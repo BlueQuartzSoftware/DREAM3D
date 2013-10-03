@@ -57,7 +57,7 @@ class StructArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of StructArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const QString &name)
+    static Pointer CreateArray(size_t numElements, const QString& name)
     {
       if (name.isEmpty() == true)
       {
@@ -65,7 +65,8 @@ class StructArray : public IDataArray
       }
       StructArray<T>* d = new StructArray<T> (numElements, true);
       if (d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
+      {
+        // Could not allocate enough memory, reset the pointer to null and return
         delete d;
         return StructArray<T>::NullPointer();
       }
@@ -81,7 +82,7 @@ class StructArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
     {
       IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name);
       return p;
@@ -114,7 +115,7 @@ class StructArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -124,14 +125,14 @@ class StructArray : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual QString getTypeAsString(){ return "struct"; }
+    virtual QString getTypeAsString() { return "struct"; }
 
-        /**
+    /**
     * @brief Returns the HDF Type for a given primitive value.
-     * @param value A value to use. Can be anything. Just used to get the type info
-     * from
-     * @return The HDF5 native type for the value
-     */
+    * @param value A value to use. Can be anything. Just used to get the type info
+    * from
+    * @return The HDF5 native type for the value
+    */
     virtual QString getFullNameOfClass()
     {
       QString theType = getTypeAsString();
@@ -144,7 +145,7 @@ class StructArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const QString &name)
+    void SetName(const QString& name)
     {
       m_Name = name;
     }
@@ -257,7 +258,7 @@ class StructArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t>& idxs)
     {
 
       int err = 0;
@@ -514,7 +515,7 @@ class StructArray : public IDataArray
      * @param i
      * @param delimiter
      */
-    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
       //        for(int j = 0; j < NumberOfComponents; ++j)
@@ -530,7 +531,7 @@ class StructArray : public IDataArray
      * @param i
      * @param j
      */
-    virtual void printComponent(QTextStream &out, size_t i, int j)
+    virtual void printComponent(QTextStream& out, size_t i, int j)
     {
       BOOST_ASSERT(false);
       //        out << Array[i + j];
@@ -557,8 +558,8 @@ class StructArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
-                                    const QString &groupPath, const QString &labelb)
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                                   const QString& groupPath, const QString& labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
@@ -601,7 +602,7 @@ class StructArray : public IDataArray
       _ownsData(ownsData),
       m_IsAllocated(false)
     {
-      MaxId = (Size > 0) ? Size - 1: Size;
+      MaxId = (Size > 0) ? Size - 1 : Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
@@ -675,9 +676,9 @@ class StructArray : public IDataArray
       // OS X's realloc does not free memory if the new block is smaller.  This
       // is a very serious problem and causes huge amount of memory to be
       // wasted. Do not use realloc on the Mac.
-      bool dontUseRealloc=false;
+      bool dontUseRealloc = false;
 #if defined __APPLE__
-      dontUseRealloc=true;
+      dontUseRealloc = true;
 #endif
 
       // Allocate a new array if we DO NOT own the current array
@@ -715,7 +716,8 @@ class StructArray : public IDataArray
         }
 
         // Copy the data from the old array.
-        if (this->Array != NULL) {
+        if (this->Array != NULL)
+        {
           memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
         }
         // Free the old array
@@ -728,7 +730,7 @@ class StructArray : public IDataArray
       // This object has now allocated its memory and owns it.
       this->_ownsData = true;
 
-      this->MaxId = newSize-1;
+      this->MaxId = newSize - 1;
       this->m_IsAllocated = true;
 
       return this->Array;

@@ -139,17 +139,17 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     */
     virtual void execute();
 
- /**
-     * @brief This function writes a set of Axis coordinates to that are needed
-     * for a Rectilinear Grid based data set.
-     * @param f The "C" FILE* pointer to the file being written to.
-     * @param axis The name of the Axis that is being written
-     * @param type The type of primitive being written (float, int, ...)
-     * @param npoints The total number of points in the array
-     * @param min The minimum value of the axis
-     * @param max The maximum value of the axis
-     * @param step The step value between each point on the axis.
-     */
+    /**
+        * @brief This function writes a set of Axis coordinates to that are needed
+        * for a Rectilinear Grid based data set.
+        * @param f The "C" FILE* pointer to the file being written to.
+        * @param axis The name of the Axis that is being written
+        * @param type The type of primitive being written (float, int, ...)
+        * @param npoints The total number of points in the array
+        * @param min The minimum value of the axis
+        * @param max The maximum value of the axis
+        * @param step The step value between each point on the axis.
+        */
     template<typename T>
     static int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
     {
@@ -201,8 +201,8 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
      * @return
      */
     template<typename T>
-    static int WriteDataArrayToFile(const QString &filename, DataArray<T>* data, size_t* dims, float* res,
-                                    const QString &dataType, bool writeBinary )
+    static int WriteDataArrayToFile(const QString& filename, DataArray<T>* data, size_t* dims, float* res,
+                                    const QString& dataType, bool writeBinary )
     {
       int err = 0;
       FILE* f = NULL;
@@ -233,7 +233,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       int numComp = data->GetNumberOfComponents();
       fprintf(f, "CELL_DATA %d\n", (int)total);
 
-      fprintf(f, "SCALARS %s %s %d\n", data->GetName().toLatin1().data(), dataType.toLatin1().data(),numComp);
+      fprintf(f, "SCALARS %s %s %d\n", data->GetName().toLatin1().data(), dataType.toLatin1().data(), numComp);
       fprintf(f, "LOOKUP_TABLE default\n");
 #ifdef DREAM3D_LITTLE_ENDIAN
       data->byteSwapElements();
@@ -285,7 +285,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
 
 
-    int write(const QString &file, VolumeDataContainer* r, std::vector<VtkScalarWriter*> &scalars);
+    int write(const QString& file, VolumeDataContainer* r, std::vector<VtkScalarWriter*>& scalars);
 
 };
 

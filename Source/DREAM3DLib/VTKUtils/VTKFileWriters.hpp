@@ -65,10 +65,10 @@
 class VtkScalarWriter : public AbstractFilter
 {
   public:
-    VtkScalarWriter() : AbstractFilter(), m_WriteBinaryFiles(true), m_ErrorCondition(0){}
+    VtkScalarWriter() : AbstractFilter(), m_WriteBinaryFiles(true), m_ErrorCondition(0) {}
     DREAM3D_TYPE_MACRO(VtkScalarWriter)
 
-    virtual ~VtkScalarWriter(){}
+    virtual ~VtkScalarWriter() {}
 
     bool m_WriteBinaryFiles;
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
@@ -93,27 +93,28 @@ template<typename T>
 class VoxelGrainIdScalarWriter : public VtkScalarWriter
 {
   public:
-  VoxelGrainIdScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
-  DREAM3D_TYPE_MACRO_SUPER(VoxelGrainIdScalarWriter<T>, VtkScalarWriter)
-  virtual ~VoxelGrainIdScalarWriter(){}
+    VoxelGrainIdScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
+    DREAM3D_TYPE_MACRO_SUPER(VoxelGrainIdScalarWriter<T>, VtkScalarWriter)
+    virtual ~VoxelGrainIdScalarWriter() {}
 
 
-  int writeScalars(FILE* f)
-  {
-    int err = 0;
-    QString file;
-    int64_t totalPoints = r->getTotalPoints();
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
-
-    if (m_WriteBinaryFiles == true) {
-      WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::CellData::GrainIds);
-    }
-    else
+    int writeScalars(FILE* f)
     {
-      WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::CellData::GrainIds, grain_indicies)
+      int err = 0;
+      QString file;
+      int64_t totalPoints = r->getTotalPoints();
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+
+      if (m_WriteBinaryFiles == true)
+      {
+        WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::CellData::GrainIds);
+      }
+      else
+      {
+        WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::CellData::GrainIds, grain_indicies)
+      }
+      return err;
     }
-    return err;
-  }
 
   private:
     T* r;
@@ -127,84 +128,84 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
  * properties to the VTK file
  */
 #define VtkSCALARWRITER_CLASS_DEF(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
-template<typename T>\
-class name : public VtkScalarWriter\
-{\
-  public:\
-    name(T* r) : VtkScalarWriter(), r(r) {}\
-    DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
-    virtual ~name(){}\
-    int writeScalars(FILE* f)  {\
-      int err = 0;\
-      QString file;\
-      int64_t totalPoints = r->getTotalPoints();\
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
-      if (m_WriteBinaryFiles == true) {\
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, m_msgType, var)\
-      }    else    {\
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
+  template<typename T>\
+  class name : public VtkScalarWriter\
+  {\
+    public:\
+      name(T* r) : VtkScalarWriter(), r(r) {}\
+      DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
+      virtual ~name(){}\
+      int writeScalars(FILE* f)  {\
+        int err = 0;\
+        QString file;\
+        int64_t totalPoints = r->getTotalPoints();\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
+        if (m_WriteBinaryFiles == true) {\
+          WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, m_msgType, var)\
+        }    else    {\
+          WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
+        }\
+        return err;\
       }\
-      return err;\
-  }\
-  private:\
-    T* r;\
-    name(const name&); \
-    void operator=(const name&);\
-};
+    private:\
+      T* r;\
+      name(const name&); \
+      void operator=(const name&);\
+  };
 
 #define VtkSCALARWRITER_CLASS_DEF_FIELD(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
-template<typename T>\
-class name : public VtkScalarWriter\
-{\
-  public:\
-    name(T* r) : VtkScalarWriter(), r(r) {}\
-    DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
-    virtual ~name(){}\
-    int writeScalars(FILE* f)  {\
-      int err = 0;\
-      QString file;\
-      int64_t totalFields = r->getNumCellFieldTuples();\
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell##field, arrayName, arrayType, m_msgType, totalFields, var);\
-      int64_t totalPoints = r->getTotalPoints();\
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);\
-      if (m_WriteBinaryFiles == true) {\
-        WRITE_VTK_SCALARS_FROM_FIELD_BINARY(r, scalarName, m_msgType, var, grain_indicies)\
-      }    else    {\
-        WRITE_VTK_SCALARS_FROM_FIELD_ASCII(r, scalarName, m_msgType, var, grain_indicies, format)\
+  template<typename T>\
+  class name : public VtkScalarWriter\
+  {\
+    public:\
+      name(T* r) : VtkScalarWriter(), r(r) {}\
+      DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
+      virtual ~name(){}\
+      int writeScalars(FILE* f)  {\
+        int err = 0;\
+        QString file;\
+        int64_t totalFields = r->getNumCellFieldTuples();\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell##field, arrayName, arrayType, m_msgType, totalFields, var);\
+        int64_t totalPoints = r->getTotalPoints();\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);\
+        if (m_WriteBinaryFiles == true) {\
+          WRITE_VTK_SCALARS_FROM_FIELD_BINARY(r, scalarName, m_msgType, var, grain_indicies)\
+        }    else    {\
+          WRITE_VTK_SCALARS_FROM_FIELD_ASCII(r, scalarName, m_msgType, var, grain_indicies, format)\
+        }\
+        return err;\
       }\
-      return err;\
-  }\
-  private:\
-    T* r;\
-    name(const name&); \
-    void operator=(const name&);\
-};
+    private:\
+      T* r;\
+      name(const name&); \
+      void operator=(const name&);\
+  };
 
 #define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
-template<typename T>\
-class name : public VtkScalarWriter\
-{\
-  public:\
-    name(T* r) : VtkScalarWriter(), r(r) {}\
-    DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
-    virtual ~name(){}\
-    int writeScalars(FILE* f)  {\
-    int err = 0;\
-    QString file;\
-    int64_t totalPoints = r->getTotalPoints();\
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
-    if (m_WriteBinaryFiles == true) {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, m_msgType, var)\
-    }    else    {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
-    }\
-    return err;\
-  }\
-  private:\
-    T* r;\
-    name(const name&); \
-    void operator=(const name&);\
-};
+  template<typename T>\
+  class name : public VtkScalarWriter\
+  {\
+    public:\
+      name(T* r) : VtkScalarWriter(), r(r) {}\
+      DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
+      virtual ~name(){}\
+      int writeScalars(FILE* f)  {\
+        int err = 0;\
+        QString file;\
+        int64_t totalPoints = r->getTotalPoints();\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
+        if (m_WriteBinaryFiles == true) {\
+          WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, m_msgType, var)\
+        }    else    {\
+          WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
+        }\
+        return err;\
+      }\
+    private:\
+      T* r;\
+      name(const name&); \
+      void operator=(const name&);\
+  };
 
 
 VtkSCALARWRITER_CLASS_DEF(VoxelParentIdScalarWriter, r, Cell, DREAM3D::CellData::ParentIds, DREAM3D::CellData::ParentIds, Int32ArrayType, int, "%d ")
@@ -228,81 +229,81 @@ template<typename T>
 class VoxelEulerAngleScalarWriter : public VtkScalarWriter
 {
   public:
-  VoxelEulerAngleScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
-  DREAM3D_TYPE_MACRO_SUPER(VoxelEulerAngleScalarWriter<T>, VtkScalarWriter)\
+    VoxelEulerAngleScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
+    DREAM3D_TYPE_MACRO_SUPER(VoxelEulerAngleScalarWriter<T>, VtkScalarWriter)\
 
-      virtual ~VoxelEulerAngleScalarWriter(){}
+    virtual ~VoxelEulerAngleScalarWriter() {}
 
-  int writeScalars(FILE* f)
-  {
-    int err = 0;
-    int64_t totalPoints = r->getTotalPoints();
-    size_t dims[3];
-    r->getDimensions(dims);
-
-    QVector<QString> names(3);
-    names[0] = "Phi1";
-    names[1] = "Phi";
-    names[2] = "Phi2";
-
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
-
-    boost::shared_array<float> buffer(new float[dims[0]]);
-
-    //std::vector<float> buffer(dims[0]);
-    // Loop over each component of the Euler Angles
-    for (int eIndex = 0; eIndex < 3; ++eIndex)
+    int writeScalars(FILE* f)
     {
-      QString name = names[eIndex];
-      fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), "float");
-      fprintf(f, "LOOKUP_TABLE default\n");
-      size_t index = 0;
-      for(size_t z = 0; z < dims[2]; ++z)
+      int err = 0;
+      int64_t totalPoints = r->getTotalPoints();
+      size_t dims[3];
+      r->getDimensions(dims);
+
+      QVector<QString> names(3);
+      names[0] = "Phi1";
+      names[1] = "Phi";
+      names[2] = "Phi2";
+
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3 * totalPoints), eulerangles);
+
+      boost::shared_array<float> buffer(new float[dims[0]]);
+
+      //std::vector<float> buffer(dims[0]);
+      // Loop over each component of the Euler Angles
+      for (int eIndex = 0; eIndex < 3; ++eIndex)
       {
-        for(size_t y = 0; y < dims[1]; ++y)
+        QString name = names[eIndex];
+        fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), "float");
+        fprintf(f, "LOOKUP_TABLE default\n");
+        size_t index = 0;
+        for(size_t z = 0; z < dims[2]; ++z)
         {
-          for(size_t x = 0; x < dims[0]; ++x)
+          for(size_t y = 0; y < dims[1]; ++y)
           {
-            index = (z * dims[0] * dims[1]) + (y*dims[0]) + x;
-            buffer[x] = eulerangles[3*index + eIndex];
-            if (false == m_WriteBinaryFiles)
+            for(size_t x = 0; x < dims[0]; ++x)
             {
-              fprintf(f, "%f ", buffer[x]);
+              index = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
+              buffer[x] = eulerangles[3 * index + eIndex];
+              if (false == m_WriteBinaryFiles)
+              {
+                fprintf(f, "%f ", buffer[x]);
+              }
             }
-          }
-          // We just buffered an dim[0] worth of data, now write it out.
-          if (true == m_WriteBinaryFiles)
-          {
-            float tmp = 0.0f;
-            // VTK Binary files are written with Big Endian Byte Ordering
-            for(size_t ii = 0; ii < dims[0]; ++ii)
+            // We just buffered an dim[0] worth of data, now write it out.
+            if (true == m_WriteBinaryFiles)
             {
-              tmp = buffer[ii];
-              DREAM3D::Endian::FromSystemToBig::convert(tmp);
-              buffer[ii] = tmp;
+              float tmp = 0.0f;
+              // VTK Binary files are written with Big Endian Byte Ordering
+              for(size_t ii = 0; ii < dims[0]; ++ii)
+              {
+                tmp = buffer[ii];
+                DREAM3D::Endian::FromSystemToBig::convert(tmp);
+                buffer[ii] = tmp;
+              }
+              size_t totalWritten = fwrite( buffer.get(), sizeof(char), dims[0] * sizeof(float), f);
+              if (totalWritten != dims[0] * 4)
+              {
+                qDebug() << "Error Writing Binary Data for Euler Angles to file " ;
+                fclose(f);
+                return -1;
+              }
             }
-            size_t totalWritten = fwrite( buffer.get(), sizeof(char), dims[0] * sizeof(float), f);
-            if (totalWritten != dims[0] * 4)
+            else
             {
-              qDebug() << "Error Writing Binary Data for Euler Angles to file " ;
-              fclose(f);
-              return -1;
+              fprintf(f, "\n"); // Add a new line after each row.
             }
-          }
-          else
-          {
-            fprintf(f, "\n"); // Add a new line after each row.
           }
         }
       }
+      return err;
     }
-    return err;
-  }
 
   private:
-  T* r;
-  VoxelEulerAngleScalarWriter(const VoxelEulerAngleScalarWriter&); // Copy Constructor Not Implemented
-  void operator=(const VoxelEulerAngleScalarWriter&); // Operator '=' Not Implemented
+    T* r;
+    VoxelEulerAngleScalarWriter(const VoxelEulerAngleScalarWriter&); // Copy Constructor Not Implemented
+    void operator=(const VoxelEulerAngleScalarWriter&); // Operator '=' Not Implemented
 
 
 };
@@ -393,7 +394,7 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
      * @return Negative Value on error
      */
     template<typename T>
-    int write(const QString &file, T* r, std::vector<VtkScalarWriter*> scalars)
+    int write(const QString& file, T* r, std::vector<VtkScalarWriter*> scalars)
     {
       int err = 0;
       FILE* f = NULL;
@@ -405,11 +406,11 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
       // Write the correct header
       if (m_WriteBinaryFiles == true)
       {
-        WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->getXPoints() + 1, r->getYPoints()+1, r->getZPoints()+1)
+        WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->getXPoints() + 1, r->getYPoints() + 1, r->getZPoints() + 1)
       }
       else
       {
-        WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->getXPoints() + 1, r->getYPoints()+1, r->getZPoints()+1)
+        WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->getXPoints() + 1, r->getYPoints() + 1, r->getZPoints() + 1)
       }
 
       // Write the XCoords
@@ -453,12 +454,12 @@ class VTKStructuredPointsFileWriter
     DREAM3D_STATIC_NEW_MACRO(VTKStructuredPointsFileWriter)
     DREAM3D_TYPE_MACRO(VTKStructuredPointsFileWriter)
 
-    virtual ~VTKStructuredPointsFileWriter(){}
+    virtual ~VTKStructuredPointsFileWriter() {}
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
 
     template<typename T>
-    int write(const QString &file, T* r, std::vector<VtkScalarWriter*> scalars)
+    int write(const QString& file, T* r, std::vector<VtkScalarWriter*> scalars)
     {
       int err = 0;
       FILE* f = NULL;
@@ -515,7 +516,7 @@ class VtkMiscFileWriter : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(VtkMiscFileWriter)
     DREAM3D_TYPE_MACRO(VtkMiscFileWriter)
 
-    virtual ~VtkMiscFileWriter(){}
+    virtual ~VtkMiscFileWriter() {}
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
@@ -526,7 +527,7 @@ class VtkMiscFileWriter : public AbstractFilter
      * @return 0 on Success
      */
     template <typename T>
-    int writeDisorientationFile(T* m, const QString &file)
+    int writeDisorientationFile(T* m, const QString& file)
     {
 
       FILE* f = NULL;
@@ -556,14 +557,14 @@ class VtkMiscFileWriter : public AbstractFilter
         WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::CellData::GrainIds);
         WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::KernelAvgMisorientations, float, kernelmisorientation)
         WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::GrainAvgMisorientations, float, grainmisorientation)
-   //     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::LMG, float, misorientationgradient)
+        //     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::LMG, float, misorientationgradient)
       }
       else
       {
         WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds, grain_indicies)
         WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::KernelAvgMisorientations, float, kernelmisorientation, "%f ")
         WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::GrainAvgMisorientations, float, grainmisorientation, "%f ")
- //       WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::LMG, float, misorientationgradient, "%f ")
+//       WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::LMG, float, misorientationgradient, "%f ")
       }
       fclose(f);
       return 0;
@@ -577,7 +578,7 @@ class VtkMiscFileWriter : public AbstractFilter
      * @return 0 on Success
      */
     template <typename T>
-    int writeSchmidFactorVizFile(T* m, const QString &file)
+    int writeSchmidFactorVizFile(T* m, const QString& file)
     {
       FILE* f = NULL;
       f = fopen(file.toLatin1().data(), "wb");

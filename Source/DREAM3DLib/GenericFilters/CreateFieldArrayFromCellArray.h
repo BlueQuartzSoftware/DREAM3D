@@ -87,7 +87,7 @@ class DREAM3DLib_EXPORT CreateFieldArrayFromCellArray : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-  int32_t*  m_GrainIds;
+    int32_t*  m_GrainIds;
 
     CreateFieldArrayFromCellArray(const CreateFieldArrayFromCellArray&); // Copy Constructor Not Implemented
     void operator=(const CreateFieldArrayFromCellArray&); // Operator '=' Not Implemented

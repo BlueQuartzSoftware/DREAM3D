@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -77,7 +77,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     DREAM3D_INSTANCE_PROPERTY(int, Phase)
     DREAM3D_INSTANCE_PROPERTY(QVector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
 
-    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
+    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
     {
       return ModifiedLambertProjectionArray::New();
     }
@@ -125,10 +125,10 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
       m_ModifiedLambertProjectionArray.resize(n);
       for (size_t i = 0; i < n; ++i)
       {
-          if (m_ModifiedLambertProjectionArray[i].get() == NULL)
-          {
-            m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
-          }
+        if (m_ModifiedLambertProjectionArray[i].get() == NULL)
+        {
+          m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
+        }
       }
     }
 
@@ -160,7 +160,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     /* **************** This is the interface for the IDataArray Class which MUST
      *  Be implemented. Most of it is useless and will simply ASSERT if called. */
 
-    void SetName(const QString &name);
+    void SetName(const QString& name);
     QString GetName();
 
     /**
@@ -216,7 +216,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t> &idxs);
+    virtual int EraseTuples(QVector<size_t>& idxs);
 
     /**
      * @brief Copies a Tuple from one position to another.
@@ -238,11 +238,11 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual void initializeWithZeros();
 
-  /**
-     * @brief Reseizes the internal array
-     * @param size The new size of the internal array
-     * @return 1 on success, 0 on failure
-     */
+    /**
+       * @brief Reseizes the internal array
+       * @param size The new size of the internal array
+       * @return 1 on success, 0 on failure
+       */
     virtual int32_t RawResize(size_t size);
 
     /**
@@ -252,8 +252,8 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual int32_t Resize(size_t numTuples);
 
-    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',');
-    virtual void printComponent(QTextStream &out, size_t i, int j);
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',');
+    virtual void printComponent(QTextStream& out, size_t i, int j);
 
     /**
      *
@@ -271,8 +271,8 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
-            const QString &groupPath, const QString &labelb)
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                                   const QString& groupPath, const QString& labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;

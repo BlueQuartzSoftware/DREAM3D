@@ -46,14 +46,14 @@
 //
 // -----------------------------------------------------------------------------
 FindSurfaceVoxelFractions::FindSurfaceVoxelFractions() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
-m_SurfaceVoxelFractionsArrayName(DREAM3D::FieldData::SurfaceVoxelFractions),
-m_GrainIds(NULL),
-m_SurfaceVoxels(NULL),
-m_SurfaceVoxelFractions(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
+  m_SurfaceVoxelFractionsArrayName(DREAM3D::FieldData::SurfaceVoxelFractions),
+  m_GrainIds(NULL),
+  m_SurfaceVoxels(NULL),
+  m_SurfaceVoxelFractions(NULL)
 {
   setupFilterParameters();
 }
@@ -76,8 +76,8 @@ void FindSurfaceVoxelFractions::readFilterParameters(AbstractFilterParametersRea
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -97,7 +97,7 @@ int FindSurfaceVoxelFractions::writeFilterParameters(AbstractFilterParametersWri
 void FindSurfaceVoxelFractions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -174,10 +174,10 @@ void FindSurfaceVoxelFractions::find_surface_voxel_fractions()
   {
     int gnum = m_GrainIds[j];
     voxcounts[gnum]++;
-    if(m_SurfaceVoxels[j] > 0) surfvoxcounts[gnum]++;
+    if(m_SurfaceVoxels[j] > 0) { surfvoxcounts[gnum]++; }
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-    m_SurfaceVoxelFractions[i] = surfvoxcounts[i]/voxcounts[i];
+    m_SurfaceVoxelFractions[i] = surfvoxcounts[i] / voxcounts[i];
   }
 }

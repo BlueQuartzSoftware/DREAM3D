@@ -47,11 +47,11 @@
 // Here the order of multiplication is q1*q2 not q2*q1
 #if 0
 #define MULT_QUAT(q1, q2, out)\
-    out[1] = q2[1] * q1[4] + q2[4] * q1[1] + q2[3] * q1[2] - q2[2] * q1[3];\
-    out[2] = q2[2] * q1[4] + q2[4] * q1[2] + q2[1] * q1[3] - q2[3] * q1[1];\
-    out[3] = q2[3] * q1[4] + q2[4] * q1[3] + q2[2] * q1[1] - q2[1] * q1[2];\
-    out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
-
+  out[1] = q2[1] * q1[4] + q2[4] * q1[1] + q2[3] * q1[2] - q2[2] * q1[3];\
+  out[2] = q2[2] * q1[4] + q2[4] * q1[2] + q2[1] * q1[3] - q2[3] * q1[1];\
+  out[3] = q2[3] * q1[4] + q2[4] * q1[3] + q2[2] * q1[1] - q2[1] * q1[2];\
+  out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
+   
 #endif
 
 /*
@@ -69,38 +69,38 @@ class DREAM3DLib_EXPORT OrientationMath
     virtual ~OrientationMath();
 
 
-    static void AxisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
-    static void AxisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
-    static void AxisAngletoQuat(float w, float n1, float n2, float n3, QuatF &q);
+    static void AxisAngletoHomochoric(float w, float n1, float n2, float n3, float& r1, float& r2, float& r3);
+    static void AxisAngletoRod(float w, float n1, float n2, float n3, float& r1, float& r2, float& r3);
+    static void AxisAngletoQuat(float w, float n1, float n2, float n3, QuatF& q);
     static void AxisAngletoMat(float w, float n1, float n2, float n3, float g[3][3]);
 
-    static void ChangeAxisReferenceFrame(QuatF &q, float &n1, float &n2, float &n3);
+    static void ChangeAxisReferenceFrame(QuatF& q, float& n1, float& n2, float& n3);
 
-    static void HomochorictoRod(float &r1, float &r2, float &r3);
+    static void HomochorictoRod(float& r1, float& r2, float& r3);
 
-    static void RodtoAxisAngle(float r1, float r2, float r3, float &w, float &n1, float &n2, float &n3);
-    static void RodtoQuat(QuatF &q, float r1, float r2, float r3);
-    static void RodtoHomochoric(float &r1, float &r2, float &r3);
-    static void RodtoEuler(float r1, float r2, float r3, float &ea1, float &ea2, float &ea3);
-
-
-    static void QuattoAxisAngle(QuatF &q, float &w, float &n1, float &n2, float &n3);
-    static void QuattoMat(QuatF &q, float g[3][3]);
-    static void QuattoRod(QuatF &q, float &r1, float &r2, float &r3);
-    static void QuattoEuler(QuatF &q, float &ea1, float &ea2, float &ea3);
+    static void RodtoAxisAngle(float r1, float r2, float r3, float& w, float& n1, float& n2, float& n3);
+    static void RodtoQuat(QuatF& q, float r1, float r2, float r3);
+    static void RodtoHomochoric(float& r1, float& r2, float& r3);
+    static void RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3);
 
 
-    static void EulertoQuat(QuatF &q, float ea1, float ea2, float ea3);
-    static void EulertoQuat(QuatF &q, float* euler);
+    static void QuattoAxisAngle(QuatF& q, float& w, float& n1, float& n2, float& n3);
+    static void QuattoMat(QuatF& q, float g[3][3]);
+    static void QuattoRod(QuatF& q, float& r1, float& r2, float& r3);
+    static void QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3);
+
+
+    static void EulertoQuat(QuatF& q, float ea1, float ea2, float ea3);
+    static void EulertoQuat(QuatF& q, float* euler);
     static void EulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
-    static void EulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3);
+    static void EulertoRod(float& r1, float& r2, float& r3, float ea1, float ea2, float ea3);
 
 
-    static void MattoEuler(float g[3][3], float &ea1, float &ea2, float &ea3);
+    static void MattoEuler(float g[3][3], float& ea1, float& ea2, float& ea3);
 
     static float MatrixMisorientation(float g1[3][3], float g2[3][3]);
 
-    static void MultiplyQuaternionVector(QuatF &inQuat, float inVec[3], float outVec[3]);
+    static void MultiplyQuaternionVector(QuatF& inQuat, float inVec[3], float outVec[3]);
 
   protected:
     OrientationMath();

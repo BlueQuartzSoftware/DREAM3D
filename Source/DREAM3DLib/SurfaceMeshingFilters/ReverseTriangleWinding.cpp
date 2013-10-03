@@ -55,7 +55,7 @@ class ReverseWindingImpl
     ReverseWindingImpl(FaceArray::Pointer triangles) :
       m_Triangles(triangles)
     {}
-    virtual ~ReverseWindingImpl(){}
+    virtual ~ReverseWindingImpl() {}
 
     /**
      * @brief generate Generates the Normals for the triangles
@@ -82,7 +82,7 @@ class ReverseWindingImpl
      * @brief operator () This is called from the TBB stye of code
      * @param r The range to compute the values
      */
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -198,8 +198,8 @@ void ReverseTriangleWinding::readFilterParameters(AbstractFilterParametersReader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -222,7 +222,7 @@ int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter
 void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   // We MUST have Nodes
@@ -262,7 +262,7 @@ void ReverseTriangleWinding::preflight()
 void ReverseTriangleWinding::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == m)

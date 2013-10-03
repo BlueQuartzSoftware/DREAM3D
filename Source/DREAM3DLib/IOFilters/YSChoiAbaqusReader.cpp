@@ -183,7 +183,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
         zpoints = tokens[3].toInt(&ok, 10);
         size_t dims[3] = {xpoints, ypoints, zpoints};
         m->setDimensions(dims);
-        m->setOrigin(0,0,0);
+        m->setOrigin(0, 0, 0);
       }
       if (RES == word)
       {
@@ -234,7 +234,7 @@ void YSChoiAbaqusReader::execute()
 
   int xpoints, ypoints, zpoints, totalpoints = 0;
   float resx, resy, resz;
-  float ***mat;
+  float** *mat;
   //const unsigned int size(1024);
   // Read header from data file to figure out how many points there are
   QFile in(getInputFile());
@@ -261,7 +261,7 @@ void YSChoiAbaqusReader::execute()
       zpoints = tokens[3].toInt(&ok, 10);
       size_t dims[3] = {xpoints, ypoints, zpoints};
       m->setDimensions(dims);
-      m->setOrigin(0,0,0);
+      m->setOrigin(0, 0, 0);
 
     }
     if (buf.startsWith(RES))
@@ -298,7 +298,7 @@ void YSChoiAbaqusReader::execute()
   QList<QByteArray> tokens = buf.split(' ');
 //  in2 >> word >> word >> word >> word >> word >> word;
   totalpoints = m->getNumCellTuples();
-  dataCheck(false, totalpoints, numgrains+1, 2);
+  dataCheck(false, totalpoints, numgrains + 1, 2);
   //Read data file
   int gnum = 0;
   bool onedge = false;
@@ -307,7 +307,7 @@ void YSChoiAbaqusReader::execute()
   for (int i = 0; i < totalpoints; i++)
   {
     mat[i] = new float *[3];
-    for(int j=0;j<3;j++)
+    for(int j = 0; j < 3; j++)
     {
       mat[i][j] = new float [3];
     }
@@ -316,7 +316,7 @@ void YSChoiAbaqusReader::execute()
     col = i % xpoints;
     row = (i / xpoints) % ypoints;
     plane = i / (xpoints * ypoints);
-    if (col == 0 || col == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) onedge = true;
+    if (col == 0 || col == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) { onedge = true; }
     m_GrainIds[i] = gnum;
     m_SurfaceFields[gnum] = onedge;
   }
@@ -352,7 +352,7 @@ void YSChoiAbaqusReader::execute()
   avgQuats[0].z = 0.0;
   avgQuats[0].w = 0.0;
 
-  for (int i = 1; i < numgrains+1; i++)
+  for (int i = 1; i < numgrains + 1; i++)
   {
     buf = in2.readLine();
     tokens = buf.split(' ');
@@ -368,29 +368,29 @@ void YSChoiAbaqusReader::execute()
   QuatF q;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g[3][3];
-  for(int i=0;i<(xpoints*ypoints*zpoints);i++)
+  for(int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
-    for(int j=0;j<3;j++)
+    for(int j = 0; j < 3; j++)
     {
-      for(int k=0;k<3;k++)
+      for(int k = 0; k < 3; k++)
       {
         g[j][k] = mat[i][j][k];
       }
     }
     MatrixMath::Normalize3x3(g);
-    q.w = static_cast<float>( sqrt((1.0+g[0][0]+g[1][1]+g[2][2]))/2.0 );
-    q.x = static_cast<float>( (g[1][2]-g[2][1])/(4.0*q.w) );
-    q.y = static_cast<float>( (g[2][0]-g[0][2])/(4.0*q.w) );
-    q.z = static_cast<float>( (g[0][1]-g[1][0])/(4.0*q.w) );
+    q.w = static_cast<float>( sqrt((1.0 + g[0][0] + g[1][1] + g[2][2])) / 2.0 );
+    q.x = static_cast<float>( (g[1][2] - g[2][1]) / (4.0 * q.w) );
+    q.y = static_cast<float>( (g[2][0] - g[0][2]) / (4.0 * q.w) );
+    q.z = static_cast<float>( (g[0][1] - g[1][0]) / (4.0 * q.w) );
     QuaternionMathF::Copy(q, quats[i]);
     //    m_Quats[5*i+1] = q[1];
     //    m_Quats[5*i+2] = q[2];
     //    m_Quats[5*i+3] = q[3];
     //    m_Quats[5*i+4] = q[4];
     OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
-    m_CellEulerAngles[3*i] = ea1;
-    m_CellEulerAngles[3*i + 1] = ea2;
-    m_CellEulerAngles[3*i + 2] = ea3;
+    m_CellEulerAngles[3 * i] = ea1;
+    m_CellEulerAngles[3 * i + 1] = ea2;
+    m_CellEulerAngles[3 * i + 2] = ea3;
     delete[] mat[i];
   }
   delete[] mat;

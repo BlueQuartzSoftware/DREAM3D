@@ -42,7 +42,7 @@
 //
 // -----------------------------------------------------------------------------
 ArraySelectionExample::ArraySelectionExample() :
-AbstractFilter()
+  AbstractFilter()
 {
   setupFilterParameters();
 }
@@ -119,8 +119,8 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setVoxelSelectedArrayNames(QSet<QString> selectedCellArrays,
-                                                    QSet<QString> selectedFieldArrays,
-                                                    QSet<QString> selectedEnsembleArrays)
+                                                       QSet<QString> selectedFieldArrays,
+                                                       QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVoxelCellArrays = selectedCellArrays;
   m_SelectedVoxelFieldArrays = selectedFieldArrays;
@@ -131,10 +131,10 @@ void ArraySelectionExample::setVoxelSelectedArrayNames(QSet<QString> selectedCel
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedFaceArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+    QSet<QString> selectedFaceArrays,
+    QSet<QString> selectedEdgeArrays,
+    QSet<QString> selectedFieldArrays,
+    QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
@@ -147,8 +147,8 @@ void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(QSet<QString> selec
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setSolidMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                        QSet<QString> selectedFaceArrays,
-                                                        QSet<QString> selectedEdgeArrays)
+                                                           QSet<QString> selectedFaceArrays,
+                                                           QSet<QString> selectedEdgeArrays)
 {
   m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
   m_SelectedSolidMeshFaceArrays = selectedFaceArrays;
@@ -209,5 +209,5 @@ void ArraySelectionExample::execute()
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
-   notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }

@@ -86,13 +86,13 @@ void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
   }
   else if (preflight == true)
   {
-    if(m_CellArraysToRead.size() == 0 && m_ReadAllCellArrays != true) m_ReadCellData = false;
-    if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllCellFieldArrays != true) m_ReadCellFieldData = false;
-    if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllCellEnsembleArrays != true) m_ReadCellEnsembleData = false;
+    if(m_CellArraysToRead.size() == 0 && m_ReadAllCellArrays != true) { m_ReadCellData = false; }
+    if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllCellFieldArrays != true) { m_ReadCellFieldData = false; }
+    if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllCellEnsembleArrays != true) { m_ReadCellEnsembleData = false; }
 
-    if(m_ReadCellData == true) dc->clearCellData();
-    if(m_ReadCellFieldData == true) dc->clearCellFieldData();
-    if(m_ReadCellEnsembleData == true) dc->clearCellEnsembleData();
+    if(m_ReadCellData == true) { dc->clearCellData(); }
+    if(m_ReadCellFieldData == true) { dc->clearCellFieldData(); }
+    if(m_ReadCellEnsembleData == true) { dc->clearCellEnsembleData(); }
 
     int err = gatherData(preflight);
     if (err < 0)
@@ -143,13 +143,13 @@ void VolumeDataContainerReader::execute()
   dc->setResolution(spacing);
   dc->setOrigin(origin);
 
-  if(m_CellArraysToRead.size() == 0 && m_ReadAllCellArrays != true) m_ReadCellData = false;
-  if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllCellFieldArrays != true) m_ReadCellFieldData = false;
-  if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllCellEnsembleArrays != true) m_ReadCellEnsembleData = false;
+  if(m_CellArraysToRead.size() == 0 && m_ReadAllCellArrays != true) { m_ReadCellData = false; }
+  if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllCellFieldArrays != true) { m_ReadCellFieldData = false; }
+  if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllCellEnsembleArrays != true) { m_ReadCellEnsembleData = false; }
 
-  if(m_ReadCellData == true) dc->clearCellData();
-  if(m_ReadCellFieldData == true) dc->clearCellFieldData();
-  if(m_ReadCellEnsembleData == true) dc->clearCellEnsembleData();
+  if(m_ReadCellData == true) { dc->clearCellData(); }
+  if(m_ReadCellFieldData == true) { dc->clearCellFieldData(); }
+  if(m_ReadCellEnsembleData == true) { dc->clearCellEnsembleData(); }
 
   // We are actually wanting to read the file so set preflight to false
   err = gatherData(false);
@@ -282,7 +282,7 @@ int VolumeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         return err;
       }
       dc->setCells(cellsPtr);
-      size_t nCells= cellsPtr->getNumberOfTuples();
+      size_t nCells = cellsPtr->getNumberOfTuples();
       err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellNeighbors, dims, type_class, type_size);
       if (err >= 0)
       {
@@ -410,10 +410,10 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead,
-                                                bool readAllCurrentArrays)
+int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupName, bool preflight,
+                                              QVector<QString>& namesRead,
+                                              QSet<QString>& namesToRead,
+                                              bool readAllCurrentArrays)
 {
 
   VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());

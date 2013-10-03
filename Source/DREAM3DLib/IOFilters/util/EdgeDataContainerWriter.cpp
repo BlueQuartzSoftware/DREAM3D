@@ -119,11 +119,12 @@ void EdgeDataContainerWriter::execute()
 
   // Add some VTK hints into the group
   err = createVtkObjectGroup(getDataContainer()->getName(), H5_VTK_POLYDATA);
-  if (err < 0)  {
+  if (err < 0)
+  {
     return;
   }
 
-  if(getdcType() == 2) writeXdmfMeshStructure();
+  if(getdcType() == 2) { writeXdmfMeshStructure(); }
 
   err = writeMeshData(dcGid);
   if (err < 0)
@@ -204,11 +205,11 @@ void EdgeDataContainerWriter::writeXdmfMeshStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const QString &attrType,
-                                                              const QString &groupName,
-                                                              IDataArray::Pointer array,
-                                                              const QString &centering,
-                                                              int precision, const QString &xdmfTypeName)
+QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const QString& attrType,
+    const QString& groupName,
+    IDataArray::Pointer array,
+    const QString& centering,
+    int precision, const QString& xdmfTypeName)
 {
   QString buf;
   QTextStream out(&buf);
@@ -216,9 +217,9 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
   QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
 
   QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
-  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents()/2);
+  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents() / 2);
 
-  if((numComp%2) == 1)
+  if((numComp % 2) == 1)
   {
     out << "    <Attribute Name=\"" << array->GetName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
@@ -237,12 +238,12 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     out << "AttributeType=\"" << attrType << "\" ";
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
-    out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents()/2) <<  "\" ";
+    out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2) <<  "\" ";
     out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 0)\" >" << "\n";
     out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
     out << "          0        0" << "\n";
     out << "          1        1" << "\n";
-    out << "          " << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents()/2) << " </DataItem>" << "\n";
+    out << "          " << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2) << " </DataItem>" << "\n";
     out << "\n";
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << array->getNumberOfTuples() << " " << array->GetNumberOfComponents() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
     out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
@@ -255,12 +256,12 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     out << "AttributeType=\"" << attrType << "\" ";
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
-    out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents()/2) <<  "\" ";
+    out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2) <<  "\" ";
     out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 1)\" >" << "\n";
     out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
-    out << "          0        " << (array->GetNumberOfComponents()/2) << "\n";
+    out << "          0        " << (array->GetNumberOfComponents() / 2) << "\n";
     out << "          1        1" << "\n";
-    out << "          " << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents()/2) << " </DataItem>" << "\n";
+    out << "          " << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2) << " </DataItem>" << "\n";
     out << "\n";
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << array->getNumberOfTuples() << " " << array->GetNumberOfComponents() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
 
@@ -275,21 +276,22 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering)
+void EdgeDataContainerWriter::writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering)
 {
 #if 0
-  <Attribute Name="Node Type" Center="Node">
-      <DataItem Format="HDF" DataType="char" Precision="1" Dimensions="43029 1">
-      MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:/EdgeDataContainer/POINT_DATA/SurfaceMeshNodeType
-      </DataItem>
-      </Attribute>
-    #endif
-      if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
+  < Attribute Name = "Node Type" Center = "Node" >
+                                          < DataItem Format = "HDF" DataType = "char" Precision = "1" Dimensions = "43029 1" >
+                                                            MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:
+                                                              / EdgeDataContainer / POINT_DATA / SurfaceMeshNodeType
+                                                              < / DataItem >
+                                                              < / Attribute >
+#endif
+                                                              if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
   { return; }
 
 
 
-      QTextStream& out = *getXdmfOStream();
+  QTextStream& out = *getXdmfOStream();
   int precision = 0;
   QString xdmfTypeName;
   array->GetXdmfTypeAndSize(xdmfTypeName, precision);
@@ -300,9 +302,9 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, I
   }
   int numComp = array->GetNumberOfComponents();
   QString attrType = "Scalar";
-  if(numComp > 2) attrType = "Vector";
+  if(numComp > 2) { attrType = "Vector"; }
 
-  QString block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
+  QString block = writeXdmfAttributeDataHelper(numComp, attrType, groupName, array, centering, precision, xdmfTypeName);
 
   out << block << "\n";
 }
@@ -325,7 +327,7 @@ int EdgeDataContainerWriter::writeMeshData(hid_t dcGid)
     int32_t* data = reinterpret_cast<int32_t*>(edgesPtr->getPointer(0));
 
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::EdgesName, rank, dims, data);
-    if (err < 0) 
+    if (err < 0)
     {
       setErrorCondition(err);
       notifyErrorMessage("Error Writing Edge List to DREAM3D file", getErrorCondition());
@@ -355,8 +357,8 @@ int EdgeDataContainerWriter::writeMeshData(hid_t dcGid)
         int32_t* cells = edgeNeighbors->getElementListPointer(v);
         ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
         offset += sizeof(uint16_t);
-        ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-        offset += ncells*sizeof(int32_t);
+        ::memcpy(bufPtr + offset, cells, ncells * sizeof(int32_t) );
+        offset += ncells * sizeof(int32_t);
       }
 
       int32_t rank = 1;
@@ -403,8 +405,8 @@ int EdgeDataContainerWriter::writeMeshData(hid_t dcGid)
       int32_t* cells = edgesContainingVert->getElementListPointer(v);
       ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
       offset += sizeof(uint16_t);
-      ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-      offset += ncells*sizeof(int32_t);
+      ::memcpy(bufPtr + offset, cells, ncells * sizeof(int32_t) );
+      offset += ncells * sizeof(int32_t);
     }
 
     rank = 1;
@@ -496,7 +498,7 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
   QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
-  int64_t volDims[3] = { 0,0,0 };
+  int64_t volDims[3] = { 0, 0, 0 };
 
 
   // Write the Field Data
@@ -637,7 +639,7 @@ int EdgeDataContainerWriter::writeEdgeEnsembleData(hid_t dcGid, QString groupNam
   EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
   //QString groupName(H5_ENSEMBLE_DATA_GROUP_NAME);
   // Write the Ensemble data
-   err = QH5Utilities::createGroupsFromPath(H5_EDGE_ENSEMBLE_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(H5_EDGE_ENSEMBLE_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);

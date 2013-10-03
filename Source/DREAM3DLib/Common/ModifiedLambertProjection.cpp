@@ -103,7 +103,8 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
 
   for(int i = 0; i < npoints; ++i)
   {
-    sqCoord[0] = 0.0; sqCoord[1] = 0.0;
+    sqCoord[0] = 0.0;
+    sqCoord[1] = 0.0;
     //get coordinates in square projection of crystal normal parallel to boundary normal
     nhCheck = squareProj->getSquareCoord(coords->getPointer(i * 3), sqCoord);
 #if WRITE_LAMBERT_SQUARE_COORD_VTK
@@ -195,23 +196,23 @@ void ModifiedLambertProjection::addInterpolatedValues(Square square, float* sqCo
   modY -= bbin;
   modX -= 0.5;
   modY -= 0.5;
-  if(modX == 0.0) abinSign = 1;
-  else abinSign = modX/fabs(modX);
-  if(modY == 0.0) bbinSign = 1;
-  else bbinSign = modY/fabs(modY);
+  if(modX == 0.0) { abinSign = 1; }
+  else { abinSign = modX / fabs(modX); }
+  if(modY == 0.0) { bbinSign = 1; }
+  else { bbinSign = modY / fabs(modY); }
   abin1 = abin;
   bbin1 = bbin;
-  abin2 = abin+abinSign;
+  abin2 = abin + abinSign;
   bbin2 = bbin;
-  if(abin2 < 0 || abin2 > m_Dimension-1) abin2 = abin2 - (abinSign*m_Dimension), bbin2 = m_Dimension-bbin2-1;
+  if(abin2 < 0 || abin2 > m_Dimension - 1) { abin2 = abin2 - (abinSign * m_Dimension), bbin2 = m_Dimension - bbin2 - 1; }
   abin3 = abin;
-  bbin3 = bbin+bbinSign;
-  if(bbin3 < 0 || bbin3 > m_Dimension-1) abin3 = m_Dimension-abin3-1, bbin3 = bbin3 - (bbinSign*m_Dimension);
-  abin4 = abin+abinSign;
-  bbin4 = bbin+bbinSign;
-  if((abin4 < 0 || abin4 > m_Dimension-1) && (bbin4 >= 0 && bbin4 <= m_Dimension-1)) abin4 = abin4 - (abinSign*m_Dimension), bbin4 = m_Dimension-bbin4-1;
-  else if((abin4 >= 0 && abin4 <= m_Dimension-1) && (bbin4 < 0 || bbin4 > m_Dimension-1)) abin4 = m_Dimension-abin4-1, bbin4 = bbin4 - (bbinSign*m_Dimension);
-  else if((abin4 < 0 || abin4 > m_Dimension-1) && (bbin4 < 0 || bbin4 > m_Dimension-1)) abin4 = abin4 - (abinSign*m_Dimension), bbin4 = bbin4 - (bbinSign*m_Dimension);
+  bbin3 = bbin + bbinSign;
+  if(bbin3 < 0 || bbin3 > m_Dimension - 1) { abin3 = m_Dimension - abin3 - 1, bbin3 = bbin3 - (bbinSign * m_Dimension); }
+  abin4 = abin + abinSign;
+  bbin4 = bbin + bbinSign;
+  if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 >= 0 && bbin4 <= m_Dimension - 1)) { abin4 = abin4 - (abinSign * m_Dimension), bbin4 = m_Dimension - bbin4 - 1; }
+  else if((abin4 >= 0 && abin4 <= m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1)) { abin4 = m_Dimension - abin4 - 1, bbin4 = bbin4 - (bbinSign * m_Dimension); }
+  else if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1)) { abin4 = abin4 - (abinSign * m_Dimension), bbin4 = bbin4 - (bbinSign * m_Dimension); }
   modX = fabs(modX);
   modY = fabs(modY);
 
@@ -221,10 +222,10 @@ void ModifiedLambertProjection::addInterpolatedValues(Square square, float* sqCo
   int index4 = bbin4 * m_Dimension + abin4;
   if (square == NorthSquare)
   {
-    double v1 = m_NorthSquare->GetValue(index1) + value*(1.0-modX)*(1.0-modY);
-    double v2 = m_NorthSquare->GetValue(index2) + value*(modX)*(1.0-modY);
-    double v3 = m_NorthSquare->GetValue(index3) + value*(1.0-modX)*(modY);
-    double v4 = m_NorthSquare->GetValue(index4) + value*(modX)*(modY);
+    double v1 = m_NorthSquare->GetValue(index1) + value * (1.0 - modX) * (1.0 - modY);
+    double v2 = m_NorthSquare->GetValue(index2) + value * (modX) * (1.0 - modY);
+    double v3 = m_NorthSquare->GetValue(index3) + value * (1.0 - modX) * (modY);
+    double v4 = m_NorthSquare->GetValue(index4) + value * (modX) * (modY);
     m_NorthSquare->SetValue(index1, v1);
     m_NorthSquare->SetValue(index2, v2);
     m_NorthSquare->SetValue(index3, v3);
@@ -232,10 +233,10 @@ void ModifiedLambertProjection::addInterpolatedValues(Square square, float* sqCo
   }
   else
   {
-    double v1 = m_SouthSquare->GetValue(index1) + value*(1.0-modX)*(1.0-modY);
-    double v2 = m_SouthSquare->GetValue(index2) + value*(modX)*(1.0-modY);
-    double v3 = m_SouthSquare->GetValue(index3) + value*(1.0-modX)*(modY);
-    double v4 = m_SouthSquare->GetValue(index4) + value*(modX)*(modY);
+    double v1 = m_SouthSquare->GetValue(index1) + value * (1.0 - modX) * (1.0 - modY);
+    double v2 = m_SouthSquare->GetValue(index2) + value * (modX) * (1.0 - modY);
+    double v3 = m_SouthSquare->GetValue(index3) + value * (1.0 - modX) * (modY);
+    double v4 = m_SouthSquare->GetValue(index4) + value * (modX) * (modY);
     m_SouthSquare->SetValue(index1, v1);
     m_SouthSquare->SetValue(index2, v2);
     m_SouthSquare->SetValue(index3, v3);
@@ -295,7 +296,7 @@ double ModifiedLambertProjection::getValue(Square square, int index)
 // -----------------------------------------------------------------------------
 double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqCoord)
 {
- // float sqCoord[2] = { sqCoord0[0] - 0.5*m_StepSize, sqCoord0[1] - 0.5*m_StepSize};
+// float sqCoord[2] = { sqCoord0[0] - 0.5*m_StepSize, sqCoord0[1] - 0.5*m_StepSize};
   int abin1, bbin1;
   int abin2, bbin2;
   int abin3, bbin3;
@@ -309,41 +310,41 @@ double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqC
   modY -= bbin;
   modX -= 0.5;
   modY -= 0.5;
-  if(modX == 0.0) abinSign = 1;
-  else abinSign = modX/fabs(modX);
-  if(modY == 0.0) bbinSign = 1;
-  else bbinSign = modY/fabs(modY);
+  if(modX == 0.0) { abinSign = 1; }
+  else { abinSign = modX / fabs(modX); }
+  if(modY == 0.0) { bbinSign = 1; }
+  else { bbinSign = modY / fabs(modY); }
   abin1 = abin;
   bbin1 = bbin;
-  abin2 = abin+abinSign;
+  abin2 = abin + abinSign;
   bbin2 = bbin;
-  if(abin2 < 0 || abin2 > m_Dimension-1) abin2 = abin2 - (abinSign*m_Dimension), bbin2 = m_Dimension-bbin2-1;
+  if(abin2 < 0 || abin2 > m_Dimension - 1) { abin2 = abin2 - (abinSign * m_Dimension), bbin2 = m_Dimension - bbin2 - 1; }
   abin3 = abin;
-  bbin3 = bbin+bbinSign;
-  if(bbin3 < 0 || bbin3 > m_Dimension-1) abin3 = m_Dimension-abin3-1, bbin3 = bbin3 - (bbinSign*m_Dimension);
-  abin4 = abin+abinSign;
-  bbin4 = bbin+bbinSign;
-  if((abin4 < 0 || abin4 > m_Dimension-1) && (bbin4 >= 0 && bbin4 <= m_Dimension-1)) abin4 = abin4 - (abinSign*m_Dimension), bbin4 = m_Dimension-bbin4-1;
-  else if((abin4 >= 0 && abin4 <= m_Dimension-1) && (bbin4 < 0 || bbin4 > m_Dimension-1)) abin4 = m_Dimension-abin4-1, bbin4 = bbin4 - (bbinSign*m_Dimension);
-  else if((abin4 < 0 || abin4 > m_Dimension-1) && (bbin4 < 0 || bbin4 > m_Dimension-1)) abin4 = abin4 - (abinSign*m_Dimension), bbin4 = bbin4 - (bbinSign*m_Dimension);
+  bbin3 = bbin + bbinSign;
+  if(bbin3 < 0 || bbin3 > m_Dimension - 1) { abin3 = m_Dimension - abin3 - 1, bbin3 = bbin3 - (bbinSign * m_Dimension); }
+  abin4 = abin + abinSign;
+  bbin4 = bbin + bbinSign;
+  if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 >= 0 && bbin4 <= m_Dimension - 1)) { abin4 = abin4 - (abinSign * m_Dimension), bbin4 = m_Dimension - bbin4 - 1; }
+  else if((abin4 >= 0 && abin4 <= m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1)) { abin4 = m_Dimension - abin4 - 1, bbin4 = bbin4 - (bbinSign * m_Dimension); }
+  else if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1)) { abin4 = abin4 - (abinSign * m_Dimension), bbin4 = bbin4 - (bbinSign * m_Dimension); }
   modX = fabs(modX);
   modY = fabs(modY);
   if (square == NorthSquare)
   {
-    float intensity1 = m_NorthSquare->GetValue((abin1)+(bbin1*m_Dimension));
-    float intensity2 = m_NorthSquare->GetValue((abin2)+(bbin2*m_Dimension));
-    float intensity3 = m_NorthSquare->GetValue((abin3)+(bbin3*m_Dimension));
-    float intensity4 = m_NorthSquare->GetValue((abin4)+(bbin4*m_Dimension));
-    float interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
+    float intensity1 = m_NorthSquare->GetValue((abin1) + (bbin1 * m_Dimension));
+    float intensity2 = m_NorthSquare->GetValue((abin2) + (bbin2 * m_Dimension));
+    float intensity3 = m_NorthSquare->GetValue((abin3) + (bbin3 * m_Dimension));
+    float intensity4 = m_NorthSquare->GetValue((abin4) + (bbin4 * m_Dimension));
+    float interpolatedIntensity = ((intensity1 * (1 - modX) * (1 - modY)) + (intensity2 * (modX) * (1 - modY)) + (intensity3 * (1 - modX) * (modY)) + (intensity4 * (modX) * (modY)));
     return interpolatedIntensity;
   }
   else
   {
-    float intensity1 = m_SouthSquare->GetValue((abin1)+(bbin1*m_Dimension));
-    float intensity2 = m_SouthSquare->GetValue((abin2)+(bbin2*m_Dimension));
-    float intensity3 = m_SouthSquare->GetValue((abin3)+(bbin3*m_Dimension));
-    float intensity4 = m_SouthSquare->GetValue((abin4)+(bbin4*m_Dimension));
-    float interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
+    float intensity1 = m_SouthSquare->GetValue((abin1) + (bbin1 * m_Dimension));
+    float intensity2 = m_SouthSquare->GetValue((abin2) + (bbin2 * m_Dimension));
+    float intensity3 = m_SouthSquare->GetValue((abin3) + (bbin3 * m_Dimension));
+    float intensity4 = m_SouthSquare->GetValue((abin4) + (bbin4 * m_Dimension));
+    float interpolatedIntensity = ((intensity1 * (1 - modX) * (1 - modY)) + (intensity2 * (modX) * (1 - modY)) + (intensity3 * (1 - modX) * (modY)) + (intensity4 * (modX) * (modY)));
     return interpolatedIntensity;
   }
 }
@@ -368,13 +369,13 @@ bool ModifiedLambertProjection::getSquareCoord(float* xyz, float* sqCoord)
   }
   if(fabs(xyz[0]) >= fabs(xyz[1]))
   {
-    sqCoord[0] = (xyz[0]/fabs(xyz[0]) ) * sqrt(2.0*m_SphereRadius*(m_SphereRadius + (xyz[2]*adjust) ) ) * DREAM3D::Constants::k_HalfOfSqrtPi;
-    sqCoord[1] = (xyz[0]/fabs(xyz[0]) ) * sqrt(2.0*m_SphereRadius*(m_SphereRadius + (xyz[2]*adjust) ) ) * ((DREAM3D::Constants::k_2OverSqrtPi)*atan(xyz[1]/xyz[0]));
+    sqCoord[0] = (xyz[0] / fabs(xyz[0]) ) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust) ) ) * DREAM3D::Constants::k_HalfOfSqrtPi;
+    sqCoord[1] = (xyz[0] / fabs(xyz[0]) ) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust) ) ) * ((DREAM3D::Constants::k_2OverSqrtPi) * atan(xyz[1] / xyz[0]));
   }
   else
   {
-    sqCoord[0] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*m_SphereRadius*(m_SphereRadius+(xyz[2]*adjust)))*((DREAM3D::Constants::k_2OverSqrtPi)*atan(xyz[0]/xyz[1]));
-    sqCoord[1] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*m_SphereRadius*(m_SphereRadius+(xyz[2]*adjust)))*(DREAM3D::Constants::k_HalfOfSqrtPi);
+    sqCoord[0] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust))) * ((DREAM3D::Constants::k_2OverSqrtPi) * atan(xyz[0] / xyz[1]));
+    sqCoord[1] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust))) * (DREAM3D::Constants::k_HalfOfSqrtPi);
   }
 
   if (sqCoord[0] >= m_MaxCoord)
@@ -406,7 +407,7 @@ int ModifiedLambertProjection::getSquareIndex(float* sqCoord)
   }
   if (y < 0) { y = 0; }
   int index = y * m_Dimension + x;
-  BOOST_ASSERT(index < m_Dimension *m_Dimension);
+  BOOST_ASSERT(index < m_Dimension * m_Dimension);
   return index;
 }
 
@@ -430,8 +431,8 @@ void ModifiedLambertProjection::normalizeSquares()
     nTotal = nTotal + north[i];
     sTotal = sTotal + south[i];
   }
-  double oneOverNTotal = 1.0/nTotal;
-  double oneOverSTotal = 1.0/sTotal;
+  double oneOverNTotal = 1.0 / nTotal;
+  double oneOverSTotal = 1.0 / sTotal;
 
   // Divide each bin by the total of all the bins for that Hemisphere
   for(size_t i = 0; i < npoints; ++i)
@@ -490,20 +491,20 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
     for (int64_t x = 0; x < xpoints; x++)
     {
       //get (x,y) for stereographic projection pixel
-      xtmp = float(x-xpointshalf)*xres+(xres * 0.5);
-      ytmp = float(y-ypointshalf)*yres+(yres * 0.5);
+      xtmp = float(x - xpointshalf) * xres + (xres * 0.5);
+      ytmp = float(y - ypointshalf) * yres + (yres * 0.5);
       int index = y * xpoints + x;
-      if((xtmp*xtmp+ytmp*ytmp) <= 1.0)
+      if((xtmp * xtmp + ytmp * ytmp) <= 1.0)
       {
         //project xy from stereo projection to the unit spehere
-        xyz[2] = -((xtmp*xtmp+ytmp*ytmp)-1)/((xtmp*xtmp+ytmp*ytmp)+1);
-        xyz[0] = xtmp*(1+xyz[2]);
-        xyz[1] = ytmp*(1+xyz[2]);
+        xyz[2] = -((xtmp * xtmp + ytmp * ytmp) - 1) / ((xtmp * xtmp + ytmp * ytmp) + 1);
+        xyz[0] = xtmp * (1 + xyz[2]);
+        xyz[1] = ytmp * (1 + xyz[2]);
 
 
         for( int64_t m = 0; m < 2; m++)
         {
-          if(m == 1) MatrixMath::Multiply3x1withConstant(xyz, -1.0);
+          if(m == 1) { MatrixMath::Multiply3x1withConstant(xyz, -1.0); }
           nhCheck = getSquareCoord(xyz, sqCoord);
           sqIndex = getSquareIndex(sqCoord);
           if (nhCheck == true)

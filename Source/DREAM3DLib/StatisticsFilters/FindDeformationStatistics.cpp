@@ -145,7 +145,7 @@ int FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWri
 void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -185,7 +185,7 @@ void FindDeformationStatistics::preflight()
     return;
   }
 
-  dataCheck(true, 1,1 ,1);
+  dataCheck(true, 1, 1 , 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -319,7 +319,7 @@ void FindDeformationStatistics::execute()
       if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
         w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
-        w = w *(180.0f/DREAM3D::Constants::k_Pi);
+        w = w * (180.0f / DREAM3D::Constants::k_Pi);
       }
       else
       {
@@ -329,17 +329,17 @@ void FindDeformationStatistics::execute()
       counter++;
     }
   }
-  avgKAM = avgKAM/counter;
-  avgGRM = avgGRM/counter;
-  avgGBdist = avgGBdist/counter;
-  avgTJdist = avgTJdist/counter;
-  avgQPdist = avgQPdist/counter;
-  avgSF = avgSF/counter;
-  avgF1 = avgF1/counter;
-  avgF1spt = avgF1spt/counter;
-  avgF7 = avgF7/counter;
-  avgmprime = avgmprime/counter;
-  avgDIS = avgDIS/counter;
+  avgKAM = avgKAM / counter;
+  avgGRM = avgGRM / counter;
+  avgGBdist = avgGBdist / counter;
+  avgTJdist = avgTJdist / counter;
+  avgQPdist = avgQPdist / counter;
+  avgSF = avgSF / counter;
+  avgF1 = avgF1 / counter;
+  avgF1spt = avgF1spt / counter;
+  avgF7 = avgF7 / counter;
+  avgmprime = avgmprime / counter;
+  avgDIS = avgDIS / counter;
   for (int i = 0; i < totalPoints; i++)
   {
     gname = m_GrainIds[i];
@@ -366,156 +366,156 @@ void FindDeformationStatistics::execute()
       if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
         w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
-        w = w *(180.0f/DREAM3D::Constants::k_Pi);
+        w = w * (180.0f / DREAM3D::Constants::k_Pi);
       }
       else
       {
         w = 0;
       }
-      if((kam/avgKAM) >= 1) kambin = 10+int(((kam/avgKAM)-1.0)/0.25);
-      else kambin = 9-int(((avgKAM/kam)-1.0)/0.25);
-      if((grm/avgGRM) >= 1) grmbin = 10+int(((grm/avgGRM)-1.0)/0.25);
-      else grmbin = 9-int(((avgGRM/grm)-1.0)/0.25);
-      kambin2 = int(kam/0.25);
-      grmbin2 = int(grm/0.5);
+      if((kam / avgKAM) >= 1) { kambin = 10 + int(((kam / avgKAM) - 1.0) / 0.25); }
+      else { kambin = 9 - int(((avgKAM / kam) - 1.0) / 0.25); }
+      if((grm / avgGRM) >= 1) { grmbin = 10 + int(((grm / avgGRM) - 1.0) / 0.25); }
+      else { grmbin = 9 - int(((avgGRM / grm) - 1.0) / 0.25); }
+      kambin2 = int(kam / 0.25);
+      grmbin2 = int(grm / 0.5);
       gbbin = int(gbdist);
       tjbin = int(tjdist);
       qpbin = int(qpdist);
-      if((sf/avgSF) >= 1) sfbin = 10+int(((sf/avgSF)-1.0)/0.25);
-      else sfbin = 9-int(((avgSF/sf)-1.0)/0.25);
-      if((w/avgDIS) >= 1) disbin = 10+int(((w/avgDIS)-1.0)/0.25);
-      else disbin = 9-int(((avgDIS/w)-1.0)/0.25);
-      if((mprime/avgmprime) >= 1) mprimebin = 10+int(((mprime/avgmprime)-1.0)/0.25);
-      else mprimebin = 9-int(((avgmprime/mprime)-1.0)/0.25);
-      if((F1/avgF1) >= 1) F1bin = 10+int(((F1/avgF1)-1.0)/0.25);
-      else F1bin = 9-int(((avgF1/F1)-1.0)/0.25);
-      if((F1spt/avgF1) >= 1) F1sptbin = 10+int(((F1spt/avgF1spt)-1.0)/0.25);
-      else F1sptbin = 9-int(((avgF1spt/F1spt)-1.0)/0.25);
-      if((F7/avgF7) >= 1) F7bin = 10+int(((F7/avgF7)-1.0)/0.25);
-      else F7bin = 9-int(((avgF7/F7)-1.0)/0.25);
-      if(kambin < 0) kambin = 0;
-      if(kambin > 19) kambin = 19;
-      if(grmbin < 0) grmbin = 0;
-      if(grmbin > 19) grmbin = 19;
-      if(gbbin < 0) gbbin = 0;
-      if(gbbin > 19) gbbin = 19;
-      if(tjbin < 0) tjbin = 0;
-      if(tjbin > 19) tjbin = 19;
-      if(qpbin < 0) qpbin = 0;
-      if(qpbin > 19) qpbin = 19;
-      if(sfbin < 0) sfbin = 0;
-      if(sfbin > 19) sfbin = 19;
-      if(F1bin < 0) F1bin = 0;
-      if(F1bin > 19) F1bin = 19;
-      if(F1sptbin < 0) F1sptbin = 0;
-      if(F1sptbin > 19) F1sptbin = 19;
-      if(F7bin < 0) F7bin = 0;
-      if(F7bin > 19) F7bin = 19;
-      if(mprimebin < 0) mprimebin = 0;
-      if(mprimebin > 19) mprimebin = 19;
-      if(disbin < 0) disbin = 0;
-      if(disbin > 19) disbin = 19;
+      if((sf / avgSF) >= 1) { sfbin = 10 + int(((sf / avgSF) - 1.0) / 0.25); }
+      else { sfbin = 9 - int(((avgSF / sf) - 1.0) / 0.25); }
+      if((w / avgDIS) >= 1) { disbin = 10 + int(((w / avgDIS) - 1.0) / 0.25); }
+      else { disbin = 9 - int(((avgDIS / w) - 1.0) / 0.25); }
+      if((mprime / avgmprime) >= 1) { mprimebin = 10 + int(((mprime / avgmprime) - 1.0) / 0.25); }
+      else { mprimebin = 9 - int(((avgmprime / mprime) - 1.0) / 0.25); }
+      if((F1 / avgF1) >= 1) { F1bin = 10 + int(((F1 / avgF1) - 1.0) / 0.25); }
+      else { F1bin = 9 - int(((avgF1 / F1) - 1.0) / 0.25); }
+      if((F1spt / avgF1) >= 1) { F1sptbin = 10 + int(((F1spt / avgF1spt) - 1.0) / 0.25); }
+      else { F1sptbin = 9 - int(((avgF1spt / F1spt) - 1.0) / 0.25); }
+      if((F7 / avgF7) >= 1) { F7bin = 10 + int(((F7 / avgF7) - 1.0) / 0.25); }
+      else { F7bin = 9 - int(((avgF7 / F7) - 1.0) / 0.25); }
+      if(kambin < 0) { kambin = 0; }
+      if(kambin > 19) { kambin = 19; }
+      if(grmbin < 0) { grmbin = 0; }
+      if(grmbin > 19) { grmbin = 19; }
+      if(gbbin < 0) { gbbin = 0; }
+      if(gbbin > 19) { gbbin = 19; }
+      if(tjbin < 0) { tjbin = 0; }
+      if(tjbin > 19) { tjbin = 19; }
+      if(qpbin < 0) { qpbin = 0; }
+      if(qpbin > 19) { qpbin = 19; }
+      if(sfbin < 0) { sfbin = 0; }
+      if(sfbin > 19) { sfbin = 19; }
+      if(F1bin < 0) { F1bin = 0; }
+      if(F1bin > 19) { F1bin = 19; }
+      if(F1sptbin < 0) { F1sptbin = 0; }
+      if(F1sptbin > 19) { F1sptbin = 19; }
+      if(F7bin < 0) { F7bin = 0; }
+      if(F7bin > 19) { F7bin = 19; }
+      if(mprimebin < 0) { mprimebin = 0; }
+      if(mprimebin > 19) { mprimebin = 19; }
+      if(disbin < 0) { disbin = 0; }
+      if(disbin > 19) { disbin = 19; }
       kmdist[kambin2]++;
       gamdist[grmbin2]++;
       kmvgb[gbbin][0]++;
-      kmvgb[gbbin][1] = kmvgb[gbbin][1] + (kam/avgKAM);
+      kmvgb[gbbin][1] = kmvgb[gbbin][1] + (kam / avgKAM);
       gamvgb[gbbin][0]++;
-      gamvgb[gbbin][1] = gamvgb[gbbin][1] + (grm/avgGRM);
+      gamvgb[gbbin][1] = gamvgb[gbbin][1] + (grm / avgGRM);
       kmvtj[tjbin][0]++;
-      kmvtj[tjbin][1] = kmvtj[tjbin][1] + (kam/avgKAM);
+      kmvtj[tjbin][1] = kmvtj[tjbin][1] + (kam / avgKAM);
       gamvtj[tjbin][0]++;
-      gamvtj[tjbin][1] = gamvtj[tjbin][1] + (grm/avgGRM);
+      gamvtj[tjbin][1] = gamvtj[tjbin][1] + (grm / avgGRM);
       kmvqp[qpbin][0]++;
-      kmvqp[qpbin][1] = kmvqp[qpbin][1] + (kam/avgKAM);
+      kmvqp[qpbin][1] = kmvqp[qpbin][1] + (kam / avgKAM);
       gamvqp[qpbin][0]++;
-      gamvqp[qpbin][1] = gamvqp[qpbin][1] + (grm/avgGRM);
+      gamvqp[qpbin][1] = gamvqp[qpbin][1] + (grm / avgGRM);
       distance = int(m_GBEuclideanDistances[i]);
-      if(distance > 19) distance = 19;
+      if(distance > 19) { distance = 19; }
       if(distance <= 5)
       {
         kmvsf[kambin][0]++;
-        kmvsf[kambin][1] = kmvsf[kambin][1] + (sf/avgSF);
+        kmvsf[kambin][1] = kmvsf[kambin][1] + (sf / avgSF);
         gamvsf[grmbin][0]++;
-        gamvsf[grmbin][1] = gamvsf[grmbin][1] + (sf/avgSF);
+        gamvsf[grmbin][1] = gamvsf[grmbin][1] + (sf / avgSF);
         kmvF1[kambin][0]++;
-        kmvF1[kambin][1] = kmvF1[kambin][1] + (F1/avgF1);
+        kmvF1[kambin][1] = kmvF1[kambin][1] + (F1 / avgF1);
         gamvF1[grmbin][0]++;
-        gamvF1[grmbin][1] = gamvF1[grmbin][1] + (F1/avgF1);
+        gamvF1[grmbin][1] = gamvF1[grmbin][1] + (F1 / avgF1);
         kmvF1spt[kambin][0]++;
-        kmvF1spt[kambin][1] = kmvF1spt[kambin][1] + (F1spt/avgF1spt);
+        kmvF1spt[kambin][1] = kmvF1spt[kambin][1] + (F1spt / avgF1spt);
         gamvF1spt[grmbin][0]++;
-        gamvF1spt[grmbin][1] = gamvF1spt[grmbin][1] + (F1spt/avgF1spt);
+        gamvF1spt[grmbin][1] = gamvF1spt[grmbin][1] + (F1spt / avgF1spt);
         kmvF7[kambin][0]++;
-        kmvF7[kambin][1] = kmvF7[kambin][1] + (F7/avgF7);
+        kmvF7[kambin][1] = kmvF7[kambin][1] + (F7 / avgF7);
         gamvF7[grmbin][0]++;
-        gamvF7[grmbin][1] = gamvF7[grmbin][1] + (F7/avgF7);
+        gamvF7[grmbin][1] = gamvF7[grmbin][1] + (F7 / avgF7);
         kmvmprime[kambin][0]++;
-        kmvmprime[kambin][1] = kmvmprime[kambin][1] + (mprime/avgmprime);
+        kmvmprime[kambin][1] = kmvmprime[kambin][1] + (mprime / avgmprime);
         gamvmprime[grmbin][0]++;
-        gamvmprime[grmbin][1] = gamvmprime[grmbin][1] + (mprime/avgmprime);
+        gamvmprime[grmbin][1] = gamvmprime[grmbin][1] + (mprime / avgmprime);
         kmvdis[kambin][0]++;
-        kmvdis[kambin][1] = kmvdis[kambin][1] + (w/avgDIS);
+        kmvdis[kambin][1] = kmvdis[kambin][1] + (w / avgDIS);
         gamvdis[grmbin][0]++;
-        gamvdis[grmbin][1] = gamvdis[grmbin][1] + (w/avgDIS);
+        gamvdis[grmbin][1] = gamvdis[grmbin][1] + (w / avgDIS);
       }
     }
   }
   outFile << "Kernel Misorientation Data" << "\n";
   outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" << "\n";
-  outFile << avgGBdist << "		" << avgTJdist << "		" << avgQPdist << "		" << avgSF << "		" << avgF1 << "		" << avgF1spt << "		" << avgF7 << "		" << avgmprime << "		" << avgDIS <<std::endl;
+  outFile << avgGBdist << "		" << avgTJdist << "		" << avgQPdist << "		" << avgSF << "		" << avgF1 << "		" << avgF1spt << "		" << avgF7 << "		" << avgmprime << "		" << avgDIS << std::endl;
   for (int i = 0; i < 20; i++)
   {
-    if (kmvgb[i][0] > 0) kmvgb[i][1] = kmvgb[i][1] / kmvgb[i][0];
-    if (kmvtj[i][0] > 0) kmvtj[i][1] = kmvtj[i][1] / kmvtj[i][0];
-    if (kmvqp[i][0] > 0) kmvqp[i][1] = kmvqp[i][1] / kmvqp[i][0];
-    if (kmvsf[i][0] > 0) kmvsf[i][1] = kmvsf[i][1] / kmvsf[i][0];
-    if (kmvF1[i][0] > 0) kmvF1[i][1] = kmvF1[i][1] / kmvF1[i][0];
-    if (kmvF1spt[i][0] > 0) kmvF1spt[i][1] = kmvF1spt[i][1] / kmvF1spt[i][0];
-    if (kmvF7[i][0] > 0) kmvF7[i][1] = kmvF7[i][1] / kmvF7[i][0];
-    if (kmvmprime[i][0] > 0) kmvmprime[i][1] = kmvmprime[i][1] / kmvmprime[i][0];
-    if (kmvdis[i][0] > 0) kmvdis[i][1] = kmvdis[i][1] / kmvdis[i][0];
+    if (kmvgb[i][0] > 0) { kmvgb[i][1] = kmvgb[i][1] / kmvgb[i][0]; }
+    if (kmvtj[i][0] > 0) { kmvtj[i][1] = kmvtj[i][1] / kmvtj[i][0]; }
+    if (kmvqp[i][0] > 0) { kmvqp[i][1] = kmvqp[i][1] / kmvqp[i][0]; }
+    if (kmvsf[i][0] > 0) { kmvsf[i][1] = kmvsf[i][1] / kmvsf[i][0]; }
+    if (kmvF1[i][0] > 0) { kmvF1[i][1] = kmvF1[i][1] / kmvF1[i][0]; }
+    if (kmvF1spt[i][0] > 0) { kmvF1spt[i][1] = kmvF1spt[i][1] / kmvF1spt[i][0]; }
+    if (kmvF7[i][0] > 0) { kmvF7[i][1] = kmvF7[i][1] / kmvF7[i][0]; }
+    if (kmvmprime[i][0] > 0) { kmvmprime[i][1] = kmvmprime[i][1] / kmvmprime[i][0]; }
+    if (kmvdis[i][0] > 0) { kmvdis[i][1] = kmvdis[i][1] / kmvdis[i][0]; }
     outFile << kmvgb[i][0] << "	" << kmvgb[i][1] << "	"
-                           << kmvtj[i][0] << "	" << kmvtj[i][1] << "	"
-                           << kmvqp[i][0] << "	" << kmvqp[i][1] << "	"
-                           << kmvsf[i][0] << "	" << kmvsf[i][1] << "	"
-                           << kmvF1[i][0] << "	" << kmvF1[i][1] << "	"
-                           << kmvF1spt[i][0] << "	" << kmvF1spt[i][1] << "	"
-                           << kmvF7[i][0] << "	" << kmvF7[i][1] << "	"
-                           << kmvmprime[i][0] << "	" << kmvmprime[i][1] << "	"
-                           << kmvdis[i][0] << "	" << kmvdis[i][1] << "\n";
+            << kmvtj[i][0] << "	" << kmvtj[i][1] << "	"
+            << kmvqp[i][0] << "	" << kmvqp[i][1] << "	"
+            << kmvsf[i][0] << "	" << kmvsf[i][1] << "	"
+            << kmvF1[i][0] << "	" << kmvF1[i][1] << "	"
+            << kmvF1spt[i][0] << "	" << kmvF1spt[i][1] << "	"
+            << kmvF7[i][0] << "	" << kmvF7[i][1] << "	"
+            << kmvmprime[i][0] << "	" << kmvmprime[i][1] << "	"
+            << kmvdis[i][0] << "	" << kmvdis[i][1] << "\n";
   }
   outFile << "\n";
   outFile << "\n";
   outFile << "Grain Average Misorientation Data" << "\n";
   outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" << "\n";
-  outFile << avgGBdist << "		" << avgTJdist << "		" << avgQPdist << "		" << avgSF << "		" << avgF1 << "		" << avgF1spt << "		" << avgF7 << "		" << avgmprime << "		" << avgDIS <<std::endl;
+  outFile << avgGBdist << "		" << avgTJdist << "		" << avgQPdist << "		" << avgSF << "		" << avgF1 << "		" << avgF1spt << "		" << avgF7 << "		" << avgmprime << "		" << avgDIS << std::endl;
   for (int i = 0; i < 20; i++)
   {
-    if (gamvgb[i][0] > 0) gamvgb[i][1] = gamvgb[i][1] / gamvgb[i][0];
-    if (gamvtj[i][0] > 0) gamvtj[i][1] = gamvtj[i][1] / gamvtj[i][0];
-    if (gamvqp[i][0] > 0) gamvqp[i][1] = gamvqp[i][1] / gamvqp[i][0];
-    if (gamvsf[i][0] > 0) gamvsf[i][1] = gamvsf[i][1] / gamvsf[i][0];
-    if (gamvF1[i][0] > 0) gamvF1[i][1] = gamvF1[i][1] / gamvF1[i][0];
-    if (gamvF1spt[i][0] > 0) gamvF1spt[i][1] = gamvF1spt[i][1] / gamvF1spt[i][0];
-    if (gamvF7[i][0] > 0) gamvF7[i][1] = gamvF7[i][1] / gamvF7[i][0];
-    if (gamvmprime[i][0] > 0) gamvmprime[i][1] = gamvmprime[i][1] / gamvmprime[i][0];
-    if (gamvdis[i][0] > 0) gamvdis[i][1] = gamvdis[i][1] / gamvdis[i][0];
+    if (gamvgb[i][0] > 0) { gamvgb[i][1] = gamvgb[i][1] / gamvgb[i][0]; }
+    if (gamvtj[i][0] > 0) { gamvtj[i][1] = gamvtj[i][1] / gamvtj[i][0]; }
+    if (gamvqp[i][0] > 0) { gamvqp[i][1] = gamvqp[i][1] / gamvqp[i][0]; }
+    if (gamvsf[i][0] > 0) { gamvsf[i][1] = gamvsf[i][1] / gamvsf[i][0]; }
+    if (gamvF1[i][0] > 0) { gamvF1[i][1] = gamvF1[i][1] / gamvF1[i][0]; }
+    if (gamvF1spt[i][0] > 0) { gamvF1spt[i][1] = gamvF1spt[i][1] / gamvF1spt[i][0]; }
+    if (gamvF7[i][0] > 0) { gamvF7[i][1] = gamvF7[i][1] / gamvF7[i][0]; }
+    if (gamvmprime[i][0] > 0) { gamvmprime[i][1] = gamvmprime[i][1] / gamvmprime[i][0]; }
+    if (gamvdis[i][0] > 0) { gamvdis[i][1] = gamvdis[i][1] / gamvdis[i][0]; }
     outFile << gamvgb[i][0] << "	" << gamvgb[i][1] << "	"
-                            << gamvtj[i][0] << "	" << gamvtj[i][1] << "	"
-                            << gamvqp[i][0] << "	" << gamvqp[i][1] << "	"
-                            << gamvsf[i][0] << "	" << gamvsf[i][1] << "	"
-                            << gamvF1[i][0] << "	" << gamvF1[i][1] << "	"
-                            << gamvF1spt[i][0] << "	" << gamvF1spt[i][1] << "	"
-                            << gamvF7[i][0] << "	" << gamvF7[i][1] << "	"
-                            << gamvmprime[i][0] << "	" << gamvmprime[i][1] << "	"
-                            << gamvdis[i][0] << "	" << gamvdis[i][1] << "\n";
+            << gamvtj[i][0] << "	" << gamvtj[i][1] << "	"
+            << gamvqp[i][0] << "	" << gamvqp[i][1] << "	"
+            << gamvsf[i][0] << "	" << gamvsf[i][1] << "	"
+            << gamvF1[i][0] << "	" << gamvF1[i][1] << "	"
+            << gamvF1spt[i][0] << "	" << gamvF1spt[i][1] << "	"
+            << gamvF7[i][0] << "	" << gamvF7[i][1] << "	"
+            << gamvmprime[i][0] << "	" << gamvmprime[i][1] << "	"
+            << gamvdis[i][0] << "	" << gamvdis[i][1] << "\n";
   }
   outFile << "\n";
   outFile << "\n";
   outFile << "KAM DIST		GAM DIST" << "\n";
   for (int i = 0; i < 20; i++)
   {
-    outFile << float(i)*0.25+0.125 << "	" << kmdist[i] << "	" << float(i)*0.5+0.25 << "	" << gamdist[i] << "\n";
+    outFile << float(i) * 0.25 + 0.125 << "	" << kmdist[i] << "	" << float(i) * 0.5 + 0.25 << "	" << gamdist[i] << "\n";
   }
   outFile.close();
 
@@ -531,7 +531,7 @@ void FindDeformationStatistics::execute()
   fprintf(vtkFile,  "DREAM3D Generated Data Set: Deformation Statistics\n");
   fprintf(vtkFile,  "ASCII\n");
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
-  fprintf(vtkFile,  "POINTS %ld float\n", m->getNumCellFieldTuples()-1);
+  fprintf(vtkFile,  "POINTS %ld float\n", m->getNumCellFieldTuples() - 1);
 
 
   size_t size = m->getNumCellFieldTuples();
@@ -539,30 +539,30 @@ void FindDeformationStatistics::execute()
   float x, y, z;
   float xtemp, ytemp, ztemp;
   float xFZ, yFZ, zFZ;
-  for(size_t i=1;i<size;i++)
+  for(size_t i = 1; i < size; i++)
   {
-    xtemp = m_Poles[3*i];
-    ytemp = m_Poles[3*i+1];
-    ztemp = m_Poles[3*i+2];
+    xtemp = m_Poles[3 * i];
+    ytemp = m_Poles[3 * i + 1];
+    ztemp = m_Poles[3 * i + 2];
 
-    if(ztemp<0) xtemp = -xtemp, ytemp = -ytemp, ztemp = -ztemp;
+    if(ztemp < 0) { xtemp = -xtemp, ytemp = -ytemp, ztemp = -ztemp; }
     if(xtemp >= ytemp && xtemp >= ztemp)
     {
       z = xtemp;
-      if(ytemp >= ztemp) x = ytemp, y = ztemp;
-      else x = ztemp, y = ytemp;
+      if(ytemp >= ztemp) { x = ytemp, y = ztemp; }
+      else { x = ztemp, y = ytemp; }
     }
     if(ytemp >= xtemp && ytemp >= ztemp)
     {
       z = ytemp;
-      if(xtemp >= ztemp) x = xtemp, y = ztemp;
-      else x = ztemp, y = xtemp;
+      if(xtemp >= ztemp) { x = xtemp, y = ztemp; }
+      else { x = ztemp, y = xtemp; }
     }
     if(ztemp >= xtemp && ztemp >= ytemp)
     {
       z = ztemp;
-      if(xtemp >= ytemp) x = xtemp, y = ytemp;
-      else x = ytemp, y = xtemp;
+      if(xtemp >= ytemp) { x = xtemp, y = ytemp; }
+      else { x = ytemp, y = xtemp; }
     }
 
     xFZ = static_cast<float>( x - (x * (z / (z + 1.0))) );
@@ -571,17 +571,17 @@ void FindDeformationStatistics::execute()
     fprintf(vtkFile, "%f %f %f\n", xFZ, yFZ, zFZ);
   }
 
-  fprintf(vtkFile, "CELLS %ld %ld\n", m->getNumCellFieldTuples()-1, ((m->getNumCellFieldTuples()-1)*2));
+  fprintf(vtkFile, "CELLS %ld %ld\n", m->getNumCellFieldTuples() - 1, ((m->getNumCellFieldTuples() - 1) * 2));
   //  Store the Grain Ids so we don't have to re-read the triangles file again
-  for(size_t i=1;i<size;i++)
+  for(size_t i = 1; i < size; i++)
   {
-    fprintf(vtkFile, "1 %ld\n", (i-1));
+    fprintf(vtkFile, "1 %ld\n", (i - 1));
   }
 
   // Write the CELL_TYPES into the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getNumCellFieldTuples()-1);
-  for(size_t i=1;i<size;i++)
+  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getNumCellFieldTuples() - 1);
+  for(size_t i = 1; i < size; i++)
   {
     fprintf(vtkFile, "1\n");
   }
@@ -589,7 +589,7 @@ void FindDeformationStatistics::execute()
 
   // Write the GrainId Data to teh file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %ld\n", m->getNumCellFieldTuples()-1);
+  fprintf(vtkFile, "CELL_DATA %ld\n", m->getNumCellFieldTuples() - 1);
   fprintf(vtkFile, "SCALARS Misorientation float\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (size_t i = 1; i < size; i++)

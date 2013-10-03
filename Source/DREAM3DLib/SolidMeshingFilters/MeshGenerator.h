@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -47,9 +47,9 @@ extern "C"
 {
 #endif
 
-  class nodes
-  {
-   public:
+class nodes
+{
+  public:
     void set_coords(float x, float y, float z)
     {
       xc = x;
@@ -99,12 +99,12 @@ extern "C"
     int nodekilled;
     int newnodenumber;
     int surfnode;
-  };
+};
 
 
-  class triangles
-  {
-   public:
+class triangles
+{
+  public:
     void set_nodes_leftgrain(int node1, int node2, int node3)
     {
       firstnodeleft = node1;
@@ -212,12 +212,12 @@ extern "C"
     int tripletriangle;
     float dvalue;
     float averagemisorientation;
-  };
+};
 
 
-  class elements
-  {
-   public:
+class elements
+{
+  public:
     void set_nodes(int n1, int n2, int n3, int n4)
     {
       node1 = n1;
@@ -284,11 +284,11 @@ extern "C"
     int edgeelement;
     int originalnodecount;
     float volume;
-  };
+};
 
-  class grains
-  {
-   public:
+class grains
+{
+  public:
     void set_centroid(float xcenter, float ycenter, float zcenter)
     {
       xcentroid = xcenter;
@@ -333,36 +333,36 @@ extern "C"
     float minimumdistance;
     float volume;
     float maxedgelength;
-  };
+};
 
 
 
 #ifdef VOLUME_MESH_LIBRARY
-int MeshGenerator_Main(const QString &readname1, const QString &readname2,
-                    const QString &writename1, const QString &writename1a,
-                    const QString &writename2, const QString &writename3,
-                    float xDim, float yDim, float zDim,
-                    float xRes, float yRes, float zRes,
-                    int numGrains);
+int MeshGenerator_Main(const QString& readname1, const QString& readname2,
+                       const QString& writename1, const QString& writename1a,
+                       const QString& writename2, const QString& writename3,
+                       float xDim, float yDim, float zDim,
+                       float xRes, float yRes, float zRes,
+                       int numGrains);
 #endif
 
 
 
-  void read_nodes(QString inname1);
-  void read_triangles(QString inname3);
-  void locate_graincenters();
-  void delete_triangles();
-  void clean_triangles();
-  void create_finalnodesandtriangles();
-  void find_volumes();
-  void make_nodes(int iter);
-  void write_nodes();
-  void read_elements(int idea);
-  void measure_elements();
-  void improve_mesh();
-  void write_meshdata(QString outname1);
-  void write_dihedralangles(QString outname2);
-  void write_voxeldata(QString outname3);
+void read_nodes(QString inname1);
+void read_triangles(QString inname3);
+void locate_graincenters();
+void delete_triangles();
+void clean_triangles();
+void create_finalnodesandtriangles();
+void find_volumes();
+void make_nodes(int iter);
+void write_nodes();
+void read_elements(int idea);
+void measure_elements();
+void improve_mesh();
+void write_meshdata(QString outname1);
+void write_dihedralangles(QString outname2);
+void write_voxeldata(QString outname3);
 
 
 #ifdef __cplusplus

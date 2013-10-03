@@ -119,12 +119,12 @@ void SingleThresholdCells::readFilterParameters(AbstractFilterParametersReader* 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
   setComparisonOperator( reader->readValue("ComparisonOperator", getComparisonOperator()) );
   setComparisonValue( reader->readValue("ComparisonValue",  getComparisonValue()) );
   setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -200,7 +200,7 @@ void SingleThresholdCells::execute()
   IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
   if (NULL == inputData.get())
   {
-    
+
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
     setErrorCondition(-11001);
     notifyErrorMessage(ss, getErrorCondition());

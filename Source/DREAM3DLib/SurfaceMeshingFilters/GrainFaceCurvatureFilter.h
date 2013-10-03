@@ -83,7 +83,7 @@ class DREAM3DLib_EXPORT GrainFaceCurvatureFilter : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-   virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CurvatureFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CurvatureFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -102,16 +102,16 @@ class DREAM3DLib_EXPORT GrainFaceCurvatureFilter : public SurfaceMeshFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

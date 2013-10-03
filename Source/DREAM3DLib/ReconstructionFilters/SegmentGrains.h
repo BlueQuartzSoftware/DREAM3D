@@ -68,7 +68,7 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
-	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
+    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
     virtual const QString getHumanLabel() {return "Segment Grains";}
 
     /**
@@ -76,7 +76,7 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

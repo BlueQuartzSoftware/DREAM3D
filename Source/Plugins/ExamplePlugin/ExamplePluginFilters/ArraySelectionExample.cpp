@@ -78,7 +78,7 @@ void ArraySelectionExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
   reader->openFilterGroup(this, index);
   setSelectedVolumeCellArrays( reader->readValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() ) );
@@ -121,11 +121,11 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                             QSet<QString> selectedEdgeArrays,
-                                                             QSet<QString> selectedFaceArrays,
-                                                             QSet<QString> selectedCellArrays,
-                                                             QSet<QString> selectedFieldArrays,
-                                                             QSet<QString> selectedEnsembleArrays)
+                                                        QSet<QString> selectedEdgeArrays,
+                                                        QSet<QString> selectedFaceArrays,
+                                                        QSet<QString> selectedCellArrays,
+                                                        QSet<QString> selectedFieldArrays,
+                                                        QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
@@ -139,10 +139,10 @@ void ArraySelectionExample::setVolumeSelectedArrayNames(QSet<QString> selectedVe
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                             QSet<QString> selectedEdgeArrays,
-                                                             QSet<QString> selectedFaceArrays,
-                                                             QSet<QString> selectedFieldArrays,
-                                                             QSet<QString> selectedEnsembleArrays)
+                                                         QSet<QString> selectedEdgeArrays,
+                                                         QSet<QString> selectedFaceArrays,
+                                                         QSet<QString> selectedFieldArrays,
+                                                         QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
@@ -155,9 +155,9 @@ void ArraySelectionExample::setSurfaceSelectedArrayNames(QSet<QString> selectedV
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                             QSet<QString> selectedEdgeArrays,
-                                                             QSet<QString> selectedFieldArrays,
-                                                             QSet<QString> selectedEnsembleArrays)
+                                                      QSet<QString> selectedEdgeArrays,
+                                                      QSet<QString> selectedFieldArrays,
+                                                      QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
@@ -169,8 +169,8 @@ void ArraySelectionExample::setEdgeSelectedArrayNames(QSet<QString> selectedVert
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+                                                        QSet<QString> selectedFieldArrays,
+                                                        QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
   m_SelectedVertexVertexFieldArrays = selectedFieldArrays;

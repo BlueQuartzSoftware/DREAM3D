@@ -81,9 +81,9 @@ class WritePoleFigure : public AbstractFilter
     enum ImageFormatType
     {
       TifImageType = 0,
-          BmpImageType = 1,
-          PngImageType = 2,
-          JpgImageType = 3
+      BmpImageType = 1,
+      PngImageType = 2,
+      JpgImageType = 3
     };
 
     /**
@@ -152,17 +152,17 @@ class WritePoleFigure : public AbstractFilter
      * @brief generateCubicPoleFigures
      * @param eulers
      */
-    void generateCubicHighPoleFigures(FloatArrayType *eulers, int phaseIndex);
+    void generateCubicHighPoleFigures(FloatArrayType* eulers, int phaseIndex);
     /**
      * @brief generateHexPoleFigures
      * @param eulers
      */
-    void generateHexHighPoleFigures(FloatArrayType *eulers, int phaseIndex);
+    void generateHexHighPoleFigures(FloatArrayType* eulers, int phaseIndex);
     /**
      * @brief generateOrthoPoleFigures
      * @param eulers
      */
-    void generateOrthorhombicPoleFigures(FloatArrayType *eulers, int phaseIndex);
+    void generateOrthorhombicPoleFigures(FloatArrayType* eulers, int phaseIndex);
 
     QString generateVtkPath( QString label);
     void writeVtkFile(const QString filename,  DoubleArrayType* poleFigurePtr, int dimension);

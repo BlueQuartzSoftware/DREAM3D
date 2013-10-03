@@ -44,8 +44,8 @@
 //TODO: Add tests for the find* methods
 
 #define CloseH5A(aid, err, retError)\
-   err = H5Aclose( attr_id );\
-   if (err<0) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): " << "Error Closing Attribute." << std::endl;retErr = err;}
+  err = H5Aclose( attr_id );\
+  if (err<0) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): " << "Error Closing Attribute." << std::endl;retErr = err;}
 
 #define CloseH5D(did, err, retError)\
   err = H5Dclose(did);\

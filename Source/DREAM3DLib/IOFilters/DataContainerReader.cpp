@@ -220,7 +220,7 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
 
   // Loop over the items getting the "ClassName" attribute from each group
   QString classNameStr = "";
-  for (int i=0; i<groupList.size(); i++)
+  for (int i = 0; i < groupList.size(); i++)
   {
     QString ss = QString::number(i, 10);
 
@@ -331,9 +331,9 @@ void DataContainerReader::readData(bool preflight)
     {
       err = QH5Lite::readScalarAttribute(dcGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
       if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_ReadVolumeData == true) ||
-      (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_ReadSurfaceData == true) ||
-      (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_ReadEdgeData == true) ||
-      (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_ReadVertexData == true))
+          (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_ReadSurfaceData == true) ||
+          (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_ReadEdgeData == true) ||
+          (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_ReadVertexData == true))
       {
         if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
         {
@@ -374,8 +374,8 @@ void DataContainerReader::readData(bool preflight)
           vReader->setObservers(getObservers());
           ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
           vReader->setMessagePrefix(ss);
-          if(preflight == true) vReader->preflight();
-          else vReader->execute();
+          if(preflight == true) { vReader->preflight(); }
+          else { vReader->execute(); }
           if (vReader->getErrorCondition() < 0)
           {
             if(preflight == true)
@@ -406,8 +406,8 @@ void DataContainerReader::readData(bool preflight)
           eReader->setObservers(getObservers());
           ss = getMessagePrefix() + " |--> Reading Surface Data ";
           eReader->setMessagePrefix(ss);
-          if(preflight == true) eReader->preflight();
-          else eReader->execute();
+          if(preflight == true) { eReader->preflight(); }
+          else { eReader->execute(); }
           if (eReader->getErrorCondition() < 0)
           {
             if(preflight == true)
@@ -438,8 +438,8 @@ void DataContainerReader::readData(bool preflight)
           smReader->setObservers(getObservers());
           ss = getMessagePrefix() + " |--> Reading Surface Data ";
           smReader->setMessagePrefix(ss);
-          if(preflight == true) smReader->preflight();
-          else smReader->execute();
+          if(preflight == true) { smReader->preflight(); }
+          else { smReader->execute(); }
           if (smReader->getErrorCondition() < 0)
           {
             if(preflight == true)
@@ -470,8 +470,8 @@ void DataContainerReader::readData(bool preflight)
           volumeReader->setObservers(getObservers());
           ss = getMessagePrefix() + " |--> Reading Volume Data ";
           volumeReader->setMessagePrefix(ss);
-          if(preflight == true) volumeReader->preflight();
-          else volumeReader->execute();
+          if(preflight == true) { volumeReader->preflight(); }
+          else { volumeReader->execute(); }
           if (volumeReader->getErrorCondition() < 0)
           {
             if(preflight == true)
@@ -497,11 +497,11 @@ void DataContainerReader::readData(bool preflight)
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedFaceArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedCellArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+                                                      QSet<QString> selectedFaceArrays,
+                                                      QSet<QString> selectedEdgeArrays,
+                                                      QSet<QString> selectedCellArrays,
+                                                      QSet<QString> selectedFieldArrays,
+                                                      QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeFaceArrays = selectedFaceArrays;
@@ -516,10 +516,10 @@ void DataContainerReader::setVolumeSelectedArrayNames(QSet<QString> selectedVert
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFaceArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+                                                       QSet<QString> selectedEdgeArrays,
+                                                       QSet<QString> selectedFaceArrays,
+                                                       QSet<QString> selectedFieldArrays,
+                                                       QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
@@ -533,9 +533,9 @@ void DataContainerReader::setSurfaceSelectedArrayNames(QSet<QString> selectedVer
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+                                                    QSet<QString> selectedEdgeArrays,
+                                                    QSet<QString> selectedFieldArrays,
+                                                    QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
@@ -548,8 +548,8 @@ void DataContainerReader::setEdgeSelectedArrayNames(QSet<QString> selectedVertex
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                         QSet<QString> selectedFieldArrays,
-                                                         QSet<QString> selectedEnsembleArrays)
+                                                      QSet<QString> selectedFieldArrays,
+                                                      QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
   m_SelectedVertexVertexFieldArrays = selectedFieldArrays;

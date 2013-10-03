@@ -278,7 +278,7 @@ void WritePoleFigure::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename Ops>
-QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t& config)
 {
   Ops ops;
   return ops.generatePoleFigure(config);
@@ -347,7 +347,8 @@ void WritePoleFigure::execute()
     // keep allocating memory everytime we find one.
     for(int64_t i = 0; i < numPoints; ++i)
     {
-      if (m_CellPhases[i] == phase) {
+      if (m_CellPhases[i] == phase)
+      {
         if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
         {
           count++;
@@ -368,9 +369,9 @@ void WritePoleFigure::execute()
       {
         if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
         {
-          eu[count*3] = m_CellEulerAngles[i*3];
-          eu[count*3+1] = m_CellEulerAngles[i*3+1];
-          eu[count*3+2] = m_CellEulerAngles[i*3+2];
+          eu[count * 3] = m_CellEulerAngles[i * 3];
+          eu[count * 3 + 1] = m_CellEulerAngles[i * 3 + 1];
+          eu[count * 3 + 2] = m_CellEulerAngles[i * 3 + 2];
 
           //    std::cout << eu[count*3] << " " << eu[count*3+1] << " " << eu[count*3+2] << std::endl;
 
@@ -406,19 +407,19 @@ void WritePoleFigure::execute()
         figures = makePoleFigures<HexagonalLowOps>(config);
         break;
       case Ebsd::CrystalStructure::Trigonal_High:
-     //   figures = makePoleFigures<TrigonalOps>(config);
+        //   figures = makePoleFigures<TrigonalOps>(config);
         addWarningMessage(getHumanLabel(), "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Trigonal_Low:
-      //  figures = makePoleFigures<TrigonalLowOps>(config);
+        //  figures = makePoleFigures<TrigonalLowOps>(config);
         addWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Tetragonal_High:
-      //  figures = makePoleFigures<TetragonalOps>(config);
+        //  figures = makePoleFigures<TetragonalOps>(config);
         addWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Tetragonal_Low:
-      //  figures = makePoleFigures<TetragonalLowOps>(config);
+        //  figures = makePoleFigures<TetragonalLowOps>(config);
         addWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::OrthoRhombic:
@@ -473,15 +474,16 @@ QString WritePoleFigure::generateVtkPath( QString label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType *poleFigurePtr, int dimension)
+void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType* poleFigurePtr, int dimension)
 {
 
   notifyStatusMessage("Writing VTK File");
 
   size_t dims[3] = {dimension, dimension, 1};
-  float res[3] = {  2.0/(float)(dimension),
-                    2.0/(float)(dimension),
-                    ( 2.0/(float)(dimension) + 2.0/(float)(dimension) )/2.0 };
+  float res[3] = {  2.0 / (float)(dimension),
+                    2.0 / (float)(dimension),
+                    ( 2.0 / (float)(dimension) + 2.0 / (float)(dimension) ) / 2.0
+                 };
 
   int err = VtkRectilinearGridWriter::WriteDataArrayToFile(filename, poleFigurePtr, dims, res, "double", true);
   if (err < 0)

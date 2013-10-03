@@ -45,15 +45,15 @@
 //
 // -----------------------------------------------------------------------------
 FindGrainPhases::FindGrainPhases() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_FieldPhases(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_GrainIds(NULL),
+  m_CellPhases(NULL),
+  m_FieldPhases(NULL)
 {
 
 }
@@ -69,8 +69,8 @@ void FindGrainPhases::readFilterParameters(AbstractFilterParametersReader* reade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -91,7 +91,7 @@ void FindGrainPhases::dataCheck(bool preflight, size_t voxels, size_t fields, si
 {
 
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)

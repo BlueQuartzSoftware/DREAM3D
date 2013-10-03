@@ -68,26 +68,26 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     virtual ~FindSchmids();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SlipSystemsArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SlipSystemsArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Schmid Factors"; }
 
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, LoadingDir)
 
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -108,14 +108,14 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
-	
-	float* m_Schmids;
-	int32_t* m_Poles;
-	int32_t* m_FieldPhases;
+
+    float* m_Schmids;
+    int32_t* m_Poles;
+    int32_t* m_FieldPhases;
     float* m_AvgQuats;
     int32_t* m_SlipSystems;
 
-	unsigned int* m_CrystalStructures;
+    unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

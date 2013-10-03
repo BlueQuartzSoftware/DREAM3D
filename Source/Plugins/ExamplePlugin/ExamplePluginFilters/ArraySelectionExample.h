@@ -74,23 +74,23 @@ class ArraySelectionExample : public AbstractFilter
     typedef QSet<QString> ArrayList_t;
 
     virtual void setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFaceArrays,
-                                                  QSet<QString> selectedCellArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                             QSet<QString> selectedEdgeArrays,
+                                             QSet<QString> selectedFaceArrays,
+                                             QSet<QString> selectedCellArrays,
+                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedEnsembleArrays);
     virtual void setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedFaceArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                              QSet<QString> selectedFaceArrays,
+                                              QSet<QString> selectedEdgeArrays,
+                                              QSet<QString> selectedFieldArrays,
+                                              QSet<QString> selectedEnsembleArrays);
     virtual void setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                           QSet<QString> selectedEdgeArrays,
+                                           QSet<QString> selectedFieldArrays,
+                                           QSet<QString> selectedEnsembleArrays);
     virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedEnsembleArrays);
 
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
@@ -156,9 +156,9 @@ class ArraySelectionExample : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

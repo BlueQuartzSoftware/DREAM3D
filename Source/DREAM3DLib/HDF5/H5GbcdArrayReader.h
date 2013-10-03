@@ -58,7 +58,7 @@ class DREAM3DLib_EXPORT H5GbcdArrayReader
      * @param name
      * @return
      */
-    static IDataArray::Pointer readIDataArray(hid_t gid, const QString &name, bool preflightOnly = false);
+    static IDataArray::Pointer readIDataArray(hid_t gid, const QString& name, bool preflightOnly = false);
 
   protected:
     H5GbcdArrayReader();

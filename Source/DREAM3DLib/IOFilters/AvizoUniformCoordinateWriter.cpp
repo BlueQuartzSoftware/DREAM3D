@@ -46,11 +46,11 @@
 //
 // -----------------------------------------------------------------------------
 AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
-  AbstractFilter(), 
+  AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), 
-  m_WriteGrainIds(true), 
-  m_WriteBinaryFile(false), 
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_WriteGrainIds(true),
+  m_WriteBinaryFile(false),
   m_GrainIds(NULL)
 {
   setupFilterParameters();
@@ -207,7 +207,7 @@ void AvizoUniformCoordinateWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AvizoUniformCoordinateWriter::generateHeader(QDataStream &ss)
+void AvizoUniformCoordinateWriter::generateHeader(QDataStream& ss)
 {
   if(m_WriteBinaryFile == true)
   {
@@ -258,7 +258,7 @@ void AvizoUniformCoordinateWriter::generateHeader(QDataStream &ss)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AvizoUniformCoordinateWriter::writeData(QDataStream &out)
+int AvizoUniformCoordinateWriter::writeData(QDataStream& out)
 {
   QString start("@1\n");
   out << start;

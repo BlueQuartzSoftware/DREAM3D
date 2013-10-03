@@ -212,24 +212,24 @@ void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
-  if (getXMax() > (static_cast<int64_t>(m->getXPoints())-1))
+  if (getXMax() > (static_cast<int64_t>(m->getXPoints()) - 1))
   {
 
-    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getXPoints())-1);
+    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getXPoints()) - 1);
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
-  if (getYMax() > (static_cast<int64_t>(m->getYPoints())-1))
+  if (getYMax() > (static_cast<int64_t>(m->getYPoints()) - 1))
   {
 
-    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getYPoints())-1);
+    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getYPoints()) - 1);
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5556);
   }
-  if (getZMax() > (static_cast<int64_t>(m->getZPoints())-1))
+  if (getZMax() > (static_cast<int64_t>(m->getZPoints()) - 1))
   {
 
-    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getZPoints())-1);
+    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getZPoints()) - 1);
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5557);
   }
@@ -289,18 +289,18 @@ void ClearData::execute()
 
   int index;
   QList<QString> voxelArrayNames = m->getCellArrayNameList();
-  for (int k = m_ZMin; k < m_ZMax+1; k++)
+  for (int k = m_ZMin; k < m_ZMax + 1; k++)
   {
-    for (int j = m_YMin; j < m_YMax+1; j++)
+    for (int j = m_YMin; j < m_YMax + 1; j++)
     {
-      for (int i = m_XMin; i < m_XMax+1; i++)
+      for (int i = m_XMin; i < m_XMax + 1; i++)
       {
         index = (k * dims[0] * dims[1]) + (j * dims[0]) + i;
         for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
-          p->InitializeTuple(index,0);
+          p->InitializeTuple(index, 0);
         }
       }
     }

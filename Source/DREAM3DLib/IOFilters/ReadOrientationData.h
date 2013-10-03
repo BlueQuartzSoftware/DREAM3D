@@ -198,7 +198,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
       latticeConstants->SetComponent(0, 4, 0.0f);
       latticeConstants->SetComponent(0, 5, 0.0f);
 
-      for(size_t i=0;i<phases.size();i++)
+      for(size_t i = 0; i < phases.size(); i++)
       {
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );

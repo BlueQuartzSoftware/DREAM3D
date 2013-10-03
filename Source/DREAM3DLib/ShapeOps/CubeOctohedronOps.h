@@ -42,31 +42,31 @@
 
 
 
-  /*
-   *
-   */
-  class DREAM3DLib_EXPORT CubeOctohedronOps : public ShapeOps
-  {
-    public:
-      DREAM3D_SHARED_POINTERS(CubeOctohedronOps)
-      DREAM3D_TYPE_MACRO(CubeOctohedronOps)
-      DREAM3D_STATIC_NEW_MACRO(CubeOctohedronOps)
+/*
+ *
+ */
+class DREAM3DLib_EXPORT CubeOctohedronOps : public ShapeOps
+{
+  public:
+    DREAM3D_SHARED_POINTERS(CubeOctohedronOps)
+    DREAM3D_TYPE_MACRO(CubeOctohedronOps)
+    DREAM3D_STATIC_NEW_MACRO(CubeOctohedronOps)
 
-      virtual ~CubeOctohedronOps();
+    virtual ~CubeOctohedronOps();
 
-      virtual float radcur1(QMap<ArgName, float> args);
+    virtual float radcur1(QMap<ArgName, float> args);
 
-      virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-      virtual void init() { Gvalue = 0.0f; }
+    virtual float inside(float axis1comp, float axis2comp, float axis3comp);
+    virtual void init() { Gvalue = 0.0f; }
 
-    protected:
-      CubeOctohedronOps();
-    private:
-      float Gvalue;
+  protected:
+    CubeOctohedronOps();
+  private:
+    float Gvalue;
 
-      CubeOctohedronOps(const CubeOctohedronOps&); // Copy Constructor Not Implemented
-      void operator=(const CubeOctohedronOps&); // Operator '=' Not Implemented
-  };
+    CubeOctohedronOps(const CubeOctohedronOps&); // Copy Constructor Not Implemented
+    void operator=(const CubeOctohedronOps&); // Operator '=' Not Implemented
+};
 
 
 #endif /* CUBOCTOHEDRONOPS_H_ */

@@ -39,15 +39,15 @@
 
 #define TEST_PREREQ_DATA( dc, NameSpace, DType, Name, errVariable, errCode, ptrType, ArrayType, size, NumComp)\
   {if (m_##Name##ArrayName.isEmpty() == true){ \
-    setErrorCondition(errCode##000);\
-    QString _##Name##_ss;\
-    _##Name##_ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" ;\
-    addErrorMessage(getHumanLabel(), _##Name##_ss, errCode##000);\
-  }\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
-  if (NULL == m_##Name ) {\
-    errVariable = errCode;\
-  }}
+      setErrorCondition(errCode##000);\
+      QString _##Name##_ss;\
+      _##Name##_ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" ;\
+      addErrorMessage(getHumanLabel(), _##Name##_ss, errCode##000);\
+    }\
+    m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
+    if (NULL == m_##Name ) {\
+      errVariable = errCode;\
+    }}
 
 
 
@@ -66,26 +66,26 @@
  */
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, err, ptrType, ArrayType, size, NumComp)\
   { QString ss; \
-  if (m_##Name##ArrayName.isEmpty() == true){ \
-    setErrorCondition(err##000);\
-    ss = QObject::tr("The name of the array for the %1::%2::%3 was empty. Please provide a name for this array").arg(#NameSpace).arg(#DType).arg(#Name);\
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
-  }\
-  if (dc->does##DType##Exist(m_##Name##ArrayName) == false) {\
-    setErrorCondition(err##001);\
-    ss = QObject::tr("An array with name '%1' in the %2 grouping does not exist and is required for this filter to execute.").arg(m_##Name##ArrayName).arg(#DType);\
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
-  }\
-  else { \
-  /* QString _s(#Name); \
-  addRequired##DType(_s);*/\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
-  if (NULL == m_##Name ) {\
-    ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named 'm_%2' for this filter."\
-    "The preflight failed for one or more reasons. Check additional error messages for more details.").arg(m_##Name##ArrayName).arg(#Name);\
-    setErrorCondition(err##002);\
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition()); \
-  }}}
+    if (m_##Name##ArrayName.isEmpty() == true){ \
+      setErrorCondition(err##000);\
+      ss = QObject::tr("The name of the array for the %1::%2::%3 was empty. Please provide a name for this array").arg(#NameSpace).arg(#DType).arg(#Name);\
+      addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
+    }\
+    if (dc->does##DType##Exist(m_##Name##ArrayName) == false) {\
+      setErrorCondition(err##001);\
+      ss = QObject::tr("An array with name '%1' in the %2 grouping does not exist and is required for this filter to execute.").arg(m_##Name##ArrayName).arg(#DType);\
+      addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
+    }\
+    else { \
+      /* QString _s(#Name); \
+      addRequired##DType(_s);*/\
+      m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
+      if (NULL == m_##Name ) {\
+        ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named 'm_%2' for this filter."\
+                         "The preflight failed for one or more reasons. Check additional error messages for more details.").arg(m_##Name##ArrayName).arg(#Name);\
+        setErrorCondition(err##002);\
+        addErrorMessage(getHumanLabel(), ss, getErrorCondition()); \
+      }}}
 
 /**
  * @brief These are used in the filters to run checks on available arrays
@@ -101,237 +101,237 @@
  */
 #define GET_PREREQ_DATA_2( dc, DType, Name, err, ptrType, ArrayType, size, NumComp)\
   {QString ss;\
-  if (m_##Name##ArrayName.isEmpty() == true){ \
-    setErrorCondition(err##000);\
-    ss = QObject::tr("The name of the array for the %1 was empty. Please provide a name for this array").arg(#Name);\
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
-  }\
-  if (dc->does##DType##Exist(m_##Name##ArrayName) == false) {\
-    setErrorCondition(err##001);\
-    ss = QObject::tr("An array with name '%1' in the %2 grouping does not exist and is required for this filter to execute.").arg(m_##Name##ArrayName).arg(#DType);\
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
-  }\
-  else { \
-  /* QString _s(#Name); \
-  addRequired##DType(_s);*/\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
-  if (NULL == m_##Name ) {\
-    ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named '%2::%3' for this filter."\
-     "The preflight failed for one or more reasons. Check additional error messages for more details.").arg(m_##Name##ArrayName).arg(#DType).arg(#Name);\
-    setErrorCondition(err##002);\
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition()); \
-  }}}
+    if (m_##Name##ArrayName.isEmpty() == true){ \
+      setErrorCondition(err##000);\
+      ss = QObject::tr("The name of the array for the %1 was empty. Please provide a name for this array").arg(#Name);\
+      addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
+    }\
+    if (dc->does##DType##Exist(m_##Name##ArrayName) == false) {\
+      setErrorCondition(err##001);\
+      ss = QObject::tr("An array with name '%1' in the %2 grouping does not exist and is required for this filter to execute.").arg(m_##Name##ArrayName).arg(#DType);\
+      addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
+    }\
+    else { \
+      /* QString _s(#Name); \
+      addRequired##DType(_s);*/\
+      m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
+      if (NULL == m_##Name ) {\
+        ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named '%2::%3' for this filter."\
+                         "The preflight failed for one or more reasons. Check additional error messages for more details.").arg(m_##Name##ArrayName).arg(#DType).arg(#Name);\
+        setErrorCondition(err##002);\
+        addErrorMessage(getHumanLabel(), ss, getErrorCondition()); \
+      }}}
 
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ptrType, ArrayType, initValue, size, NumComp)\
   {\
-  if (m_##Name##ArrayName.isEmpty() == true)\
-  {\
-    setErrorCondition(-10000);\
-    QString ss = QObject::tr("The name of the array for the "  #NameSpace  #DType  #Name " was empty. Please provide a name for this array.");\
-    addErrorMessage(getHumanLabel(), ss, -10000);\
-  }\
-  /* QString _s(#Name);*/\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
-  if (NULL ==  m_##Name ) \
-  {\
-    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
-    if (NULL == p.get()) \
+    if (m_##Name##ArrayName.isEmpty() == true)\
     {\
-      QString ss;\
-      if (m_##Name##ArrayName.isEmpty() == true) \
+      setErrorCondition(-10000);\
+      QString ss = QObject::tr("The name of the array for the "  #NameSpace  #DType  #Name " was empty. Please provide a name for this array.");\
+      addErrorMessage(getHumanLabel(), ss, -10000);\
+    }\
+    /* QString _s(#Name);*/\
+    m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
+    if (NULL ==  m_##Name ) \
+    {\
+      ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
+      if (NULL == p.get()) \
       {\
-        ss = QObject::tr("Filter %1 attempted to create array with an empty name and that is not allowed.").arg(getNameOfClass());\
-        setErrorCondition(-501);\
-      } else {\
-         ss = QObject::tr("Filter %1 attempted to create array' %2' but was unsuccessful. This is most likely due to not enough contiguous memory.").arg(getNameOfClass()).arg(m_##Name##ArrayName);\
-        setErrorCondition(-500);\
+        QString ss;\
+        if (m_##Name##ArrayName.isEmpty() == true) \
+        {\
+          ss = QObject::tr("Filter %1 attempted to create array with an empty name and that is not allowed.").arg(getNameOfClass());\
+          setErrorCondition(-501);\
+        } else {\
+          ss = QObject::tr("Filter %1 attempted to create array' %2' but was unsuccessful. This is most likely due to not enough contiguous memory.").arg(getNameOfClass()).arg(m_##Name##ArrayName);\
+          setErrorCondition(-500);\
+        }\
+        addErrorMessage(getHumanLabel(), ss, -50001);\
+      } \
+      else if (p->getPointer(0) == NULL)\
+      {\
+        setErrorCondition(-11000);\
+        QString ss = QObject::tr("'%1' was sized to Zero which may cause the program to crash in filters that use this array, including the current filter."\
+                                 " Please add a filter before this filter that will result in a properly sized array.").arg(m_##Name##ArrayName);\
+        addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
       }\
-      addErrorMessage(getHumanLabel(), ss, -50001);\
-    } \
-    else if (p->getPointer(0) == NULL)\
-    {\
-      setErrorCondition(-11000);\
-      QString ss = QObject::tr("'%1' was sized to Zero which may cause the program to crash in filters that use this array, including the current filter."\
-        " Please add a filter before this filter that will result in a properly sized array.").arg(m_##Name##ArrayName);\
-      addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
+      else {\
+        p->initializeWithValues(initValue);\
+        p->SetNumberOfComponents(NumComp);\
+        p->SetName(m_##Name##ArrayName);\
+        dc->add##DType(m_##Name##ArrayName, p);\
+        m_##Name = p->getPointer(0);\
+        CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();\
+        e->setFilterName(this->getNameOfClass());\
+        e->setFilterHumanLabel(this->getHumanLabel());\
+        e->setFilterGroup(this->getGroupName());\
+        e->setFilterSubGroup(this->getSubGroupName());\
+        e->setArrayDefaultName(m_##Name##ArrayName);\
+        e->setArrayGroup(#DType);\
+        e->setArrayNumComponents(NumComp);\
+        e->setArrayType(#ArrayType);\
+        addCreatedArrayHelpIndexEntry(e);\
+      }\
     }\
-    else {\
-      p->initializeWithValues(initValue);\
-      p->SetNumberOfComponents(NumComp);\
-      p->SetName(m_##Name##ArrayName);\
-      dc->add##DType(m_##Name##ArrayName, p);\
-      m_##Name = p->getPointer(0);\
-      CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();\
-      e->setFilterName(this->getNameOfClass());\
-      e->setFilterHumanLabel(this->getHumanLabel());\
-      e->setFilterGroup(this->getGroupName());\
-      e->setFilterSubGroup(this->getSubGroupName());\
-      e->setArrayDefaultName(m_##Name##ArrayName);\
-      e->setArrayGroup(#DType);\
-      e->setArrayNumComponents(NumComp);\
-      e->setArrayType(#ArrayType);\
-      addCreatedArrayHelpIndexEntry(e);\
-    }\
-  }\
-}
+  }
 
 
 /**
  *@brief
  */
 #define ADD_HELP_INDEX_ENTRY(DType, Name, ArrayType, NumComp)\
-CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();\
-e->setFilterName(this->getNameOfClass());\
-e->setFilterHumanLabel(this->getHumanLabel());\
-e->setFilterGroup(this->getGroupName());\
-e->setFilterSubGroup(this->getSubGroupName());\
-e->setArrayDefaultName(m_##Name##ArrayName);\
-e->setArrayGroup(#DType);\
-e->setArrayNumComponents(NumComp);\
-e->setArrayType(#ArrayType);\
-addCreatedArrayHelpIndexEntry(e);
+  CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();\
+  e->setFilterName(this->getNameOfClass());\
+  e->setFilterHumanLabel(this->getHumanLabel());\
+  e->setFilterGroup(this->getGroupName());\
+  e->setFilterSubGroup(this->getSubGroupName());\
+  e->setArrayDefaultName(m_##Name##ArrayName);\
+  e->setArrayGroup(#DType);\
+  e->setArrayNumComponents(NumComp);\
+  e->setArrayType(#ArrayType);\
+  addCreatedArrayHelpIndexEntry(e);
 
 
 
 #define METHOD_DEF_TEMPLATE_GETARRAYDATA(GetMethod)\
-template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
-PtrType* GetMethod##SizeCheck(const QString &arrayName, size_t size, int numComp, AbstractFilter* obv)\
-{\
-PtrType* gi = NULL;\
-IDataArray::Pointer iDataArray = GetMethod(arrayName);\
-if (iDataArray.get() == 0) {\
-  return gi;\
-}\
-if (size*numComp != iDataArray->GetSize()) {\
-  QString s = QObject::tr(" - Array '%1' from the DataContainer class did not have the required number of elements. Required: %2 Contains: %3").arg(arrayName).arg((size*numComp)).arg(iDataArray->GetSize());\
-  if (NULL != obv) {obv->setErrorCondition(-501);\
-  obv->addErrorMessage(obv->getHumanLabel(), s, -501);}\
-  return gi;\
-}\
-if (numComp != iDataArray->GetNumberOfComponents()) {\
-      if (NULL != obv) {\
-      QString ss = QObject::tr("Filter '%1'' requires an array where the number of components is %2 but the array"\
-      " that was supplied has %3.").arg(obv->getHumanLabel()).arg(numComp).arg(iDataArray->GetNumberOfComponents());\
-      obv->addErrorMessage(obv->getHumanLabel(), ss, -503);}\
+  template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
+  PtrType* GetMethod##SizeCheck(const QString &arrayName, size_t size, int numComp, AbstractFilter* obv)\
+  {\
+    PtrType* gi = NULL;\
+    IDataArray::Pointer iDataArray = GetMethod(arrayName);\
+    if (iDataArray.get() == 0) {\
       return gi;\
-}\
-  gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
-  if (NULL == gi) {\
-    typename DataArrayType::Pointer dat = DataArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");\
-    QString s = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"\
-      "An Array with name '%4' is stored in the %5 but is of type %6\n")\
-    .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());\
-    if (NULL != obv) {obv->setErrorCondition(-502);\
-    obv->addErrorMessage(obv->getHumanLabel(), s, -502);}\
+    }\
+    if (size*numComp != iDataArray->GetSize()) {\
+      QString s = QObject::tr(" - Array '%1' from the DataContainer class did not have the required number of elements. Required: %2 Contains: %3").arg(arrayName).arg((size*numComp)).arg(iDataArray->GetSize());\
+      if (NULL != obv) {obv->setErrorCondition(-501);\
+        obv->addErrorMessage(obv->getHumanLabel(), s, -501);}\
+      return gi;\
+    }\
+    if (numComp != iDataArray->GetNumberOfComponents()) {\
+      if (NULL != obv) {\
+        QString ss = QObject::tr("Filter '%1'' requires an array where the number of components is %2 but the array"\
+                                 " that was supplied has %3.").arg(obv->getHumanLabel()).arg(numComp).arg(iDataArray->GetNumberOfComponents());\
+        obv->addErrorMessage(obv->getHumanLabel(), ss, -503);}\
+      return gi;\
+    }\
+    gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
+    if (NULL == gi) {\
+      typename DataArrayType::Pointer dat = DataArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");\
+      QString s = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"\
+                              "An Array with name '%4' is stored in the %5 but is of type %6\n")\
+                  .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());\
+      if (NULL != obv) {obv->setErrorCondition(-502);\
+        obv->addErrorMessage(obv->getHumanLabel(), s, -502);}\
+      return gi;\
+    }\
     return gi;\
-  }\
-return gi;\
-}
+  }
 
 
 
 #define METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)\
-template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
-PtrType* create##Field##Data(const QString &arrayName, size_t size, int numComp, AbstractFilter* obv)\
-{\
-  PtrType* valuePtr = NULL;\
-  IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
-  if (iDataArray.get() == NULL) { \
-    iDataArray = DataArrayType::CreateArray(size * numComp, arrayName);\
-    iDataArray->initializeWithZeros();\
-    iDataArray->SetNumberOfComponents(numComp);\
-    if (NULL == iDataArray.get()) { \
-      QString s = QObject::tr(": Array '%1' could not allocate %2 elements.").arg(arrayName).arg(size);\
-      if (NULL != obv) {obv->setErrorCondition(-25);\
-      obv->addErrorMessage(getNameOfClass(), s, -25);}\
+  template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
+  PtrType* create##Field##Data(const QString &arrayName, size_t size, int numComp, AbstractFilter* obv)\
+  {\
+    PtrType* valuePtr = NULL;\
+    IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
+    if (iDataArray.get() == NULL) { \
+      iDataArray = DataArrayType::CreateArray(size * numComp, arrayName);\
+      iDataArray->initializeWithZeros();\
+      iDataArray->SetNumberOfComponents(numComp);\
+      if (NULL == iDataArray.get()) { \
+        QString s = QObject::tr(": Array '%1' could not allocate %2 elements.").arg(arrayName).arg(size);\
+        if (NULL != obv) {obv->setErrorCondition(-25);\
+          obv->addErrorMessage(getNameOfClass(), s, -25);}\
+        return valuePtr;\
+      }\
+      add##Field##Data(arrayName, iDataArray);\
+    } \
+    valuePtr =\
+              IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
+    if (NULL == valuePtr) {\
+      QString s = QObject::tr(": Array '%1' could not be cast to proper type").arg(arrayName);\
+      if (NULL != obv) {obv->setErrorCondition(-12);\
+        obv->addErrorMessage(getNameOfClass(), s, -12);}\
       return valuePtr;\
     }\
-    add##Field##Data(arrayName, iDataArray);\
-  } \
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
-  if (NULL == valuePtr) {\
-      QString s = QObject::tr(": Array '%1' could not be cast to proper type").arg(arrayName);\
-    if (NULL != obv) {obv->setErrorCondition(-12);\
-    obv->addErrorMessage(getNameOfClass(), s, -12);}\
     return valuePtr;\
-  }\
-  return valuePtr;\
-}
+  }
 
 
 #define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
-m_msgType* valuePtr = NULL;\
-{\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
-  if (iDataArray.get() == NULL) { \
-    QString s = QObject::tr(": Array %1 from the DataContainer class was not in the DataContainer").arg(name);\
-    setErrorCondition(-10);\
-    addErrorMessage(getNameOfClass(), s, -10);\
-    return -10;\
-  } \
-  if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
-    QString s = QObject::tr(": Array %1 from the DataContainer class did not have the correct number of elements.").arg(name);\
-    setErrorCondition(-20);\
-    addErrorMessage(getNameOfClass(), s, -20);\
-    return -20;\
-  }\
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
-  if (NULL == valuePtr) {\
-    QString s = QObject::tr(": Array %1 from the DataContainer class could not be cast to type ").arg(#m_msgType);\
-    setErrorCondition(-30);\
-    addErrorMessage(getNameOfClass(), s, -30);\
-    return -30;\
-  }\
-}
+  m_msgType* valuePtr = NULL;\
+  {\
+    IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
+    if (iDataArray.get() == NULL) { \
+      QString s = QObject::tr(": Array %1 from the DataContainer class was not in the DataContainer").arg(name);\
+      setErrorCondition(-10);\
+      addErrorMessage(getNameOfClass(), s, -10);\
+      return -10;\
+    } \
+    if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
+      QString s = QObject::tr(": Array %1 from the DataContainer class did not have the correct number of elements.").arg(name);\
+      setErrorCondition(-20);\
+      addErrorMessage(getNameOfClass(), s, -20);\
+      return -20;\
+    }\
+    valuePtr =\
+              IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
+    if (NULL == valuePtr) {\
+      QString s = QObject::tr(": Array %1 from the DataContainer class could not be cast to type ").arg(#m_msgType);\
+      setErrorCondition(-30);\
+      addErrorMessage(getNameOfClass(), s, -30);\
+      return -30;\
+    }\
+  }
 
 #define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
-m_msgType* valuePtr = NULL;\
-{\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
-  if (iDataArray.get() == NULL) { \
-    return;\
-  } \
-  if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
-    return;\
-  }\
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
-  if (NULL == valuePtr) {\
-    return;\
-  }\
-}
+  m_msgType* valuePtr = NULL;\
+  {\
+    IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
+    if (iDataArray.get() == NULL) { \
+      return;\
+    } \
+    if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
+      return;\
+    }\
+    valuePtr =\
+              IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
+    if (NULL == valuePtr) {\
+      return;\
+    }\
+  }
 
 #define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
-m_msgType* valuePtr = NULL;\
-{\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
-  if (iDataArray.get() == NULL) { \
-    return -10;\
-  } \
-  if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
-    qDebug() << name << " Size did not match." << size << " vs " << iDataArray->getNumberOfTuples() ;\
-    return -20;\
-  }\
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
-  if (NULL == valuePtr) {\
-    return -30;\
-  }\
-}
+  m_msgType* valuePtr = NULL;\
+  {\
+    IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
+    if (iDataArray.get() == NULL) { \
+      return -10;\
+    } \
+    if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
+      qDebug() << name << " Size did not match." << size << " vs " << iDataArray->getNumberOfTuples() ;\
+      return -20;\
+    }\
+    valuePtr =\
+              IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
+    if (NULL == valuePtr) {\
+      return -30;\
+    }\
+  }
 
 
 
 #define DOES_DATASET_EXIST_DECL(DType)\
-virtual bool does##DType##Exist(const QString &name);
+  virtual bool does##DType##Exist(const QString &name);
 
 #define DOES_DATASET_EXIST_DEFN(Class, DType)\
-bool Class::does##DType##Exist(const QString &name) {\
-  /*QMap<QString, IDataArray::Pointer>::iterator iter = m_##DType.find(name);*/\
-  return  m_##DType.contains(name);\
-}
+  bool Class::does##DType##Exist(const QString &name) {\
+    /*QMap<QString, IDataArray::Pointer>::iterator iter = m_##DType.find(name);*/\
+    return  m_##DType.contains(name);\
+  }
 
 #endif /* _DATACONTAINERMACROS_H_ */
 

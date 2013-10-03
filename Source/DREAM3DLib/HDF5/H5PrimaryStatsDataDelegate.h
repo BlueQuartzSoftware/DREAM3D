@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT H5PrimaryStatsDataDelegate : public H5StatsDataDelegate
     int writeBoundaryArea(PrimaryStatsData* data, hid_t groupId);
     int readBoundaryArea(PrimaryStatsData* data, hid_t groupId);
 
-	int writePhaseFraction(PrimaryStatsData* data, hid_t groupId);
+    int writePhaseFraction(PrimaryStatsData* data, hid_t groupId);
     int readPhaseFraction(PrimaryStatsData* data, hid_t groupId);
 
     int writeGrainDiameterInfo(PrimaryStatsData* data, hid_t groupId);
@@ -86,19 +86,19 @@ class DREAM3DLib_EXPORT H5PrimaryStatsDataDelegate : public H5StatsDataDelegate
     int readODFWeights(hid_t pid, PrimaryStatsData* data);
     int readAxisODFWeights(hid_t pid, PrimaryStatsData* data);
 
-    int writeWeightsData(hid_t pid, const QString &hdf5GroupName,
-                                              VectorOfFloatArray colData);
+    int writeWeightsData(hid_t pid, const QString& hdf5GroupName,
+                         VectorOfFloatArray colData);
 
     int writeDistributionData(hid_t pid,
                               uint32_t disType,
-                              const QString &hdf5GroupName,
+                              const QString& hdf5GroupName,
                               VectorOfFloatArray colData);
 
-    uint32_t readDistributionType(hid_t pid, const QString &hdf5GroupName);
+    uint32_t readDistributionType(hid_t pid, const QString& hdf5GroupName);
 
     int readDistributionData(hid_t pid,
-                              const QString &hdf5GroupName,
-                              VectorOfFloatArray colData);
+                             const QString& hdf5GroupName,
+                             VectorOfFloatArray colData);
 
 
     int writeVectorOfArrays(hid_t pid, VectorOfFloatArray colData);

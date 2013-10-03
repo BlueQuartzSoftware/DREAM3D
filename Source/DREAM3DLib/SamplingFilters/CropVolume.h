@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
 
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-  virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
     virtual const QString getHumanLabel() { return "Crop Volume"; }
 
     virtual void setupFilterParameters();
@@ -88,16 +88,16 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-  /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+    /**
+       * @brief Reimplemented from @see AbstractFilter class
+       */
     virtual void execute();
     virtual void preflight();
 

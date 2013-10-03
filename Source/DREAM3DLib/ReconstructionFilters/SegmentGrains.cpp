@@ -177,7 +177,7 @@ void SegmentGrains::execute()
       size++;
       while(size > 0)
       {
-        int64_t currentpoint = voxelslist[size-1];
+        int64_t currentpoint = voxelslist[size - 1];
         size -= 1;
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
@@ -187,12 +187,12 @@ void SegmentGrains::execute()
           good = true;
           neighbor = currentpoint + neighpoints[i];
 
-          if(i == 0 && plane == 0) good = false;
-          if(i == 5 && plane == (dims[2] - 1)) good = false;
-          if(i == 1 && row == 0) good = false;
-          if(i == 4 && row == (dims[1] - 1)) good = false;
-          if(i == 2 && col == 0) good = false;
-          if(i == 3 && col == (dims[0] - 1)) good = false;
+          if(i == 0 && plane == 0) { good = false; }
+          if(i == 5 && plane == (dims[2] - 1)) { good = false; }
+          if(i == 1 && row == 0) { good = false; }
+          if(i == 4 && row == (dims[1] - 1)) { good = false; }
+          if(i == 2 && col == 0) { good = false; }
+          if(i == 3 && col == (dims[0] - 1)) { good = false; }
           if(good == true)
           {
             if(determineGrouping(currentpoint, neighbor, gnum) == true)
@@ -215,7 +215,7 @@ void SegmentGrains::execute()
       gnum++;
 
       QString ss = QObject::tr("Total Grains: %1").arg(gnum);
-      if(gnum%100 == 0) notifyStatusMessage(ss);
+      if(gnum % 100 == 0) { notifyStatusMessage(ss); }
     }
   }
 

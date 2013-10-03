@@ -76,8 +76,8 @@ void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -183,7 +183,7 @@ void FindMisorientations::execute()
 
   QVector<QVector<float> > misorientationlists;
 
-  float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
+  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   //float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
   // int mbin = 0;
   float w;
@@ -195,7 +195,7 @@ void FindMisorientations::execute()
   size_t numgrains = m->getNumCellFieldTuples();
   unsigned int phase1, phase2;
 
-  float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
+  float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
 
   size_t nname;
   // float nsa;
@@ -214,7 +214,7 @@ void FindMisorientations::execute()
       if (phase1 == phase2)
       {
         w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-        misorientationlists[i][j] = w*radToDeg;
+        misorientationlists[i][j] = w * radToDeg;
       }
       else
       {

@@ -52,48 +52,57 @@
 #include <tbb/task.h>
 #endif
 
-namespace Detail {
+namespace Detail
+{
 
-  static const float TetraDim1InitValue = powf((0.75f*((M_PI)-sinf((M_PI)))),(1.0f/3.0f));
-  static const float TetraDim2InitValue = powf((0.75f*((M_PI)-sinf((M_PI)))),(1.0f/3.0f));
-  static const float TetraDim3InitValue = powf((0.75f*((M_PI/4.0f)-sinf((M_PI/2.0f)))),(1.0f/3.0f));
-  static const float TetraDim1StepValue = TetraDim1InitValue/36.0f;
-  static const float TetraDim2StepValue = TetraDim2InitValue/36.0f;
-  static const float TetraDim3StepValue = TetraDim3InitValue/9.0f;
+  static const float TetraDim1InitValue = powf((0.75f * ((M_PI) - sinf((M_PI)))), (1.0f / 3.0f));
+  static const float TetraDim2InitValue = powf((0.75f * ((M_PI) - sinf((M_PI)))), (1.0f / 3.0f));
+  static const float TetraDim3InitValue = powf((0.75f * ((M_PI / 4.0f) - sinf((M_PI / 2.0f)))), (1.0f / 3.0f));
+  static const float TetraDim1StepValue = TetraDim1InitValue / 36.0f;
+  static const float TetraDim2StepValue = TetraDim2InitValue / 36.0f;
+  static const float TetraDim3StepValue = TetraDim3InitValue / 9.0f;
   namespace TetragonalLow
   {
-  static const int symSize0 = 2;
-  static const int symSize1 = 2;
-  static const int symSize2 = 2;
+    static const int symSize0 = 2;
+    static const int symSize1 = 2;
+    static const int symSize2 = 2;
   }
 }
-static const QuatF TetraQuatSym[4] = {QuaternionMathF::New(0.000000000f,0.000000000f,0.000000000f,1.000000000f),
-                                      QuaternionMathF::New(0.000000000f,0.000000000f,1.000000000f,0.000000000f),
-                                      QuaternionMathF::New(0.000000000f,0.000000000f,DREAM3D::Constants::k_1OverRoot2,-DREAM3D::Constants::k_1OverRoot2),
-                                      QuaternionMathF::New(0.000000000f,0.000000000f,DREAM3D::Constants::k_1OverRoot2,DREAM3D::Constants::k_1OverRoot2)};
+static const QuatF TetraQuatSym[4] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+                                      QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
+                                      QuaternionMathF::New(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, -DREAM3D::Constants::k_1OverRoot2),
+                                      QuaternionMathF::New(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2)
+                                     };
 
 
-static const float TetraRodSym[4][3] = {{0.0f,0.0f,0.0f},
-                                        {0.0f,0.0f,10000000000.0f},
-                                        {0.0f,0.0f,-1.0f},
-                                        {0.0f,0.0f,1.0f}};
+static const float TetraRodSym[4][3] = {{0.0f, 0.0f, 0.0f},
+  {0.0f, 0.0f, 10000000000.0f},
+  {0.0f, 0.0f, -1.0f},
+  {0.0f, 0.0f, 1.0f}
+};
 
 static const float TetraMatSym[4][3][3] =
-{{{1.0, 0.0, 0.0},
-  {0.0, 1.0, 0.0},
-  {0.0, 0.0, 1.0}},
+{
+  { {1.0, 0.0, 0.0},
+    {0.0, 1.0, 0.0},
+    {0.0, 0.0, 1.0}
+  },
 
- {{-1.0,  0.0, 0.0},
-  {0.0, -1.0, 0.0},
-  {0.0,  0.0, 1.0}},
+  { { -1.0,  0.0, 0.0},
+    {0.0, -1.0, 0.0},
+    {0.0,  0.0, 1.0}
+  },
 
- {{0.0, 1.0, 0.0},
-  {-1.0, 0.0, 0.0},
-  {0.0, 0.0, 1.0}},
+  { {0.0, 1.0, 0.0},
+    { -1.0, 0.0, 0.0},
+    {0.0, 0.0, 1.0}
+  },
 
- {{0.0, -1.0, 0.0},
-  {1.0,  0.0, 0.0},
-  {0.0,  0.0, 1.0}}};
+  { {0.0, -1.0, 0.0},
+    {1.0,  0.0, 0.0},
+    {0.0,  0.0, 1.0}
+  }
+};
 
 
 const static float m_OnePointThree = 1.33333333333f;
@@ -119,8 +128,8 @@ TetragonalLowOps::~TetragonalLowOps()
 }
 
 float TetragonalLowOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
-QuatF &q1, QuatF &q2,
-float &n1, float &n2, float &n3)
+                                      QuatF& q1, QuatF& q2,
+                                      float& n1, float& n2, float& n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
@@ -138,16 +147,19 @@ float &n1, float &n2, float &n3)
   for (int i = 0; i < numsym; i++)
   {
     QuaternionMathF::Multiply(qr, quatsym[i], qc);
-    if (qc.w < -1) {
+    if (qc.w < -1)
+    {
       qc.w = -1;
     }
-    else if (qc.w > 1) {
+    else if (qc.w > 1)
+    {
       qc.w = 1;
     }
 
     OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
 
-    if (w > DREAM3D::Constants::k_Pi) {
+    if (w > DREAM3D::Constants::k_Pi)
+    {
       w = DREAM3D::Constants::k_2Pi - w;
     }
     if (w < wmin)
@@ -158,35 +170,35 @@ float &n1, float &n2, float &n3)
       n3min = n3;
     }
   }
-  float denom = sqrt((n1min*n1min+n2min*n2min+n3min*n3min));
-  n1 = n1min/denom;
-  n2 = n2min/denom;
-  n3 = n3min/denom;
-  if(denom == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
-  if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  float denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
+  n1 = n1min / denom;
+  n2 = n2min / denom;
+  n3 = n3min / denom;
+  if(denom == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
+  if(wmin == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
   return wmin;
 }
 
-float TetragonalLowOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
+float TetragonalLowOps::getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3)
 {
   int numsym = 4;
 
   return _calcMisoQuat(TetraQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void TetragonalLowOps::getQuatSymOp(int i, QuatF &q)
+void TetragonalLowOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(TetraQuatSym[i], q);
 }
 
-void TetragonalLowOps::getRodSymOp(int i,float *r)
+void TetragonalLowOps::getRodSymOp(int i, float* r)
 {
   r[0] = TetraRodSym[i][0];
   r[1] = TetraRodSym[i][1];
   r[2] = TetraRodSym[i][2];
 }
 
-void TetragonalLowOps::getMatSymOp(int i,float g[3][3])
+void TetragonalLowOps::getMatSymOp(int i, float g[3][3])
 {
   g[0][0] = TetraMatSym[i][0][0];
   g[0][1] = TetraMatSym[i][0][1];
@@ -199,14 +211,14 @@ void TetragonalLowOps::getMatSymOp(int i,float g[3][3])
   g[2][2] = TetraMatSym[i][2][2];
 }
 
-void TetragonalLowOps::getODFFZRod(float &r1,float &r2, float &r3)
+void TetragonalLowOps::getODFFZRod(float& r1, float& r2, float& r3)
 {
   int  numsym = 4;
 
   _calcRodNearestOrigin(TetraRodSym, numsym, r1, r2, r3);
 }
 
-void TetragonalLowOps::getMDFFZRod(float &r1,float &r2, float &r3)
+void TetragonalLowOps::getMDFFZRod(float& r1, float& r2, float& r3)
 {
   float w, n1, n2, n3;
   float FZn1, FZn2, FZn3;
@@ -221,7 +233,7 @@ void TetragonalLowOps::getMDFFZRod(float &r1,float &r2, float &r3)
   OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
-void TetragonalLowOps::getNearestQuat(QuatF &q1, QuatF &q2)
+void TetragonalLowOps::getNearestQuat(QuatF& q1, QuatF& q2)
 {
   int numsym = 4;
 
@@ -249,7 +261,7 @@ int TetragonalLowOps::getMisoBin(float r1, float r2, float r3)
   return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
 
-void TetragonalLowOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
+void TetragonalLowOps::determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3)
 {
   float init[3];
   float step[3];
@@ -273,7 +285,7 @@ void TetragonalLowOps::determineEulerAngles(int choose, float &synea1, float &sy
 }
 
 
-void TetragonalLowOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
+void TetragonalLowOps::determineRodriguesVector( int choose, float& r1, float& r2, float& r3)
 {
   float init[3];
   float step[3];
@@ -315,28 +327,28 @@ int TetragonalLowOps::getOdfBin(float r1, float r2, float r3)
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void TetragonalLowOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
+void TetragonalLowOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys)
 {
   schmidfactor = 0;
   slipsys = 0;
 }
 
-void TetragonalLowOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
+void TetragonalLowOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
 {
   mPrime = 0;
 }
 
-void TetragonalLowOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
+void TetragonalLowOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
 {
   F1 = 0;
 }
 
-void TetragonalLowOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
+void TetragonalLowOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt)
 {
   F1spt = 0;
 }
 
-void TetragonalLowOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
+void TetragonalLowOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
 {
   F7 = 0;
 }
@@ -346,78 +358,84 @@ void TetragonalLowOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, floa
 // -----------------------------------------------------------------------------
 namespace Detail
 {
-namespace TetragonalLow
-{
-class GenerateSphereCoordsImpl
-{
-    FloatArrayType* eulers;
-    FloatArrayType* m_xyz001;
-    FloatArrayType* m_xyz011;
-    FloatArrayType* m_xyz111;
-
-  public:
-    GenerateSphereCoordsImpl(FloatArrayType* eulerAngles, FloatArrayType* xyz001Coords, FloatArrayType* xyz011Coords, FloatArrayType* xyz111Coords) :
-      eulers(eulerAngles),
-      m_xyz001(xyz001Coords),
-      m_xyz011(xyz011Coords),
-      m_xyz111(xyz111Coords)
-    {}
-    virtual ~GenerateSphereCoordsImpl(){}
-
-    void generate(size_t start, size_t end) const
+  namespace TetragonalLow
+  {
+    class GenerateSphereCoordsImpl
     {
-      float g[3][3];
-      float gTranpose[3][3];
-      float* currentEuler = NULL;
-      float direction[3] = {0.0, 0.0, 0.0};
+        FloatArrayType* eulers;
+        FloatArrayType* m_xyz001;
+        FloatArrayType* m_xyz011;
+        FloatArrayType* m_xyz111;
+
+      public:
+        GenerateSphereCoordsImpl(FloatArrayType* eulerAngles, FloatArrayType* xyz001Coords, FloatArrayType* xyz011Coords, FloatArrayType* xyz111Coords) :
+          eulers(eulerAngles),
+          m_xyz001(xyz001Coords),
+          m_xyz011(xyz011Coords),
+          m_xyz111(xyz111Coords)
+        {}
+        virtual ~GenerateSphereCoordsImpl() {}
+
+        void generate(size_t start, size_t end) const
+        {
+          float g[3][3];
+          float gTranpose[3][3];
+          float* currentEuler = NULL;
+          float direction[3] = {0.0, 0.0, 0.0};
 
 
-      for(size_t i = start; i < end; ++i)
-      {
-        currentEuler = eulers->getPointer(i * 3);
+          for(size_t i = start; i < end; ++i)
+          {
+            currentEuler = eulers->getPointer(i * 3);
 
-        OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
-        MatrixMath::Transpose3x3(g, gTranpose);
+            OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+            MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
             // 001 Family
-            direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i*6));
-            MatrixMath::Copy3x1(m_xyz001->getPointer(i*6),m_xyz001->getPointer(i*6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i*6 + 3),-1);
+            direction[0] = 0.0;
+            direction[1] = 0.0;
+            direction[2] = 1.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 6));
+            MatrixMath::Copy3x1(m_xyz001->getPointer(i * 6), m_xyz001->getPointer(i * 6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 6 + 3), -1);
 
 
             // -----------------------------------------------------------------------------
             // 011 Family
-            direction[0] = 1.0; direction[1] = 0.0; direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i*6));
-            MatrixMath::Copy3x1(m_xyz011->getPointer(i*6),m_xyz011->getPointer(i*6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i*6 + 3),-1);
+            direction[0] = 1.0;
+            direction[1] = 0.0;
+            direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 6));
+            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 6), m_xyz011->getPointer(i * 6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 6 + 3), -1);
 
 
             // -----------------------------------------------------------------------------
             // 111 Family
-            direction[0] = 0.0; direction[1] = 1.0; direction[2] = 0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i*6));
-            MatrixMath::Copy3x1(m_xyz111->getPointer(i*6),m_xyz111->getPointer(i*6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i*6 + 3),-1);
-      }
-    }
+            direction[0] = 0.0;
+            direction[1] = 1.0;
+            direction[2] = 0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 6));
+            MatrixMath::Copy3x1(m_xyz111->getPointer(i * 6), m_xyz111->getPointer(i * 6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 6 + 3), -1);
+          }
+        }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
-    {
-      generate(r.begin(), r.end());
-    }
+        void operator()(const tbb::blocked_range<size_t>& r) const
+        {
+          generate(r.begin(), r.end());
+        }
 #endif
-};
-}
+    };
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
+void TetragonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111)
 {
   BOOST_ASSERT(false);
   size_t nOrientations = eulers->getNumberOfTuples();
@@ -461,7 +479,7 @@ void TetragonalLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, Fl
 // -----------------------------------------------------------------------------
 bool TetragonalLowOps::inUnitTriangle(float eta, float chi)
 {
-  if( eta < 0 || eta > (90.0*DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0*DREAM3D::Constants::k_PiOver180) ) return false;
+  if( eta < 0 || eta > (90.0 * DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * DREAM3D::Constants::k_PiOver180) ) { return false; }
   return true;
 }
 
@@ -507,32 +525,32 @@ DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double 
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(getHasInversion() == false && p[2] < 0) continue;
-    else if(getHasInversion() == true && p[2] < 0) p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
+    if(getHasInversion() == false && p[2] < 0) { continue; }
+    else if(getHasInversion() == true && p[2] < 0) { p[0] = -p[0], p[1] = -p[1], p[2] = -p[2]; }
     chi = acos(p[2]);
-    eta = atan2(p[1],p[0]);
-    if(inUnitTriangle(eta, chi) == false) continue;
+    eta = atan2(p[1], p[0]);
+    if(inUnitTriangle(eta, chi) == false) { continue; }
     else {break;}
   }
 
   float etaMin = 0.0;
   float etaMax = 90.0;
   float chiMax = 90.0;
-  float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
-  float chiDeg = chi*DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
+  float chiDeg = chi * DREAM3D::Constants::k_180OverPi;
 
-  _rgb[0] = 1.0 - chiDeg/chiMax;
-  _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
-  _rgb[1] = 1-_rgb[2];
-  _rgb[1] *= chiDeg/chiMax;
-  _rgb[2] *= chiDeg/chiMax;
+  _rgb[0] = 1.0 - chiDeg / chiMax;
+  _rgb[2] = fabs(etaDeg - etaMin) / (etaMax - etaMin);
+  _rgb[1] = 1 - _rgb[2];
+  _rgb[1] *= chiDeg / chiMax;
+  _rgb[2] *= chiDeg / chiMax;
   _rgb[0] = sqrt(_rgb[0]);
   _rgb[1] = sqrt(_rgb[1]);
   _rgb[2] = sqrt(_rgb[2]);
 
   float max = _rgb[0];
-  if (_rgb[1] > max) max = _rgb[1];
-  if (_rgb[2] > max) max = _rgb[2];
+  if (_rgb[1] > max) { max = _rgb[1]; }
+  if (_rgb[2] > max) { max = _rgb[2]; }
 
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
@@ -547,15 +565,15 @@ DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double 
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb TetragonalLowOps::generateRodriguesColor(float r1, float r2, float r3)
 {
-  float range1 = 2.0f*TetraDim1InitValue;
-  float range2 = 2.0f*TetraDim2InitValue;
-  float range3 = 2.0f*TetraDim3InitValue;
-  float max1 = range1/2.0f;
-  float max2 = range2/2.0f;
-  float max3 = range3/2.0f;
-  float red = (r1+max1)/range1;
-  float green = (r2+max2)/range2;
-  float blue = (r3+max3)/range3;
+  float range1 = 2.0f * TetraDim1InitValue;
+  float range2 = 2.0f * TetraDim2InitValue;
+  float range3 = 2.0f * TetraDim3InitValue;
+  float max1 = range1 / 2.0f;
+  float max2 = range2 / 2.0f;
+  float max3 = range3 / 2.0f;
+  float red = (r1 + max1) / range1;
+  float green = (r2 + max2) / range2;
+  float blue = (r3 + max3) / range3;
 
   // Scale values from 0 to 1.0
   red = red / max1;
@@ -569,7 +587,7 @@ DREAM3D::Rgb TetragonalLowOps::generateRodriguesColor(float r1, float r2, float 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<UInt8ArrayType::Pointer> TetragonalLowOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> TetragonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
   QVector<UInt8ArrayType::Pointer> poleFigures;
   QString label0("Tetragonal Low <001>");
@@ -692,9 +710,9 @@ QVector<UInt8ArrayType::Pointer> TetragonalLowOps::generatePoleFigure(PoleFigure
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TetragonalLowOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
+DREAM3D::Rgb TetragonalLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
+  DREAM3D::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
 
   BOOST_ASSERT(false);
 

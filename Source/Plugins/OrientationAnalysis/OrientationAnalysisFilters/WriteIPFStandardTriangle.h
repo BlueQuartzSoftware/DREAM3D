@@ -75,9 +75,9 @@ class WriteIPFStandardTriangle : public AbstractFilter
     enum ImageFormatType
     {
       TifImageType = 0,
-          BmpImageType = 1,
-          PngImageType = 2,
-          JpgImageType = 3
+      BmpImageType = 1,
+      PngImageType = 2,
+      JpgImageType = 3
     };
 
     /**
@@ -144,7 +144,7 @@ class WriteIPFStandardTriangle : public AbstractFilter
 
     QString generateImagePath( QString label);
 
-    void writeImage(QImage &image);
+    void writeImage(QImage& image);
 
     QImage generateCubicHighTriangle();
     QImage overlayCubicHighText(QImage image);
@@ -158,7 +158,7 @@ class WriteIPFStandardTriangle : public AbstractFilter
 
   private:
     float* m_CellEulerAngles;
-        int32_t* m_CellPhases;
+    int32_t* m_CellPhases;
     unsigned int* m_CrystalStructures;
 
     WriteIPFStandardTriangle(const WriteIPFStandardTriangle&); // Copy Constructor Not Implemented

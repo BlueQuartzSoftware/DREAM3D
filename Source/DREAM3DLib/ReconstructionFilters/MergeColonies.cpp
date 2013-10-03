@@ -56,58 +56,71 @@
 
 
 
-static const float unit110 = 1.0/sqrtf(2.0);
-static const float unit111 = 1.0/sqrtf(3.0);
-static const float unit112_1 = 1.0/sqrtf(6.0);
-static const float unit112_2 = 2.0/sqrtf(6.0);
+static const float unit110 = 1.0 / sqrtf(2.0);
+static const float unit111 = 1.0 / sqrtf(3.0);
+static const float unit112_1 = 1.0 / sqrtf(6.0);
+static const float unit112_2 = 2.0 / sqrtf(6.0);
 
 float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
-                                      {-unit111, -unit112_1, unit110},
-                                      {unit111, -unit112_2, 0}},
+    { -unit111, -unit112_1, unit110},
+    {unit111, -unit112_2, 0}
+  },
 
-                                     {{-unit111, unit112_1, unit110},
-                                      {unit111, -unit112_1, unit110},
-                                      {unit111, unit112_2, 0}},
+  { { -unit111, unit112_1, unit110},
+    {unit111, -unit112_1, unit110},
+    {unit111, unit112_2, 0}
+  },
 
-                                     {{unit111, -unit112_1, unit110},
-                                      {unit111, -unit112_1, -unit110},
-                                      {unit111, unit112_2, 0}},
+  { {unit111, -unit112_1, unit110},
+    {unit111, -unit112_1, -unit110},
+    {unit111, unit112_2, 0}
+  },
 
-                                     {{unit111, unit112_1, unit110},
-                                      {unit111, unit112_1, -unit110},
-                                      {-unit111, unit112_2, 0}},
+  { {unit111, unit112_1, unit110},
+    {unit111, unit112_1, -unit110},
+    { -unit111, unit112_2, 0}
+  },
 
-                                     {{unit111, unit112_1, unit110},
-                                      {unit111, -unit112_2, 0},
-                                      {unit111, unit112_1, -unit110}},
+  { {unit111, unit112_1, unit110},
+    {unit111, -unit112_2, 0},
+    {unit111, unit112_1, -unit110}
+  },
 
-                                     {{unit111, -unit112_1, unit110},
-                                      {-unit111, -unit112_2, 0},
-                                      {unit111, -unit112_1, -unit110}},
+  { {unit111, -unit112_1, unit110},
+    { -unit111, -unit112_2, 0},
+    {unit111, -unit112_1, -unit110}
+  },
 
-                                     {{unit111, -unit112_1, unit110},
-                                      {unit111, unit112_2, 0},
-                                      {-unit111, unit112_1, unit110}},
+  { {unit111, -unit112_1, unit110},
+    {unit111, unit112_2, 0},
+    { -unit111, unit112_1, unit110}
+  },
 
-                                     {{-unit111, -unit112_1, unit110},
-                                      {unit111, -unit112_2, 0},
-                                      {unit111, unit112_1, unit110}},
+  { { -unit111, -unit112_1, unit110},
+    {unit111, -unit112_2, 0},
+    {unit111, unit112_1, unit110}
+  },
 
-                                     {{unit111, -unit112_2,0},
-                                      {unit111, unit112_1, unit110},
-                                      {-unit111, -unit112_1, unit110}},
+  { {unit111, -unit112_2, 0},
+    {unit111, unit112_1, unit110},
+    { -unit111, -unit112_1, unit110}
+  },
 
-                                     {{unit111, unit112_2, 0},
-                                      {-unit111, unit112_1, unit110},
-                                      {unit111, -unit112_1, unit110}},
+  { {unit111, unit112_2, 0},
+    { -unit111, unit112_1, unit110},
+    {unit111, -unit112_1, unit110}
+  },
 
-                                     {{unit111, unit112_2, 0},
-                                      {unit111, -unit112_1, unit110},
-                                      {unit111, -unit112_1, -unit110}},
+  { {unit111, unit112_2, 0},
+    {unit111, -unit112_1, unit110},
+    {unit111, -unit112_1, -unit110}
+  },
 
-                                     {{-unit111, unit112_2, 0},
-                                      {unit111, unit112_1, unit110},
-                                      {unit111, unit112_1, -unit110}}};
+  { { -unit111, unit112_2, 0},
+    {unit111, unit112_1, unit110},
+    {unit111, unit112_1, -unit110}
+  }
+};
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -199,11 +212,11 @@ void MergeColonies::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setAxisTolerance( reader->readValue("AxisTolerance", getAxisTolerance()) );
   setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
   setIdentifyGlobAlpha( reader->readValue("IdentifyGlobAlpha", getIdentifyGlobAlpha()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -230,21 +243,21 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, int32_t, Int32ArrayType, 0, voxels, 1)
-      if(m_IdentifyGlobAlpha == true)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, int32_t, Int32ArrayType, 0, voxels, 1)
+  if(m_IdentifyGlobAlpha == true)
   {
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, int32_t, Int32ArrayType, 0, voxels, 1)
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
 
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldParentIds, int32_t, Int32ArrayType, 0, fields, 1)
-      // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-      m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldParentIds, int32_t, Int32ArrayType, 0, fields, 1)
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
     QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
@@ -308,8 +321,8 @@ void MergeColonies::execute()
     const int rangeMax = numParents - 1;
     typedef boost::uniform_int<int> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&,
-        NumberDistribution> Generator;
+    typedef boost::variate_generator < RandomNumberGenerator&,
+            NumberDistribution > Generator;
 
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
@@ -330,9 +343,11 @@ void MergeColonies::execute()
     int r;
     size_t temp;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (int i=1; i< numParents; i++) {
+    for (int i = 1; i < numParents; i++)
+    {
       r = numberGenerator(); // Random remaining position.
-      if (r >= numParents) {
+      if (r >= numParents)
+      {
         continue;
       }
       temp = pid[i];
@@ -369,7 +384,7 @@ void MergeColonies::merge_colonies()
   NeighborList<int>& neighborlist = *m_NeighborList;
 
   //Converting the user defined tolerance to radians.
-  m_AxisTolerance = m_AxisTolerance*DREAM3D::Constants::k_Pi/180.0f;
+  m_AxisTolerance = m_AxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
   QVector<int> colonylist;
   float w;
@@ -386,7 +401,7 @@ void MergeColonies::merge_colonies()
   m_ParentNumbers.clear();
   m_ParentNumbers.fill(-1, numgrains);
 
-  m_ParentNumbers[0]= 0;
+  m_ParentNumbers[0] = 0;
   for (size_t i = 1; i < numgrains; i++)
   {
     if (m_ParentNumbers[i] == -1 && m_FieldPhases[i] > 0)
@@ -418,28 +433,28 @@ void MergeColonies::merge_colonies()
               OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
               m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
               OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-              w = w * (180.0f/DREAM3D::Constants::k_Pi);
-              //				float vecttol = 0.01f;
-              //	            if (fabs(fabs(r1) - 0.0000f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
-              //	            if (fabs(fabs(r1) - 0.9957f) < vecttol && fabs(fabs(r2) - 0.0917f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
-              //				if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
-              //				if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0530f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
-              //				if (fabs(fabs(r1) - 0.5870f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.1858f) < vecttol) colony = 1;
-              float angdiff1 = fabs(w-10.53f);
-              float axisdiff1 = acosf(fabs(n1)*0.0000f+fabs(n2)*0.0000f+fabs(n3)*1.0000f);
-              if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) colony = 1;
-              float angdiff2 = fabs(w-90.00f);
-              float axisdiff2 = acosf(fabs(n1)*0.9958f+fabs(n2)*0.0917f+fabs(n3)*0.0000f);
-              if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) colony = 1;
-              float angdiff3 = fabs(w-60.00f);
-              float axisdiff3 = acosf(fabs(n1)*1.0000f+fabs(n2)*0.0000f+fabs(n3)*0.0000f);
-              if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) colony = 1;
-              float angdiff4 = fabs(w-60.83f);
-              float axisdiff4 = acosf(fabs(n1)*0.9834f+fabs(n2)*0.0905f+fabs(n3)*0.1570f);
-              if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) colony = 1;
-              float angdiff5 = fabs(w-63.26f);
-              float axisdiff5 = acosf(fabs(n1)*0.9549f+fabs(n2)*0.0000f+fabs(n3)*0.2969f);
-              if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
+              w = w * (180.0f / DREAM3D::Constants::k_Pi);
+              //        float vecttol = 0.01f;
+              //              if (fabs(fabs(r1) - 0.0000f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
+              //              if (fabs(fabs(r1) - 0.9957f) < vecttol && fabs(fabs(r2) - 0.0917f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
+              //        if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
+              //        if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0530f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
+              //        if (fabs(fabs(r1) - 0.5870f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.1858f) < vecttol) colony = 1;
+              float angdiff1 = fabs(w - 10.53f);
+              float axisdiff1 = acosf(fabs(n1) * 0.0000f + fabs(n2) * 0.0000f + fabs(n3) * 1.0000f);
+              if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) { colony = 1; }
+              float angdiff2 = fabs(w - 90.00f);
+              float axisdiff2 = acosf(fabs(n1) * 0.9958f + fabs(n2) * 0.0917f + fabs(n3) * 0.0000f);
+              if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) { colony = 1; }
+              float angdiff3 = fabs(w - 60.00f);
+              float axisdiff3 = acosf(fabs(n1) * 1.0000f + fabs(n2) * 0.0000f + fabs(n3) * 0.0000f);
+              if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) { colony = 1; }
+              float angdiff4 = fabs(w - 60.83f);
+              float axisdiff4 = acosf(fabs(n1) * 0.9834f + fabs(n2) * 0.0905f + fabs(n3) * 0.1570f);
+              if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) { colony = 1; }
+              float angdiff5 = fabs(w - 63.26f);
+              float axisdiff5 = acosf(fabs(n1) * 0.9549f + fabs(n2) * 0.0000f + fabs(n3) * 0.2969f);
+              if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) { colony = 1; }
               if (colony == 1)
               {
                 m_ParentNumbers[neigh] = parentcount;
@@ -447,7 +462,7 @@ void MergeColonies::merge_colonies()
               }
             }
             else if (Ebsd::CrystalStructure::Cubic_High == phase2
-              && Ebsd::CrystalStructure::Hexagonal_High == phase1)
+                     && Ebsd::CrystalStructure::Hexagonal_High == phase1)
             {
               colony = check_for_burgers(q2, q1);
               if (colony == 1)
@@ -476,10 +491,10 @@ void MergeColonies::merge_colonies()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-    if(grainname > 0) m_CellParentIds[k] = m_ParentNumbers[grainname];
-    else m_CellParentIds[k] = 0;
+    if(grainname > 0) { m_CellParentIds[k] = m_ParentNumbers[grainname]; }
+    else { m_CellParentIds[k] = 0; }
   }
-  numParents = parentcount+1;
+  numParents = parentcount + 1;
 }
 
 // -----------------------------------------------------------------------------
@@ -503,7 +518,7 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 {
   float dP = 0.0;
   float angle = 0.0;
-  float radToDeg = 180.0f/DREAM3D::Constants::k_Pi;
+  float radToDeg = 180.0f / DREAM3D::Constants::k_Pi;
 
   float gBeta[3][3];
   float gBetaT[3][3];
@@ -522,7 +537,7 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
   float mat[3][3];
   float a[3];
   float b[3];
-  for(int i=0;i<12;i++)
+  for(int i = 0; i < 12; i++)
   {
     MatrixMath::Multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
     a[0] = mat[0][2];
@@ -533,7 +548,7 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
     b[2] = gAlphaT[2][2];
     dP = MatrixMath::CosThetaBetweenVectors(a, b);
     angle = acos(dP);
-    if((angle*radToDeg) < m_AngleTolerance || (180.0-(angle*radToDeg)) < m_AngleTolerance)
+    if((angle * radToDeg) < m_AngleTolerance || (180.0 - (angle * radToDeg)) < m_AngleTolerance)
     {
       a[0] = mat[0][0];
       a[1] = mat[1][0];
@@ -543,22 +558,22 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
       b[2] = gAlphaT[2][0];
       dP = MatrixMath::CosThetaBetweenVectors(a, b);
       angle = acos(dP);
-      if((angle*radToDeg) < m_AngleTolerance) return 1;
-      if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
-      b[0] = -0.5*gAlphaT[0][0]+0.866025*gAlphaT[0][1];
-      b[1] = -0.5*gAlphaT[1][0]+0.866025*gAlphaT[1][1];
-      b[2] = -0.5*gAlphaT[2][0]+0.866025*gAlphaT[2][1];
+      if((angle * radToDeg) < m_AngleTolerance) { return 1; }
+      if((180.0 - (angle * radToDeg)) < m_AngleTolerance) { return 1; }
+      b[0] = -0.5 * gAlphaT[0][0] + 0.866025 * gAlphaT[0][1];
+      b[1] = -0.5 * gAlphaT[1][0] + 0.866025 * gAlphaT[1][1];
+      b[2] = -0.5 * gAlphaT[2][0] + 0.866025 * gAlphaT[2][1];
       dP = MatrixMath::CosThetaBetweenVectors(a, b);
       angle = acos(dP);
-      if((angle*radToDeg) < m_AngleTolerance) return 1;
-      if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
-      b[0] = -0.5*gAlphaT[0][0]-0.866025*gAlphaT[0][1];
-      b[1] = -0.5*gAlphaT[1][0]-0.866025*gAlphaT[1][1];
-      b[2] = -0.5*gAlphaT[2][0]-0.866025*gAlphaT[2][1];
+      if((angle * radToDeg) < m_AngleTolerance) { return 1; }
+      if((180.0 - (angle * radToDeg)) < m_AngleTolerance) { return 1; }
+      b[0] = -0.5 * gAlphaT[0][0] - 0.866025 * gAlphaT[0][1];
+      b[1] = -0.5 * gAlphaT[1][0] - 0.866025 * gAlphaT[1][1];
+      b[2] = -0.5 * gAlphaT[2][0] - 0.866025 * gAlphaT[2][1];
       dP = MatrixMath::CosThetaBetweenVectors(a, b);
       angle = acos(dP);
-      if((angle*radToDeg) < m_AngleTolerance) return 1;
-      if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
+      if((angle * radToDeg) < m_AngleTolerance) { return 1; }
+      if((180.0 - (angle * radToDeg)) < m_AngleTolerance) { return 1; }
     }
   }
 
@@ -573,8 +588,8 @@ void MergeColonies::identify_globAlpha()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int64_t totalPoints = m->getTotalPoints();
-  QVector<int> betaSize(numParents,0);
-  QVector<int> totalSize(numParents,0);
+  QVector<int> betaSize(numParents, 0);
+  QVector<int> totalSize(numParents, 0);
   for (int64_t i = 0; i < totalPoints; i++)
   {
     int pnum = m_CellParentIds[i];
@@ -585,8 +600,8 @@ void MergeColonies::identify_globAlpha()
   for (int64_t i = 0; i < totalPoints; i++)
   {
     int pnum = m_CellParentIds[i];
-    float ratio = float(betaSize[pnum])/float(totalSize[pnum]);
-    if(ratio > 0.0) m_GlobAlpha[i] = 0;
-    else m_GlobAlpha[i] = 1;
+    float ratio = float(betaSize[pnum]) / float(totalSize[pnum]);
+    if(ratio > 0.0) { m_GlobAlpha[i] = 0; }
+    else { m_GlobAlpha[i] = 1; }
   }
 }

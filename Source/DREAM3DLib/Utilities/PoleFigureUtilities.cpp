@@ -69,7 +69,7 @@ PoleFigureUtilities::~PoleFigureUtilities()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int writeVtkFile(FloatArrayType* xyz, const QString &filename)
+int writeVtkFile(FloatArrayType* xyz, const QString& filename)
 {
 
   QFile in(filename);
@@ -97,9 +97,9 @@ int writeVtkFile(FloatArrayType* xyz, const QString &filename)
 //
 // -----------------------------------------------------------------------------
 void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
-                                              DoubleArrayType::Pointer &intensity0001,
-                                              DoubleArrayType::Pointer &intensity1010,
-                                              DoubleArrayType::Pointer &intensity1120)
+                                                 DoubleArrayType::Pointer& intensity0001,
+                                                 DoubleArrayType::Pointer& intensity1010,
+                                                 DoubleArrayType::Pointer& intensity1120)
 {
   int numOrientations = eulers->getNumberOfTuples();
 
@@ -148,7 +148,7 @@ void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lam
   poleFigurePtr->SetName("PoleFigure_<1010>");
   intensity1010.swap(poleFigurePtr);
 
-    // Generate the <111> pole figure which will generate a new set of Lambert Squares
+  // Generate the <111> pole figure which will generate a new set of Lambert Squares
   lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz1120.get(), lambertDimension, sphereRadius);
   poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
   poleFigurePtr->SetName("PoleFigure_<1120>");
@@ -159,9 +159,9 @@ void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lam
 //
 // -----------------------------------------------------------------------------
 void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
-                                              DoubleArrayType::Pointer &intensity100,
-                                              DoubleArrayType::Pointer &intensity010,
-                                              DoubleArrayType::Pointer &intensity001)
+                                                   DoubleArrayType::Pointer& intensity100,
+                                                   DoubleArrayType::Pointer& intensity010,
+                                                   DoubleArrayType::Pointer& intensity001)
 {
   int numOrientations = eulers->getNumberOfTuples();
 
@@ -210,7 +210,7 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
   poleFigurePtr->SetName("PoleFigure_<010>");
   intensity010.swap(poleFigurePtr);
 
-    // Generate the <111> pole figure which will generate a new set of Lambert Squares
+  // Generate the <111> pole figure which will generate a new set of Lambert Squares
   lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), lambertDimension, sphereRadius);
   poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
   poleFigurePtr->SetName("PoleFigure_<001>");

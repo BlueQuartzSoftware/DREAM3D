@@ -72,12 +72,12 @@ class DREAM3DLib_EXPORT IOSupport : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(QVector<PipelineMessage>, PipelineMessages)
 
-    void addErrorMessage(PipelineMessage &msg);
-    void addErrorMessage(const QString &filterName, const QString &errorDescription, int errorCode);
+    void addErrorMessage(PipelineMessage& msg);
+    void addErrorMessage(const QString& filterName, const QString& errorDescription, int errorCode);
     void addErrorMessages(QVector<PipelineMessage> msgVector);
 
-    void addWarningMessage(PipelineMessage &msg);
-    void addWarningMessage(const QString &filterName, const QString &warnDescription, int warnCode);
+    void addWarningMessage(PipelineMessage& msg);
+    void addWarningMessage(const QString& filterName, const QString& warnDescription, int warnCode);
     void addWarningMessages(QVector<PipelineMessage> msgVector);
 
     void removeErrorMessage(PipelineMessage msg);
@@ -88,14 +88,14 @@ class DREAM3DLib_EXPORT IOSupport : public Observable
 
     QString getHumanLabel();
 
-    virtual int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
+    virtual int createVtkObjectGroup(const QString& hdfGroupPath, const char* vtkDataObjectType);
 
 
-    protected:
-      IOSupport();
+  protected:
+    IOSupport();
 
-    private:
-      IOSupport(const IOSupport&); // Copy Constructor Not Implemented
+  private:
+    IOSupport(const IOSupport&); // Copy Constructor Not Implemented
     void operator=(const IOSupport&); // Operator '=' Not Implemented
 
 

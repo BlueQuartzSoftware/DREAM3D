@@ -72,24 +72,24 @@ class DREAM3DLib_EXPORT TrigonalOps : public OrientationOps
     virtual int getNumSymOps() { return k_NumSymQuats; }
     QString getSymmetryName() { return "Trignal-High -3m"; }
 
-    virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
-    virtual void getQuatSymOp(int i, QuatF &q);
-    virtual void getRodSymOp(int i, float *r);
+    virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3);
+    virtual void getQuatSymOp(int i, QuatF& q);
+    virtual void getRodSymOp(int i, float* r);
     virtual void getMatSymOp(int i, float g[3][3]);
-    virtual void getODFFZRod(float &r1, float &r2, float &r3);
-    virtual void getMDFFZRod(float &r1, float &r2, float &r3);
-    virtual void getNearestQuat(QuatF &q1, QuatF &q2);
+    virtual void getODFFZRod(float& r1, float& r2, float& r3);
+    virtual void getMDFFZRod(float& r1, float& r2, float& r3);
+    virtual void getNearestQuat(QuatF& q1, QuatF& q2);
     virtual int getMisoBin(float r1, float r2, float r3);
     virtual bool inUnitTriangle(float eta, float chi);
-    virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
-    virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
+    virtual void determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3);
+    virtual void determineRodriguesVector(int choose, float& r1, float& r2, float& r3);
     virtual int getOdfBin(float r1, float r2, float r3);
-    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
-    virtual void getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime);
-    virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1);
-    virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
-    virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
-    virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3);
+    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys);
+    virtual void getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime);
+    virtual void getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1);
+    virtual void getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt);
+    virtual void getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7);
+    virtual void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3);
 
 
     /**
@@ -129,7 +129,7 @@ class DREAM3DLib_EXPORT TrigonalOps : public OrientationOps
      * @param refDir The sample reference direction
      * @return Returns the ARGB Quadruplet DREAM3D::Rgb
      */
-    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF &q, const QuatF &refFrame);
+    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF& q, const QuatF& refFrame);
 
     /**
      * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler
@@ -140,12 +140,12 @@ class DREAM3DLib_EXPORT TrigonalOps : public OrientationOps
      * @return A QVector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config);
+    virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config);
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[6], int numsym,
-                  QuatF &q1, QuatF &q2,
-                  float &n1, float &n2, float &n3);
+                        QuatF& q1, QuatF& q2,
+                        float& n1, float& n2, float& n3);
 
   private:
     TrigonalOps(const TrigonalOps&); // Copy Constructor Not Implemented

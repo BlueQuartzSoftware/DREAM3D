@@ -73,7 +73,7 @@ class NeighborList : public IDataArray
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
-    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
+    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
     {
       return NeighborList<T>::New();
     }
@@ -94,7 +94,7 @@ class NeighborList : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -124,7 +124,7 @@ class NeighborList : public IDataArray
      */
     virtual QString getTypeAsString() { return NeighborList<T>::ClassName();}
 
-    void SetName(const QString &name) { m_Name = name; }
+    void SetName(const QString& name) { m_Name = name; }
     QString GetName() { return m_Name; }
 
 
@@ -142,10 +142,10 @@ class NeighborList : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t>& idxs)
     {
       int err = 0;
-            // If nothing is to be erased just return
+      // If nothing is to be erased just return
       if(idxs.size() == 0)
       {
         return 0;
@@ -210,7 +210,8 @@ class NeighborList : public IDataArray
      * of the internal storage arrays for this class.
      * @return
      */
-    size_t GetSize() {
+    size_t GetSize()
+    {
       size_t total = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
@@ -252,19 +253,19 @@ class NeighborList : public IDataArray
     virtual int32_t Resize(size_t numTuples) { return RawResize(numTuples); }
 
     //FIXME: These need to be implemented
-    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
     {
       SharedVectorType sharedVec = _data[i];
       VectorType* vec = sharedVec.get();
       size_t size = vec->size();
       out << size;
-      for(size_t i=0;i<size;i++)
+      for(size_t i = 0; i < size; i++)
       {
         out << delimiter << vec->at(i);
       }
     }
 
-    virtual void printComponent(QTextStream &out, size_t i, int j)
+    virtual void printComponent(QTextStream& out, size_t i, int j)
     {
       BOOST_ASSERT(false);
     }
@@ -374,7 +375,7 @@ class NeighborList : public IDataArray
         T* start = &(_data[dIdx]->front()); // Get the pointer to the front of the array
         //    T* end = start + nEle; // Get the pointer to the end of the array
         T* dst = &(flat.front()) + currentStart;
-        ::memcpy(dst, start, nEle*sizeof(T));
+        ::memcpy(dst, start, nEle * sizeof(T));
 
         currentStart += _data[dIdx]->size();
       }
@@ -418,8 +419,8 @@ class NeighborList : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
-                                  const QString &groupPath, const QString &label)
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                                   const QString& groupPath, const QString& label)
     {
       int precision = 0;
       QString xdmfTypeName;
@@ -496,8 +497,8 @@ class NeighborList : public IDataArray
     }
 
     /**
- *
- */
+    *
+    */
     void addEntry(int grainId, int value)
     {
       if(grainId >= static_cast<int>(_data.size()) )
@@ -543,7 +544,7 @@ class NeighborList : public IDataArray
     /**
      *
      */
-    T getValue(int grainId, int index, bool &ok)
+    T getValue(int grainId, int index, bool& ok)
     {
 #ifndef NDEBUG
       if (_data.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(_data.size()));}
@@ -643,7 +644,7 @@ class NeighborList : public IDataArray
     NeighborList() :
       m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
       m_Name("NeighborList")
-      {    }
+    {    }
 
   private:
     QString m_Name;

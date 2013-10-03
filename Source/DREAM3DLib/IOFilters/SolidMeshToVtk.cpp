@@ -48,8 +48,8 @@
 //
 // -----------------------------------------------------------------------------
 SolidMeshToVtk::SolidMeshToVtk() :
-AbstractFilter(),
-m_WriteBinaryFile(false)
+  AbstractFilter(),
+  m_WriteBinaryFile(false)
 {
   setupFilterParameters();
 }
@@ -67,22 +67,22 @@ SolidMeshToVtk::~SolidMeshToVtk()
 void SolidMeshToVtk::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> options;
-{
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Output Vtk File");
-     option->setPropertyName("OutputVtkFile");
-     option->setWidgetType(FilterParameter::OutputFileWidget);
-     option->setValueType("string");
-     options.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Write Binary Vtk File");
-     option->setPropertyName("WriteBinaryFile");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     options.push_back(option);
-   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Output Vtk File");
+    option->setPropertyName("OutputVtkFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Binary Vtk File");
+    option->setPropertyName("WriteBinaryFile");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
 
   setFilterParameters(options);
 }
@@ -94,10 +94,10 @@ void SolidMeshToVtk::readFilterParameters(AbstractFilterParametersReader* reader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputVtkFile( reader->readValue( "OutputVtkFile", getOutputVtkFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -119,7 +119,7 @@ int SolidMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer
 void SolidMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
 
   if (m_OutputVtkFile.isEmpty() == true)
   {
@@ -130,8 +130,8 @@ void SolidMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   VolumeDataContainer* sm = getVolumeDataContainer();
   if (NULL == sm)
   {
-      addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
   else
   {
@@ -182,9 +182,9 @@ class ScopedFileMonitor
 // -----------------------------------------------------------------------------
 void SolidMeshToVtk::execute()
 {
-<<<<<<< HEAD
+  <<< <<< < HEAD
   int err = 0;
-  
+
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)
@@ -203,14 +203,14 @@ void SolidMeshToVtk::execute()
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QString parentPath = QFileInfo::parentPath(getOutputVtkFile());
-    QDir dir;
+  QDir dir;
   if(!dir.mkpath(parentPath))
   {
-      ss.str("");
-      QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-      notifyErrorMessage(ss, -1);
-      setErrorCondition(-1);
-      return;
+    ss.str("");
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
+    notifyErrorMessage(ss, -1);
+    setErrorCondition(-1);
+    return;
   }
 
 
@@ -219,20 +219,22 @@ void SolidMeshToVtk::execute()
   vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
-      ss.str("");
-      QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
-      notifyErrorMessage(ss, -18542);
-      setErrorCondition(-18542);
-      return;
+    ss.str("");
+    QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
+    notifyErrorMessage(ss, -18542);
+    setErrorCondition(-18542);
+    return;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Solid Meshing Module\n");
-  if (m_WriteBinaryFile) {
+  if (m_WriteBinaryFile)
+  {
     fprintf(vtkFile, "BINARY\n");
   }
-  else {
+  else
+  {
     fprintf(vtkFile, "ASCII\n");
   }
   fprintf(vtkFile, "DATASET UNSTRUCTURED_GRID\n");
@@ -251,18 +253,18 @@ void SolidMeshToVtk::execute()
     pos[2] = static_cast<float>(n.pos[2]);
     if (m_WriteBinaryFile == true)
     {
-        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
-        DREAM3D::Endian::FromSystemToBig::convert(tData[1]);
-        DREAM3D::Endian::FromSystemToBig::convert(tData[2]);
-        totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
-        if (totalWritten != sizeof(float) * 3)
-        {
+      DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[1]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[2]);
+      totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
+      if (totalWritten != sizeof(float) * 3)
+      {
 
-        }
+      }
     }
     else
-  {
-        fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
+    {
+      fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
     }
   }
 
@@ -277,7 +279,7 @@ void SolidMeshToVtk::execute()
   fprintf(vtkFile, "CELLS %d %d\n", tetrahedronCount, (tetrahedronCount * 5));
   for (int j = 0; j < nT; j++)
   {
-  //  Triangle& t = triangles[j];
+    //  Triangle& t = triangles[j];
     tData[1] = tetrahedrons[j].node_id[0];
     tData[2] = tetrahedrons[j].node_id[1];
     tData[3] = tetrahedrons[j].node_id[2];
@@ -303,7 +305,7 @@ void SolidMeshToVtk::execute()
   fprintf(vtkFile, "CELL_TYPES %d\n", tetrahedronCount);
   for (int j = 0; j < nT; j++)
   {
-  //  Triangle& t = triangles[j];
+    //  Triangle& t = triangles[j];
     tData2[0] = 10;
     if (m_WriteBinaryFile == true)
     {
@@ -325,9 +327,9 @@ void SolidMeshToVtk::execute()
 
   setErrorCondition(0);
   notifyStatusMessage("Complete");
-=======
+  == == == =
 //  int err = 0;
-//  
+//
 //  setErrorCondition(err);
 //  dataCheck(false, 0, 0, 0);
 //  if(getErrorCondition() < 0)
@@ -467,7 +469,7 @@ void SolidMeshToVtk::execute()
 //
 //  setErrorCondition(0);
 //  notifyStatusMessage("Complete");
->>>>>>> develop
+    >>> >>> > develop
 }
 
 
@@ -497,14 +499,14 @@ int SolidMeshToVtk::writePointData(FILE* vtkFile)
 
   for(int i = 0; i < numNodes; ++i)
   {
-      if(m_WriteBinaryFile == true)
-      {
+    if(m_WriteBinaryFile == true)
+    {
 
-      }
-      else
-      {
+    }
+    else
+    {
 
-      }
+    }
   }
   return err;
 }

@@ -162,8 +162,9 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields
   {
 
     if (preflight == true)
-      addWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
-    else {
+    { addWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
+    else
+    {
       setErrorCondition(-1001);
       addErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
     }
@@ -179,8 +180,9 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields
   {
 
     if (preflight == true)
-      addWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
-    else {
+    { addWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
+    else
+    {
       setErrorCondition(-1002);
       addErrorMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
     }
@@ -268,10 +270,12 @@ void NodesTrianglesToVtk::execute()
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (m_WriteBinaryFile) {
+  if (m_WriteBinaryFile)
+  {
     fprintf(vtkFile, "BINARY\n");
   }
-  else {
+  else
+  {
     fprintf(vtkFile, "ASCII\n");
   }
   fprintf(vtkFile, "DATASET POLYDATA\n");
@@ -287,12 +291,13 @@ void NodesTrianglesToVtk::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos+1, pos+2); // Read one set of positions from the nodes file
+    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if (nread != 5)
     {
       break;
     }
-    if (m_WriteBinaryFile == true) {
+    if (m_WriteBinaryFile == true)
+    {
       DREAM3D::Endian::FromSystemToBig::convert(pos[0]);
       DREAM3D::Endian::FromSystemToBig::convert(pos[1]);
       DREAM3D::Endian::FromSystemToBig::convert(pos[2]);
@@ -302,7 +307,8 @@ void NodesTrianglesToVtk::execute()
 
       }
     }
-    else {
+    else
+    {
       fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
     }
   }
@@ -324,7 +330,7 @@ void NodesTrianglesToVtk::execute()
   for (int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData+1,tData+2,tData+3,tData+4,tData+5,tData+6,tData+7,tData+8 );
+    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8 );
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
@@ -393,7 +399,7 @@ void NodesTrianglesToVtk::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeBinaryPointData(const QString &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
 {
   //# first line = number of nodes
   //# column 1 = node id, starts from zero.
@@ -420,7 +426,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString &NodesFile, FILE* vt
   std::vector<int> data (nNodes, 0);
   for (int i = 0; i < nNodes; i++)
   {
-    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos+1, pos+2); // Read one set of positions from the nodes file
+    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if (nread != 5)
     {
       break;
@@ -442,7 +448,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString &NodesFile, FILE* vt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeASCIIPointData(const QString &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
 {
   int err = 0;
   int nodeId = 0;
@@ -459,7 +465,7 @@ int NodesTrianglesToVtk::writeASCIIPointData(const QString &NodesFile, FILE* vtk
   fscanf(nodesFile, "%d", &nodeId); // Read the number of nodes
   for (int i = 0; i < nNodes; i++)
   {
-    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos+1, pos+2); // Read one set of positions from the nodes file
+    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if (nread != 5)
     {
       break;
@@ -475,7 +481,7 @@ int NodesTrianglesToVtk::writeASCIIPointData(const QString &NodesFile, FILE* vtk
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeBinaryCellData(const QString &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryCellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
   //# first line = number of triangles
   //# column 1 = triangle id, starts from zero
@@ -508,19 +514,20 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString &TrianglesFile, FILE*
   std::vector<int> cell_data(triangleCount);
   for (int i = 0; i < nTriangles; i++)
   {
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData+1,tData+2,tData+3,tData+4,tData+5,tData+6,tData+7,tData+8 );
-    if (nread != 9) {
+    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8 );
+    if (nread != 9)
+    {
       return -1;
     }
     DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
-    tri_ids[i*offset] = tData[0];
+    tri_ids[i * offset] = tData[0];
     DREAM3D::Endian::FromSystemToBig::convert(tData[7]);
-    cell_data[i*offset] = tData[7];
+    cell_data[i * offset] = tData[7];
     if (false == conformalMesh)
     {
       DREAM3D::Endian::FromSystemToBig::convert(tData[8]);
-      cell_data[i*offset + 1] = tData[8];
-      tri_ids[i*offset + 1] = tData[0];
+      cell_data[i * offset + 1] = tData[8];
+      tri_ids[i * offset + 1] = tData[0];
     }
   }
 
@@ -549,7 +556,7 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString &TrianglesFile, FILE*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeASCIICellData(const QString &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
   int nread = 0;
   // Open the triangles file for reading
@@ -570,8 +577,9 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString &TrianglesFile, FILE* 
   int tData[9];
   for (int i = 0; i < nTriangles; i++)
   {
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData+1,tData+2,tData+3,tData+4,tData+5,tData+6,tData+7,tData+8 );
-    if (nread != 9) {
+    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8 );
+    if (nread != 9)
+    {
       return -1;
     }
     fprintf(vtkFile, "%d\n", tData[7]);

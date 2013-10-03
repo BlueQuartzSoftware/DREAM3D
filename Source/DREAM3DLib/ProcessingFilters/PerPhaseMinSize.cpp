@@ -105,10 +105,10 @@ void PerPhaseMinSize::readFilterParameters(AbstractFilterParametersReader* reade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMinAllowedGrainSize( reader->readValue("MinAllowedGrainSize", getMinAllowedGrainSize()) );
   setPhaseNumber( reader->readValue("PhaseNumber", getPhaseNumber()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -184,16 +184,16 @@ void PerPhaseMinSize::remove_smallgrains()
   int numgrains = m->getNumCellFieldTuples();
 
   std::vector<int> voxcounts;
-  voxcounts.resize(numgrains,0);
+  voxcounts.resize(numgrains, 0);
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];
-    if(gnum >= 0) voxcounts[gnum]++;
+    if(gnum >= 0) { voxcounts[gnum]++; }
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-  m_Active[i] = true;
-    if(voxcounts[i] >= getMinAllowedGrainSize() || m_FieldPhases[i] != m_PhaseNumber) good = true;
+    m_Active[i] = true;
+    if(voxcounts[i] >= getMinAllowedGrainSize() || m_FieldPhases[i] != m_PhaseNumber) { good = true; }
   }
   if(good == false)
   {
@@ -205,9 +205,9 @@ void PerPhaseMinSize::remove_smallgrains()
   {
     gnum = m_GrainIds[i];
     if(voxcounts[gnum] < getMinAllowedGrainSize() && m_FieldPhases[i] == m_PhaseNumber && gnum > 0)
-  {
-    m_GrainIds[i] = -1;
-    m_Active[gnum] = false;
-  }
+    {
+      m_GrainIds[i] = -1;
+      m_Active[gnum] = false;
+    }
   }
 }

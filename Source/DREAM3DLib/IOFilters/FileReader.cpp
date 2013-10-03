@@ -45,8 +45,8 @@
 //
 // -----------------------------------------------------------------------------
 FileReader::FileReader() :
-    AbstractFilter(),
-    m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
 {
 }
 
@@ -208,21 +208,22 @@ size_t FileReader::nonPrintables(char* buf, size_t bufSize)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FileReader::readLine(std::istream &in, char* buf, int bufSize)
+int FileReader::readLine(std::istream& in, char* buf, int bufSize)
 {
 
   bool readAnotherLine = true;
-    size_t gcount = 0;
-  while ( readAnotherLine == true && in.gcount() != 0) {
+  size_t gcount = 0;
+  while ( readAnotherLine == true && in.gcount() != 0)
+  {
     // Zero out the buffer
     ::memset(buf, 0, bufSize);
     // Read a line up to a '\n' which will catch windows and unix line endings but
     // will leave a trailing '\r' at the end of the string
     in.getline(buf, bufSize, '\n');
     gcount = in.gcount();
-    if (gcount > 1 && buf[in.gcount()-2] == '\r')
+    if (gcount > 1 && buf[in.gcount() - 2] == '\r')
     {
-      buf[in.gcount()-2] = 0;
+      buf[in.gcount() - 2] = 0;
     }
     size_t len = strlen(buf);
     size_t np = nonPrintables(buf, bufSize);

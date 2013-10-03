@@ -353,7 +353,7 @@ void GenericExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
   reader->openFilterGroup(this, index);
   setStlFilePrefix( reader->readValue("StlFilePrefix", getStlFilePrefix()) );

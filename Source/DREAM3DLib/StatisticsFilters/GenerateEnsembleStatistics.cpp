@@ -166,11 +166,11 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 
 
-      if(m_SizeDistribution == true || m_Omega3Distribution == true
-         || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
+  if(m_SizeDistribution == true || m_Omega3Distribution == true
+      || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, -302, bool, BoolArrayType, fields, 1)
-        GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
   }
   if(m_NeighborhoodDistribution == true)
   {
@@ -194,17 +194,17 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   {
     typedef DataArray<unsigned int> XTalStructArrayType;
     GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-        GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
   }
   if(m_CalculateODF == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, -304, float, FloatArrayType, fields, 1)
-        GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -302, float, FloatArrayType, fields, 3)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -302, float, FloatArrayType, fields, 3)
   }
   if(m_CalculateMDF == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-        m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getCellFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getCellFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {
 
@@ -314,7 +314,7 @@ void GenerateEnsembleStatistics::execute()
     if(static_cast<int>(m_PhaseTypeArray.size()) > totalEnsembles)
     {
 
-      QString ss = QObject::tr("The number of PhaseTypes entered is more than the number of Ensembles, only the first %1 will be used").arg(totalEnsembles-1);
+      QString ss = QObject::tr("The number of PhaseTypes entered is more than the number of Ensembles, only the first %1 will be used").arg(totalEnsembles - 1);
       notifyWarningMessage(ss, -999);
     }
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
@@ -384,7 +384,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   size_t numgrains = m->getNumCellFieldTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
 
-  QVector<float> fractions(numensembles,0.0);
+  QVector<float> fractions(numensembles, 0.0);
   sizedist.resize(numensembles);
   values.resize(numensembles);
 
@@ -400,7 +400,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
     if(m_BiasedFields[i] == false)
     {
       values[m_FieldPhases[i]][0].push_back(m_EquivalentDiameters[i]);
-      vol = (1.0/6.0)*DREAM3D::Constants::k_Pi*m_EquivalentDiameters[i]*m_EquivalentDiameters[i]*m_EquivalentDiameters[i];
+      vol = (1.0 / 6.0) * DREAM3D::Constants::k_Pi * m_EquivalentDiameters[i] * m_EquivalentDiameters[i] * m_EquivalentDiameters[i];
       fractions[m_FieldPhases[i]] = fractions[m_FieldPhases[i]] + vol;
       totalUnbiasedVolume = totalUnbiasedVolume + vol;
     }
@@ -410,11 +410,11 @@ void GenerateEnsembleStatistics::gatherSizeStats()
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-      pp->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
+      pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       pp->setGrainSizeDistribution(sizedist[i]);
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-      int numbins = int(maxdiam/m_SizeCorrelationResolution)+1;
+      int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       pp->setGrainDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
       DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
@@ -423,11 +423,11 @@ void GenerateEnsembleStatistics::gatherSizeStats()
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-      pp->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
+      pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       pp->setGrainSizeDistribution(sizedist[i]);
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-      int numbins = int(maxdiam/m_SizeCorrelationResolution)+1;
+      int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       pp->setGrainDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
       DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
@@ -437,11 +437,11 @@ void GenerateEnsembleStatistics::gatherSizeStats()
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-      tp->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
+      tp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       tp->setGrainSizeDistribution(sizedist[i]);
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-      int numbins = int(maxdiam/m_SizeCorrelationResolution)+1;
+      int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       tp->setGrainDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
       DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
@@ -512,9 +512,9 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   {
     if(m_BiasedFields[i] == false)
     {
-      bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
-      bvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i]);
-      cvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i+1]);
+      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FieldPhases[i]]) / binsteps[m_FieldPhases[i]]);
+      bvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2 * i]);
+      cvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2 * i + 1]);
     }
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -600,7 +600,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   {
     if(m_BiasedFields[i] == false)
     {
-      bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FieldPhases[i]]) / binsteps[m_FieldPhases[i]]);
       values[m_FieldPhases[i]][bin].push_back(m_Omega3s[i]);
     }
   }
@@ -676,7 +676,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
   {
     if(m_BiasedFields[i] == false)
     {
-      bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FieldPhases[i]]) / binsteps[m_FieldPhases[i]]);
       values[m_FieldPhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
     }
   }
@@ -722,7 +722,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
   totalvol.resize(numensembles);
   eulerodf.resize(numensembles);
   unsigned long long dims = 0;
-  for(unsigned long long i=1;i<numensembles;i++)
+  for(unsigned long long i = 1; i < numensembles; i++)
   {
     totalvol[i] = 0;
     if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal_High)
@@ -757,9 +757,9 @@ void GenerateEnsembleStatistics::gatherODFStats()
   {
     if (m_SurfaceFields[i] == false)
     {
-      ea1 = m_FieldEulerAngles[3*i];
-      ea2 = m_FieldEulerAngles[3*i+1];
-      ea3 = m_FieldEulerAngles[3*i+2];
+      ea1 = m_FieldEulerAngles[3 * i];
+      ea2 = m_FieldEulerAngles[3 * i + 1];
+      ea3 = m_FieldEulerAngles[3 * i + 2];
       phase = m_CrystalStructures[m_FieldPhases[i]];
       OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
@@ -767,7 +767,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
     }
   }
 
-  for(size_t i = 1;i < numensembles;i++)
+  for(size_t i = 1; i < numensembles; i++)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
@@ -802,8 +802,8 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   // And we do the same for the SharedSurfaceArea list
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
-  float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
-  float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
+  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   int mbin = 0;
   float w;
   QuatF q1;
@@ -820,7 +820,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
 
   misobin.resize(numensembles);
   totalSurfaceArea.resize(numensembles);
-  for(size_t i=1;i<numensembles;++i)
+  for(size_t i = 1; i < numensembles; ++i)
   {
     totalSurfaceArea[i] = 0;
     if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[i] )
@@ -869,9 +869,9 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for (size_t i = 1; i < numensembles; i++)
   {
-    for(size_t j=0;j<misobin[i]->GetSize();j++)
+    for(size_t j = 0; j < misobin[i]->GetSize(); j++)
     {
-      misobin[i]->SetValue(j, (misobin[i]->GetValue(j)/totalSurfaceArea[i]));
+      misobin[i]->SetValue(j, (misobin[i]->GetValue(j) / totalSurfaceArea[i]));
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {

@@ -93,7 +93,7 @@ class DREAM3DLib_EXPORT StatsData
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;

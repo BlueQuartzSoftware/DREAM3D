@@ -10,14 +10,14 @@
 //
 // -----------------------------------------------------------------------------
 FindMicroTextureRegions::FindMicroTextureRegions() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_MicroTextureRegionNumCellsArrayName(DREAM3D::FieldData::MicroTextureRegionNumCells),
-m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FieldData::MicroTextureRegionFractionOccupied),
-m_MicroTextureRegionNumCells(NULL),
-m_MicroTextureRegionFractionOccupied(NULL),
-m_GrainIds(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_MicroTextureRegionNumCellsArrayName(DREAM3D::FieldData::MicroTextureRegionNumCells),
+  m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FieldData::MicroTextureRegionFractionOccupied),
+  m_MicroTextureRegionNumCells(NULL),
+  m_MicroTextureRegionFractionOccupied(NULL),
+  m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -40,8 +40,8 @@ void FindMicroTextureRegions::readFilterParameters(AbstractFilterParametersReade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -61,7 +61,7 @@ int FindMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrite
 void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
@@ -109,8 +109,8 @@ void FindMicroTextureRegions::execute()
     return;
   }
 
- find_microtextureregions();
- notifyStatusMessage("FindMicroTextureRegions Completed");
+  find_microtextureregions();
+  notifyStatusMessage("FindMicroTextureRegions Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -172,24 +172,24 @@ void FindMicroTextureRegions::find_microtextureregions()
 
   float x, y, z;
   size_t zStride, yStride;
-  for(size_t i=0;i<zPoints;i++)
+  for(size_t i = 0; i < zPoints; i++)
   {
-  zStride = i*xPoints*yPoints;
-    for (size_t j=0;j<yPoints;j++)
+    zStride = i * xPoints * yPoints;
+    for (size_t j = 0; j < yPoints; j++)
     {
-      yStride = j*xPoints;
-      for(size_t k=0;k<xPoints;k++)
+      yStride = j * xPoints;
+      for(size_t k = 0; k < xPoints; k++)
       {
-       int mtnum = m_GrainIds[zStride+yStride+k];
+        int mtnum = m_GrainIds[zStride + yStride + k];
         x = float(k) * xRes;
         y = float(j) * yRes;
         z = float(i) * zRes;
-        if (x > microtextureregionxmaxs[mtnum]) microtextureregionxmaxs[mtnum] = x;
-        if (y > microtextureregionymaxs[mtnum]) microtextureregionymaxs[mtnum] = y;
-        if (z > microtextureregionzmaxs[mtnum]) microtextureregionzmaxs[mtnum] = z;
-        if (x < microtextureregionxmins[mtnum]) microtextureregionxmins[mtnum] = x;
-        if (y < microtextureregionymins[mtnum]) microtextureregionymins[mtnum] = y;
-        if (z < microtextureregionzmins[mtnum]) microtextureregionzmins[mtnum] = z;
+        if (x > microtextureregionxmaxs[mtnum]) { microtextureregionxmaxs[mtnum] = x; }
+        if (y > microtextureregionymaxs[mtnum]) { microtextureregionymaxs[mtnum] = y; }
+        if (z > microtextureregionzmaxs[mtnum]) { microtextureregionzmaxs[mtnum] = z; }
+        if (x < microtextureregionxmins[mtnum]) { microtextureregionxmins[mtnum] = x; }
+        if (y < microtextureregionymins[mtnum]) { microtextureregionymins[mtnum] = y; }
+        if (z < microtextureregionzmins[mtnum]) { microtextureregionzmins[mtnum] = z; }
       }
     }
   }

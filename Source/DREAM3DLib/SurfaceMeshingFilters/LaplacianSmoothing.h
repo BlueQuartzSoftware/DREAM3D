@@ -95,7 +95,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-   virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -149,7 +149,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
      * @brief This method generates the Lambda array that will be use during the smoothing
      * @return
      */
-    virtual int generateLambdaArray(DataArray<int8_t> *nodeTypePtr);
+    virtual int generateLambdaArray(DataArray<int8_t>* nodeTypePtr);
 
     /**
      * @brief This version of the smoothing algorithm uses Edge->Vertex connectivity information for its algorithm
@@ -167,7 +167,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     bool m_DoConnectivityFilter;
 
 #if OUTPUT_DEBUG_VTK_FILES
-    void writeVTKFile(const QString &outputVtkFile);
+    void writeVTKFile(const QString& outputVtkFile);
 #endif
 
 

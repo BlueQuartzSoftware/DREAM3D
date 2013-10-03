@@ -87,8 +87,8 @@ void FindSlipTransmissionMetrics::readFilterParameters(AbstractFilterParametersR
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -183,7 +183,7 @@ void FindSlipTransmissionMetrics::preflight()
     return;
   }
 
-  dataCheck(true, 1,1 ,1);
+  dataCheck(true, 1, 1 , 1);
 }
 
 // -----------------------------------------------------------------------------

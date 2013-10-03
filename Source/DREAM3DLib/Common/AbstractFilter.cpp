@@ -34,9 +34,9 @@
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
-Observable(),
-m_ErrorCondition(0),
-m_Cancel(false)
+  Observable(),
+  m_ErrorCondition(0),
+  m_Cancel(false)
 {
   m_DataContainerArray = DataContainerArray::Pointer();
   setupFilterParameters();
@@ -78,7 +78,7 @@ void AbstractFilter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterBeforeThis(const QString &name)
+bool AbstractFilter::doesPipelineContainFilterBeforeThis(const QString& name)
 {
   bool contains = false;
   // Check the previous filter
@@ -98,7 +98,7 @@ bool AbstractFilter::doesPipelineContainFilterBeforeThis(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterAfterThis(const QString &name)
+bool AbstractFilter::doesPipelineContainFilterAfterThis(const QString& name)
 {
   bool contains = false;
   // Check the previous filter
@@ -147,7 +147,7 @@ int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessage(PipelineMessage &msg)
+void AbstractFilter::addErrorMessage(PipelineMessage& msg)
 {
   m_PipelineMessages.push_back(msg);
 }
@@ -155,7 +155,7 @@ void AbstractFilter::addErrorMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessage(const QString &filterHumanLabel, const QString &errorDescription, int errorCode)
+void AbstractFilter::addErrorMessage(const QString& filterHumanLabel, const QString& errorDescription, int errorCode)
 {
   PipelineMessage em(getNameOfClass(), errorDescription, errorCode, PipelineMessage::Error);
   em.setFilterHumanLabel(getHumanLabel());
@@ -165,8 +165,10 @@ void AbstractFilter::addErrorMessage(const QString &filterHumanLabel, const QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessages(QVector<PipelineMessage> msgVector) {
-  for (QVector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
+void AbstractFilter::addErrorMessages(QVector<PipelineMessage> msgVector)
+{
+  for (QVector<PipelineMessage>::size_type i = 0; i < msgVector.size(); ++i)
+  {
     m_PipelineMessages.push_back(msgVector[i]);
   }
 }
@@ -174,7 +176,7 @@ void AbstractFilter::addErrorMessages(QVector<PipelineMessage> msgVector) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessage(PipelineMessage &msg)
+void AbstractFilter::addWarningMessage(PipelineMessage& msg)
 {
   msg.setFilterHumanLabel(getHumanLabel());
   msg.setFilterClassName(getNameOfClass());
@@ -184,7 +186,7 @@ void AbstractFilter::addWarningMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessage(const QString &filterName, const QString &warnDescription, int warnCode)
+void AbstractFilter::addWarningMessage(const QString& filterName, const QString& warnDescription, int warnCode)
 {
   PipelineMessage em(getNameOfClass(), warnDescription, warnCode, PipelineMessage::Warning);
   em.setFilterHumanLabel(getHumanLabel());
@@ -195,8 +197,10 @@ void AbstractFilter::addWarningMessage(const QString &filterName, const QString 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessages(QVector<PipelineMessage> msgVector) {
-  for (QVector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
+void AbstractFilter::addWarningMessages(QVector<PipelineMessage> msgVector)
+{
+  for (QVector<PipelineMessage>::size_type i = 0; i < msgVector.size(); ++i)
+  {
     m_PipelineMessages.push_back(msgVector[i]);
   }
 }
@@ -205,9 +209,12 @@ void AbstractFilter::addWarningMessages(QVector<PipelineMessage> msgVector) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::removeErrorMessage(PipelineMessage msg) {
-  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
-    if (*iter == msg) {
+void AbstractFilter::removeErrorMessage(PipelineMessage msg)
+{
+  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter != m_PipelineMessages.end(); ++iter)
+  {
+    if (*iter == msg)
+    {
       m_PipelineMessages.erase(iter);
       return;
     }
@@ -217,11 +224,14 @@ void AbstractFilter::removeErrorMessage(PipelineMessage msg) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::removeErrorMessage(int index) {
+void AbstractFilter::removeErrorMessage(int index)
+{
   int count = 0;
 
-  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
-    if (count == index) {
+  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter != m_PipelineMessages.end(); ++iter)
+  {
+    if (count == index)
+    {
       m_PipelineMessages.erase(iter);
       return;
     }
@@ -232,12 +242,16 @@ void AbstractFilter::removeErrorMessage(int index) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::removeErrorMessages(int start, int end) {
+void AbstractFilter::removeErrorMessages(int start, int end)
+{
   int count = 0;
 
-  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
-    if (count == start) {
-      while (count <= end) {
+  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter != m_PipelineMessages.end(); ++iter)
+  {
+    if (count == start)
+    {
+      while (count <= end)
+      {
         iter = m_PipelineMessages.erase(iter);
         count++;
       }
@@ -250,10 +264,12 @@ void AbstractFilter::removeErrorMessages(int start, int end) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::clearErrorMessages() {
+void AbstractFilter::clearErrorMessages()
+{
   QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin();
 
-  while ( iter != m_PipelineMessages.end() ) {
+  while ( iter != m_PipelineMessages.end() )
+  {
     iter = m_PipelineMessages.erase(iter);
   }
 }

@@ -78,10 +78,10 @@ class DREAM3DLib_EXPORT OrientationOps
      */
     virtual int getODFSize() = 0;
 
-     /**
-     * @brief getHasInversion Returns a bool whether the symmetry class is centro-symmetric
-     * @return
-     */
+    /**
+    * @brief getHasInversion Returns a bool whether the symmetry class is centro-symmetric
+    * @return
+    */
     virtual bool getHasInversion() = 0;
 
     /**
@@ -111,32 +111,32 @@ class DREAM3DLib_EXPORT OrientationOps
      * @param n3
      * @return
      */
-    virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3) = 0;
+    virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3) = 0;
 
     /**
      * @brief getQuatSymOp Copies the symmetry operator at index i into q
      * @param i The index into the Symmetry operators array
      * @param q [output] The quaternion to store the value into
      */
-    virtual void getQuatSymOp(int i, QuatF &q) = 0;
-    virtual void getRodSymOp(int i, float *r) = 0;
+    virtual void getQuatSymOp(int i, QuatF& q) = 0;
+    virtual void getRodSymOp(int i, float* r) = 0;
     virtual void getMatSymOp(int i, float g[3][3]) = 0;
-    virtual void getODFFZRod(float &r1, float &r2, float &r3) = 0;
-    virtual void getMDFFZRod(float &r1, float &r2, float &r3) = 0;
-    virtual void getNearestQuat(QuatF &q1, QuatF &q2) = 0;
+    virtual void getODFFZRod(float& r1, float& r2, float& r3) = 0;
+    virtual void getMDFFZRod(float& r1, float& r2, float& r3) = 0;
+    virtual void getNearestQuat(QuatF& q1, QuatF& q2) = 0;
     virtual int getMisoBin(float r1, float r2, float r3) = 0;
     virtual bool inUnitTriangle(float eta, float chi) = 0;
-    virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3) = 0;
-    virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3) = 0;
+    virtual void determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3) = 0;
+    virtual void determineRodriguesVector(int choose, float& r1, float& r2, float& r3) = 0;
     virtual int getOdfBin(float r1, float r2, float r3) = 0;
-    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys) = 0;
-    virtual void getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime) = 0;
-    virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1) = 0;
-    virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt) = 0;
-    virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7) = 0;
+    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys) = 0;
+    virtual void getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime) = 0;
+    virtual void getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1) = 0;
+    virtual void getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt) = 0;
+    virtual void getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7) = 0;
 
 
-    virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3) = 0;
+    virtual void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3) = 0;
 
     /**
      * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
@@ -175,7 +175,7 @@ class DREAM3DLib_EXPORT OrientationOps
      * @param refDir A Quaternion representing the sample reference direction
      * @return A DREAM3D::Rgb value
      */
-    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF &q, const QuatF &refFrame) = 0;
+    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF& q, const QuatF& refFrame) = 0;
 
 
     /**
@@ -187,21 +187,21 @@ class DREAM3DLib_EXPORT OrientationOps
      * @return A QVector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config) = 0;
+    virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config) = 0;
 
   protected:
     OrientationOps();
 
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,
-                  QuatF &q1, QuatF &q2,
-                  float &n1, float &n2, float &n3);
+                        QuatF& q1, QuatF& q2,
+                        float& n1, float& n2, float& n3);
 
-    void _calcRodNearestOrigin(const float rodsym[24][3], int numsym, float &r1,float &r2, float &r3);
-    void _calcNearestQuat(const QuatF quatsym[24], int numsym, QuatF &q1, QuatF &q2);
-    void _calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF &qr);
+    void _calcRodNearestOrigin(const float rodsym[24][3], int numsym, float& r1, float& r2, float& r3);
+    void _calcNearestQuat(const QuatF quatsym[24], int numsym, QuatF& q1, QuatF& q2);
+    void _calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF& qr);
 
     int _calcMisoBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3);
-    void _calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float &r1, float &r2, float &r3);
+    void _calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float& r1, float& r2, float& r3);
     int _calcODFBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3);
 
   private:

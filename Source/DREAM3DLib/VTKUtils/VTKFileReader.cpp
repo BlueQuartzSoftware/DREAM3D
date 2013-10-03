@@ -55,9 +55,9 @@
 //
 // -----------------------------------------------------------------------------
 VTKFileReader::VTKFileReader() :
-FileReader(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_InputFile("")
+  FileReader(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_InputFile("")
 {
 }
 
@@ -103,7 +103,7 @@ size_t VTKFileReader::parseByteSize(char text[256])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKFileReader::ignoreData(std::ifstream &in, int byteSize, char* text, int xDim, int yDim, int zDim)
+int VTKFileReader::ignoreData(std::ifstream& in, int byteSize, char* text, int xDim, int yDim, int zDim)
 {
   char cunsigned_char [64] = "unsigned_char";
   char cchar [64] = "char";
@@ -116,7 +116,8 @@ int VTKFileReader::ignoreData(std::ifstream &in, int byteSize, char* text, int x
   char cfloat [64] = "float";
   char cdouble [64] = " double";
   int err = 0;
-  if (strcmp(text, cunsigned_char) == 0 ) {
+  if (strcmp(text, cunsigned_char) == 0 )
+  {
     err |= skipVolume<unsigned char>(in, byteSize, xDim, yDim, zDim);
   }
   if (strcmp(text, cchar) == 0 ) { err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);}
@@ -205,9 +206,9 @@ int VTKFileReader::readHeader()
   dims[1] = tokens[2].toLongLong(&ok, 10);
   dims[2] = tokens[3].toLongLong(&ok, 10);
 #if   (CMP_SIZEOF_SSIZE_T==4)
-    int64_t max = std::numeric_limits<size_t>::max();
+  int64_t max = std::numeric_limits<size_t>::max();
 #else
-    int64_t max = std::numeric_limits<int64_t>::max();
+  int64_t max = std::numeric_limits<int64_t>::max();
 #endif
   if (dims[0] * dims[1] * dims[2] > max )
   {
@@ -222,7 +223,7 @@ int VTKFileReader::readHeader()
   {
     err = -1;
     QString s = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version. dim[0]=%1  dim[1]=%2im[2]=%3")\
-    .arg(dims[0]).arg(dims[1]).arg(dims[2]);
+                .arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(err);
     addErrorMessage(getHumanLabel(), s, -1);
     return err;

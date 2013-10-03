@@ -113,10 +113,10 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
     /**
      * @brief
      */
-    virtual AbstractFilter::Pointer removeFirstFilterByName(const QString &name);
+    virtual AbstractFilter::Pointer removeFirstFilterByName(const QString& name);
 
 
-    virtual void printFilterNames(QTextStream &out);
+    virtual void printFilterNames(QTextStream& out);
 
 
 

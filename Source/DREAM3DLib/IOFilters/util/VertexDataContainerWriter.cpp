@@ -122,11 +122,12 @@ void VertexDataContainerWriter::execute()
 
   // Add some VTK hints into the group
   err = createVtkObjectGroup(getDataContainer()->getName(), H5_VTK_POLYDATA);
-  if (err < 0)  {
+  if (err < 0)
+  {
     return;
   }
 
-  if(getdcType() == 3) writeXdmfMeshStructure();
+  if(getdcType() == 3) { writeXdmfMeshStructure(); }
 
   err = writeMeshData(dcGid);
   if (err < 0)
@@ -203,11 +204,11 @@ void VertexDataContainerWriter::writeXdmfMeshStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const QString &attrType,
-                                                                              const QString &groupName,
-                                                                              IDataArray::Pointer array,
-                                                                              const QString &centering,
-                                                                              int precision, const QString &xdmfTypeName)
+QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const QString& attrType,
+    const QString& groupName,
+    IDataArray::Pointer array,
+    const QString& centering,
+    int precision, const QString& xdmfTypeName)
 {
   QString buf;
   QTextStream out(&buf);
@@ -231,16 +232,17 @@ QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering)
+void VertexDataContainerWriter::writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering)
 {
 #if 0
-      <Attribute Name="Node Type" Center="Node">
-      <DataItem Format="HDF" DataType="char" Precision="1" Dimensions="43029 1">
-        MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:/VertexDataContainer/POINT_DATA/VertexMeshNodeType
-      </DataItem>
-    </Attribute>
+  < Attribute Name = "Node Type" Center = "Node" >
+                                          < DataItem Format = "HDF" DataType = "char" Precision = "1" Dimensions = "43029 1" >
+                                                            MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:
+                                                              / VertexDataContainer / POINT_DATA / VertexMeshNodeType
+                                                              < / DataItem >
+                                                              < / Attribute >
 #endif
-  if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
+                                                              if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
   { return; }
 
 
@@ -257,9 +259,9 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const QString &groupName,
   }
   int numComp = array->GetNumberOfComponents();
   QString attrType = "Scalar";
-  if(numComp > 2) attrType = "Vector";
+  if(numComp > 2) { attrType = "Vector"; }
 
-  QString block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
+  QString block = writeXdmfAttributeDataHelper(numComp, attrType, groupName, array, centering, precision, xdmfTypeName);
 
   out << block << "\n";
 }
@@ -283,7 +285,7 @@ int VertexDataContainerWriter::writeMeshData(hid_t dcGid)
     float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
 
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
-    if (err < 0) 
+    if (err < 0)
     {
       setErrorCondition(err);
       notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
@@ -292,11 +294,11 @@ int VertexDataContainerWriter::writeMeshData(hid_t dcGid)
     {
       DataArray<int32_t>::Pointer vertsPtr = DataArray<int32_t>::CreateArray(verticesPtr->getNumberOfTuples(), 3, DREAM3D::HDF5::VertsName);
       int32_t* verts = vertsPtr->getPointer(0);
-      for(int i=0;i<verticesPtr->getNumberOfTuples();i++)
+      for(int i = 0; i < verticesPtr->getNumberOfTuples(); i++)
       {
-        verts[3*i] = 1;
-        verts[3*i+1] = 1;
-        verts[3*i+2] = i;
+        verts[3 * i] = 1;
+        verts[3 * i + 1] = 1;
+        verts[3 * i + 2] = i;
       }
       rank = 2;
       dims[0] = verticesPtr->getNumberOfTuples();
@@ -384,7 +386,7 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid, QString groupNa
   QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
-  int64_t volDims[3] = { 0,0,0 };
+  int64_t volDims[3] = { 0, 0, 0 };
 
 
   // Write the Field Data
@@ -482,11 +484,11 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid, QString groupNa
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
-    #if WRITE_FIELD_XDMF
+#if WRITE_FIELD_XDMF
     ss.str("");
     ss << "Neighbor Data (" << total << ")";
     writeFieldXdmfGridHeader(total, ss);
-    #endif
+#endif
     for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
     {
       err = (*iter)->writeH5Data(fieldGroupId);

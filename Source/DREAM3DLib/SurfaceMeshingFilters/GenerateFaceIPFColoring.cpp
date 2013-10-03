@@ -83,7 +83,7 @@ class CalculateFaceIPFColorsImpl
       m_Colors(colors),
       m_CrystalStructures(crystalStructures)
     {}
-    virtual ~CalculateFaceIPFColorsImpl(){}
+    virtual ~CalculateFaceIPFColorsImpl() {}
 
     /**
      * @brief generate Generates the Normals for the triangles
@@ -114,37 +114,37 @@ class CalculateFaceIPFColorsImpl
       int grain1, grain2, phase1, phase2;
       for (size_t i = start; i < end; i++)
       {
-        grain1 = m_Labels[2*i];
-        grain2 = m_Labels[2*i+1];
-        if(grain1 > 0) phase1 = m_Phases[grain1];
-        else phase1 = 0;
+        grain1 = m_Labels[2 * i];
+        grain2 = m_Labels[2 * i + 1];
+        if(grain1 > 0) { phase1 = m_Phases[grain1]; }
+        else { phase1 = 0; }
 
-        if(grain2 > 0) phase2 = m_Phases[grain2];
-        else phase2 = 0;
+        if(grain2 > 0) { phase2 = m_Phases[grain2]; }
+        else { phase2 = 0; }
 
         if(phase1 > 0 )
         {
           // Make sure we are using a valid Euler Angles with valid crystal symmetry
           if( m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd )
           {
-            dEuler[0] = m_Eulers[3*grain1+0];
-            dEuler[1] = m_Eulers[3*grain1+1];
-            dEuler[2] = m_Eulers[3*grain1+2];
-            refDir[0] = m_Normals[3*i+0];
-            refDir[1] = m_Normals[3*i+1];
-            refDir[2] = m_Normals[3*i+2];
+            dEuler[0] = m_Eulers[3 * grain1 + 0];
+            dEuler[1] = m_Eulers[3 * grain1 + 1];
+            dEuler[2] = m_Eulers[3 * grain1 + 2];
+            refDir[0] = m_Normals[3 * i + 0];
+            refDir[1] = m_Normals[3 * i + 1];
+            refDir[2] = m_Normals[3 * i + 2];
 
             argb = ops[m_CrystalStructures[phase1]]->generateIPFColor(dEuler, refDir, false);
-            m_Colors[6*i] = RgbColor::dRed(argb);
-            m_Colors[6*i + 1] = RgbColor::dGreen(argb);
-            m_Colors[6*i + 2] = RgbColor::dBlue(argb);
+            m_Colors[6 * i] = RgbColor::dRed(argb);
+            m_Colors[6 * i + 1] = RgbColor::dGreen(argb);
+            m_Colors[6 * i + 2] = RgbColor::dBlue(argb);
           }
         }
         else // Phase 1 was Zero so assign a black color
         {
-          m_Colors[6*i+0] = 0;
-          m_Colors[6*i+1] = 0;
-          m_Colors[6*i+2] = 0;
+          m_Colors[6 * i + 0] = 0;
+          m_Colors[6 * i + 1] = 0;
+          m_Colors[6 * i + 2] = 0;
         }
 
 
@@ -154,24 +154,24 @@ class CalculateFaceIPFColorsImpl
           // Make sure we are using a valid Euler Angles with valid crystal symmetry
           if( m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd )
           {
-            dEuler[0] = m_Eulers[3*grain2+0];
-            dEuler[1] = m_Eulers[3*grain2+1];
-            dEuler[2] = m_Eulers[3*grain2+2];
-            refDir[0] = -m_Normals[3*i+0];
-            refDir[1] = -m_Normals[3*i+1];
-            refDir[2] = -m_Normals[3*i+2];
+            dEuler[0] = m_Eulers[3 * grain2 + 0];
+            dEuler[1] = m_Eulers[3 * grain2 + 1];
+            dEuler[2] = m_Eulers[3 * grain2 + 2];
+            refDir[0] = -m_Normals[3 * i + 0];
+            refDir[1] = -m_Normals[3 * i + 1];
+            refDir[2] = -m_Normals[3 * i + 2];
 
             argb = ops[m_CrystalStructures[phase1]]->generateIPFColor(dEuler, refDir, false);
-            m_Colors[6*i + 3] = RgbColor::dRed(argb);
-            m_Colors[6*i + 4] = RgbColor::dGreen(argb);
-            m_Colors[6*i + 5] = RgbColor::dBlue(argb);
+            m_Colors[6 * i + 3] = RgbColor::dRed(argb);
+            m_Colors[6 * i + 4] = RgbColor::dGreen(argb);
+            m_Colors[6 * i + 5] = RgbColor::dBlue(argb);
           }
         }
         else
         {
-          m_Colors[6*i+3] = 0;
-          m_Colors[6*i+4] = 0;
-          m_Colors[6*i+5] = 0;
+          m_Colors[6 * i + 3] = 0;
+          m_Colors[6 * i + 4] = 0;
+          m_Colors[6 * i + 5] = 0;
         }
       }
     }
@@ -181,7 +181,7 @@ class CalculateFaceIPFColorsImpl
      * @brief operator () This is called from the TBB stye of code
      * @param r The range to compute the values
      */
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -258,7 +258,7 @@ int GenerateFaceIPFColoring::writeFilterParameters(AbstractFilterParametersWrite
 void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   // We MUST have Nodes
@@ -288,7 +288,7 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels
 void GenerateFaceIPFColoring::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
@@ -327,7 +327,7 @@ void GenerateFaceIPFColoring::preflight()
 void GenerateFaceIPFColoring::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());

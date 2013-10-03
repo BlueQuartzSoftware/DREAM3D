@@ -80,25 +80,25 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     virtual ~FindDeformationStatistics();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)	
-	DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)	
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)	
-	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -106,12 +106,12 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const QString getHumanLabel() { return "Find Deformation Statistics"; }
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -119,9 +119,9 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
 
-	/**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+    /**
+       * @brief Reimplemented from @see AbstractFilter class
+       */
     virtual void execute();
     virtual void preflight();
 

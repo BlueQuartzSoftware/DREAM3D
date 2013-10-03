@@ -136,23 +136,23 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
 
     virtual void setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedFaceArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedCellArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                             QSet<QString> selectedFaceArrays,
+                                             QSet<QString> selectedEdgeArrays,
+                                             QSet<QString> selectedCellArrays,
+                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedEnsembleArrays);
     virtual void setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFaceArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                              QSet<QString> selectedEdgeArrays,
+                                              QSet<QString> selectedFaceArrays,
+                                              QSet<QString> selectedFieldArrays,
+                                              QSet<QString> selectedEnsembleArrays);
     virtual void setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                           QSet<QString> selectedEdgeArrays,
+                                           QSet<QString> selectedFieldArrays,
+                                           QSet<QString> selectedEnsembleArrays);
     virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedEnsembleArrays);
 
     /**
      * @brief readExistingPipelineFromFile This will read the existing pipeline that is stored in the file and store it

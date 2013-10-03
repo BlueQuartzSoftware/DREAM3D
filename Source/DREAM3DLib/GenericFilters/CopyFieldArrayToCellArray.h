@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT CopyFieldArrayToCellArray : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -92,7 +92,7 @@ class DREAM3DLib_EXPORT CopyFieldArrayToCellArray : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT CopyFieldArrayToCellArray : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-  int32_t*  m_GrainIds;
+    int32_t*  m_GrainIds;
 
     CopyFieldArrayToCellArray(const CopyFieldArrayToCellArray&); // Copy Constructor Not Implemented
     void operator=(const CopyFieldArrayToCellArray&); // Operator '=' Not Implemented

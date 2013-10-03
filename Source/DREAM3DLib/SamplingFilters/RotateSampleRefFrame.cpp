@@ -47,22 +47,23 @@
 #endif
 
 
-typedef struct {
-    size_t   xp;
-    size_t   yp;
-    size_t   zp;
-    float   xRes;
-    float   yRes;
-    float   zRes;
-    size_t   xpNew;
-    size_t   ypNew;
-    size_t   zpNew;
-    float   xResNew;
-    float   yResNew;
-    float   zResNew;
-    float   xMinNew;
-    float   yMinNew;
-    float   zMinNew;
+typedef struct
+{
+  size_t   xp;
+  size_t   yp;
+  size_t   zp;
+  float   xRes;
+  float   yRes;
+  float   zRes;
+  size_t   xpNew;
+  size_t   ypNew;
+  size_t   zpNew;
+  float   xResNew;
+  float   yResNew;
+  float   zResNew;
+  float   xMinNew;
+  float   yMinNew;
+  float   zMinNew;
 
 } RotateSampleRefFrameImplArg_t;
 
@@ -95,7 +96,7 @@ class RotateSampleRefFrameImpl
       rotMatrixInv[2][1] = rotMat[1][2];
       rotMatrixInv[2][2] = rotMat[2][2];
     }
-    virtual ~RotateSampleRefFrameImpl(){}
+    virtual ~RotateSampleRefFrameImpl() {}
 
     void convert(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
     {
@@ -110,27 +111,27 @@ class RotateSampleRefFrameImpl
 
       for (size_t k = zStart; k < zEnd; k++)
       {
-        ktot = (m_params->xpNew*m_params->ypNew)*k;
+        ktot = (m_params->xpNew * m_params->ypNew) * k;
         for (size_t j = yStart; j < yEnd; j++)
         {
-          jtot = (m_params->xpNew)*j;
+          jtot = (m_params->xpNew) * j;
           for (size_t i = xStart; i < xEnd; i++)
           {
             index = ktot + jtot + i;
             newindicies[index] = -1;
-            coords[2] = (float(k)*m_params->zResNew)+m_params->zMinNew;
-            coords[1] = (float(j)*m_params->yResNew)+m_params->yMinNew;
-            coords[0] = (float(i)*m_params->xResNew)+m_params->xMinNew;
-            coordsNew[0] = rotMatrixInv[0][0]*coords[0]+rotMatrixInv[0][1]*coords[1]+rotMatrixInv[0][2]*coords[2];
-            coordsNew[1] = rotMatrixInv[1][0]*coords[0]+rotMatrixInv[1][1]*coords[1]+rotMatrixInv[1][2]*coords[2];
-            coordsNew[2] = rotMatrixInv[2][0]*coords[0]+rotMatrixInv[2][1]*coords[1]+rotMatrixInv[2][2]*coords[2];
-            colOld = coordsNew[0]/m_params->xRes;
-            rowOld = coordsNew[1]/m_params->yRes;
-            planeOld = coordsNew[2]/m_params->zRes;
-            if(m_sliceBySlice == true) planeOld = k;
+            coords[2] = (float(k) * m_params->zResNew) + m_params->zMinNew;
+            coords[1] = (float(j) * m_params->yResNew) + m_params->yMinNew;
+            coords[0] = (float(i) * m_params->xResNew) + m_params->xMinNew;
+            coordsNew[0] = rotMatrixInv[0][0] * coords[0] + rotMatrixInv[0][1] * coords[1] + rotMatrixInv[0][2] * coords[2];
+            coordsNew[1] = rotMatrixInv[1][0] * coords[0] + rotMatrixInv[1][1] * coords[1] + rotMatrixInv[1][2] * coords[2];
+            coordsNew[2] = rotMatrixInv[2][0] * coords[0] + rotMatrixInv[2][1] * coords[1] + rotMatrixInv[2][2] * coords[2];
+            colOld = coordsNew[0] / m_params->xRes;
+            rowOld = coordsNew[1] / m_params->yRes;
+            planeOld = coordsNew[2] / m_params->zRes;
+            if(m_sliceBySlice == true) { planeOld = k; }
             if(colOld >= 0 && colOld < m_params->xp && rowOld >= 0 && rowOld < m_params->yp && planeOld >= 0 && planeOld < m_params->zp)
             {
-              newindicies[index] = (m_params->xp*m_params->yp*planeOld)+(m_params->xp*rowOld)+colOld;
+              newindicies[index] = (m_params->xp * m_params->yp * planeOld) + (m_params->xp * rowOld) + colOld;
             }
           }
         }
@@ -138,7 +139,7 @@ class RotateSampleRefFrameImpl
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range3d<size_t, size_t, size_t> &r) const
+    void operator()(const tbb::blocked_range3d<size_t, size_t, size_t>& r) const
     {
       convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
     }
@@ -207,10 +208,10 @@ void RotateSampleRefFrame::readFilterParameters(AbstractFilterParametersReader* 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setRotationAxis( reader->readValue("RotationAxis", getRotationAxis() ) );
   setRotationAngle( reader->readValue("RotationAngle", getRotationAngle()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -252,7 +253,7 @@ void RotateSampleRefFrame::preflight()
   }
 
 
-  m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
+  m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
   int32_t xp, yp, zp;
   float xRes, yRes, zRes;
@@ -282,53 +283,53 @@ void RotateSampleRefFrame::preflight()
   float xMin = 100000000, xMax = 0, yMin = 100000000, yMax = 0, zMin = 100000000, zMax = 0;
 
   OrientationMath::AxisAngletoMat(m_RotationAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
-  for(int i=0;i<8;i++)
+  for(int i = 0; i < 8; i++)
   {
-    if(i == 0) col = 0, row = 0, plane = 0;
-    if(i == 1) col = xp-1, row = 0, plane = 0;
-    if(i == 2) col = 0, row = yp-1, plane = 0;
-    if(i == 3) col = xp-1, row = yp-1, plane = 0;
-    if(i == 4) col = 0, row = 0, plane = zp-1;
-    if(i == 5) col = xp-1, row = 0, plane = zp-1;
-    if(i == 6) col = 0, row = yp-1, plane = zp-1;
-    if(i == 7) col = xp-1, row = yp-1, plane = zp-1;
-    coords[0] = col*xRes;
-    coords[1] = row*yRes;
-    coords[2] = plane*zRes;
-    MatrixMath::Multiply3x3with3x1(rotMat,coords,newcoords);
-    if(newcoords[0] < xMin) xMin = newcoords[0];
-    if(newcoords[0] > xMax) xMax = newcoords[0];
-    if(newcoords[1] < yMin) yMin = newcoords[1];
-    if(newcoords[1] > yMax) yMax = newcoords[1];
-    if(newcoords[2] < zMin) zMin = newcoords[2];
-    if(newcoords[2] > zMax) zMax = newcoords[2];
+    if(i == 0) { col = 0, row = 0, plane = 0; }
+    if(i == 1) { col = xp - 1, row = 0, plane = 0; }
+    if(i == 2) { col = 0, row = yp - 1, plane = 0; }
+    if(i == 3) { col = xp - 1, row = yp - 1, plane = 0; }
+    if(i == 4) { col = 0, row = 0, plane = zp - 1; }
+    if(i == 5) { col = xp - 1, row = 0, plane = zp - 1; }
+    if(i == 6) { col = 0, row = yp - 1, plane = zp - 1; }
+    if(i == 7) { col = xp - 1, row = yp - 1, plane = zp - 1; }
+    coords[0] = col * xRes;
+    coords[1] = row * yRes;
+    coords[2] = plane * zRes;
+    MatrixMath::Multiply3x3with3x1(rotMat, coords, newcoords);
+    if(newcoords[0] < xMin) { xMin = newcoords[0]; }
+    if(newcoords[0] > xMax) { xMax = newcoords[0]; }
+    if(newcoords[1] < yMin) { yMin = newcoords[1]; }
+    if(newcoords[1] > yMax) { yMax = newcoords[1]; }
+    if(newcoords[2] < zMin) { zMin = newcoords[2]; }
+    if(newcoords[2] > zMax) { zMax = newcoords[2]; }
   }
-  float xAxis[3] = {1,0,0};
-  float yAxis[3] = {0,1,0};
-  float zAxis[3] = {0,0,1};
+  float xAxis[3] = {1, 0, 0};
+  float yAxis[3] = {0, 1, 0};
+  float zAxis[3] = {0, 0, 1};
   float xAxisNew[3];
   float yAxisNew[3];
   float zAxisNew[3];
-  MatrixMath::Multiply3x3with3x1(rotMat,xAxis,xAxisNew);
-  MatrixMath::Multiply3x3with3x1(rotMat,yAxis,yAxisNew);
-  MatrixMath::Multiply3x3with3x1(rotMat,zAxis,zAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat, xAxis, xAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat, yAxis, yAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat, zAxis, zAxisNew);
   float closestAxis;
   xResNew = xRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis,xAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis,xAxisNew)) > closestAxis) xResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis,xAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis,xAxisNew)) > closestAxis) xResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis,xAxisNew));
+  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, xAxisNew));
+  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis) { xResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, xAxisNew)); }
+  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis) { xResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, xAxisNew)); }
   yResNew = yRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis,yAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis,yAxisNew)) > closestAxis) yResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis,yAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis,yAxisNew)) > closestAxis) yResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis,yAxisNew));
+  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, yAxisNew));
+  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis) { yResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, yAxisNew)); }
+  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis) { yResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, yAxisNew)); }
   zResNew = zRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis,zAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis,zAxisNew)) > closestAxis) zResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis,zAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis,zAxisNew)) > closestAxis) zResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis,zAxisNew));
+  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, zAxisNew));
+  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
+  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
 
-  xpNew = ((xMax-xMin)/xResNew)+1;
-  ypNew = ((yMax-yMin)/yResNew)+1;
-  zpNew = ((zMax-zMin)/zResNew)+1;
+  xpNew = ((xMax - xMin) / xResNew) + 1;
+  ypNew = ((yMax - yMin) / yResNew) + 1;
+  zpNew = ((zMax - zMin) / zResNew) + 1;
 
   params.xpNew = xpNew;
   params.xResNew = xResNew;
@@ -366,7 +367,7 @@ void RotateSampleRefFrame::execute()
     return;
   }
 
-  m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
+  m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
   int32_t xp, yp, zp;
   float xRes, yRes, zRes;
@@ -396,53 +397,53 @@ void RotateSampleRefFrame::execute()
   float xMin = 100000000, xMax = 0, yMin = 100000000, yMax = 0, zMin = 100000000, zMax = 0;
 
   OrientationMath::AxisAngletoMat(m_RotationAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
-  for(int i=0;i<8;i++)
+  for(int i = 0; i < 8; i++)
   {
-    if(i == 0) col = 0, row = 0, plane = 0;
-    if(i == 1) col = xp-1, row = 0, plane = 0;
-    if(i == 2) col = 0, row = yp-1, plane = 0;
-    if(i == 3) col = xp-1, row = yp-1, plane = 0;
-    if(i == 4) col = 0, row = 0, plane = zp-1;
-    if(i == 5) col = xp-1, row = 0, plane = zp-1;
-    if(i == 6) col = 0, row = yp-1, plane = zp-1;
-    if(i == 7) col = xp-1, row = yp-1, plane = zp-1;
-    coords[0] = col*xRes;
-    coords[1] = row*yRes;
-    coords[2] = plane*zRes;
-    MatrixMath::Multiply3x3with3x1(rotMat,coords,newcoords);
-    if(newcoords[0] < xMin) xMin = newcoords[0];
-    if(newcoords[0] > xMax) xMax = newcoords[0];
-    if(newcoords[1] < yMin) yMin = newcoords[1];
-    if(newcoords[1] > yMax) yMax = newcoords[1];
-    if(newcoords[2] < zMin) zMin = newcoords[2];
-    if(newcoords[2] > zMax) zMax = newcoords[2];
+    if(i == 0) { col = 0, row = 0, plane = 0; }
+    if(i == 1) { col = xp - 1, row = 0, plane = 0; }
+    if(i == 2) { col = 0, row = yp - 1, plane = 0; }
+    if(i == 3) { col = xp - 1, row = yp - 1, plane = 0; }
+    if(i == 4) { col = 0, row = 0, plane = zp - 1; }
+    if(i == 5) { col = xp - 1, row = 0, plane = zp - 1; }
+    if(i == 6) { col = 0, row = yp - 1, plane = zp - 1; }
+    if(i == 7) { col = xp - 1, row = yp - 1, plane = zp - 1; }
+    coords[0] = col * xRes;
+    coords[1] = row * yRes;
+    coords[2] = plane * zRes;
+    MatrixMath::Multiply3x3with3x1(rotMat, coords, newcoords);
+    if(newcoords[0] < xMin) { xMin = newcoords[0]; }
+    if(newcoords[0] > xMax) { xMax = newcoords[0]; }
+    if(newcoords[1] < yMin) { yMin = newcoords[1]; }
+    if(newcoords[1] > yMax) { yMax = newcoords[1]; }
+    if(newcoords[2] < zMin) { zMin = newcoords[2]; }
+    if(newcoords[2] > zMax) { zMax = newcoords[2]; }
   }
-  float xAxis[3] = {1,0,0};
-  float yAxis[3] = {0,1,0};
-  float zAxis[3] = {0,0,1};
+  float xAxis[3] = {1, 0, 0};
+  float yAxis[3] = {0, 1, 0};
+  float zAxis[3] = {0, 0, 1};
   float xAxisNew[3];
   float yAxisNew[3];
   float zAxisNew[3];
-  MatrixMath::Multiply3x3with3x1(rotMat,xAxis,xAxisNew);
-  MatrixMath::Multiply3x3with3x1(rotMat,yAxis,yAxisNew);
-  MatrixMath::Multiply3x3with3x1(rotMat,zAxis,zAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat, xAxis, xAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat, yAxis, yAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat, zAxis, zAxisNew);
   float closestAxis;
   xResNew = xRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis,xAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis,xAxisNew)) > closestAxis) xResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis,xAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis,xAxisNew)) > closestAxis) xResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis,xAxisNew));
+  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, xAxisNew));
+  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis) { xResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, xAxisNew)); }
+  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis) { xResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, xAxisNew)); }
   yResNew = yRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis,yAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis,yAxisNew)) > closestAxis) yResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis,yAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis,yAxisNew)) > closestAxis) yResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis,yAxisNew));
+  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, yAxisNew));
+  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis) { yResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, yAxisNew)); }
+  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis) { yResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, yAxisNew)); }
   zResNew = zRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis,zAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis,zAxisNew)) > closestAxis) zResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis,zAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis,zAxisNew)) > closestAxis) zResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis,zAxisNew));
+  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, zAxisNew));
+  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
+  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
 
-  xpNew = ((xMax-xMin)/xResNew)+1;
-  ypNew = ((yMax-yMin)/yResNew)+1;
-  zpNew = ((zMax-zMin)/zResNew)+1;
+  xpNew = ((xMax - xMin) / xResNew) + 1;
+  ypNew = ((yMax - yMin) / yResNew) + 1;
+  zpNew = ((zMax - zMin) / zResNew) + 1;
 
   params.xpNew = xpNew;
   params.xResNew = xResNew;
@@ -507,7 +508,7 @@ void RotateSampleRefFrame::execute()
       }
       else
       {
-        data->InitializeTuple(i,0);
+        data->InitializeTuple(i, 0);
       }
     }
     m->addCellData(*iter, data);

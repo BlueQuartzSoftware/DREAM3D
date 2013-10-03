@@ -80,7 +80,7 @@ class FindNRingNeighbors
     DREAM3D_INSTANCE_PROPERTY(int, Ring)
 
 
-    FaceArray::UniqueFaceIds_t &getNRingTriangles();
+    FaceArray::UniqueFaceIds_t& getNRingTriangles();
 
     /**
      * @brief generate
@@ -95,14 +95,14 @@ class FindNRingNeighbors
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
   protected:
-      FindNRingNeighbors();
+    FindNRingNeighbors();
 
-     /**
-     * @brief writeVTKFile
-     * @param node2Triangle
-     * @param twoRingNeighbors
-     */
-    int writeVTKFile(const QString &outputFile);
+    /**
+    * @brief writeVTKFile
+    * @param node2Triangle
+    * @param twoRingNeighbors
+    */
+    int writeVTKFile(const QString& outputFile);
 
   private:
     FaceArray::UniqueFaceIds_t  m_NRingTriangles;

@@ -105,7 +105,7 @@ int GBCDTriangleDumper::writeFilterParameters(AbstractFilterParametersWriter* wr
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("OutputFile", getOutputFile() );
-    writer->closeFilterGroup();
+  writer->closeFilterGroup();
   return index;
 }
 
@@ -155,8 +155,8 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
   //      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
- //       typedef DataArray<unsigned int> XTalStructArrayType;
- //   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+//       typedef DataArray<unsigned int> XTalStructArrayType;
+//   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -228,7 +228,7 @@ void GBCDTriangleDumper::execute()
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
-  float radToDeg = 180.0/M_PI;
+  float radToDeg = 180.0 / M_PI;
 
   int gid0 = 0; // Grain id 0
   int gid1 = 0; // Grain id 1
@@ -238,8 +238,8 @@ void GBCDTriangleDumper::execute()
   for(size_t t = 0; t < totalFaces; ++t)
   {
     // Get the Grain Ids for the triangle
-    gid0 = m_SurfaceMeshFaceLabels[t*2];
-    gid1 = m_SurfaceMeshFaceLabels[t*2 + 1];
+    gid0 = m_SurfaceMeshFaceLabels[t * 2];
+    gid1 = m_SurfaceMeshFaceLabels[t * 2 + 1];
 
     if(gid0 < 0)
     {
@@ -258,8 +258,8 @@ void GBCDTriangleDumper::execute()
     tNorm = m_SurfaceMeshFaceNormals + (t * 3);
 
     fprintf(f, "%0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f\n", euAng0[0]*radToDeg, euAng0[1]*radToDeg, euAng0[2]*radToDeg,
-    euAng1[0]*radToDeg, euAng1[1]*radToDeg, euAng1[2]*radToDeg,
-    tNorm[0], tNorm[1], tNorm[2], m_SurfaceMeshFaceAreas[t]);
+            euAng1[0]*radToDeg, euAng1[1]*radToDeg, euAng1[2]*radToDeg,
+            tNorm[0], tNorm[1], tNorm[2], m_SurfaceMeshFaceAreas[t]);
 
 
   }

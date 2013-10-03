@@ -96,14 +96,14 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addVertexData(const QString &name, IDataArray::Pointer data);
+    void addVertexData(const QString& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVertexData(const QString &name);
+    IDataArray::Pointer getVertexData(const QString& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -111,7 +111,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeVertexData(const QString &name);
+    IDataArray::Pointer removeVertexData(const QString& name);
 
     /**
      * @brief Removes all the Point Arrays
@@ -144,14 +144,14 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addVertexFieldData(const QString &name, IDataArray::Pointer data);
+    void addVertexFieldData(const QString& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVertexFieldData(const QString &name);
+    IDataArray::Pointer getVertexFieldData(const QString& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -159,7 +159,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeVertexFieldData(const QString &name);
+    IDataArray::Pointer removeVertexFieldData(const QString& name);
 
     /**
      * @brief Removes all the Field Arrays
@@ -197,14 +197,14 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addVertexEnsembleData(const QString &name, IDataArray::Pointer data);
+    void addVertexEnsembleData(const QString& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVertexEnsembleData(const QString &name);
+    IDataArray::Pointer getVertexEnsembleData(const QString& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -212,7 +212,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeVertexEnsembleData(const QString &name);
+    IDataArray::Pointer removeVertexEnsembleData(const QString& name);
 
     /**
      * @brief Removes all the Ensemble Arrays
@@ -248,16 +248,16 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
 
 
   protected:
-     VertexDataContainer();
+    VertexDataContainer();
 
-   private:
+  private:
 
-     QMap<QString, IDataArray::Pointer> m_VertexData;
-     QMap<QString, IDataArray::Pointer> m_VertexFieldData;
-     QMap<QString, IDataArray::Pointer> m_VertexEnsembleData;
+    QMap<QString, IDataArray::Pointer> m_VertexData;
+    QMap<QString, IDataArray::Pointer> m_VertexFieldData;
+    QMap<QString, IDataArray::Pointer> m_VertexEnsembleData;
 
-     VertexDataContainer(const VertexDataContainer&);
-     void operator =(const VertexDataContainer&);
+    VertexDataContainer(const VertexDataContainer&);
+    void operator =(const VertexDataContainer&);
 
 };
 

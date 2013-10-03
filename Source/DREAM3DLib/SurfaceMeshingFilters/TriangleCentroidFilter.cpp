@@ -60,7 +60,7 @@ class CalculateCentroidsImpl
       m_Triangles(triangles),
       m_Centroids(centroids)
     {}
-    virtual ~CalculateCentroidsImpl(){}
+    virtual ~CalculateCentroidsImpl() {}
 
     void generate(size_t start, size_t end) const
     {
@@ -70,14 +70,14 @@ class CalculateCentroidsImpl
 
       for (size_t i = start; i < end; i++)
       {
-        m_Centroids[i*3]  = (nodes[triangles[i].verts[0]].pos[0] + nodes[triangles[i].verts[1]].pos[0] + nodes[triangles[i].verts[2]].pos[0])/3.0;
-        m_Centroids[i*3 + 1] = (nodes[triangles[i].verts[0]].pos[1] + nodes[triangles[i].verts[1]].pos[1] + nodes[triangles[i].verts[2]].pos[1])/3.0;
-        m_Centroids[i*3 + 2]  = (nodes[triangles[i].verts[0]].pos[2] + nodes[triangles[i].verts[1]].pos[2] + nodes[triangles[i].verts[2]].pos[2])/3.0;
+        m_Centroids[i * 3]  = (nodes[triangles[i].verts[0]].pos[0] + nodes[triangles[i].verts[1]].pos[0] + nodes[triangles[i].verts[2]].pos[0]) / 3.0;
+        m_Centroids[i * 3 + 1] = (nodes[triangles[i].verts[0]].pos[1] + nodes[triangles[i].verts[1]].pos[1] + nodes[triangles[i].verts[2]].pos[1]) / 3.0;
+        m_Centroids[i * 3 + 2]  = (nodes[triangles[i].verts[0]].pos[2] + nodes[triangles[i].verts[1]].pos[2] + nodes[triangles[i].verts[2]].pos[2]) / 3.0;
       }
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -122,8 +122,8 @@ void TriangleCentroidFilter::readFilterParameters(AbstractFilterParametersReader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -146,7 +146,7 @@ int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter
 void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   // We MUST have Nodes
@@ -190,7 +190,7 @@ void TriangleCentroidFilter::preflight()
 void TriangleCentroidFilter::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == m)

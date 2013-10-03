@@ -98,7 +98,7 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
   setOrigin( reader->readValue("Origin", getOrigin()) );
   setResolution( reader->readValue("Resolution", getResolution()) );
-  Ebsd::RefFrameZDir zdir = static_cast<Ebsd::RefFrameZDir>(reader->readValue("RefFrameZDir",getRefFrameZDir()));
+  Ebsd::RefFrameZDir zdir = static_cast<Ebsd::RefFrameZDir>(reader->readValue("RefFrameZDir", getRefFrameZDir()));
   setRefFrameZDir(zdir);
   reader->closeFilterGroup();
 }
@@ -109,7 +109,7 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
@@ -155,22 +155,22 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
 #else
     int64_t max = std::numeric_limits<int64_t>::max();
 #endif
-  if(dims[0] * dims[1] * dims[2] > max)
-  {
-    err = -1;
-    QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
-    setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), ss, err);
-  }
+    if(dims[0] * dims[1] * dims[2] > max)
+    {
+      err = -1;
+      QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
+      setErrorCondition(err);
+      addErrorMessage(getHumanLabel(), ss, err);
+    }
 
-  if(dims[0] > max || dims[1] > max || dims[2] > max)
-  {
-    err = -1;
-    QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
-    " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
-    setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), ss, err);
-  }
+    if(dims[0] > max || dims[1] > max || dims[2] > max)
+    {
+      err = -1;
+      QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
+                               " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
+      setErrorCondition(err);
+      addErrorMessage(getHumanLabel(), ss, err);
+    }
     /* ************ End Sanity Check *************************** */
 
     m->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
@@ -259,7 +259,7 @@ void ImportImageStack::execute()
     }
 
     // Get the current position in the array to copy the image into
-    zSpot = (z-m_ZStartIndex);
+    zSpot = (z - m_ZStartIndex);
     for(qint32 i = 0; i < height; ++i)
     {
       imagePtr = data->getPointer( (zSpot) * totalPixels * pixelBytes + i * (width * pixelBytes));

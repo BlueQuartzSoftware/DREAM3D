@@ -68,14 +68,14 @@ class DREAM3DLib_EXPORT FindFieldClustering : public AbstractFilter
 
     void find_clustering();
 
-private:
+  private:
     int32_t* m_FieldPhases;
     float* m_Centroids;
     float* m_EquivalentDiameters;
     int32_t* m_Clusters;
     NeighborList<float>* m_ClusteringList;
 
-  void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindFieldClustering(const FindFieldClustering&); // Copy Constructor Not Implemented
     void operator=(const FindFieldClustering&); // Operator '=' Not Implemented

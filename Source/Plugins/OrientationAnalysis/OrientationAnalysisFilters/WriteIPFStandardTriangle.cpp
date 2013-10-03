@@ -243,7 +243,7 @@ QImage WriteIPFStandardTriangle::generateCubicHighTriangle()
   {
     for(int x = 0; x < xDim; ++x)
     {
-      idx = (y*xDim) + x;
+      idx = (y * xDim) + x;
       image.setPixel(x, y, rgba[idx]);
     }
   }
@@ -261,7 +261,7 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
   int fontHeight = 0;
   int fontWidth = 0;
 
-  int fontScale = 24.0/256.0 * getImageSize(); // At 256 Pixel Image, we want to use 24 Point font
+  int fontScale = 24.0 / 256.0 * getImageSize(); // At 256 Pixel Image, we want to use 24 Point font
   if (fontScale < 10) { fontScale = 10; } // Do not use fonts below 10Point.
 
 
@@ -296,7 +296,7 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
   QFontMetrics metrics = painter.fontMetrics();
 
   // Draw the Figure into the upper left of the enlarged image so all the extra space is at the bottom
-  QPoint point(yMargin/2, 0);
+  QPoint point(yMargin / 2, 0);
   painter.drawImage(point, image);
 
   qint32 penWidth = 2;
@@ -323,7 +323,7 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
   label = QString("Cubic m-3m");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
-  painter.drawText( 10, fontHeight*1.10, label);
+  painter.drawText( 10, fontHeight * 1.10, label);
 
   return pImage;
 }
@@ -332,7 +332,7 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteIPFStandardTriangle::writeImage( QImage &image)
+void WriteIPFStandardTriangle::writeImage( QImage& image)
 {
 
   QString ss = QObject::tr("Writing Image %1").arg(getOutputFile());

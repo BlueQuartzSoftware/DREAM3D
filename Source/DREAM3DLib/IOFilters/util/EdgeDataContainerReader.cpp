@@ -47,24 +47,25 @@
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 
 
-namespace Detail {
-class H5GroupAutoCloser
+namespace Detail
 {
-public:
-  H5GroupAutoCloser(hid_t* groupId) :
-  gid(groupId)
-  {}
-
-  virtual ~H5GroupAutoCloser()
+  class H5GroupAutoCloser
   {
-    if (*gid > 0)
-    {
-      H5Gclose(*gid);
-    }
-  }
-  private:
-   hid_t* gid;
-};
+    public:
+      H5GroupAutoCloser(hid_t* groupId) :
+        gid(groupId)
+      {}
+
+      virtual ~H5GroupAutoCloser()
+      {
+        if (*gid > 0)
+        {
+          H5Gclose(*gid);
+        }
+      }
+    private:
+      hid_t* gid;
+  };
 
 }
 
@@ -112,13 +113,13 @@ void EdgeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fi
   }
   else if (preflight == true)
   {
-    if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true) m_ReadEdgeData = false;
-    if(m_EdgeFieldArraysToRead.size() == 0 && m_ReadAllEdgeFieldArrays != true) m_ReadEdgeFieldData = false;
-    if(m_EdgeEnsembleArraysToRead.size() == 0 && m_ReadAllEdgeEnsembleArrays != true) m_ReadEdgeEnsembleData = false;
+    if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true) { m_ReadEdgeData = false; }
+    if(m_EdgeFieldArraysToRead.size() == 0 && m_ReadAllEdgeFieldArrays != true) { m_ReadEdgeFieldData = false; }
+    if(m_EdgeEnsembleArraysToRead.size() == 0 && m_ReadAllEdgeEnsembleArrays != true) { m_ReadEdgeEnsembleData = false; }
 
-    if(m_ReadEdgeData == true) dc->clearEdgeData();
-    if(m_ReadEdgeFieldData == true) dc->clearEdgeFieldData();
-    if(m_ReadEdgeEnsembleData == true) dc->clearEdgeEnsembleData();
+    if(m_ReadEdgeData == true) { dc->clearEdgeData(); }
+    if(m_ReadEdgeFieldData == true) { dc->clearEdgeFieldData(); }
+    if(m_ReadEdgeEnsembleData == true) { dc->clearEdgeEnsembleData(); }
 
     int err = gatherData(preflight);
     if (err < 0)
@@ -157,13 +158,13 @@ void EdgeDataContainerReader::execute()
   }
   setErrorCondition(err);
 
-  if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true) m_ReadEdgeData = false;
-  if(m_EdgeFieldArraysToRead.size() == 0 && m_ReadAllEdgeFieldArrays != true) m_ReadEdgeFieldData = false;
-  if(m_EdgeEnsembleArraysToRead.size() == 0 && m_ReadAllEdgeEnsembleArrays != true) m_ReadEdgeEnsembleData = false;
+  if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true) { m_ReadEdgeData = false; }
+  if(m_EdgeFieldArraysToRead.size() == 0 && m_ReadAllEdgeFieldArrays != true) { m_ReadEdgeFieldData = false; }
+  if(m_EdgeEnsembleArraysToRead.size() == 0 && m_ReadAllEdgeEnsembleArrays != true) { m_ReadEdgeEnsembleData = false; }
 
-  if(m_ReadEdgeData == true) dc->clearEdgeData();
-  if(m_ReadEdgeFieldData == true) dc->clearEdgeFieldData();
-  if(m_ReadEdgeEnsembleData == true) dc->clearEdgeEnsembleData();
+  if(m_ReadEdgeData == true) { dc->clearEdgeData(); }
+  if(m_ReadEdgeFieldData == true) { dc->clearEdgeFieldData(); }
+  if(m_ReadEdgeEnsembleData == true) { dc->clearEdgeEnsembleData(); }
 
   err = gatherData(false);
   setErrorCondition(err);
@@ -309,7 +310,7 @@ int EdgeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         return err;
       }
       dc->setEdges(edgesPtr);
-      size_t nEdges= edgesPtr->getNumberOfTuples();
+      size_t nEdges = edgesPtr->getNumberOfTuples();
       err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgeNeighbors, dims, type_class, type_size);
       if (err >= 0)
       {
@@ -352,10 +353,10 @@ int EdgeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead,
-                                                bool readAllCurrentArrays)
+int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupName, bool preflight,
+                                            QVector<QString>& namesRead,
+                                            QSet<QString>& namesToRead,
+                                            bool readAllCurrentArrays)
 {
 
   int err = 0;

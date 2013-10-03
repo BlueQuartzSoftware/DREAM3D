@@ -87,12 +87,12 @@ FloatArrayType::Pointer PrecipitateStatsData::generateBinNumbers()
   float d = grainDiameterInfo[2];
   while (d <= grainDiameterInfo[1])
   {
-  //  qDebug() << d << "\n";
+    //  qDebug() << d << "\n";
     bins.push_back(d);
     d = d + grainDiameterInfo[0];
   }
   // Copy this into the DataArray<float>
-  m_BinNumbers = FloatArrayType::CreateArray(bins.size(),DREAM3D::HDF5::BinNumber );
+  m_BinNumbers = FloatArrayType::CreateArray(bins.size(), DREAM3D::HDF5::BinNumber );
   ::memcpy(m_BinNumbers->GetVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
   return m_BinNumbers;
 }

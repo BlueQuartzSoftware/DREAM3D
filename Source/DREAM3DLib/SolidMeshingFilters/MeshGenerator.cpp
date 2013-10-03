@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -52,70 +52,71 @@
 
 using namespace std;
 
-namespace VolMesh {
-nodes *originalnode;
-nodes *finalnode;
-triangles *originaltriangle;
-triangles *finaltriangle;
-elements *element;
-grains *grain;
-float *grainvol;
-float ****zbuffer;
-int ***voxels;
-int *graincheck;
-QVector< QVector<int > > nodesvector;
-QVector< QVector<int > > trianglesvector;
-QVector< QVector<int > > gvector;
-QVector< QVector<int > > tvector;
-QVector< QVector<int > > nnvector;
-QVector< QVector<int > > elvector;
-int dihedralanglesurf[180];
-int dihedralanglebulk[180];
-int volumesurf[25];
-int volumebulk[25];
-int badedge[1000000][2];
-int numsurfnodes=0;
-int numnodes=0;
-int numtriangles=0;
-int numelements=0;
-int elementcount=0;
-int numcycles=4;
-float xdim=0.0f;
-float ydim=0.0f;
-float zdim=0.0f;
-float xres=0.0f;
-float yres=0.0f;
-float zres=0.0f;
-float globalxmin = 0.5f;
-float globalymin = 0.5f;
-float globalzmin = 0.5f;
-float globalxmax = 48.5f;
-float globalymax = 48.5f;
-float globalzmax = 48.5f;
-float pi = 3.1415926535897f;
-float radtodegree = 180.0f/3.1415926535897f;
-int numxvoxels=0;
-int numyvoxels=0;
-int numzvoxels=0;
-int numgrains=0;
-int numgoodsurfnodes = 0;
-float globalvolmeshvol = 0.0f;
-float globalsurfmeshvol = 0.0f;
-float avgarea = 0.0f;
-int32_t seeder = time(0);
-DREAM3DRandom rg;
+namespace VolMesh
+{
+  nodes* originalnode;
+  nodes* finalnode;
+  triangles* originaltriangle;
+  triangles* finaltriangle;
+  elements* element;
+  grains* grain;
+  float* grainvol;
+  float**** zbuffer;
+  int*** voxels;
+  int* graincheck;
+  QVector< QVector<int > > nodesvector;
+  QVector< QVector<int > > trianglesvector;
+  QVector< QVector<int > > gvector;
+  QVector< QVector<int > > tvector;
+  QVector< QVector<int > > nnvector;
+  QVector< QVector<int > > elvector;
+  int dihedralanglesurf[180];
+  int dihedralanglebulk[180];
+  int volumesurf[25];
+  int volumebulk[25];
+  int badedge[1000000][2];
+  int numsurfnodes = 0;
+  int numnodes = 0;
+  int numtriangles = 0;
+  int numelements = 0;
+  int elementcount = 0;
+  int numcycles = 4;
+  float xdim = 0.0f;
+  float ydim = 0.0f;
+  float zdim = 0.0f;
+  float xres = 0.0f;
+  float yres = 0.0f;
+  float zres = 0.0f;
+  float globalxmin = 0.5f;
+  float globalymin = 0.5f;
+  float globalzmin = 0.5f;
+  float globalxmax = 48.5f;
+  float globalymax = 48.5f;
+  float globalzmax = 48.5f;
+  float pi = 3.1415926535897f;
+  float radtodegree = 180.0f / 3.1415926535897f;
+  int numxvoxels = 0;
+  int numyvoxels = 0;
+  int numzvoxels = 0;
+  int numgrains = 0;
+  int numgoodsurfnodes = 0;
+  float globalvolmeshvol = 0.0f;
+  float globalsurfmeshvol = 0.0f;
+  float avgarea = 0.0f;
+  int32_t seeder = time(0);
+  DREAM3DRandom rg;
 }
 
 
 using namespace VolMesh;
 
 #ifdef VOLUME_MESH_LIBRARY
-int MeshGenerator_Main(const QString &readname1, const QString &readname2,
-                    const QString &writename1, const QString &writename1a,
-                    const QString &writename2, const QString &writename3,
-                    float xDim, float yDim, float zDim,
-                    float xRes, float yRes, float zRes,
-                    int numGrains)
+int MeshGenerator_Main(const QString& readname1, const QString& readname2,
+                       const QString& writename1, const QString& writename1a,
+                       const QString& writename2, const QString& writename3,
+                       float xDim, float yDim, float zDim,
+                       float xRes, float yRes, float zRes,
+                       int numGrains)
 {
 
   xdim = xDim;
@@ -127,7 +128,7 @@ int MeshGenerator_Main(const QString &readname1, const QString &readname2,
   numgrains = numGrains;
 
 #else
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   rg.RandomInit(seeder);
   string readname1;
@@ -206,7 +207,7 @@ int main(int argc, char **argv)
   elvector.resize(numsurfnodes * 100);
   trianglesvector.resize(numgrains + 1);
   nodesvector.resize(numgrains + 1);
-  voxels = new int **[numxvoxels];
+  voxels = new int** [numxvoxels];
   for (int a = 0; a < numxvoxels; a++)
   {
     voxels[a] = new int *[numyvoxels];
@@ -219,10 +220,10 @@ int main(int argc, char **argv)
       }
     }
   }
-  zbuffer = new float ***[numgrains + 1];
+  zbuffer = new float** *[numgrains + 1];
   for (int a = 1; a < numgrains + 1; a++)
   {
-    zbuffer[a] = new float **[6];
+    zbuffer[a] = new float** [6];
     for (int b = 0; b < 6; b++)
     {
       zbuffer[a][b] = new float *[500];
@@ -233,9 +234,9 @@ int main(int argc, char **argv)
         {
           float initval = 0;
           if (b == 0 || b == 2 || b == 4)
-            initval = 10000000;
+          { initval = 10000000; }
           if (b == 1 || b == 3 || b == 5)
-            initval = 0;
+          { initval = 0; }
           zbuffer[a][b][c][d] = initval;
         }
       }
@@ -276,7 +277,7 @@ int main(int argc, char **argv)
     element = new elements[numelements];
     read_elements(idea);
     if (idea < (numcycles - 1))
-      delete[] element;
+    { delete[] element; }
   }
   measure_elements();
   // improve_mesh();
@@ -310,7 +311,7 @@ void read_nodes(string inname1)
     originalnode[nodenum].set_numgrains(ngrains);
     originalnode[nodenum].set_triplenode(ntnode);
     if (ngrains > 2)
-      originalnode[nodenum].set_triplenode(tnode);
+    { originalnode[nodenum].set_triplenode(tnode); }
   }
 }
 
@@ -337,9 +338,9 @@ void read_triangles(string inname3)
     onedge = 0;
     inputFile >> trianglenum >> node1 >> node2 >> node3 >> edge1 >> edge2 >> edge3 >> grain1 >> grain2;
     if (grain1 < 0)
-      grain1 = 0, onedge = 1;
+    { grain1 = 0, onedge = 1; }
     if (grain2 < 0)
-      grain2 = 0, onedge = 1;
+    { grain2 = 0, onedge = 1; }
     float x1 = originalnode[node1].xc;
     float y1 = originalnode[node1].yc;
     float z1 = originalnode[node1].zc;
@@ -465,7 +466,7 @@ void read_triangles(string inname3)
     originaltriangle[trianglenum].set_tripletriangle(nttriangle);
     originaltriangle[trianglenum].set_onedge(onedge);
     if ((originalnode[node1].triplenode + originalnode[node2].triplenode + originalnode[node3].triplenode) >= 2)
-      originaltriangle[trianglenum].set_tripletriangle(ttriangle);
+    { originaltriangle[trianglenum].set_tripletriangle(ttriangle); }
   }
   for (int j = 0; j < numgrains + 1; j++)
   {
@@ -514,7 +515,7 @@ void locate_graincenters()
       ycenter = ycenter + originalnode[snode].yc;
       zcenter = zcenter + originalnode[snode].zc;
       if (originalnode[snode].edgenode == 1)
-        onedge = 1;
+      { onedge = 1; }
     }
     xcenter = xcenter / size;
     ycenter = ycenter / size;
@@ -547,28 +548,28 @@ void delete_triangles()
         int g2 = originaltriangle[j].rightgrain;
         int sameboundary = 0;
         if (g1 == grain1 && g2 == grain2)
-          sameboundary = 1;
+        { sameboundary = 1; }
         if (g1 == grain2 && g2 == grain1)
-          sameboundary = 1;
+        { sameboundary = 1; }
         int shared = 0;
         if (n1 == node1)
-          shared++;
+        { shared++; }
         if (n1 == node2)
-          shared++;
+        { shared++; }
         if (n1 == node3)
-          shared++;
+        { shared++; }
         if (n2 == node1)
-          shared++;
+        { shared++; }
         if (n2 == node2)
-          shared++;
+        { shared++; }
         if (n2 == node3)
-          shared++;
+        { shared++; }
         if (n3 == node1)
-          shared++;
+        { shared++; }
         if (n3 == node2)
-          shared++;
+        { shared++; }
         if (n3 == node3)
-          shared++;
+        { shared++; }
         if (originaltriangle[j].trianglekilled != 1 && i != j && sameboundary == 1)
         {
           if (shared > 0)
@@ -604,23 +605,23 @@ void delete_triangles()
       float edgelength2 = originaltriangle[i].edgelength2;
       float edgelength3 = originaltriangle[i].edgelength3;
       if (edgelength1 <= edgelength2 && edgelength1 <= edgelength3)
-        edgeorder[0] = 1;
+      { edgeorder[0] = 1; }
       if (edgelength2 <= edgelength1 && edgelength2 <= edgelength3)
-        edgeorder[0] = 2;
+      { edgeorder[0] = 2; }
       if (edgelength3 <= edgelength1 && edgelength3 <= edgelength2)
-        edgeorder[0] = 3;
+      { edgeorder[0] = 3; }
       if (edgeorder[0] == 1 && edgelength2 <= edgelength3)
-        edgeorder[1] = 2, edgeorder[2] = 3;
+      { edgeorder[1] = 2, edgeorder[2] = 3; }
       if (edgeorder[0] == 1 && edgelength3 <= edgelength2)
-        edgeorder[1] = 3, edgeorder[2] = 2;
+      { edgeorder[1] = 3, edgeorder[2] = 2; }
       if (edgeorder[0] == 2 && edgelength1 <= edgelength3)
-        edgeorder[1] = 1, edgeorder[2] = 3;
+      { edgeorder[1] = 1, edgeorder[2] = 3; }
       if (edgeorder[0] == 2 && edgelength3 <= edgelength1)
-        edgeorder[1] = 3, edgeorder[2] = 1;
+      { edgeorder[1] = 3, edgeorder[2] = 1; }
       if (edgeorder[0] == 3 && edgelength1 <= edgelength2)
-        edgeorder[1] = 1, edgeorder[2] = 2;
+      { edgeorder[1] = 1, edgeorder[2] = 2; }
       if (edgeorder[0] == 3 && edgelength2 <= edgelength1)
-        edgeorder[1] = 2, edgeorder[2] = 1;
+      { edgeorder[1] = 2, edgeorder[2] = 1; }
       int size = 0;
       float avgmisorient = 0;
       while (!affectedtrianglelist.empty() && keep == 0)
@@ -634,9 +635,9 @@ void delete_triangles()
           int rightgrain2 = originaltriangle[trianglenum].rightgrain;
           int normalfix2 = 1;
           if (leftgrain1 == leftgrain2)
-            normalfix2 = 1;
+          { normalfix2 = 1; }
           if (leftgrain1 == rightgrain2)
-            normalfix2 = -1;
+          { normalfix2 = -1; }
           float nx = normalfix2 * originaltriangle[trianglenum].normalx;
           float ny = normalfix2 * originaltriangle[trianglenum].normaly;
           float nz = normalfix2 * originaltriangle[trianglenum].normalz;
@@ -645,7 +646,7 @@ void delete_triangles()
           angle = 180.0f * angle / 3.1415926535897;
           angle = 180.0f - angle;
           if (angle < 165)
-            keep = 1;
+          { keep = 1; }
           avgmisorient = avgmisorient + angle;
         }
         affectedtrianglelist.pop_front();
@@ -653,9 +654,9 @@ void delete_triangles()
       avgmisorient = avgmisorient / size;
       originaltriangle[i].set_avgmisorientation(avgmisorient);
       if (avgmisorient <= 172.5)
-        keep = 1;
+      { keep = 1; }
       if (originaltriangle[i].trianglearea < (0.25 * avgarea))
-        keep = 0;
+      { keep = 0; }
       if (keep == 0)
       {
         count++;
@@ -681,15 +682,15 @@ void delete_triangles()
               int n2 = originaltriangle[firsttriangle].secondnodeleft;
               int n3 = originaltriangle[firsttriangle].thirdnodeleft;
               if (n1 == node2)
-                n1 = node1, affected = 1;
+              { n1 = node1, affected = 1; }
               if (n2 == node2)
-                n2 = node1, affected = 1;
+              { n2 = node1, affected = 1; }
               if (n3 == node2)
-                n3 = node1, affected = 1;
+              { n3 = node1, affected = 1; }
               originaltriangle[firsttriangle].set_nodes_leftgrain(n1, n2, n3);
               originaltriangle[firsttriangle].set_nodes_rightgrain(n1, n3, n2);
               if (n1 == n2 || n1 == n3 || n2 == n3)
-                originaltriangle[firsttriangle].set_killed(killed);
+              { originaltriangle[firsttriangle].set_killed(killed); }
               if (affected == 1 && originaltriangle[firsttriangle].trianglekilled != 1)
               {
                 tvector[node1].push_back(firsttriangle);
@@ -712,23 +713,23 @@ void delete_triangles()
               float yc = (originalnode[n1].yc + originalnode[n2].yc + originalnode[n3].yc) / 3.0f;
               float zc = (originalnode[n1].zc + originalnode[n2].zc + originalnode[n3].zc) / 3.0f;
               float length1 = ((originalnode[n1].xc - originalnode[n2].xc) * (originalnode[n1].xc - originalnode[n2].xc)) + ((originalnode[n1].yc
-                  - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
-                  - originalnode[n2].zc));
+                              - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
+                                  - originalnode[n2].zc));
               length1 = powf(length1, 0.5);
               float length2 = ((originalnode[n1].xc - originalnode[n3].xc) * (originalnode[n1].xc - originalnode[n3].xc)) + ((originalnode[n1].yc
-                  - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
+                                  - originalnode[n3].zc));
               length2 = powf(length2, 0.5);
               float length3 = ((originalnode[n2].xc - originalnode[n3].xc) * (originalnode[n2].xc - originalnode[n3].xc)) + ((originalnode[n2].yc
-                  - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
+                                  - originalnode[n3].zc));
               length3 = powf(length3, 0.5);
               float avglength = (length1 + length2 + length3) / 3.0f;
               float maxlength = length1;
               if (length2 > maxlength)
-                maxlength = length2;
+              { maxlength = length2; }
               if (length3 > maxlength)
-                maxlength = length3;
+              { maxlength = length3; }
               originaltriangle[firsttriangle].set_normal(nx, ny, nz);
               originaltriangle[firsttriangle].set_center(xc, yc, zc);
               originaltriangle[firsttriangle].set_area(area);
@@ -765,15 +766,15 @@ void delete_triangles()
               int n2 = originaltriangle[firsttriangle].secondnodeleft;
               int n3 = originaltriangle[firsttriangle].thirdnodeleft;
               if (n1 == node3)
-                n1 = node1, affected = 1;
+              { n1 = node1, affected = 1; }
               if (n2 == node3)
-                n2 = node1, affected = 1;
+              { n2 = node1, affected = 1; }
               if (n3 == node3)
-                n3 = node1, affected = 1;
+              { n3 = node1, affected = 1; }
               originaltriangle[firsttriangle].set_nodes_leftgrain(n1, n2, n3);
               originaltriangle[firsttriangle].set_nodes_rightgrain(n1, n3, n2);
               if (n1 == n2 || n1 == n3 || n2 == n3)
-                originaltriangle[firsttriangle].set_killed(killed);
+              { originaltriangle[firsttriangle].set_killed(killed); }
               if (affected == 1 && originaltriangle[firsttriangle].trianglekilled != 1)
               {
                 tvector[node1].push_back(firsttriangle);
@@ -796,23 +797,23 @@ void delete_triangles()
               float yc = (originalnode[n1].yc + originalnode[n2].yc + originalnode[n3].yc) / 3.0f;
               float zc = (originalnode[n1].zc + originalnode[n2].zc + originalnode[n3].zc) / 3.0f;
               float length1 = ((originalnode[n1].xc - originalnode[n2].xc) * (originalnode[n1].xc - originalnode[n2].xc)) + ((originalnode[n1].yc
-                  - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
-                  - originalnode[n2].zc));
+                              - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
+                                  - originalnode[n2].zc));
               length1 = powf(length1, 0.5);
               float length2 = ((originalnode[n1].xc - originalnode[n3].xc) * (originalnode[n1].xc - originalnode[n3].xc)) + ((originalnode[n1].yc
-                  - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
+                                  - originalnode[n3].zc));
               length2 = powf(length2, 0.5);
               float length3 = ((originalnode[n2].xc - originalnode[n3].xc) * (originalnode[n2].xc - originalnode[n3].xc)) + ((originalnode[n2].yc
-                  - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
+                                  - originalnode[n3].zc));
               length3 = powf(length3, 0.5);
               float avglength = (length1 + length2 + length3) / 3.0f;
               float maxlength = length1;
               if (length2 > maxlength)
-                maxlength = length2;
+              { maxlength = length2; }
               if (length3 > maxlength)
-                maxlength = length3;
+              { maxlength = length3; }
               originaltriangle[firsttriangle].set_normal(nx, ny, nz);
               originaltriangle[firsttriangle].set_center(xc, yc, zc);
               originaltriangle[firsttriangle].set_area(area);
@@ -849,15 +850,15 @@ void delete_triangles()
               int n2 = originaltriangle[firsttriangle].secondnodeleft;
               int n3 = originaltriangle[firsttriangle].thirdnodeleft;
               if (n1 == node3)
-                n1 = node2, affected = 1;
+              { n1 = node2, affected = 1; }
               if (n2 == node3)
-                n2 = node2, affected = 1;
+              { n2 = node2, affected = 1; }
               if (n3 == node3)
-                n3 = node2, affected = 1;
+              { n3 = node2, affected = 1; }
               originaltriangle[firsttriangle].set_nodes_leftgrain(n1, n2, n3);
               originaltriangle[firsttriangle].set_nodes_rightgrain(n1, n3, n2);
               if (n1 == n2 || n1 == n3 || n2 == n3)
-                originaltriangle[firsttriangle].set_killed(killed);
+              { originaltriangle[firsttriangle].set_killed(killed); }
               if (affected == 1 && originaltriangle[firsttriangle].trianglekilled != 1)
               {
                 tvector[node2].push_back(firsttriangle);
@@ -880,23 +881,23 @@ void delete_triangles()
               float yc = (originalnode[n1].yc + originalnode[n2].yc + originalnode[n3].yc) / 3.0f;
               float zc = (originalnode[n1].zc + originalnode[n2].zc + originalnode[n3].zc) / 3.0f;
               float length1 = ((originalnode[n1].xc - originalnode[n2].xc) * (originalnode[n1].xc - originalnode[n2].xc)) + ((originalnode[n1].yc
-                  - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
-                  - originalnode[n2].zc));
+                              - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
+                                  - originalnode[n2].zc));
               length1 = powf(length1, 0.5);
               float length2 = ((originalnode[n1].xc - originalnode[n3].xc) * (originalnode[n1].xc - originalnode[n3].xc)) + ((originalnode[n1].yc
-                  - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
+                                  - originalnode[n3].zc));
               length2 = powf(length2, 0.5);
               float length3 = ((originalnode[n2].xc - originalnode[n3].xc) * (originalnode[n2].xc - originalnode[n3].xc)) + ((originalnode[n2].yc
-                  - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
+                                  - originalnode[n3].zc));
               length3 = powf(length3, 0.5);
               float avglength = (length1 + length2 + length3) / 3.0f;
               float maxlength = length1;
               if (length2 > maxlength)
-                maxlength = length2;
+              { maxlength = length2; }
               if (length3 > maxlength)
-                maxlength = length3;
+              { maxlength = length3; }
               originaltriangle[firsttriangle].set_normal(nx, ny, nz);
               originaltriangle[firsttriangle].set_center(xc, yc, zc);
               originaltriangle[firsttriangle].set_area(area);
@@ -925,7 +926,7 @@ void clean_triangles()
   for (int i = 0; i < numsurfnodes; i++)
   {
     if (originalnode[i].nodekilled != 1 && originalnode[i].edgenode != 1)
-    //    if(originalnode[i].nodekilled != 1)
+      //    if(originalnode[i].nodekilled != 1)
     {
       nx = 0;
       ny = 0;
@@ -1043,11 +1044,11 @@ void clean_triangles()
         angle3 = 180.0f * angle3 / 3.1415926535897;
         int badangle = 0;
         if (angle1 < 20)
-          badangle = 1;
+        { badangle = 1; }
         if (angle2 < 20)
-          badangle = 2;
+        { badangle = 2; }
         if (angle3 < 20)
-          badangle = 3;
+        { badangle = 3; }
         if (badangle == 1)
         {
           count++;
@@ -1070,15 +1071,15 @@ void clean_triangles()
               int n2 = originaltriangle[firsttriangle].secondnodeleft;
               int n3 = originaltriangle[firsttriangle].thirdnodeleft;
               if (n1 == node3)
-                n1 = node2, affected = 1;
+              { n1 = node2, affected = 1; }
               if (n2 == node3)
-                n2 = node2, affected = 1;
+              { n2 = node2, affected = 1; }
               if (n3 == node3)
-                n3 = node2, affected = 1;
+              { n3 = node2, affected = 1; }
               originaltriangle[firsttriangle].set_nodes_leftgrain(n1, n2, n3);
               originaltriangle[firsttriangle].set_nodes_rightgrain(n1, n3, n2);
               if (n1 == n2 || n1 == n3 || n2 == n3)
-                originaltriangle[firsttriangle].set_killed(killed);
+              { originaltriangle[firsttriangle].set_killed(killed); }
               if (affected == 1 && originaltriangle[firsttriangle].trianglekilled != 1)
               {
                 tvector[node2].push_back(firsttriangle);
@@ -1101,23 +1102,23 @@ void clean_triangles()
               float yc = (originalnode[n1].yc + originalnode[n2].yc + originalnode[n3].yc) / 3.0f;
               float zc = (originalnode[n1].zc + originalnode[n2].zc + originalnode[n3].zc) / 3.0f;
               float length1 = ((originalnode[n1].xc - originalnode[n2].xc) * (originalnode[n1].xc - originalnode[n2].xc)) + ((originalnode[n1].yc
-                  - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
-                  - originalnode[n2].zc));
+                              - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
+                                  - originalnode[n2].zc));
               length1 = powf(length1, 0.5);
               float length2 = ((originalnode[n1].xc - originalnode[n3].xc) * (originalnode[n1].xc - originalnode[n3].xc)) + ((originalnode[n1].yc
-                  - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
+                                  - originalnode[n3].zc));
               length2 = powf(length2, 0.5);
               float length3 = ((originalnode[n2].xc - originalnode[n3].xc) * (originalnode[n2].xc - originalnode[n3].xc)) + ((originalnode[n2].yc
-                  - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
+                                  - originalnode[n3].zc));
               length3 = powf(length3, 0.5);
               float avglength = (length1 + length2 + length3) / 3.0f;
               float maxlength = length1;
               if (length2 > maxlength)
-                maxlength = length2;
+              { maxlength = length2; }
               if (length3 > maxlength)
-                maxlength = length3;
+              { maxlength = length3; }
               originaltriangle[firsttriangle].set_normal(nx, ny, nz);
               originaltriangle[firsttriangle].set_center(xc, yc, zc);
               originaltriangle[firsttriangle].set_area(area);
@@ -1154,15 +1155,15 @@ void clean_triangles()
               int n2 = originaltriangle[firsttriangle].secondnodeleft;
               int n3 = originaltriangle[firsttriangle].thirdnodeleft;
               if (n1 == node3)
-                n1 = node1, affected = 1;
+              { n1 = node1, affected = 1; }
               if (n2 == node3)
-                n2 = node1, affected = 1;
+              { n2 = node1, affected = 1; }
               if (n3 == node3)
-                n3 = node1, affected = 1;
+              { n3 = node1, affected = 1; }
               originaltriangle[firsttriangle].set_nodes_leftgrain(n1, n2, n3);
               originaltriangle[firsttriangle].set_nodes_rightgrain(n1, n3, n2);
               if (n1 == n2 || n1 == n3 || n2 == n3)
-                originaltriangle[firsttriangle].set_killed(killed);
+              { originaltriangle[firsttriangle].set_killed(killed); }
               if (affected == 1 && originaltriangle[firsttriangle].trianglekilled != 1)
               {
                 tvector[node1].push_back(firsttriangle);
@@ -1185,23 +1186,23 @@ void clean_triangles()
               float yc = (originalnode[n1].yc + originalnode[n2].yc + originalnode[n3].yc) / 3.0f;
               float zc = (originalnode[n1].zc + originalnode[n2].zc + originalnode[n3].zc) / 3.0f;
               float length1 = ((originalnode[n1].xc - originalnode[n2].xc) * (originalnode[n1].xc - originalnode[n2].xc)) + ((originalnode[n1].yc
-                  - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
-                  - originalnode[n2].zc));
+                              - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
+                                  - originalnode[n2].zc));
               length1 = powf(length1, 0.5);
               float length2 = ((originalnode[n1].xc - originalnode[n3].xc) * (originalnode[n1].xc - originalnode[n3].xc)) + ((originalnode[n1].yc
-                  - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
+                                  - originalnode[n3].zc));
               length2 = powf(length2, 0.5);
               float length3 = ((originalnode[n2].xc - originalnode[n3].xc) * (originalnode[n2].xc - originalnode[n3].xc)) + ((originalnode[n2].yc
-                  - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
+                                  - originalnode[n3].zc));
               length3 = powf(length3, 0.5);
               float avglength = (length1 + length2 + length3) / 3.0f;
               float maxlength = length1;
               if (length2 > maxlength)
-                maxlength = length2;
+              { maxlength = length2; }
               if (length3 > maxlength)
-                maxlength = length3;
+              { maxlength = length3; }
               originaltriangle[firsttriangle].set_normal(nx, ny, nz);
               originaltriangle[firsttriangle].set_center(xc, yc, zc);
               originaltriangle[firsttriangle].set_area(area);
@@ -1238,15 +1239,15 @@ void clean_triangles()
               int n2 = originaltriangle[firsttriangle].secondnodeleft;
               int n3 = originaltriangle[firsttriangle].thirdnodeleft;
               if (n1 == node2)
-                n1 = node1, affected = 1;
+              { n1 = node1, affected = 1; }
               if (n2 == node2)
-                n2 = node1, affected = 1;
+              { n2 = node1, affected = 1; }
               if (n3 == node2)
-                n3 = node1, affected = 1;
+              { n3 = node1, affected = 1; }
               originaltriangle[firsttriangle].set_nodes_leftgrain(n1, n2, n3);
               originaltriangle[firsttriangle].set_nodes_rightgrain(n1, n3, n2);
               if (n1 == n2 || n1 == n3 || n2 == n3)
-                originaltriangle[firsttriangle].set_killed(killed);
+              { originaltriangle[firsttriangle].set_killed(killed); }
               if (affected == 1 && originaltriangle[firsttriangle].trianglekilled != 1)
               {
                 tvector[node1].push_back(firsttriangle);
@@ -1269,23 +1270,23 @@ void clean_triangles()
               float yc = (originalnode[n1].yc + originalnode[n2].yc + originalnode[n3].yc) / 3.0f;
               float zc = (originalnode[n1].zc + originalnode[n2].zc + originalnode[n3].zc) / 3.0f;
               float length1 = ((originalnode[n1].xc - originalnode[n2].xc) * (originalnode[n1].xc - originalnode[n2].xc)) + ((originalnode[n1].yc
-                  - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
-                  - originalnode[n2].zc));
+                              - originalnode[n2].yc) * (originalnode[n1].yc - originalnode[n2].yc)) + ((originalnode[n1].zc - originalnode[n2].zc) * (originalnode[n1].zc
+                                  - originalnode[n2].zc));
               length1 = powf(length1, 0.5);
               float length2 = ((originalnode[n1].xc - originalnode[n3].xc) * (originalnode[n1].xc - originalnode[n3].xc)) + ((originalnode[n1].yc
-                  - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n1].yc - originalnode[n3].yc)) + ((originalnode[n1].zc - originalnode[n3].zc) * (originalnode[n1].zc
+                                  - originalnode[n3].zc));
               length2 = powf(length2, 0.5);
               float length3 = ((originalnode[n2].xc - originalnode[n3].xc) * (originalnode[n2].xc - originalnode[n3].xc)) + ((originalnode[n2].yc
-                  - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
-                  - originalnode[n3].zc));
+                              - originalnode[n3].yc) * (originalnode[n2].yc - originalnode[n3].yc)) + ((originalnode[n2].zc - originalnode[n3].zc) * (originalnode[n2].zc
+                                  - originalnode[n3].zc));
               length3 = powf(length3, 0.5);
               float avglength = (length1 + length2 + length3) / 3.0f;
               float maxlength = length1;
               if (length2 > maxlength)
-                maxlength = length2;
+              { maxlength = length2; }
               if (length3 > maxlength)
-                maxlength = length3;
+              { maxlength = length3; }
               originaltriangle[firsttriangle].set_normal(nx, ny, nz);
               originaltriangle[firsttriangle].set_center(xc, yc, zc);
               originaltriangle[firsttriangle].set_area(area);
@@ -1461,11 +1462,11 @@ void create_finalnodesandtriangles()
       float y = originalnode[i].yc;
       float z = originalnode[i].zc;
       if (x != globalxmin && x != globalxmax)
-        x = x + (random1 * 0.01f);
+      { x = x + (random1 * 0.01f); }
       if (y != globalymin && y != globalymax)
-        y = y - (random1 * 0.01f);
+      { y = y - (random1 * 0.01f); }
       if (z != globalzmin && z != globalzmax)
-        z = z + (random1 * 0.01f);
+      { z = z + (random1 * 0.01f); }
       int ngrains = originalnode[i].numgrains;
       int onedge = originalnode[i].edgenode;
       finalnode[count].set_coords(x, y, z);
@@ -1641,17 +1642,17 @@ void find_volumes()
     {
       int firstnode = nodesvector[i][j];
       if (finalnode[firstnode].xc < minx)
-        minx = finalnode[firstnode].xc;
+      { minx = finalnode[firstnode].xc; }
       if (finalnode[firstnode].xc > maxx)
-        maxx = finalnode[firstnode].xc;
+      { maxx = finalnode[firstnode].xc; }
       if (finalnode[firstnode].yc < miny)
-        miny = finalnode[firstnode].yc;
+      { miny = finalnode[firstnode].yc; }
       if (finalnode[firstnode].yc > maxy)
-        maxy = finalnode[firstnode].yc;
+      { maxy = finalnode[firstnode].yc; }
       if (finalnode[firstnode].zc < minz)
-        minz = finalnode[firstnode].zc;
+      { minz = finalnode[firstnode].zc; }
       if (finalnode[firstnode].zc > maxz)
-        maxz = finalnode[firstnode].zc;
+      { maxz = finalnode[firstnode].zc; }
     }
     grain[i].set_bounds(minx, maxx, miny, maxy, minz, maxz);
     size = trianglesvector[i].size();
@@ -1698,13 +1699,13 @@ void find_volumes()
         float determinant = ((a1x * a2y * a3z) + (a1y * a2z * a3x) + (a2x * a3y * a1z)) - ((a3x * a2y * a1z) + (a2x * a1y * a3z) + (a2z * a3y * a1x));
         vol = determinant / 6.0f;
         if (leftgrain == i)
-          finaltriangle[firsttriangle].set_vol_leftgrain(vol);
+        { finaltriangle[firsttriangle].set_vol_leftgrain(vol); }
         if (rightgrain == i)
-          finaltriangle[firsttriangle].set_vol_rightgrain(vol);
+        { finaltriangle[firsttriangle].set_vol_rightgrain(vol); }
         totalvol = totalvol + vol;
         float tempmaxlength = finaltriangle[firsttriangle].maxedgelength;
         if (tempmaxlength > maxlength)
-          maxlength = tempmaxlength;
+        { maxlength = tempmaxlength; }
       }
     }
     grain[i].set_volume(totalvol);
@@ -1733,7 +1734,7 @@ void make_nodes(int iter)
 //  itoa(iter, num, 10);
 //  strcat(fileout, num);
 //  strcat(fileout, fileoutext);
-  
+
   ss << "pointcheck" << iter << ".vtk";
   QString fileout = ss.str();
 
@@ -1778,34 +1779,34 @@ void make_nodes(int iter)
       z3 = (z3 - minz) / (maxz - minz);
       float xmin = x1;
       if (x2 < xmin)
-        xmin = x2;
+      { xmin = x2; }
       if (x3 < xmin)
-        xmin = x3;
+      { xmin = x3; }
       float ymin = y1;
       if (y2 < ymin)
-        ymin = y2;
+      { ymin = y2; }
       if (y3 < ymin)
-        ymin = y3;
+      { ymin = y3; }
       float zmin = z1;
       if (z2 < zmin)
-        zmin = z2;
+      { zmin = z2; }
       if (z3 < zmin)
-        zmin = z3;
+      { zmin = z3; }
       float xmax = x1;
       if (x2 > xmax)
-        xmax = x2;
+      { xmax = x2; }
       if (x3 > xmax)
-        xmax = x3;
+      { xmax = x3; }
       float ymax = y1;
       if (y2 > ymax)
-        ymax = y2;
+      { ymax = y2; }
       if (y3 > ymax)
-        ymax = y3;
+      { ymax = y3; }
       float zmax = z1;
       if (z2 > zmax)
-        zmax = z2;
+      { zmax = z2; }
       if (z3 > zmax)
-        zmax = z3;
+      { zmax = z3; }
       int xstart = (xmin / resx) - 1;
       int xstop = (xmax / resx) + 1;
       int ystart = (ymin / resy) - 1;
@@ -1813,17 +1814,17 @@ void make_nodes(int iter)
       int zstart = (zmin / resz) - 1;
       int zstop = (zmax / resz) + 1;
       if (xstart < 0)
-        xstart = 0;
+      { xstart = 0; }
       if (xstop > 500)
-        xstop = 500;
+      { xstop = 500; }
       if (ystart < 0)
-        ystart = 0;
+      { ystart = 0; }
       if (ystop > 500)
-        ystop = 500;
+      { ystop = 500; }
       if (zstart < 0)
-        zstart = 0;
+      { zstart = 0; }
       if (zstop > 500)
-        zstop = 500;
+      { zstop = 500; }
       for (int i = xstart; i < xstop; i++)
       {
         for (int j = ystart; j < ystop; j++)
@@ -1840,34 +1841,34 @@ void make_nodes(int iter)
           if (e1x == 0)
           {
             if (e2x == 0)
-              in = 0;
+            { in = 0; }
             if (e2x != 0)
             {
               float u = e0x / e2x;
               if (u < 0 || u > 1)
-                in = 0;
+              { in = 0; }
               if (e1y == 0)
-                in = 0;
+              { in = 0; }
               float v = (e0y - (e2y * u)) / e1y;
               if (v < 0)
-                in = 0;
+              { in = 0; }
               if ((u + v) > 1)
-                in = 0;
+              { in = 0; }
             }
           }
           if (e1x != 0)
           {
             float d = (e2y * e1x) - (e2x * e1y);
             if (d == 0)
-              in = 0;
+            { in = 0; }
             float u = ((e0y * e1x) - (e0x * e1y)) / d;
             if (u < 0 || u > 1)
-              in = 0;
+            { in = 0; }
             float v = (e0x - (e2x * u)) / e1x;
             if (v < 0)
-              in = 0;
+            { in = 0; }
             if ((u + v) > 1)
-              in = 0;
+            { in = 0; }
           }
           if (in == 1)
           {
@@ -1880,9 +1881,9 @@ void make_nodes(int iter)
             float zval = (d - (a * x) - (b * y)) / c;
             zval = (zval - minz) / (maxz - minz);
             if (zval < zbuffer[iter][0][i][j])
-              zbuffer[iter][0][i][j] = zval;
+            { zbuffer[iter][0][i][j] = zval; }
             if (zval > zbuffer[iter][1][i][j])
-              zbuffer[iter][1][i][j] = zval;
+            { zbuffer[iter][1][i][j] = zval; }
           }
         }
       }
@@ -1902,34 +1903,34 @@ void make_nodes(int iter)
           if (e1x == 0)
           {
             if (e2x == 0)
-              in = 0;
+            { in = 0; }
             if (e2x != 0)
             {
               float u = e0x / e2x;
               if (u < 0 || u > 1)
-                in = 0;
+              { in = 0; }
               if (e1z == 0)
-                in = 0;
+              { in = 0; }
               float v = (e0z - (e2z * u)) / e1z;
               if (v < 0)
-                in = 0;
+              { in = 0; }
               if ((u + v) > 1)
-                in = 0;
+              { in = 0; }
             }
           }
           if (e1x != 0)
           {
             float d = (e2z * e1x) - (e2x * e1z);
             if (d == 0)
-              in = 0;
+            { in = 0; }
             float u = ((e0z * e1x) - (e0x * e1z)) / d;
             if (u < 0 || u > 1)
-              in = 0;
+            { in = 0; }
             float v = (e0x - (e2x * u)) / e1x;
             if (v < 0)
-              in = 0;
+            { in = 0; }
             if ((u + v) > 1)
-              in = 0;
+            { in = 0; }
           }
           if (in == 1)
           {
@@ -1942,9 +1943,9 @@ void make_nodes(int iter)
             float yval = (d - (a * x) - (c * z)) / b;
             yval = (yval - miny) / (maxy - miny);
             if (yval < zbuffer[iter][2][i][j])
-              zbuffer[iter][2][i][j] = yval;
+            { zbuffer[iter][2][i][j] = yval; }
             if (yval > zbuffer[iter][3][i][j])
-              zbuffer[iter][3][i][j] = yval;
+            { zbuffer[iter][3][i][j] = yval; }
           }
         }
       }
@@ -1964,34 +1965,34 @@ void make_nodes(int iter)
           if (e1y == 0)
           {
             if (e2y == 0)
-              in = 0;
+            { in = 0; }
             if (e2y != 0)
             {
               float u = e0y / e2y;
               if (u < 0 || u > 1)
-                in = 0;
+              { in = 0; }
               if (e1z == 0)
-                in = 0;
+              { in = 0; }
               float v = (e0z - (e2z * u)) / e1z;
               if (v < 0)
-                in = 0;
+              { in = 0; }
               if ((u + v) > 1)
-                in = 0;
+              { in = 0; }
             }
           }
           if (e1y != 0)
           {
             float d = (e2z * e1y) - (e2y * e1z);
             if (d == 0)
-              in = 0;
+            { in = 0; }
             float u = ((e0z * e1y) - (e0y * e1z)) / d;
             if (u < 0 || u > 1)
-              in = 0;
+            { in = 0; }
             float v = (e0y - (e2y * u)) / e1y;
             if (v < 0)
-              in = 0;
+            { in = 0; }
             if ((u + v) > 1)
-              in = 0;
+            { in = 0; }
           }
           if (in == 1)
           {
@@ -2004,9 +2005,9 @@ void make_nodes(int iter)
             float xval = (d - (b * y) - (c * z)) / a;
             xval = (xval - minx) / (maxx - minx);
             if (xval < zbuffer[iter][4][i][j])
-              zbuffer[iter][4][i][j] = xval;
+            { zbuffer[iter][4][i][j] = xval; }
             if (xval > zbuffer[iter][5][i][j])
-              zbuffer[iter][5][i][j] = xval;
+            { zbuffer[iter][5][i][j] = xval; }
           }
         }
       }
@@ -2055,15 +2056,15 @@ void make_nodes(int iter)
       {
         dist = xp - zbuffer[iter][4][y][z];
         if ((zbuffer[iter][5][y][z] - xp) < dist)
-          dist = (zbuffer[iter][5][y][z] - xp);
+        { dist = (zbuffer[iter][5][y][z] - xp); }
         if ((yp - zbuffer[iter][2][x][z]) < dist)
-          dist = (yp - zbuffer[iter][2][x][z]);
+        { dist = (yp - zbuffer[iter][2][x][z]); }
         if ((zbuffer[iter][3][x][z] - yp) < dist)
-          dist = (zbuffer[iter][3][x][z] - yp);
+        { dist = (zbuffer[iter][3][x][z] - yp); }
         if ((zp - zbuffer[iter][0][x][y]) < dist)
-          dist = (zp - zbuffer[iter][0][x][y]);
+        { dist = (zp - zbuffer[iter][0][x][y]); }
         if ((zbuffer[iter][1][x][y] - zp) < dist)
-          dist = (zbuffer[iter][1][x][y] - zp);
+        { dist = (zbuffer[iter][1][x][y] - zp); }
         float prob = 2.0 * (0.5 - dist);
         prob = powf(prob, 2);
         float random = rg.genrand_res53();
@@ -2224,25 +2225,25 @@ void read_elements(int idea)
       {
         int gnum1 = gvector[n1][l];
         if (find(gvector[n2].begin(), gvector[n2].end(), gnum1) != gvector[n2].end())
-          good12 = 1;
+        { good12 = 1; }
         if (find(gvector[n3].begin(), gvector[n3].end(), gnum1) != gvector[n3].end())
-          good13 = 1;
+        { good13 = 1; }
         if (find(gvector[n4].begin(), gvector[n4].end(), gnum1) != gvector[n4].end())
-          good14 = 1;
+        { good14 = 1; }
       }
       for (int l = 0; l < size2; l++)
       {
         int gnum2 = gvector[n2][l];
         if (find(gvector[n3].begin(), gvector[n3].end(), gnum2) != gvector[n3].end())
-          good23 = 1;
+        { good23 = 1; }
         if (find(gvector[n4].begin(), gvector[n4].end(), gnum2) != gvector[n4].end())
-          good24 = 1;
+        { good24 = 1; }
       }
       for (int l = 0; l < size3; l++)
       {
         int gnum3 = gvector[n3][l];
         if (find(gvector[n4].begin(), gvector[n4].end(), gnum3) != gvector[n4].end())
-          good34 = 1;
+        { good34 = 1; }
       }
       if (good12 == 0)
       {
@@ -2284,20 +2285,20 @@ void read_elements(int idea)
             float vy = finalnode[node3].yc - finalnode[node1].yc;
             float vz = finalnode[node3].zc - finalnode[node1].zc;
             float denominator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((ux * vx) + (uy * vy) + (uz * vz))) - (((ux * ux) + (uy * uy) + (uz * uz))
-                * ((vx * vx) + (vy * vy) + (vz * vz)));
+                                * ((vx * vx) + (vy * vy) + (vz * vz)));
             float snumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * vx) + (wy * vy) + (wz * vz))) - (((wx * ux) + (wy * uy) + (wz * uz)) * ((vx * vx)
-                + (vy * vy) + (vz * vz)));
+                               + (vy * vy) + (vz * vz)));
             float tnumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * ux) + (wy * uy) + (wz * uz))) - (((wx * vx) + (wy * vy) + (wz * vz)) * ((ux * ux)
-                + (uy * uy) + (uz * uz)));
+                               + (uy * uy) + (uz * uz)));
             float s = snumerator / denominator;
             float t = tnumerator / denominator;
             int in = 1;
             if (s < 0 || s > 1)
-              in = 0;
+            { in = 0; }
             if (t < 0 || t > 1)
-              in = 0;
+            { in = 0; }
             if ((s + t) > 1)
-              in = 0;
+            { in = 0; }
             if (in == 1 && r >= 0 && r <= 1)
             {
               xp = p1x;
@@ -2305,9 +2306,9 @@ void read_elements(int idea)
               zp = p1z;
               l = size;
               if (r <= 0.5)
-                move = 1;
+              { move = 1; }
               if (r > 0.5)
-                move = 2;
+              { move = 2; }
               intersected++;
             }
 //            if (in == 0 && r >= 0 && r <= 1)
@@ -2321,7 +2322,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n2][l];
               if (find(gvector[n1].begin(), gvector[n1].end(), firstgrain) == gvector[n1].end())
-                gvector[n1].push_back(firstgrain);
+              { gvector[n1].push_back(firstgrain); }
             }
             size1 = gvector[n1].size();
             good13 = 0;
@@ -2330,9 +2331,9 @@ void read_elements(int idea)
             {
               int gnum1 = gvector[n1][l];
               if (find(gvector[n3].begin(), gvector[n3].end(), gnum1) != gvector[n3].end())
-                good13 = 1;
+              { good13 = 1; }
               if (find(gvector[n4].begin(), gvector[n4].end(), gnum1) != gvector[n4].end())
-                good14 = 1;
+              { good14 = 1; }
             }
             finalnode[n1].set_coords(xp, yp, zp);
           }
@@ -2342,7 +2343,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n1][l];
               if (find(gvector[n2].begin(), gvector[n2].end(), firstgrain) == gvector[n2].end())
-                gvector[n2].push_back(firstgrain);
+              { gvector[n2].push_back(firstgrain); }
             }
             size2 = gvector[n2].size();
             good23 = 0;
@@ -2351,9 +2352,9 @@ void read_elements(int idea)
             {
               int gnum2 = gvector[n2][l];
               if (find(gvector[n3].begin(), gvector[n3].end(), gnum2) != gvector[n3].end())
-                good23 = 1;
+              { good23 = 1; }
               if (find(gvector[n4].begin(), gvector[n4].end(), gnum2) != gvector[n4].end())
-                good24 = 1;
+              { good24 = 1; }
             }
             finalnode[n2].set_coords(xp, yp, zp);
           }
@@ -2399,29 +2400,29 @@ void read_elements(int idea)
             float vy = finalnode[node3].yc - finalnode[node1].yc;
             float vz = finalnode[node3].zc - finalnode[node1].zc;
             float denominator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((ux * vx) + (uy * vy) + (uz * vz))) - (((ux * ux) + (uy * uy) + (uz * uz))
-                * ((vx * vx) + (vy * vy) + (vz * vz)));
+                                * ((vx * vx) + (vy * vy) + (vz * vz)));
             float snumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * vx) + (wy * vy) + (wz * vz))) - (((wx * ux) + (wy * uy) + (wz * uz)) * ((vx * vx)
-                + (vy * vy) + (vz * vz)));
+                               + (vy * vy) + (vz * vz)));
             float tnumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * ux) + (wy * uy) + (wz * uz))) - (((wx * vx) + (wy * vy) + (wz * vz)) * ((ux * ux)
-                + (uy * uy) + (uz * uz)));
+                               + (uy * uy) + (uz * uz)));
             float s = snumerator / denominator;
             float t = tnumerator / denominator;
             int in = 1;
             if (s < 0 || s > 1)
-              in = 0;
+            { in = 0; }
             if (t < 0 || t > 1)
-              in = 0;
+            { in = 0; }
             if ((s + t) > 1)
-              in = 0;
+            { in = 0; }
             if (in == 1 && r >= 0 && r <= 1)
             {
               xp = p1x;
               yp = p1y;
               zp = p1z;
               if (r <= 0.5)
-                move = 1;
+              { move = 1; }
               if (r <= 0.5)
-                move = 2;
+              { move = 2; }
               l = size;
               intersected++;
             }
@@ -2436,7 +2437,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n3][l];
               if (find(gvector[n1].begin(), gvector[n1].end(), firstgrain) == gvector[n1].end())
-                gvector[n1].push_back(firstgrain);
+              { gvector[n1].push_back(firstgrain); }
             }
             size1 = gvector[n1].size();
             good14 = 0;
@@ -2444,7 +2445,7 @@ void read_elements(int idea)
             {
               int gnum1 = gvector[n1][l];
               if (find(gvector[n4].begin(), gvector[n4].end(), gnum1) != gvector[n4].end())
-                good14 = 1;
+              { good14 = 1; }
             }
             finalnode[n1].set_coords(xp, yp, zp);
           }
@@ -2454,7 +2455,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n1][l];
               if (find(gvector[n3].begin(), gvector[n3].end(), firstgrain) == gvector[n3].end())
-                gvector[n3].push_back(firstgrain);
+              { gvector[n3].push_back(firstgrain); }
             }
             size3 = gvector[n3].size();
             good23 = 0;
@@ -2463,9 +2464,9 @@ void read_elements(int idea)
             {
               int gnum3 = gvector[n3][l];
               if (find(gvector[n2].begin(), gvector[n2].end(), gnum3) != gvector[n2].end())
-                good23 = 1;
+              { good23 = 1; }
               if (find(gvector[n4].begin(), gvector[n4].end(), gnum3) != gvector[n4].end())
-                good34 = 1;
+              { good34 = 1; }
             }
             finalnode[n3].set_coords(xp, yp, zp);
           }
@@ -2511,20 +2512,20 @@ void read_elements(int idea)
             float vy = finalnode[node3].yc - finalnode[node1].yc;
             float vz = finalnode[node3].zc - finalnode[node1].zc;
             float denominator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((ux * vx) + (uy * vy) + (uz * vz))) - (((ux * ux) + (uy * uy) + (uz * uz))
-                * ((vx * vx) + (vy * vy) + (vz * vz)));
+                                * ((vx * vx) + (vy * vy) + (vz * vz)));
             float snumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * vx) + (wy * vy) + (wz * vz))) - (((wx * ux) + (wy * uy) + (wz * uz)) * ((vx * vx)
-                + (vy * vy) + (vz * vz)));
+                               + (vy * vy) + (vz * vz)));
             float tnumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * ux) + (wy * uy) + (wz * uz))) - (((wx * vx) + (wy * vy) + (wz * vz)) * ((ux * ux)
-                + (uy * uy) + (uz * uz)));
+                               + (uy * uy) + (uz * uz)));
             float s = snumerator / denominator;
             float t = tnumerator / denominator;
             int in = 1;
             if (s < 0 || s > 1)
-              in = 0;
+            { in = 0; }
             if (t < 0 || t > 1)
-              in = 0;
+            { in = 0; }
             if ((s + t) > 1)
-              in = 0;
+            { in = 0; }
             if (in == 1 && r >= 0 && r <= 1)
             {
               xp = p1x;
@@ -2532,9 +2533,9 @@ void read_elements(int idea)
               zp = p1z;
               l = size;
               if (r <= 0.5)
-                move = 1;
+              { move = 1; }
               if (r <= 0.5)
-                move = 2;
+              { move = 2; }
               intersected++;
             }
 //            if (in == 0 && r >= 0 && r <= 1)
@@ -2548,7 +2549,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n4][l];
               if (find(gvector[n1].begin(), gvector[n1].end(), firstgrain) == gvector[n1].end())
-                gvector[n1].push_back(firstgrain);
+              { gvector[n1].push_back(firstgrain); }
             }
             finalnode[n1].set_coords(xp, yp, zp);
           }
@@ -2558,7 +2559,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n1][l];
               if (find(gvector[n4].begin(), gvector[n4].end(), firstgrain) == gvector[n4].end())
-                gvector[n4].push_back(firstgrain);
+              { gvector[n4].push_back(firstgrain); }
             }
             size4 = gvector[n4].size();
             good24 = 0;
@@ -2567,9 +2568,9 @@ void read_elements(int idea)
             {
               int gnum4 = gvector[n4][l];
               if (find(gvector[n2].begin(), gvector[n2].end(), gnum4) != gvector[n2].end())
-                good24 = 1;
+              { good24 = 1; }
               if (find(gvector[n3].begin(), gvector[n3].end(), gnum4) != gvector[n3].end())
-                good34 = 1;
+              { good34 = 1; }
             }
             finalnode[n4].set_coords(xp, yp, zp);
           }
@@ -2615,20 +2616,20 @@ void read_elements(int idea)
             float vy = finalnode[node3].yc - finalnode[node1].yc;
             float vz = finalnode[node3].zc - finalnode[node1].zc;
             float denominator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((ux * vx) + (uy * vy) + (uz * vz))) - (((ux * ux) + (uy * uy) + (uz * uz))
-                * ((vx * vx) + (vy * vy) + (vz * vz)));
+                                * ((vx * vx) + (vy * vy) + (vz * vz)));
             float snumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * vx) + (wy * vy) + (wz * vz))) - (((wx * ux) + (wy * uy) + (wz * uz)) * ((vx * vx)
-                + (vy * vy) + (vz * vz)));
+                               + (vy * vy) + (vz * vz)));
             float tnumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * ux) + (wy * uy) + (wz * uz))) - (((wx * vx) + (wy * vy) + (wz * vz)) * ((ux * ux)
-                + (uy * uy) + (uz * uz)));
+                               + (uy * uy) + (uz * uz)));
             float s = snumerator / denominator;
             float t = tnumerator / denominator;
             int in = 1;
             if (s < 0 || s > 1)
-              in = 0;
+            { in = 0; }
             if (t < 0 || t > 1)
-              in = 0;
+            { in = 0; }
             if ((s + t) > 1)
-              in = 0;
+            { in = 0; }
             if (in == 1 && r >= 0 && r <= 1)
             {
               xp = p1x;
@@ -2636,9 +2637,9 @@ void read_elements(int idea)
               zp = p1z;
               l = size;
               if (r <= 0.5)
-                move = 1;
+              { move = 1; }
               if (r <= 0.5)
-                move = 2;
+              { move = 2; }
               intersected++;
             }
 //            if (in == 0 && r >= 0 && r <= 1)
@@ -2652,7 +2653,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n3][l];
               if (find(gvector[n2].begin(), gvector[n2].end(), firstgrain) == gvector[n2].end())
-                gvector[n2].push_back(firstgrain);
+              { gvector[n2].push_back(firstgrain); }
             }
             size2 = gvector[n2].size();
             good24 = 0;
@@ -2660,7 +2661,7 @@ void read_elements(int idea)
             {
               int gnum2 = gvector[n2][l];
               if (find(gvector[n4].begin(), gvector[n4].end(), gnum2) != gvector[n4].end())
-                good24 = 1;
+              { good24 = 1; }
             }
             finalnode[n2].set_coords(xp, yp, zp);
           }
@@ -2670,7 +2671,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n2][l];
               if (find(gvector[n3].begin(), gvector[n3].end(), firstgrain) == gvector[n3].end())
-                gvector[n3].push_back(firstgrain);
+              { gvector[n3].push_back(firstgrain); }
             }
             size3 = gvector[n3].size();
             good34 = 0;
@@ -2678,7 +2679,7 @@ void read_elements(int idea)
             {
               int gnum3 = gvector[n3][l];
               if (find(gvector[n4].begin(), gvector[n4].end(), gnum3) != gvector[n4].end())
-                good34 = 1;
+              { good34 = 1; }
             }
             finalnode[n3].set_coords(xp, yp, zp);
           }
@@ -2724,20 +2725,20 @@ void read_elements(int idea)
             float vy = finalnode[node3].yc - finalnode[node1].yc;
             float vz = finalnode[node3].zc - finalnode[node1].zc;
             float denominator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((ux * vx) + (uy * vy) + (uz * vz))) - (((ux * ux) + (uy * uy) + (uz * uz))
-                * ((vx * vx) + (vy * vy) + (vz * vz)));
+                                * ((vx * vx) + (vy * vy) + (vz * vz)));
             float snumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * vx) + (wy * vy) + (wz * vz))) - (((wx * ux) + (wy * uy) + (wz * uz)) * ((vx * vx)
-                + (vy * vy) + (vz * vz)));
+                               + (vy * vy) + (vz * vz)));
             float tnumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * ux) + (wy * uy) + (wz * uz))) - (((wx * vx) + (wy * vy) + (wz * vz)) * ((ux * ux)
-                + (uy * uy) + (uz * uz)));
+                               + (uy * uy) + (uz * uz)));
             float s = snumerator / denominator;
             float t = tnumerator / denominator;
             int in = 1;
             if (s < 0 || s > 1)
-              in = 0;
+            { in = 0; }
             if (t < 0 || t > 1)
-              in = 0;
+            { in = 0; }
             if ((s + t) > 1)
-              in = 0;
+            { in = 0; }
             if (in == 1 && r >= 0 && r <= 1)
             {
               xp = p1x;
@@ -2745,9 +2746,9 @@ void read_elements(int idea)
               zp = p1z;
               l = size;
               if (r <= 0.5)
-                move = 1;
+              { move = 1; }
               if (r <= 0.5)
-                move = 2;
+              { move = 2; }
               intersected++;
             }
 //            if (in == 0 && r >= 0 && r <= 1)
@@ -2761,7 +2762,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n4][l];
               if (find(gvector[n2].begin(), gvector[n2].end(), firstgrain) == gvector[n2].end())
-                gvector[n2].push_back(firstgrain);
+              { gvector[n2].push_back(firstgrain); }
             }
             finalnode[n2].set_coords(xp, yp, zp);
           }
@@ -2771,7 +2772,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n2][l];
               if (find(gvector[n4].begin(), gvector[n4].end(), firstgrain) == gvector[n4].end())
-                gvector[n4].push_back(firstgrain);
+              { gvector[n4].push_back(firstgrain); }
             }
             size4 = gvector[n4].size();
             good34 = 0;
@@ -2779,7 +2780,7 @@ void read_elements(int idea)
             {
               int gnum4 = gvector[n4][l];
               if (find(gvector[n3].begin(), gvector[n3].end(), gnum4) != gvector[n3].end())
-                good34 = 1;
+              { good34 = 1; }
             }
             finalnode[n4].set_coords(xp, yp, zp);
           }
@@ -2825,20 +2826,20 @@ void read_elements(int idea)
             float vy = finalnode[node3].yc - finalnode[node1].yc;
             float vz = finalnode[node3].zc - finalnode[node1].zc;
             float denominator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((ux * vx) + (uy * vy) + (uz * vz))) - (((ux * ux) + (uy * uy) + (uz * uz))
-                * ((vx * vx) + (vy * vy) + (vz * vz)));
+                                * ((vx * vx) + (vy * vy) + (vz * vz)));
             float snumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * vx) + (wy * vy) + (wz * vz))) - (((wx * ux) + (wy * uy) + (wz * uz)) * ((vx * vx)
-                + (vy * vy) + (vz * vz)));
+                               + (vy * vy) + (vz * vz)));
             float tnumerator = (((ux * vx) + (uy * vy) + (uz * vz)) * ((wx * ux) + (wy * uy) + (wz * uz))) - (((wx * vx) + (wy * vy) + (wz * vz)) * ((ux * ux)
-                + (uy * uy) + (uz * uz)));
+                               + (uy * uy) + (uz * uz)));
             float s = snumerator / denominator;
             float t = tnumerator / denominator;
             int in = 1;
             if (s < 0 || s > 1)
-              in = 0;
+            { in = 0; }
             if (t < 0 || t > 1)
-              in = 0;
+            { in = 0; }
             if ((s + t) > 1)
-              in = 0;
+            { in = 0; }
             if (in == 1 && r >= 0 && r <= 1)
             {
               xp = p1x;
@@ -2846,9 +2847,9 @@ void read_elements(int idea)
               zp = p1z;
               l = size;
               if (r <= 0.5)
-                move = 1;
+              { move = 1; }
               if (r <= 0.5)
-                move = 2;
+              { move = 2; }
               intersected++;
             }
 //            if (in == 0 && r >= 0 && r <= 1)
@@ -2862,7 +2863,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n4][l];
               if (find(gvector[n3].begin(), gvector[n3].end(), firstgrain) == gvector[n3].end())
-                gvector[n3].push_back(firstgrain);
+              { gvector[n3].push_back(firstgrain); }
             }
             finalnode[n3].set_coords(xp, yp, zp);
           }
@@ -2872,7 +2873,7 @@ void read_elements(int idea)
             {
               int firstgrain = gvector[n3][l];
               if (find(gvector[n4].begin(), gvector[n4].end(), firstgrain) == gvector[n4].end())
-                gvector[n4].push_back(firstgrain);
+              { gvector[n4].push_back(firstgrain); }
             }
             finalnode[n4].set_coords(xp, yp, zp);
           }
@@ -2891,7 +2892,7 @@ void read_elements(int idea)
     int surfnode4 = finalnode[n4].surfnode;
     surfnodecount = surfnode1 + surfnode2 + surfnode3 + surfnode4;
     if (finalnode[n1].edgenode == 1 || finalnode[n2].edgenode == 1 || finalnode[n3].edgenode == 1 || finalnode[n4].edgenode == 1)
-      onedge = 1;
+    { onedge = 1; }
     size1 = gvector[n1].size();
     size2 = gvector[n2].size();
     size3 = gvector[n3].size();
@@ -2901,28 +2902,28 @@ void read_elements(int idea)
       int gnum = gvector[n1][l];
       graincheck[gnum]++;
       if (graincheck[gnum] == 4)
-        pickedgrain = gnum;
+      { pickedgrain = gnum; }
     }
     for (int l = 0; l < size2; l++)
     {
       int gnum = gvector[n2][l];
       graincheck[gnum]++;
       if (graincheck[gnum] == 4)
-        pickedgrain = gnum;
+      { pickedgrain = gnum; }
     }
     for (int l = 0; l < size3; l++)
     {
       int gnum = gvector[n3][l];
       graincheck[gnum]++;
       if (graincheck[gnum] == 4)
-        pickedgrain = gnum;
+      { pickedgrain = gnum; }
     }
     for (int l = 0; l < size4; l++)
     {
       int gnum = gvector[n4][l];
       graincheck[gnum]++;
       if (graincheck[gnum] == 4)
-        pickedgrain = gnum;
+      { pickedgrain = gnum; }
     }
     float x1 = finalnode[n1].xc;
     float y1 = finalnode[n1].yc;
@@ -3038,28 +3039,28 @@ void read_elements(int idea)
         int gnum = gvector[n1][l];
         graincheck[gnum]++;
         if (graincheck[gnum] == 4)
-          pickedgrain = gnum;
+        { pickedgrain = gnum; }
       }
       for (int l = 0; l < size2; l++)
       {
         int gnum = gvector[n2][l];
         graincheck[gnum]++;
         if (graincheck[gnum] == 4)
-          pickedgrain = gnum;
+        { pickedgrain = gnum; }
       }
       for (int l = 0; l < size3; l++)
       {
         int gnum = gvector[n3][l];
         graincheck[gnum]++;
         if (graincheck[gnum] == 4)
-          pickedgrain = gnum;
+        { pickedgrain = gnum; }
       }
       for (int l = 0; l < size4; l++)
       {
         int gnum = gvector[n4][l];
         graincheck[gnum]++;
         if (graincheck[gnum] == 4)
-          pickedgrain = gnum;
+        { pickedgrain = gnum; }
       }
       if (pickedgrain > 0)
       {
@@ -3070,19 +3071,19 @@ void read_elements(int idea)
         int newnode = n1;
         int maxsize = size1;
         if (size2 > maxsize)
-          newnode = n2, maxsize = size2;
+        { newnode = n2, maxsize = size2; }
         if (size3 > maxsize)
-          newnode = n3, maxsize = size3;
+        { newnode = n3, maxsize = size3; }
         if (size4 > maxsize)
-          newnode = n4, maxsize = size4;
+        { newnode = n4, maxsize = size4; }
         if (newnode != n1)
-          finalnode[n1].set_killed(killed);
+        { finalnode[n1].set_killed(killed); }
         if (newnode != n2)
-          finalnode[n2].set_killed(killed);
+        { finalnode[n2].set_killed(killed); }
         if (newnode != n3)
-          finalnode[n3].set_killed(killed);
+        { finalnode[n3].set_killed(killed); }
         if (newnode != n4)
-          finalnode[n4].set_killed(killed);
+        { finalnode[n4].set_killed(killed); }
         int size = elvector[n1].size();
         for (int l = 0; l < size; l++)
         {
@@ -3096,13 +3097,13 @@ void read_elements(int idea)
           int node3 = element[elem].node3;
           int node4 = element[elem].node4;
           if (node1 == n1 || node1 == n2 || node1 == n3 || node1 == n4)
-            count1++;
+          { count1++; }
           if (node2 == n1 || node2 == n2 || node2 == n3 || node2 == n4)
-            count2++;
+          { count2++; }
           if (node3 == n1 || node3 == n2 || node3 == n3 || node3 == n4)
-            count3++;
+          { count3++; }
           if (node4 == n1 || node4 == n2 || node4 == n3 || node4 == n4)
-            count4++;
+          { count4++; }
           if ((count1 + count2 + count3 + count4) >= 2)
           {
             element[elem].set_killed(killed);
@@ -3110,13 +3111,13 @@ void read_elements(int idea)
           if ((count1 + count2 + count3 + count4) == 1)
           {
             if (count1 == 1)
-              element[elem].set_nodes(newnode, node2, node3, node4);
+            { element[elem].set_nodes(newnode, node2, node3, node4); }
             if (count2 == 1)
-              element[elem].set_nodes(node1, newnode, node3, node4);
+            { element[elem].set_nodes(node1, newnode, node3, node4); }
             if (count3 == 1)
-              element[elem].set_nodes(node1, node2, newnode, node4);
+            { element[elem].set_nodes(node1, node2, newnode, node4); }
             if (count4 == 1)
-              element[elem].set_nodes(node1, node2, node3, newnode);
+            { element[elem].set_nodes(node1, node2, node3, newnode); }
           }
         }
         size = elvector[n2].size();
@@ -3132,13 +3133,13 @@ void read_elements(int idea)
           int node3 = element[elem].node3;
           int node4 = element[elem].node4;
           if (node1 == n1 || node1 == n2 || node1 == n3 || node1 == n4)
-            count1++;
+          { count1++; }
           if (node2 == n1 || node2 == n2 || node2 == n3 || node2 == n4)
-            count2++;
+          { count2++; }
           if (node3 == n1 || node3 == n2 || node3 == n3 || node3 == n4)
-            count3++;
+          { count3++; }
           if (node4 == n1 || node4 == n2 || node4 == n3 || node4 == n4)
-            count4++;
+          { count4++; }
           if ((count1 + count2 + count3 + count4) >= 2)
           {
             element[elem].set_killed(killed);
@@ -3146,13 +3147,13 @@ void read_elements(int idea)
           if ((count1 + count2 + count3 + count4) == 1)
           {
             if (count1 == 1)
-              element[elem].set_nodes(newnode, node2, node3, node4);
+            { element[elem].set_nodes(newnode, node2, node3, node4); }
             if (count2 == 1)
-              element[elem].set_nodes(node1, newnode, node3, node4);
+            { element[elem].set_nodes(node1, newnode, node3, node4); }
             if (count3 == 1)
-              element[elem].set_nodes(node1, node2, newnode, node4);
+            { element[elem].set_nodes(node1, node2, newnode, node4); }
             if (count4 == 1)
-              element[elem].set_nodes(node1, node2, node3, newnode);
+            { element[elem].set_nodes(node1, node2, node3, newnode); }
           }
         }
         size = elvector[n3].size();
@@ -3168,13 +3169,13 @@ void read_elements(int idea)
           int node3 = element[elem].node3;
           int node4 = element[elem].node4;
           if (node1 == n1 || node1 == n2 || node1 == n3 || node1 == n4)
-            count1++;
+          { count1++; }
           if (node2 == n1 || node2 == n2 || node2 == n3 || node2 == n4)
-            count2++;
+          { count2++; }
           if (node3 == n1 || node3 == n2 || node3 == n3 || node3 == n4)
-            count3++;
+          { count3++; }
           if (node4 == n1 || node4 == n2 || node4 == n3 || node4 == n4)
-            count4++;
+          { count4++; }
           if ((count1 + count2 + count3 + count4) >= 2)
           {
             element[elem].set_killed(killed);
@@ -3182,13 +3183,13 @@ void read_elements(int idea)
           if ((count1 + count2 + count3 + count4) == 1)
           {
             if (count1 == 1)
-              element[elem].set_nodes(newnode, node2, node3, node4);
+            { element[elem].set_nodes(newnode, node2, node3, node4); }
             if (count2 == 1)
-              element[elem].set_nodes(node1, newnode, node3, node4);
+            { element[elem].set_nodes(node1, newnode, node3, node4); }
             if (count3 == 1)
-              element[elem].set_nodes(node1, node2, newnode, node4);
+            { element[elem].set_nodes(node1, node2, newnode, node4); }
             if (count4 == 1)
-              element[elem].set_nodes(node1, node2, node3, newnode);
+            { element[elem].set_nodes(node1, node2, node3, newnode); }
           }
         }
         size = elvector[n4].size();
@@ -3204,13 +3205,13 @@ void read_elements(int idea)
           int node3 = element[elem].node3;
           int node4 = element[elem].node4;
           if (node1 == n1 || node1 == n2 || node1 == n3 || node1 == n4)
-            count1++;
+          { count1++; }
           if (node2 == n1 || node2 == n2 || node2 == n3 || node2 == n4)
-            count2++;
+          { count2++; }
           if (node3 == n1 || node3 == n2 || node3 == n3 || node3 == n4)
-            count3++;
+          { count3++; }
           if (node4 == n1 || node4 == n2 || node4 == n3 || node4 == n4)
-            count4++;
+          { count4++; }
           if ((count1 + count2 + count3 + count4) >= 2)
           {
             element[elem].set_killed(killed);
@@ -3218,13 +3219,13 @@ void read_elements(int idea)
           if ((count1 + count2 + count3 + count4) == 1)
           {
             if (count1 == 1)
-              element[elem].set_nodes(newnode, node2, node3, node4);
+            { element[elem].set_nodes(newnode, node2, node3, node4); }
             if (count2 == 1)
-              element[elem].set_nodes(node1, newnode, node3, node4);
+            { element[elem].set_nodes(node1, newnode, node3, node4); }
             if (count3 == 1)
-              element[elem].set_nodes(node1, node2, newnode, node4);
+            { element[elem].set_nodes(node1, node2, newnode, node4); }
             if (count4 == 1)
-              element[elem].set_nodes(node1, node2, node3, newnode);
+            { element[elem].set_nodes(node1, node2, node3, newnode); }
           }
         }
       }
@@ -3348,9 +3349,9 @@ void measure_elements()
       denom12 = powf(denom12, 0.5);
       float dihedral1 = ((n1x * n2x) + (n1y * n2y) + (n1z * n2z)) / (denom11 * denom12);
       if (dihedral1 < -1)
-        dihedral1 = -1;
+      { dihedral1 = -1; }
       if (dihedral1 > 1)
-        dihedral1 = 1;
+      { dihedral1 = 1; }
       dihedral1 = acos(dihedral1);
       float denom21 = (n1x * n1x) + (n1y * n1y) + (n1z * n1z);
       float denom22 = (n3x * n3x) + (n3y * n3y) + (n3z * n3z);
@@ -3358,9 +3359,9 @@ void measure_elements()
       denom22 = powf(denom22, 0.5);
       float dihedral2 = ((n1x * n3x) + (n1y * n3y) + (n1z * n3z)) / (denom21 * denom22);
       if (dihedral2 < -1)
-        dihedral2 = -1;
+      { dihedral2 = -1; }
       if (dihedral2 > 1)
-        dihedral2 = 1;
+      { dihedral2 = 1; }
       dihedral2 = acos(dihedral2);
       float denom31 = (n1x * n1x) + (n1y * n1y) + (n1z * n1z);
       float denom32 = (n4x * n4x) + (n4y * n4y) + (n4z * n4z);
@@ -3368,9 +3369,9 @@ void measure_elements()
       denom32 = powf(denom32, 0.5);
       float dihedral3 = ((n1x * n4x) + (n1y * n4y) + (n1z * n4z)) / (denom31 * denom32);
       if (dihedral3 < -1)
-        dihedral3 = -1;
+      { dihedral3 = -1; }
       if (dihedral3 > 1)
-        dihedral3 = 1;
+      { dihedral3 = 1; }
       dihedral3 = acos(dihedral3);
       float denom41 = (n2x * n2x) + (n2y * n2y) + (n2z * n2z);
       float denom42 = (n3x * n3x) + (n3y * n3y) + (n3z * n3z);
@@ -3378,9 +3379,9 @@ void measure_elements()
       denom42 = powf(denom42, 0.5);
       float dihedral4 = ((n2x * n3x) + (n2y * n3y) + (n2z * n3z)) / (denom41 * denom42);
       if (dihedral4 < -1)
-        dihedral4 = -1;
+      { dihedral4 = -1; }
       if (dihedral4 > 1)
-        dihedral4 = 1;
+      { dihedral4 = 1; }
       dihedral4 = acos(dihedral4);
       float denom51 = (n2x * n2x) + (n2y * n2y) + (n2z * n2z);
       float denom52 = (n4x * n4x) + (n4y * n4y) + (n4z * n4z);
@@ -3388,9 +3389,9 @@ void measure_elements()
       denom52 = powf(denom52, 0.5);
       float dihedral5 = ((n2x * n4x) + (n2y * n4y) + (n2z * n4z)) / (denom51 * denom52);
       if (dihedral5 < -1)
-        dihedral5 = -1;
+      { dihedral5 = -1; }
       if (dihedral5 > 1)
-        dihedral5 = 1;
+      { dihedral5 = 1; }
       dihedral5 = acos(dihedral5);
       float denom61 = (n3x * n3x) + (n3y * n3y) + (n3z * n3z);
       float denom62 = (n4x * n4x) + (n4y * n4y) + (n4z * n4z);
@@ -3398,9 +3399,9 @@ void measure_elements()
       denom62 = powf(denom62, 0.5);
       float dihedral6 = ((n3x * n4x) + (n3y * n4y) + (n3z * n4z)) / (denom61 * denom62);
       if (dihedral6 < -1)
-        dihedral6 = -1;
+      { dihedral6 = -1; }
       if (dihedral6 > 1)
-        dihedral6 = 1;
+      { dihedral6 = 1; }
       dihedral6 = acos(dihedral6);
       dihedral1 = (180.0f / 3.1415926535897f) * dihedral1;
       dihedral2 = (180.0f / 3.1415926535897f) * dihedral2;
@@ -3452,7 +3453,7 @@ void measure_elements()
       float vol = absdeterminant / 6.0;
       element[k].set_volume(vol);
       if (grainname > 0)
-        grainvol[grainname] = grainvol[grainname] + vol;
+      { grainvol[grainname] = grainvol[grainname] + vol; }
       avgvol = avgvol + vol;
       count++;
     }
@@ -3462,7 +3463,7 @@ void measure_elements()
   for (int i = 1; i < numgrains + 1; i++)
   {
 //    float truevol = grain[i].volume;
-   // float error = (truevol - grainvol[i]) / truevol;
+    // float error = (truevol - grainvol[i]) / truevol;
     totalvol = totalvol + grainvol[i];
   }
   for (int l = 0; l < elementcount; l++)
@@ -3473,55 +3474,55 @@ void measure_elements()
       float volume = element[l].volume;
       float ratio = volume / avgvol;
       if (ratio < 1.0 / 10.0)
-        bin = 0;
+      { bin = 0; }
       if (ratio >= 1.0 / 10.0 && ratio < 1.0 / 9.0)
-        bin = 1;
+      { bin = 1; }
       if (ratio >= 1.0 / 9.0 && ratio < 1.0 / 8.0)
-        bin = 2;
+      { bin = 2; }
       if (ratio >= 1.0 / 8.0 && ratio < 1.0 / 7.0)
-        bin = 3;
+      { bin = 3; }
       if (ratio >= 1.0 / 7.0 && ratio < 1.0 / 6.0)
-        bin = 4;
+      { bin = 4; }
       if (ratio >= 1.0 / 6.0 && ratio < 1.0 / 5.0)
-        bin = 5;
+      { bin = 5; }
       if (ratio >= 1.0 / 5.0 && ratio < 1.0 / 4.0)
-        bin = 6;
+      { bin = 6; }
       if (ratio >= 1.0 / 4.0 && ratio < 1.0 / 3.0)
-        bin = 7;
+      { bin = 7; }
       if (ratio >= 1.0 / 3.0 && ratio < 1.0 / 2.0)
-        bin = 8;
+      { bin = 8; }
       if (ratio >= 1.0 / 2.0 && ratio < 1.0 / 1.0)
-        bin = 9;
+      { bin = 9; }
       if (ratio >= 1.0 / 1.0 && ratio < 2.0 / 1.0)
-        bin = 10;
+      { bin = 10; }
       if (ratio >= 2.0 / 1.0 && ratio < 3.0 / 1.0)
-        bin = 11;
+      { bin = 11; }
       if (ratio >= 3.0 / 1.0 && ratio < 4.0 / 1.0)
-        bin = 12;
+      { bin = 12; }
       if (ratio >= 4.0 / 1.0 && ratio < 5.0 / 1.0)
-        bin = 13;
+      { bin = 13; }
       if (ratio >= 5.0 / 1.0 && ratio < 6.0 / 1.0)
-        bin = 14;
+      { bin = 14; }
       if (ratio >= 6.0 / 1.0 && ratio < 7.0 / 1.0)
-        bin = 15;
+      { bin = 15; }
       if (ratio >= 7.0 / 1.0 && ratio < 8.0 / 1.0)
-        bin = 16;
+      { bin = 16; }
       if (ratio >= 8.0 / 1.0 && ratio < 9.0 / 1.0)
-        bin = 17;
+      { bin = 17; }
       if (ratio >= 9.0 / 1.0 && ratio < 10.0 / 1.0)
-        bin = 18;
+      { bin = 18; }
       if (ratio >= 10.0 / 1.0 && ratio < 11.0 / 1.0)
-        bin = 19;
+      { bin = 19; }
       if (ratio >= 11.0 / 1.0 && ratio < 12.0 / 1.0)
-        bin = 20;
+      { bin = 20; }
       if (ratio >= 12.0 / 1.0 && ratio < 13.0 / 1.0)
-        bin = 21;
+      { bin = 21; }
       if (ratio >= 13.0 / 1.0 && ratio < 14.0 / 1.0)
-        bin = 22;
+      { bin = 22; }
       if (ratio >= 14.0 / 1.0 && ratio < 15.0 / 1.0)
-        bin = 23;
+      { bin = 23; }
       if (ratio >= 15.0 / 1.0)
-        bin = 24;
+      { bin = 24; }
       int grainname = element[l].grainname;
       int onedge = grain[grainname].edgegrain;
       int surfnodecount = element[l].originalnodecount;
@@ -3554,7 +3555,7 @@ void improve_mesh()
     insidecount = 0;
     for (int i = 0; i < elementcount; i++)
     {
- //    int gnum = element[i].grainname;
+//    int gnum = element[i].grainname;
 //      int oedge = grain[gnum].edgegrain;
       if (element[i].elementkilled != 1)
       {
@@ -3575,21 +3576,21 @@ void improve_mesh()
         float dihedralangle6 = element[i].dihedralangle6;
         if (dihedralangle1 < 10 || dihedralangle1 > 170 || dihedralangle2 < 10 || dihedralangle2 > 170 || dihedralangle3 < 10 || dihedralangle3 > 170
             || dihedralangle4 < 10 || dihedralangle4 > 170 || dihedralangle5 < 10 || dihedralangle5 > 170 || dihedralangle6 < 10 || dihedralangle6 > 170)
-        //        if(dihedralangle1 < 15 || dihedralangle1 > 165 || dihedralangle2 < 15 || dihedralangle2 > 165 || dihedralangle3 < 15 || dihedralangle3 > 165 || dihedralangle4 < 15 || dihedralangle4 > 165 || dihedralangle5 < 15 || dihedralangle5 > 165 || dihedralangle6 < 15 || dihedralangle6 > 165)
-        //        if(dihedralangle1 < 20 || dihedralangle1 > 160 || dihedralangle2 < 20 || dihedralangle2 > 160 || dihedralangle3 < 20 || dihedralangle3 > 160 || dihedralangle4 < 20 || dihedralangle4 > 160 || dihedralangle5 < 20 || dihedralangle5 > 160 || dihedralangle6 < 20 || dihedralangle6 > 160)
+          //        if(dihedralangle1 < 15 || dihedralangle1 > 165 || dihedralangle2 < 15 || dihedralangle2 > 165 || dihedralangle3 < 15 || dihedralangle3 > 165 || dihedralangle4 < 15 || dihedralangle4 > 165 || dihedralangle5 < 15 || dihedralangle5 > 165 || dihedralangle6 < 15 || dihedralangle6 > 165)
+          //        if(dihedralangle1 < 20 || dihedralangle1 > 160 || dihedralangle2 < 20 || dihedralangle2 > 160 || dihedralangle3 < 20 || dihedralangle3 > 160 || dihedralangle4 < 20 || dihedralangle4 > 160 || dihedralangle5 < 20 || dihedralangle5 > 160 || dihedralangle6 < 20 || dihedralangle6 > 160)
         {
           minedgelength = element[i].edgelength1;
           edgetokill = 1;
           if (minedgelength > element[i].edgelength2)
-            minedgelength = element[i].edgelength2, edgetokill = 2;
+          { minedgelength = element[i].edgelength2, edgetokill = 2; }
           if (minedgelength > element[i].edgelength3)
-            minedgelength = element[i].edgelength3, edgetokill = 3;
+          { minedgelength = element[i].edgelength3, edgetokill = 3; }
           if (minedgelength > element[i].edgelength4)
-            minedgelength = element[i].edgelength4, edgetokill = 4;
+          { minedgelength = element[i].edgelength4, edgetokill = 4; }
           if (minedgelength > element[i].edgelength5)
-            minedgelength = element[i].edgelength5, edgetokill = 5;
+          { minedgelength = element[i].edgelength5, edgetokill = 5; }
           if (minedgelength > element[i].edgelength6)
-            minedgelength = element[i].edgelength6, edgetokill = 6;
+          { minedgelength = element[i].edgelength6, edgetokill = 6; }
           element[i].set_killed(killed);
           if (edgetokill == 1)
           {
@@ -3617,16 +3618,16 @@ void improve_mesh()
               int n3 = element[firstelement].node3;
               int n4 = element[firstelement].node4;
               if (n1 == node2)
-                n1 = node1, affected = 1;
+              { n1 = node1, affected = 1; }
               if (n2 == node2)
-                n2 = node1, affected = 1;
+              { n2 = node1, affected = 1; }
               if (n3 == node2)
-                n3 = node1, affected = 1;
+              { n3 = node1, affected = 1; }
               if (n4 == node2)
-                n4 = node1, affected = 1;
+              { n4 = node1, affected = 1; }
               element[firstelement].set_nodes(n1, n2, n3, n4);
               if (n1 == n2 || n1 == n3 || n1 == n4 || n2 == n3 || n2 == n4 || n3 == n4)
-                element[firstelement].set_killed(killed);
+              { element[firstelement].set_killed(killed); }
               if (element[firstelement].elementkilled != 1)
               {
                 if (affected == 1)
@@ -3926,16 +3927,16 @@ void improve_mesh()
               int n3 = element[firstelement].node3;
               int n4 = element[firstelement].node4;
               if (n1 == node3)
-                n1 = node1, affected = 1;
+              { n1 = node1, affected = 1; }
               if (n2 == node3)
-                n2 = node1, affected = 1;
+              { n2 = node1, affected = 1; }
               if (n3 == node3)
-                n3 = node1, affected = 1;
+              { n3 = node1, affected = 1; }
               if (n4 == node3)
-                n4 = node1, affected = 1;
+              { n4 = node1, affected = 1; }
               element[firstelement].set_nodes(n1, n2, n3, n4);
               if (n1 == n2 || n1 == n3 || n1 == n4 || n2 == n3 || n2 == n4 || n3 == n4)
-                element[firstelement].set_killed(killed);
+              { element[firstelement].set_killed(killed); }
               if (element[firstelement].elementkilled != 1)
               {
                 if (affected == 1)
@@ -4235,16 +4236,16 @@ void improve_mesh()
               int n3 = element[firstelement].node3;
               int n4 = element[firstelement].node4;
               if (n1 == node4)
-                n1 = node1, affected = 1;
+              { n1 = node1, affected = 1; }
               if (n2 == node4)
-                n2 = node1, affected = 1;
+              { n2 = node1, affected = 1; }
               if (n3 == node4)
-                n3 = node1, affected = 1;
+              { n3 = node1, affected = 1; }
               if (n4 == node4)
-                n4 = node1, affected = 1;
+              { n4 = node1, affected = 1; }
               element[firstelement].set_nodes(n1, n2, n3, n4);
               if (n1 == n2 || n1 == n3 || n1 == n4 || n2 == n3 || n2 == n4 || n3 == n4)
-                element[firstelement].set_killed(killed);
+              { element[firstelement].set_killed(killed); }
               if (element[firstelement].elementkilled != 1)
               {
                 if (affected == 1)
@@ -4544,16 +4545,16 @@ void improve_mesh()
               int n3 = element[firstelement].node3;
               int n4 = element[firstelement].node4;
               if (n1 == node3)
-                n1 = node2, affected = 1;
+              { n1 = node2, affected = 1; }
               if (n2 == node3)
-                n2 = node2, affected = 1;
+              { n2 = node2, affected = 1; }
               if (n3 == node3)
-                n3 = node2, affected = 1;
+              { n3 = node2, affected = 1; }
               if (n4 == node3)
-                n4 = node2, affected = 1;
+              { n4 = node2, affected = 1; }
               element[firstelement].set_nodes(n1, n2, n3, n4);
               if (n1 == n2 || n1 == n3 || n1 == n4 || n2 == n3 || n2 == n4 || n3 == n4)
-                element[firstelement].set_killed(killed);
+              { element[firstelement].set_killed(killed); }
               if (element[firstelement].elementkilled != 1)
               {
                 if (affected == 1)
@@ -4853,16 +4854,16 @@ void improve_mesh()
               int n3 = element[firstelement].node3;
               int n4 = element[firstelement].node4;
               if (n1 == node4)
-                n1 = node2, affected = 1;
+              { n1 = node2, affected = 1; }
               if (n2 == node4)
-                n2 = node2, affected = 1;
+              { n2 = node2, affected = 1; }
               if (n3 == node4)
-                n3 = node2, affected = 1;
+              { n3 = node2, affected = 1; }
               if (n4 == node4)
-                n4 = node2, affected = 1;
+              { n4 = node2, affected = 1; }
               element[firstelement].set_nodes(n1, n2, n3, n4);
               if (n1 == n2 || n1 == n3 || n1 == n4 || n2 == n3 || n2 == n4 || n3 == n4)
-                element[firstelement].set_killed(killed);
+              { element[firstelement].set_killed(killed); }
               if (element[firstelement].elementkilled != 1)
               {
                 if (affected == 1)
@@ -5162,16 +5163,16 @@ void improve_mesh()
               int n3 = element[firstelement].node3;
               int n4 = element[firstelement].node4;
               if (n1 == node4)
-                n1 = node3, affected = 1;
+              { n1 = node3, affected = 1; }
               if (n2 == node4)
-                n2 = node3, affected = 1;
+              { n2 = node3, affected = 1; }
               if (n3 == node4)
-                n3 = node3, affected = 1;
+              { n3 = node3, affected = 1; }
               if (n4 == node4)
-                n4 = node3, affected = 1;
+              { n4 = node3, affected = 1; }
               element[firstelement].set_nodes(n1, n2, n3, n4);
               if (n1 == n2 || n1 == n3 || n1 == n4 || n2 == n3 || n2 == n4 || n3 == n4)
-                element[firstelement].set_killed(killed);
+              { element[firstelement].set_killed(killed); }
               if (element[firstelement].elementkilled != 1)
               {
                 if (affected == 1)
@@ -5569,15 +5570,15 @@ void write_meshdata(string outname1)
       float dihedral6 = element[i].dihedralangle6;
       float worstangle = dihedral1;
       if ((dihedral2) < worstangle)
-        worstangle = (dihedral2);
+      { worstangle = (dihedral2); }
       if ((dihedral3) < worstangle)
-        worstangle = (dihedral3);
+      { worstangle = (dihedral3); }
       if ((dihedral4) < worstangle)
-        worstangle = (dihedral4);
+      { worstangle = (dihedral4); }
       if ((dihedral5) < worstangle)
-        worstangle = (dihedral5);
+      { worstangle = (dihedral5); }
       if ((dihedral6) < worstangle)
-        worstangle = (dihedral6);
+      { worstangle = (dihedral6); }
       outFile << worstangle << endl;
     }
   }
@@ -5626,7 +5627,7 @@ void write_voxeldata(string outname3)
         counter++;
         outFile << "       " << voxels[k][j][i];
         if (counter % 20 == 0)
-          outFile << endl;
+        { outFile << endl; }
       }
     }
   }

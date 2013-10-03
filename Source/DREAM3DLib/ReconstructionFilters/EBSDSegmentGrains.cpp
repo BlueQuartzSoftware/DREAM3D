@@ -119,9 +119,9 @@ void EBSDSegmentGrains::readFilterParameters(AbstractFilterParametersReader* rea
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -198,8 +198,8 @@ void EBSDSegmentGrains::execute()
   notifyStatusMessage("Starting");
 
   //Convert user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi/180.0f;
-  for(int64_t i=0;i<totalPoints;i++)
+  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  for(int64_t i = 0; i < totalPoints; i++)
   {
     m_GrainIds[i] = 0;
   }
@@ -244,9 +244,11 @@ void EBSDSegmentGrains::execute()
     size_t r;
     size_t temp;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (size_t i=1; i< totalFields; i++) {
+    for (size_t i = 1; i < totalFields; i++)
+    {
       r = numberGenerator(); // Random remaining position.
-      if (r >= totalFields) {
+      if (r >= totalFields)
+      {
         continue;
       }
       temp = gid[i];
@@ -277,7 +279,7 @@ int64_t EBSDSegmentGrains::getSeed(size_t gnum)
   int64_t totalPoints = m->getTotalPoints();
 
   DREAM3D_RANDOMNG_NEW()
-      int64_t seed = -1;
+  int64_t seed = -1;
   int64_t randpoint = 0;
 
   // Precalculate some constants
@@ -287,15 +289,15 @@ int64_t EBSDSegmentGrains::getSeed(size_t gnum)
   randpoint = int64_t(float(rg.genrand_res53()) * float(totalPMinus1));
   while (seed == -1 && counter < totalPoints)
   {
-    if (randpoint > totalPMinus1) randpoint = static_cast<int64_t>( randpoint - totalPoints );
-    if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) seed = randpoint;
+    if (randpoint > totalPMinus1) { randpoint = static_cast<int64_t>( randpoint - totalPoints ); }
+    if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) { seed = randpoint; }
     randpoint++;
     counter++;
   }
   if (seed >= 0)
   {
     m_GrainIds[seed] = gnum;
-    m->resizeCellFieldDataArrays(gnum+1);
+    m->resizeCellFieldDataArrays(gnum + 1);
     dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   }
   return seed;
@@ -321,7 +323,7 @@ bool EBSDSegmentGrains::determineGrouping(int64_t referencepoint, int64_t neighb
     phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
     QuaternionMathF::Copy(quats[neighborpoint], q2);
 
-    if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint]) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+    if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint]) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
     if (w < m_MisorientationTolerance)
     {
       group = true;

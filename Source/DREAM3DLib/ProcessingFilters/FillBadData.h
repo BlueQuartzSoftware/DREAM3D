@@ -68,18 +68,18 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
     virtual ~FillBadData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-	DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize)
+    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Fill Bad Data"; }
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

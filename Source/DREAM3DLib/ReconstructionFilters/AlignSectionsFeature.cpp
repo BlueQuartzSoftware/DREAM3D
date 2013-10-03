@@ -63,10 +63,10 @@ using namespace std;
 //
 // -----------------------------------------------------------------------------
 AlignSectionsFeature::AlignSectionsFeature() :
-AlignSections(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_GoodVoxels(NULL)
+  AlignSections(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxels(NULL)
 {
   setupFilterParameters();
 }
@@ -94,8 +94,8 @@ void AlignSectionsFeature::readFilterParameters(AbstractFilterParametersReader* 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -121,7 +121,7 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t field
   {
     QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
@@ -169,29 +169,31 @@ void AlignSectionsFeature::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Aligning Sections Complete");
+  notifyStatusMessage("Aligning Sections Complete");
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
+void AlignSectionsFeature::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   ofstream outFile;
-  if (getWriteAlignmentShifts() == true) {
+  if (getWriteAlignmentShifts() == true)
+  {
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -217,8 +219,8 @@ void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshi
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
 
-    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter/dims[2])*100);
-  //  notifyStatusMessage(ss);
+    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
+    //  notifyStatusMessage(ss);
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;
@@ -253,16 +255,16 @@ void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshi
                 {
                   refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
                   curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
-                  if(m_GoodVoxels[refposition] != m_GoodVoxels[curposition]) disorientation++;
-                count++;
+                  if(m_GoodVoxels[refposition] != m_GoodVoxels[curposition]) { disorientation++; }
+                  count++;
                 }
                 else
                 {
 
-        }
+                }
               }
             }
-            disorientation = disorientation/count;
+            disorientation = disorientation / count;
             misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
             if(disorientation < mindisorientation)
             {
@@ -274,13 +276,15 @@ void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshi
         }
       }
     }
-    xshifts[iter] = xshifts[iter-1] + newxshift;
-    yshifts[iter] = yshifts[iter-1] + newyshift;
-    if (getWriteAlignmentShifts() == true) {
-      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << endl;
+    xshifts[iter] = xshifts[iter - 1] + newxshift;
+    yshifts[iter] = yshifts[iter - 1] + newyshift;
+    if (getWriteAlignmentShifts() == true)
+    {
+      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << endl;
     }
   }
-  if (getWriteAlignmentShifts() == true) {
+  if (getWriteAlignmentShifts() == true)
+  {
     outFile.close();
   }
 }

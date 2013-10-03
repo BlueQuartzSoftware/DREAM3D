@@ -51,8 +51,8 @@
 //
 // -----------------------------------------------------------------------------
 VertexDataContainer::VertexDataContainer() :
-DataContainer(),
-m_NumVertexTuples(0)
+  DataContainer(),
+  m_NumVertexTuples(0)
 {
   setName(DREAM3D::HDF5::VertexDataContainerName);
 }
@@ -75,7 +75,7 @@ DOES_DATASET_EXIST_DEFN(VertexDataContainer, VertexEnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::addVertexData(const QString &name, IDataArray::Pointer data)
+void VertexDataContainer::addVertexData(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -91,7 +91,7 @@ void VertexDataContainer::addVertexData(const QString &name, IDataArray::Pointer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::getVertexData(const QString &name)
+IDataArray::Pointer VertexDataContainer::getVertexData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -106,7 +106,7 @@ IDataArray::Pointer VertexDataContainer::getVertexData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::removeVertexData(const QString &name)
+IDataArray::Pointer VertexDataContainer::removeVertexData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -151,7 +151,7 @@ int VertexDataContainer::getNumVertexArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::getVertexFieldData(const QString &name)
+IDataArray::Pointer VertexDataContainer::getVertexFieldData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexFieldData.find(name);
@@ -165,7 +165,7 @@ IDataArray::Pointer VertexDataContainer::getVertexFieldData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::addVertexFieldData(const QString &name, IDataArray::Pointer data)
+void VertexDataContainer::addVertexFieldData(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -181,7 +181,7 @@ void VertexDataContainer::addVertexFieldData(const QString &name, IDataArray::Po
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::removeVertexFieldData(const QString &name)
+IDataArray::Pointer VertexDataContainer::removeVertexFieldData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexFieldData.find(name);
@@ -228,7 +228,7 @@ int VertexDataContainer::getNumVertexFieldArrays()
 // -----------------------------------------------------------------------------
 void VertexDataContainer::resizeVertexFieldDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexFieldData.begin(); iter != m_VertexFieldData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
@@ -241,7 +241,7 @@ void VertexDataContainer::resizeVertexFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::getVertexEnsembleData(const QString &name)
+IDataArray::Pointer VertexDataContainer::getVertexEnsembleData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexEnsembleData.find(name);
@@ -255,7 +255,7 @@ IDataArray::Pointer VertexDataContainer::getVertexEnsembleData(const QString &na
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::addVertexEnsembleData(const QString &name, IDataArray::Pointer data)
+void VertexDataContainer::addVertexEnsembleData(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -271,7 +271,7 @@ void VertexDataContainer::addVertexEnsembleData(const QString &name, IDataArray:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::removeVertexEnsembleData(const QString &name)
+IDataArray::Pointer VertexDataContainer::removeVertexEnsembleData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexEnsembleData.find(name);
@@ -318,7 +318,7 @@ int VertexDataContainer::getNumVertexEnsembleArrays()
 // -----------------------------------------------------------------------------
 void VertexDataContainer::resizeVertexEnsembleDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexEnsembleData.begin(); iter != m_VertexEnsembleData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";

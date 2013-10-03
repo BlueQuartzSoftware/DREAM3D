@@ -53,21 +53,23 @@ class DREAM3DLib_EXPORT IDataArray
      * @return
      */
     template <class Source, class Target, typename Raw>
-    static Raw SafeReinterpretCast(Source x) {
-        if( dynamic_cast<Target>(x) != x ) {
-          return 0;
-        }
-        return reinterpret_cast<Raw>(x->GetVoidPointer(0));
+    static Raw SafeReinterpretCast(Source x)
+    {
+      if( dynamic_cast<Target>(x) != x )
+      {
+        return 0;
+      }
+      return reinterpret_cast<Raw>(x->GetVoidPointer(0));
     }
 
 
     IDataArray();
     virtual ~IDataArray();
 
-    virtual void SetName(const QString &name) = 0;
+    virtual void SetName(const QString& name) = 0;
     virtual QString GetName() = 0;
 
-    virtual Pointer createNewArray(size_t numElements, int numComponents, const QString &name) = 0;
+    virtual Pointer createNewArray(size_t numElements, int numComponents, const QString& name) = 0;
 
     /**
      * @brief Has all the memory needed for this class been allocated?
@@ -95,9 +97,9 @@ class DREAM3DLib_EXPORT IDataArray
      */
     virtual void* GetVoidPointer ( size_t i) = 0;
 
-     /**
-     * @brief Returns the number of Tuples in the array.
-     */
+    /**
+    * @brief Returns the number of Tuples in the array.
+    */
     virtual size_t getNumberOfTuples () = 0;
 
 
@@ -124,14 +126,14 @@ class DREAM3DLib_EXPORT IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    virtual void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision) = 0;
+    virtual void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision) = 0;
 
     /**
      * @brief Erases tuples based on a list of specific Tuple indices
      * @param idxs The indices to erase
      * @return
      */
-    virtual int EraseTuples(QVector<size_t> &idxs) = 0;
+    virtual int EraseTuples(QVector<size_t>& idxs) = 0;
 
     /**
      * @brief Copies a Tuple from one position to another.
@@ -169,8 +171,8 @@ class DREAM3DLib_EXPORT IDataArray
     virtual int32_t Resize(size_t numTuples) = 0;
 
 
-    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',') = 0;
-    virtual void printComponent(QTextStream &out, size_t i, int j) = 0;
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',') = 0;
+    virtual void printComponent(QTextStream& out, size_t i, int j) = 0;
 
 
     /**
@@ -181,7 +183,7 @@ class DREAM3DLib_EXPORT IDataArray
     virtual int writeH5Data(hid_t parentId) = 0;
     virtual int readH5Data(hid_t parentId) = 0;
 
-    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath, const QString &label) = 0;
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName, const QString& groupPath, const QString& label) = 0;
 //    {
 //      qDebug() << "IDataArray::writeXdmfAttribute needs to be implemented for the data being written." ;
 //      return -1;
@@ -192,8 +194,8 @@ class DREAM3DLib_EXPORT IDataArray
   protected:
 
   private:
-      IDataArray (const IDataArray&);    //Not Implemented
-      void operator=(const IDataArray&); //Not Implemented
+    IDataArray (const IDataArray&);    //Not Implemented
+    void operator=(const IDataArray&); //Not Implemented
 
 };
 

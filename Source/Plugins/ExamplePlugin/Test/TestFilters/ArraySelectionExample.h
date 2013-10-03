@@ -85,17 +85,17 @@ class ArraySelectionExample : public AbstractFilter
                                                 QSet<QString> selectedFaceArrays,
                                                 QSet<QString> selectedEdgeArrays);
 
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelCellArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEdgeArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshEdgeArrays)
 
   public:
 
@@ -156,9 +156,9 @@ class ArraySelectionExample : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

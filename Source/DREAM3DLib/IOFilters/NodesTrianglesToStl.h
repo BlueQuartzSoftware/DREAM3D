@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -92,16 +92,16 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -124,17 +124,17 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    int writeBinaryCellData(const QString &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
-    int writeASCIICellData(const QString &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
+    int writeBinaryCellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
+    int writeASCIICellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
 
-    int writeBinaryPointData(const QString &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
-    int writeASCIIPointData(const QString &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
+    int writeBinaryPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
+    int writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
 
 
   private:
 
-    int writeHeader(FILE* f, const QString &header, int triCount);
-    int writeNumTrianglesToFile(const QString &filename, int triCount);
+    int writeHeader(FILE* f, const QString& header, int triCount);
+    int writeNumTrianglesToFile(const QString& filename, int triCount);
 
     NodesTrianglesToStl(const NodesTrianglesToStl&); // Copy Constructor Not Implemented
     void operator=(const NodesTrianglesToStl&); // Operator '=' Not Implemented

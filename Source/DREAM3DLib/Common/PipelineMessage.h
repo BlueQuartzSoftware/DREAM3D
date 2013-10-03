@@ -53,11 +53,12 @@ class PipelineMessage
   public:
 
     enum MessageType {Error,
-                        Warning,
-                        StatusMessage,
-                        StatusValue,
-                        StatusMessageAndValue,
-                        UnknownMessageType};
+                      Warning,
+                      StatusMessage,
+                      StatusValue,
+                      StatusMessageAndValue,
+                      UnknownMessageType
+                     };
 
     PipelineMessage() {}
 
@@ -73,29 +74,29 @@ class PipelineMessage
     }
 
 
-    PipelineMessage(const QString &className,
+    PipelineMessage(const QString& className,
                     const char* msg,
                     int code,
                     MessageType msgType = UnknownMessageType,
                     int status = -1) :
-        m_FilterClassName(className),
-        m_Msg(msg),
-        m_Code(code),
-        m_msgType(msgType),
-        m_Progress(status)
+      m_FilterClassName(className),
+      m_Msg(msg),
+      m_Code(code),
+      m_msgType(msgType),
+      m_Progress(status)
     {}
 
-    PipelineMessage(const QString &className,
-                    const QString &msg,
+    PipelineMessage(const QString& className,
+                    const QString& msg,
                     int code,
                     MessageType msgType = UnknownMessageType,
                     int status = -1) :
-        m_FilterClassName(className),
-        m_FilterHumanLabel(""),
-        m_Msg(msg),
-        m_Code(code),
-        m_msgType(msgType),
-        m_Progress(status)
+      m_FilterClassName(className),
+      m_FilterHumanLabel(""),
+      m_Msg(msg),
+      m_Code(code),
+      m_msgType(msgType),
+      m_Progress(status)
     {
 
     }
@@ -107,12 +108,12 @@ class PipelineMessage
     bool operator==(const PipelineMessage& rhs)
     {
       return (m_FilterClassName == rhs.m_FilterClassName &&
-          m_MessagePrefix == rhs.m_MessagePrefix &&
-          m_FilterHumanLabel == rhs.m_FilterHumanLabel &&
-          m_Msg == rhs.m_Msg &&
-            m_Code == rhs.m_Code &&
+              m_MessagePrefix == rhs.m_MessagePrefix &&
+              m_FilterHumanLabel == rhs.m_FilterHumanLabel &&
+              m_Msg == rhs.m_Msg &&
+              m_Code == rhs.m_Code &&
               m_msgType == rhs.m_msgType &&
-                m_Progress == rhs.m_Progress);
+              m_Progress == rhs.m_Progress);
     }
 
     void operator=(const PipelineMessage& rhs)
@@ -130,17 +131,17 @@ class PipelineMessage
 
     DREAM3D_INSTANCE_STRING_PROPERTY(FilterClassName)
 //    DREAM3D_INSTANCE_STRING_PROPERTY(FilterHumanLabel)
-    private:
-      QString m_FilterHumanLabel;
-    public:
-       void setFilterHumanLabel(const QString &s)
-       {
-       m_FilterHumanLabel = s;
-       }
-      QString getFilterHumanLabel()
-      {
+  private:
+    QString m_FilterHumanLabel;
+  public:
+    void setFilterHumanLabel(const QString& s)
+    {
+      m_FilterHumanLabel = s;
+    }
+    QString getFilterHumanLabel()
+    {
       return m_FilterHumanLabel;
-      }
+    }
 
     DREAM3D_INSTANCE_STRING_PROPERTY(MessagePrefix)
 
@@ -154,7 +155,7 @@ class PipelineMessage
      * @brief This function is the member m_Msg's mutator.
      * @param val Variable whose value is assigned to m_Msg.
      */
-    void setMessageText(const QString &val) { m_Msg = val; }
+    void setMessageText(const QString& val) { m_Msg = val; }
 
     /**
      * @brief This function is the member m_Code's accessor.
@@ -211,10 +212,10 @@ class PipelineMessage
      * @brief This function creates and returns a string for status messages
      */
     QString generateStatusString()
-     {
+    {
       QString ss = QObject::tr("%1:%2").arg(m_MessagePrefix).arg(m_Msg);
       return ss;
-     }
+    }
 
   private:
     QString m_Msg;          // Message Text
@@ -225,7 +226,7 @@ class PipelineMessage
 };
 
 #if defined(QT_CORE_LIB)
-  Q_DECLARE_METATYPE(PipelineMessage);
+Q_DECLARE_METATYPE(PipelineMessage);
 #endif
 
 #endif /* _PipelineMessage_H */

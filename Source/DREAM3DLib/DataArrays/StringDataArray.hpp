@@ -61,7 +61,7 @@ class StringDataArray : public IDataArray
     DREAM3D_SHARED_POINTERS(StringDataArray )
     DREAM3D_TYPE_MACRO_SUPER(StringDataArray, IDataArray)
 
-    static Pointer CreateArray(size_t numElements, const QString &name)
+    static Pointer CreateArray(size_t numElements, const QString& name)
     {
       if (name.isEmpty() == true)
       {
@@ -80,13 +80,13 @@ class StringDataArray : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
     {
       IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name);
       return p;
     }
 
-    virtual ~StringDataArray(){}
+    virtual ~StringDataArray() {}
 
     /**
      * @brief isAllocated
@@ -100,7 +100,7 @@ class StringDataArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -116,7 +116,7 @@ class StringDataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const QString &name)
+    void SetName(const QString& name)
     {
       m_Name = name;
     }
@@ -146,24 +146,24 @@ class StringDataArray : public IDataArray
       this->_ownsData = false;
     }
 
-     /**
-     * @brief Returns a void pointer pointing to the index of the array. NULL
-     * pointers are entirely possible. No checks are performed to make sure
-     * the index is with in the range of the internal data array.
-     * @param i The index to have the returned pointer pointing to.
-     * @return Void Pointer. Possibly NULL.
-     */
+    /**
+    * @brief Returns a void pointer pointing to the index of the array. NULL
+    * pointers are entirely possible. No checks are performed to make sure
+    * the index is with in the range of the internal data array.
+    * @param i The index to have the returned pointer pointing to.
+    * @return Void Pointer. Possibly NULL.
+    */
     virtual void* GetVoidPointer ( size_t i)
     {
-        return static_cast<void*>( &(m_Array[i]));
+      return static_cast<void*>( &(m_Array[i]));
     }
 
-     /**
-     * @brief Returns the number of Tuples in the array.
-     */
+    /**
+    * @brief Returns the number of Tuples in the array.
+    */
     virtual size_t getNumberOfTuples ()
     {
-    return m_Array.size();
+      return m_Array.size();
     }
 
 
@@ -206,7 +206,7 @@ class StringDataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t>& idxs)
     {
 
       int err = 0;
@@ -309,7 +309,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @param delimiter
      */
-    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
     {
       out << m_Array[i];
     }
@@ -320,7 +320,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @param j
      */
-    virtual void printComponent(QTextStream &out, size_t i, int j)
+    virtual void printComponent(QTextStream& out, size_t i, int j)
     {
       out << m_Array[i];
     }
@@ -367,8 +367,8 @@ class StringDataArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
-                                    const QString &groupPath, const QString &labelb)
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                                   const QString& groupPath, const QString& labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
@@ -402,7 +402,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @param value
      */
-    void SetValue(size_t i, const QString &value)
+    void SetValue(size_t i, const QString& value)
     {
       m_Array[i] = value;
     }
@@ -418,30 +418,30 @@ class StringDataArray : public IDataArray
     }
 
   protected:
-        /**
-     * @brief Protected Constructor
-     * @param numElements The number of elements in the internal array.
-     * @param takeOwnership Will the class clean up the memory. Default=true
-     */
+    /**
+    * @brief Protected Constructor
+    * @param numElements The number of elements in the internal array.
+    * @param takeOwnership Will the class clean up the memory. Default=true
+    */
     StringDataArray(size_t numElements, bool ownsData = true) :
       _ownsData(ownsData)
     {
       m_Array.resize(numElements);
-    //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
+      //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
   private:
-      //  unsigned long long int MUD_FLAP_0;
+    //  unsigned long long int MUD_FLAP_0;
     QVector<QString> m_Array;
-  //  unsigned long long int MUD_FLAP_1;
+    //  unsigned long long int MUD_FLAP_1;
     //size_t Size;
-  //  unsigned long long int MUD_FLAP_4;
+    //  unsigned long long int MUD_FLAP_4;
     bool _ownsData;
-  //  unsigned long long int MUD_FLAP_2;
-  //  size_t MaxId;
- //   unsigned long long int MUD_FLAP_3;
+    //  unsigned long long int MUD_FLAP_2;
+    //  size_t MaxId;
+//   unsigned long long int MUD_FLAP_3;
     QString m_Name;
-  //  unsigned long long int MUD_FLAP_5;
+    //  unsigned long long int MUD_FLAP_5;
 
     StringDataArray(const StringDataArray&); //Not Implemented
     void operator=(const StringDataArray&); //Not Implemented

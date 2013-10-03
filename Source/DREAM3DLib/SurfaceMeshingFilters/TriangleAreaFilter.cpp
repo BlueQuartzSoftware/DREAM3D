@@ -60,7 +60,7 @@ class CalculateAreasImpl
       m_Triangles(triangles),
       m_Areas(Areas)
     {}
-    virtual ~CalculateAreasImpl(){}
+    virtual ~CalculateAreasImpl() {}
 
     void generate(size_t start, size_t end) const
     {
@@ -68,21 +68,21 @@ class CalculateAreasImpl
       VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
       FaceArray::Face_t* triangles = m_Triangles->getPointer(0);
 
-    float ABx, ABy, ABz, ACx, ACy, ACz;
+      float ABx, ABy, ABz, ACx, ACy, ACz;
       for (size_t i = start; i < end; i++)
       {
-    ABx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[1]].pos[0];
-    ABy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[1]].pos[1];
-    ABz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[1]].pos[2];
-    ACx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
-    ACy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
-    ACz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
-        m_Areas[i]  = 0.5*sqrt(((ABy*ACz-ABz*ACy)*(ABy*ACz-ABz*ACy)) + ((ABz*ACx-ABx*ACz)*(ABz*ACx-ABx*ACz)) + ((ABx*ACy-ABy*ACx)*(ABx*ACy-ABy*ACx)));
+        ABx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[1]].pos[0];
+        ABy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[1]].pos[1];
+        ABz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[1]].pos[2];
+        ACx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
+        ACy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
+        ACz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
+        m_Areas[i]  = 0.5 * sqrt(((ABy * ACz - ABz * ACy) * (ABy * ACz - ABz * ACy)) + ((ABz * ACx - ABx * ACz) * (ABz * ACx - ABx * ACz)) + ((ABx * ACy - ABy * ACx) * (ABx * ACy - ABy * ACx)));
       }
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -127,8 +127,8 @@ void TriangleAreaFilter::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -151,7 +151,7 @@ int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void TriangleAreaFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   // We MUST have Nodes
@@ -195,7 +195,7 @@ void TriangleAreaFilter::preflight()
 void TriangleAreaFilter::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == m)

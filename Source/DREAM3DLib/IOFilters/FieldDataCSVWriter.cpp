@@ -99,10 +99,10 @@ void FieldDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setFieldDataFile( reader->readValue( "FieldDataFile", getFieldDataFile() ) );
   setWriteNeighborListData( reader->readValue("WriteNeighborListData", getWriteNeighborListData()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -195,7 +195,7 @@ void FieldDataCSVWriter::execute()
 
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumCellFieldTuples()-1 ;
+  outFile << m->getNumCellFieldTuples() - 1 ;
   // Get all the names of the arrays from the Data Container
   QList<QString> headers = m->getCellFieldArrayNameList();
 
@@ -213,7 +213,8 @@ void FieldDataCSVWriter::execute()
     IDataArray::Pointer p = m->getCellFieldData(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
-      if (p->GetNumberOfComponents() == 1) {
+      if (p->GetNumberOfComponents() == 1)
+      {
         outFile << space << (*iter);
       }
       else // There are more than a single component so we need to add multiple header values
@@ -237,12 +238,14 @@ void FieldDataCSVWriter::execute()
   // Skip the first grain
   for(size_t i = 1; i < numTuples; ++i)
   {
-    if (((float)i / numTuples) * 100.0f > threshold) {
+    if (((float)i / numTuples) * 100.0f > threshold)
+    {
 
       QString ss = QObject::tr("Writing Field Data - %1% Complete").arg(((float)i / numTuples) * 100);
       notifyStatusMessage(ss);
       threshold = threshold + 5.0f;
-      if (threshold < ((float)i / numTuples) * 100.0f) {
+      if (threshold < ((float)i / numTuples) * 100.0f)
+      {
         threshold = ((float)i / numTuples) * 100.0f;
       }
     }
@@ -270,7 +273,7 @@ void FieldDataCSVWriter::execute()
       {
         outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << "\n";
         size_t numTuples = p->getNumberOfTuples();
-        //	  float threshold = 0.0f;
+        //    float threshold = 0.0f;
 
         // Skip the first grain
         for(size_t i = 1; i < numTuples; ++i)

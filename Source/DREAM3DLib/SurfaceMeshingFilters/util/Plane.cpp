@@ -1,6 +1,6 @@
 /***
- * Name:	Plane.cpp
- * Purpose:	m3c_basics.math.geom.Plane Implementation
+ * Name:  Plane.cpp
+ * Purpose: m3c_basics.math.geom.Plane Implementation
  * Notice:  Copyright Stuart Golodetz, 2008. All rights reserved.
 * This work is licensed under the Creative Commons Attribution-NonCommercial 3.0
 * Unported License. To view a copy of this license, visit
@@ -16,12 +16,13 @@
 
 #include "DREAM3DLib/SurfaceMeshingFilters/util/InvalidParameterException.h"
 
-namespace PlaneDetail {
+namespace PlaneDetail
+{
 
 //double EPSILON = 0.0001;
-double   EPSILON = 0.0001f;
-double PI = 3.141592654;
-double SMALL_EPSILON = 0.0000000001;
+  double   EPSILON = 0.0001f;
+  double PI = 3.141592654;
+  double SMALL_EPSILON = 0.0000000001;
 
 }
 
@@ -33,21 +34,21 @@ using namespace PlaneDetail;
 
 //####################RUCTORS ####################
 Plane::Plane(VectorType& normal, double d)
-:	m_normal(normal), m_d(d)
+  : m_normal(normal), m_d(d)
 {
   ensure_invariant();
 }
 
 Plane::Plane(VectorType& normal, VectorType& x)
-:	m_normal(normal), m_center(x), m_d(normal.dot(x))
+  : m_normal(normal), m_center(x), m_d(normal.dot(x))
 {
   ensure_invariant();
 }
 
 Plane::Plane(VectorType& normal, VertexArray::Vert_t& x) :
-m_normal(normal),
-m_center(x),
-m_d(normal.dot(x))
+  m_normal(normal),
+  m_center(x),
+  m_d(normal.dot(x))
 {
   ensure_invariant();
 }
@@ -94,7 +95,7 @@ void Plane::ensure_invariant()
     m_normal /= length;
     m_d /= length;
   }
-  else throw InvalidParameterException("The plane's normal must be non-zero");
+  else { throw InvalidParameterException("The plane's normal must be non-zero"); }
 }
 
 //#################### GLOBAL OPERATORS ####################

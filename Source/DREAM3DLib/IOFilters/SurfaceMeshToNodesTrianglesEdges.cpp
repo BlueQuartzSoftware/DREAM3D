@@ -42,7 +42,7 @@
 #include <QtCore/QFileInfo>
 
 
- #define WRITE_EDGES_FILE 0
+#define WRITE_EDGES_FILE 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
-    #if WRITE_EDGES_FILE
+#if WRITE_EDGES_FILE
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Edges File");
@@ -94,7 +94,7 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
-  #endif
+#endif
 
   setFilterParameters(parameters);
 }
@@ -106,10 +106,10 @@ void SurfaceMeshToNodesTrianglesEdges::readFilterParameters(AbstractFilterParame
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputNodesFile( reader->readValue( "OutputNodesFile", getOutputNodesFile() ) );
   setOutputTrianglesFile( reader->readValue( "OutputTrianglesFile", getOutputTrianglesFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -138,13 +138,13 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
     addErrorMessage(getHumanLabel(), "The output Nodes file needs to be set", -380);
     setErrorCondition(-380);
   }
-  #if WRITE_EDGES_FILE
+#if WRITE_EDGES_FILE
   if(true == m_OutputEdgesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Edges file needs to be set", -381);
     setErrorCondition(-381);
   }
-  #endif
+#endif
   if(true == m_OutputTrianglesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Triangles file needs to be set", -382);
@@ -162,13 +162,13 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Vertices", -385);
     setErrorCondition(-384);
   }
-  #if WRITE_EDGES_FILE
-    IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
-    if (edges.get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing DREAM3D::CellData::SurfaceMeshEdges Information", -386);
-      setErrorCondition(-385);
-    }
+#if WRITE_EDGES_FILE
+  IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
+  if (edges.get() == NULL)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing DREAM3D::CellData::SurfaceMeshEdges Information", -386);
+    setErrorCondition(-385);
+  }
 #endif
   IDataArray::Pointer nodeKinds = sm->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
   if (nodeKinds.get() == NULL)
@@ -204,7 +204,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   setErrorCondition(err);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-999);
@@ -212,7 +212,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  dataCheck(false, 1,1,1);
+  dataCheck(false, 1, 1, 1);
   if (getErrorCondition() < 0)
   {
     return;
@@ -268,7 +268,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   // ++++++++++++++ Write the Edges File +++++++++++++++++++++++++++++++++++++++++++
   notifyStatusMessage("Writing Edges Text File");
   parentPath = QFileInfo::parentPath(getOutputEdgesFile());
-    QDir dir;
+  QDir dir;
   if(!dir.mkpath(parentPath))
   {
 
@@ -354,14 +354,14 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     n2 = t[j].verts[1];
     n3 = t[j].verts[2];
 
-  #if WRITE_EDGES_FILE
+#if WRITE_EDGES_FILE
     e1 = t[j].e_id[0];
     e2 = t[j].e_id[1];
     e3 = t[j].e_id[2];
-<<<<<<<<<< #error FIX THIS CODE BELOW. WE PROBABLY NEED TO GENERATE THE EDGE INFORMATION IF NEEDED
+    <<< <<< <<< < #error FIX THIS CODE BELOW. WE PROBABLY NEED TO GENERATE THE EDGE INFORMATION IF NEEDED
 #endif
 
-    fprintf(triFile, "%10lu    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", j, n1, n2, n3, e1, e2, e3, faceLabels[j*2], faceLabels[j*2+1]);
+    fprintf(triFile, "%10lu    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", j, n1, n2, n3, e1, e2, e3, faceLabels[j * 2], faceLabels[j * 2 + 1]);
   }
 
   fclose(triFile);

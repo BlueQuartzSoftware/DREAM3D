@@ -66,22 +66,22 @@ void TestReadQSettingsFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   int err = EXIT_SUCCESS;
 
-  #if !REMOVE_TEST_FILES
-    DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  #endif
+#if !REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
 
 
 
 
   DREAM3D_REGISTER_TEST( TestReadQSettingsFile() )
 
-  #if REMOVE_TEST_FILES
+#if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  #endif
+#endif
 
 
 

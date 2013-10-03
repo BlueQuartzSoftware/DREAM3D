@@ -51,8 +51,8 @@
 //
 // -----------------------------------------------------------------------------
 EdgeDataContainer::EdgeDataContainer() :
-VertexDataContainer(),
-m_NumEdgeTuples(0)
+  VertexDataContainer(),
+  m_NumEdgeTuples(0)
 {
   setName(DREAM3D::HDF5::EdgeDataContainerName);
 }
@@ -75,7 +75,7 @@ DOES_DATASET_EXIST_DEFN(EdgeDataContainer, EdgeEnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::getEdgeData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::getEdgeData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
@@ -89,7 +89,7 @@ IDataArray::Pointer EdgeDataContainer::getEdgeData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::addEdgeData(const QString &name, IDataArray::Pointer data)
+void EdgeDataContainer::addEdgeData(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -106,7 +106,7 @@ void EdgeDataContainer::addEdgeData(const QString &name, IDataArray::Pointer dat
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::removeEdgeData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::removeEdgeData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
@@ -152,7 +152,7 @@ int EdgeDataContainer::getNumEdgeArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::getEdgeFieldData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::getEdgeFieldData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeFieldData.find(name);
@@ -166,7 +166,7 @@ IDataArray::Pointer EdgeDataContainer::getEdgeFieldData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::addEdgeFieldData(const QString &name, IDataArray::Pointer data)
+void EdgeDataContainer::addEdgeFieldData(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -182,7 +182,7 @@ void EdgeDataContainer::addEdgeFieldData(const QString &name, IDataArray::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::removeEdgeFieldData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::removeEdgeFieldData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeFieldData.find(name);
@@ -229,7 +229,7 @@ int EdgeDataContainer::getNumEdgeFieldArrays()
 // -----------------------------------------------------------------------------
 void EdgeDataContainer::resizeEdgeFieldDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeFieldData.begin(); iter != m_EdgeFieldData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
@@ -242,7 +242,7 @@ void EdgeDataContainer::resizeEdgeFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::getEdgeEnsembleData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::getEdgeEnsembleData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeEnsembleData.find(name);
@@ -256,7 +256,7 @@ IDataArray::Pointer EdgeDataContainer::getEdgeEnsembleData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::addEdgeEnsembleData(const QString &name, IDataArray::Pointer data)
+void EdgeDataContainer::addEdgeEnsembleData(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -272,7 +272,7 @@ void EdgeDataContainer::addEdgeEnsembleData(const QString &name, IDataArray::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::removeEdgeEnsembleData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::removeEdgeEnsembleData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeEnsembleData.find(name);
@@ -319,7 +319,7 @@ int EdgeDataContainer::getNumEdgeEnsembleArrays()
 // -----------------------------------------------------------------------------
 void EdgeDataContainer::resizeEdgeEnsembleDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeEnsembleData.begin(); iter != m_EdgeEnsembleData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";

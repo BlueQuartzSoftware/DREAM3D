@@ -381,7 +381,8 @@ int ParaDisReader::readFile()
   uint64_t* ptr64;
 
   QMap<int64_t, int32_t> vertNumbers;
-  struct{
+  struct
+  {
     int32_t n1;
     int32_t n2;
   } uniqueNodeId;
@@ -395,7 +396,7 @@ int ParaDisReader::readFile()
   QVector<float> spnYs;
   QVector<float> spnZs;
 
-  for(int j=0;j<numVerts;j++)
+  for(int j = 0; j < numVerts; j++)
   {
     buf = m_InStream.readLine();
     buf = buf.trimmed();
@@ -429,7 +430,7 @@ int ParaDisReader::readFile()
     {
       buf = m_InStream.readLine();
     }
-    for(int k=0;k<m_NumberOfArms[nodeNum];k++)
+    for(int k = 0; k < m_NumberOfArms[nodeNum]; k++)
     {
       buf = m_InStream.readLine();
       buf = buf.trimmed();
@@ -475,16 +476,16 @@ int ParaDisReader::readFile()
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, BurgersVectors, float, FloatArrayType, 0.0, numEdges, 3)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, SlipPlaneNormals, float, FloatArrayType, 0.0, numEdges, 3)
 
-  for(int i=0;i<numEdges;i++)
+  for(int i = 0; i < numEdges; i++)
   {
     edge[i].verts[0] = firstNodes[i];
     edge[i].verts[1] = secondNodes[i];
-    m_BurgersVectors[3*i+0] = burgerXs[i];
-    m_BurgersVectors[3*i+1] = burgerYs[i];
-    m_BurgersVectors[3*i+2] = burgerZs[i];
-    m_SlipPlaneNormals[3*i+0] = spnXs[i];
-    m_SlipPlaneNormals[3*i+1] = spnYs[i];
-    m_SlipPlaneNormals[3*i+2] = spnZs[i];
+    m_BurgersVectors[3 * i + 0] = burgerXs[i];
+    m_BurgersVectors[3 * i + 1] = burgerYs[i];
+    m_BurgersVectors[3 * i + 2] = burgerZs[i];
+    m_SlipPlaneNormals[3 * i + 0] = spnXs[i];
+    m_SlipPlaneNormals[3 * i + 1] = spnYs[i];
+    m_SlipPlaneNormals[3 * i + 2] = spnZs[i];
   }
 
   tokens.clear();

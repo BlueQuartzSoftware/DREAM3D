@@ -58,8 +58,8 @@ class DREAM3DLib_EXPORT BetaOps : public DistributionAnalysisOps
     virtual ~BetaOps();
 
 
-	int calculateParameters(QVector<float> &data, FloatArrayType::Pointer outputs);
-    int calculateCorrelatedParameters(QVector<QVector<float> > &data, VectorOfFloatArray outputs);
+    int calculateParameters(QVector<float>& data, FloatArrayType::Pointer outputs);
+    int calculateCorrelatedParameters(QVector<QVector<float> >& data, VectorOfFloatArray outputs);
 
   protected:
     BetaOps();

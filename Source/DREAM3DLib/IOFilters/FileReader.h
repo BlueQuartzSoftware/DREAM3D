@@ -45,94 +45,94 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
-  /*
-   *
-   */
-  class DREAM3DLib_EXPORT FileReader : public AbstractFilter
-  {
-    public:
-      DREAM3D_SHARED_POINTERS(FileReader)
-      DREAM3D_STATIC_NEW_MACRO(FileReader)
-      DREAM3D_TYPE_MACRO_SUPER(FileReader, AbstractFilter)
+/*
+ *
+ */
+class DREAM3DLib_EXPORT FileReader : public AbstractFilter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(FileReader)
+    DREAM3D_STATIC_NEW_MACRO(FileReader)
+    DREAM3D_TYPE_MACRO_SUPER(FileReader, AbstractFilter)
 
-      virtual ~FileReader();
+    virtual ~FileReader();
 
-      DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-      /* This will internally call readHeader() and readFile() with appropriate
-       * error checkes after each one. Subclasses should just implement the readHeader
-       * and readFile methods unless special setups are needed.
-       */
-      virtual void execute();
+    /* This will internally call readHeader() and readFile() with appropriate
+     * error checkes after each one. Subclasses should just implement the readHeader
+     * and readFile methods unless special setups are needed.
+     */
+    virtual void execute();
 #if 0
-      /**
-      * @brief This function parses 3 floating point values from a comma delimited string
-      * @param input
-      * @param output
-      * @param defaultValue The value to set if the parsing fails
-      * @return Zero on Success, Negative on Error
-      */
-     int parseFloat3V(const char* input, float* output, float defaultValue);
+    /**
+    * @brief This function parses 3 floating point values from a comma delimited string
+    * @param input
+    * @param output
+    * @param defaultValue The value to set if the parsing fails
+    * @return Zero on Success, Negative on Error
+    */
+    int parseFloat3V(const char* input, float* output, float defaultValue);
 
-     /**
-      * @brief This function parses 3 integer values from a comma delimited string
-      * @param input
-      * @param output
-      * @param defaultValue The value to set if the parsing fails
-      * @return Zero on Success, Negative on Error
-      */
-     int parseInt3V(const char* input, int* output, int defaultValue);
+    /**
+     * @brief This function parses 3 integer values from a comma delimited string
+     * @param input
+     * @param output
+     * @param defaultValue The value to set if the parsing fails
+     * @return Zero on Success, Negative on Error
+     */
+    int parseInt3V(const char* input, int* output, int defaultValue);
 
-     /**
-      * @brief This function parses 3  64 bit integer values from a comma delimited string
-      * @param input
-      * @param output
-      * @param defaultValue The value to set if the parsing fails
-      * @return Zero on Success, Negative on Error
-      */
-     int parseSizeT_3V(const char* input, size_t* output, size_t defaultValue);
-     int parse64_3V(const char* input, int64_t* output, int64_t defaultValue);
+    /**
+     * @brief This function parses 3  64 bit integer values from a comma delimited string
+     * @param input
+     * @param output
+     * @param defaultValue The value to set if the parsing fails
+     * @return Zero on Success, Negative on Error
+     */
+    int parseSizeT_3V(const char* input, size_t* output, size_t defaultValue);
+    int parse64_3V(const char* input, int64_t* output, int64_t defaultValue);
 
-     /**
-      * @brief Reads a single line from a buffer
-      * @param in The input stream
-      * @param buf The buffer
-      * @param bufSize The size of the buffer
-      * @return
-      */
-     int readLine(std::istream &in, char* buf, int bufSize);
+    /**
+     * @brief Reads a single line from a buffer
+     * @param in The input stream
+     * @param buf The buffer
+     * @param bufSize The size of the buffer
+     * @return
+     */
+    int readLine(std::istream& in, char* buf, int bufSize);
 
 
 
-     /**
-      * @brief
-      * @param buf
-      * @param bufSize
-      * @return
-      */
-     size_t nonPrintables(char* buf, size_t bufSize);
+    /**
+     * @brief
+     * @param buf
+     * @param bufSize
+     * @return
+     */
+    size_t nonPrintables(char* buf, size_t bufSize);
 
-     /**
-      * @brief
-      * @param str
-      * @param tokens
-      * @param delimiters
-      */
-     void tokenize(const QString& str, QVector<QString>& tokens, const QString& delimiters = " ");
+    /**
+     * @brief
+     * @param str
+     * @param tokens
+     * @param delimiters
+     */
+    void tokenize(const QString& str, QVector<QString>& tokens, const QString& delimiters = " ");
 #endif
 
-    protected:
-     FileReader();
+  protected:
+    FileReader();
 
-     virtual int readHeader();
+    virtual int readHeader();
 
-     virtual int readFile();
+    virtual int readFile();
 
-     virtual void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    virtual void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    private:
-      FileReader(const FileReader&); // Copy Constructor Not Implemented
-      void operator=(const FileReader&); // Operator '=' Not Implemented
-  };
+  private:
+    FileReader(const FileReader&); // Copy Constructor Not Implemented
+    void operator=(const FileReader&); // Operator '=' Not Implemented
+};
 
 #endif /* FILEREADER_H_ */

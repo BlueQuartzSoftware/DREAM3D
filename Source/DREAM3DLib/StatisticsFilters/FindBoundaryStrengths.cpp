@@ -110,9 +110,9 @@ void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader*
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setLoading( reader->readValue("Loading", getLoading() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -132,7 +132,7 @@ int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter*
 void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   // We MUST have Nodes
@@ -164,7 +164,7 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, 
 void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
@@ -187,7 +187,7 @@ void FindBoundaryStrengths::preflight()
     return;
   }
 
-  dataCheckVoxel(true, 1,1 ,1);
+  dataCheckVoxel(true, 1, 1 , 1);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
@@ -196,7 +196,7 @@ void FindBoundaryStrengths::preflight()
     setErrorCondition(-383);
   }
 
-  dataCheckSurfaceMesh(true, 1,1 ,1);
+  dataCheckSurfaceMesh(true, 1, 1 , 1);
 }
 
 
@@ -205,7 +205,7 @@ void FindBoundaryStrengths::preflight()
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::execute()
 {
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
@@ -231,7 +231,7 @@ void FindBoundaryStrengths::execute()
 
 
   // float w, n1, n2, n3;
- // float sf1, sf2;
+// float sf1, sf2;
   float mPrime_1, mPrime_2, F1_1, F1_2, F1spt_1, F1spt_2, F7_1,  F7_2;
   int gname1, gname2;
   // int ss1, ss2;
@@ -249,8 +249,8 @@ void FindBoundaryStrengths::execute()
   int nTriangles = sm->getNumFaceTuples();
   for (int i = 0; i < nTriangles; i++)
   {
-    gname1 = m_SurfaceMeshFaceLabels[i*2];
-    gname2 = m_SurfaceMeshFaceLabels[i*2 + 1];
+    gname1 = m_SurfaceMeshFaceLabels[i * 2];
+    gname2 = m_SurfaceMeshFaceLabels[i * 2 + 1];
     if(gname1 > 0 && gname2 > 0)
     {
 
@@ -262,7 +262,7 @@ void FindBoundaryStrengths::execute()
 //        q2[j] = m_AvgQuats[5 * gname2 + j];
 //      }
       if(m_CrystalStructures[m_FieldPhases[gname1]] == m_CrystalStructures[m_FieldPhases[gname2]]
-         && m_FieldPhases[gname1] > 0)
+          && m_FieldPhases[gname1] > 0)
       {
         m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname1]]]->getmPrime(q1, q2, LD, mPrime_1);
         m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname1]]]->getmPrime(q2, q1, LD, mPrime_2);
@@ -287,23 +287,23 @@ void FindBoundaryStrengths::execute()
     }
     else
     {
-        mPrime_1 = 0;
-        F1_1 = 0;
-        F1spt_1 = 0;
-        F7_1 = 0;
-        mPrime_2 = 0;
-        F1_2 = 0;
-        F1spt_2 = 0;
-        F7_2 = 0;
+      mPrime_1 = 0;
+      F1_1 = 0;
+      F1spt_1 = 0;
+      F7_1 = 0;
+      mPrime_2 = 0;
+      F1_2 = 0;
+      F1spt_2 = 0;
+      F7_2 = 0;
     }
-    m_SurfaceMeshmPrimes[2*i] = mPrime_1;
-    m_SurfaceMeshmPrimes[2*i+1] = mPrime_2;
-    m_SurfaceMeshF1s[2*i] = F1_1;
-    m_SurfaceMeshF1s[2*i+1] = F1_2;
-    m_SurfaceMeshF1spts[2*i] = F1spt_1;
-    m_SurfaceMeshF1spts[2*i+1] = F1spt_2;
-    m_SurfaceMeshF7s[2*i] = F7_1;
-    m_SurfaceMeshF7s[2*i+1] = F7_2;
+    m_SurfaceMeshmPrimes[2 * i] = mPrime_1;
+    m_SurfaceMeshmPrimes[2 * i + 1] = mPrime_2;
+    m_SurfaceMeshF1s[2 * i] = F1_1;
+    m_SurfaceMeshF1s[2 * i + 1] = F1_2;
+    m_SurfaceMeshF1spts[2 * i] = F1spt_1;
+    m_SurfaceMeshF1spts[2 * i + 1] = F1spt_2;
+    m_SurfaceMeshF7s[2 * i] = F7_1;
+    m_SurfaceMeshF7s[2 * i + 1] = F7_2;
   }
 
 

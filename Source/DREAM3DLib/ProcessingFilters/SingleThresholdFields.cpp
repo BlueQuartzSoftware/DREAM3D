@@ -117,12 +117,12 @@ void SingleThresholdFields::readFilterParameters(AbstractFilterParametersReader*
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedFieldArrayName( reader->readValue( "SelectedFieldArrayName", getSelectedFieldArrayName() ) );
   setComparisonOperator( reader->readValue("ComparisonOperator", getComparisonOperator()) );
   setComparisonValue( reader->readValue("ComparisonValue", getComparisonValue()) );
   setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

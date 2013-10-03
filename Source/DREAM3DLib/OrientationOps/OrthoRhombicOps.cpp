@@ -56,47 +56,55 @@
 namespace Detail
 {
 
-  static const float OrthoDim1InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/2.0f)-sinf((DREAM3D::Constants::k_Pi/2.0f)))),(1.0f/3.0f));
-  static const float OrthoDim2InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/2.0f)-sinf((DREAM3D::Constants::k_Pi/2.0f)))),(1.0f/3.0f));
-  static const float OrthoDim3InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/2.0f)-sinf((DREAM3D::Constants::k_Pi/2.0f)))),(1.0f/3.0f));
-  static const float OrthoDim1StepValue = OrthoDim1InitValue/18.0f;
-  static const float OrthoDim2StepValue = OrthoDim2InitValue/18.0f;
-  static const float OrthoDim3StepValue = OrthoDim3InitValue/18.0f;
+  static const float OrthoDim1InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float OrthoDim2InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float OrthoDim3InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float OrthoDim1StepValue = OrthoDim1InitValue / 18.0f;
+  static const float OrthoDim2StepValue = OrthoDim2InitValue / 18.0f;
+  static const float OrthoDim3StepValue = OrthoDim3InitValue / 18.0f;
 
   namespace Orthorhombic
   {
-  static const int symSize0 = 2;
-  static const int symSize1 = 2;
-  static const int symSize2 = 2;
+    static const int symSize0 = 2;
+    static const int symSize1 = 2;
+    static const int symSize2 = 2;
   }
 }
 
-static const QuatF OrthoQuatSym[4] = { QuaternionMathF::New(0.000000000f,0.000000000f,0.000000000f,1.000000000f),
-                                       QuaternionMathF::New(1.000000000f,0.000000000f,0.000000000f,0.000000000f),
-                                       QuaternionMathF::New(0.000000000f,1.000000000f,0.000000000f,0.000000000f),
-                                       QuaternionMathF::New(0.000000000f,0.000000000f,1.000000000f,0.000000000)};
+static const QuatF OrthoQuatSym[4] = { QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+                                       QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
+                                       QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
+                                       QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000)
+                                     };
 
-static const float OrthoRodSym[4][3] = {{0.0f,0.0f,0.0f},
-                                        {10000000000.0f,0.0f,0.0f},
-                                        {0.0f,10000000000.0f,0.0f},
-                                        {0.0f,0.0f,10000000000.0}};
+static const float OrthoRodSym[4][3] = {{0.0f, 0.0f, 0.0f},
+  {10000000000.0f, 0.0f, 0.0f},
+  {0.0f, 10000000000.0f, 0.0f},
+  {0.0f, 0.0f, 10000000000.0}
+};
 
 static const float OrthoMatSym[4][3][3] =
-{{{1.0, 0.0, 0.0},
-  {0.0, 1.0, 0.0},
-  {0.0, 0.0, 1.0}},
+{
+  { {1.0, 0.0, 0.0},
+    {0.0, 1.0, 0.0},
+    {0.0, 0.0, 1.0}
+  },
 
- {{1.0,  0.0,  0.0},
-  {0.0, -1.0,  0.0},
-  {0.0,  0.0, -1.0}},
+  { {1.0,  0.0,  0.0},
+    {0.0, -1.0,  0.0},
+    {0.0,  0.0, -1.0}
+  },
 
- {{-1.0,  0.0,  0.0},
-  {0.0, 1.0,  0.0},
-  {0.0,  0.0, -1.0}},
+  { { -1.0,  0.0,  0.0},
+    {0.0, 1.0,  0.0},
+    {0.0,  0.0, -1.0}
+  },
 
- {{-1.0,  0.0,  0.0},
-  {0.0, -1.0,  0.0},
-  {0.0,  0.0, 1.0}}};
+  { { -1.0,  0.0,  0.0},
+    {0.0, -1.0,  0.0},
+    {0.0,  0.0, 1.0}
+  }
+};
 
 using namespace Detail;
 
@@ -120,8 +128,8 @@ OrthoRhombicOps::~OrthoRhombicOps()
 //
 // -----------------------------------------------------------------------------
 float OrthoRhombicOps::_calcMisoQuat(const QuatF quatsym[4], int numsym,
-QuatF &q1, QuatF &q2,
-float &n1, float &n2, float &n3)
+                                     QuatF& q1, QuatF& q2,
+                                     float& n1, float& n2, float& n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
@@ -142,16 +150,19 @@ float &n1, float &n2, float &n3)
 
     QuaternionMathF::Multiply(qr, quatsym[i], qc);
     //MULT_QUAT(qr, quatsym[i], qc)
-    if (qc.w < -1) {
+    if (qc.w < -1)
+    {
       qc.w = -1;
     }
-    else if (qc.w > 1) {
+    else if (qc.w > 1)
+    {
       qc.w = 1;
     }
 
     OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
 
-    if (w > DREAM3D::Constants::k_Pi) {
+    if (w > DREAM3D::Constants::k_Pi)
+    {
       w = DREAM3D::Constants::k_2Pi - w;
     }
     if (w < wmin)
@@ -162,36 +173,36 @@ float &n1, float &n2, float &n3)
       n3min = n3;
     }
   }
-  float denom = sqrt((n1min*n1min+n2min*n2min+n3min*n3min));
-  n1 = n1min/denom;
-  n2 = n2min/denom;
-  n3 = n3min/denom;
-  if(denom == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
-  if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  float denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
+  n1 = n1min / denom;
+  n2 = n2min / denom;
+  n3 = n3min / denom;
+  if(denom == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
+  if(wmin == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
   return wmin;
 }
 
-float OrthoRhombicOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
+float OrthoRhombicOps::getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3)
 {
   int numsym = 4;
 
   return _calcMisoQuat(OrthoQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void OrthoRhombicOps::getQuatSymOp(int i, QuatF &q)
+void OrthoRhombicOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(OrthoQuatSym[i], q);
 
 }
 
-void OrthoRhombicOps::getRodSymOp(int i,float *r)
+void OrthoRhombicOps::getRodSymOp(int i, float* r)
 {
   r[0] = OrthoRodSym[i][0];
   r[1] = OrthoRodSym[i][1];
   r[2] = OrthoRodSym[i][2];
 }
 
-void OrthoRhombicOps::getMatSymOp(int i,float g[3][3])
+void OrthoRhombicOps::getMatSymOp(int i, float g[3][3])
 {
   g[0][0] = OrthoMatSym[i][0][0];
   g[0][1] = OrthoMatSym[i][0][1];
@@ -204,14 +215,14 @@ void OrthoRhombicOps::getMatSymOp(int i,float g[3][3])
   g[2][2] = OrthoMatSym[i][2][2];
 }
 
-void OrthoRhombicOps::getODFFZRod(float &r1,float &r2, float &r3)
+void OrthoRhombicOps::getODFFZRod(float& r1, float& r2, float& r3)
 {
   int  numsym = 4;
 
   _calcRodNearestOrigin(OrthoRodSym, numsym, r1, r2, r3);
 }
 
-void OrthoRhombicOps::getMDFFZRod(float &r1,float &r2, float &r3)
+void OrthoRhombicOps::getMDFFZRod(float& r1, float& r2, float& r3)
 {
   float w, n1, n2, n3;
   //float FZn1, FZn2, FZn3;
@@ -220,14 +231,14 @@ void OrthoRhombicOps::getMDFFZRod(float &r1,float &r2, float &r3)
   OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 }
 
-void OrthoRhombicOps::getNearestQuat(QuatF &q1, QuatF &q2)
+void OrthoRhombicOps::getNearestQuat(QuatF& q1, QuatF& q2)
 {
   int numsym = 4;
 
   _calcNearestQuat(OrthoQuatSym, numsym, q1, q2);
 }
 
-void OrthoRhombicOps::getFZQuat(QuatF &qr)
+void OrthoRhombicOps::getFZQuat(QuatF& qr)
 {
   int numsym = 4;
 
@@ -256,7 +267,7 @@ int OrthoRhombicOps::getMisoBin(float r1, float r2, float r3)
   return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
 
-void OrthoRhombicOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
+void OrthoRhombicOps::determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3)
 {
   float init[3];
   float step[3];
@@ -280,7 +291,7 @@ void OrthoRhombicOps::determineEulerAngles(int choose, float &synea1, float &syn
 }
 
 
-void OrthoRhombicOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
+void OrthoRhombicOps::determineRodriguesVector( int choose, float& r1, float& r2, float& r3)
 {
   float init[3];
   float step[3];
@@ -322,28 +333,28 @@ int OrthoRhombicOps::getOdfBin(float r1, float r2, float r3)
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void OrthoRhombicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
+void OrthoRhombicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys)
 {
   schmidfactor = 0;
   slipsys = 0;
 }
 
-void OrthoRhombicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
+void OrthoRhombicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
 {
   mPrime = 0;
 }
 
-void OrthoRhombicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
+void OrthoRhombicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
 {
   F1 = 0;
 }
 
-void OrthoRhombicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
+void OrthoRhombicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt)
 {
   F1spt = 0;
 }
 
-void OrthoRhombicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
+void OrthoRhombicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
 {
   F7 = 0;
 }
@@ -352,78 +363,84 @@ void OrthoRhombicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float
 // -----------------------------------------------------------------------------
 namespace Detail
 {
-namespace OrthoRhombic
-{
-class GenerateSphereCoordsImpl
-{
-    FloatArrayType* eulers;
-    FloatArrayType* m_xyz001;
-    FloatArrayType* m_xyz011;
-    FloatArrayType* m_xyz111;
-
-  public:
-    GenerateSphereCoordsImpl(FloatArrayType* eulerAngles, FloatArrayType* xyz001Coords, FloatArrayType* xyz011Coords, FloatArrayType* xyz111Coords) :
-      eulers(eulerAngles),
-      m_xyz001(xyz001Coords),
-      m_xyz011(xyz011Coords),
-      m_xyz111(xyz111Coords)
-    {}
-    virtual ~GenerateSphereCoordsImpl(){}
-
-    void generate(size_t start, size_t end) const
+  namespace OrthoRhombic
+  {
+    class GenerateSphereCoordsImpl
     {
-      float g[3][3];
-      float gTranpose[3][3];
-      float* currentEuler = NULL;
-      float direction[3] = {0.0, 0.0, 0.0};
+        FloatArrayType* eulers;
+        FloatArrayType* m_xyz001;
+        FloatArrayType* m_xyz011;
+        FloatArrayType* m_xyz111;
+
+      public:
+        GenerateSphereCoordsImpl(FloatArrayType* eulerAngles, FloatArrayType* xyz001Coords, FloatArrayType* xyz011Coords, FloatArrayType* xyz111Coords) :
+          eulers(eulerAngles),
+          m_xyz001(xyz001Coords),
+          m_xyz011(xyz011Coords),
+          m_xyz111(xyz111Coords)
+        {}
+        virtual ~GenerateSphereCoordsImpl() {}
+
+        void generate(size_t start, size_t end) const
+        {
+          float g[3][3];
+          float gTranpose[3][3];
+          float* currentEuler = NULL;
+          float direction[3] = {0.0, 0.0, 0.0};
 
 
-      for(size_t i = start; i < end; ++i)
-      {
-        currentEuler = eulers->getPointer(i * 3);
+          for(size_t i = start; i < end; ++i)
+          {
+            currentEuler = eulers->getPointer(i * 3);
 
-        OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
-        MatrixMath::Transpose3x3(g, gTranpose);
+            OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+            MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
             // 001 Family
-            direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i*6));
-            MatrixMath::Copy3x1(m_xyz001->getPointer(i*6),m_xyz001->getPointer(i*6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i*6 + 3),-1);
+            direction[0] = 0.0;
+            direction[1] = 0.0;
+            direction[2] = 1.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 6));
+            MatrixMath::Copy3x1(m_xyz001->getPointer(i * 6), m_xyz001->getPointer(i * 6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 6 + 3), -1);
 
 
             // -----------------------------------------------------------------------------
             // 011 Family
-            direction[0] = 1.0; direction[1] = 0.0; direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i*6));
-            MatrixMath::Copy3x1(m_xyz011->getPointer(i*6),m_xyz011->getPointer(i*6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i*6 + 3),-1);
+            direction[0] = 1.0;
+            direction[1] = 0.0;
+            direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 6));
+            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 6), m_xyz011->getPointer(i * 6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 6 + 3), -1);
 
 
             // -----------------------------------------------------------------------------
             // 111 Family
-            direction[0] = 0.0; direction[1] = 1.0; direction[2] = 0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i*6));
-            MatrixMath::Copy3x1(m_xyz111->getPointer(i*6),m_xyz111->getPointer(i*6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i*6 + 3),-1);
-      }
-    }
+            direction[0] = 0.0;
+            direction[1] = 1.0;
+            direction[2] = 0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 6));
+            MatrixMath::Copy3x1(m_xyz111->getPointer(i * 6), m_xyz111->getPointer(i * 6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 6 + 3), -1);
+          }
+        }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
-    {
-      generate(r.begin(), r.end());
-    }
+        void operator()(const tbb::blocked_range<size_t>& r) const
+        {
+          generate(r.begin(), r.end());
+        }
 #endif
-};
-}
+    };
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrthoRhombicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
+void OrthoRhombicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111)
 {
   size_t nOrientations = eulers->getNumberOfTuples();
 
@@ -466,7 +483,7 @@ void OrthoRhombicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, Flo
 // -----------------------------------------------------------------------------
 bool OrthoRhombicOps::inUnitTriangle(float eta, float chi)
 {
-  if( eta < 0 || eta > (90.0*DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0*DREAM3D::Constants::k_PiOver180) ) return false;
+  if( eta < 0 || eta > (90.0 * DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * DREAM3D::Constants::k_PiOver180) ) { return false; }
   return true;
 }
 
@@ -513,32 +530,32 @@ DREAM3D::Rgb OrthoRhombicOps::generateIPFColor(double phi1, double phi, double p
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(getHasInversion() == false && p[2] < 0) continue;
-    else if(getHasInversion() == true && p[2] < 0) p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
+    if(getHasInversion() == false && p[2] < 0) { continue; }
+    else if(getHasInversion() == true && p[2] < 0) { p[0] = -p[0], p[1] = -p[1], p[2] = -p[2]; }
     chi = acos(p[2]);
-    eta = atan2(p[1],p[0]);
-    if(inUnitTriangle(eta, chi) == false) continue;
+    eta = atan2(p[1], p[0]);
+    if(inUnitTriangle(eta, chi) == false) { continue; }
     else {break;}
   }
 
   float etaMin = 0.0;
   float etaMax = 90.0;
   float chiMax = 90.0;
-  float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
-  float chiDeg = chi*DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
+  float chiDeg = chi * DREAM3D::Constants::k_180OverPi;
 
-  _rgb[0] = 1.0 - chiDeg/chiMax;
-  _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
-  _rgb[1] = 1-_rgb[2];
-  _rgb[1] *= chiDeg/chiMax;
-  _rgb[2] *= chiDeg/chiMax;
+  _rgb[0] = 1.0 - chiDeg / chiMax;
+  _rgb[2] = fabs(etaDeg - etaMin) / (etaMax - etaMin);
+  _rgb[1] = 1 - _rgb[2];
+  _rgb[1] *= chiDeg / chiMax;
+  _rgb[2] *= chiDeg / chiMax;
   _rgb[0] = sqrt(_rgb[0]);
   _rgb[1] = sqrt(_rgb[1]);
   _rgb[2] = sqrt(_rgb[2]);
 
   float max = _rgb[0];
-  if (_rgb[1] > max) max = _rgb[1];
-  if (_rgb[2] > max) max = _rgb[2];
+  if (_rgb[1] > max) { max = _rgb[1]; }
+  if (_rgb[2] > max) { max = _rgb[2]; }
 
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
@@ -553,15 +570,15 @@ DREAM3D::Rgb OrthoRhombicOps::generateIPFColor(double phi1, double phi, double p
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb OrthoRhombicOps::generateRodriguesColor(float r1, float r2, float r3)
 {
-  float range1 = 2.0f*OrthoDim1InitValue;
-  float range2 = 2.0f*OrthoDim2InitValue;
-  float range3 = 2.0f*OrthoDim3InitValue;
-  float max1 = range1/2.0f;
-  float max2 = range2/2.0f;
-  float max3 = range3/2.0f;
-  float red = (r1+max1)/range1;
-  float green = (r2+max2)/range2;
-  float blue = (r3+max3)/range3;
+  float range1 = 2.0f * OrthoDim1InitValue;
+  float range2 = 2.0f * OrthoDim2InitValue;
+  float range3 = 2.0f * OrthoDim3InitValue;
+  float max1 = range1 / 2.0f;
+  float max2 = range2 / 2.0f;
+  float max3 = range3 / 2.0f;
+  float red = (r1 + max1) / range1;
+  float green = (r2 + max2) / range2;
+  float blue = (r3 + max3) / range3;
 
   // Scale values from 0 to 1.0
   red = red / max1;
@@ -575,7 +592,7 @@ DREAM3D::Rgb OrthoRhombicOps::generateRodriguesColor(float r1, float r2, float r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
   QVector<UInt8ArrayType::Pointer> poleFigures;
   QString label0("Orthorhombic <001>");
@@ -698,9 +715,9 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
+DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
+  DREAM3D::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
 
   BOOST_ASSERT(false);
 
@@ -715,183 +732,183 @@ DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF &q, const 
   QuaternionMathF::Copy(refFrame, q2);
 
   //get disorientation
-  w=getMisoQuat(q1, q2, n1, n2, n3);
-  n1=fabs(n1);
-  n2=fabs(n2);
-  n3=fabs(n3);
+  w = getMisoQuat(q1, q2, n1, n2, n3);
+  n1 = fabs(n1);
+  n2 = fabs(n2);
+  n3 = fabs(n3);
 
   //eq c1.1
-  k=tan(w/2.0f);
-  x=n1*k;
-  y=n2*k;
-  z=n3*k;
+  k = tan(w / 2.0f);
+  x = n1 * k;
+  y = n2 * k;
+  z = n3 * k;
 
   getMDFFZRod(x, y, z);
 
   //eq c1.2
-  k=std::max(x, y);
-  k=std::max(k, z);
-  k=(k*sqrt(3.0f))/(x+y+z);
-  x1=x*k;
-  y1=y*k;
-  z1=z*k;
+  k = std::max(x, y);
+  k = std::max(k, z);
+  k = (k * sqrt(3.0f)) / (x + y + z);
+  x1 = x * k;
+  y1 = y * k;
+  z1 = z * k;
 
   //eq c1.3
   //3 rotation matricies (in paper) can be multiplied into one (here) for simplicity / speed
   //g1*g2*g3 = {{sqrt(2/3), 0, 1/sqrt(3)},{-1/sqrt(6), 1/sqrt(2), 1/sqrt(3)},{-1/sqrt(6), 1/sqrt(2), 1/sqrt(3)}}
-  x2=x1*sqrt(2.0f/3.0f)-(y1+z1)/sqrt(6.0f);
-  y2=(y1-z1)/sqrt(2.0f);
-  z2=(x1+y1+z1)/sqrt(3.0f);
+  x2 = x1 * sqrt(2.0f / 3.0f) - (y1 + z1) / sqrt(6.0f);
+  y2 = (y1 - z1) / sqrt(2.0f);
+  z2 = (x1 + y1 + z1) / sqrt(3.0f);
 
   //eq c1.4
-  k=fmodf(atan2f(y2, x2)+2.0f*M_PI, 2.0f*M_PI);
-  x3=cos(k)*sqrt((x2*x2+y2*y2)/2.0f)*sin(M_PI/6.0f+fmodf(k, 2.0f*M_PI/3.0f))/0.5f;
-  y3=sin(k)*sqrt((x2*x2+y2*y2)/2.0f)*sin(M_PI/6.0f+fmodf(k, 2.0f*M_PI/3.0f))/0.5f;
-  z3=z2-1.0f;
+  k = fmodf(atan2f(y2, x2) + 2.0f * M_PI, 2.0f * M_PI);
+  x3 = cos(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(M_PI / 6.0f + fmodf(k, 2.0f * M_PI / 3.0f)) / 0.5f;
+  y3 = sin(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(M_PI / 6.0f + fmodf(k, 2.0f * M_PI / 3.0f)) / 0.5f;
+  z3 = z2 - 1.0f;
 
   //eq c1.5
-  k=(sqrt(x3*x3+y3*y3)-z3)/sqrt(x3*x3+y3*y3+z3*z3);
-  x4=x3*k;
-  y4=y3*k;
-  z4=z3*k;
+  k = (sqrt(x3 * x3 + y3 * y3) - z3) / sqrt(x3 * x3 + y3 * y3 + z3 * z3);
+  x4 = x3 * k;
+  y4 = y3 * k;
+  z4 = z3 * k;
 
   //eq c1.6, 7, and 8 (from matlab code not paper)
-  k=fmod(atan2(y4, x4)+2*M_PI,2*M_PI);
+  k = fmod(atan2(y4, x4) + 2 * M_PI, 2 * M_PI);
 
   int type;
-  if(k>=0.0f && k<2.0f*M_PI/3.0f)
+  if(k >= 0.0f && k < 2.0f * M_PI / 3.0f)
   {
-      type=1;
-      x5=(x4+y4*sqrt(3.0f))/2.0f;
-      y5=(-x4*sqrt(3.0f)+y4)/2.0f;
+    type = 1;
+    x5 = (x4 + y4 * sqrt(3.0f)) / 2.0f;
+    y5 = (-x4 * sqrt(3.0f) + y4) / 2.0f;
   }
-  else if(k>=2.0f*M_PI/3.0f && k<4.0f*M_PI/3.0f)
+  else if(k >= 2.0f * M_PI / 3.0f && k < 4.0f * M_PI / 3.0f)
   {
-      type=2;
-      x5=x4;
-      y5=y4;
+    type = 2;
+    x5 = x4;
+    y5 = y4;
   }
   else//k>=4*pi/3 && <2*pi
   {
-      type=3;
-      x5=(x4-y4*sqrt(3.0f))/2.0f;
-      y5=(x4*sqrt(3.0f)+y4)/2.0f;
+    type = 3;
+    x5 = (x4 - y4 * sqrt(3.0f)) / 2.0f;
+    y5 = (x4 * sqrt(3.0f) + y4) / 2.0f;
   }
-  z5=z4;
+  z5 = z4;
 
-  k=1.5f*atan2(y5,x5);
-  x6=sqrt(x5*x5+y5*y5)*cos(k);
-  y6=sqrt(x5*x5+y5*y5)*sin(k);
-  z6=z5;
+  k = 1.5f * atan2(y5, x5);
+  x6 = sqrt(x5 * x5 + y5 * y5) * cos(k);
+  y6 = sqrt(x5 * x5 + y5 * y5) * sin(k);
+  z6 = z5;
 
-  k=2.0f*atan2(x6,-z6);
-  x7=sqrt(x6*x6+z6*z6)*sin(k);
-  y7=y6;
-  z7=-sqrt(x6*x6+z6*z6)*cos(k);
+  k = 2.0f * atan2(x6, -z6);
+  x7 = sqrt(x6 * x6 + z6 * z6) * sin(k);
+  y7 = y6;
+  z7 = -sqrt(x6 * x6 + z6 * z6) * cos(k);
 
-  k=(2.0f/3.0f)*atan2(y7,x7);
-  x8=sqrt(x7*x7+y7*y7)*cos(k);
-  y8=sqrt(x7*x7+y7*y7)*sin(k);
-  z8=z7;
+  k = (2.0f / 3.0f) * atan2(y7, x7);
+  x8 = sqrt(x7 * x7 + y7 * y7) * cos(k);
+  y8 = sqrt(x7 * x7 + y7 * y7) * sin(k);
+  z8 = z7;
 
-  if(type==1)
+  if(type == 1)
   {
-      x9=(x8-y8*sqrt(3.0f))/2.0f;
-      y9=(x8*sqrt(3.0f)+y8)/2.0f;
+    x9 = (x8 - y8 * sqrt(3.0f)) / 2.0f;
+    y9 = (x8 * sqrt(3.0f) + y8) / 2.0f;
   }
-  else if(type==2)
+  else if(type == 2)
   {
-      x9=x8;
-      y9=y8;
+    x9 = x8;
+    y9 = y8;
   }
   else//type==3;
   {
-      x9=(x8+y8*sqrt(3.0f))/2.0f;
-      y9=(-x8*sqrt(3.0f)+y8)/2.0f;
+    x9 = (x8 + y8 * sqrt(3.0f)) / 2.0f;
+    y9 = (-x8 * sqrt(3.0f) + y8) / 2.0f;
   }
-  z9=z8;
+  z9 = z8;
 
   //c1.9
-  x10=(x9-y9*sqrt(3.0f))/2.0f;
-  y10=(x9*sqrt(3.0f)+y9)/2.0f;
-  z10=z9;
+  x10 = (x9 - y9 * sqrt(3.0f)) / 2.0f;
+  y10 = (x9 * sqrt(3.0f) + y9) / 2.0f;
+  z10 = z9;
 
   //cartesian to traditional hsv
-  x11=sqrt(x10*x10+y10*y10+z10*z10);//r
-  y11=acos(z10/x11)/M_PI;//theta
-  z11=fmod(fmod(atan2(y10,x10)+2.0f*M_PI,2.0f*M_PI)+4.0f*M_PI/3.0f,2.0f*M_PI)/(2.0f*M_PI);//rho
+  x11 = sqrt(x10 * x10 + y10 * y10 + z10 * z10); //r
+  y11 = acos(z10 / x11) / M_PI; //theta
+  z11 = fmod(fmod(atan2(y10, x10) + 2.0f * M_PI, 2.0f * M_PI) + 4.0f * M_PI / 3.0f, 2.0f * M_PI) / (2.0f * M_PI); //rho
 
-  if(x11==0)
+  if(x11 == 0)
   {
-      y11=0;
-      z11=0;
+    y11 = 0;
+    z11 = 0;
   }
 
-  h=z11;
-  if(y11>=0.5f)
+  h = z11;
+  if(y11 >= 0.5f)
   {
-      s=(1.0f-x11);
-      v=2.0f*x11*(1.0f-y11)+(1.0f-x11)/2.0f;
-      if(v>0)
-      {
-          s=s/(2.0f*v);
-      }
-      s=1.0f-s;
+    s = (1.0f - x11);
+    v = 2.0f * x11 * (1.0f - y11) + (1.0f - x11) / 2.0f;
+    if(v > 0)
+    {
+      s = s / (2.0f * v);
+    }
+    s = 1.0f - s;
   }
   else
   {
-      s=(4.0f*x11*y11)/(1.0f+x11);
-      v=0.5f+x11/2;
+    s = (4.0f * x11 * y11) / (1.0f + x11);
+    v = 0.5f + x11 / 2;
   }
 
   //hsv to rgb (from wikipedia hsv/hsl page)
-  c = v*s;
-  k=c*(1-fabs(fmod(h*6,2)-1));//x in wiki article
-  h=h*6;
-  r=0;
-  g=0;
-  b=0;
+  c = v * s;
+  k = c * (1 - fabs(fmod(h * 6, 2) - 1)); //x in wiki article
+  h = h * 6;
+  r = 0;
+  g = 0;
+  b = 0;
 
-  if(h>=0)
+  if(h >= 0)
   {
-      if(h<1)
-      {
-          r=c;
-          g=k;
-      }
-      else if(h<2)
-      {
-          r=k;
-          g=c;
-      }
-      else if(h<3)
-      {
-          g=c;
-          b=k;
-      }
-      else if(h<4)
-      {
-          g=k;
-          b=c;
-      }
-      else if (h<5)
-      {
-          r=k;
-          b=c;
-      }
-      else if(h<6)
-      {
-          r=c;
-          b=k;
-      }
+    if(h < 1)
+    {
+      r = c;
+      g = k;
+    }
+    else if(h < 2)
+    {
+      r = k;
+      g = c;
+    }
+    else if(h < 3)
+    {
+      g = c;
+      b = k;
+    }
+    else if(h < 4)
+    {
+      g = k;
+      b = c;
+    }
+    else if (h < 5)
+    {
+      r = k;
+      b = c;
+    }
+    else if(h < 6)
+    {
+      r = c;
+      b = k;
+    }
   }
 
   //adjust lumosity and invert
-  r=1-(r+(v-c));
-  g=1-(g+(v-c));
-  b=1-(b+(v-c));
+  r = 1 - (r + (v - c));
+  g = 1 - (g + (v - c));
+  b = 1 - (b + (v - c));
 
-  rgb=RgbColor::dRgb(r*255, g*255, b*255, 0);
+  rgb = RgbColor::dRgb(r * 255, g * 255, b * 255, 0);
 
   return rgb;
 }

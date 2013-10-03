@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT GenerateEulerColors : public AbstractFilter
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-        //------ Required Ensemble Data
+    //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     //------ Created Cell Data
@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT GenerateEulerColors : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -128,7 +128,7 @@ class DREAM3DLib_EXPORT GenerateEulerColors : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-     int32_t* m_CellPhases;
+    int32_t* m_CellPhases;
     float* m_CellEulerAngles;
     uint8_t* m_CellEulerColors;
     unsigned int* m_CrystalStructures;

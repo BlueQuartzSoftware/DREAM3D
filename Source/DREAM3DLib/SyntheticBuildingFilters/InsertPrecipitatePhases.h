@@ -54,14 +54,15 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-typedef struct {
-    float m_Volumes;
-    float m_EquivalentDiameters;
-    float m_AxisLengths[3];
-    float m_AxisEulerAngles[3];
-    float m_Omega3s;
-    int m_FieldPhases;
-    int m_Neighborhoods;
+typedef struct
+{
+  float m_Volumes;
+  float m_EquivalentDiameters;
+  float m_AxisLengths[3];
+  float m_AxisEulerAngles[3];
+  float m_Omega3s;
+  int m_FieldPhases;
+  int m_Neighborhoods;
 } Precip;
 
 /**
@@ -157,10 +158,10 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);
 
-    void compare_1Ddistributions(QVector<float>, QVector<float>, float &sqrerror);
-    void compare_2Ddistributions(QVector<QVector<float> >, QVector<QVector<float> >, float &sqrerror);
+    void compare_1Ddistributions(QVector<float>, QVector<float>, float& sqrerror);
+    void compare_2Ddistributions(QVector<QVector<float> >, QVector<QVector<float> >, float& sqrerror);
 
-    void compare_3Ddistributions(QVector<QVector<QVector<float> > >, QVector<QVector<QVector<float> > >, float &sqrerror);
+    void compare_3Ddistributions(QVector<QVector<QVector<float> > >, QVector<QVector<QVector<float> > >, float& sqrerror);
 
     QVector<int> precipitatephases;
     QVector<float> precipitatephasefractions;

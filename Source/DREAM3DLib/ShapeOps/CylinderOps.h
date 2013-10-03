@@ -41,29 +41,29 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
-  /*
-   *
-   */
-  class DREAM3DLib_EXPORT CylinderOps : public ShapeOps
-  {
-    public:
-      DREAM3D_SHARED_POINTERS(CylinderOps)
-      DREAM3D_TYPE_MACRO(CylinderOps)
-      DREAM3D_STATIC_NEW_MACRO(CylinderOps)
+/*
+ *
+ */
+class DREAM3DLib_EXPORT CylinderOps : public ShapeOps
+{
+  public:
+    DREAM3D_SHARED_POINTERS(CylinderOps)
+    DREAM3D_TYPE_MACRO(CylinderOps)
+    DREAM3D_STATIC_NEW_MACRO(CylinderOps)
 
 
-      virtual ~CylinderOps();
+    virtual ~CylinderOps();
 
-      virtual float radcur1(QMap<ArgName, float> args);
-      virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-      virtual void init() {  }
+    virtual float radcur1(QMap<ArgName, float> args);
+    virtual float inside(float axis1comp, float axis2comp, float axis3comp);
+    virtual void init() {  }
 
-    protected:
-      CylinderOps();
-    private:
-      CylinderOps(const CylinderOps&); // Copy Constructor Not Implemented
-      void operator=(const CylinderOps&); // Operator '=' Not Implemented
+  protected:
+    CylinderOps();
+  private:
+    CylinderOps(const CylinderOps&); // Copy Constructor Not Implemented
+    void operator=(const CylinderOps&); // Operator '=' Not Implemented
 
-  };
+};
 
 #endif /* CYLINDEROPS_H_ */

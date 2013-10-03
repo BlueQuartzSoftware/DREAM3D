@@ -50,45 +50,45 @@
 
 namespace Detail
 {
-/**
- * @brief The CalculateCentroidsImpl class
- */
-class UpdateVerticesImpl
-{
-    VertexArray::Pointer m_Nodes;
-    float* m_Delta;
+  /**
+   * @brief The CalculateCentroidsImpl class
+   */
+  class UpdateVerticesImpl
+  {
+      VertexArray::Pointer m_Nodes;
+      float* m_Delta;
 
-  public:
-    UpdateVerticesImpl(VertexArray::Pointer nodes, float* delta) :
-      m_Nodes(nodes),
-      m_Delta(delta)
-    {
-    }
-
-    virtual ~UpdateVerticesImpl(){}
-
-    void generate(size_t start, size_t end) const
-    {
-
-      VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
-      for (size_t i = start; i < end; i++)
+    public:
+      UpdateVerticesImpl(VertexArray::Pointer nodes, float* delta) :
+        m_Nodes(nodes),
+        m_Delta(delta)
       {
-        nodes[i].pos[0] = nodes[i].pos[0] - m_Delta[0];
-        nodes[i].pos[1] = nodes[i].pos[1] - m_Delta[1];
-        nodes[i].pos[2] = nodes[i].pos[2] - m_Delta[2];
       }
 
-    }
+      virtual ~UpdateVerticesImpl() {}
+
+      void generate(size_t start, size_t end) const
+      {
+
+        VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
+        for (size_t i = start; i < end; i++)
+        {
+          nodes[i].pos[0] = nodes[i].pos[0] - m_Delta[0];
+          nodes[i].pos[1] = nodes[i].pos[1] - m_Delta[1];
+          nodes[i].pos[2] = nodes[i].pos[2] - m_Delta[2];
+        }
+
+      }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
-    {
-      generate(r.begin(), r.end());
-    }
+      void operator()(const tbb::blocked_range<size_t>& r) const
+      {
+        generate(r.begin(), r.end());
+      }
 #endif
 
 
-};
+  };
 
 }
 
@@ -155,11 +155,11 @@ void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", false) );
   setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", false) );
   setOrigin( reader->readValue("Origin", getOrigin() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -231,7 +231,7 @@ void AdjustVolumeOrigin::execute()
   setErrorCondition(0);
 
   // Set the Voxel Volume First, since this is easy
-  if (m_ApplyToVoxelVolume ==true)
+  if (m_ApplyToVoxelVolume == true)
   {
     VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
     if(NULL == m)

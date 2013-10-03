@@ -50,7 +50,7 @@ template<typename Node, typename T>
 class NodeFunctions
 {
   public:
-    virtual ~NodeFunctions(){}
+    virtual ~NodeFunctions() {}
 
     static T Distance(Node& n0, Node& n1)
     {
@@ -66,7 +66,7 @@ class NodeFunctions
     }
 
   protected:
-    NodeFunctions(){}
+    NodeFunctions() {}
 
   private:
     NodeFunctions(const NodeFunctions&); // Copy Constructor Not Implemented
@@ -79,8 +79,8 @@ class NodeFunctions
 template<typename Node, typename T>
 class EdgeFunctions
 {
-    public:
-    virtual ~EdgeFunctions(){}
+  public:
+    virtual ~EdgeFunctions() {}
 
     static T Length(typename VertexArray::Pointer nodes, EdgeArray::Edge_t* e)
     {
@@ -90,7 +90,7 @@ class EdgeFunctions
     }
 
   protected:
-    EdgeFunctions(){}
+    EdgeFunctions() {}
 
   private:
     EdgeFunctions(const EdgeFunctions&); // Copy Constructor Not Implemented
@@ -105,8 +105,8 @@ template<typename Node, typename T>
 class TriangleFunctions
 {
   public:
-    virtual ~TriangleFunctions(){}
-    static T area(Node &n0, Node &n1, Node &n2)
+    virtual ~TriangleFunctions() {}
+    static T area(Node& n0, Node& n1, Node& n2)
     {
       double a[3], b[3], c[3];
       a[0] = n1.pos[0] - n0.pos[0];
@@ -121,23 +121,23 @@ class TriangleFunctions
       return 0.5 * sqrt(c[0] * c[0] + c[1] * c[1] + c[2] * c[2]);
     }
 
-    static T aspect(Node &n0, Node &n1, Node &n2)
+    static T aspect(Node& n0, Node& n1, Node& n2)
     {
-      T a = NodeFunctions<Node,T>::Distance(n0, n1);
-      T b = NodeFunctions<Node,T>::Distance(n1, n2);
-      T c = NodeFunctions<Node,T>::Distance(n2, n0);
+      T a = NodeFunctions<Node, T>::Distance(n0, n1);
+      T b = NodeFunctions<Node, T>::Distance(n1, n2);
+      T c = NodeFunctions<Node, T>::Distance(n2, n0);
       T min = a;
       T max = a;
-      if(b > max) max = b;
-      else if(b < min) min = b;
-      if(c > max) max = c;
-      else if(c < min) min = c;
+      if(b > max) { max = b; }
+      else if(b < min) { min = b; }
+      if(c > max) { max = c; }
+      else if(c < min) { min = c; }
       return max / min;
     }
 
-    static T MinDihedral(Node &n0, Node &n1, Node &n2)
+    static T MinDihedral(Node& n0, Node& n1, Node& n2)
     {
-     //  a points from p0 to p1; b is p0 to p2;  c points p1 to p2
+      //  a points from p0 to p1; b is p0 to p2;  c points p1 to p2
       T a[3], b[3], c[3], min, w1, w2, w3;
       a[0] = n1.pos[0] - n0.pos[0];
       a[1] = n1.pos[1] - n0.pos[1];
@@ -176,14 +176,14 @@ class TriangleFunctions
       }
       //  qDebug() << "MinDIhedral, c: " << c[0] <<" " << c[1] <<" " << c[2] << "\n" ;
       w1 = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-      if(w1 < -1.) w1 = -1.;
-      if(w1 > 1.) w1 = 1.;
+      if(w1 < -1.) { w1 = -1.; }
+      if(w1 > 1.) { w1 = 1.; }
       w2 = -1. * a[0] * c[0] - a[1] * c[1] - a[2] * c[2];
-      if(w2 < -1.) w2 = -1.;
-      if(w2 > 1.) w2 = 1.;
+      if(w2 < -1.) { w2 = -1.; }
+      if(w2 > 1.) { w2 = 1.; }
       w3 = c[0] * b[0] + c[1] * b[1] + c[2] * b[2];
-      if(w3 < -1.) w3 = -1.;
-      if(w3 > 1.) w3 = 1.;
+      if(w3 < -1.) { w3 = -1.; }
+      if(w3 > 1.) { w3 = 1.; }
       //  qDebug() << "MinDIhedral, w: " << w1 <<" " << w2 <<" " << w3 << "\n" ;
       T d1 = acos(w1);
       T d2 = acos(w2);
@@ -191,24 +191,24 @@ class TriangleFunctions
       // debug
       //  qDebug() << "MinDIhedral, angles: " << d1*180./PI <<" " << d2*180./PI <<" " << d3*180./PI << "\n" ;
       min = d1;
-      if(d2 < min) min = d2;
-      if(d3 < min) min = d3;
+      if(d2 < min) { min = d2; }
+      if(d3 < min) { min = d3; }
       return min;
     }
 
-    static T circularity(Node &n0, Node &n1, Node &n2, T area)
+    static T circularity(Node& n0, Node& n1, Node& n2, T area)
     {
-      T a = NodeFunctions<Node,T>::Distance(n0, n1);
-      T b = NodeFunctions<Node,T>::Distance(n1, n2);
-      T c = NodeFunctions<Node,T>::Distance(n2, n0);
+      T a = NodeFunctions<Node, T>::Distance(n0, n1);
+      T b = NodeFunctions<Node, T>::Distance(n1, n2);
+      T c = NodeFunctions<Node, T>::Distance(n2, n0);
       T s = 0.5 * (a + b + c); //  1/2 perimeter
       T r = area / s;
       T R = a * b * c / 4.0 / area;
-      R = R/r;
+      R = R / r;
       return R;
     }
 
-    static MFE::Vector<T> normal(Node &n0, Node &n1, Node &n2)
+    static MFE::Vector<T> normal(Node& n0, Node& n1, Node& n2)
     {
       MFE::Vector<T> n(3);
       T a[3], b[3];
@@ -234,11 +234,11 @@ class TriangleFunctions
     }
 
   protected:
-     TriangleFunctions(){}
+    TriangleFunctions() {}
 
   private:
-     TriangleFunctions(const TriangleFunctions&); // Copy Constructor Not Implemented
-     void operator=(const TriangleFunctions&); // Operator '=' Not Implemented
+    TriangleFunctions(const TriangleFunctions&); // Copy Constructor Not Implemented
+    void operator=(const TriangleFunctions&); // Operator '=' Not Implemented
 
 };
 

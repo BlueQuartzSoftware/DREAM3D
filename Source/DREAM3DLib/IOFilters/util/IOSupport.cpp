@@ -33,7 +33,7 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
- #include "IOSupport.h"
+#include "IOSupport.h"
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
@@ -44,9 +44,9 @@
 //
 // -----------------------------------------------------------------------------
 IOSupport::IOSupport() :
-Observable(),
-m_ErrorCondition(0),
-m_Cancel(false),
+  Observable(),
+  m_ErrorCondition(0),
+  m_Cancel(false),
   m_DataContainer(NULL),
   m_HdfGroupId(-1)
 {
@@ -72,7 +72,7 @@ QString IOSupport::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IOSupport::addErrorMessage(PipelineMessage &msg)
+void IOSupport::addErrorMessage(PipelineMessage& msg)
 {
   m_PipelineMessages.push_back(msg);
 }
@@ -80,7 +80,7 @@ void IOSupport::addErrorMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IOSupport::addErrorMessage(const QString &filterHumanLabel, const QString &errorDescription, int errorCode)
+void IOSupport::addErrorMessage(const QString& filterHumanLabel, const QString& errorDescription, int errorCode)
 {
   PipelineMessage em(getNameOfClass(), errorDescription, errorCode, PipelineMessage::Error);
   em.setFilterHumanLabel(getHumanLabel());
@@ -90,8 +90,10 @@ void IOSupport::addErrorMessage(const QString &filterHumanLabel, const QString &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IOSupport::addErrorMessages(QVector<PipelineMessage> msgVector) {
-  for (QVector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
+void IOSupport::addErrorMessages(QVector<PipelineMessage> msgVector)
+{
+  for (QVector<PipelineMessage>::size_type i = 0; i < msgVector.size(); ++i)
+  {
     m_PipelineMessages.push_back(msgVector[i]);
   }
 }
@@ -99,7 +101,7 @@ void IOSupport::addErrorMessages(QVector<PipelineMessage> msgVector) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IOSupport::addWarningMessage(PipelineMessage &msg)
+void IOSupport::addWarningMessage(PipelineMessage& msg)
 {
   msg.setFilterHumanLabel(getHumanLabel());
   msg.setFilterClassName(getNameOfClass());
@@ -109,7 +111,7 @@ void IOSupport::addWarningMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IOSupport::addWarningMessage(const QString &filterName, const QString &warnDescription, int warnCode)
+void IOSupport::addWarningMessage(const QString& filterName, const QString& warnDescription, int warnCode)
 {
   PipelineMessage em(getNameOfClass(), warnDescription, warnCode, PipelineMessage::Warning);
   em.setFilterHumanLabel(getHumanLabel());
@@ -120,8 +122,10 @@ void IOSupport::addWarningMessage(const QString &filterName, const QString &warn
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IOSupport::addWarningMessages(QVector<PipelineMessage> msgVector) {
-  for (QVector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
+void IOSupport::addWarningMessages(QVector<PipelineMessage> msgVector)
+{
+  for (QVector<PipelineMessage>::size_type i = 0; i < msgVector.size(); ++i)
+  {
     m_PipelineMessages.push_back(msgVector[i]);
   }
 }
@@ -130,9 +134,12 @@ void IOSupport::addWarningMessages(QVector<PipelineMessage> msgVector) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IOSupport::removeErrorMessage(PipelineMessage msg) {
-  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
-    if (*iter == msg) {
+void IOSupport::removeErrorMessage(PipelineMessage msg)
+{
+  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter != m_PipelineMessages.end(); ++iter)
+  {
+    if (*iter == msg)
+    {
       m_PipelineMessages.erase(iter);
       return;
     }
@@ -142,11 +149,14 @@ void IOSupport::removeErrorMessage(PipelineMessage msg) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IOSupport::removeErrorMessage(int index) {
+void IOSupport::removeErrorMessage(int index)
+{
   int count = 0;
 
-  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
-    if (count == index) {
+  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter != m_PipelineMessages.end(); ++iter)
+  {
+    if (count == index)
+    {
       m_PipelineMessages.erase(iter);
       return;
     }
@@ -157,12 +167,16 @@ void IOSupport::removeErrorMessage(int index) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IOSupport::removeErrorMessages(int start, int end) {
+void IOSupport::removeErrorMessages(int start, int end)
+{
   int count = 0;
 
-  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
-    if (count == start) {
-      while (count <= end) {
+  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter != m_PipelineMessages.end(); ++iter)
+  {
+    if (count == start)
+    {
+      while (count <= end)
+      {
         iter = m_PipelineMessages.erase(iter);
         count++;
       }
@@ -175,10 +189,12 @@ void IOSupport::removeErrorMessages(int start, int end) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IOSupport::clearErrorMessages() {
+void IOSupport::clearErrorMessages()
+{
   QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin();
 
-  while ( iter != m_PipelineMessages.end() ) {
+  while ( iter != m_PipelineMessages.end() )
+  {
     iter = m_PipelineMessages.erase(iter);
   }
 }
@@ -188,7 +204,7 @@ void IOSupport::clearErrorMessages() {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int IOSupport::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
+int IOSupport::createVtkObjectGroup(const QString& hdfGroupPath, const char* vtkDataObjectType)
 {
   // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
   herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, getHdfGroupId());

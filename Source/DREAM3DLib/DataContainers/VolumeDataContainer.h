@@ -37,7 +37,7 @@
 #define _VolumeDataContainer_H_
 
 #if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
 
@@ -88,19 +88,19 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
 
     DREAM3D_INSTANCE_PROPERTY(CellArray::Pointer, Cells)
 
-   /**
-   * @brief Adds/overwrites the data for a named array
-   * @param name The name that the array will be known by
-   * @param data The IDataArray::Pointer that will hold the data
-   */
-    virtual void addCellData(const QString &name, IDataArray::Pointer data);
+    /**
+    * @brief Adds/overwrites the data for a named array
+    * @param name The name that the array will be known by
+    * @param data The IDataArray::Pointer that will hold the data
+    */
+    virtual void addCellData(const QString& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getCellData(const QString &name);
+    virtual IDataArray::Pointer getCellData(const QString& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -108,17 +108,17 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeCellData(const QString &name);
+    virtual IDataArray::Pointer removeCellData(const QString& name);
 
     /**
     * @brief Renames a cell data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameCellData(const QString &oldname, const QString &newname);
+    virtual bool renameCellData(const QString& oldname, const QString& newname);
 
-  /**
-     * @brief Removes all the Cell Arrays
-     */
+    /**
+       * @brief Removes all the Cell Arrays
+       */
     virtual void clearCellData();
 
     /**
@@ -146,14 +146,14 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
     */
-    virtual void addCellFieldData(const QString &name, IDataArray::Pointer data);
+    virtual void addCellFieldData(const QString& name, IDataArray::Pointer data);
 
     /**
     * @brief Returns the array for a given named array or the equivelant to a
     * null pointer if the name does not exist.
     * @param name The name of the data array
     */
-    virtual IDataArray::Pointer getCellFieldData(const QString &name);
+    virtual IDataArray::Pointer getCellFieldData(const QString& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -161,17 +161,17 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeCellFieldData(const QString &name);
+    virtual IDataArray::Pointer removeCellFieldData(const QString& name);
 
     /**
     * @brief Renames a field data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameCellFieldData(const QString &oldname, const QString &newname);
+    virtual bool renameCellFieldData(const QString& oldname, const QString& newname);
 
-  /**
-     * @brief Removes all the Field Arrays
-     */
+    /**
+       * @brief Removes all the Field Arrays
+       */
     virtual void clearCellFieldData();
 
     /**
@@ -205,14 +205,14 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
     */
-    virtual void addCellEnsembleData(const QString &name, IDataArray::Pointer data);
+    virtual void addCellEnsembleData(const QString& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getCellEnsembleData(const QString &name);
+    virtual IDataArray::Pointer getCellEnsembleData(const QString& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -220,7 +220,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeCellEnsembleData(const QString &name);
+    virtual IDataArray::Pointer removeCellEnsembleData(const QString& name);
 
     /**
      * @brief Removes all the ensemble data
@@ -229,9 +229,9 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
 
     virtual QList<QString> getCellEnsembleArrayNameList();
 
-     /**
-     * @brief Returns if a data set with the name exists in the data container for the Cell Data
-     */
+    /**
+    * @brief Returns if a data set with the name exists in the data container for the Cell Data
+    */
 
     virtual int getNumCellEnsembleArrays();
 

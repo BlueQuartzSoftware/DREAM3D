@@ -61,7 +61,7 @@ ModifiedLambertProjectionArray::~ModifiedLambertProjectionArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::SetName(const QString &name)
+void ModifiedLambertProjectionArray::SetName(const QString& name)
 {
   m_Name = name;
 }
@@ -151,7 +151,7 @@ size_t ModifiedLambertProjectionArray::GetTypeSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::EraseTuples(QVector<size_t> &idxs)
+int ModifiedLambertProjectionArray::EraseTuples(QVector<size_t>& idxs)
 {
   int err = 0;
 
@@ -220,7 +220,7 @@ void ModifiedLambertProjectionArray::initializeWithZeros()
 
   for(size_t i = 0; i < m_ModifiedLambertProjectionArray.size(); ++i)
   {
-    m_ModifiedLambertProjectionArray[i]->initializeSquares(1,1);
+    m_ModifiedLambertProjectionArray[i]->initializeSquares(1, 1);
   }
 
 }
@@ -245,20 +245,20 @@ int32_t ModifiedLambertProjectionArray::Resize(size_t numTuples)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::printTuple(QTextStream &out, size_t i, char delimiter)
+void ModifiedLambertProjectionArray::printTuple(QTextStream& out, size_t i, char delimiter)
 {
   BOOST_ASSERT(false);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::printComponent(QTextStream &out, size_t i, int j)
+void ModifiedLambertProjectionArray::printComponent(QTextStream& out, size_t i, int j)
 {
   BOOST_ASSERT(false);
 }
 
 // -------------------------------------------------------------------------- */
-void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, double* north, double* south)
+void AppendRowToH5Dataset(hid_t gid, const QString& dsetName, int lambertSize, double* north, double* south)
 {
   hid_t dataspace = -1, dataset = -1;
   hid_t filespace = -1;
@@ -293,7 +293,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, d
   offset[1] = 0; // Start of Row
   /*  printf("dataset '%s' rank %d, offset %lu x %lu \n", dsetName, rank, (unsigned long)(offset[0]), (unsigned long)(offset[1]));*/
   hyperDims[0] = 1; /* We want 1 single row - so force the dimension correctly */
-  hyperDims[1] = currentDims[1]/2; /* We DO want how ever many columns are needed. */
+  hyperDims[1] = currentDims[1] / 2; /* We DO want how ever many columns are needed. */
   /*  printf("dataset '%s' rank %d, dims1 %lu x %lu \n", dsetName, rank, (unsigned long)(dims1[0]), (unsigned long)(dims1[1]));*/
   status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, hyperDims, NULL);
   /* Define a Memory Space*/
@@ -330,7 +330,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, d
 /* -----------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------- */
-void Create2DExpandableDataset(hid_t gid, const QString &dsetName, int lambertSize, hsize_t chunk_dim,
+void Create2DExpandableDataset(hid_t gid, const QString& dsetName, int lambertSize, hsize_t chunk_dim,
                                double* north, double* south)
 {
 

@@ -67,8 +67,8 @@ class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
 
     virtual ~IdentifySample();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
@@ -76,8 +76,8 @@ class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
     virtual const QString getHumanLabel() { return "Identify Sample"; }
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

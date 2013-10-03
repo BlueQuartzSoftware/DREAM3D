@@ -100,8 +100,8 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
 
   // Make sure we have a valid angle representation
   if(m_AngleRepresentation != EulerAngles
-     && m_AngleRepresentation != QuaternionAngles
-     && m_AngleRepresentation != RodriguezAngles)
+      && m_AngleRepresentation != QuaternionAngles
+      && m_AngleRepresentation != RodriguezAngles)
   {
     setErrorMessage("The Angle representation was not set to anything know to this code");
     setErrorCode(-3);
@@ -116,7 +116,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   QByteArray buf;
 
   // Open the file and read the first line
-   QFile reader(getInputFile());
+  QFile reader(getInputFile());
   if (!reader.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString msg = QObject::tr("Angle file could not be opened: %1").arg(getInputFile());

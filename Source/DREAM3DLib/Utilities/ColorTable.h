@@ -43,45 +43,45 @@
 
 class DREAM3DLib_EXPORT RgbColor
 {
-public:
-   /**
-   * @brief Rgb An ARGB quadruplet on the format #AARRGGBB, equivalent to an unsigned int and The type also holds a value for the alpha-channel.
-   */
+  public:
+    /**
+    * @brief Rgb An ARGB quadruplet on the format #AARRGGBB, equivalent to an unsigned int and The type also holds a value for the alpha-channel.
+    */
 
 
 
-  inline static int dRed(DREAM3D::Rgb rgb)
-  {
-    return ((rgb >> 16) & 0xff);
-  }
+    inline static int dRed(DREAM3D::Rgb rgb)
+    {
+      return ((rgb >> 16) & 0xff);
+    }
 
-  inline static int dGreen(DREAM3D::Rgb rgb)
-  {
-    return ((rgb >> 8) & 0xff);
-  }
+    inline static int dGreen(DREAM3D::Rgb rgb)
+    {
+      return ((rgb >> 8) & 0xff);
+    }
 
-  inline static int dBlue(DREAM3D::Rgb rgb)
-  {
-    return (rgb & 0xff);
-  }
+    inline static int dBlue(DREAM3D::Rgb rgb)
+    {
+      return (rgb & 0xff);
+    }
 
-  inline static int dAlpha(DREAM3D::Rgb rgb)
-  {
-    return rgb >> 24;
-  }
+    inline static int dAlpha(DREAM3D::Rgb rgb)
+    {
+      return rgb >> 24;
+    }
 
-  inline static int dGray(DREAM3D::Rgb rgb)
-  {
-    return  (((rgb >> 16) & 0xff) * 11 + ((rgb >> 8) & 0xff) * 16 + (rgb & 0xff) * 5)/32;
-  }
+    inline static int dGray(DREAM3D::Rgb rgb)
+    {
+      return  (((rgb >> 16) & 0xff) * 11 + ((rgb >> 8) & 0xff) * 16 + (rgb & 0xff) * 5) / 32;
+    }
 
-  inline static DREAM3D::Rgb dRgb(int r, int g, int b, int a)
-  {
-    return ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
-  }
+    inline static DREAM3D::Rgb dRgb(int r, int g, int b, int a)
+    {
+      return ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+    }
 
-protected:
-  RgbColor() {};
+  protected:
+    RgbColor() {};
 
 
 
@@ -114,7 +114,7 @@ class DREAM3DLib_EXPORT ColorTable
     * @param max
     * @param min
     */
-    static void GetColorTable(int numColors, QVector<float> &colors);
+    static void GetColorTable(int numColors, QVector<float>& colors);
 
   private:
     ColorTable(const ColorTable&); // Copy Constructor Not Implemented

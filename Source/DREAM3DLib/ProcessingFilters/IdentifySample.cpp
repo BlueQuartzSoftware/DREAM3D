@@ -80,8 +80,8 @@ void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -147,14 +147,15 @@ void IdentifySample::execute()
   }
   setErrorCondition(0);
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -172,9 +173,9 @@ void IdentifySample::execute()
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
   QVector<int> currentvlist;
-  QVector<bool> checked(totalPoints,false);
-  QVector<bool> Sample(totalPoints,false);
-  QVector<bool> notSample(totalPoints,false);
+  QVector<bool> checked(totalPoints, false);
+  QVector<bool> Sample(totalPoints, false);
+  QVector<bool> notSample(totalPoints, false);
   int biggestBlock = 0;
   size_t count;
   int good;
@@ -198,12 +199,12 @@ void IdentifySample::execute()
         {
           good = 1;
           neighbor = static_cast<int>( index + neighpoints[j] );
-          if(j == 0 && plane == 0) good = 0;
-          if(j == 5 && plane == (zp - 1)) good = 0;
-          if(j == 1 && row == 0) good = 0;
-          if(j == 4 && row == (yp - 1)) good = 0;
-          if(j == 2 && column == 0) good = 0;
-          if(j == 3 && column == (xp - 1)) good = 0;
+          if(j == 0 && plane == 0) { good = 0; }
+          if(j == 5 && plane == (zp - 1)) { good = 0; }
+          if(j == 1 && row == 0) { good = 0; }
+          if(j == 4 && row == (yp - 1)) { good = 0; }
+          if(j == 2 && column == 0) { good = 0; }
+          if(j == 3 && column == (xp - 1)) { good = 0; }
           if(good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == false)
           {
             currentvlist.push_back(neighbor);
@@ -229,8 +230,8 @@ void IdentifySample::execute()
   }
   for (int i = 0; i < totalPoints; i++)
   {
-    if (notSample[i] == false && m_GoodVoxels[i] == false) m_GoodVoxels[i] = true;
-    else if (notSample[i] == true && m_GoodVoxels[i] == true) m_GoodVoxels[i] = false;
+    if (notSample[i] == false && m_GoodVoxels[i] == false) { m_GoodVoxels[i] = true; }
+    else if (notSample[i] == true && m_GoodVoxels[i] == true) { m_GoodVoxels[i] = false; }
   }
   notSample.clear();
   checked.fill(false, totalPoints);
@@ -252,12 +253,12 @@ void IdentifySample::execute()
         {
           good = 1;
           neighbor = static_cast<int>( index + neighpoints[j] );
-          if(j == 0 && plane == 0) good = 0;
-          if(j == 5 && plane == (zp - 1)) good = 0;
-          if(j == 1 && row == 0) good = 0;
-          if(j == 4 && row == (yp - 1)) good = 0;
-          if(j == 2 && column == 0) good = 0;
-          if(j == 3 && column == (xp - 1)) good = 0;
+          if(j == 0 && plane == 0) { good = 0; }
+          if(j == 5 && plane == (zp - 1)) { good = 0; }
+          if(j == 1 && row == 0) { good = 0; }
+          if(j == 4 && row == (yp - 1)) { good = 0; }
+          if(j == 2 && column == 0) { good = 0; }
+          if(j == 3 && column == (xp - 1)) { good = 0; }
           if(good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == true)
           {
             currentvlist.push_back(neighbor);
@@ -283,8 +284,8 @@ void IdentifySample::execute()
   }
   for (int i = 0; i < totalPoints; i++)
   {
-    if (Sample[i] == false && m_GoodVoxels[i] == true) m_GoodVoxels[i] = false;
-    else if (Sample[i] == true && m_GoodVoxels[i] == false) m_GoodVoxels[i] = true;
+    if (Sample[i] == false && m_GoodVoxels[i] == true) { m_GoodVoxels[i] = false; }
+    else if (Sample[i] == true && m_GoodVoxels[i] == false) { m_GoodVoxels[i] = true; }
   }
   Sample.clear();
   checked.clear();

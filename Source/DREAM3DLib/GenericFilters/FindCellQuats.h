@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() { return "Find Cell Quaternions"; }
 
     /**
@@ -89,10 +89,10 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-   protected:
-     FindCellQuats();
+  protected:
+    FindCellQuats();
 
-   private:
+  private:
     int32_t* m_CellPhases;
     float* m_Quats;
     float* m_CellEulerAngles;

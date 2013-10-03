@@ -69,7 +69,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    virtual ~EdgeArray(){ }
+    virtual ~EdgeArray() { }
 
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, EdgesContainingVert)
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, EdgeNeighbors)
@@ -88,7 +88,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    static Pointer CreateArray(size_t numElements, const QString &name, VertexArray* verts)
+    static Pointer CreateArray(size_t numElements, const QString& name, VertexArray* verts)
     {
       if (name.isEmpty() == true)
       {
@@ -152,29 +152,29 @@ class EdgeArray
       SharedShortArray_t linkLocPtr(new unsigned short[numPts]);
       linkLoc = linkLocPtr.get();
 
-      ::memset(linkLoc, 0, numPts*sizeof(unsigned short));
+      ::memset(linkLoc, 0, numPts * sizeof(unsigned short));
 
 
       size_t pts[2];
 
       //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
       // traverse data to determine number of uses of each point
-      for (cellId=0; cellId < numCells; cellId++)
+      for (cellId = 0; cellId < numCells; cellId++)
       {
         getVerts(cellId, pts);
-        for (size_t j=0; j < 2; j++)
+        for (size_t j = 0; j < 2; j++)
         {
-         linkCount[pts[j]]++;
+          linkCount[pts[j]]++;
         }
       }
 
       // now allocate storage for the links
       m_EdgesContainingVert->allocateLists(linkCount);
 
-      for (cellId=0; cellId < numCells; cellId++)
+      for (cellId = 0; cellId < numCells; cellId++)
       {
         getVerts(cellId, pts);
-        for (size_t j=0; j < 2; j++)
+        for (size_t j = 0; j < 2; j++)
         {
           m_EdgesContainingVert->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
         }
@@ -267,7 +267,7 @@ class EdgeArray
         }
         BOOST_ASSERT(linkCount[t] > 1);
         // Reset all the visited triangle indexs back to false (zero)
-        for(size_t k = 0;k < linkCount[t]; ++k)
+        for(size_t k = 0; k < linkCount[t]; ++k)
         {
           visited[loop_neighbors[k]] = false;
         }
@@ -284,27 +284,27 @@ class EdgeArray
       return m_Array->getPointer(i);
     }
 
-     /**
-     * @brief Returns reference to the Face_t at the index i
-     * @param i
-     * @return
-     */
+    /**
+    * @brief Returns reference to the Face_t at the index i
+    * @param i
+    * @return
+    */
     inline Edge_t& operator[](size_t i)
     {
       return (*m_Array)[i];
     }
-     /**
-     * @brief Returns reference to the Face_t at the index i
-     * @param i
-     * @return
-     */
+    /**
+    * @brief Returns reference to the Face_t at the index i
+    * @param i
+    * @return
+    */
     inline Edge_t& getEdge(size_t i)
     {
       return (*m_Array)[i];
     }
   protected:
     EdgeArray():
-    m_Verts(NULL)
+      m_Verts(NULL)
     {
       m_Array = EdgeContainerType::CreateArray(0, "EdgeArray_Internal_Use_Only");
     }

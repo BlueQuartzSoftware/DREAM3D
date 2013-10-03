@@ -131,7 +131,8 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
-  }  {
+  }
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Phase Ids");
     option->setPropertyName("WritePhaseIds");
@@ -639,7 +640,7 @@ void VtkRectilinearGridWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkRectilinearGridWriter::write(const QString &file, VolumeDataContainer* r, std::vector<VtkScalarWriter*> &scalars)
+int VtkRectilinearGridWriter::write(const QString& file, VolumeDataContainer* r, std::vector<VtkScalarWriter*>& scalars)
 {
   int err = 0;
   FILE* f = NULL;
@@ -651,11 +652,11 @@ int VtkRectilinearGridWriter::write(const QString &file, VolumeDataContainer* r,
   // Write the correct header
   if(m_WriteBinaryFile == true)
   {
-    WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->getXPoints() + 1, r->getYPoints()+1, r->getZPoints()+1)
+    WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->getXPoints() + 1, r->getYPoints() + 1, r->getZPoints() + 1)
   }
   else
   {
-    WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->getXPoints() + 1, r->getYPoints()+1, r->getZPoints()+1)
+    WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->getXPoints() + 1, r->getYPoints() + 1, r->getZPoints() + 1)
   }
 
   // Write the XCoords

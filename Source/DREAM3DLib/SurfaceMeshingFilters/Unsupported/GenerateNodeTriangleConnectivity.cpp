@@ -99,7 +99,7 @@ int GenerateNodeTriangleConnectivity::writeFilterParameters(AbstractFilterParame
 void GenerateNodeTriangleConnectivity::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
@@ -156,7 +156,7 @@ void GenerateNodeTriangleConnectivity::preflight()
 void GenerateNodeTriangleConnectivity::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(NULL == m)
@@ -168,7 +168,7 @@ void GenerateNodeTriangleConnectivity::execute()
   setErrorCondition(0);
 
   // Just to double check we have everything.
-  dataCheck(false, 0,0,0);
+  dataCheck(false, 0, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -227,15 +227,15 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   float progIndex = 0.0;
   float curPercent = 0.0;
   float total = static_cast<float>(m_Node2Triangle.size());
-  
+
 
   // Loop over each entry in the map
   for(NodeTrianglesMap_t::iterator iter = m_Node2Triangle.begin(); iter != m_Node2Triangle.end(); ++iter)
   {
-    if ( progIndex/total * 100.0f > (curPercent) )
+    if ( progIndex / total * 100.0f > (curPercent) )
     {
       ss.str("");
-      ss << (progIndex/total * 100.0f) << "% Complete";
+      ss << (progIndex / total * 100.0f) << "% Complete";
       notifyStatusMessage(ss.str());
       curPercent += 5.0f;
     }

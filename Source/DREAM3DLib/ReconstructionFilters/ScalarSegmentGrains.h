@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT ScalarSegmentGrains : public SegmentGrains
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
+    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
     virtual const QString getHumanLabel() { return "Segment Fields (Scalar)"; }
 
     virtual void setupFilterParameters();
@@ -90,7 +90,7 @@ class DREAM3DLib_EXPORT ScalarSegmentGrains : public SegmentGrains
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -110,14 +110,14 @@ class DREAM3DLib_EXPORT ScalarSegmentGrains : public SegmentGrains
     virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum);
 
   private:
-	  IDataArray::Pointer m_InputData;
-    
-	  int32_t*  m_GrainIds;
+    IDataArray::Pointer m_InputData;
+
+    int32_t*  m_GrainIds;
     bool*     m_Active;
     CompareFunctor* m_Compare;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    
+
 
     ScalarSegmentGrains(const ScalarSegmentGrains&); // Copy Constructor Not Implemented
     void operator=(const ScalarSegmentGrains&); // Operator '=' Not Implemented

@@ -53,7 +53,7 @@ class ConvertEulerAnglesImpl
       m_CellEulerAngles(data),
       convFactor(factor)
     {}
-    virtual ~ConvertEulerAnglesImpl(){}
+    virtual ~ConvertEulerAnglesImpl() {}
 
     void convert(size_t start, size_t end) const
     {
@@ -64,14 +64,14 @@ class ConvertEulerAnglesImpl
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       convert(r.begin(), r.end());
     }
 #endif
   private:
-     float* m_CellEulerAngles;
-     float  convFactor;
+    float* m_CellEulerAngles;
+    float  convFactor;
 
 };
 
@@ -81,11 +81,11 @@ class ConvertEulerAnglesImpl
 //
 // -----------------------------------------------------------------------------
 ConvertEulerAngles::ConvertEulerAngles() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians), // We convert from Degrees to Radians by Default
-m_CellEulerAngles(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians), // We convert from Degrees to Radians by Default
+  m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
 }
@@ -126,9 +126,9 @@ void ConvertEulerAngles::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setConversionType( reader->readValue("ConversionType", getConversionType()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -149,7 +149,7 @@ int ConvertEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* wr
 void ConvertEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, 3)
@@ -193,10 +193,10 @@ void ConvertEulerAngles::execute()
     return;
   }
 
-  #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    tbb::task_scheduler_init init;
-    bool doParallel = true;
-  #endif
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
 
   float conversionFactor = 1.0;
   if (m_ConversionType == DREAM3D::EulerAngleConversionType::DegreesToRadians)
@@ -224,5 +224,5 @@ void ConvertEulerAngles::execute()
     serial.convert(0, totalPoints);
   }
 
- notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }

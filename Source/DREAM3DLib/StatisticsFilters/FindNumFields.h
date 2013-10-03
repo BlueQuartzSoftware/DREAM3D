@@ -67,7 +67,7 @@ class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Number of Fields"; }
 
     /**
@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -85,15 +85,15 @@ class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-   protected:
-     FindNumFields();
+  protected:
+    FindNumFields();
 
-   private:
+  private:
     int32_t* m_FieldPhases;
 
     int32_t* m_NumFields;
 
-	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindNumFields(const FindNumFields&); // Copy Constructor Not Implemented
     void operator=(const FindNumFields&); // Operator '=' Not Implemented

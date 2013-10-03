@@ -47,7 +47,7 @@
 //
 // -----------------------------------------------------------------------------
 NodesTrianglesToStl::NodesTrianglesToStl() :
-AbstractFilter()
+  AbstractFilter()
 {
   setupFilterParameters();
 }
@@ -67,40 +67,40 @@ void NodesTrianglesToStl::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Nodes File");
-     option->setPropertyName("NodesFile");
-     option->setWidgetType(FilterParameter::InputFileWidget);
-     option->setValueType("string");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Triangles File");
-     option->setPropertyName("TrianglesFile");
-     option->setWidgetType(FilterParameter::InputFileWidget);
-     option->setValueType("string");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Output STL Directory");
-     option->setPropertyName("OutputStlDirectory");
-     option->setWidgetType(FilterParameter::OutputPathWidget);
-     option->setValueType("string");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Stl File Prefix");
-     option->setPropertyName("OutputStlPrefix");
-     option->setWidgetType(FilterParameter::StringWidget);
-     option->setValueType("string");
-     parameters.push_back(option);
-   }
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Nodes File");
+    option->setPropertyName("NodesFile");
+    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Triangles File");
+    option->setPropertyName("TrianglesFile");
+    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Output STL Directory");
+    option->setPropertyName("OutputStlDirectory");
+    option->setWidgetType(FilterParameter::OutputPathWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Stl File Prefix");
+    option->setPropertyName("OutputStlPrefix");
+    option->setWidgetType(FilterParameter::StringWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
 
 
-   setFilterParameters(parameters);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -110,12 +110,12 @@ void NodesTrianglesToStl::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setNodesFile( reader->readValue( "NodesFile", getNodesFile() ) );
   setTrianglesFile( reader->readValue( "TrianglesFile", getTrianglesFile() ) );
   setOutputStlDirectory( reader->readValue( "OutputStlDirectory", getOutputStlDirectory() ) );
   setOutputStlPrefix( reader->readValue( "OutputStlPrefix", getOutputStlPrefix() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -151,10 +151,11 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields
   {
 
     if (preflight == true)
-    addWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
-    else {
-    setErrorCondition(-1001);
-    addErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+    { addWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
+    else
+    {
+      setErrorCondition(-1001);
+      addErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
     }
   }
 
@@ -168,8 +169,9 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields
   {
 
     if (preflight == true)
-    addWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
-    else {
+    { addWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
+    else
+    {
       setErrorCondition(-1002);
       addErrorMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
     }
@@ -213,10 +215,10 @@ void NodesTrianglesToStl::execute()
   if(!stlDir.mkpath("."))
   {
 
-      QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
-      notifyErrorMessage(ss, -1);
-      setErrorCondition(-1);
-      return;
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
+    notifyErrorMessage(ss, -1);
+    setErrorCondition(-1);
+    return;
   }
 
 
@@ -236,8 +238,8 @@ void NodesTrianglesToStl::execute()
   int nNodes = 0;
   fscanf(nodesFile, "%d", &nNodes);
   {
-  QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
-  notifyStatusMessage(ss);
+    QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
+    notifyStatusMessage(ss);
   }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
@@ -256,8 +258,8 @@ void NodesTrianglesToStl::execute()
   fscanf(triFile, "%d", &nTriangles);
 
   {
-  QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
-  notifyStatusMessage(ss);
+    QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
+    notifyStatusMessage(ss);
   }
 
   int nodeId = 0;
@@ -281,7 +283,7 @@ void NodesTrianglesToStl::execute()
       break;
     }
     nodeIdToIndex[nodeId] = i;
-   // nodeKindArray[nodeId] = nodeKind;
+    // nodeKindArray[nodeId] = nodeKind;
     nodes[nodeId].pos[0] = pos[0];
     nodes[nodeId].pos[1] = pos[1];
     nodes[nodeId].pos[2] = pos[2];
@@ -308,8 +310,8 @@ void NodesTrianglesToStl::execute()
     triangles[i].verts[0] = tData[1];
     triangles[i].verts[1] = tData[2];
     triangles[i].verts[2] = tData[3];
-    faceLabels[i*2] = tData[7];
-    faceLabels[i*2+1] = tData[8];
+    faceLabels[i * 2] = tData[7];
+    faceLabels[i * 2 + 1] = tData[8];
     uniqueSpins.insert(tData[7]);
     uniqueSpins.insert(tData[8]);
   }
@@ -347,8 +349,8 @@ void NodesTrianglesToStl::execute()
     }
 
     {
-    QString ss = "DREAM3D Generated For Grain ID " + QString::number(spin);
-    err = writeHeader(f, ss, 0);
+      QString ss = "DREAM3D Generated For Grain ID " + QString::number(spin);
+      err = writeHeader(f, ss, 0);
     }
     triCount = 0; // Reset this to Zero. Increment for every triangle written
 
@@ -365,11 +367,11 @@ void NodesTrianglesToStl::execute()
       vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
       vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
 
-      if (faceLabels[t*2] == spin)
+      if (faceLabels[t * 2] == spin)
       {
         winding = 0; // 0 = Write it using forward spin
       }
-      else if (faceLabels[t*2+1] == spin)
+      else if (faceLabels[t * 2 + 1] == spin)
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices
@@ -431,7 +433,7 @@ void NodesTrianglesToStl::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToStl::writeHeader(FILE* f, const QString &header, int triCount)
+int NodesTrianglesToStl::writeHeader(FILE* f, const QString& header, int triCount)
 {
   if (NULL == f)
   {
@@ -439,7 +441,7 @@ int NodesTrianglesToStl::writeHeader(FILE* f, const QString &header, int triCoun
   }
   char h[80];
   size_t headlength = 80;
-  if(header.length() < 80) headlength = header.length();
+  if(header.length() < 80) { headlength = header.length(); }
   ::memset(h, 0, 80);
   ::memcpy(h, header.data(), headlength);
   // Return the number of bytes written - which should be 80
@@ -451,10 +453,10 @@ int NodesTrianglesToStl::writeHeader(FILE* f, const QString &header, int triCoun
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToStl::writeNumTrianglesToFile(const QString &filename, int triCount)
+int NodesTrianglesToStl::writeNumTrianglesToFile(const QString& filename, int triCount)
 {
   // We need to update the number of triangles in the file
-  int err =0;
+  int err = 0;
 
   FILE* out = fopen(filename.toLatin1().data(), "r+b");
   fseek(out, 80L, SEEK_SET);

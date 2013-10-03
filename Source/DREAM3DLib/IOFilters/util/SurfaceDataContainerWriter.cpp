@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainerWriter::SurfaceDataContainerWriter() :
-EdgeDataContainerWriter()
+  EdgeDataContainerWriter()
 {
 }
 
@@ -117,11 +117,12 @@ void SurfaceDataContainerWriter::execute()
 
   // Add some VTK hints into the group
   err = createVtkObjectGroup(getDataContainer()->getName(), H5_VTK_POLYDATA);
-  if (err < 0)  {
+  if (err < 0)
+  {
     return;
   }
 
-  if(getdcType() == 1) writeXdmfMeshStructure();
+  if(getdcType() == 1) { writeXdmfMeshStructure(); }
 
   err = writeMeshData(dcGid);
   if (err < 0)
@@ -202,11 +203,11 @@ void SurfaceDataContainerWriter::writeXdmfMeshStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const QString &attrType,
-                                                                              const QString &groupName,
-                                                                              IDataArray::Pointer array,
-                                                                              const QString &centering,
-                                                                              int precision, const QString &xdmfTypeName)
+QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const QString& attrType,
+    const QString& groupName,
+    IDataArray::Pointer array,
+    const QString& centering,
+    int precision, const QString& xdmfTypeName)
 {
   QString buf;
   QTextStream out(&buf);
@@ -214,9 +215,9 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
   QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
 
   QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
-  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents()/2);
+  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents() / 2);
 
-  if((numComp%2) == 1)
+  if((numComp % 2) == 1)
   {
     out << "    <Attribute Name=\"" << array->GetName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
@@ -259,7 +260,7 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStrHalf <<  "\" ";
     out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 1)\" >" << "\n";
     out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
-    out << "          0        " << (array->GetNumberOfComponents()/2) << "\n";
+    out << "          0        " << (array->GetNumberOfComponents() / 2) << "\n";
     out << "          1        1" << "\n";
     out << "          " << dimStrHalf << " </DataItem>" << "\n";
     out << "\n";
@@ -275,16 +276,17 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering)
+void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering)
 {
 #if 0
-      <Attribute Name="Node Type" Center="Node">
-      <DataItem Format="HDF" DataType="char" Precision="1" Dimensions="43029 1">
-        MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:/SurfaceDataContainer/POINT_DATA/SurfaceMeshNodeType
-      </DataItem>
-    </Attribute>
+  < Attribute Name = "Node Type" Center = "Node" >
+                                          < DataItem Format = "HDF" DataType = "char" Precision = "1" Dimensions = "43029 1" >
+                                                            MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:
+                                                              / SurfaceDataContainer / POINT_DATA / SurfaceMeshNodeType
+                                                              < / DataItem >
+                                                              < / Attribute >
 #endif
-  if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
+                                                              if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
   { return; }
 
 
@@ -300,9 +302,9 @@ void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString &groupName
   }
   int numComp = array->GetNumberOfComponents();
   QString attrType = "Scalar";
-  if(numComp > 2) attrType = "Vector";
+  if(numComp > 2) { attrType = "Vector"; }
 
-  QString block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
+  QString block = writeXdmfAttributeDataHelper(numComp, attrType, groupName, array, centering, precision, xdmfTypeName);
 
   out << block << "\n";
 }
@@ -325,7 +327,7 @@ int SurfaceDataContainerWriter::writeMeshData(hid_t dcGid)
     int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
 
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FacesName, rank, dims, data);
-    if (err < 0) 
+    if (err < 0)
     {
       setErrorCondition(err);
       notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
@@ -355,8 +357,8 @@ int SurfaceDataContainerWriter::writeMeshData(hid_t dcGid)
         int32_t* cells = faceNeighbors->getElementListPointer(v);
         ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
         offset += sizeof(uint16_t);
-        ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-        offset += ncells*sizeof(int32_t);
+        ::memcpy(bufPtr + offset, cells, ncells * sizeof(int32_t) );
+        offset += ncells * sizeof(int32_t);
       }
 
       int32_t rank = 1;
@@ -403,8 +405,8 @@ int SurfaceDataContainerWriter::writeMeshData(hid_t dcGid)
       int32_t* cells = facesContainingVert->getElementListPointer(v);
       ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
       offset += sizeof(uint16_t);
-      ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-      offset += ncells*sizeof(int32_t);
+      ::memcpy(bufPtr + offset, cells, ncells * sizeof(int32_t) );
+      offset += ncells * sizeof(int32_t);
     }
 
     rank = 1;
@@ -432,7 +434,7 @@ int SurfaceDataContainerWriter::writeFaceData(hid_t dcGid, QString groupName)
   //QString groupName(H5_FACE_DATA_GROUP_NAME)
 
   // Write the Face Data
- err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
+  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
     QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
@@ -494,7 +496,7 @@ int SurfaceDataContainerWriter::writeFaceFieldData(hid_t dcGid, QString groupNam
   QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
-  int64_t volDims[3] = { 0,0,0 };
+  int64_t volDims[3] = { 0, 0, 0 };
 
   // Write the Field Data
   // Write the Field Data
@@ -509,7 +511,7 @@ int SurfaceDataContainerWriter::writeFaceFieldData(hid_t dcGid, QString groupNam
   {
     return err;
   }
- hid_t fieldGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t fieldGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
     QString ss = QObject::tr("Error opening field Group ").arg(groupName);
@@ -592,11 +594,11 @@ int SurfaceDataContainerWriter::writeFaceFieldData(hid_t dcGid, QString groupNam
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
-    #if WRITE_FIELD_XDMF
+#if WRITE_FIELD_XDMF
     ss.str("");
     ss << "Neighbor Data (" << total << ")";
     writeFieldXdmfGridHeader(total, ss);
-    #endif
+#endif
     for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
     {
       err = (*iter)->writeH5Data(fieldGroupId);

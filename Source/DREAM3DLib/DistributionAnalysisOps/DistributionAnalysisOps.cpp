@@ -51,27 +51,27 @@ DistributionAnalysisOps::~DistributionAnalysisOps()
 {
 
 }
-void DistributionAnalysisOps::determinemaxandminvalues(QVector<float> &data, float &max, float &min)
+void DistributionAnalysisOps::determinemaxandminvalues(QVector<float>& data, float& max, float& min)
 {
-	float value;
-    min = std::numeric_limits<float>::max();
-    max = std::numeric_limits<float>::min();
-	for (size_t i = 0; i < data.size(); i++)
-	{
-		value = data[i];
-		if(value > max) max = value;
-		if(value < min) min = value;
-	}
+  float value;
+  min = std::numeric_limits<float>::max();
+  max = std::numeric_limits<float>::min();
+  for (size_t i = 0; i < data.size(); i++)
+  {
+    value = data[i];
+    if(value > max) { max = value; }
+    if(value < min) { min = value; }
+  }
 }
-void DistributionAnalysisOps::determinebinnumbers(float &max, float &min, int &stepsize, FloatArrayType::Pointer binnumbers)
+void DistributionAnalysisOps::determinebinnumbers(float& max, float& min, int& stepsize, FloatArrayType::Pointer binnumbers)
 {
-	size_t iter = 0;
-	float current = (float(iter*stepsize) + min);
-	while(current < max)
-	{
-		binnumbers->SetValue(iter, current);
-		iter++;
-		current = (float(iter*stepsize) + min);
-	}
+  size_t iter = 0;
+  float current = (float(iter * stepsize) + min);
+  while(current < max)
+  {
+    binnumbers->SetValue(iter, current);
+    iter++;
+    current = (float(iter * stepsize) + min);
+  }
 }
 

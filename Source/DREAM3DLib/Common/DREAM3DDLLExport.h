@@ -62,46 +62,46 @@ building the MXADatModel DLL on windows.
 
 #if defined (DREAM3DLib_BUILT_AS_DYNAMIC_LIB)
 
-  #if defined (DREAM3DLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
-    #if defined (_MSC_VER)  /* MSVC Compiler Case */
-      #define  DREAM3DLib_EXPORT __declspec(dllexport)
-      #define EXPIMP_TEMPLATE
-    #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-      #define DREAM3DLib_EXPORT __attribute__ ((visibility("default")))
-    #endif
-  #else  /* Importing the DLL into another project */
-    #if defined (_MSC_VER)  /* MSVC Compiler Case */
-      #define  DREAM3DLib_EXPORT __declspec(dllimport)
-      #define EXPIMP_TEMPLATE extern
-    #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-      #define DREAM3DLib_EXPORT __attribute__ ((visibility("default")))
-    #endif
-  #endif
+#if defined (DREAM3DLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
+#if defined (_MSC_VER)  /* MSVC Compiler Case */
+#define  DREAM3DLib_EXPORT __declspec(dllexport)
+#define EXPIMP_TEMPLATE
+#elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
+#define DREAM3DLib_EXPORT __attribute__ ((visibility("default")))
+#endif
+#else  /* Importing the DLL into another project */
+#if defined (_MSC_VER)  /* MSVC Compiler Case */
+#define  DREAM3DLib_EXPORT __declspec(dllimport)
+#define EXPIMP_TEMPLATE extern
+#elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
+#define DREAM3DLib_EXPORT __attribute__ ((visibility("default")))
+#endif
+#endif
 #endif
 
 /* If DREAM3DLib_EXPORT was never defined, define it here */
 #ifndef DREAM3DLib_EXPORT
-  #define DREAM3DLib_EXPORT
-  #define EXPIMP_TEMPLATE
+#define DREAM3DLib_EXPORT
+#define EXPIMP_TEMPLATE
 #endif
 
 #if 0
 #if defined (_WIN32) || defined __CYGWIN__
 
-  #if defined (DREAM3D_BUILT_AS_DYNAMIC_LIB)
-    #if defined(DREAM3DLib_EXPORTS)
-      #define  DREAM3DLib_EXPORT __declspec(dllexport)
-    #else
-      #define  DREAM3DLib_EXPORT __declspec(dllimport)
-    #endif /* DREAM3DLib_EXPORTS */
-  #else
-    #define DREAM3DLib_EXPORT
-  #endif
+#if defined (DREAM3D_BUILT_AS_DYNAMIC_LIB)
+#if defined(DREAM3DLib_EXPORTS)
+#define  DREAM3DLib_EXPORT __declspec(dllexport)
+#else
+#define  DREAM3DLib_EXPORT __declspec(dllimport)
+#endif /* DREAM3DLib_EXPORTS */
+#else
+#define DREAM3DLib_EXPORT
+#endif
 #elif __GNUC__ >= 4
- #define FLOW_DLL __attribute__ ((visibility("default")))
- #define DLL_LOCAL  __attribute__ ((visibility("hidden")
+#define FLOW_DLL __attribute__ ((visibility("default")))
+#define DLL_LOCAL  __attribute__ ((visibility("hidden")
 #else /* defined (_WIN32) && defined (DREAM3D_BUILD_SHARED_LIBS)  */
- #define DREAM3DLib_EXPORT
+#define DREAM3DLib_EXPORT
 #endif
 #endif
 

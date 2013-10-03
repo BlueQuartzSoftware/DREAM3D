@@ -50,8 +50,8 @@
 //
 // -----------------------------------------------------------------------------
 ChangeResolution::ChangeResolution() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -92,9 +92,9 @@ void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setResolution( reader->readValue("Resolution", getResolution() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -125,9 +125,9 @@ void ChangeResolution::preflight()
   size_t dims[3];
   m->getDimensions(dims);
 
-  float sizex = (dims[0])*m->getXRes();
-  float sizey = (dims[1])*m->getYRes();
-  float sizez = (dims[2])*m->getZRes();
+  float sizex = (dims[0]) * m->getXRes();
+  float sizey = (dims[1]) * m->getYRes();
+  float sizez = (dims[2]) * m->getZRes();
   int m_XP = int(sizex / m_Resolution.x);
   int m_YP = int(sizey / m_Resolution.y);
   int m_ZP = int(sizez / m_Resolution.z);
@@ -171,13 +171,13 @@ void ChangeResolution::execute()
   m->getDimensions(dims);
 
 
-  float sizex = (dims[0])*m->getXRes();
-  float sizey = (dims[1])*m->getYRes();
-  float sizez = (dims[2])*m->getZRes();
+  float sizex = (dims[0]) * m->getXRes();
+  float sizey = (dims[1]) * m->getYRes();
+  float sizez = (dims[2]) * m->getZRes();
   int m_XP = int(sizex / m_Resolution.x);
   int m_YP = int(sizey / m_Resolution.y);
   int m_ZP = int(sizez / m_Resolution.z);
-  int64_t totalPoints = m_XP*m_YP*m_ZP;
+  int64_t totalPoints = m_XP * m_YP * m_ZP;
 
   float x, y, z;
   int col, row, plane;
@@ -187,7 +187,7 @@ void ChangeResolution::execute()
   newindicies.resize(totalPoints);
   for (int i = 0; i < m_ZP; i++)
   {
-    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i/m->getZPoints())*100);
+    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getZPoints()) * 100);
     notifyStatusMessage(ss);
     for (int j = 0; j < m_YP; j++)
     {
@@ -201,7 +201,7 @@ void ChangeResolution::execute()
         plane = int(z / m->getZRes());
         index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
-    newindicies[index] = index_old;
+        newindicies[index] = index_old;
       }
     }
   }

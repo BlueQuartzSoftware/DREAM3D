@@ -98,8 +98,8 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    int writeMetaInfo(const QString &hdfPath, int64_t volDims[3],
-                              float spacing[3], float origin[3]);
+    int writeMetaInfo(const QString& hdfPath, int64_t volDims[3],
+                      float spacing[3], float origin[3]);
 
     virtual int writeMeshData(hid_t dcGid);
 
@@ -114,8 +114,8 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     //
     // -----------------------------------------------------------------------------
     template<typename T, typename K>
-    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T> &v, const QString &label)
-     {
+    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T>& v, const QString& label)
+    {
       herr_t err = 0;
       int numComp = 1;
       std::vector<int> eData(v.size());
@@ -130,7 +130,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
         int num = static_cast<int>(eData.size() / numComp);
         int32_t rank = 1;
         hsize_t dims[1] =
-        { (hsize_t)num * (hsize_t)numComp };
+        { (hsize_t)num* (hsize_t)numComp };
 
         err |= QH5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
         err |= QH5Lite::writeScalarAttribute(ensembleGid, label, QString(H5_NUMCOMPONENTS), numComp);

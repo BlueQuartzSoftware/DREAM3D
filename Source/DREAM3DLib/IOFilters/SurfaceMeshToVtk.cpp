@@ -254,10 +254,12 @@ void SurfaceMeshToVtk::execute()
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (m_WriteBinaryFile) {
+  if (m_WriteBinaryFile)
+  {
     fprintf(vtkFile, "BINARY\n");
   }
-  else {
+  else
+  {
     fprintf(vtkFile, "ASCII\n");
   }
   fprintf(vtkFile, "DATASET POLYDATA\n");
@@ -297,7 +299,8 @@ void SurfaceMeshToVtk::execute()
 
         }
       }
-      else {
+      else
+      {
         fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
       }
     }
@@ -372,7 +375,7 @@ void SurfaceMeshToVtk::execute()
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointScalarData(DataContainer* dc, const QString &dataName, const QString &dataType,
+void writePointScalarData(DataContainer* dc, const QString& dataName, const QString& dataType,
                           bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
@@ -409,8 +412,8 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
-                          bool writeBinaryData, bool writeConformalMesh, const QString &vtkAttributeType,
+void writePointVectorData(DataContainer* dc, const QString& dataName, const QString& dataType,
+                          bool writeBinaryData, bool writeConformalMesh, const QString& vtkAttributeType,
                           FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
@@ -427,9 +430,9 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
       T s2 = 0x00;
       if(writeBinaryData == true)
       {
-        s0 = static_cast<T>(m[i*3+0]);
-        s1 = static_cast<T>(m[i*3+1]);
-        s2 = static_cast<T>(m[i*3+2]);
+        s0 = static_cast<T>(m[i * 3 + 0]);
+        s1 = static_cast<T>(m[i * 3 + 1]);
+        s2 = static_cast<T>(m[i * 3 + 2]);
         DREAM3D::Endian::FromSystemToBig::convert(s0);
         DREAM3D::Endian::FromSystemToBig::convert(s1);
         DREAM3D::Endian::FromSystemToBig::convert(s2);
@@ -440,7 +443,7 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
       else
       {
 
-        ss = QString::number(m[i*3+0]) + " " + QString::number(m[i*3+1]) + " " + QString::number(m[i*3+2]) + " ";
+        ss = QString::number(m[i * 3 + 0]) + " " + QString::number(m[i * 3 + 1]) + " " + QString::number(m[i * 3 + 2]) + " ";
         fprintf(vtkFile, "%s ", ss.toLatin1().data());
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }
@@ -525,7 +528,7 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellScalarData(DataContainer* dc, const QString &dataName, const QString &dataType,
+void writeCellScalarData(DataContainer* dc, const QString& dataName, const QString& dataType,
                          bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
   // Write the Grain Face ID Data to the file
@@ -561,7 +564,7 @@ void writeCellScalarData(DataContainer* dc, const QString &dataName, const QStri
         }
         fprintf(vtkFile, "%s", buf.toLatin1().data());
         buf.clear();
-        if (i%50 == 0) { fprintf(vtkFile, "\n"); }
+        if (i % 50 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
   }
@@ -572,8 +575,8 @@ void writeCellScalarData(DataContainer* dc, const QString &dataName, const QStri
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
-                         bool writeBinaryData, bool writeConformalMesh, const QString &vtkAttributeType,
+void writeCellVectorData(DataContainer* dc, const QString& dataName, const QString& dataType,
+                         bool writeBinaryData, bool writeConformalMesh, const QString& vtkAttributeType,
                          FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getFaceData(dataName);
@@ -591,9 +594,9 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
       T s2 = 0x00;
       if(writeBinaryData == true)
       {
-        s0 = static_cast<T>(m[i*3+0]);
-        s1 = static_cast<T>(m[i*3+1]);
-        s2 = static_cast<T>(m[i*3+2]);
+        s0 = static_cast<T>(m[i * 3 + 0]);
+        s1 = static_cast<T>(m[i * 3 + 1]);
+        s2 = static_cast<T>(m[i * 3 + 2]);
         DREAM3D::Endian::FromSystemToBig::convert(s0);
         DREAM3D::Endian::FromSystemToBig::convert(s1);
         DREAM3D::Endian::FromSystemToBig::convert(s2);
@@ -609,14 +612,14 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
       }
       else
       {
-        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
+        ss << m[i * 3 + 0] << " " << m[i * 3 + 1] << " " << m[i * 3 + 2] << " ";
         if(false == writeConformalMesh)
         {
-          ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
+          ss << m[i * 3 + 0] << " " << m[i * 3 + 1] << " " << m[i * 3 + 2] << " ";
         }
         fprintf(vtkFile, "%s ",  buf.toLatin1().data());
         buf.clear();
-        if (i%25 == 0) { fprintf(vtkFile, "\n"); }
+        if (i % 25 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
   }
@@ -626,7 +629,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellNormalData(DataContainer* dc, const QString &dataName, const QString &dataType,
+void writeCellNormalData(DataContainer* dc, const QString& dataName, const QString& dataType,
                          bool writeBinaryData, bool writeConformalMesh,
                          FILE* vtkFile, int nT)
 {
@@ -645,9 +648,9 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
       T s2 = 0x00;
       if(writeBinaryData == true)
       {
-        s0 = static_cast<T>(m[i*3+0]);
-        s1 = static_cast<T>(m[i*3+1]);
-        s2 = static_cast<T>(m[i*3+2]);
+        s0 = static_cast<T>(m[i * 3 + 0]);
+        s1 = static_cast<T>(m[i * 3 + 1]);
+        s2 = static_cast<T>(m[i * 3 + 2]);
         DREAM3D::Endian::FromSystemToBig::convert(s0);
         DREAM3D::Endian::FromSystemToBig::convert(s1);
         DREAM3D::Endian::FromSystemToBig::convert(s2);
@@ -656,9 +659,9 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
         fwrite(&s2, sizeof(T), 1, vtkFile);
         if(false == writeConformalMesh)
         {
-          s0 = static_cast<T>(m[i*3+0]) * -1.0;
-          s1 = static_cast<T>(m[i*3+1]) * -1.0;
-          s2 = static_cast<T>(m[i*3+2]) * -1.0;
+          s0 = static_cast<T>(m[i * 3 + 0]) * -1.0;
+          s1 = static_cast<T>(m[i * 3 + 1]) * -1.0;
+          s2 = static_cast<T>(m[i * 3 + 2]) * -1.0;
           DREAM3D::Endian::FromSystemToBig::convert(s0);
           DREAM3D::Endian::FromSystemToBig::convert(s1);
           DREAM3D::Endian::FromSystemToBig::convert(s2);
@@ -670,14 +673,14 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
       else
       {
 
-        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
+        ss << m[i * 3 + 0] << " " << m[i * 3 + 1] << " " << m[i * 3 + 2] << " ";
         if(false == writeConformalMesh)
         {
-          ss << -1.0*m[i*3+0] << " " << -1.0*m[i*3+1] << " " << -1.0*m[i*3+2] << " ";
+          ss << -1.0 * m[i * 3 + 0] << " " << -1.0 * m[i * 3 + 1] << " " << -1.0 * m[i * 3 + 2] << " ";
         }
         fprintf(vtkFile, "%s ", buf.toLatin1().data());
         buf.clear();
-        if (i%50 == 0) { fprintf(vtkFile, "\n"); }
+        if (i % 50 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
   }
@@ -724,22 +727,22 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
 
     if(m_WriteBinaryFile == true)
     {
-      swapped = faceLabels[i*2];
+      swapped = faceLabels[i * 2];
       DREAM3D::Endian::FromSystemToBig::convert(swapped);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
       if(false == m_WriteConformalMesh)
       {
-        swapped = faceLabels[i*2+1];
+        swapped = faceLabels[i * 2 + 1];
         DREAM3D::Endian::FromSystemToBig::convert(swapped);
         fwrite(&swapped, sizeof(int), 1, vtkFile);
       }
     }
     else
     {
-      fprintf(vtkFile, "%d\n", faceLabels[i*2]);
+      fprintf(vtkFile, "%d\n", faceLabels[i * 2]);
       if(false == m_WriteConformalMesh)
       {
-        fprintf(vtkFile, "%d\n", faceLabels[i*2+1]);
+        fprintf(vtkFile, "%d\n", faceLabels[i * 2 + 1]);
       }
     }
 

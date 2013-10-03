@@ -57,28 +57,28 @@ PowerLawOps::PowerLawOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PowerLawOps::calculateParameters(QVector<float> &data, FloatArrayType::Pointer outputs)
+int PowerLawOps::calculateParameters(QVector<float>& data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
   float alpha = 0;
   float min = std::numeric_limits<float>::max();
   if(data.size() > 1)
   {
-	  for(size_t i = 0; i < data.size(); i++)
-	  {
-		if (data[i] < min) min = data[i];		
-	  }
-	  for(size_t i = 0; i < data.size(); i++)
-	  {
-		alpha = alpha + log(data[i]/min);		
-	  }
-	  alpha = 1.0f/alpha;
-	  alpha = 1 + (alpha*data.size());
+    for(size_t i = 0; i < data.size(); i++)
+    {
+      if (data[i] < min) { min = data[i]; }
+    }
+    for(size_t i = 0; i < data.size(); i++)
+    {
+      alpha = alpha + log(data[i] / min);
+    }
+    alpha = 1.0f / alpha;
+    alpha = 1 + (alpha * data.size());
   }
   else
   {
-	  min = 0;
-	  alpha = 0;
+    min = 0;
+    alpha = 0;
   }
   outputs->SetValue(0, alpha);
   outputs->SetValue(1, min);
@@ -87,34 +87,34 @@ int PowerLawOps::calculateParameters(QVector<float> &data, FloatArrayType::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PowerLawOps::calculateCorrelatedParameters(QVector<QVector<float> > &data, VectorOfFloatArray outputs)
+int PowerLawOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float alpha = 0;
   float min;
   for(size_t i = 0; i < data.size(); i++)
   {
-	  if(data[i].size() > 1)
-	  {
-		  min = std::numeric_limits<float>::max();
-		  for(size_t j = 0; j < data[i].size(); j++)
-		  {
-			if (data[i][j] < min) min = data[i][j];		
-		  }
-		  for(size_t j = 0; j < data[i].size(); j++)
-		  {
-			alpha = alpha + log(data[i][j]/min);		
-		  }
-		  if(alpha != 0.0f) alpha = 1.0f/alpha;
-		  alpha = 1.0f + (alpha*data[i].size());
-	  }
-	  else
-	  {
-		  min = 0;
-		  alpha = 0;
-	  }	
-	  outputs[0]->SetValue(i, alpha);
-	  outputs[1]->SetValue(i, min);
+    if(data[i].size() > 1)
+    {
+      min = std::numeric_limits<float>::max();
+      for(size_t j = 0; j < data[i].size(); j++)
+      {
+        if (data[i][j] < min) { min = data[i][j]; }
+      }
+      for(size_t j = 0; j < data[i].size(); j++)
+      {
+        alpha = alpha + log(data[i][j] / min);
+      }
+      if(alpha != 0.0f) { alpha = 1.0f / alpha; }
+      alpha = 1.0f + (alpha * data[i].size());
+    }
+    else
+    {
+      min = 0;
+      alpha = 0;
+    }
+    outputs[0]->SetValue(i, alpha);
+    outputs[1]->SetValue(i, min);
   }
   return err;
 }

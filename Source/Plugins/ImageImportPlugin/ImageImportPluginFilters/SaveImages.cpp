@@ -122,7 +122,7 @@ void SaveImages::setupFilterParameters()
 void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setImagePrefix( reader->readValue("ImagePrefix", getImagePrefix()) );
   setOutputPath( reader->readValue("OutputPath", getOutputPath()) );
   setColorsArrayName( reader->readValue("ColorsArrayName", getColorsArrayName()) );
@@ -275,17 +275,17 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
     uint8_t* scanLine = image.scanLine(y);
     for(size_t x = 0; x < dims[0]; ++x)
     {
-      #if defined (CMP_WORDS_BIGENDIAN)
-        #error
-      #else
+#if defined (CMP_WORDS_BIGENDIAN)
+#error
+#else
 
-        scanLine[x*4 + 3] = 0xFF;
-        index = y * dims[0] * 3 + x * 3;
-        scanLine[x*4 + 2] = ipfColors[index + 0];
-        scanLine[x*4 + 1] = ipfColors[index + 1];
-        scanLine[x*4 + 0] = ipfColors[index + 2];
+      scanLine[x * 4 + 3] = 0xFF;
+      index = y * dims[0] * 3 + x * 3;
+      scanLine[x * 4 + 2] = ipfColors[index + 0];
+      scanLine[x * 4 + 1] = ipfColors[index + 1];
+      scanLine[x * 4 + 0] = ipfColors[index + 2];
 
-      #endif
+#endif
     }
 
   }

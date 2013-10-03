@@ -59,7 +59,7 @@ class DREAM3DLib_EXPORT TexturePreset
     DREAM3D_STATIC_NEW_MACRO(TexturePreset)
     DREAM3D_TYPE_MACRO(TexturePreset)
     static Pointer New(unsigned int xtal,
-                       const QString &name,
+                       const QString& name,
                        double e1, double e2, double e3)
     {
       Pointer p (new TexturePreset);

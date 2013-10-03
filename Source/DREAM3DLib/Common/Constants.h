@@ -37,7 +37,7 @@
 #define _DREAM3D_CONSTANTS_H_
 
 #if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
 
@@ -152,7 +152,7 @@ namespace DREAM3D
     const DREAM3D_STRING F7("F7");
     const DREAM3D_STRING mPrime("mPrime");
     const DREAM3D_STRING EulerAngles("EulerAngles");
-  //  const DREAM3D_STRING FieldEulerAngles("FieldEulerAngles");
+    //  const DREAM3D_STRING FieldEulerAngles("FieldEulerAngles");
     const DREAM3D_STRING SurfaceVoxelFractions("SurfaceVoxelFractions");
     const DREAM3D_STRING AxisEulerAngles("AxisEulerAngles");
     const DREAM3D_STRING SurfaceFields("SurfaceFields");
@@ -506,7 +506,8 @@ namespace DREAM3D
     const DREAM3D_STRING VtkFile("Test.vtk");
   }
 
-  namespace MicroStats {
+  namespace MicroStats
+  {
     const DREAM3D_STRING H5StatisticsFile("Results.h5stats");
     const DREAM3D_STRING GrainDataFile("GrainData.csv");//14
     const DREAM3D_STRING DeformationStatsFile("Deformation_Stats.txt");
@@ -533,7 +534,8 @@ namespace DREAM3D
     }
   }
 
-  namespace SolidMeshing {
+  namespace SolidMeshing
+  {
     /* Solid Meshing Related */
     const DREAM3D_STRING MeshFile("solid_mesh_v5_1.vtk");
     const DREAM3D_STRING MeshFile2("solid_mesh_v5_2.vtk");

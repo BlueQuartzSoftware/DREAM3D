@@ -61,7 +61,7 @@ FilterManager::Pointer FilterManager::Instance()
 
   if (singleton.get() == NULL)
   {
-  //  qDebug() << "FilterManager::Instance singleton was NULL" << "\n";
+    //  qDebug() << "FilterManager::Instance singleton was NULL" << "\n";
     singleton.reset ( new FilterManager() );
 //    singleton->RegisterKnownFilters();
   }
@@ -71,7 +71,7 @@ FilterManager::Pointer FilterManager::Instance()
 // -----------------------------------------------------------------------------
 //  Static Method
 // -----------------------------------------------------------------------------
-void FilterManager::RegisterFilterFactory(const QString &name, IFilterFactory::Pointer factory)
+void FilterManager::RegisterFilterFactory(const QString& name, IFilterFactory::Pointer factory)
 {
   if (NULL != factory.get() )
   {
@@ -94,16 +94,16 @@ FilterManager::Collection FilterManager::getFactories()
 // -----------------------------------------------------------------------------
 void FilterManager::printFactoryNames()
 {
-    for(Collection::iterator iter = m_Factories.begin(); iter != m_Factories.end(); ++iter)
-    {
-      qDebug() << "Name: " << iter.key() << "\n";
-    }
+  for(Collection::iterator iter = m_Factories.begin(); iter != m_Factories.end(); ++iter)
+  {
+    qDebug() << "Name: " << iter.key() << "\n";
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterManager::Collection FilterManager::getFactories(const QString &groupName)
+FilterManager::Collection FilterManager::getFactories(const QString& groupName)
 {
   FilterManager::Collection groupFactories;
 
@@ -122,7 +122,7 @@ FilterManager::Collection FilterManager::getFactories(const QString &groupName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterManager::Collection FilterManager::getFactories(const QString &groupName, const QString &subGroupName)
+FilterManager::Collection FilterManager::getFactories(const QString& groupName, const QString& subGroupName)
 {
   FilterManager::Collection groupFactories;
 
@@ -130,7 +130,7 @@ FilterManager::Collection FilterManager::getFactories(const QString &groupName, 
   for (FilterManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
   {
     IFilterFactory::Pointer filterFactory = factory.value();
-  if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0 && factory.value()->getFilterSubGroup().compare(subGroupName) == 0)
+    if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0 && factory.value()->getFilterSubGroup().compare(subGroupName) == 0)
     {
       groupFactories[factory.key()] = factory.value();
     }
@@ -141,7 +141,7 @@ FilterManager::Collection FilterManager::getFactories(const QString &groupName, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterManager::addFilterFactory(const QString &name, IFilterFactory::Pointer factory)
+void FilterManager::addFilterFactory(const QString& name, IFilterFactory::Pointer factory)
 {
   m_Factories[name] = factory;
 }
@@ -151,7 +151,7 @@ void FilterManager::addFilterFactory(const QString &name, IFilterFactory::Pointe
 // -----------------------------------------------------------------------------
 QSet<QString> FilterManager::getGroupNames()
 {
- // qDebug() << "FilterManager::getGroupNames" << "\n";
+// qDebug() << "FilterManager::getGroupNames" << "\n";
   // Get all the  Factories and loop over each one we know about and instantiate a new one
   FilterManager::Pointer fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
@@ -160,7 +160,7 @@ QSet<QString> FilterManager::getGroupNames()
   {
     IFilterFactory::Pointer filterFactory = factory.value();
     groupNames.insert(factory.value()->getFilterGroup());
-  //  qDebug() << factory.value()->getFilterGroup() << "\n";
+    //  qDebug() << factory.value()->getFilterGroup() << "\n";
   }
   return groupNames;
 }
@@ -168,9 +168,9 @@ QSet<QString> FilterManager::getGroupNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<QString> FilterManager::getSubGroupNames(const QString &groupName)
+QSet<QString> FilterManager::getSubGroupNames(const QString& groupName)
 {
- // qDebug() << "FilterManager::getGroupNames" << "\n";
+// qDebug() << "FilterManager::getGroupNames" << "\n";
   // Get all the  Factories and loop over each one we know about and instantiate a new one
   FilterManager::Pointer fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
@@ -178,10 +178,10 @@ QSet<QString> FilterManager::getSubGroupNames(const QString &groupName)
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     IFilterFactory::Pointer filterFactory = factory.value();
-  if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0)
+    if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0)
     {
       subGroupNames.insert(factory.value()->getFilterSubGroup());
-  }
+    }
   }
   return subGroupNames;
 }
@@ -189,7 +189,7 @@ QSet<QString> FilterManager::getSubGroupNames(const QString &groupName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IFilterFactory::Pointer FilterManager::getFactoryForFilter(const QString &filterName)
+IFilterFactory::Pointer FilterManager::getFactoryForFilter(const QString& filterName)
 {
   return m_Factories[filterName];
 }
@@ -197,7 +197,7 @@ IFilterFactory::Pointer FilterManager::getFactoryForFilter(const QString &filter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IFilterFactory::Pointer FilterManager::getFactoryForFilterHumanName(const QString &humanName)
+IFilterFactory::Pointer FilterManager::getFactoryForFilterHumanName(const QString& humanName)
 {
   IFilterFactory::Pointer Factory;
 

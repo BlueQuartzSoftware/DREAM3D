@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -69,11 +69,11 @@
 */
 class VolumeMesh
 #ifdef DREAM3D_USE_QT
- : public QObject
+  : public QObject
 #endif
 {
 #ifdef DREAM3D_USE_QT
-Q_OBJECT
+    Q_OBJECT
 #endif
 
   public:
@@ -121,30 +121,30 @@ Q_OBJECT
     /**
      * Qt Signals for connections
      */
-    signals:
-      void updateMessage(QString message);
-      void updateProgress(int value);
-      void finished();
+  signals:
+    void updateMessage(QString message);
+    void updateProgress(int value);
+    void finished();
 
-    public slots:
+  public slots:
     /**
      * @brief Slot to receive a signal to cancel the operation
      */
-      void on_CancelWorker();
+    void on_CancelWorker();
 #endif
-      /**
-       * @brief Main method to run the operation
-       */
-      void compute();
+    /**
+     * @brief Main method to run the operation
+     */
+    void compute();
 
 
   protected:
 
     VolumeMesh(
 #ifdef DREAM3D_USE_QT
-        QObject* parent = 0
+      QObject* parent = 0
 #endif
-        );
+    );
 
   private:
 

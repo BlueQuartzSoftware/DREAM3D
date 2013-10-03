@@ -61,23 +61,23 @@
 
 namespace Detail
 {
-class H5GroupAutoCloser
-{
-public:
-  H5GroupAutoCloser(hid_t* groupId) :
-  gid(groupId)
-  {}
-
-  virtual ~H5GroupAutoCloser()
+  class H5GroupAutoCloser
   {
-    if (*gid > 0)
-    {
-      H5Gclose(*gid);
-    }
-  }
-  private:
-   hid_t* gid;
-};
+    public:
+      H5GroupAutoCloser(hid_t* groupId) :
+        gid(groupId)
+      {}
+
+      virtual ~H5GroupAutoCloser()
+      {
+        if (*gid > 0)
+        {
+          H5Gclose(*gid);
+        }
+      }
+    private:
+      hid_t* gid;
+  };
 }
 
 // -----------------------------------------------------------------------------
@@ -319,14 +319,14 @@ void DataContainerWriter::execute()
     SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(dcNames[iter]);
     EdgeDataContainer* e = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(dcNames[iter]);
     VertexDataContainer* v = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(dcNames[iter]);
-    if(vl != NULL) dcType = DREAM3D::DataContainerType::VolumeDataContainer;
-    else if(sm != NULL) dcType = DREAM3D::DataContainerType::SurfaceDataContainer;
-    else if(e != NULL) dcType = DREAM3D::DataContainerType::EdgeDataContainer;
-    else if(v != NULL) dcType = DREAM3D::DataContainerType::VertexDataContainer;
+    if(vl != NULL) { dcType = DREAM3D::DataContainerType::VolumeDataContainer; }
+    else if(sm != NULL) { dcType = DREAM3D::DataContainerType::SurfaceDataContainer; }
+    else if(e != NULL) { dcType = DREAM3D::DataContainerType::EdgeDataContainer; }
+    else if(v != NULL) { dcType = DREAM3D::DataContainerType::VertexDataContainer; }
     if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_WriteVolumeData == true) ||
-      (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_WriteSurfaceData == true) ||
-      (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_WriteEdgeData == true) ||
-      (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_WriteVertexData == true))
+        (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_WriteSurfaceData == true) ||
+        (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_WriteEdgeData == true) ||
+        (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_WriteVertexData == true))
     {
 
       err = H5Utilities::createGroupsFromPath(dcNames[iter].toLatin1().data(), dcaGid);
@@ -426,7 +426,7 @@ void DataContainerWriter::execute()
       }
 
       if (m_WriteXdmfFile == true)
-      {      
+      {
         writeXdmfGridFooter(out, dcNames[iter]);
       }
 
@@ -435,7 +435,7 @@ void DataContainerWriter::execute()
 
   if (m_WriteXdmfFile == true)
   {
-      writeXdmfFooter(out);
+    writeXdmfFooter(out);
   }
 
 
@@ -445,7 +445,7 @@ void DataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::writeXdmfHeader(QTextStream &xdmf)
+void DataContainerWriter::writeXdmfHeader(QTextStream& xdmf)
 {
   xdmf << "<?xml version=\"1.0\"?>" << "\n";
   xdmf << "<!DOCTYPE Xdmf SYSTEM \"Xdmf.dtd\"[]>" << "\n";
@@ -456,7 +456,7 @@ void DataContainerWriter::writeXdmfHeader(QTextStream &xdmf)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::writeXdmfFooter(QTextStream &xdmf)
+void DataContainerWriter::writeXdmfFooter(QTextStream& xdmf)
 {
   xdmf << " </Domain>" << "\n";
   xdmf << "</Xdmf>" << "\n";
@@ -465,7 +465,7 @@ void DataContainerWriter::writeXdmfFooter(QTextStream &xdmf)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::writeXdmfGridFooter(QTextStream &xdmf, const QString label)
+void DataContainerWriter::writeXdmfGridFooter(QTextStream& xdmf, const QString label)
 {
   xdmf << "  </Grid>" << "\n";
   xdmf << "    <!-- *************** END OF " << label << " *************** -->" << "\n";

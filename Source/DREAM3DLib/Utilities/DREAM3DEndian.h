@@ -55,14 +55,14 @@
 // __BYTE_ORDER
 
 #if defined (__GLIBC__)
- #include <endian.h>
- #if (__BYTE_ORDER == __LITTLE_ENDIAN)
-    #define DREAM3D_LITTLE_ENDIAN
- #elif (__BYTE_ORDER == __BIG_ENDIAN)
-    #define DREAM3D_BIG_ENDIAN
- #else
-  #error Unknown machine endianness detected.
- #endif /* Not GCC */
+#include <endian.h>
+#if (__BYTE_ORDER == __LITTLE_ENDIAN)
+#define DREAM3D_LITTLE_ENDIAN
+#elif (__BYTE_ORDER == __BIG_ENDIAN)
+#define DREAM3D_BIG_ENDIAN
+#else
+#error Unknown machine endianness detected.
+#endif /* Not GCC */
 #elif defined ( __sparc     ) || \
       defined ( __sparc__   ) || \
       defined ( __powerpc__ ) || \
@@ -71,7 +71,7 @@
       defined ( _MIPSEB     ) || \
       defined ( _POWER      ) || \
       defined ( __BIG_ENDIAN__)
- #define DREAM3D_BIG_ENDIAN
+#define DREAM3D_BIG_ENDIAN
 #elif defined ( __i386__    ) || \
       defined ( __alpha__   ) || \
       defined ( __ia64      ) || \
@@ -85,31 +85,33 @@
     defined (_M_X64       ) || \
     defined (_M_IA64      ) || \
     defined (__x86_64     )
- #define DREAM3D_LITTLE_ENDIAN
+#define DREAM3D_LITTLE_ENDIAN
 #else
- #error Unknown endian type in DREAM3D/Endian.h
+#error Unknown endian type in DREAM3D/Endian.h
 #endif
 
 
-namespace DREAM3D {
-namespace Endian {
+namespace DREAM3D
+{
+  namespace Endian
+  {
 
 
-const char BIGE[4] = { 'B', 'I', 'G', 'E' };
-const char LITE[4] = { 'L', 'I', 'T', 'E'};
-const std::string BIGE_STR ("BIGE");
-const std::string LITE_STR ("LITE");
+    const char BIGE[4] = { 'B', 'I', 'G', 'E' };
+    const char LITE[4] = { 'L', 'I', 'T', 'E'};
+    const std::string BIGE_STR ("BIGE");
+    const std::string LITE_STR ("LITE");
 
 //
 //  Run-time checking for big endian.
 //
 
 
-inline bool isBig()
-{
-  unsigned long u = 1;
-  return ( 0 == ( *( (char *) &u ) ) );
-}
+    inline bool isBig()
+    {
+      unsigned long u = 1;
+      return ( 0 == ( *( (char*) &u ) ) );
+    }
 
 
 
@@ -118,10 +120,10 @@ inline bool isBig()
 //
 
 
-inline bool isLittle()
-{
-  return ( false == DREAM3D::Endian::isBig() );
-}
+    inline bool isLittle()
+    {
+      return ( false == DREAM3D::Endian::isBig() );
+    }
 
 
 
@@ -130,7 +132,8 @@ inline bool isLittle()
 //
 
 
-namespace Detail {
+    namespace Detail
+    {
 
 
 //
@@ -138,11 +141,11 @@ namespace Detail {
 //
 
 
-inline void _reverseBytes ( uint16_t &n )
-{
-  n = ( ((((uint16_t)n)>>8) & 0x00FF) |
-        ((((uint16_t)n)<<8) & 0xFF00) );
-}
+      inline void _reverseBytes ( uint16_t& n )
+      {
+        n = ( ((((uint16_t)n) >> 8) & 0x00FF) |
+              ((((uint16_t)n) << 8) & 0xFF00) );
+      }
 
 
 
@@ -151,14 +154,14 @@ inline void _reverseBytes ( uint16_t &n )
 //
 
 
-inline void _reverseBytes ( float32 &n )
-{
-  n = static_cast < float32 >
-      ( ((((uint32_t)n)<<24) & 0xFF000000) |
-        ((((uint32_t)n)<< 8) & 0x00FF0000) |
-        ((((uint32_t)n)>> 8) & 0x0000FF00) |
-        ((((uint32_t)n)>>24) & 0x000000FF) );
-}
+      inline void _reverseBytes ( float32& n )
+      {
+        n = static_cast < float32 >
+            ( ((((uint32_t)n) << 24) & 0xFF000000) |
+              ((((uint32_t)n) << 8) & 0x00FF0000) |
+              ((((uint32_t)n) >> 8) & 0x0000FF00) |
+              ((((uint32_t)n) >> 24) & 0x000000FF) );
+      }
 
 
 //
@@ -166,13 +169,13 @@ inline void _reverseBytes ( float32 &n )
 //
 //////////////////////////////////////////////////////////////////////////
 
-inline void _reverseBytes ( uint32_t &n )
-{
-  n = ( ((((uint32_t)n)<<24) & 0xFF000000) |
-        ((((uint32_t)n)<< 8) & 0x00FF0000) |
-        ((((uint32_t)n)>> 8) & 0x0000FF00) |
-        ((((uint32_t)n)>>24) & 0x000000FF) );
-}
+      inline void _reverseBytes ( uint32_t& n )
+      {
+        n = ( ((((uint32_t)n) << 24) & 0xFF000000) |
+              ((((uint32_t)n) << 8) & 0x00FF0000) |
+              ((((uint32_t)n) >> 8) & 0x0000FF00) |
+              ((((uint32_t)n) >> 24) & 0x000000FF) );
+      }
 
 
 
@@ -181,19 +184,19 @@ inline void _reverseBytes ( uint32_t &n )
 //
 
 
-inline void _reverseBytes ( uint64_t &n )
-{
-  typedef uint64_t UInt64;
+      inline void _reverseBytes ( uint64_t& n )
+      {
+        typedef uint64_t UInt64;
 
- n = ( ((((UInt64)n)<<56) & 0xFF00000000000000ULL) |
-       ((((UInt64)n)<<40) & 0x00FF000000000000ULL) |
-       ((((UInt64)n)<<24) & 0x0000FF0000000000ULL) |
-       ((((UInt64)n)<< 8) & 0x000000FF00000000ULL) |
-       ((((UInt64)n)>> 8) & 0x00000000FF000000ULL) |
-       ((((UInt64)n)>>24) & 0x0000000000FF0000ULL) |
-       ((((UInt64)n)>>40) & 0x000000000000FF00ULL) |
-       ((((UInt64)n)>>56) & 0x00000000000000FFULL) );
-}
+        n = ( ((((UInt64)n) << 56) & 0xFF00000000000000ULL) |
+              ((((UInt64)n) << 40) & 0x00FF000000000000ULL) |
+              ((((UInt64)n) << 24) & 0x0000FF0000000000ULL) |
+              ((((UInt64)n) << 8) & 0x000000FF00000000ULL) |
+              ((((UInt64)n) >> 8) & 0x00000000FF000000ULL) |
+              ((((UInt64)n) >> 24) & 0x0000000000FF0000ULL) |
+              ((((UInt64)n) >> 40) & 0x000000000000FF00ULL) |
+              ((((UInt64)n) >> 56) & 0x00000000000000FFULL) );
+      }
 
 
 
@@ -202,48 +205,48 @@ inline void _reverseBytes ( uint64_t &n )
 //
 
 
-template < uint32_t Size > struct ReverseBytes;
-template <> struct ReverseBytes < sizeof ( uint16_t ) >
-{
-  void operator () ( uint16_t &n ) const
-  {
-    DREAM3D::Endian::Detail::_reverseBytes ( n );
-  }
-  void operator () ( int16_t &n ) const
-  {
-    DREAM3D::Endian::Detail::_reverseBytes ( (uint16_t&)n );
-  }
-};
-template <> struct ReverseBytes < sizeof ( uint32_t ) >
-{
-  void operator () ( uint32_t &n ) const
-  {
-    DREAM3D::Endian::Detail::_reverseBytes ( n );
-  }
-  void operator () ( int32_t &n ) const
-  {
-    DREAM3D::Endian::Detail::_reverseBytes ( (uint32_t&)n  );
-  }
-  void operator () ( float32 &n ) const
-  {
-    DREAM3D::Endian::Detail::_reverseBytes ( ( uint32_t&)n );
-  }
-};
-template <> struct ReverseBytes < sizeof ( uint64_t ) >
-{
-  void operator () ( uint64_t &n ) const
-  {
-    DREAM3D::Endian::Detail::_reverseBytes ( n );
-  }
-  void operator () ( int64_t &n ) const
-  {
-    DREAM3D::Endian::Detail::_reverseBytes ( (uint64_t&)n );
-  }
-  void operator () ( float64 &n ) const
-  {
-    DREAM3D::Endian::Detail::_reverseBytes ( (uint64_t&)n );
-  }
-};
+      template < uint32_t Size > struct ReverseBytes;
+      template <> struct ReverseBytes < sizeof ( uint16_t ) >
+      {
+        void operator () ( uint16_t& n ) const
+      {
+        DREAM3D::Endian::Detail::_reverseBytes ( n );
+      }
+      void operator () ( int16_t& n ) const
+      {
+        DREAM3D::Endian::Detail::_reverseBytes ( (uint16_t&)n );
+      }
+      };
+      template <> struct ReverseBytes < sizeof ( uint32_t ) >
+      {
+        void operator () ( uint32_t& n ) const
+      {
+        DREAM3D::Endian::Detail::_reverseBytes ( n );
+      }
+      void operator () ( int32_t& n ) const
+      {
+        DREAM3D::Endian::Detail::_reverseBytes ( (uint32_t&)n  );
+      }
+      void operator () ( float32& n ) const
+      {
+        DREAM3D::Endian::Detail::_reverseBytes ( ( uint32_t&)n );
+      }
+      };
+      template <> struct ReverseBytes < sizeof ( uint64_t ) >
+      {
+        void operator () ( uint64_t& n ) const
+      {
+        DREAM3D::Endian::Detail::_reverseBytes ( n );
+      }
+      void operator () ( int64_t& n ) const
+      {
+        DREAM3D::Endian::Detail::_reverseBytes ( (uint64_t&)n );
+      }
+      void operator () ( float64& n ) const
+      {
+        DREAM3D::Endian::Detail::_reverseBytes ( (uint64_t&)n );
+      }
+      };
 
 
 
@@ -252,7 +255,7 @@ template <> struct ReverseBytes < sizeof ( uint64_t ) >
 //
 
 
-}
+    }
 
 
 
@@ -261,12 +264,12 @@ template <> struct ReverseBytes < sizeof ( uint64_t ) >
 //
 
 
-template < class Type >
-inline void reverseBytes ( Type &n )
-{
-  typedef DREAM3D::Endian::Detail::ReverseBytes < sizeof ( Type ) > ReverseBytes;
-  ReverseBytes () ( n );
-}
+    template < class Type >
+    inline void reverseBytes ( Type& n )
+    {
+      typedef DREAM3D::Endian::Detail::ReverseBytes < sizeof ( Type ) > ReverseBytes;
+      ReverseBytes () ( n );
+    }
 
 
 
@@ -275,42 +278,18 @@ inline void reverseBytes ( Type &n )
 //
 
 
-struct ByteSwapper
-{
- template < class T > static void convert ( T &t )
-  {
-    DREAM3D::Endian::reverseBytes ( t );
-  }
-  template < class T > void operator () ( T &t )
-  {
-    this->convert ( t );
-  }
+    struct ByteSwapper
+    {
+      template < class T > static void convert ( T& t )
+      {
+        DREAM3D::Endian::reverseBytes ( t );
+      }
+      template < class T > void operator () ( T& t )
+      {
+        this->convert ( t );
+      }
 
-};
-
-
-//
-//  Convert the bytes.
-//
-
-
-struct FromSystemToBig
-{
-  template < class T > static void convert ( T &t )
-  {
-    #ifdef DREAM3D_LITTLE_ENDIAN
-    DREAM3D::Endian::reverseBytes ( t );
-    #endif
-  }
-  template < class T > void operator () ( T &t )
-  {
-    this->convert ( t );
-  }
-  void getEndianType(char* type) {
-    ::memcpy(type, DREAM3D::Endian::BIGE, 4);
-  }
-};
-
+    };
 
 
 //
@@ -318,22 +297,23 @@ struct FromSystemToBig
 //
 
 
-struct FromSystemToLittle
-{
-  template < class T > static void convert ( T &t )
-  {
-    #ifdef DREAM3D_BIG_ENDIAN
-    DREAM3D::Endian::reverseBytes ( t );
-    #endif
-  }
-  template < class T > void operator () ( T &t )
-  {
-    this->convert ( t );
-  }
-  void getEndianType(char* type) {
-    ::memcpy(type, DREAM3D::Endian::LITE, 4);
-  }
-};
+    struct FromSystemToBig
+    {
+      template < class T > static void convert ( T& t )
+      {
+#ifdef DREAM3D_LITTLE_ENDIAN
+        DREAM3D::Endian::reverseBytes ( t );
+#endif
+      }
+      template < class T > void operator () ( T& t )
+      {
+        this->convert ( t );
+      }
+      void getEndianType(char* type)
+      {
+        ::memcpy(type, DREAM3D::Endian::BIGE, 4);
+      }
+    };
 
 
 
@@ -342,22 +322,23 @@ struct FromSystemToLittle
 //
 
 
-struct FromBigToSystem
-{
-  template < class T > static void convert ( T &t )
-  {
-    #ifdef DREAM3D_LITTLE_ENDIAN
-    DREAM3D::Endian::reverseBytes ( t );
-    #endif
-  }
-  template < class T > void operator () ( T &t )
-  {
-    this->convert ( t );
-  }
-  void getEndianType(char* type) {
-    ::memcpy(type, DREAM3D::Endian::BIGE, 4);
-  }
-};
+    struct FromSystemToLittle
+    {
+      template < class T > static void convert ( T& t )
+      {
+#ifdef DREAM3D_BIG_ENDIAN
+        DREAM3D::Endian::reverseBytes ( t );
+#endif
+      }
+      template < class T > void operator () ( T& t )
+      {
+        this->convert ( t );
+      }
+      void getEndianType(char* type)
+      {
+        ::memcpy(type, DREAM3D::Endian::LITE, 4);
+      }
+    };
 
 
 
@@ -366,27 +347,53 @@ struct FromBigToSystem
 //
 
 
-struct FromLittleToSystem
-{
-  template < class T > static void convert ( T &t )
-  {
-    #ifdef DREAM3D_BIG_ENDIAN
-    DREAM3D::Endian::reverseBytes ( t );
-    #endif
-  }
-  template < class T > void operator () ( T &t )
-  {
-    this->convert ( t );
-  }
-  void getEndianType(char* type) {
-    ::memcpy(type, DREAM3D::Endian::LITE, 4);
-  }
-};
+    struct FromBigToSystem
+    {
+      template < class T > static void convert ( T& t )
+      {
+#ifdef DREAM3D_LITTLE_ENDIAN
+        DREAM3D::Endian::reverseBytes ( t );
+#endif
+      }
+      template < class T > void operator () ( T& t )
+      {
+        this->convert ( t );
+      }
+      void getEndianType(char* type)
+      {
+        ::memcpy(type, DREAM3D::Endian::BIGE, 4);
+      }
+    };
+
+
+
+//
+//  Convert the bytes.
+//
+
+
+    struct FromLittleToSystem
+    {
+      template < class T > static void convert ( T& t )
+      {
+#ifdef DREAM3D_BIG_ENDIAN
+        DREAM3D::Endian::reverseBytes ( t );
+#endif
+      }
+      template < class T > void operator () ( T& t )
+      {
+        this->convert ( t );
+      }
+      void getEndianType(char* type)
+      {
+        ::memcpy(type, DREAM3D::Endian::LITE, 4);
+      }
+    };
 
 
 
 
-} // namespace Endian
+  } // namespace Endian
 } // namespace DREAM3D
 
 

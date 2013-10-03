@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
     DREAM3D_INSTANCE_PROPERTY(QVector<StatsData::Pointer>, StatsDataArray)
 
-    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
+    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
     {
       return StatsDataArray::New();
     }
@@ -129,16 +129,16 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
       m_StatsDataArray.resize(n);
       for (size_t i = 0; i < n; ++i)
       {
-          if (m_StatsDataArray[i].get() == NULL && phase_types != NULL)
-          {
-        if(phase_types[i] == DREAM3D::PhaseType::PrimaryPhase) m_StatsDataArray[i] = PrimaryStatsData::New();
-        else if(phase_types[i] == DREAM3D::PhaseType::PrecipitatePhase) m_StatsDataArray[i] = PrecipitateStatsData::New();
-        else if(phase_types[i] == DREAM3D::PhaseType::TransformationPhase) m_StatsDataArray[i] = TransformationStatsData::New();
-        else if(phase_types[i] == DREAM3D::PhaseType::BoundaryPhase) m_StatsDataArray[i] = BoundaryStatsData::New();
-        else if(phase_types[i] == DREAM3D::PhaseType::MatrixPhase) m_StatsDataArray[i] = MatrixStatsData::New();
-        else m_StatsDataArray[i] = StatsData::New();
-          }
-      if(phase_types == NULL) m_StatsDataArray[i] = StatsData::New();
+        if (m_StatsDataArray[i].get() == NULL && phase_types != NULL)
+        {
+          if(phase_types[i] == DREAM3D::PhaseType::PrimaryPhase) { m_StatsDataArray[i] = PrimaryStatsData::New(); }
+          else if(phase_types[i] == DREAM3D::PhaseType::PrecipitatePhase) { m_StatsDataArray[i] = PrecipitateStatsData::New(); }
+          else if(phase_types[i] == DREAM3D::PhaseType::TransformationPhase) { m_StatsDataArray[i] = TransformationStatsData::New(); }
+          else if(phase_types[i] == DREAM3D::PhaseType::BoundaryPhase) { m_StatsDataArray[i] = BoundaryStatsData::New(); }
+          else if(phase_types[i] == DREAM3D::PhaseType::MatrixPhase) { m_StatsDataArray[i] = MatrixStatsData::New(); }
+          else { m_StatsDataArray[i] = StatsData::New(); }
+        }
+        if(phase_types == NULL) { m_StatsDataArray[i] = StatsData::New(); }
       }
     }
 
@@ -170,7 +170,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     /* **************** This is the interface for the IDataArray Class which MUST
      *  Be implemented. Most of it is useless and will simply ASSERT if called. */
 
-    void SetName(const QString &name);
+    void SetName(const QString& name);
     QString GetName();
 
     /**
@@ -226,7 +226,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t> &idxs);
+    virtual int EraseTuples(QVector<size_t>& idxs);
 
     /**
      * @brief Copies a Tuple from one position to another.
@@ -248,11 +248,11 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual void initializeWithZeros();
 
-  /**
-     * @brief Reseizes the internal array
-     * @param size The new size of the internal array
-     * @return 1 on success, 0 on failure
-     */
+    /**
+       * @brief Reseizes the internal array
+       * @param size The new size of the internal array
+       * @return 1 on success, 0 on failure
+       */
     virtual int32_t RawResize(size_t size);
 
     /**
@@ -262,8 +262,8 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual int32_t Resize(size_t numTuples);
 
-    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',');
-    virtual void printComponent(QTextStream &out, size_t i, int j);
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',');
+    virtual void printComponent(QTextStream& out, size_t i, int j);
 
     /**
      *
@@ -281,8 +281,8 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
-            const QString &groupPath, const QString &labelb)
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                                   const QString& groupPath, const QString& labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;

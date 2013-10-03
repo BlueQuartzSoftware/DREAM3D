@@ -56,7 +56,7 @@ void Observer::updatePipelineProgressAndMessage(const char* msg, int progress)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updatePipelineProgressAndMessage(const QString &msg, int progress)
+void Observer::updatePipelineProgressAndMessage(const QString& msg, int progress)
 {
   qDebug() << progress << "% " << msg ;
 }
@@ -73,7 +73,7 @@ void Observer::updatePipelineProgress(int progress)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updatePipelineMessage(const QString &msg)
+void Observer::updatePipelineMessage(const QString& msg)
 {
   qDebug() << msg ;
 }
@@ -89,7 +89,7 @@ void Observer::updatePipelineMessage(const char* msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::sendPipelineMessage(PipelineMessage &msg)
+void Observer::sendPipelineMessage(PipelineMessage& msg)
 {
   QString ss;
   if(msg.getMessageType() == PipelineMessage::Error)

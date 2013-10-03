@@ -110,9 +110,9 @@ void FindGrainReferenceMisorientations::readFilterParameters(AbstractFilterParam
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setReferenceOrientation( reader->readValue("ReferenceOrientation", getReferenceOrientation()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -133,7 +133,7 @@ int FindGrainReferenceMisorientations::writeFilterParameters(AbstractFilterParam
 void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -171,7 +171,7 @@ void FindGrainReferenceMisorientations::preflight()
     return;
   }
 
-  dataCheck(true, 1,1,1);
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -219,7 +219,7 @@ void FindGrainReferenceMisorientations::execute()
   float r1, r2, r3;
   unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef uint32_t DimType;
@@ -237,8 +237,8 @@ void FindGrainReferenceMisorientations::execute()
 
   size_t gnum;
   float dist;
-  QVector<size_t> m_Centers(totalFields,0);
-  QVector<float> m_CenterDists(totalFields,0);
+  QVector<size_t> m_Centers(totalFields, 0);
+  QVector<float> m_CenterDists(totalFields, 0);
   if(m_ReferenceOrientation == 1)
   {
     for (int64_t i = 0; i < totalPoints; i++)
@@ -281,7 +281,7 @@ void FindGrainReferenceMisorientations::execute()
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
           OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
           m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
-          w = w *(180.0f/DREAM3D::Constants::k_Pi);
+          w = w * (180.0f / DREAM3D::Constants::k_Pi);
           m_GrainReferenceMisorientations[point] = w;
           avgmiso[m_GrainIds[point]][0]++;
           avgmiso[m_GrainIds[point]][1] = avgmiso[m_GrainIds[point]][1] + w;

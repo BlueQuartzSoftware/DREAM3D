@@ -100,10 +100,10 @@ void MultiThresholdCells::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputArrayName(reader->readValue( "OutputArrayName", getOutputArrayName()));
   setComparisonInputs(reader->readValue("ComparisonInputs", getComparisonInputs()));
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -125,7 +125,7 @@ int MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* w
 void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if (m_ComparisonInputs.size() == 0)
@@ -160,7 +160,7 @@ void MultiThresholdCells::preflight()
 void MultiThresholdCells::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)

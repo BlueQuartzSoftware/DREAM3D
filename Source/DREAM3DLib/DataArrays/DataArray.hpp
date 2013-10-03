@@ -89,27 +89,28 @@ class DataArray : public IDataArray
 
     typedef QVector<Pointer>   ContainterType;
 
-  enum NumType {
-    Int8 = 0,
-    UInt8,
-    Int16,
-    UInt16,
-    Int32,
-    UInt32,
-    Int64,
-    UInt64,
-    Float,
-    Double,
-    Bool,
-    UnknownNumType
-  };
+    enum NumType
+    {
+      Int8 = 0,
+      UInt8,
+      Int16,
+      UInt16,
+      Int32,
+      UInt32,
+      Int64,
+      UInt64,
+      Float,
+      Double,
+      Bool,
+      UnknownNumType
+    };
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -159,7 +160,7 @@ class DataArray : public IDataArray
 
       if (typeid(value) == typeid(bool)) { return Bool;}
 
-    return UnknownNumType;
+      return UnknownNumType;
     }
 
     /**
@@ -168,7 +169,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const QString &name)
+    static Pointer CreateArray(size_t numElements, const QString& name)
     {
       if (name.isEmpty() == true)
       {
@@ -176,7 +177,8 @@ class DataArray : public IDataArray
       }
       DataArray<T>* d = new DataArray<T> (numElements, true);
       if (d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
+      {
+        // Could not allocate enough memory, reset the pointer to null and return
         delete d;
         return DataArray<T>::NullPointer();
       }
@@ -192,12 +194,13 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numTuples, int numComponents, const QString &name)
+    static Pointer CreateArray(size_t numTuples, int numComponents, const QString& name)
     {
 
       DataArray<T>* d = new DataArray<T> (numTuples, numComponents, true);
       if (d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
+      {
+        // Could not allocate enough memory, reset the pointer to null and return
         delete d;
         return DataArray<T>::NullPointer();
       }
@@ -213,7 +216,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer FromStdVector(QVector<T> &vec, const QString &name)
+    static Pointer FromStdVector(QVector<T>& vec, const QString& name)
     {
       Pointer p = CreateArray(vec.size(), name);
       ::memcpy(p->getPointer(0), &(vec.front()), vec.size() * sizeof(T));
@@ -227,7 +230,7 @@ class DataArray : public IDataArray
      * @param name
      * @return
      */
-    static Pointer FromPointer(T* data, size_t size, const QString &name)
+    static Pointer FromPointer(T* data, size_t size, const QString& name)
     {
       Pointer p = CreateArray(size, name);
       ::memcpy(p->getPointer(0), data, size * sizeof(T));
@@ -241,7 +244,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
     {
       IDataArray::Pointer p = DataArray<T>::CreateArray(numElements, numComponents, name);
       return p;
@@ -269,7 +272,7 @@ class DataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    virtual void SetName(const QString &name)
+    virtual void SetName(const QString& name)
     {
       m_Name = name;
     }
@@ -385,7 +388,7 @@ class DataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t>& idxs)
     {
 
       int err = 0;
@@ -500,7 +503,7 @@ class DataArray : public IDataArray
      */
     virtual int CopyTuple(size_t currentPos, size_t newPos)
     {
-      size_t max =  ((this->MaxId + 1)/this->NumberOfComponents);
+      size_t max =  ((this->MaxId + 1) / this->NumberOfComponents);
       if (currentPos >= max
           || newPos >= max )
       {return -1;}
@@ -530,7 +533,7 @@ class DataArray : public IDataArray
     virtual size_t getNumberOfTuples()
     {
       if (Size == 0) { return 0; }
-      return (this->MaxId + 1)/this->NumberOfComponents;
+      return (this->MaxId + 1) / this->NumberOfComponents;
     }
 
     virtual size_t GetSize()
@@ -543,7 +546,7 @@ class DataArray : public IDataArray
     // this is set before allocation.
     virtual void SetNumberOfComponents(int nc)
     {
-      if(nc > 0) this->NumberOfComponents = nc;
+      if(nc > 0) { this->NumberOfComponents = nc; }
     }
 
     virtual int GetNumberOfComponents()
@@ -612,9 +615,9 @@ class DataArray : public IDataArray
     T GetComponent(size_t i, int j)
     {
 #ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i*NumberOfComponents+j < Size);}
+      if (Size > 0) { BOOST_ASSERT(i * NumberOfComponents + j < Size);}
 #endif
-      return Array[i*this->NumberOfComponents + j];
+      return Array[i * this->NumberOfComponents + j];
     }
 
     /**
@@ -626,9 +629,9 @@ class DataArray : public IDataArray
     void SetComponent(size_t i, int j, T c)
     {
 #ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i*NumberOfComponents+j < Size);}
+      if (Size > 0) { BOOST_ASSERT(i * NumberOfComponents + j < Size);}
 #endif
-      Array[i*this->NumberOfComponents + j] = c;
+      Array[i * this->NumberOfComponents + j] = c;
     }
 
     /**
@@ -639,11 +642,12 @@ class DataArray : public IDataArray
     void InitializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i*NumberOfComponents < Size);}
+      if (Size > 0) { BOOST_ASSERT(i * NumberOfComponents < Size);}
 #endif
       T c = static_cast<T>(p);
-      for (int j = 0; j < this->NumberOfComponents; ++j) {
-        Array[i*this->NumberOfComponents + j] = c;
+      for (int j = 0; j < this->NumberOfComponents; ++j)
+      {
+        Array[i * this->NumberOfComponents + j] = c;
       }
     }
 
@@ -669,18 +673,18 @@ class DataArray : public IDataArray
       return RawResize(numTuples * this->NumberOfComponents);
     }
 
-    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
     {
       for(int j = 0; j < NumberOfComponents; ++j)
       {
         if (j != 0) { out << delimiter; }
-        out << Array[i*NumberOfComponents + j];
+        out << Array[i * NumberOfComponents + j];
       }
     }
 
-    virtual void printComponent(QTextStream &out, size_t i, int j)
+    virtual void printComponent(QTextStream& out, size_t i, int j)
     {
-      out << Array[i*NumberOfComponents + j];
+      out << Array[i * NumberOfComponents + j];
     }
 
     /**
@@ -703,60 +707,61 @@ class DataArray : public IDataArray
     QString getTypeAsString()
     {
       T value = static_cast<T>(0);
-      if (typeid(value) == typeid(float)) return "float";
-      if (typeid(value) == typeid(double)) return "double";
+      if (typeid(value) == typeid(float)) { return "float"; }
+      if (typeid(value) == typeid(double)) { return "double"; }
 
-      if (typeid(value) == typeid(int8_t)) return "int8_t";
-      if (typeid(value) == typeid(uint8_t)) return "uint8_t";
+      if (typeid(value) == typeid(int8_t)) { return "int8_t"; }
+      if (typeid(value) == typeid(uint8_t)) { return "uint8_t"; }
 # if CMP_TYPE_CHAR_IS_SIGNED
-      if (typeid(value) == typeid(char)) return "char";
+      if (typeid(value) == typeid(char)) { return "char"; }
 #else
-      if (typeid(value) == typeid(char)) return "char";
+      if (typeid(value) == typeid(char)) { return "char"; }
 #endif
-      if (typeid(value) == typeid(signed char)) return "signed char";
-      if (typeid(value) == typeid(unsigned char)) return "unsigned char";
+      if (typeid(value) == typeid(signed char)) { return "signed char"; }
+      if (typeid(value) == typeid(unsigned char)) { return "unsigned char"; }
 
 
-      if (typeid(value) == typeid(int16_t)) return "int16_t";
-      if (typeid(value) == typeid(short)) return "short";
-      if (typeid(value) == typeid(signed short)) return "signed short";
-      if (typeid(value) == typeid(uint16_t)) return "uint16_t";
-      if (typeid(value) == typeid(unsigned short)) return "unsigned short";
+      if (typeid(value) == typeid(int16_t)) { return "int16_t"; }
+      if (typeid(value) == typeid(short)) { return "short"; }
+      if (typeid(value) == typeid(signed short)) { return "signed short"; }
+      if (typeid(value) == typeid(uint16_t)) { return "uint16_t"; }
+      if (typeid(value) == typeid(unsigned short)) { return "unsigned short"; }
 
 
-      if (typeid(value) == typeid(int32_t)) return "int32_t";
-      if (typeid(value) == typeid(uint32_t)) return "uint32_t";
+      if (typeid(value) == typeid(int32_t)) { return "int32_t"; }
+      if (typeid(value) == typeid(uint32_t)) { return "uint32_t"; }
 #if (CMP_SIZEOF_INT == 4)
-      if (typeid(value) == typeid(int)) return "int";
-      if (typeid(value) == typeid(signed int)) return "signed int";
-      if (typeid(value) == typeid(unsigned int)) return "unsigned int";
+      if (typeid(value) == typeid(int)) { return "int"; }
+      if (typeid(value) == typeid(signed int)) { return "signed int"; }
+      if (typeid(value) == typeid(unsigned int)) { return "unsigned int"; }
 #endif
 
 
 #if (CMP_SIZEOF_LONG == 4)
-      if (typeid(value) == typeid(long int)) return "long int";
-      if (typeid(value) == typeid(signed long int)) return "signed long int";
-      if (typeid(value) == typeid(unsigned long int)) return "unsigned long int";
+      if (typeid(value) == typeid(long int)) { return "long int"; }
+      if (typeid(value) == typeid(signed long int)) { return "signed long int"; }
+      if (typeid(value) == typeid(unsigned long int)) { return "unsigned long int"; }
 #elif (CMP_SIZEOF_LONG == 8)
-      if (typeid(value) == typeid(long int)) return "long int";
-      if (typeid(value) == typeid(signed long int)) return "signed long int";
-      if (typeid(value) == typeid(unsigned long int)) return "unsigned long int";
+      if (typeid(value) == typeid(long int)) { return "long int"; }
+      if (typeid(value) == typeid(signed long int)) { return "signed long int"; }
+      if (typeid(value) == typeid(unsigned long int)) { return "unsigned long int"; }
 #endif
 
 
 #if (CMP_SIZEOF_LONG_LONG == 8)
-      if (typeid(value) == typeid(long long int)) return "long long int";
-      if (typeid(value) == typeid(signed long long int)) return "signed long long int";
-      if (typeid(value) == typeid(unsigned long long int)) return "unsigned long long int";
+      if (typeid(value) == typeid(long long int)) { return "long long int"; }
+      if (typeid(value) == typeid(signed long long int)) { return "signed long long int"; }
+      if (typeid(value) == typeid(unsigned long long int)) { return "unsigned long long int"; }
 #endif
-      if (typeid(value) == typeid(int64_t)) return "int64_t";
-      if (typeid(value) == typeid(uint64_t)) return "uint64_t";
+      if (typeid(value) == typeid(int64_t)) { return "int64_t"; }
+      if (typeid(value) == typeid(uint64_t)) { return "uint64_t"; }
 
-      if (typeid(value) == typeid(bool)) return "bool";
+      if (typeid(value) == typeid(bool)) { return "bool"; }
 
       // qDebug()  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) ;
       const char* name = typeid(value).name();
-      if (NULL != name && name[0] == 'l' ) {
+      if (NULL != name && name[0] == 'l' )
+      {
         qDebug() << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." ;
       }
       return "UnknownType";
@@ -780,8 +785,8 @@ class DataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
-                                                    const QString &groupPath, const QString &label)
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                                   const QString& groupPath, const QString& label)
     {
       if (Array == NULL) { return -85648; }
       QString dimStr;
@@ -835,7 +840,7 @@ class DataArray : public IDataArray
       }
       this->NumberOfComponents = p->GetNumberOfComponents();
       this->Size = p->GetSize();
-      this->MaxId = (Size == 0) ? 0 : Size -1;
+      this->MaxId = (Size == 0) ? 0 : Size - 1;
       this->Array = reinterpret_cast<T*>(p->GetVoidPointer(0));
       p->releaseOwnership();
 
@@ -863,20 +868,20 @@ class DataArray : public IDataArray
         }
         else if (sizeof(T) == 8)
         {
-          mxa_bswap(0,7,t);
-          mxa_bswap(1,6,t);
-          mxa_bswap(2,5,t);
-          mxa_bswap(3,4,t);
+          mxa_bswap(0, 7, t);
+          mxa_bswap(1, 6, t);
+          mxa_bswap(2, 5, t);
+          mxa_bswap(3, 4, t);
         }
         ptr += size; // increment the pointer
       }
     }
 
-   /**
-     * @brief operator []
-     * @param i
-     * @return
-     */
+    /**
+      * @brief operator []
+      * @param i
+      * @return
+      */
     inline T& operator[](size_t i)
     {
       BOOST_ASSERT(i < Size);
@@ -899,7 +904,7 @@ class DataArray : public IDataArray
       m_IsAllocated(false)
     {
       NumberOfComponents = 1;
-      MaxId = (Size > 0) ? Size - 1: Size;
+      MaxId = (Size > 0) ? Size - 1 : Size;
 
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
@@ -917,7 +922,7 @@ class DataArray : public IDataArray
     {
       NumberOfComponents = numComponents;
       Size = numTuples * numComponents;
-      MaxId = (Size > 0) ? Size - 1: Size;
+      MaxId = (Size > 0) ? Size - 1 : Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
     /**
@@ -990,9 +995,9 @@ class DataArray : public IDataArray
       // OS X's realloc does not free memory if the new block is smaller.  This
       // is a very serious problem and causes huge amount of memory to be
       // wasted. Do not use realloc on the Mac.
-      bool dontUseRealloc=false;
+      bool dontUseRealloc = false;
 #if defined __APPLE__
-      dontUseRealloc=true;
+      dontUseRealloc = true;
 #endif
 
       // Allocate a new array if we DO NOT own the current array
@@ -1030,7 +1035,8 @@ class DataArray : public IDataArray
         }
 
         // Copy the data from the old array.
-        if (this->Array != NULL) {
+        if (this->Array != NULL)
+        {
           memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
         }
         // Free the old array
@@ -1043,7 +1049,7 @@ class DataArray : public IDataArray
       // This object has now allocated its memory and owns it.
       this->_ownsData = true;
 
-      this->MaxId = newSize-1;
+      this->MaxId = newSize - 1;
       m_IsAllocated = true;
       return this->Array;
     }

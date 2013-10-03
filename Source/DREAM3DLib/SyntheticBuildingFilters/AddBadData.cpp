@@ -49,16 +49,16 @@
 //
 // -----------------------------------------------------------------------------
 AddBadData::AddBadData() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
-m_PoissonNoise(false),
-m_PoissonVolFraction(0.0f),
-m_BoundaryNoise(false),
-m_BoundaryVolFraction(0.0f),
-m_GBEuclideanDistances(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
+  m_PoissonNoise(false),
+  m_PoissonVolFraction(0.0f),
+  m_BoundaryNoise(false),
+  m_BoundaryVolFraction(0.0f),
+  m_GBEuclideanDistances(NULL)
 {
-	setupFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -114,12 +114,12 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setPoissonNoise( reader->readValue("PoissonNoise", getPoissonNoise()) );
   setPoissonVolFraction( reader->readValue("PoissonVolFraction", getPoissonVolFraction()) );
   setBoundaryNoise( reader->readValue("BoundaryNoise", getBoundaryNoise()) );
   setBoundaryVolFraction( reader->readValue("BoundaryVolFraction", getBoundaryVolFraction()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -143,7 +143,7 @@ int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void AddBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
@@ -194,7 +194,7 @@ void AddBadData::execute()
   add_noise();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("AddBadDatas Completed");
+  notifyStatusMessage("AddBadDatas Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -202,7 +202,7 @@ void AddBadData::execute()
 // -----------------------------------------------------------------------------
 void  AddBadData::add_noise()
 {
- notifyStatusMessage("Adding Noise");
+  notifyStatusMessage("Adding Noise");
   DREAM3D_RANDOMNG_NEW()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -213,32 +213,32 @@ void  AddBadData::add_noise()
   int64_t totalPoints = m->getTotalPoints();
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
-	  if(m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)
-	  {
-		random = static_cast<float>( rg.genrand_res53() );
-		if(random < m_BoundaryVolFraction)
-		{
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            QString name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-			p->InitializeTuple(i,0); 
-          }
-		}
-	  }
-	  if(m_PoissonNoise == true && m_GBEuclideanDistances[i] >=1)
-	  {
-		random = static_cast<float>( rg.genrand_res53() );
-		if(random < m_PoissonVolFraction)
-		{
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            QString name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-			p->InitializeTuple(i,0); 
-          }
-		}
-	  }
+    if(m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)
+    {
+      random = static_cast<float>( rg.genrand_res53() );
+      if(random < m_BoundaryVolFraction)
+      {
+        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        {
+          QString name = *iter;
+          IDataArray::Pointer p = m->getCellData(*iter);
+          p->InitializeTuple(i, 0);
+        }
+      }
+    }
+    if(m_PoissonNoise == true && m_GBEuclideanDistances[i] >= 1)
+    {
+      random = static_cast<float>( rg.genrand_res53() );
+      if(random < m_PoissonVolFraction)
+      {
+        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        {
+          QString name = *iter;
+          IDataArray::Pointer p = m->getCellData(*iter);
+          p->InitializeTuple(i, 0);
+        }
+      }
+    }
   }
 }
 

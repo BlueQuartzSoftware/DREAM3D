@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT ShapeType
     }
 
 
-    static void getShapeTypeStrings(QVector<QString> &strings)
+    static void getShapeTypeStrings(QVector<QString>& strings)
     {
       strings.clear();
       strings.push_back(EllipsoidStr());
@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT ShapeType
       strings.push_back(UnknownShapeTypeStr());
     }
 
-    static void getShapeTypeEnums(QVector<unsigned int> &types)
+    static void getShapeTypeEnums(QVector<unsigned int>& types)
     {
       types.clear();
       types.push_back(DREAM3D::ShapeType::EllipsoidShape);
@@ -127,7 +127,7 @@ class DREAM3DLib_EXPORT ShapeType
       types.push_back(DREAM3D::ShapeType::UnknownShapeType);
     }
 
-    static void getShapeTypeMap(QMap<int, QString> &map)
+    static void getShapeTypeMap(QMap<int, QString>& map)
     {
       map.clear();
       map[DREAM3D::ShapeType::EllipsoidShape] = EllipsoidStr();

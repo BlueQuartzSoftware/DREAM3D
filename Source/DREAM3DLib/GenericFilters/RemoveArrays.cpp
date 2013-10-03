@@ -150,7 +150,7 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 
 
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-999);
@@ -257,11 +257,12 @@ void RemoveArrays::execute()
 //
 // -----------------------------------------------------------------------------
 void RemoveArrays::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFaceArrays,
-                                                           QSet<QString> selectedCellArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays){
+                                               QSet<QString> selectedEdgeArrays,
+                                               QSet<QString> selectedFaceArrays,
+                                               QSet<QString> selectedCellArrays,
+                                               QSet<QString> selectedFieldArrays,
+                                               QSet<QString> selectedEnsembleArrays)
+{
   m_SelectedVolumeCellArrays = selectedVertexArrays;
   m_SelectedVolumeCellArrays = selectedEdgeArrays;
   m_SelectedVolumeCellArrays = selectedFaceArrays;
@@ -274,10 +275,10 @@ void RemoveArrays::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArray
 //
 // -----------------------------------------------------------------------------
 void RemoveArrays::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFaceArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+                                                QSet<QString> selectedEdgeArrays,
+                                                QSet<QString> selectedFaceArrays,
+                                                QSet<QString> selectedFieldArrays,
+                                                QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
@@ -290,9 +291,9 @@ void RemoveArrays::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArra
 //
 // -----------------------------------------------------------------------------
 void RemoveArrays::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+                                             QSet<QString> selectedEdgeArrays,
+                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
@@ -304,8 +305,8 @@ void RemoveArrays::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
 //
 // -----------------------------------------------------------------------------
 void RemoveArrays::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                     QSet<QString> selectedFieldArrays,
-                                                     QSet<QString> selectedEnsembleArrays)
+                                               QSet<QString> selectedFieldArrays,
+                                               QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
   m_SelectedVertexVertexFieldArrays = selectedFieldArrays;

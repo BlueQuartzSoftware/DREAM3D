@@ -64,10 +64,10 @@ GenerateMisorientationColors::GenerateMisorientationColors() :
   m_CrystalStructures(NULL),
   m_MisorientationColor(NULL)
 {
-  m_ReferenceAxis.x=0.0f;
-  m_ReferenceAxis.y=0.0f;
-  m_ReferenceAxis.z=1.0f;
-  m_ReferenceAngle=0.0f;
+  m_ReferenceAxis.x = 0.0f;
+  m_ReferenceAxis.y = 0.0f;
+  m_ReferenceAxis.z = 1.0f;
+  m_ReferenceAngle = 0.0f;
 
   setupFilterParameters();
 }
@@ -230,7 +230,7 @@ void GenerateMisorientationColors::execute()
 
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  QuatF refQuat = {m_ReferenceAxis.x*sin(m_ReferenceAngle), m_ReferenceAxis.y*sin(m_ReferenceAngle), m_ReferenceAxis.z*sin(m_ReferenceAngle), cos(m_ReferenceAngle)};
+  QuatF refQuat = {m_ReferenceAxis.x * sin(m_ReferenceAngle), m_ReferenceAxis.y * sin(m_ReferenceAngle), m_ReferenceAxis.z * sin(m_ReferenceAngle), cos(m_ReferenceAngle)};
   QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 
@@ -250,7 +250,8 @@ void GenerateMisorientationColors::execute()
     if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
     {
       uint32_t idx = m_CrystalStructures[phase];
-      if(idx == Ebsd::CrystalStructure::UnknownCrystalStructure) {
+      if(idx == Ebsd::CrystalStructure::UnknownCrystalStructure)
+      {
         idx = 12;
       }
       notSupported->SetValue(idx, 1);

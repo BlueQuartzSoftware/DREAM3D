@@ -54,32 +54,32 @@ class DREAM3DLib_EXPORT QuickSolidMesh : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(QuickSolidMesh)
-     DREAM3D_STATIC_NEW_MACRO(QuickSolidMesh)
-     DREAM3D_TYPE_MACRO_SUPER(QuickSolidMesh, AbstractFilter)
+    DREAM3D_STATIC_NEW_MACRO(QuickSolidMesh)
+    DREAM3D_TYPE_MACRO_SUPER(QuickSolidMesh, AbstractFilter)
 
-     virtual ~QuickSolidMesh();
+    virtual ~QuickSolidMesh();
 
-	 //------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-		virtual const QString getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
-     virtual const QString getHumanLabel() { return "Quick Solid Mesh"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
+    virtual const QString getHumanLabel() { return "Quick Solid Mesh"; }
 
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-	virtual void execute();
-     virtual void preflight();
+    virtual void execute();
+    virtual void preflight();
 
-   protected:
-     QuickSolidMesh();
+  protected:
+    QuickSolidMesh();
 
-   private:
+  private:
     int32_t* m_GrainIds;
 
 

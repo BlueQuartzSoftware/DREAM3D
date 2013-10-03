@@ -58,7 +58,9 @@ DxReader::DxReader() :
   m_Resolution.y = 1.0;
   m_Resolution.z = 1.0;
 
-  m_Dims[0] = 0; m_Dims[1] = 0; m_Dims[2] = 0;
+  m_Dims[0] = 0;
+  m_Dims[1] = 0;
+  m_Dims[2] = 0;
   setupFilterParameters();
 }
 
@@ -278,9 +280,9 @@ int DxReader::readHeader()
     {
       if(tokens[i] == "counts")
       {
-        nz = tokens[i+1].toInt(&ok, 10) - 1;
-        ny = tokens[i+2].toInt(&ok, 10) - 1;
-        nx = tokens[i+3].toInt(&ok, 10) - 1;
+        nz = tokens[i + 1].toInt(&ok, 10) - 1;
+        ny = tokens[i + 2].toInt(&ok, 10) - 1;
+        nx = tokens[i + 3].toInt(&ok, 10) - 1;
         done = true;
         break;
       }
@@ -304,7 +306,8 @@ int DxReader::readHeader()
 
   qint32 pos1 = 0;
   while (pos1 == 0 && m_InStream.atEnd() == false)
-  { // continue until we find the keyword
+  {
+    // continue until we find the keyword
     buf = m_InStream.readLine();
     buf = buf.simplified();
     tokens = buf.split(' ');

@@ -109,7 +109,8 @@ class DREAM3DLib_EXPORT VTKFileReader : public FileReader
     /**
      * @brief This method should be re-implemented in a subclass
      */
-    virtual int readFile() {
+    virtual int readFile()
+    {
       return -1;
     }
 
@@ -123,13 +124,13 @@ class DREAM3DLib_EXPORT VTKFileReader : public FileReader
     /**
      *
      */
-    int ignoreData(std::ifstream &in, int byteSize, char* type, int xDim, int yDim, int zDim);
+    int ignoreData(std::ifstream& in, int byteSize, char* type, int xDim, int yDim, int zDim);
 
     /**
      *
      */
     template<typename T>
-    int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim, T &diff)
+    int skipVolume(std::ifstream& inStream, int byteSize, int xDim, int yDim, int zDim, T& diff)
     {
       int err = 0;
       size_t totalSize = xDim * yDim * zDim;
@@ -141,11 +142,12 @@ class DREAM3DLib_EXPORT VTKFileReader : public FileReader
         if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
         {
           qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
-              << " vs " << (totalSize * sizeof(T)) ;
+                   << " vs " << (totalSize * sizeof(T)) ;
           return -1;
         }
-        if (totalSize > 1) {
-          diff = buffer[totalSize-1] - buffer[totalSize-2];
+        if (totalSize > 1)
+        {
+          diff = buffer[totalSize - 1] - buffer[totalSize - 2];
         }
         else
         {
@@ -174,7 +176,7 @@ class DREAM3DLib_EXPORT VTKFileReader : public FileReader
     }
 
     template<typename T>
-    int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim)
+    int skipVolume(std::ifstream& inStream, int byteSize, int xDim, int yDim, int zDim)
     {
       int err = 0;
       if(getFileIsBinary() == true)
@@ -186,7 +188,7 @@ class DREAM3DLib_EXPORT VTKFileReader : public FileReader
         if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
         {
           qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount() << " vs "
-              << (totalSize * sizeof(T)) ;
+                   << (totalSize * sizeof(T)) ;
           return -1;
         }
         delete buffer;

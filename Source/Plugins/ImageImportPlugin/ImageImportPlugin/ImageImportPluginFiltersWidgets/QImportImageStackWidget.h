@@ -68,16 +68,16 @@
  */
 class QImportImageStackWidget : public QFilterWidget, private Ui::QImportImageStackWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    QImportImageStackWidget(QWidget *parent = 0);
+    QImportImageStackWidget(QWidget* parent = 0);
     virtual ~QImportImageStackWidget();
 
     virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
-    virtual void writeOptions(QSettings &prefs);
-    virtual void readOptions(QSettings &prefs);
+    virtual void writeOptions(QSettings& prefs);
+    virtual void readOptions(QSettings& prefs);
 
     /**
      * @brief Enables or Disables all the widgets in a list
@@ -102,8 +102,8 @@ class QImportImageStackWidget : public QFilterWidget, private Ui::QImportImageSt
     void m_generateExampleEbsdInputFile();
     Ebsd::RefFrameZDir getRefFrameZDir();
 
-    QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles,
-                                                   bool stackLowToHigh, QString filename);
+    QVector<QString> generateFileList(int start, int end, bool& hasMissingFiles,
+                                      bool stackLowToHigh, QString filename);
 
 
     virtual QUrl htmlHelpIndexFile();
@@ -112,15 +112,15 @@ class QImportImageStackWidget : public QFilterWidget, private Ui::QImportImageSt
     /* OIM Data Import Slots */
     void on_m_InputDirBtn_clicked();
 
-    void on_m_FilePrefix_textChanged(const QString &string);
-    void on_m_FileSuffix_textChanged(const QString &string);
-    void on_m_FileExt_textChanged(const QString &string);
+    void on_m_FilePrefix_textChanged(const QString& string);
+    void on_m_FileSuffix_textChanged(const QString& string);
+    void on_m_FileExt_textChanged(const QString& string);
     void on_m_TotalDigits_valueChanged(int value);
     void on_m_ZStartIndex_valueChanged(int value);
     void on_m_ZEndIndex_valueChanged(int value);
 
     // slots to catch signals emittd by the various QLineEdit widgets
-    void on_m_InputDir_textChanged(const QString & text);
+    void on_m_InputDir_textChanged(const QString& text);
 
   private slots:
     void stackingOrderChanged(bool checked);

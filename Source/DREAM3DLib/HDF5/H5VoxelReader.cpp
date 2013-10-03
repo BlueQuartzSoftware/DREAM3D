@@ -43,8 +43,8 @@
 //
 // -----------------------------------------------------------------------------
 H5VoxelReader::H5VoxelReader() :
-AbstractFilter(),
-m_FileId(-1)
+  AbstractFilter(),
+  m_FileId(-1)
 {
 
 }
@@ -80,7 +80,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error Reading the Dimensions", err);
-  addErrorMessage(em);
+    addErrorMessage(em);
     err = H5Gclose(reconGid);
     err = H5Fclose(fileId);
     return err;
@@ -90,7 +90,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   {
     PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error Reading the Spacing (Resolution)", err);
     err = H5Gclose(reconGid);
-  addErrorMessage(em);
+    addErrorMessage(em);
     err = H5Fclose(fileId);
     return err;
   }
@@ -99,7 +99,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error Reading the Origin", err);
-  addErrorMessage(em);
+    addErrorMessage(em);
     err = H5Gclose(reconGid);
     err = H5Fclose(fileId);
     return err;
@@ -146,11 +146,13 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
   count[0] = xdim * ydim;
 
   status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, count, NULL);
-  if (status < 0) {
+  if (status < 0)
+  {
     //FIXME: Implement the error trapping
   }
   status = H5Dread(dataset, H5T_NATIVE_INT, memspace, filespace, H5P_DEFAULT, fileVoxelLayer);
-  if (status < 0) {
+  if (status < 0)
+  {
     //FIXME: Implement the error trapping
   }
 
@@ -170,11 +172,11 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
 //
 // -----------------------------------------------------------------------------
 int H5VoxelReader::readVoxelData(int* grain_indicies,
-                  int* phases,
-                  float* eulerangles,
-                  std::vector<unsigned int> &crystruct,
-                  std::vector<unsigned int> &phaseType,
-                  int64_t totalpoints)
+                                 int* phases,
+                                 float* eulerangles,
+                                 std::vector<unsigned int>& crystruct,
+                                 std::vector<unsigned int>& phaseType,
+                                 int64_t totalpoints)
 {
   int err = 0;
   if(m_FileName.isEmpty() == true)
@@ -200,8 +202,8 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
 #if   (CMP_SIZEOF_SSIZE_T==4)
   if (totalpoints * 3 > static_cast<int64_t>(std::numeric_limits<size_t>::max()) )
   {
-  PipelineMessage em (getHumanLabel(), "Trying to read more data than this architecture can handle.", -1);
-  addErrorMessage(em);
+    PipelineMessage em (getHumanLabel(), "Trying to read more data than this architecture can handle.", -1);
+    addErrorMessage(em);
     return -400;
   }
 #endif
@@ -223,19 +225,19 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
 
   err = readFieldData<unsigned int, uint32_t>(DREAM3D::EnsembleData::CrystalStructures, crystruct);
   if(err < 0)
-    {
-      addErrorMessage(getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Field Data", err);
-      err |= H5Gclose(reconGid);
-      return err;
-    }
+  {
+    addErrorMessage(getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Field Data", err);
+    err |= H5Gclose(reconGid);
+    return err;
+  }
 
   err = readFieldData<unsigned int, uint32_t>(DREAM3D::EnsembleData::PhaseTypes, phaseType);
   if(err < 0)
-    {
-      addErrorMessage(getHumanLabel(), "H5VoxelReader Error Reading the Phase Type Data", err);
-      err |= H5Gclose(reconGid);
-      return err;
-    }
+  {
+    addErrorMessage(getHumanLabel(), "H5VoxelReader Error Reading the Phase Type Data", err);
+    err |= H5Gclose(reconGid);
+    return err;
+  }
 
 
   err |= H5Gclose(reconGid);

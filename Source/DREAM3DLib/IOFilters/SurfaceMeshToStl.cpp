@@ -96,10 +96,10 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputStlDirectory( reader->readValue( "OutputStlDirectory", getOutputStlDirectory() ) );
   setOutputStlPrefix( reader->readValue( "OutputStlPrefix", getOutputStlPrefix() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -149,8 +149,8 @@ void SurfaceMeshToStl::preflight()
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if (NULL == sm)
   {
-      addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
 
   dataCheck(true, 1, 1, 1);
@@ -161,7 +161,7 @@ void SurfaceMeshToStl::preflight()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToStl::execute()
 {
- int err = 0;
+  int err = 0;
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
@@ -183,10 +183,10 @@ void SurfaceMeshToStl::execute()
   if(!stlDir.mkpath("."))
   {
 
-      QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
-      notifyErrorMessage(ss, -1);
-      setErrorCondition(-1);
-      return;
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
+    notifyErrorMessage(ss, -1);
+    setErrorCondition(-1);
+    return;
   }
 
   VertexArray& nodes = *(sm->getVertices());
@@ -202,8 +202,8 @@ void SurfaceMeshToStl::execute()
   QSet<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
-    uniqueSpins.insert(faceLabels[i*2]);
-    uniqueSpins.insert(faceLabels[i*2+1]);
+    uniqueSpins.insert(faceLabels[i * 2]);
+    uniqueSpins.insert(faceLabels[i * 2 + 1]);
   }
 
   unsigned char data[50];
@@ -253,11 +253,11 @@ void SurfaceMeshToStl::execute()
       vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
       vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
 
-      if (faceLabels[t*2] == spin)
+      if (faceLabels[t * 2] == spin)
       {
         winding = 0; // 0 = Write it using forward spin
       }
-      else if (faceLabels[t*2+1] == spin)
+      else if (faceLabels[t * 2 + 1] == spin)
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices
@@ -319,7 +319,7 @@ void SurfaceMeshToStl::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToStl::writeHeader(FILE* f, const QString &header, int triCount)
+int SurfaceMeshToStl::writeHeader(FILE* f, const QString& header, int triCount)
 {
   if (NULL == f)
   {
@@ -327,7 +327,7 @@ int SurfaceMeshToStl::writeHeader(FILE* f, const QString &header, int triCount)
   }
   char h[80];
   size_t headlength = 80;
-  if(header.length() < 80) headlength = header.length();
+  if(header.length() < 80) { headlength = header.length(); }
   ::memset(h, 0, 80);
   ::memcpy(h, header.data(), headlength);
   // Return the number of bytes written - which should be 80
@@ -339,10 +339,10 @@ int SurfaceMeshToStl::writeHeader(FILE* f, const QString &header, int triCount)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToStl::writeNumTrianglesToFile(const QString &filename, int triCount)
+int SurfaceMeshToStl::writeNumTrianglesToFile(const QString& filename, int triCount)
 {
   // We need to update the number of triangles in the file
-  int err =0;
+  int err = 0;
 
   FILE* out = fopen(filename.toLatin1().data(), "r+b");
   fseek(out, 80L, SEEK_SET);

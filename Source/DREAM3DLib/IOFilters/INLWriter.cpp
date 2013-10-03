@@ -249,16 +249,16 @@ int INLWriter::writeFile()
   fprintf(f, "# Y_MIN: %f\r\n", origin[1]);
   fprintf(f, "# Z_MIN: %f\r\n", origin[2]);
   fprintf(f, "#\r\n");
-  fprintf(f, "# X_MAX: %f\r\n", origin[0]+(dims[0]*res[0]));
-  fprintf(f, "# Y_MAX: %f\r\n", origin[1]+(dims[1]*res[1]));
-  fprintf(f, "# Z_MAX: %f\r\n", origin[2]+(dims[2]*res[2]));
+  fprintf(f, "# X_MAX: %f\r\n", origin[0] + (dims[0]*res[0]));
+  fprintf(f, "# Y_MAX: %f\r\n", origin[1] + (dims[1]*res[1]));
+  fprintf(f, "# Z_MAX: %f\r\n", origin[2] + (dims[2]*res[2]));
   fprintf(f, "#\r\n");
   fprintf(f, "# X_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[0]));
   fprintf(f, "# Y_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[1]));
   fprintf(f, "# Z_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[2]));
   fprintf(f, "#\r\n");
 
- // IDataArray::Pointer pDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+// IDataArray::Pointer pDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
   IDataArray::Pointer materialNamePtr = m->getCellEnsembleData(DREAM3D::EnsembleData::MaterialName);
   StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
   if (NULL == materialNames)
@@ -309,7 +309,7 @@ int INLWriter::writeFile()
   //  fprintf(f, "# Column 8: Phase ID\r\n");
 
 
-  fprintf(f,"# phi1 PHI phi2 x y z GrainId PhaseId Symmetry\r\n");
+  fprintf(f, "# phi1 PHI phi2 x y z GrainId PhaseId Symmetry\r\n");
 
   float phi1, phi, phi2;
   float xPos, yPos, zPos;
@@ -327,10 +327,10 @@ int INLWriter::writeFile()
     {
       for (size_t x = 0; x < dims[0]; ++x)
       {
-        index = (z*dims[0]*dims[1]) + (dims[0]*y) + x;
-        phi1 = m_CellEulerAngles[index*3];
-        phi = m_CellEulerAngles[index*3+1];
-        phi2 = m_CellEulerAngles[index*3+2];
+        index = (z * dims[0] * dims[1]) + (dims[0] * y) + x;
+        phi1 = m_CellEulerAngles[index * 3];
+        phi = m_CellEulerAngles[index * 3 + 1];
+        phi2 = m_CellEulerAngles[index * 3 + 2];
         xPos = origin[0] + (x * res[0]);
         yPos = origin[1] + (y * res[1]);
         zPos = origin[2] + (z * res[2]);
@@ -359,7 +359,7 @@ int INLWriter::writeFile()
         }
 
 
-        fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n",phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId, symmetry);
+        fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n", phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId, symmetry);
       }
     }
   }

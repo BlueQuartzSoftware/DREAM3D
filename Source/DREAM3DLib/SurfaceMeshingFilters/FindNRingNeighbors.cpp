@@ -43,7 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 FindNRingNeighbors::FindNRingNeighbors() :
-m_SurfaceDataContainer(NULL),
+  m_SurfaceDataContainer(NULL),
   m_TriangleId(-1),
   m_RegionId0(0),
   m_RegionId1(0),
@@ -74,7 +74,7 @@ void FindNRingNeighbors::setRegionIds(int g, int r)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FaceArray::UniqueFaceIds_t &FindNRingNeighbors::getNRingTriangles()
+FaceArray::UniqueFaceIds_t& FindNRingNeighbors::getNRingTriangles()
 {
   return m_NRingTriangles;
 }
@@ -112,14 +112,14 @@ void FindNRingNeighbors::generate()
 
 
   // Figure out these boolean values for a sanity check
-  bool check0 = faceLabels[m_TriangleId*2] == m_RegionId0 && faceLabels[m_TriangleId*2+1] == m_RegionId1;
-  bool check1 = faceLabels[m_TriangleId*2+1] == m_RegionId0 && faceLabels[m_TriangleId*2] == m_RegionId1;
+  bool check0 = faceLabels[m_TriangleId * 2] == m_RegionId0 && faceLabels[m_TriangleId * 2 + 1] == m_RegionId1;
+  bool check1 = faceLabels[m_TriangleId * 2 + 1] == m_RegionId0 && faceLabels[m_TriangleId * 2] == m_RegionId1;
 
 #if 1
   if ( check0 == false && check1 == false)
   {
     qDebug() << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << "\n";
-    qDebug() << "Region Ids are: " << faceLabels[m_TriangleId*2] << " & " << faceLabels[m_TriangleId*2+1] << "\n";
+    qDebug() << "Region Ids are: " << faceLabels[m_TriangleId * 2] << " & " << faceLabels[m_TriangleId * 2 + 1] << "\n";
     return;
   }
 #endif
@@ -149,8 +149,8 @@ void FindNRingNeighbors::generate()
         for(uint16_t t = 0; t < tCount; ++t)
         {
           int tid = data[t];
-          check0 = faceLabels[tid*2] == m_RegionId0 && faceLabels[tid*2+1] == m_RegionId1;
-          check1 = faceLabels[tid*2+1] == m_RegionId0 && faceLabels[tid*2] == m_RegionId1;
+          check0 = faceLabels[tid * 2] == m_RegionId0 && faceLabels[tid * 2 + 1] == m_RegionId1;
+          check1 = faceLabels[tid * 2 + 1] == m_RegionId0 && faceLabels[tid * 2] == m_RegionId1;
           if (check0 == true || check1 == true)
           {
             m_NRingTriangles.insert(static_cast<int>(tid) );
@@ -166,7 +166,7 @@ void FindNRingNeighbors::generate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
+int FindNRingNeighbors::writeVTKFile(const QString& outputVtkFile)
 {
 
   SurfaceDataContainer* m = getSurfaceDataContainer();  /* Place all your code to execute your filter here. */
@@ -177,17 +177,19 @@ int FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
   vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
-   // QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
+    // QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
     return -100;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (m_WriteBinaryFile) {
+  if (m_WriteBinaryFile)
+  {
     fprintf(vtkFile, "BINARY\n");
   }
-  else {
+  else
+  {
     fprintf(vtkFile, "ASCII\n");
   }
   fprintf(vtkFile, "DATASET POLYDATA\n");
@@ -217,7 +219,8 @@ int FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
 
         }
       }
-      else {
+      else
+      {
         fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
       }
     }

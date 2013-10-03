@@ -90,9 +90,9 @@ void H5VoxelFileReader::readFilterParameters(AbstractFilterParametersReader* rea
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -146,39 +146,39 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   float origin[3];
   err = reader->getSizeResolutionOrigin(dims, spacing, origin);
 
-    /* Sanity check what we are trying to load to make sure it can fit in our address space.
-     * Note that this does not guarantee the user has enough left, just that the
-     * size of the volume can fit in the address space of the program
-     */
+  /* Sanity check what we are trying to load to make sure it can fit in our address space.
+   * Note that this does not guarantee the user has enough left, just that the
+   * size of the volume can fit in the address space of the program
+   */
 #if   (CMP_SIZEOF_SSIZE_T==4)
-    int64_t max = std::numeric_limits<size_t>::max();
+  int64_t max = std::numeric_limits<size_t>::max();
 #else
-    int64_t max = std::numeric_limits<int64_t>::max();
+  int64_t max = std::numeric_limits<int64_t>::max();
 #endif
-    if(dims[0] * dims[1] * dims[2] > max)
-    {
-      err = -1;
-      QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
-      setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), ss, -1);
-      return;
-    }
+  if(dims[0] * dims[1] * dims[2] > max)
+  {
+    err = -1;
+    QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
+    setErrorCondition(err);
+    addErrorMessage(getHumanLabel(), ss, -1);
+    return;
+  }
 
-    if(dims[0] > max || dims[1] > max || dims[2] > max)
-    {
-      err = -1;
-      QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
-        " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
-      setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), ss, -1);
-      return;
-    }
-    /* ************ End Sanity Check *************************** */
-    size_t dcDims[3] =
-    { dims[0], dims[1], dims[2] };
-    m->setDimensions(dcDims);
-    m->setResolution(spacing);
-    m->setOrigin(origin);
+  if(dims[0] > max || dims[1] > max || dims[2] > max)
+  {
+    err = -1;
+    QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
+                             " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
+    setErrorCondition(err);
+    addErrorMessage(getHumanLabel(), ss, -1);
+    return;
+  }
+  /* ************ End Sanity Check *************************** */
+  size_t dcDims[3] =
+  { dims[0], dims[1], dims[2] };
+  m->setDimensions(dcDims);
+  m->setResolution(spacing);
+  m->setOrigin(origin);
 
 }
 
@@ -234,7 +234,7 @@ void H5VoxelFileReader::execute()
   // Create an DataArray to hold the data
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::GrainIds);
   DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::Phases);
-  DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints*3, DREAM3D::CellData::EulerAngles);
+  DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints * 3, DREAM3D::CellData::EulerAngles);
   eulers->SetNumberOfComponents(3);
 
   QString arrayname = "GrainID";
@@ -271,12 +271,12 @@ void H5VoxelFileReader::execute()
 
   size_t gnum = 0;
   size_t maxId = 0;
-  for(size_t i= 0; i < totalpoints; i++)
+  for(size_t i = 0; i < totalpoints; i++)
   {
     gnum = size_t(grainIds->GetValue(i));
-    if(gnum > maxId) maxId = gnum;
+    if(gnum > maxId) { maxId = gnum; }
   }
-  m->resizeCellFieldDataArrays(maxId+1);
+  m->resizeCellFieldDataArrays(maxId + 1);
 
   std::vector<unsigned int> crystruct;
   std::vector<unsigned int> phaseType;
@@ -301,8 +301,8 @@ void H5VoxelFileReader::execute()
 
   for (size_t i = 0; i < crystruct.size(); i++)
   {
-    crystructs->SetValue(i,crystruct[i]);
-    phaseTypes->SetValue(i,phaseType[i]);
+    crystructs->SetValue(i, crystruct[i]);
+    phaseTypes->SetValue(i, phaseType[i]);
   }
   m->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystructs);
   m->addCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);

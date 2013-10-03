@@ -210,7 +210,7 @@ void AvizoRectilinearCoordinateWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream &ss)
+void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream& ss)
 {
   if(m_WriteBinaryFile == true)
   {
@@ -257,7 +257,7 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream &ss)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AvizoRectilinearCoordinateWriter::writeData(QDataStream &out)
+int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   size_t dims[3];

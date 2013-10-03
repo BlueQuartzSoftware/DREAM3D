@@ -75,8 +75,8 @@ class pvector
 
 typedef struct
 {
-    int triplenn1;
-    int triplenn2;
+  int triplenn1;
+  int triplenn2;
 } TripleNN;
 
 
@@ -119,8 +119,8 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
   T d1 = NodeFunctions<Node, T>::Distance(n0, n1);
   T d2 = NodeFunctions<Node, T>::Distance(n1, n2);
   T product = sqrt((v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]) / d1 / d2);
-  if(product > 1.) product = 1.;
-  if(product < -1.) product = -1.;
+  if(product > 1.) { product = 1.; }
+  if(product < -1.) { product = -1.; }
   T angle = acos(product);
   return 2. * angle / (d1 + d2);
 }
@@ -129,15 +129,15 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 //
 // -----------------------------------------------------------------------------
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
-SurfaceMeshFilter(),
-m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
-m_IterationSteps(1),
-m_NodeConstraints(true),
-m_ConstrainSurfaceNodes(true),
-m_ConstrainQuadPoints(true),
-m_SmoothTripleLines(true),
-m_SurfaceMeshNodeType(NULL)
+  SurfaceMeshFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_IterationSteps(1),
+  m_NodeConstraints(true),
+  m_ConstrainSurfaceNodes(true),
+  m_ConstrainQuadPoints(true),
+  m_SmoothTripleLines(true),
+  m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
 }
@@ -205,13 +205,13 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setIterationSteps( reader->readValue("IterationSteps", getIterationSteps()) );
   setNodeConstraints( reader->readValue("NodeConstraints", false) );
   setConstrainSurfaceNodes( reader->readValue("ConstrainSurfaceNodes", false) );
   setConstrainQuadPoints( reader->readValue("ConstrainQuadPoints", false) );
   setSmoothTripleLines( reader->readValue("SmoothTripleLines", false) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -304,7 +304,8 @@ void MovingFiniteElementSmoothing::execute()
   }
 
 
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
@@ -380,7 +381,7 @@ void MovingFiniteElementSmoothing::execute()
   //Read the nodes
 #if 0
   int nodeType;
-  if (isVerbose) qDebug() << "reading nodes " << "\n";
+  if (isVerbose) { qDebug() << "reading nodes " << "\n"; }
   for (int i = 0; i < nnod; i++)
   {
     input1 >> id(nodes[i]) >> nodeType >> nodes[i][0] >> nodes[i][1] >> nodes[i][2];
@@ -389,7 +390,7 @@ void MovingFiniteElementSmoothing::execute()
     triplenn2(nodes[i]) = 0;
     type(nodes[i]) = nodeType;// duplicating info for now
   }
-  if (isVerbose) qDebug() << "end reading nodes" << "\n";
+  if (isVerbose) { qDebug() << "end reading nodes" << "\n"; }
   input1.close();
 #endif
 
@@ -400,15 +401,15 @@ void MovingFiniteElementSmoothing::execute()
 
 
 
-  #if 1
+#if 1
 #if __APPLE__
-  #warning Smoothing Triple Lines are NOT working because the code needs updated.
+#warning Smoothing Triple Lines are NOT working because the code needs updated.
 #endif
   if(m_SmoothTripleLines == true)
   {
-    m_SmoothTripleLines= false;
+    m_SmoothTripleLines = false;
   }
-  #else
+#else
 
   if(m_SmoothTripleLines == true)
   {
@@ -421,15 +422,15 @@ void MovingFiniteElementSmoothing::execute()
       return;
     }
 
-    StructArray<EdgeArray::Edge_t> *edgesStructArray = StructArray<EdgeArray::Edge_t>::SafePointerDownCast(edgesDataArray.get());
+    StructArray<EdgeArray::Edge_t>* edgesStructArray = StructArray<EdgeArray::Edge_t>::SafePointerDownCast(edgesDataArray.get());
     EdgeArray::Edge_t* edges = edgesStructArray->getPointer(0);
 
-    StructArray<EdgeArray::Edge_t> *internalEdgesStructArray = StructArray<EdgeArray::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
+    StructArray<EdgeArray::Edge_t>* internalEdgesStructArray = StructArray<EdgeArray::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
     EdgeArray::Edge_t* iEdges = internalEdgesStructArray->getPointer(0);
 
     //  Read the edges, if we are going to smooth them explicitly
 #if 0
-    if (isVerbose) qDebug() << "reading edges " << "\n";
+    if (isVerbose) { qDebug() << "reading edges " << "\n"; }
     std::ifstream input3(edgesFile.toLatin1().data());
     if (input3.is_open() == false)
     {
@@ -445,7 +446,7 @@ void MovingFiniteElementSmoothing::execute()
     int nedges = edgeCount + iEdgeCount;
     //  input3 >> nedges;
     //  don't actually need the structure. just the information
-    if(isVerbose) qDebug() << "Number of edges = " << nedges << "\n";
+    if(isVerbose) { qDebug() << "Number of edges = " << nedges << "\n"; }
 
     int tedges = 0; // triple line edge count
 
@@ -523,7 +524,7 @@ void MovingFiniteElementSmoothing::execute()
         }
       }
     }
-    if(isVerbose) qDebug() << "... completed 1st reading edges" << "\n";
+    if(isVerbose) { qDebug() << "... completed 1st reading edges" << "\n"; }
     //  destroy(edges) ;
     //input3.close();
     //  now let's check the entries
@@ -554,27 +555,28 @@ void MovingFiniteElementSmoothing::execute()
     std::ifstream restartInput(restartFile.toLatin1().data());
 
     restartInput >> nnodRe >> nnTriRe;
-    if (isVerbose) qDebug() << "Check number of nodes, triangles in .inp: " << nnodRe << ", " << nnTriRe << "\n";
+    if (isVerbose) { qDebug() << "Check number of nodes, triangles in .inp: " << nnodRe << ", " << nnTriRe << "\n"; }
     if(nnodRe != nnod)
     {
-      if (isVerbose) qDebug() << "Discrepancy in the number of nodes, must stop! " << "\n";
+      if (isVerbose) { qDebug() << "Discrepancy in the number of nodes, must stop! " << "\n"; }
       return -1;
     }
     else
-    { // we are OK to read in
-      if (isVerbose) qDebug() << "reading nodes from restart INP " << "\n";
+    {
+      // we are OK to read in
+      if (isVerbose) { qDebug() << "reading nodes from restart INP " << "\n"; }
       for (int i = 0; i < nnod; i++)
       {
         input1 >> id(nodes[i]) >> nodes[i][0] >> nodes[i][1] >> nodes[i][2];
       }
-      if (isVerbose) qDebug() << "end reading nodes from restart INP " << "\n";
+      if (isVerbose) { qDebug() << "end reading nodes from restart INP " << "\n"; }
     }
     restartInput.close();
-    if (isVerbose) qDebug() << "What step are we re-starting at? " << "\n";
+    if (isVerbose) { qDebug() << "What step are we re-starting at? " << "\n"; }
     std::cin >> stepsRe;
     if(stepsRe >= final)
     {
-      if (isVerbose) qDebug() << "Final time less than re-start time, must stop! " << "\n";
+      if (isVerbose) { qDebug() << "Final time less than re-start time, must stop! " << "\n"; }
       return -1;
     }
     else
@@ -591,7 +593,7 @@ void MovingFiniteElementSmoothing::execute()
 
 #if 0
   //Read the triangles
-  if (isVerbose) qDebug() << "reading triangles: " << "\n";
+  if (isVerbose) { qDebug() << "reading triangles: " << "\n"; }
   for (int i = 0; i < ntri; i++)
   {
     //  char type[3];
@@ -602,18 +604,18 @@ void MovingFiniteElementSmoothing::execute()
     triangles[i](0) = &nodes[nid[0]];
     triangles[i](1) = &nodes[nid[1]];
     triangles[i](2) = &nodes[nid[2]];
-    // 	bool ok[3] = {false,false,false};
-    // 	for (int j=0; j<nnod; j++) {
-    // // 	  if (id[j]==nid[0]) {triangles[i](0) = &nodes[j]; triangles[i].nids[0]= nid[0]; ok[0] = true;}
-    // // 	  else if (id[j]==nid[1]) {triangles[i](1) = &nodes[j]; triangles[i].nids[1]= nid[1];ok[1] = true;}
-    // // 	  else if (id[j]==nid[2]) {triangles[i](2) = &nodes[j]; triangles[i].nids[2]= nid[2];ok[2] = true;}
-    // 	  if (id(nodes[j])==nid[0]) {triangles[i](0) = &nodes[j];  ok[0] = true;}
-    // 	  else if (id(nodes[j])==nid[1]) {triangles[i](1) = &nodes[j]; ok[1] = true;}
-    // 	  else if (id(nodes[j])==nid[2]) {triangles[i](2) = &nodes[j]; ok[2] = true;}
-    // 	  if (ok[0] && ok[1] && ok[2]) break;
-    // 	}
+    //  bool ok[3] = {false,false,false};
+    //  for (int j=0; j<nnod; j++) {
+    // //     if (id[j]==nid[0]) {triangles[i](0) = &nodes[j]; triangles[i].nids[0]= nid[0]; ok[0] = true;}
+    // //     else if (id[j]==nid[1]) {triangles[i](1) = &nodes[j]; triangles[i].nids[1]= nid[1];ok[1] = true;}
+    // //     else if (id[j]==nid[2]) {triangles[i](2) = &nodes[j]; triangles[i].nids[2]= nid[2];ok[2] = true;}
+    //    if (id(nodes[j])==nid[0]) {triangles[i](0) = &nodes[j];  ok[0] = true;}
+    //    else if (id(nodes[j])==nid[1]) {triangles[i](1) = &nodes[j]; ok[1] = true;}
+    //    else if (id(nodes[j])==nid[2]) {triangles[i](2) = &nodes[j]; ok[2] = true;}
+    //    if (ok[0] && ok[1] && ok[2]) break;
+    //  }
   }
-  if (isVerbose) qDebug() << "end reading triangles" << "\n";
+  if (isVerbose) { qDebug() << "end reading triangles" << "\n"; }
   input2.close();
 
   if (getCancel() == true)
@@ -692,10 +694,11 @@ void MovingFiniteElementSmoothing::execute()
   {
     nodeConstraint[r] = 0;
     if(m_NodeConstraints == true)
-    { // only do this if we want the constraint on surfaces
-      if(fabs(nodes[r].pos[0] - max[0]) < tolerance || fabs(nodes[r].pos[0] - min[0]) < tolerance) nodeConstraint[r] += 1;
-      if(fabs(nodes[r].pos[1] - max[1]) < tolerance || fabs(nodes[r].pos[1] - min[1]) < tolerance) nodeConstraint[r] += 2;
-      if(fabs(nodes[r].pos[2] - max[2]) < tolerance || fabs(nodes[r].pos[2] - min[2]) < tolerance) nodeConstraint[r] += 4;
+    {
+      // only do this if we want the constraint on surfaces
+      if(fabs(nodes[r].pos[0] - max[0]) < tolerance || fabs(nodes[r].pos[0] - min[0]) < tolerance) { nodeConstraint[r] += 1; }
+      if(fabs(nodes[r].pos[1] - max[1]) < tolerance || fabs(nodes[r].pos[1] - min[1]) < tolerance) { nodeConstraint[r] += 2; }
+      if(fabs(nodes[r].pos[2] - max[2]) < tolerance || fabs(nodes[r].pos[2] - min[2]) < tolerance) { nodeConstraint[r] += 4; }
       // debug
       if(m_SurfaceMeshNodeType[r] > 10 && nodeConstraint[r] == 0)
       {
@@ -742,7 +745,7 @@ void MovingFiniteElementSmoothing::execute()
     A_scale = 4000.0;
     //  designed to ramp up the weight attached to the Quality forces
     Q_scale = 500.0 + 50.0 * (double)updates / (double)final;
-    // 		WAS: 	Q_scale = 1000;
+    //    WAS:  Q_scale = 1000;
     //  14 may 10: discovered that ramping up the quality forces so high
     //    leads to UNsmoothing of the mesh!
 
@@ -765,7 +768,8 @@ void MovingFiniteElementSmoothing::execute()
       n = TriangleFunctionsType::normal(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
       A = TriangleFunctionsType::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
       Q = TriangleFunctionsType::circularity(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]], A); //  current quality
-      if(Q > 100.) {
+      if(Q > 100.)
+      {
         if(isVerbose)
         {
           qDebug() << "Warning, tri no. " << t << " has Q= " << Q << "\n";
@@ -778,15 +782,17 @@ void MovingFiniteElementSmoothing::execute()
       // debug
       //      qDebug() << "triangle, min dihedral: " << t << ", " << Dihedral*180/PI << "\n";
       Dihedral_sum += Dihedral;
-      if(Dihedral < Dihedral_min) Dihedral_min = Dihedral;
-      if(Dihedral > Dihedral_max) Dihedral_max = Dihedral;
+      if(Dihedral < Dihedral_min) { Dihedral_min = Dihedral; }
+      if(Dihedral > Dihedral_max) { Dihedral_max = Dihedral; }
 
       for (int n0 = 0; n0 < 3; n0++)
-      { // for each of 3 nodes on the t^th triangle
+      {
+        // for each of 3 nodes on the t^th triangle
         int i = rtri.verts[n0];
         VertexArray::VertD_t& node_i = nodes[i];
         for (int j = 0; j < 3; j++)
-        { //  for each of the three coordinates of the node
+        {
+          //  for each of the three coordinates of the node
           if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
@@ -799,7 +805,7 @@ void MovingFiniteElementSmoothing::execute()
           {
             //  if we are smoothing triple lines, and we have a TJ node
             deltaLDistance = NodeFunctionsType::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctionsType::Distance(nodes[triplenn[i].triplenn2], nodes[i])
-                - LDistance; // change in line length
+                             - LDistance; // change in line length
             F[3 * i + j] -= TJ_scale * deltaLDistance;
           }
           node_i.pos[j] -= small;
@@ -807,7 +813,8 @@ void MovingFiniteElementSmoothing::execute()
           F[3 * i + j] -= arg;
         }
         for (int n1 = 0; n1 < 3; n1++)
-        { //  for each of 3 nodes
+        {
+          //  for each of 3 nodes
           int h = rtri.verts[n1];
           for (int k = 0; k < 3; k++)
           {
@@ -834,7 +841,8 @@ void MovingFiniteElementSmoothing::execute()
     for (int r = 0; r < numberNodes; r++)
     {
       if(m_NodeConstraints == true || m_ConstrainQuadPoints == true)
-      { // only do this if we want the constraint
+      {
+        // only do this if we want the constraint
         if(nodeConstraint[r] % 2 != 0)
         {
           K[3 * r][3 * r] = large;
@@ -853,7 +861,7 @@ void MovingFiniteElementSmoothing::execute()
 
     // solve for node velocities
     int iterations = MFE::CR(K, x, F, 4000, 1.0e-5);
-    if(isVerbose) qDebug() << iterations << " iterations ... " << "\n";
+    if(isVerbose) { qDebug() << iterations << " iterations ... " << "\n"; }
 
     //Update the quality information
     if(updates - 1 < Q_max_hist.size())
@@ -866,7 +874,7 @@ void MovingFiniteElementSmoothing::execute()
       //Update the history of Q_max
       for (size_t i = 0; i < Q_max_hist.size() - 1; i++)
       {
-        //		qDebug() << i << " "<< Q_max_hist[i] << " " << Q_max_hist[i+1] << "\n";
+        //    qDebug() << i << " "<< Q_max_hist[i] << " " << Q_max_hist[i+1] << "\n";
         Q_max_hist[i] = Q_max_hist[i + 1];
       }
 
@@ -882,8 +890,8 @@ void MovingFiniteElementSmoothing::execute()
     }
     Q_ave = Q_sum / ntri;
 
-    // 	for(int i=0; i<Q_max_hist.size(); i++)
-    // 	  std::cout<<"Q_Max history ... "<<Q_max_hist[i]<<std::endl;
+    //  for(int i=0; i<Q_max_hist.size(); i++)
+    //    std::cout<<"Q_Max history ... "<<Q_max_hist[i]<<std::endl;
     if(isVerbose)
     {
       qDebug() << "Maximum circularity quality ... " << Q_max << "   - high is bad, low is good" << "\n";
@@ -917,8 +925,8 @@ void MovingFiniteElementSmoothing::execute()
 
     if(tokens.size() > 2)
     {
-      if(isVerbose) qDebug() << "WARNING: multiple \".\" in file name: " << infile << "\n";
-      if(isVerbose) qDebug() << "\t Using: ." << tokens.front() << "As basename" << "\n";
+      if(isVerbose) { qDebug() << "WARNING: multiple \".\" in file name: " << infile << "\n"; }
+      if(isVerbose) { qDebug() << "\t Using: ." << tokens.front() << "As basename" << "\n"; }
       basename = tokens.front();
     }
     else if(tokens.size() <= 2)
@@ -941,19 +949,20 @@ void MovingFiniteElementSmoothing::execute()
     // update node positions
     for (int r = 0; r < numberNodes; r++)
     {
-      //	  velocityfile << r << " ";
+      //    velocityfile << r << " ";
       for (int s = 0; s < 3; s++)
       {
         double bc_dt = dt;
         if(m_NodeConstraints == true)
-        { // only do this if we want the constraint
+        {
+          // only do this if we want the constraint
           /*
            if( (fabs(nodes[r][s] - max[s]) < tolerance)
            || (fabs(nodes[r][s] - min[s]) < tolerance)) bc_dt = 0.0 ;
            */
-          if(s == 0 && nodeConstraint[r] % 2 != 0) bc_dt = 0.0; // X
-          if(s == 1 && (nodeConstraint[r] / 2) % 2 != 0) bc_dt = 0.0; // Y
-          if(s == 2 && nodeConstraint[r] / 4 != 0) bc_dt = 0.0; // Z
+          if(s == 0 && nodeConstraint[r] % 2 != 0) { bc_dt = 0.0; } // X
+          if(s == 1 && (nodeConstraint[r] / 2) % 2 != 0) { bc_dt = 0.0; } // Y
+          if(s == 2 && nodeConstraint[r] / 4 != 0) { bc_dt = 0.0; } // Z
           //  changed  12 v 10, ADR
         }
 
@@ -965,12 +974,12 @@ void MovingFiniteElementSmoothing::execute()
         {
           nodes[r].pos[s] += bc_dt * x[3 * r + s];
         }
-        //		velocityfile  << std::scientific << QSetw(4)
-        //			  << QSetprecision(4) << F[3*r+s] << "\t"<< x[3*r+s] <<"\t";
+        //    velocityfile  << std::scientific << QSetw(4)
+        //        << QSetprecision(4) << F[3*r+s] << "\t"<< x[3*r+s] <<"\t";
       }
-      //	  velocityfile << "\n";
+      //    velocityfile << "\n";
     }
-    //	velocityfile.close();
+    //  velocityfile.close();
 
 #if 0
     if(!((updates) % 10))
@@ -980,7 +989,7 @@ void MovingFiniteElementSmoothing::execute()
       inpfile.open(iterFileName.toLatin1().data());
       if(!inpfile)
       {
-        if(isVerbose) qDebug() << "Failed to open: " << iterFileName << "\n";
+        if(isVerbose) { qDebug() << "Failed to open: " << iterFileName << "\n"; }
         return;
       }
 
@@ -993,7 +1002,7 @@ void MovingFiniteElementSmoothing::execute()
 
       for (int i = 0; i < ntri; i++)
       {
-        //		inpfile<<i<<" "<<triangles[i].region1>>triangles[i].region2<<" tri ";
+        //    inpfile<<i<<" "<<triangles[i].region1>>triangles[i].region2<<" tri ";
         inpfile << i << " 0 tri ";
         inpfile << triangles[i].verts[0] << " ";
         inpfile << triangles[i].verts[1] << " ";
@@ -1029,7 +1038,7 @@ void MovingFiniteElementSmoothing::execute()
   inpfile.open(outputNodesFile.toLatin1().data());
   if(!inpfile)
   {
-    if(isVerbose) qDebug() << "Failed to open nodes output: " << outputNodesFile << "\n";
+    if(isVerbose) { qDebug() << "Failed to open nodes output: " << outputNodesFile << "\n"; }
     return;
   }
 
@@ -1038,7 +1047,7 @@ void MovingFiniteElementSmoothing::execute()
   for (int i = 0; i < nnod; i++)
   {
     inpfile << QSetw(6) << std::fixed << "\t" << i << "\t" << nodes[i].nodeKind << "\t" << nodes[i].pos[0] << "\t" << nodes[i].pos[1] << "\t"
-        << nodes[i].pos[2] << "\n";
+            << nodes[i].pos[2] << "\n";
   }
   inpfile.close();
 #endif

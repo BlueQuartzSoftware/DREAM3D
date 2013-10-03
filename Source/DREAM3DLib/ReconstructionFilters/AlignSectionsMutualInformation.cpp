@@ -205,7 +205,7 @@ void AlignSectionsMutualInformation::execute()
   m_GrainIds = p->getPointer(0);
 
   //Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance*DREAM3D::Constants::k_Pi/180.0f;
+  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
   AlignSections::execute();
 
@@ -217,23 +217,25 @@ void AlignSectionsMutualInformation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
+void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   std::ofstream outFile;
-  if (getWriteAlignmentShifts() == true) {
+  if (getWriteAlignmentShifts() == true)
+  {
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -241,9 +243,9 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
 
   float disorientation = 0;
   float mindisorientation = 100000000;
-  float **mutualinfo12 = NULL;
-  float *mutualinfo1 = NULL;
-  float *mutualinfo2 = NULL;
+  float** mutualinfo12 = NULL;
+  float* mutualinfo1 = NULL;
+  float* mutualinfo2 = NULL;
   int graincount1, graincount2;
   int newxshift = 0;
   int newyshift = 0;
@@ -273,7 +275,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter/dims[2])*100);
+    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
     //  notifyStatusMessage(ss);
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
@@ -315,7 +317,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
           disorientation = 0;
           count = 0;
           if(misorients[k + oldxshift + size_t(dims[0] / 2)][j + oldyshift + (size_t)(dims[1] / 2)] == 0 && abs(k + oldxshift) < (dims[0] / 2)
-             && (j + oldyshift) < (dims[1] / 2))
+              && (j + oldyshift) < (dims[1] / 2))
           {
             for (DimType l = 0; l < dims[1]; l = l + 4)
             {
@@ -349,22 +351,22 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
             for (int b = 0; b < graincount1; b++)
             {
               mutualinfo1[b] = mutualinfo1[b] / float(count);
-              if(mutualinfo1[b] != 0) ha = ha + mutualinfo1[b] * log(mutualinfo1[b]);
+              if(mutualinfo1[b] != 0) { ha = ha + mutualinfo1[b] * log(mutualinfo1[b]); }
             }
             for (int c = 0; c < graincount2; c++)
             {
               mutualinfo2[c] = mutualinfo2[c] / float(count);
-              if(mutualinfo2[c] != 0) hb = hb + mutualinfo2[c] * log(mutualinfo2[c]);
+              if(mutualinfo2[c] != 0) { hb = hb + mutualinfo2[c] * log(mutualinfo2[c]); }
             }
             for (int b = 0; b < graincount1; b++)
             {
               for (int c = 0; c < graincount2; c++)
               {
                 mutualinfo12[b][c] = mutualinfo12[b][c] / float(count);
-                if(mutualinfo12[b][c] != 0) hab = hab + mutualinfo12[b][c] * log(mutualinfo12[b][c]);
+                if(mutualinfo12[b][c] != 0) { hab = hab + mutualinfo12[b][c] * log(mutualinfo12[b][c]); }
                 float value = 0;
-                if(mutualinfo1[b] > 0 && mutualinfo2[c] > 0) value = (mutualinfo12[b][c] / (mutualinfo1[b] * mutualinfo2[c]));
-                if(value != 0) disorientation = disorientation + (mutualinfo12[b][c] * log(value));
+                if(mutualinfo1[b] > 0 && mutualinfo2[c] > 0) { value = (mutualinfo12[b][c] / (mutualinfo1[b] * mutualinfo2[c])); }
+                if(value != 0) { disorientation = disorientation + (mutualinfo12[b][c] * log(value)); }
               }
             }
             for (int b = 0; b < graincount1; b++)
@@ -388,8 +390,8 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
         }
       }
     }
-    xshifts[iter] = xshifts[iter-1] + newxshift;
-    yshifts[iter] = yshifts[iter-1] + newyshift;
+    xshifts[iter] = xshifts[iter - 1] + newxshift;
+    yshifts[iter] = yshifts[iter - 1] + newyshift;
     if(getWriteAlignmentShifts() == true)
     {
       outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << "\n";
@@ -422,14 +424,15 @@ void AlignSectionsMutualInformation::form_grains_sections()
   DREAM3D_RANDOMNG_NEW()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -475,7 +478,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
 
-    QString ss = QObject::tr("Aligning Sections - Identifying Grains on Sections - %1 Percent Complete").arg(((float)slice/dims[2])*100);
+    QString ss = QObject::tr("Aligning Sections - Identifying Grains on Sections - %1 Percent Complete").arg(((float)slice / dims[2]) * 100);
     graincount = 1;
     noseeds = 0;
     while (noseeds == 0)
@@ -490,18 +493,18 @@ void AlignSectionsMutualInformation::form_grains_sections()
           x = randx + i;
           y = randy + j;
           z = slice;
-          if(x > dims[0] - 1) x = x - dims[0];
-          if(y > dims[1] - 1) y = y - dims[1];
+          if(x > dims[0] - 1) { x = x - dims[0]; }
+          if(y > dims[1] - 1) { y = y - dims[1]; }
           point = static_cast<int>( (z * dims[0] * dims[1]) + (y * dims[0]) + x );
           if(m_GoodVoxels[point] == true && m_GrainIds[point] == 0 && m_CellPhases[point] > 0)
           {
             seed = point;
           }
-          if(seed > -1) break;
+          if(seed > -1) { break; }
         }
-        if(seed > -1) break;
+        if(seed > -1) { break; }
       }
-      if(seed == -1) noseeds = 1;
+      if(seed == -1) { noseeds = 1; }
       if(seed >= 0)
       {
         size = 0;
@@ -519,10 +522,10 @@ void AlignSectionsMutualInformation::form_grains_sections()
           {
             good = 1;
             neighbor = static_cast<int>( currentpoint + neighpoints[i] );
-            if((i == 0) && row == 0) good = 0;
-            if((i == 3) && row == (dims[1] - 1)) good = 0;
-            if((i == 1) && col == 0) good = 0;
-            if((i == 2) && col == (dims[0] - 1)) good = 0;
+            if((i == 0) && row == 0) { good = 0; }
+            if((i == 3) && row == (dims[1] - 1)) { good = 0; }
+            if((i == 1) && col == 0) { good = 0; }
+            if((i == 2) && col == (dims[0] - 1)) { good = 0; }
             if(good == 1 && m_GrainIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
               w = 10000.0;

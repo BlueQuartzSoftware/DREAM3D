@@ -100,9 +100,9 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
 
     int readMeshData(hid_t dcGid, bool preflight);
 
-    int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                       QVector<QString> &namesRead,
-                       QSet<QString> &namesToRead,
+    int readGroupsData(hid_t dcGid, const QString& groupName, bool preflight,
+                       QVector<QString>& namesRead,
+                       QSet<QString>& namesToRead,
                        bool readAllCurrentArrays);
 
 

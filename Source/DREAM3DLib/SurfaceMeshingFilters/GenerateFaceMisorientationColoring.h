@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-  /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     * @param ensembles The number of ensembles
     */
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-  void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
     int32_t* m_SurfaceMeshFaceLabels;

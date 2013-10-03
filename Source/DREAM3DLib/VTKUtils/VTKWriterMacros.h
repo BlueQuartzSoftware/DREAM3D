@@ -53,7 +53,7 @@
   fprintf(f, "\n");\
   fprintf(f, "DATASET RECTILINEAR_GRID\n");\
   fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints, ypoints, zpoints);\
-
+   
 #define WRITE_STRUCTURED_POINTS_HEADER(FILE_TYPE, ptr)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
   fprintf(f, "data set from DREAM3D\n");\
@@ -63,7 +63,7 @@
   fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
   fprintf(f, "SPACING %f %f %f\n", ptr->getXRes(), ptr->getYRes(), ptr->getZRes());\
   fprintf(f, "POINT_DATA %ld\n\n", ptr->getXPoints() * ptr->getYPoints() * ptr->getZPoints() );\
-
+   
 
 #else
 
@@ -73,7 +73,7 @@
   fprintf(f, FILE_TYPE); fprintf(f, "\n");\
   fprintf(f, "DATASET RECTILINEAR_GRID\n");\
   fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints, ypoints, zpoints);\
-
+   
 #define WRITE_STRUCTURED_POINTS_HEADER(FILE_TYPE, ptr)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
   fprintf(f, "data set from DREAM3D\n");\
@@ -83,7 +83,7 @@
   fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
   fprintf(f, "SPACING %f %f %f\n", ptr->getXRes(), ptr->getYRes(), ptr->getZRes());\
   fprintf(f, "POINT_DATA %lld\n\n", ptr->getXPoints() * ptr->getYPoints() * ptr->getZPoints() );\
-
+   
 
 #endif
 
@@ -97,26 +97,26 @@
     fprintf(f, "%d ", grain_indicies[i]);\
   }\
   fprintf(f, "\n");\
-
+   
 
 #define WRITE_VTK_GRAIN_IDS_BINARY(ptr, ScalarName)  \
   fprintf(f, "SCALARS %s int 1\n", ScalarName.toLatin1().data());\
   fprintf(f, "LOOKUP_TABLE default\n"); \
   { \
-  int* gn = new int[totalPoints];\
-  int t;\
-  for (int64_t i = 0; i < totalPoints; i++) {\
-    t = grain_indicies[i];\
-    DREAM3D::Endian::FromSystemToBig::convert(t);\
-    gn[i] = t; \
-  }\
-  int64_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
-  delete[] gn;\
-  if (totalWritten != totalPoints)  {\
-    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
-    fclose(f);\
-    return -1;\
-  }\
+    int* gn = new int[totalPoints];\
+    int t;\
+    for (int64_t i = 0; i < totalPoints; i++) {\
+      t = grain_indicies[i];\
+      DREAM3D::Endian::FromSystemToBig::convert(t);\
+      gn[i] = t; \
+    }\
+    int64_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
+    delete[] gn;\
+    if (totalWritten != totalPoints)  {\
+      qDebug() << "Error Writing Binary VTK Data into file " << file ;\
+      fclose(f);\
+      return -1;\
+    }\
   }
 
 
@@ -127,25 +127,25 @@
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
     fprintf(f, FORMAT, var[i]);\
   }fprintf(f,"\n"); \
-
+   
 #define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(ptr, name, m_msgType, var)\
   fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
-  m_msgType* gn = new m_msgType[totalPoints];\
-  m_msgType t;\
-  for (int64_t i = 0; i < totalPoints; i++) {\
-    t = var[i];\
-    DREAM3D::Endian::FromSystemToBig::convert(t);\
-    gn[i] = t; \
-  }\
-  int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
-  delete[] gn;\
-  if (totalWritten != totalPoints)  {\
-    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
-    fclose(f);\
-    return -1;\
-  }\
+    m_msgType* gn = new m_msgType[totalPoints];\
+    m_msgType t;\
+    for (int64_t i = 0; i < totalPoints; i++) {\
+      t = var[i];\
+      DREAM3D::Endian::FromSystemToBig::convert(t);\
+      gn[i] = t; \
+    }\
+    int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
+    delete[] gn;\
+    if (totalWritten != totalPoints)  {\
+      qDebug() << "Error Writing Binary VTK Data into file " << file ;\
+      fclose(f);\
+      return -1;\
+    }\
   }
 
 
@@ -153,18 +153,18 @@
   fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
-  m_msgType* gn = new m_msgType[totalPoints];\
-  for (int64_t i = 0; i < totalPoints; i++) {\
-    gn[i] = var[i];\
-  }\
-  int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
-  delete[] gn;\
-  if (totalWritten != totalPoints)  {\
-    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
-    fclose(f);\
-    return -1;\
-  }\
- }
+    m_msgType* gn = new m_msgType[totalPoints];\
+    for (int64_t i = 0; i < totalPoints; i++) {\
+      gn[i] = var[i];\
+    }\
+    int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
+    delete[] gn;\
+    if (totalWritten != totalPoints)  {\
+      qDebug() << "Error Writing Binary VTK Data into file " << file ;\
+      fclose(f);\
+      return -1;\
+    }\
+  }
 
 
 #define WRITE_VTK_SCALARS_FROM_FIELD_ASCII(ptr, name, m_msgType, var, grain_indicies, FORMAT)\
@@ -179,20 +179,20 @@
   fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
-  m_msgType* gn = new m_msgType[totalPoints];\
-  m_msgType t;\
-  for (int64_t i = 0; i < totalPoints; i++) {\
-    t = var[grain_indicies[i]];\
-    DREAM3D::Endian::FromSystemToBig::convert(t); \
-    gn[i] = t; \
-  }\
-  int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
-  delete[] gn;\
-  if (totalWritten != totalPoints)  {\
-    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
-    fclose(f);\
-    return -1;\
-  }\
+    m_msgType* gn = new m_msgType[totalPoints];\
+    m_msgType t;\
+    for (int64_t i = 0; i < totalPoints; i++) {\
+      t = var[grain_indicies[i]];\
+      DREAM3D::Endian::FromSystemToBig::convert(t); \
+      gn[i] = t; \
+    }\
+    int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
+    delete[] gn;\
+    if (totalWritten != totalPoints)  {\
+      qDebug() << "Error Writing Binary VTK Data into file " << file ;\
+      fclose(f);\
+      return -1;\
+    }\
   }
 
 

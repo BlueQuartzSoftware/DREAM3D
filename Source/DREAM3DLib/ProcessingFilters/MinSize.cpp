@@ -98,9 +98,9 @@ void MinSize::readFilterParameters(AbstractFilterParametersReader* reader, int i
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMinAllowedGrainSize( reader->readValue("MinAllowedGrainSize", getMinAllowedGrainSize()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -210,14 +210,15 @@ void MinSize::assign_badpoints()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -253,19 +254,19 @@ void MinSize::assign_badpoints()
   int kstride, jstride;
   int grainname, grain;
   int neighbor;
-  QVector<int > n(numgrains + 1,0);
+  QVector<int > n(numgrains + 1, 0);
   while (counter != 0)
   {
     counter = 0;
     for (int k = 0; k < dims[2]; k++)
     {
-      kstride = static_cast<int>( dims[0]*dims[1]*k );
+      kstride = static_cast<int>( dims[0] * dims[1] * k );
       for (int j = 0; j < dims[1]; j++)
       {
-        jstride = static_cast<int>( dims[0]*j );
+        jstride = static_cast<int>( dims[0] * j );
         for (int i = 0; i < dims[0]; i++)
         {
-          count = kstride+jstride+i;
+          count = kstride + jstride + i;
 
           grainname = m_GrainIds[count];
           if (grainname < 0)
@@ -277,12 +278,12 @@ void MinSize::assign_badpoints()
             {
               good = 1;
               neighpoint = static_cast<int>( count + neighpoints[l] );
-              if (l == 0 && k == 0) good = 0;
-              if (l == 5 && k == (dims[2] - 1)) good = 0;
-              if (l == 1 && j == 0) good = 0;
-              if (l == 4 && j == (dims[1] - 1)) good = 0;
-              if (l == 2 && i == 0) good = 0;
-              if (l == 3 && i == (dims[0] - 1)) good = 0;
+              if (l == 0 && k == 0) { good = 0; }
+              if (l == 5 && k == (dims[2] - 1)) { good = 0; }
+              if (l == 1 && j == 0) { good = 0; }
+              if (l == 4 && j == (dims[1] - 1)) { good = 0; }
+              if (l == 2 && i == 0) { good = 0; }
+              if (l == 3 && i == (dims[0] - 1)) { good = 0; }
               if (good == 1)
               {
                 grain = m_GrainIds[neighpoint];
@@ -302,16 +303,16 @@ void MinSize::assign_badpoints()
             {
               good = 1;
               neighpoint = static_cast<int>( count + neighpoints[l] );
-              if (l == 0 && k == 0) good = 0;
-              if (l == 5 && k == (dims[2] - 1)) good = 0;
-              if (l == 1 && j == 0) good = 0;
-              if (l == 4 && j == (dims[1] - 1)) good = 0;
-              if (l == 2 && i == 0) good = 0;
-              if (l == 3 && i == (dims[0] - 1)) good = 0;
+              if (l == 0 && k == 0) { good = 0; }
+              if (l == 5 && k == (dims[2] - 1)) { good = 0; }
+              if (l == 1 && j == 0) { good = 0; }
+              if (l == 4 && j == (dims[1] - 1)) { good = 0; }
+              if (l == 2 && i == 0) { good = 0; }
+              if (l == 3 && i == (dims[0] - 1)) { good = 0; }
               if (good == 1)
               {
                 grain = m_GrainIds[neighpoint];
-                if(grain >= 0) n[grain] = 0;
+                if(grain >= 0) { n[grain] = 0; }
               }
             }
           }
@@ -355,17 +356,17 @@ void MinSize::remove_smallgrains()
 
   int numgrains = m->getNumCellFieldTuples();
 
-  QVector<int> voxcounts(numgrains,0);
+  QVector<int> voxcounts(numgrains, 0);
 
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];
-    if(gnum >= 0) voxcounts[gnum]++;
+    if(gnum >= 0) { voxcounts[gnum]++; }
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-  m_Active[i] = true;
-    if(voxcounts[i] >= m_MinAllowedGrainSize ) good = true;
+    m_Active[i] = true;
+    if(voxcounts[i] >= m_MinAllowedGrainSize ) { good = true; }
   }
   if(good == false)
   {
@@ -377,9 +378,9 @@ void MinSize::remove_smallgrains()
   {
     gnum = m_GrainIds[i];
     if(voxcounts[gnum] < m_MinAllowedGrainSize && gnum > 0)
-  {
-    m_GrainIds[i] = -1;
-    m_Active[gnum] = false;
-  }
+    {
+      m_GrainIds[i] = -1;
+      m_Active[gnum] = false;
+    }
   }
 }

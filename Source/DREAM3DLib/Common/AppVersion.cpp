@@ -40,9 +40,9 @@
 //
 // -----------------------------------------------------------------------------
 AppVersion::AppVersion() :
-m_MajorNum(-1),
-m_MinorNum(-1),
-m_PatchNum(-1)
+  m_MajorNum(-1),
+  m_MinorNum(-1),
+  m_PatchNum(-1)
 {
 
 }
@@ -91,8 +91,8 @@ void AppVersion::operator=(const AppVersion& rhs)
 bool AppVersion::operator==(const AppVersion& rhs)
 {
   return (m_MajorNum == rhs.m_MajorNum &&
-      m_MinorNum == rhs.m_MinorNum &&
-      m_PatchNum == rhs.m_PatchNum);
+          m_MinorNum == rhs.m_MinorNum &&
+          m_PatchNum == rhs.m_PatchNum);
 }
 
 // -----------------------------------------------------------------------------

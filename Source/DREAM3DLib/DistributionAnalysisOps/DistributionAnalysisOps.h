@@ -54,14 +54,14 @@ class DREAM3DLib_EXPORT DistributionAnalysisOps
   public:
     DREAM3D_SHARED_POINTERS(DistributionAnalysisOps)
     DREAM3D_TYPE_MACRO(DistributionAnalysisOps)
- //   DREAM3D_STATIC_NEW_MACRO(DistributionAnalysisOps)
+//   DREAM3D_STATIC_NEW_MACRO(DistributionAnalysisOps)
     virtual ~DistributionAnalysisOps();
 
-	virtual int calculateParameters(QVector<float> &data, FloatArrayType::Pointer outputs) = 0;
-    virtual int calculateCorrelatedParameters(QVector<QVector<float> > &data, VectorOfFloatArray outputs) = 0;
+    virtual int calculateParameters(QVector<float>& data, FloatArrayType::Pointer outputs) = 0;
+    virtual int calculateCorrelatedParameters(QVector<QVector<float> >& data, VectorOfFloatArray outputs) = 0;
 
-	static void determinemaxandminvalues(QVector<float> &data, float &max, float &min);
-	static void determinebinnumbers(float &max, float &min, int &numbins, FloatArrayType::Pointer binnumbers);
+    static void determinemaxandminvalues(QVector<float>& data, float& max, float& min);
+    static void determinebinnumbers(float& max, float& min, int& numbins, FloatArrayType::Pointer binnumbers);
 
   protected:
     DistributionAnalysisOps();

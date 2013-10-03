@@ -17,9 +17,9 @@ Q_EXPORT_PLUGIN2(ExamplePluginPlugin, ExamplePluginPlugin)
 
 namespace Detail
 {
-   const QString ExamplePluginPluginFile("ExamplePluginPlugin");
-   const QString ExamplePluginPluginDisplayName("ExamplePluginPlugin");
-   const QString ExamplePluginPluginBaseName("ExamplePluginPlugin");
+  const QString ExamplePluginPluginFile("ExamplePluginPlugin");
+  const QString ExamplePluginPluginDisplayName("ExamplePluginPlugin");
+  const QString ExamplePluginPluginBaseName("ExamplePluginPlugin");
 }
 
 // -----------------------------------------------------------------------------
@@ -48,7 +48,7 @@ QString ExamplePluginPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExamplePluginPlugin::writeSettings(QSettings &prefs)
+void ExamplePluginPlugin::writeSettings(QSettings& prefs)
 {
 
 }
@@ -56,7 +56,7 @@ void ExamplePluginPlugin::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExamplePluginPlugin::readSettings(QSettings &prefs)
+void ExamplePluginPlugin::readSettings(QSettings& prefs)
 {
 
 }

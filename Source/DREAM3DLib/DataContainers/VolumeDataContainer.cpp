@@ -55,13 +55,19 @@
 //
 // -----------------------------------------------------------------------------
 VolumeDataContainer::VolumeDataContainer() :
-m_NumCellTuples(0),
-m_NumCellFieldTuples(0),
-m_NumCellEnsembleTuples(0)
+  m_NumCellTuples(0),
+  m_NumCellFieldTuples(0),
+  m_NumCellEnsembleTuples(0)
 {
-  m_Dimensions[0] = 0; m_Dimensions[1] = 0; m_Dimensions[2] = 0;
-  m_Resolution[0] = 1.0f; m_Resolution[1] = 1.0f; m_Resolution[2] = 1.0f;
-  m_Origin[0] = 0.0f; m_Origin[1] = 0.0f; m_Origin[2] = 0.0f;
+  m_Dimensions[0] = 0;
+  m_Dimensions[1] = 0;
+  m_Dimensions[2] = 0;
+  m_Resolution[0] = 1.0f;
+  m_Resolution[1] = 1.0f;
+  m_Resolution[2] = 1.0f;
+  m_Origin[0] = 0.0f;
+  m_Origin[1] = 0.0f;
+  m_Origin[2] = 0.0f;
 
   setName(DREAM3D::HDF5::VolumeDataContainerName);
 }
@@ -85,7 +91,7 @@ DOES_DATASET_EXIST_DEFN(VolumeDataContainer, CellEnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addCellData(const QString &name, IDataArray::Pointer data)
+void VolumeDataContainer::addCellData(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -101,7 +107,7 @@ void VolumeDataContainer::addCellData(const QString &name, IDataArray::Pointer d
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getCellData(const QString &name)
+IDataArray::Pointer VolumeDataContainer::getCellData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(name);
@@ -115,7 +121,7 @@ IDataArray::Pointer VolumeDataContainer::getCellData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeCellData(const QString &name)
+IDataArray::Pointer VolumeDataContainer::removeCellData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(name);
@@ -131,7 +137,7 @@ IDataArray::Pointer VolumeDataContainer::removeCellData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameCellData(const QString &oldname, const QString &newname)
+bool VolumeDataContainer::renameCellData(const QString& oldname, const QString& newname)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(oldname);
@@ -180,7 +186,7 @@ int VolumeDataContainer::getNumCellArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getCellFieldData(const QString &name)
+IDataArray::Pointer VolumeDataContainer::getCellFieldData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellFieldData.find(name);
@@ -194,7 +200,7 @@ IDataArray::Pointer VolumeDataContainer::getCellFieldData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addCellFieldData(const QString &name, IDataArray::Pointer data)
+void VolumeDataContainer::addCellFieldData(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -210,7 +216,7 @@ void VolumeDataContainer::addCellFieldData(const QString &name, IDataArray::Poin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeCellFieldData(const QString &name)
+IDataArray::Pointer VolumeDataContainer::removeCellFieldData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellFieldData.find(name);
@@ -226,7 +232,7 @@ IDataArray::Pointer VolumeDataContainer::removeCellFieldData(const QString &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameCellFieldData(const QString &oldname, const QString &newname)
+bool VolumeDataContainer::renameCellFieldData(const QString& oldname, const QString& newname)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellFieldData.find(oldname);
@@ -275,7 +281,7 @@ int VolumeDataContainer::getNumCellFieldArrays()
 // -----------------------------------------------------------------------------
 void VolumeDataContainer::resizeCellFieldDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
@@ -288,7 +294,7 @@ void VolumeDataContainer::resizeCellFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getCellEnsembleData(const QString &name)
+IDataArray::Pointer VolumeDataContainer::getCellEnsembleData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellEnsembleData.find(name);
@@ -302,7 +308,7 @@ IDataArray::Pointer VolumeDataContainer::getCellEnsembleData(const QString &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addCellEnsembleData(const QString &name, IDataArray::Pointer data)
+void VolumeDataContainer::addCellEnsembleData(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -319,7 +325,7 @@ void VolumeDataContainer::addCellEnsembleData(const QString &name, IDataArray::P
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeCellEnsembleData(const QString &name)
+IDataArray::Pointer VolumeDataContainer::removeCellEnsembleData(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellEnsembleData.find(name);

@@ -41,9 +41,9 @@
 //
 // -----------------------------------------------------------------------------
 VtkGrainIdWriter::VtkGrainIdWriter() :
-FileWriter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_WriteBinaryFiles(true)
+  FileWriter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_WriteBinaryFiles(true)
 {
   setupFilterParameters();
 }
@@ -98,7 +98,7 @@ int VtkGrainIdWriter::writeFilterParameters(AbstractFilterParametersWriter* writ
 void VtkGrainIdWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VoxelDataContainer* m = getVoxelDataContainer();
 
 
@@ -132,8 +132,8 @@ int VtkGrainIdWriter::writeFile()
   // Copy all the variables into the helper class from above
   if (NULL == getVoxelDataContainer())
   {
-    
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     setErrorMessage(ss.str());
     setErrorCondition(-1);
     return -1;
@@ -141,8 +141,8 @@ int VtkGrainIdWriter::writeFile()
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
-    
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     setErrorMessage(ss.str());
     setErrorCondition(-1);
     return -1;
@@ -166,7 +166,7 @@ int VtkGrainIdWriter::writeFile()
   {
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Writing GrainId Vtk RectilinearGrid File", XXXX);
-  addErrorMessage(em);
+    addErrorMessage(em);
   }
   return err;
 }

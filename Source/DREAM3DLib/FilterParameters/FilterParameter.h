@@ -65,7 +65,7 @@ class FilterParameter
     DREAM3D_SHARED_POINTERS(FilterParameter)
     DREAM3D_STATIC_NEW_MACRO(FilterParameter)
     DREAM3D_TYPE_MACRO(FilterParameter)
-    virtual ~FilterParameter(){}
+    virtual ~FilterParameter() {}
 
     enum WidgetType
     {
@@ -153,7 +153,7 @@ class ConstrainedFilterParameter : public FilterParameter
     DREAM3D_STATIC_NEW_MACRO(ConstrainedFilterParameter<T>)
     DREAM3D_TYPE_MACRO_SUPER(ConstrainedFilterParameter<T>, FilterParameter)
 
-    virtual ~ConstrainedFilterParameter(){}
+    virtual ~ConstrainedFilterParameter() {}
 
     DREAM3D_INSTANCE_PROPERTY(T, Minimum)
     DREAM3D_INSTANCE_PROPERTY(T, Maximum)
@@ -177,14 +177,14 @@ class ChoiceFilterParameter : public FilterParameter
     DREAM3D_STATIC_NEW_MACRO(ChoiceFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
 
-    virtual ~ChoiceFilterParameter(){}
+    virtual ~ChoiceFilterParameter() {}
 
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, Editable)
 
   protected:
     ChoiceFilterParameter() :
-    m_Editable(false) {}
+      m_Editable(false) {}
 
   private:
     ChoiceFilterParameter(const ChoiceFilterParameter&); // Copy Constructor Not Implemented
@@ -201,14 +201,14 @@ class ComparisonFilterParameter : public FilterParameter
     DREAM3D_STATIC_NEW_MACRO(ComparisonFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(ComparisonFilterParameter, FilterParameter)
 
-    virtual ~ComparisonFilterParameter(){}
+    virtual ~ComparisonFilterParameter() {}
 
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
 
   protected:
     ComparisonFilterParameter() :
-    m_ShowOperators(true) {}
+      m_ShowOperators(true) {}
 
   private:
     ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented

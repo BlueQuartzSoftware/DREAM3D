@@ -61,12 +61,12 @@ class StandardizeEulerAnglesImpl
       m_CellEulerAngles(eulers),
       m_CellPhases(phases),
       m_CrystalStructures(crystructs)
-    //      numCells(numCells),
-    //      numEnsembles(numEnsembles)
+      //      numCells(numCells),
+      //      numEnsembles(numEnsembles)
     {
-    m_OrientationOps = OrientationOps::getOrientationOpsVector();
+      m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
-    virtual ~StandardizeEulerAnglesImpl(){}
+    virtual ~StandardizeEulerAnglesImpl() {}
 
     void convert(size_t start, size_t end) const
     {
@@ -79,25 +79,25 @@ class StandardizeEulerAnglesImpl
       QuaternionMathF::Identity(qI);
       for (size_t i = start; i < end; i++)
       {
-        ea1 = m_CellEulerAngles[3*i];
-        ea2 = m_CellEulerAngles[3*i+1];
-        ea3 = m_CellEulerAngles[3*i+2];
+        ea1 = m_CellEulerAngles[3 * i];
+        ea2 = m_CellEulerAngles[3 * i + 1];
+        ea3 = m_CellEulerAngles[3 * i + 2];
         OrientationMath::EulertoQuat(q, ea1, ea2, ea3);
         cellPhase = m_CellPhases[i];
         crystalStruct = m_CrystalStructures[cellPhase];
         if (crystalStruct == Ebsd::CrystalStructure::UnknownCrystalStructure) { continue; }
         ormath = m_OrientationOps[crystalStruct];
-        ormath->getNearestQuat(qI,q);
+        ormath->getNearestQuat(qI, q);
 
         OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
-        m_CellEulerAngles[3*i] = ea1;
-        m_CellEulerAngles[3*i+1] = ea2;
-        m_CellEulerAngles[3*i+2] = ea3;
+        m_CellEulerAngles[3 * i] = ea1;
+        m_CellEulerAngles[3 * i + 1] = ea2;
+        m_CellEulerAngles[3 * i + 2] = ea3;
       }
     }
 
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       convert(r.begin(), r.end());
     }
@@ -169,16 +169,16 @@ int StandardizeEulerAngles::writeFilterParameters(AbstractFilterParametersWriter
 void StandardizeEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, 3)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
 
-      typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-      addWarningMessage(getHumanLabel(), "This filter is possibly unfinished. Use at your own risk", -666);
+  addWarningMessage(getHumanLabel(), "This filter is possibly unfinished. Use at your own risk", -666);
 }
 
 // -----------------------------------------------------------------------------

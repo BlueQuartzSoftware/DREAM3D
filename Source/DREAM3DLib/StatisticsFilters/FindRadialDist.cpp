@@ -191,14 +191,14 @@ void FindRadialDist::execute()
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QFileInfo fi(m_OutputFile);
-QString parentPath = fi.path();
-    QDir dir;
+  QString parentPath = fi.path();
+  QDir dir;
   if(!dir.mkpath(parentPath))
   {
-      QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-      notifyErrorMessage(ss, -1);
-      setErrorCondition(-1);
-      return;
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
+    notifyErrorMessage(ss, -1);
+    setErrorCondition(-1);
+    return;
   }
 
 
@@ -249,29 +249,29 @@ void FindRadialDist::find_radialdist()
   float totalvolume = 0;
   float largestESD = 0;
   float largestDistToSurface = 0;
-  QVector<float> distToSurface(numgrains,-1);
+  QVector<float> distToSurface(numgrains, -1);
   for (size_t i = 1; i < numgrains; i++)
   {
 
     if(m_SurfaceFields[i] == false)
     {
       number++;
-      totalvolume = totalvolume+m_Volumes[i];
-      if(m_EquivalentDiameters[i] > largestESD) largestESD = m_EquivalentDiameters[i];
-      dist = (m_Centroids[3*i] - boundbox[1]);
-      if((boundbox[2] - m_Centroids[3*i]) < dist) dist = (boundbox[2] - m_Centroids[3*i]);
-      if((m_Centroids[3*i+1] - boundbox[3]) < dist) dist = (m_Centroids[3*i+1] - boundbox[3]);
-      if((boundbox[4] - m_Centroids[3*i+1]) < dist) dist = (boundbox[4] - m_Centroids[3*i+1]);
-      if((m_Centroids[3*i+2] - boundbox[5]) < dist) dist = (m_Centroids[3*i+2] - boundbox[5]);
-      if((boundbox[6] - m_Centroids[3*i+2]) < dist) dist = (boundbox[6] - m_Centroids[3*i+2]);
+      totalvolume = totalvolume + m_Volumes[i];
+      if(m_EquivalentDiameters[i] > largestESD) { largestESD = m_EquivalentDiameters[i]; }
+      dist = (m_Centroids[3 * i] - boundbox[1]);
+      if((boundbox[2] - m_Centroids[3 * i]) < dist) { dist = (boundbox[2] - m_Centroids[3 * i]); }
+      if((m_Centroids[3 * i + 1] - boundbox[3]) < dist) { dist = (m_Centroids[3 * i + 1] - boundbox[3]); }
+      if((boundbox[4] - m_Centroids[3 * i + 1]) < dist) { dist = (boundbox[4] - m_Centroids[3 * i + 1]); }
+      if((m_Centroids[3 * i + 2] - boundbox[5]) < dist) { dist = (m_Centroids[3 * i + 2] - boundbox[5]); }
+      if((boundbox[6] - m_Centroids[3 * i + 2]) < dist) { dist = (boundbox[6] - m_Centroids[3 * i + 2]); }
       distToSurface[i] = dist;
-      if(dist > largestDistToSurface) largestDistToSurface = dist;
+      if(dist > largestDistToSurface) { largestDistToSurface = dist; }
     }
 
   }
-  float binSize = largestDistToSurface/float(numbins);
-  float avgDensity = float(number)/totalvolume;
-  int sizebins = (largestESD/ESDStepSize)+1;
+  float binSize = largestDistToSurface / float(numbins);
+  float avgDensity = float(number) / totalvolume;
+  int sizebins = (largestESD / ESDStepSize) + 1;
   QVector<QVector<float> > count(sizebins);
   QVector<QVector<float> > volume(sizebins);
   for (size_t i = 0; i < count.size(); i++)
@@ -285,26 +285,26 @@ void FindRadialDist::find_radialdist()
     {
       for(int j = 0; j < numbins; j++)
       {
-        if(j < int(distToSurface[i]/binSize))
+        if(j < int(distToSurface[i] / binSize))
         {
-          volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] = volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] + ((4.0/3.0)*DREAM3D::Constants::k_Pi*float((j+1)*binSize)*float((j+1)*binSize)*float((j+1)*binSize)) - ((4.0/3.0)*DREAM3D::Constants::k_Pi*float(j*binSize)*float(j*binSize)*float(j*binSize));
+          volume[int(m_EquivalentDiameters[i] / ESDStepSize)][j] = volume[int(m_EquivalentDiameters[i] / ESDStepSize)][j] + ((4.0 / 3.0) * DREAM3D::Constants::k_Pi * float((j + 1) * binSize) * float((j + 1) * binSize) * float((j + 1) * binSize)) - ((4.0 / 3.0) * DREAM3D::Constants::k_Pi * float(j * binSize) * float(j * binSize) * float(j * binSize));
         }
       }
-      x = m_Centroids[3*i];
-      y = m_Centroids[3*i+1];
-      z = m_Centroids[3*i+2];
+      x = m_Centroids[3 * i];
+      y = m_Centroids[3 * i + 1];
+      z = m_Centroids[3 * i + 2];
       for (size_t j = 1; j < numgrains; j++)
       {
         if(m_SurfaceFields[j] == false && i != j)
         {
-          xn = m_Centroids[3*j];
-          yn = m_Centroids[3*j+1];
-          zn = m_Centroids[3*j+2];
-          dist = ((x - xn)*(x - xn))+((y - yn)*(y - yn))+((z - zn)*(z - zn));
+          xn = m_Centroids[3 * j];
+          yn = m_Centroids[3 * j + 1];
+          zn = m_Centroids[3 * j + 2];
+          dist = ((x - xn) * (x - xn)) + ((y - yn) * (y - yn)) + ((z - zn) * (z - zn));
           dist = sqrt(dist);
-          if(int(dist/binSize) < int(distToSurface[i]/binSize))
+          if(int(dist / binSize) < int(distToSurface[i] / binSize))
           {
-            count[int(m_EquivalentDiameters[i]/ESDStepSize)][int(dist/binSize)]++;
+            count[int(m_EquivalentDiameters[i] / ESDStepSize)][int(dist / binSize)]++;
           }
           //if(dist < distToSurface[j])
           //{
@@ -326,8 +326,8 @@ void FindRadialDist::find_radialdist()
     {
       for (int j = 0; j < numbins; j++)
       {
-        float value = (count[i][j]/volume[i][j])/avgDensity;
-        if(count[i][j] == 0) value = 0;
+        float value = (count[i][j] / volume[i][j]) / avgDensity;
+        if(count[i][j] == 0) { value = 0; }
         outFile << value << " ";
       }
       outFile << "\n";
@@ -352,40 +352,40 @@ void FindRadialDist::find_boundingbox()
   float mindist;
   int sidetomove, move;
   boundbox[1] = 0;
-  boundbox[2] = m->getXPoints()*m->getXRes();
+  boundbox[2] = m->getXPoints() * m->getXRes();
   boundbox[3] = 0;
-  boundbox[4] = m->getYPoints()*m->getYRes();
+  boundbox[4] = m->getYPoints() * m->getYRes();
   boundbox[5] = 0;
-  boundbox[6] = m->getZPoints()*m->getZRes();
+  boundbox[6] = m->getZPoints() * m->getZRes();
   for (size_t i = 1; i < size; i++)
   {
     if(m_SurfaceFields[i] == true)
     {
       move = 1;
       mindist = 10000000000.0;
-      x = m_Centroids[3*i];
-      y = m_Centroids[3*i+1];
-      z = m_Centroids[3*i+2];
+      x = m_Centroids[3 * i];
+      y = m_Centroids[3 * i + 1];
+      z = m_Centroids[3 * i + 2];
       coords[1] = x;
       coords[2] = x;
       coords[3] = y;
       coords[4] = y;
       coords[5] = z;
       coords[6] = z;
-      for(int j=1;j<7;j++)
+      for(int j = 1; j < 7; j++)
       {
         dist[j] = 10000000000.0;
-        if(j%2 == 1)
+        if(j % 2 == 1)
         {
-          if(coords[j] > boundbox[j]) dist[j] = (coords[j]-boundbox[j]);
-          if(coords[j] <= boundbox[j]) move = 0;
+          if(coords[j] > boundbox[j]) { dist[j] = (coords[j] - boundbox[j]); }
+          if(coords[j] <= boundbox[j]) { move = 0; }
         }
-        if(j%2 == 0)
+        if(j % 2 == 0)
         {
-          if(coords[j] < boundbox[j]) dist[j] = (boundbox[j]-coords[j]);
-          if(coords[j] >= boundbox[j]) move = 0;
+          if(coords[j] < boundbox[j]) { dist[j] = (boundbox[j] - coords[j]); }
+          if(coords[j] >= boundbox[j]) { move = 0; }
         }
-        if(dist[j] < mindist) mindist = dist[j], sidetomove = j;
+        if(dist[j] < mindist) { mindist = dist[j], sidetomove = j; }
       }
       if(move == 1)
       {

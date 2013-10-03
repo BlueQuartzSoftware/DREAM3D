@@ -106,12 +106,12 @@ class ThresholdFilterHelper : public IDataArrayFilter
 
 
     /**
-   * @brief execute
-   * @param input
-   * @param output
-   * @return
-   */
-  int execute(IDataArray *input, IDataArray *output);
+    * @brief execute
+    * @param input
+    * @param output
+    * @return
+    */
+    int execute(IDataArray* input, IDataArray* output);
 
   private:
     DREAM3D::Comparison::Enumeration comparisonOperator;

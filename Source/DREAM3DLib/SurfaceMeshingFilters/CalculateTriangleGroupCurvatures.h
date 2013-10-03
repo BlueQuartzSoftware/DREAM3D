@@ -84,9 +84,9 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
      * @param name The name of the data array being used.
      * @return
      */
-    DataArray<double>::Pointer extractPatchData(int triId, FaceArray::UniqueFaceIds_t &triPatch,
+    DataArray<double>::Pointer extractPatchData(int triId, FaceArray::UniqueFaceIds_t& triPatch,
                                                 double* data,
-                                                const QString &name) const;
+                                                const QString& name) const;
   private:
     int m_NRing;
     QVector<int> m_TriangleIds;

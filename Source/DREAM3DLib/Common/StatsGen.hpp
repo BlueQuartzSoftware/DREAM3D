@@ -38,7 +38,7 @@
 #define _STATSGEN_H_
 
 #if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
 
@@ -62,7 +62,7 @@ class StatsGen
 {
   public:
 
-    virtual ~StatsGen(){}
+    virtual ~StatsGen() {}
 
     /**
      * @brief Generates  XY Scatter plot data for a Beta Distribution function
@@ -74,7 +74,7 @@ class StatsGen
      * @return Error Code. 0 is NO ERROR.
      */
     template<typename Vector>
-    static int GenBetaPlotData(float alpha, float beta, Vector &x, Vector &y, int size)
+    static int GenBetaPlotData(float alpha, float beta, Vector& x, Vector& y, int size)
     {
       int err = 0;
       float total = 0;
@@ -88,26 +88,26 @@ class StatsGen
         x[i] = betain;
         y[i] = betaout;
         total = total + betaout;
-        if (betaout < 0) err = 1;
+        if (betaout < 0) { err = 1; }
       }
       for (int i = 0; i < size; i++)
       {
-        y[i] = y[i]/total;
+        y[i] = y[i] / total;
       }
       return err;
     }
 
-     /**
-     * @brief GenLogNormalPlotData Generates Log Normal plot data
-     * @param avg The Average
-     * @param stdDev The standard deviation
-     * @param x The generated X values. Must conform to the STL vector API
-     * @param y The generated Y values. Must conform to the STL vector API
-     * @param size The number of values to create
-     * @return
-     */
+    /**
+    * @brief GenLogNormalPlotData Generates Log Normal plot data
+    * @param avg The Average
+    * @param stdDev The standard deviation
+    * @param x The generated X values. Must conform to the STL vector API
+    * @param y The generated Y values. Must conform to the STL vector API
+    * @param size The number of values to create
+    * @return
+    */
     template<typename Vector>
-    static int GenLogNormalPlotData(float avg, float stdDev, Vector &x, Vector &y, int size)
+    static int GenLogNormalPlotData(float avg, float stdDev, Vector& x, Vector& y, int size)
     {
       int err = 0;
       float lognormin, lognormout, max, min;
@@ -123,7 +123,7 @@ class StatsGen
         lognormout = (1.0 / (lognormin * stdDev * root2pi)) * exp(-((log(lognormin) - avg) * (log(lognormin) - avg)) / (2 * s2));
         x[i] = lognormin;
         y[i] = lognormout * ((max - min) / float(size));
-        if (lognormout < 0) err = 1;
+        if (lognormout < 0) { err = 1; }
       }
       return err;
     }
@@ -139,7 +139,7 @@ class StatsGen
      * @return
      */
     template<typename Vector>
-    static int GenPowerLawPlotData(float alpha, float k, float beta, Vector &x, Vector &y, int size)
+    static int GenPowerLawPlotData(float alpha, float k, float beta, Vector& x, Vector& y, int size)
     {
       int err = 0;
       float in, out, max, min;
@@ -153,7 +153,7 @@ class StatsGen
         out = alpha * powf(in, k) + beta;
         x[i] = in;
         y[i] = out;
-        if (out < 0) err = 1;
+        if (out < 0) { err = 1; }
       }
       return err;
     }
@@ -169,11 +169,11 @@ class StatsGen
      * @return
      */
     static int ComputeNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff,
-                            float binstep, float &max, float &min)
+                                   float binstep, float& max, float& min)
     {
       min = expf(mu - (minCutOff * sigma));
       max = expf(mu + (maxCutOff * sigma));
-      return static_cast<int>((max -min)/binstep)+1;
+      return static_cast<int>((max - min) / binstep) + 1;
     }
 
     /**
@@ -190,7 +190,7 @@ class StatsGen
      * @return
      */
     template<typename J, typename Vector>
-    static int GenCutOff(J mu, J sigma, J minCutOff, J maxCutOff, J binstep, Vector &x, Vector &y, J yMax, int &numsizebins, Vector &binsizes)
+    static int GenCutOff(J mu, J sigma, J minCutOff, J maxCutOff, J binstep, Vector& x, Vector& y, J yMax, int& numsizebins, Vector& binsizes)
     {
       J max, min;
       numsizebins = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, binstep, max, min);
@@ -247,9 +247,9 @@ class StatsGen
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        eulers[3*i+0] = ea1;
-        eulers[3*i+1] = ea2;
-        eulers[3*i+2] = ea3;
+        eulers[3 * i + 0] = ea1;
+        eulers[3 * i + 1] = ea2;
+        eulers[3 * i + 2] = ea3;
       }
       return err;
     }
@@ -290,9 +290,9 @@ class StatsGen
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        eulers[3*i+0] = ea1;
-        eulers[3*i+1] = ea2;
-        eulers[3*i+2] = ea3;
+        eulers[3 * i + 0] = ea1;
+        eulers[3 * i + 1] = ea2;
+        eulers[3 * i + 2] = ea3;
       }
       return err;
     }
@@ -312,7 +312,7 @@ class StatsGen
     static int GenOrthoRhombicODFPlotData(T* odf, T* eulers, int npoints)
     {
       DREAM3D_RANDOMNG_NEW()
-          int err = 0;
+      int err = 0;
       int choose;
       float ea1, ea2, ea3;
       float totaldensity;
@@ -337,9 +337,9 @@ class StatsGen
           }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        eulers[3*i+0] = ea1;
-        eulers[3*i+1] = ea2;
-        eulers[3*i+2] = ea3;
+        eulers[3 * i + 0] = ea1;
+        eulers[3 * i + 1] = ea2;
+        eulers[3 * i + 2] = ea3;
       }
       return err;
     }
@@ -368,7 +368,7 @@ class StatsGen
     static int GenAxisODFPlotData(T* odf, T* eulers, int npoints)
     {
       DREAM3D_RANDOMNG_NEW()
-          int err = 0;
+      int err = 0;
       int choose;
       float ea1, ea2, ea3;
       float totaldensity;
@@ -393,9 +393,9 @@ class StatsGen
           }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        eulers[3*i+0] = ea1;
-        eulers[3*i+1] = ea2;
-        eulers[3*i+2] = ea3;
+        eulers[3 * i + 0] = ea1;
+        eulers[3 * i + 1] = ea2;
+        eulers[3 * i + 2] = ea3;
       }
       return err;
     }
@@ -415,7 +415,7 @@ class StatsGen
 
       float radtodeg = 180.0f / float(M_PI);
       DREAM3D_RANDOMNG_NEW()
-          int err = 0;
+      int err = 0;
       float density;
       float totaldensity;
       int choose = 0;
@@ -490,7 +490,7 @@ class StatsGen
       {
         yval[i] = 0;
       }
-      //	  float ra1, ra2, ra3, rb1, rb2, rb3, rc1, rc2, rc3;
+      //    float ra1, ra2, ra3, rb1, rb2, rb3, rc1, rc2, rc3;
       float td1;
       for (int i = 0; i < size; i++)
       {
@@ -519,7 +519,7 @@ class StatsGen
     }
 
   protected:
-    StatsGen(){}
+    StatsGen() {}
 
   private:
     StatsGen(const StatsGen&); // Copy Constructor Not Implemented

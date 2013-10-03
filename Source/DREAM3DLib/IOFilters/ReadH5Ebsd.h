@@ -146,23 +146,23 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
 
     virtual void setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                             QSet<QString> selectedEdgeArrays,
-                                                             QSet<QString> selectedFaceArrays,
-                                                             QSet<QString> selectedCellArrays,
-                                                             QSet<QString> selectedFieldArrays,
-                                                             QSet<QString> selectedEnsembleArrays);
+                                             QSet<QString> selectedEdgeArrays,
+                                             QSet<QString> selectedFaceArrays,
+                                             QSet<QString> selectedCellArrays,
+                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedEnsembleArrays);
     virtual void setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFaceArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                              QSet<QString> selectedEdgeArrays,
+                                              QSet<QString> selectedFaceArrays,
+                                              QSet<QString> selectedFieldArrays,
+                                              QSet<QString> selectedEnsembleArrays);
     virtual void setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                           QSet<QString> selectedEdgeArrays,
+                                           QSet<QString> selectedFieldArrays,
+                                           QSet<QString> selectedEnsembleArrays);
     virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                QSet<QString> selectedFieldArrays,
-                                                QSet<QString> selectedEnsembleArrays);
+                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedEnsembleArrays);
   protected:
     ReadH5Ebsd();
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
@@ -178,14 +178,14 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     void copyHEDMArrays(H5EbsdVolumeReader* ebsdReader);
 
 
-      /**
-     * @brief This method reads the values for the phase type, crystal structure
-     * and precipitate fractions from the EBSD file.
-     * @param reader The EbsdReader instance
-     * @param precipFractions Container to hold the precipitate fractions (out)
-     * @param crystalStructures Container to hold the crystal structures (out)
-     * @return Zero/Positive on Success - Negative on error.
-     */
+    /**
+    * @brief This method reads the values for the phase type, crystal structure
+    * and precipitate fractions from the EBSD file.
+    * @param reader The EbsdReader instance
+    * @param precipFractions Container to hold the precipitate fractions (out)
+    * @param crystalStructures Container to hold the crystal structures (out)
+    * @return Zero/Positive on Success - Negative on error.
+    */
     template<typename EbsdReader, typename EbsdPhase>
     int loadInfo(EbsdReader* reader)
     {
@@ -216,7 +216,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       latticeConstants->SetComponent(0, 4, 0.0f);
       latticeConstants->SetComponent(0, 5, 0.0f);
 
-      for(size_t i=0;i<phases.size();i++)
+      for(size_t i = 0; i < phases.size(); i++)
       {
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );

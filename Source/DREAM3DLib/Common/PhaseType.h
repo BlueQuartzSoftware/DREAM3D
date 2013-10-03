@@ -114,7 +114,7 @@ class DREAM3DLib_EXPORT PhaseType
     }
 
 
-    static void getPhaseTypeStrings(QVector<QString> &strings)
+    static void getPhaseTypeStrings(QVector<QString>& strings)
     {
       strings.clear();
       strings.push_back(PrimaryStr());
@@ -125,7 +125,7 @@ class DREAM3DLib_EXPORT PhaseType
       strings.push_back(UnknownPhaseTypeStr());
     }
 
-    static void getPhaseTypeEnums(QVector<unsigned int> &types)
+    static void getPhaseTypeEnums(QVector<unsigned int>& types)
     {
       types.clear();
       types.push_back(DREAM3D::PhaseType::PrimaryPhase);
@@ -136,7 +136,7 @@ class DREAM3DLib_EXPORT PhaseType
       types.push_back(DREAM3D::PhaseType::UnknownPhaseType);
     }
 
-    static void getPhaseTypeMap(QMap<int, QString> &map)
+    static void getPhaseTypeMap(QMap<int, QString>& map)
     {
       map.clear();
       map[DREAM3D::PhaseType::PrimaryPhase] = PrimaryStr();

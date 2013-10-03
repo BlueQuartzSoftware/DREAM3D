@@ -45,9 +45,9 @@
 class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 {
   public:
-  DREAM3D_SHARED_POINTERS(YSChoiAbaqusReader)
-  DREAM3D_STATIC_NEW_MACRO(YSChoiAbaqusReader)
-  DREAM3D_TYPE_MACRO_SUPER(YSChoiAbaqusReader, FileReader)
+    DREAM3D_SHARED_POINTERS(YSChoiAbaqusReader)
+    DREAM3D_STATIC_NEW_MACRO(YSChoiAbaqusReader)
+    DREAM3D_TYPE_MACRO_SUPER(YSChoiAbaqusReader, FileReader)
 
 
     virtual ~YSChoiAbaqusReader();
@@ -56,24 +56,24 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(InputGrainInfoFile)
 
-	//------ Created Cell Data
+    //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-	//------ Created Field Data
+    //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
 
-	virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual void setupFilterParameters();
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void preflight();
-	virtual void execute();
+    virtual void execute();
 
   protected:
     YSChoiAbaqusReader();
@@ -95,7 +95,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     float* m_AvgQuats;
     float* m_CellEulerAngles;
 
-	unsigned int* m_CrystalStructures;
+    unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

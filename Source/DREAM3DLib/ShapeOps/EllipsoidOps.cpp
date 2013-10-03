@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -41,7 +41,7 @@
 
 
 
-const static float m_one_over_pi = 1.0f/DREAM3D::Constants::k_Pi;
+const static float m_one_over_pi = 1.0f / DREAM3D::Constants::k_Pi;
 
 // -----------------------------------------------------------------------------
 //
@@ -84,9 +84,9 @@ float EllipsoidOps::inside(float axis1comp, float axis2comp, float axis3comp)
   axis1comp = fabs(axis1comp);
   axis2comp = fabs(axis2comp);
   axis3comp = fabs(axis3comp);
-  axis1comp = axis1comp*axis1comp;
-  axis2comp = axis2comp*axis2comp;
-  axis3comp = axis3comp*axis3comp;
+  axis1comp = axis1comp * axis1comp;
+  axis2comp = axis2comp * axis2comp;
+  axis3comp = axis3comp * axis3comp;
   inside = 1.0f - axis1comp - axis2comp - axis3comp;
   return inside;
 }

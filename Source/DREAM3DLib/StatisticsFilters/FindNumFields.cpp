@@ -45,12 +45,12 @@
 //
 // -----------------------------------------------------------------------------
 FindNumFields::FindNumFields() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
-m_FieldPhases(NULL),
-m_NumFields(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
+  m_FieldPhases(NULL),
+  m_NumFields(NULL)
 {
 
 }
@@ -66,8 +66,8 @@ void FindNumFields::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -87,7 +87,7 @@ int FindNumFields::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -301, int32_t, Int32ArrayType, fields, 1)

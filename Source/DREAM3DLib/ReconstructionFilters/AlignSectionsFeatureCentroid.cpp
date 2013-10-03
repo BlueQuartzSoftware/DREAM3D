@@ -130,12 +130,12 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setUseReferenceSlice( reader->readValue("UseReferenceSlice", false) );
   setReferenceSlice( reader->readValue("ReferenceSlice", getReferenceSlice()) );
   setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", false) );
   setAlignmentShiftFileName( reader->readValue( "AlignmentShiftFileName", getAlignmentShiftFileName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -221,22 +221,24 @@ void AlignSectionsFeatureCentroid::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
+void AlignSectionsFeatureCentroid::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   ofstream outFile;
-  if (getWriteAlignmentShifts() == true) {
+  if (getWriteAlignmentShifts() == true)
+  {
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -250,8 +252,8 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int> &xshifts, QVector<in
   //  int xspot, yspot;
   float xRes = m->getXRes();
   float yRes = m->getYRes();
-  QVector<float> xCentroid(dims[2],0.0);
-  QVector<float> yCentroid(dims[2],0.0);
+  QVector<float> xCentroid(dims[2], 0.0);
+  QVector<float> yCentroid(dims[2], 0.0);
 
   for (DimType iter = 0; iter < dims[2]; iter++)
   {
@@ -259,7 +261,7 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int> &xshifts, QVector<in
     xCentroid[iter] = 0;
     yCentroid[iter] = 0;
 
-    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter/dims[2])*100);
+    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
     //  notifyStatusMessage(ss);
     slice = static_cast<int>( (dims[2] - 1) - iter );
     for (DimType l = 0; l < dims[1]; l++)
@@ -269,14 +271,14 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int> &xshifts, QVector<in
         point = static_cast<int>( ((slice) * dims[0] * dims[1]) + (l * dims[0]) + n );
         if(m_GoodVoxels[point] == true)
         {
-          xCentroid[iter] = xCentroid[iter] + (float(n)*xRes);
-          yCentroid[iter] = yCentroid[iter] + (float(l)*yRes);
+          xCentroid[iter] = xCentroid[iter] + (float(n) * xRes);
+          yCentroid[iter] = yCentroid[iter] + (float(l) * yRes);
           count++;
         }
       }
     }
-    xCentroid[iter] = xCentroid[iter]/float(count);
-    yCentroid[iter] = yCentroid[iter]/float(count);
+    xCentroid[iter] = xCentroid[iter] / float(count);
+    yCentroid[iter] = yCentroid[iter] / float(count);
   }
   //int refSlice;
   for (DimType iter = 1; iter < dims[2]; iter++)
@@ -284,19 +286,21 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int> &xshifts, QVector<in
     slice = static_cast<int>( (dims[2] - 1) - iter );
     if(m_UseReferenceSlice == true)
     {
-      xshifts[iter] = int((xCentroid[iter]-xCentroid[m_ReferenceSlice])/xRes);
-      yshifts[iter] = int((yCentroid[iter]-yCentroid[m_ReferenceSlice])/yRes);
+      xshifts[iter] = int((xCentroid[iter] - xCentroid[m_ReferenceSlice]) / xRes);
+      yshifts[iter] = int((yCentroid[iter] - yCentroid[m_ReferenceSlice]) / yRes);
     }
     else
     {
-      xshifts[iter] = xshifts[iter-1] + int((xCentroid[iter]-xCentroid[iter-1])/xRes);
-      yshifts[iter] = yshifts[iter-1] + int((yCentroid[iter]-yCentroid[iter-1])/yRes);
+      xshifts[iter] = xshifts[iter - 1] + int((xCentroid[iter] - xCentroid[iter - 1]) / xRes);
+      yshifts[iter] = yshifts[iter - 1] + int((yCentroid[iter] - yCentroid[iter - 1]) / yRes);
     }
-    if (getWriteAlignmentShifts() == true) {
-      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << " " << xCentroid[iter] << " " << yCentroid[iter] << endl;
+    if (getWriteAlignmentShifts() == true)
+    {
+      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << " " << xCentroid[iter] << " " << yCentroid[iter] << endl;
     }
   }
-  if (getWriteAlignmentShifts() == true) {
+  if (getWriteAlignmentShifts() == true)
+  {
     outFile.close();
   }
 }

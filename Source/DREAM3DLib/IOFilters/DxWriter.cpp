@@ -47,10 +47,10 @@
 //
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter() :
-FileWriter(), 
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName), 
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), 
-  m_AddSurfaceLayer(false), 
+  FileWriter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_AddSurfaceLayer(false),
   m_GrainIds(NULL)
 {
   setupFilterParameters();

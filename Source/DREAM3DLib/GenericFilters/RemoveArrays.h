@@ -92,23 +92,23 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     typedef QSet<QString> ArrayList_t;
 
     virtual void setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFaceArrays,
-                                                  QSet<QString> selectedCellArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                   QSet<QString> selectedEnsembleArrays);
+                                             QSet<QString> selectedEdgeArrays,
+                                             QSet<QString> selectedFaceArrays,
+                                             QSet<QString> selectedCellArrays,
+                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedEnsembleArrays);
     virtual void setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFaceArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                              QSet<QString> selectedEdgeArrays,
+                                              QSet<QString> selectedFaceArrays,
+                                              QSet<QString> selectedFieldArrays,
+                                              QSet<QString> selectedEnsembleArrays);
     virtual void setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFieldArrays,
-                                                  QSet<QString> selectedEnsembleArrays);
+                                           QSet<QString> selectedEdgeArrays,
+                                           QSet<QString> selectedFieldArrays,
+                                           QSet<QString> selectedEnsembleArrays);
     virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                  QSet<QString> selectedFaceArrays,
-                                                  QSet<QString> selectedEdgeArrays);
+                                             QSet<QString> selectedFaceArrays,
+                                             QSet<QString> selectedEdgeArrays);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -116,7 +116,7 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

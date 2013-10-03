@@ -67,8 +67,8 @@ namespace Detail
   // -----------------------------------------------------------------------------
   template<typename T>
   IDataArray::Pointer readGbcdDataset(hid_t locId,
-                                    const QString &datasetPath,
-                                    const QVector<hsize_t> &dims)
+                                      const QString& datasetPath,
+                                      const QVector<hsize_t>& dims)
   {
     herr_t err = -1;
     IDataArray::Pointer ptr;
@@ -91,7 +91,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const QString &name, bool preflightOnly)
+IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const QString& name, bool preflightOnly)
 {
 
   herr_t err = -1;
@@ -126,8 +126,8 @@ IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const QString &
     // Check to see if we are reading a bool array and if so read it and return
     if (classType.compare("GbcdDataArray<bool>") == 0)
     {
-      if (preflightOnly == false) ptr = Detail::readGbcdDataset<bool>(gid, name, dims);
-      else ptr = GbcdDataArray<bool>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+      if (preflightOnly == false) { ptr = Detail::readGbcdDataset<bool>(gid, name, dims); }
+      else { ptr = GbcdDataArray<bool>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
       CloseH5T(typeId, err, retErr);
       return ptr; // <== Note early return here.
     }
@@ -138,43 +138,43 @@ IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const QString &
         //qDebug() << "User Meta Data Type is Integer" ;
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
-          if (preflightOnly == false) ptr = Detail::readGbcdDataset<uint8_t>(gid, name, dims);
-          else ptr = GbcdDataArray<uint8_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+          if (preflightOnly == false) { ptr = Detail::readGbcdDataset<uint8_t>(gid, name, dims); }
+          else { ptr = GbcdDataArray<uint8_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
         }
         else if(H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId, H5T_STD_U16LE))
         {
-          if (preflightOnly == false) ptr = Detail::readGbcdDataset<uint16_t>(gid, name, dims);
-          else ptr = GbcdDataArray<uint16_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+          if (preflightOnly == false) { ptr = Detail::readGbcdDataset<uint16_t>(gid, name, dims); }
+          else { ptr = GbcdDataArray<uint16_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
         }
         else if(H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId, H5T_STD_U32LE))
         {
-          if (preflightOnly == false) ptr = Detail::readGbcdDataset<uint32_t>(gid, name, dims);
-          else ptr = GbcdDataArray<uint32_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+          if (preflightOnly == false) { ptr = Detail::readGbcdDataset<uint32_t>(gid, name, dims); }
+          else { ptr = GbcdDataArray<uint32_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
         }
         else if(H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId, H5T_STD_U64LE))
         {
-          if (preflightOnly == false) ptr = Detail::readGbcdDataset<uint64_t>(gid, name, dims);
-          else ptr = GbcdDataArray<uint64_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+          if (preflightOnly == false) { ptr = Detail::readGbcdDataset<uint64_t>(gid, name, dims); }
+          else { ptr = GbcdDataArray<uint64_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
         }
         else if(H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE))
         {
-          if (preflightOnly == false) ptr = Detail::readGbcdDataset<int8_t>(gid, name, dims);
-          else ptr = GbcdDataArray<int8_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+          if (preflightOnly == false) { ptr = Detail::readGbcdDataset<int8_t>(gid, name, dims); }
+          else { ptr = GbcdDataArray<int8_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
         }
         else if(H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId, H5T_STD_I16LE))
         {
-          if (preflightOnly == false) ptr = Detail::readGbcdDataset<int16_t>(gid, name, dims);
-          else ptr = GbcdDataArray<int16_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+          if (preflightOnly == false) { ptr = Detail::readGbcdDataset<int16_t>(gid, name, dims); }
+          else { ptr = GbcdDataArray<int16_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
         }
         else if(H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId, H5T_STD_I32LE))
         {
-          if (preflightOnly == false) ptr = Detail::readGbcdDataset<int32_t>(gid, name, dims);
-          else ptr = GbcdDataArray<int32_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+          if (preflightOnly == false) { ptr = Detail::readGbcdDataset<int32_t>(gid, name, dims); }
+          else { ptr = GbcdDataArray<int32_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
         }
         else if(H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId, H5T_STD_I64LE))
         {
-          if (preflightOnly == false) ptr = Detail::readGbcdDataset<int64_t>(gid, name, dims);
-          else ptr = GbcdDataArray<int64_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+          if (preflightOnly == false) { ptr = Detail::readGbcdDataset<int64_t>(gid, name, dims); }
+          else { ptr = GbcdDataArray<int64_t>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
         }
         else
         {
@@ -186,13 +186,13 @@ IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const QString &
       case H5T_FLOAT:
         if(attr_size == 4)
         {
-          if (preflightOnly == false) ptr = Detail::readGbcdDataset<float>(gid, name, dims);
-          else ptr = GbcdDataArray<float>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+          if (preflightOnly == false) { ptr = Detail::readGbcdDataset<float>(gid, name, dims); }
+          else { ptr = GbcdDataArray<float>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
         }
         else if(attr_size == 8)
         {
-          if (preflightOnly == false) ptr = Detail::readGbcdDataset<double>(gid, name, dims);
-          else ptr = GbcdDataArray<double>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly);
+          if (preflightOnly == false) { ptr = Detail::readGbcdDataset<double>(gid, name, dims); }
+          else { ptr = GbcdDataArray<double>::CreateArray(dims[0], dims[1], dims[2], dims[3], dims[4], name, !preflightOnly); }
         }
         else
         {

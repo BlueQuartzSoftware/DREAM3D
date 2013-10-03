@@ -52,14 +52,15 @@
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-typedef struct {
-    float m_Volumes;
-    float m_EquivalentDiameters;
-    float m_AxisLengths[3];
-    float m_AxisEulerAngles[3];
-    float m_Omega3s;
-    int m_FieldPhases;
-    int m_Neighborhoods;
+typedef struct
+{
+  float m_Volumes;
+  float m_EquivalentDiameters;
+  float m_AxisLengths[3];
+  float m_AxisEulerAngles[3];
+  float m_Omega3s;
+  int m_FieldPhases;
+  int m_Neighborhoods;
 } Field;
 
 /**
@@ -116,7 +117,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -147,15 +148,15 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     void determine_neighbors(size_t grainNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
 
-  float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr);
+    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr);
     void assign_voxels();
     void assign_gaps_only();
     void cleanup_grains();
-  void write_goal_attributes();
+    void write_goal_attributes();
 
-    void compare_1Ddistributions(QVector<float>, QVector<float>, float &sqrerror);
-    void compare_2Ddistributions(QVector<QVector<float> >, QVector<QVector<float> >, float &sqrerror);
-    void compare_3Ddistributions(QVector<QVector<QVector<float> > >, QVector<QVector<QVector<float> > >, float &sqrerror);
+    void compare_1Ddistributions(QVector<float>, QVector<float>, float& sqrerror);
+    void compare_2Ddistributions(QVector<QVector<float> >, QVector<QVector<float> >, float& sqrerror);
+    void compare_3Ddistributions(QVector<QVector<QVector<float> > >, QVector<QVector<QVector<float> > >, float& sqrerror);
 
     int writeVtkFile(int32_t* grainOwners, bool* exclusionZonesPtr);
     int estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres);

@@ -81,12 +81,12 @@
  */
 #define DEEP_COPY_SHARED_VECTOR(sharedPtr, obj, VType, m_msgType)\
   if (NULL != sharedPtr.get())\
-{\
-  sharedPtr = VType(static_cast<std::vector<m_msgType>*>(NULL));\
+  {\
+    sharedPtr = VType(static_cast<std::vector<m_msgType>*>(NULL));\
   }\
   if (NULL != obj->sharedPtr.get())\
-{\
-  sharedPtr = VType(new std::vector<m_msgType>(*(obj->sharedPtr.get())));\
+  {\
+    sharedPtr = VType(new std::vector<m_msgType>(*(obj->sharedPtr.get())));\
   }
 
 
@@ -176,27 +176,27 @@
 #define DREAM3D_NEW_SUPERCLASS(thisClass, SuperClass)\
   typedef SuperClass::Pointer SuperClass##Type;\
   static SuperClass##Type New##SuperClass(void) \
-{ \
-  SuperClass##Type sharedPtr (new thisClass); \
-  return sharedPtr; \
-}
+  { \
+    SuperClass##Type sharedPtr (new thisClass); \
+    return sharedPtr; \
+  }
 
 /**
  * @brief Implements a Static 'New' Method for a class
  */
 #define DREAM3D_STATIC_NEW_MACRO(thisClass) \
-static Pointer New(void) \
-{ \
-  Pointer sharedPtr (new thisClass); \
-  return sharedPtr; \
-}
+  static Pointer New(void) \
+  { \
+    Pointer sharedPtr (new thisClass); \
+    return sharedPtr; \
+  }
 
 #define DREAM3D_STATIC_NEW_MACRO_WITH_ARGS(thisClass, args) \
-static Pointer New args \
-{ \
-  Pointer sharedPtr (new thisClass); \
-  return sharedPtr; \
-}
+  static Pointer New args \
+  { \
+    Pointer sharedPtr (new thisClass); \
+    return sharedPtr; \
+  }
 
 /** Macro used to add standard methods to all classes, mainly type
  * information. */
@@ -206,9 +206,9 @@ static Pointer New args \
   static int IsTypeOf(const char *type) \
   { \
     if ( !strcmp(#thisClass,type) ) \
-      { \
+    { \
       return 1; \
-      } \
+    } \
     return 0; \
   } \
   virtual int IsA(const char *type) \
@@ -217,10 +217,10 @@ static Pointer New args \
   } \
   template <class Source, class Target>\
   inline Target SafeObjectDownCast(Source x) { \
-      if( dynamic_cast<Target>(x) != x ) { \
-        return NULL;\
-      }\
-      return static_cast<Target>(x);\
+    if( dynamic_cast<Target>(x) != x ) { \
+      return NULL;\
+    }\
+    return static_cast<Target>(x);\
   }
 
 
@@ -231,9 +231,9 @@ static Pointer New args \
   static int IsTypeOf(const char *type) \
   { \
     if ( !strcmp(#thisClass,type) ) \
-      { \
+    { \
       return 1; \
-      } \
+    } \
     return superclass::IsTypeOf(type); \
   } \
   virtual int IsA(const char *type) \
@@ -242,10 +242,10 @@ static Pointer New args \
   } \
   template <class Source, class Target>\
   static Target SafeObjectDownCast(Source x) { \
-      if( dynamic_cast<Target>(x) != x ) { \
-        return NULL;\
-      }\
-      return static_cast<Target>(x);\
+    if( dynamic_cast<Target>(x) != x ) { \
+      return NULL;\
+    }\
+    return static_cast<Target>(x);\
   }\
   static thisClass* SafePointerDownCast(superclass* s) {\
     return SafeObjectDownCast<superclass*, thisClass*>(s);\
@@ -278,67 +278,67 @@ static Pointer New args \
 
 #define DREAM3D_VIRTUAL_INSTANCE_PROPERTY(type, prpty)\
   private:\
-      type   m_##prpty;\
+  type   m_##prpty;\
   public:\
-    virtual DREAM3D_SET_PROPERTY(type, prpty)\
-    virtual DREAM3D_GET_PROPERTY(type, prpty)
+  virtual DREAM3D_SET_PROPERTY(type, prpty)\
+  virtual DREAM3D_GET_PROPERTY(type, prpty)
 
 
 #define DREAM3D_INSTANCE_PROPERTY(type, prpty)\
   private:\
-      type   m_##prpty;\
+  type   m_##prpty;\
   public:\
-    DREAM3D_SET_PROPERTY(type, prpty)\
-    DREAM3D_GET_PROPERTY(type, prpty)
+  DREAM3D_SET_PROPERTY(type, prpty)\
+  DREAM3D_GET_PROPERTY(type, prpty)
 
 
 
 #define DREAM3D_SET_2DVECTOR_PROPERTY(type, prpty, varname)\
   void set##prpty(type value[2]) {\
-      varname[0] = value[0]; varname[1] = value[1]; }\
+    varname[0] = value[0]; varname[1] = value[1]; }\
   void set##prpty(type value_0, type value_1) {\
-      varname[0] = value_0; varname[1] = value_1; }
+    varname[0] = value_0; varname[1] = value_1; }
 
 #define DREAM3D_GET_2DVECTOR_PROPERTY(type, prpty, varname)\
   void get##prpty(type value[2]) {\
-      value[0] = varname[0]; value[1] = varname[1]; }\
+    value[0] = varname[0]; value[1] = varname[1]; }\
   void get##prpty(type &value_0, type &value_1) {\
-      value_0 = varname[0]; value_1 = varname[1]; }
+    value_0 = varname[0]; value_1 = varname[1]; }
 
 
 #define DREAM3D_INSTANCE_VEC2_PROPERTY(type, prpty)\
   private:\
-    type   m_##prpty[2];\
+  type   m_##prpty[2];\
   public:\
-    DREAM3D_SET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)\
-    DREAM3D_GET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)
+  DREAM3D_SET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)\
+  DREAM3D_GET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)
 
 
 #define DREAM3D_SET_VEC3_PROPERTY(type, prpty, varname)\
   void set##prpty(type value[3]) {\
-      varname[0] = value[0]; varname[1] = value[1]; varname[2] = value[2]; }\
+    varname[0] = value[0]; varname[1] = value[1]; varname[2] = value[2]; }\
   void set##prpty(type value_0, type value_1, type value_2) {\
-      varname[0] = value_0; varname[1] = value_1; varname[2] = value_2; }
+    varname[0] = value_0; varname[1] = value_1; varname[2] = value_2; }
 
 #define DREAM3D_GET_VEC3_PROPERTY(type, prpty, varname)\
   void get##prpty(type value[3]) {\
-      value[0] = varname[0]; value[1] = varname[1]; value[2] = varname[2]; }\
+    value[0] = varname[0]; value[1] = varname[1]; value[2] = varname[2]; }\
   void get##prpty(type &value_0, type &value_1, type &value_2) {\
-      value_0 = varname[0]; value_1 = varname[1]; value_2 = varname[2]; }
+    value_0 = varname[0]; value_1 = varname[1]; value_2 = varname[2]; }
 
 
 #define DREAM3D_INSTANCE_VEC3_PROPERTY(type, prpty)\
   private:\
-    type   m_##prpty[3];\
+  type   m_##prpty[3];\
   public:\
-    DREAM3D_SET_VEC3_PROPERTY(type, prpty, m_##prpty)\
-    DREAM3D_GET_VEC3_PROPERTY(type, prpty, m_##prpty)
+  DREAM3D_SET_VEC3_PROPERTY(type, prpty, m_##prpty)\
+  DREAM3D_GET_VEC3_PROPERTY(type, prpty, m_##prpty)
 
 
 
 #define DREAM3D_CONTAINER_TYPE(thisClass, container) \
-    typedef container<thisClass >     ContainerT; \
-    typedef boost::shared_ptr< container<thisClass > > ContainerPType;
+  typedef container<thisClass >     ContainerT; \
+  typedef boost::shared_ptr< container<thisClass > > ContainerPType;
 
 
 /**
@@ -368,8 +368,8 @@ static Pointer New args \
   private:\
   QString      m_##prpty;\
   public:\
-    virtual DREAM3D_SET_STRING_PROPERTY(prpty,  m_##prpty)\
-    virtual DREAM3D_GET_STRING_PROPERTY(prpty,  m_##prpty)
+  virtual DREAM3D_SET_STRING_PROPERTY(prpty,  m_##prpty)\
+  virtual DREAM3D_GET_STRING_PROPERTY(prpty,  m_##prpty)
 
 
 // -----------------------------------------------------------------------------
@@ -409,16 +409,16 @@ static Pointer New args \
 
 #define DREAM3DHeader_INSTANCE_PROPERTY(HeaderType, type, prpty, key)\
   public:\
-    DREAM3DHeader_SET_PROPERTY(HeaderType, type, prpty, key)\
-    DREAM3DHeader_GET_PROPERTY(HeaderType, type, prpty, key)
+  DREAM3DHeader_SET_PROPERTY(HeaderType, type, prpty, key)\
+  DREAM3DHeader_GET_PROPERTY(HeaderType, type, prpty, key)
 
 
 #define DREAM3D_POINTER_PROPERTY(name, var, type)\
-private:\
+  private:\
   type* m_##var;\
-public:\
-type* get##name##Pointer() { return m_##var; }\
-void set##name##Pointer(type* f)\
+  public:\
+  type* get##name##Pointer() { return m_##var; }\
+  void set##name##Pointer(type* f)\
   {\
     if (m_##var != NULL && m_##var != f)\
     {\
@@ -433,33 +433,33 @@ void set##name##Pointer(type* f)\
 //
 // -----------------------------------------------------------------------------
 #define CREATE_INPUT_FILENAME(f, n)\
-    QString f = m_InputDirectory + QDir::Separator + n;\
-    f = QDir::toNativeSeparators(f);
+  QString f = m_InputDirectory + QDir::Separator + n;\
+  f = QDir::toNativeSeparators(f);
 
 #define CREATE_OUTPUT_FILENAME(f, n)\
-    QString f = m_InputDirectory + QDir::Separator + n;\
-    f = QDir::toNativeSeparators(f);
+  QString f = m_InputDirectory + QDir::Separator + n;\
+  f = QDir::toNativeSeparators(f);
 
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
-    if (this->getCancel() ) { \
-              updatePipelineMessage(#Message);\
-              updatePipelineProgress(0);\
-              pipelineFinished();\
-      return;}\
-
+  if (this->getCancel() ) { \
+    updatePipelineMessage(#Message);\
+    updatePipelineProgress(0);\
+    pipelineFinished();\
+    return;}\
+   
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
-    if(err < 0) {\
-      setErrorCondition(err);\
-      QString msg = QString(Message);\
-      pipelineErrorMessage(msg.toLatin1().data());\
-      updatePipelineProgress(0);\
-      pipelineFinished();\
-      return;   }
+  if(err < 0) {\
+    setErrorCondition(err);\
+    QString msg = QString(Message);\
+    pipelineErrorMessage(msg.toLatin1().data());\
+    updatePipelineProgress(0);\
+    pipelineFinished();\
+    return;   }
 
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    QString outpath = m_OutputDirectory + "/" + m_OutputFilePrefix + filename;
+  QString outpath = m_OutputDirectory + "/" + m_OutputFilePrefix + filename;
 
 
 // -----------------------------------------------------------------------------
@@ -470,27 +470,29 @@ void set##name##Pointer(type* f)\
 // for a few boost headers
 namespace DREAM3D
 {
-  class bad_lexical_cast : public std::runtime_error {
-  public:
-    bad_lexical_cast(const QString& s)
-      : std::runtime_error(s.toStdString())
-    { }
+  class bad_lexical_cast : public std::runtime_error
+  {
+    public:
+      bad_lexical_cast(const QString& s)
+        : std::runtime_error(s.toStdString())
+      { }
   };
 
-  class bad_any_cast : public std::runtime_error {
-  public:
-    bad_any_cast(const QString& s)
-      : std::runtime_error(s.toStdString())
-    { }
+  class bad_any_cast : public std::runtime_error
+  {
+    public:
+      bad_any_cast(const QString& s)
+        : std::runtime_error(s.toStdString())
+      { }
   };
 
   template<typename T>
-  T lexical_cast(const QString &s)
+  T lexical_cast(const QString& s)
   {
     std::istringstream i(s.toStdString());
     T x;
     if (!(i >> x))
-      throw bad_lexical_cast("convertToDouble(\"" + s + "\")");
+    { throw bad_lexical_cast("convertToDouble(\"" + s + "\")"); }
 
     return x;
   }

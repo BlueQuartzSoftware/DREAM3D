@@ -57,8 +57,8 @@ TriangleOps::~TriangleOps()
 //
 // -----------------------------------------------------------------------------
 QVector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm,
-                                                        int32_t triangleIndex,
-                                                        int32_t label)
+                                                    int32_t triangleIndex,
+                                                    int32_t label)
 {
   QVector<int32_t> adjacentTris;
   // Get the master list of triangles for the mesh
@@ -96,8 +96,8 @@ QVector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm,
     // Iterate over the indices to find triangles that match the label and are NOT the current triangle index
     for (uint16_t n = 0; n < count; ++n)
     {
-      int32_t fl_0 = faceLabels[nList[n]*2];
-      int32_t fl_1 = faceLabels[nList[n]*2 + 1];
+      int32_t fl_0 = faceLabels[nList[n] * 2];
+      int32_t fl_1 = faceLabels[nList[n] * 2 + 1];
       if ( (fl_0 == label || fl_1 == label)  && (nList[n] != triangleIndex) )
       {
         //  qDebug() << "    Found Adjacent Triangle: " << t->tIndex << "\n";
@@ -113,8 +113,8 @@ QVector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::getWindingIndices4(FaceArray::Face_t &triangle,
-                                     int32_t *faceLabel,
+void TriangleOps::getWindingIndices4(FaceArray::Face_t& triangle,
+                                     int32_t* faceLabel,
                                      int ids[4], int32_t label)
 {
   int idx = TriangleOps::getLabelIndex(faceLabel, label);
@@ -138,8 +138,8 @@ void TriangleOps::getWindingIndices4(FaceArray::Face_t &triangle,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool TriangleOps::verifyWinding(FaceArray::Face_t &source,
-                                FaceArray::Face_t &tri,
+bool TriangleOps::verifyWinding(FaceArray::Face_t& source,
+                                FaceArray::Face_t& tri,
                                 int32_t* faceLabelSource,
                                 int32_t* faceLabelTri,
                                 int32_t label)
@@ -169,14 +169,14 @@ bool TriangleOps::verifyWinding(FaceArray::Face_t &source,
       }
       else if (i0 == nids[j] && i1 == nids[j + 1])
       {
-     //   qDebug() << "!!!!!! Winding Bad " << "\n";
+        //   qDebug() << "!!!!!! Winding Bad " << "\n";
         done = true;
         TriangleOps::flipWinding(tri);
         flipped = true;
         break;
       }
     }
-    if (done) break;
+    if (done) { break; }
   }
   return flipped;
 }
@@ -185,17 +185,17 @@ bool TriangleOps::verifyWinding(FaceArray::Face_t &source,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TriangleOps::getLabelIndex(int32_t *t, int label)
+int TriangleOps::getLabelIndex(int32_t* t, int label)
 {
-  if (label == t[0]) return 0;
-  if (label == t[1]) return 1;
+  if (label == t[0]) { return 0; }
+  if (label == t[1]) { return 1; }
   return 2; // Error condition. Valid values are 0 or 1 since there are only 2 elements to the array.
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int> TriangleOps::getNodeIndices(FaceArray::Face_t &t, int32_t* faceLabel, int label)
+QVector<int> TriangleOps::getNodeIndices(FaceArray::Face_t& t, int32_t* faceLabel, int label)
 {
   QVector<int > tNodes(3);
   int idx = TriangleOps::getLabelIndex(faceLabel, label);
@@ -217,7 +217,7 @@ QVector<int> TriangleOps::getNodeIndices(FaceArray::Face_t &t, int32_t* faceLabe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::flipWinding(FaceArray::Face_t &t)
+void TriangleOps::flipWinding(FaceArray::Face_t& t)
 {
   int tmp = t.verts[0];
   t.verts[0] = t.verts[2];
@@ -273,10 +273,10 @@ QSet<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>* faceLabelsPt
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   size_t count = faceLabelsPtr->getNumberOfTuples();
-  for (size_t i =0; i < count; ++i)
+  for (size_t i = 0; i < count; ++i)
   {
-    uniqueLabels.insert(faceLabels[i*2]);
-    uniqueLabels.insert(faceLabels[i*2+1]);
+    uniqueLabels.insert(faceLabels[i * 2]);
+    uniqueLabels.insert(faceLabels[i * 2 + 1]);
   }
   return uniqueLabels;
 }

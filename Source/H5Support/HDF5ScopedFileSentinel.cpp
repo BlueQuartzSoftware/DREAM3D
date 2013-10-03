@@ -47,7 +47,8 @@ HDF5ScopedFileSentinel::HDF5ScopedFileSentinel(hid_t* fileId, bool turnOffErrors
 {
   if (m_TurnOffErrors == true)
   {
-    H5Eget_auto(H5E_DEFAULT, &_oldHDF_error_func, &_oldHDF_error_client_data);\
+    H5Eget_auto(H5E_DEFAULT, &_oldHDF_error_func, &_oldHDF_error_client_data);
+    \
     H5Eset_auto(H5E_DEFAULT, NULL, NULL);
   }
 
@@ -62,7 +63,8 @@ HDF5ScopedFileSentinel::~HDF5ScopedFileSentinel()
   {
     H5Eset_auto(H5E_DEFAULT, _oldHDF_error_func, _oldHDF_error_client_data);
   }
-  if (*m_FileId > 0) {
+  if (*m_FileId > 0)
+  {
     H5Utilities::closeFile(*m_FileId);
     *m_FileId = -1;
   }

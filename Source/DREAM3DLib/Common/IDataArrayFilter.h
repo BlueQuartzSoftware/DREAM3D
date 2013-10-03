@@ -49,7 +49,7 @@ class DREAM3DLib_EXPORT IDataArrayFilter
     IDataArrayFilter();
     virtual ~IDataArrayFilter();
 
-    int execute(IDataArray *input, IDataArray *output);
+    int execute(IDataArray* input, IDataArray* output);
 
   private:
     IDataArrayFilter(const IDataArrayFilter&); // Copy Constructor Not Implemented

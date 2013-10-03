@@ -271,7 +271,7 @@ int VASPReader::readHeader()
   tokens = buf.split(' ');
   atomNumbers.resize(tokens.size());
   totalAtoms = 0;
-  for(int i=0;i<tokens.size();i++)
+  for(int i = 0; i < tokens.size(); i++)
   {
     atomNumbers[i] = tokens[i].toInt(&ok, 10);
     totalAtoms += tokens[i].toInt(&ok, 10);
@@ -322,9 +322,9 @@ int VASPReader::readFile()
   float pos[3];
   float posMod[3];
   int index = 0;
-  for(int i=0;i<atomNumbers.size();i++)
+  for(int i = 0; i < atomNumbers.size(); i++)
   {
-    for(int j=0;j<atomNumbers[i];j++)
+    for(int j = 0; j < atomNumbers[i]; j++)
     {
       buf = m_InStream.readLine();
       buf = buf.trimmed();
@@ -333,14 +333,14 @@ int VASPReader::readFile()
       pos[0] = tokens[0].toFloat(&ok);
       pos[1] = tokens[1].toFloat(&ok);
       pos[2] = tokens[2].toFloat(&ok);
-      MatrixMath::Multiply3x3with3x1(latticeVectors, pos, posMod);      
+      MatrixMath::Multiply3x3with3x1(latticeVectors, pos, posMod);
       vertex[index].pos[0] = posMod[0];
       vertex[index].pos[1] = posMod[1];
       vertex[index].pos[2] = posMod[2];
       m_AtomTypes[index] = i;
       index++;
     }
-  }  
+  }
   //read the blank line
   buf = m_InStream.readLine();
 
@@ -348,9 +348,9 @@ int VASPReader::readFile()
   float velMod[3];
 
   index = 0;
-  for(int i=0;i<atomNumbers.size();i++)
+  for(int i = 0; i < atomNumbers.size(); i++)
   {
-    for(int j=0;j<atomNumbers[i];j++)
+    for(int j = 0; j < atomNumbers[i]; j++)
     {
       buf = m_InStream.readLine();
       buf = buf.trimmed();
@@ -359,10 +359,10 @@ int VASPReader::readFile()
       vel[0] = tokens[0].toFloat(&ok);
       vel[1] = tokens[1].toFloat(&ok);
       vel[2] = tokens[2].toFloat(&ok);
-      MatrixMath::Multiply3x3with3x1(latticeVectors, vel, velMod);      
-      m_AtomVelocities[3*index+0] = velMod[0];
-      m_AtomVelocities[3*index+1] = velMod[1];
-      m_AtomVelocities[3*index+2] = velMod[2];
+      MatrixMath::Multiply3x3with3x1(latticeVectors, vel, velMod);
+      m_AtomVelocities[3 * index + 0] = velMod[0];
+      m_AtomVelocities[3 * index + 1] = velMod[1];
+      m_AtomVelocities[3 * index + 2] = velMod[2];
       index++;
     }
   }

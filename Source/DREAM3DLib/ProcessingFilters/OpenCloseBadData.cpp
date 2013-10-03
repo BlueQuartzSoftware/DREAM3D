@@ -53,16 +53,16 @@
 //
 // -----------------------------------------------------------------------------
 OpenCloseBadData::OpenCloseBadData() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_Direction(0),
-m_NumIterations(1),
-m_XDirOn(true),
-m_YDirOn(true),
-m_ZDirOn(true),
-m_Neighbors(NULL),
-m_GrainIds(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_Direction(0),
+  m_NumIterations(1),
+  m_XDirOn(true),
+  m_YDirOn(true),
+  m_ZDirOn(true),
+  m_Neighbors(NULL),
+  m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -134,13 +134,13 @@ void OpenCloseBadData::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setDirection( reader->readValue("Direction", getDirection()) );
   setNumIterations( reader->readValue("NumIterations", getNumIterations()) );
   setXDirOn(reader->readValue("X Direction", getXDirOn()) );
   setYDirOn(reader->readValue("Y Direction", getYDirOn()) );
   setZDirOn(reader->readValue("Z Direction", getZDirOn()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -165,7 +165,7 @@ int OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writ
 void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -194,7 +194,7 @@ void OpenCloseBadData::preflight()
 void OpenCloseBadData::execute()
 {
   setErrorCondition(0);
- // int err = 0;
+// int err = 0;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
@@ -216,14 +216,15 @@ void OpenCloseBadData::execute()
   m_Neighbors = neighborsPtr->getPointer(0);
   neighborsPtr->initializeWithValues(-1);
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -254,19 +255,19 @@ void OpenCloseBadData::execute()
   int current;
   int most;
 
-  QVector<int > n(numgrains + 1,0);
+  QVector<int > n(numgrains + 1, 0);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {
     for (int k = 0; k < dims[2]; k++)
     {
-      kstride = static_cast<int>( dims[0]*dims[1]*k );
+      kstride = static_cast<int>( dims[0] * dims[1] * k );
       for (int j = 0; j < dims[1]; j++)
       {
-        jstride = static_cast<int>( dims[0]*j );
+        jstride = static_cast<int>( dims[0] * j );
         for (int i = 0; i < dims[0]; i++)
         {
-          count = kstride+jstride+i;
-          
+          count = kstride + jstride + i;
+
           grainname = m_GrainIds[count];
           if (grainname == 0)
           {
@@ -276,12 +277,12 @@ void OpenCloseBadData::execute()
             {
               good = 1;
               neighpoint = static_cast<int>( count + neighpoints[l] );
-              if (l == 0 && (k == 0 || m_ZDirOn == false)) good = 0;
-              else if (l == 5 && (k == (dims[2] - 1) || m_ZDirOn == false)) good = 0;
-              else if (l == 1 && (j == 0 || m_YDirOn == false)) good = 0;
-              else if (l == 4 && (j == (dims[1] - 1) || m_YDirOn == false)) good = 0;
-              else if (l == 2 && (i == 0 || m_XDirOn == false)) good = 0;
-              else if (l == 3 && (i == (dims[0] - 1) || m_XDirOn == false)) good = 0;
+              if (l == 0 && (k == 0 || m_ZDirOn == false)) { good = 0; }
+              else if (l == 5 && (k == (dims[2] - 1) || m_ZDirOn == false)) { good = 0; }
+              else if (l == 1 && (j == 0 || m_YDirOn == false)) { good = 0; }
+              else if (l == 4 && (j == (dims[1] - 1) || m_YDirOn == false)) { good = 0; }
+              else if (l == 2 && (i == 0 || m_XDirOn == false)) { good = 0; }
+              else if (l == 3 && (i == (dims[0] - 1) || m_XDirOn == false)) { good = 0; }
               if (good == 1)
               {
                 grain = m_GrainIds[neighpoint];
@@ -307,12 +308,12 @@ void OpenCloseBadData::execute()
               {
                 good = 1;
                 neighpoint = static_cast<int>( count + neighpoints[l] );
-                if (l == 0 && k == 0) good = 0;
-                if (l == 5 && k == (dims[2] - 1)) good = 0;
-                if (l == 1 && j == 0) good = 0;
-                if (l == 4 && j == (dims[1] - 1)) good = 0;
-                if (l == 2 && i == 0) good = 0;
-                if (l == 3 && i == (dims[0] - 1)) good = 0;
+                if (l == 0 && k == 0) { good = 0; }
+                if (l == 5 && k == (dims[2] - 1)) { good = 0; }
+                if (l == 1 && j == 0) { good = 0; }
+                if (l == 4 && j == (dims[1] - 1)) { good = 0; }
+                if (l == 2 && i == 0) { good = 0; }
+                if (l == 3 && i == (dims[0] - 1)) { good = 0; }
                 if (good == 1)
                 {
                   grain = m_GrainIds[neighpoint];
@@ -332,7 +333,7 @@ void OpenCloseBadData::execute()
       if (neighbor >= 0)
       {
         if ( (grainname == 0 && m_GrainIds[neighbor] > 0 && m_Direction == 1)
-          || (grainname > 0 && m_GrainIds[neighbor] == 0 && m_Direction == 0))
+             || (grainname > 0 && m_GrainIds[neighbor] == 0 && m_Direction == 0))
         {
           for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {

@@ -45,16 +45,16 @@
 //
 // -----------------------------------------------------------------------------
 FindGrainCentroids::FindGrainCentroids() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
-m_GrainIds(NULL),
-m_Centroids(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
+  m_GrainIds(NULL),
+  m_Centroids(NULL)
 {
   graincenters = NULL;
 
-  INIT_DataArray(m_GrainCenters,float);
+  INIT_DataArray(m_GrainCenters, float);
 }
 
 // -----------------------------------------------------------------------------
@@ -68,8 +68,8 @@ void FindGrainCentroids::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -90,7 +90,7 @@ void FindGrainCentroids::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
 
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -158,7 +158,7 @@ void FindGrainCentroids::find_centroids()
   if (numgrains == 0) { return; }
   m_GrainCenters->SetNumberOfComponents(5);
   m_GrainCenters->Resize(numgrains);
-  
+
   graincenters = m_GrainCenters->getPointer(0);
 
   int xPoints = static_cast<int>(m->getXPoints());
@@ -175,32 +175,32 @@ void FindGrainCentroids::find_centroids()
     graincenters[i] = 0.0f;
   }
   size_t zStride, yStride;
-  for(size_t i=0;i<zPoints;i++)
+  for(size_t i = 0; i < zPoints; i++)
   {
-  zStride = i*xPoints*yPoints;
-  for (size_t j=0;j<yPoints;j++)
-  {
-    yStride = j*xPoints;
-    for(size_t k=0;k<xPoints;k++)
+    zStride = i * xPoints * yPoints;
+    for (size_t j = 0; j < yPoints; j++)
     {
-      int gnum = m_GrainIds[zStride+yStride+k];
-      graincenters[gnum * 5 + 0]++;
-      x = float(k) * xRes;
-      y = float(j) * yRes;
-      z = float(i) * zRes;
-      graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
-      graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
-      graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
+      yStride = j * xPoints;
+      for(size_t k = 0; k < xPoints; k++)
+      {
+        int gnum = m_GrainIds[zStride + yStride + k];
+        graincenters[gnum * 5 + 0]++;
+        x = float(k) * xRes;
+        y = float(j) * yRes;
+        z = float(i) * zRes;
+        graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
+        graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
+        graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
+      }
     }
-  }
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-  graincenters[i * 5 + 1] = graincenters[i * 5 + 1] / graincenters[i * 5 + 0];
-  graincenters[i * 5 + 2] = graincenters[i * 5 + 2] / graincenters[i * 5 + 0];
-  graincenters[i * 5 + 3] = graincenters[i * 5 + 3] / graincenters[i * 5 + 0];
-  m_Centroids[3 * i] = graincenters[i * 5 + 1];
-  m_Centroids[3 * i + 1] = graincenters[i * 5 + 2];
-  m_Centroids[3 * i + 2] = graincenters[i * 5 + 3];
+    graincenters[i * 5 + 1] = graincenters[i * 5 + 1] / graincenters[i * 5 + 0];
+    graincenters[i * 5 + 2] = graincenters[i * 5 + 2] / graincenters[i * 5 + 0];
+    graincenters[i * 5 + 3] = graincenters[i * 5 + 3] / graincenters[i * 5 + 0];
+    m_Centroids[3 * i] = graincenters[i * 5 + 1];
+    m_Centroids[3 * i + 1] = graincenters[i * 5 + 2];
+    m_Centroids[3 * i + 2] = graincenters[i * 5 + 3];
   }
 }

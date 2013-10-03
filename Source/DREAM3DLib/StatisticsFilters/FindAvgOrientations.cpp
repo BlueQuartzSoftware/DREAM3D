@@ -74,8 +74,8 @@ void FindAvgOrientations::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -95,7 +95,7 @@ int FindAvgOrientations::writeFilterParameters(AbstractFilterParametersWriter* w
 void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType,  voxels, 1)
@@ -158,7 +158,7 @@ void FindAvgOrientations::execute()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    QuaternionMathF::ElementWiseAssign(avgQuats[i],0.0);
+    QuaternionMathF::ElementWiseAssign(avgQuats[i], 0.0);
   }
   for(int i = 0; i < totalPoints; i++)
   {
@@ -188,9 +188,9 @@ void FindAvgOrientations::execute()
     QuaternionMathF::ScalarDivide(avgQuats[i], counts[i]);
     QuaternionMathF::UnitQuaternion(avgQuats[i]);
     OrientationMath::QuattoEuler(avgQuats[i], ea1, ea2, ea3);
-    m_FieldEulerAngles[3*i] = ea1;
-    m_FieldEulerAngles[3*i+1] = ea2;
-    m_FieldEulerAngles[3*i+2] = ea3;
+    m_FieldEulerAngles[3 * i] = ea1;
+    m_FieldEulerAngles[3 * i + 1] = ea2;
+    m_FieldEulerAngles[3 * i + 2] = ea3;
   }
   notifyStatusMessage("Completed");
 }

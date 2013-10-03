@@ -167,7 +167,7 @@ void RenumberGrains::execute()
   QString ss;
   size_t goodcount = 1;
   std::vector<size_t> NewNames;
-  NewNames.resize(totalFields,0);
+  NewNames.resize(totalFields, 0);
 
 
   ss = QObject::tr(" - Generating Active Grain List");
@@ -202,7 +202,8 @@ void RenumberGrains::execute()
       {
         m->removeCellFieldData(*iter);
       }
-      else {
+      else
+      {
         p->EraseTuples(RemoveList);
       }
       //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;

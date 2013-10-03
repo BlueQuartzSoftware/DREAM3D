@@ -68,30 +68,30 @@ class Texture
 {
   public:
 
-    virtual ~Texture(){}
+    virtual ~Texture() {}
 
     /**
-   * @brief This will calculate ODF data based on an array of weights that are
-   * passed in and a Cubic Crystal Structure. The input data for the
-   * euler angles is in Columnar fashion instead of row major format.
-   * @param e1s Pointer to first Euler Angles
-   * @param e2s Pointer to the second euler angles
-   * @param e3s Pointer to the third euler angles
-   * @param weights Pointer to the Array of weights values.
-   * @param sigmas Pointer to the Array of sigma values.
-   * @param normalize Should the ODF data be normalized by the totalWeight value
-   * before returning.
-   * @param odf (OUT) Pointer to the ODF array that is generated from this function. NOTE: The memory
-   * for this MUST have already been allocated. Use CubicOps::k_OdfSize to allocate the proper amount
-   * @param numEntries The number of entries of Angle/Weight/Sigmas
-   */
+    * @brief This will calculate ODF data based on an array of weights that are
+    * passed in and a Cubic Crystal Structure. The input data for the
+    * euler angles is in Columnar fashion instead of row major format.
+    * @param e1s Pointer to first Euler Angles
+    * @param e2s Pointer to the second euler angles
+    * @param e3s Pointer to the third euler angles
+    * @param weights Pointer to the Array of weights values.
+    * @param sigmas Pointer to the Array of sigma values.
+    * @param normalize Should the ODF data be normalized by the totalWeight value
+    * before returning.
+    * @param odf (OUT) Pointer to the ODF array that is generated from this function. NOTE: The memory
+    * for this MUST have already been allocated. Use CubicOps::k_OdfSize to allocate the proper amount
+    * @param numEntries The number of entries of Angle/Weight/Sigmas
+    */
     template<typename T>
     static void CalculateCubicODFData(T* e1s, T* e2s, T* e3s,
                                       T* weights, T* sigmas,
                                       bool normalize, T* odf, size_t numEntries)
     {
       DREAM3D_RANDOMNG_NEW()
-          CubicOps ops;
+      CubicOps ops;
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
       int32_t* TextureBins = textureBins->getPointer(0);
 
@@ -141,19 +141,19 @@ class Texture
               //if(addbin3 < 0) addbin3 = addbin3 + 18;
               //if(addbin3 >= 18) addbin3 = addbin3 - 18;
               int good = 1;
-              if(addbin1 < 0) good = 0;
-              if(addbin1 >= 18) good = 0;
-              if(addbin2 < 0) good = 0;
-              if(addbin2 >= 18) good = 0;
-              if(addbin3 < 0) good = 0;
-              if(addbin3 >= 18) good = 0;
+              if(addbin1 < 0) { good = 0; }
+              if(addbin1 >= 18) { good = 0; }
+              if(addbin2 < 0) { good = 0; }
+              if(addbin2 >= 18) { good = 0; }
+              if(addbin3 < 0) { good = 0; }
+              if(addbin3 >= 18) { good = 0; }
               addbin = (addbin3 * 18 * 18) + (addbin2 * 18) + (addbin1);
               dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
               fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
               if(dist <= int(sigmas[i]) && good == 1)
               {
                 addweight = (weights[i] * fraction);
-                if(sigmas[i] == 0.0) addweight = weights[i];
+                if(sigmas[i] == 0.0) { addweight = weights[i]; }
                 odf[addbin] = odf[addbin] + addweight;
                 totaladdweight = totaladdweight + addweight;
               }
@@ -200,21 +200,21 @@ class Texture
     }
 
     /**
-   * @brief This will calculate ODF data based on an array of weights that are
-   * passed in and a Hexagonal Crystal Structure. This is templated on the container
-   * type that holds the data. Containers that adhere to the STL Vector API
-   * should be usable. QVector falls into this category. The input data for the
-   * euler angles is in Columnar fashion instead of row major format.
-   * @param e1s The first euler angles
-   * @param e2s The second euler angles
-   * @param e3s The third euler angles
-   * @param weights Array of weights values.
-   * @param sigmas Array of sigma values.
-   * @param normalize Should the ODF data be normalized by the totalWeight value
-   * before returning.
-   * @param odf (OUT) The ODF data that is generated from this function.
-   * @param numEntries (OUT) The TotalWeight value that is also calculated
-   */
+    * @brief This will calculate ODF data based on an array of weights that are
+    * passed in and a Hexagonal Crystal Structure. This is templated on the container
+    * type that holds the data. Containers that adhere to the STL Vector API
+    * should be usable. QVector falls into this category. The input data for the
+    * euler angles is in Columnar fashion instead of row major format.
+    * @param e1s The first euler angles
+    * @param e2s The second euler angles
+    * @param e3s The third euler angles
+    * @param weights Array of weights values.
+    * @param sigmas Array of sigma values.
+    * @param normalize Should the ODF data be normalized by the totalWeight value
+    * before returning.
+    * @param odf (OUT) The ODF data that is generated from this function.
+    * @param numEntries (OUT) The TotalWeight value that is also calculated
+    */
     template<typename T>
     static void CalculateHexODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
     {
@@ -268,19 +268,19 @@ class Texture
               //if(addbin3 < 0) addbin3 = addbin3 + 12;
               //if(addbin3 >= 12) addbin3 = addbin3 - 12;
               int good = 1;
-              if(addbin1 < 0) good = 0;
-              if(addbin1 >= 36) good = 0;
-              if(addbin2 < 0) good = 0;
-              if(addbin2 >= 36) good = 0;
-              if(addbin3 < 0) good = 0;
-              if(addbin3 >= 12) good = 0;
+              if(addbin1 < 0) { good = 0; }
+              if(addbin1 >= 36) { good = 0; }
+              if(addbin2 < 0) { good = 0; }
+              if(addbin2 >= 36) { good = 0; }
+              if(addbin3 < 0) { good = 0; }
+              if(addbin3 >= 12) { good = 0; }
               addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
               dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
               fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
               if(dist <= int(sigmas[i]) && good == 1)
               {
                 addweight = (weights[i] * fraction);
-                if(sigmas[i] == 0.0) addweight = weights[i];
+                if(sigmas[i] == 0.0) { addweight = weights[i]; }
                 odf[addbin] = odf[addbin] + addweight;
                 totaladdweight = totaladdweight + addweight;
               }
@@ -327,21 +327,21 @@ class Texture
     }
 
     /**
-   * @brief This will calculate ODF data based on an array of weights that are
-   * passed in and a OrthoRhombic Crystal Structure. This is templated on the container
-   * type that holds the data. Containers that adhere to the STL Vector API
-   * should be usable. QVector falls into this category. The input data for the
-   * euler angles is in Columnar fashion instead of row major format.
-   * @param e1s The first euler angles
-   * @param e2s The second euler angles
-   * @param e3s The third euler angles
-   * @param weights Array of weights values.
-   * @param sigmas Array of sigma values.
-   * @param normalize Should the ODF data be normalized by the totalWeight value
-   * before returning.
-   * @param odf (OUT) The ODF data that is generated from this function.
-   * @param numEntries The TotalWeight value that is also calculated
-   */
+    * @brief This will calculate ODF data based on an array of weights that are
+    * passed in and a OrthoRhombic Crystal Structure. This is templated on the container
+    * type that holds the data. Containers that adhere to the STL Vector API
+    * should be usable. QVector falls into this category. The input data for the
+    * euler angles is in Columnar fashion instead of row major format.
+    * @param e1s The first euler angles
+    * @param e2s The second euler angles
+    * @param e3s The third euler angles
+    * @param weights Array of weights values.
+    * @param sigmas Array of sigma values.
+    * @param normalize Should the ODF data be normalized by the totalWeight value
+    * before returning.
+    * @param odf (OUT) The ODF data that is generated from this function.
+    * @param numEntries The TotalWeight value that is also calculated
+    */
     template<typename T>
     static void CalculateOrthoRhombicODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
     {
@@ -350,7 +350,7 @@ class Texture
       int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = 3*OrthoRhombicOps::k_OdfSize;
+      float totalweight = 3 * OrthoRhombicOps::k_OdfSize;
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
@@ -377,13 +377,13 @@ class Texture
         bin3 = bin / (36 * 36);
         for (int j = -sigmas[i]; j <= sigmas[i]; j++)
         {
-          int jsqrd = j*j;
+          int jsqrd = j * j;
           for (int k = -sigmas[i]; k <= sigmas[i]; k++)
           {
-            int ksqrd = k*k;
+            int ksqrd = k * k;
             for (int l = -sigmas[i]; l <= sigmas[i]; l++)
             {
-              int lsqrd = l*l;
+              int lsqrd = l * l;
               addbin1 = bin1 + int(j);
               addbin2 = bin2 + int(k);
               addbin3 = bin3 + int(l);
@@ -394,20 +394,20 @@ class Texture
               //if (addbin3 < 0) addbin3 = addbin3 + 36;
               //if (addbin3 >= 36) addbin3 = addbin3 - 36;
               int good = 1;
-              if (addbin1 < 0) good = 0;
-              if (addbin1 >= 36) good = 0;
-              if (addbin2 < 0) good = 0;
-              if (addbin2 >= 36) good = 0;
-              if (addbin3 < 0) good = 0;
-              if (addbin3 >= 36) good = 0;
+              if (addbin1 < 0) { good = 0; }
+              if (addbin1 >= 36) { good = 0; }
+              if (addbin2 < 0) { good = 0; }
+              if (addbin2 >= 36) { good = 0; }
+              if (addbin3 < 0) { good = 0; }
+              if (addbin3 >= 36) { good = 0; }
               addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
               dist = sqrtf(jsqrd + ksqrd + lsqrd);
               fraction = 1.0 - (float(dist / int(sigmas[i])) * float(dist / int(sigmas[i])));
               if (dist <= int(sigmas[i]) && good == 1)
               {
                 addweight = (weights[i] * fraction);
-                if(sigmas[i] == 0.0) addweight = weights[i];
-                odf[addbin] = odf[addbin]+addweight;
+                if(sigmas[i] == 0.0) { addweight = weights[i]; }
+                odf[addbin] = odf[addbin] + addweight;
                 totaladdweight = totaladdweight + addweight;
               }
             }
@@ -416,16 +416,16 @@ class Texture
       }
       if(totaladdweight > totalweight)
       {
-        float scale = (totaladdweight/totalweight);
+        float scale = (totaladdweight / totalweight);
         for (size_t i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
         {
-          odf[i] = odf[i]/scale;
+          odf[i] = odf[i] / scale;
         }
       }
       float remainingweight = totalweight;
       for (size_t i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
       {
-        remainingweight = remainingweight-odf[i];
+        remainingweight = remainingweight - odf[i];
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
@@ -434,9 +434,9 @@ class Texture
         random1 = rg.genrand_res53();
         random2 = rg.genrand_res53();
         random3 = rg.genrand_res53();
-        ea1 = 2.0*DREAM3D::Constants::k_Pi*random1;
-        ea2 = acos(2.0*(random2-0.5));
-        ea3 = 2.0*DREAM3D::Constants::k_Pi*random3;
+        ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
+        ea2 = acos(2.0 * (random2 - 0.5));
+        ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
         OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
@@ -514,8 +514,8 @@ class Texture
           density = odf[j];
           float d = totaldensity;
           totaldensity = totaldensity + density;
-          if(random1 >= d && random1 < totaldensity) choose1 = static_cast<int>(j);
-          if(random2 >= d && random2 < totaldensity) choose2 = static_cast<int>(j);
+          if(random1 >= d && random1 < totaldensity) { choose1 = static_cast<int>(j); }
+          if(random2 >= d && random2 < totaldensity) { choose2 = static_cast<int>(j); }
         }
         orientationOps.determineEulerAngles(choose1, ea11, ea12, ea13);
         OrientationMath::EulertoQuat(q1, ea11, ea12, ea13);
@@ -525,12 +525,12 @@ class Texture
         OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
         orientationOps.getMDFFZRod(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
-        if(mdf[mbin] >= 0) mdf[mbin]++;
-        if(mdf[mbin] < 0) i = i - 1;
+        if(mdf[mbin] >= 0) { mdf[mbin]++; }
+        if(mdf[mbin] < 0) { i = i - 1; }
       }
       for (int i = 0; i < mdfsize; i++)
       {
-        if(mdf[i] < 0) mdf[i] = -mdf[i];
+        if(mdf[i] < 0) { mdf[i] = -mdf[i]; }
         mdf[i] = mdf[i] / 10000.0;
       }
 
@@ -539,7 +539,7 @@ class Texture
 
 
   protected:
-    Texture(){}
+    Texture() {}
 
   private:
     Texture(const Texture&); // Copy Constructor Not Implemented

@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     /** @brief Modifies a single line of the header section of the TSL .ang file if necessary
     * @param line The line to possibly modify
     */
-    QString modifyAngHeaderLine(QString &buf);
+    QString modifyAngHeaderLine(QString& buf);
 
     QString int_to_string(int value);
     QString float_to_string(float value);

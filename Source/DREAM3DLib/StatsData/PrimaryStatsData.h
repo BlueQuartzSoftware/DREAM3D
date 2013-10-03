@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -107,9 +107,9 @@ class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
 
 
-   /**
-     * @breif this will generate the Bin Numbers values;
-     */
+    /**
+      * @breif this will generate the Bin Numbers values;
+      */
     FloatArrayType::Pointer generateBinNumbers();
     /**
      * @brief The values are encoded into 3 floats: Average, Max, Min

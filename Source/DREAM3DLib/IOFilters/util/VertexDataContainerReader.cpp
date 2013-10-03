@@ -89,13 +89,13 @@ void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
   }
   else if (preflight == true)
   {
-    if(m_VertexArraysToRead.size() == 0 && m_ReadAllVertexArrays != true) m_ReadVertexData = false;
-    if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllVertexFieldArrays != true) m_ReadVertexFieldData = false;
-    if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllVertexEnsembleArrays != true) m_ReadVertexEnsembleData = false;
+    if(m_VertexArraysToRead.size() == 0 && m_ReadAllVertexArrays != true) { m_ReadVertexData = false; }
+    if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllVertexFieldArrays != true) { m_ReadVertexFieldData = false; }
+    if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllVertexEnsembleArrays != true) { m_ReadVertexEnsembleData = false; }
 
-    if(m_ReadVertexData == true) dc->clearVertexData();
-    if(m_ReadVertexFieldData == true) dc->clearVertexFieldData();
-    if(m_ReadVertexEnsembleData == true) dc->clearVertexEnsembleData();
+    if(m_ReadVertexData == true) { dc->clearVertexData(); }
+    if(m_ReadVertexFieldData == true) { dc->clearVertexFieldData(); }
+    if(m_ReadVertexEnsembleData == true) { dc->clearVertexEnsembleData(); }
 
     int err = gatherData(preflight);
     if (err < 0)
@@ -135,13 +135,13 @@ void VertexDataContainerReader::execute()
 
   setErrorCondition(err);
 
-  if(m_VertexArraysToRead.size() == 0 && m_ReadAllVertexArrays != true) m_ReadVertexData = false;
-  if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllVertexFieldArrays != true) m_ReadVertexFieldData = false;
-  if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllVertexEnsembleArrays != true) m_ReadVertexEnsembleData = false;
+  if(m_VertexArraysToRead.size() == 0 && m_ReadAllVertexArrays != true) { m_ReadVertexData = false; }
+  if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllVertexFieldArrays != true) { m_ReadVertexFieldData = false; }
+  if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllVertexEnsembleArrays != true) { m_ReadVertexEnsembleData = false; }
 
-  if(m_ReadVertexData == true) dc->clearVertexData();
-  if(m_ReadVertexFieldData == true) dc->clearVertexFieldData();
-  if(m_ReadVertexEnsembleData == true) dc->clearVertexEnsembleData();
+  if(m_ReadVertexData == true) { dc->clearVertexData(); }
+  if(m_ReadVertexFieldData == true) { dc->clearVertexFieldData(); }
+  if(m_ReadVertexEnsembleData == true) { dc->clearVertexEnsembleData(); }
 
   err = gatherData(false);
   setErrorCondition(err);
@@ -281,10 +281,10 @@ int VertexDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead,
-                                                bool readAllCurrentArrays)
+int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupName, bool preflight,
+                                              QVector<QString>& namesRead,
+                                              QSet<QString>& namesToRead,
+                                              bool readAllCurrentArrays)
 {
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.

@@ -46,13 +46,13 @@
 //
 // -----------------------------------------------------------------------------
 FindLargestCrossSections::FindLargestCrossSections() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_LargestCrossSectionsArrayName(DREAM3D::FieldData::LargestCrossSections),
-m_Plane(0),
-m_GrainIds(NULL),
-m_LargestCrossSections(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_LargestCrossSectionsArrayName(DREAM3D::FieldData::LargestCrossSections),
+  m_Plane(0),
+  m_GrainIds(NULL),
+  m_LargestCrossSections(NULL)
 {
   setupFilterParameters();
 }
@@ -113,7 +113,7 @@ int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWrit
 void FindLargestCrossSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -158,14 +158,14 @@ void FindLargestCrossSections::execute()
     return;
   }
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) find_crosssections();
+  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_crosssections(); }
   else
   {
     setErrorCondition(-999);
     notifyErrorMessage("The volume is not 3D and cannot be run through this filter", -999);
     return;
   }
- notifyStatusMessage("FindLargestCrossSections Completed");
+  notifyStatusMessage("FindLargestCrossSections Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -191,8 +191,8 @@ void FindLargestCrossSections::find_crosssections()
     outPlane = m->getZPoints();
     inPlane1 = m->getXPoints();
     inPlane2 = m->getYPoints();
-    res_scalar = m->getXRes()*m->getYRes();
-    stride1 = inPlane1*inPlane2;
+    res_scalar = m->getXRes() * m->getYRes();
+    stride1 = inPlane1 * inPlane2;
     stride2 = 1;
     stride3 = inPlane1;
   }
@@ -201,20 +201,20 @@ void FindLargestCrossSections::find_crosssections()
     outPlane = m->getYPoints();
     inPlane1 = m->getXPoints();
     inPlane2 = m->getZPoints();
-    res_scalar = m->getXRes()*m->getZRes();
+    res_scalar = m->getXRes() * m->getZRes();
     stride1 = inPlane1;
     stride2 = 1;
-    stride3 = inPlane1*inPlane2;
+    stride3 = inPlane1 * inPlane2;
   }
   if(m_Plane == 2)
   {
     outPlane = m->getXPoints();
     inPlane1 = m->getYPoints();
     inPlane2 = m->getZPoints();
-    res_scalar = m->getYRes()*m->getZRes();
+    res_scalar = m->getYRes() * m->getZRes();
     stride1 = 1;
     stride2 = inPlane1;
-    stride3 = inPlane1*inPlane2;
+    stride3 = inPlane1 * inPlane2;
   }
   for(int i = 0; i < outPlane; i++)
   {
@@ -222,13 +222,13 @@ void FindLargestCrossSections::find_crosssections()
     {
       graincounts[g] = 0.0f;
     }
-    istride = i*stride1;
+    istride = i * stride1;
     for (int j = 0; j < inPlane1; j++)
     {
-      jstride = j*stride2;
+      jstride = j * stride2;
       for(int k = 0; k < inPlane2; k++)
       {
-        kstride = k*stride3;
+        kstride = k * stride3;
         point = istride + jstride + kstride;
         gnum = m_GrainIds[point];
         graincounts[gnum]++;
@@ -237,7 +237,7 @@ void FindLargestCrossSections::find_crosssections()
     for (size_t g = 1; g < numgrains; g++)
     {
       area = graincounts[g] * res_scalar;
-      if(area > m_LargestCrossSections[g]) m_LargestCrossSections[g] = area;
+      if(area > m_LargestCrossSections[g]) { m_LargestCrossSections[g] = area; }
     }
   }
 }

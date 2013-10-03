@@ -61,9 +61,9 @@ void FindBasalLoadingFactor::readFilterParameters(AbstractFilterParametersReader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setLoadingDir( reader->readValue("LoadingDir", getLoadingDir() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -136,7 +136,7 @@ void FindBasalLoadingFactor::execute()
   float w;
   float g1[3][3];
   float g1t[3][3];
-  float caxis[3] = {0,0,1};
+  float caxis[3] = {0, 0, 1};
   float c1[3];
 
   sampleLoading[0] = m_LoadingDir.x;
@@ -155,12 +155,12 @@ void FindBasalLoadingFactor::execute()
     MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
     //normalize so that the magnitude is 1
     MatrixMath::Normalize3x1(c1);
-    if(c1[2] < 0) MatrixMath::Multiply3x1withConstant(c1,-1);
-    w = MatrixMath::CosThetaBetweenVectors(c1,sampleLoading);
+    if(c1[2] < 0) { MatrixMath::Multiply3x1withConstant(c1, -1); }
+    w = MatrixMath::CosThetaBetweenVectors(c1, sampleLoading);
     w = acos(w);
     w *= DREAM3D::Constants::k_180OverPi;
     m_BasalLoadingFactor[i] = w;
   }
 
- notifyStatusMessage("FindBasalLoadingFactor Completed");
+  notifyStatusMessage("FindBasalLoadingFactor Completed");
 }

@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 FileWriter::FileWriter() :
   AbstractFilter(),
-    m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
 {
 
 }

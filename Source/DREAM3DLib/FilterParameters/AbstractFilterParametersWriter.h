@@ -58,14 +58,14 @@ class AbstractFilter;
 class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 {
   public:
- //   DREAM3D_SHARED_POINTERS(AbstractFilterParametersWriter)
-  //  DREAM3D_STATIC_NEW_MACRO(AbstractFilterParametersWriter)
+//   DREAM3D_SHARED_POINTERS(AbstractFilterParametersWriter)
+    //  DREAM3D_STATIC_NEW_MACRO(AbstractFilterParametersWriter)
     DREAM3D_TYPE_MACRO(AbstractFilterParametersWriter)
 
 
     virtual ~AbstractFilterParametersWriter();
 
-    virtual int openFilterGroup(AbstractFilter *filter, int index) = 0;
+    virtual int openFilterGroup(AbstractFilter* filter, int index) = 0;
     virtual int closeFilterGroup() = 0;
 
     virtual int writeValue(const QString name, const QString value) = 0;

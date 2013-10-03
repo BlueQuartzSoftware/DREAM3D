@@ -132,7 +132,7 @@ void VolumeDataContainerWriter::execute()
     return;
   }
 
-  if(getdcType() == 0) writeXdmfMeshStructure();
+  if(getdcType() == 0) { writeXdmfMeshStructure(); }
 
   err = writeMeshData(dcGid);
   if (err < 0)
@@ -203,16 +203,17 @@ void VolumeDataContainerWriter::writeXdmfMeshStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::writeMetaInfo(const QString &hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
+int VolumeDataContainerWriter::writeMetaInfo(const QString& hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
 {
   herr_t err = 0;
   err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
-  if (err < 0)  {
+  if (err < 0)
+  {
     return err;
   }
   hid_t gid = H5Gopen(getHdfGroupId(), hdfPath.toLatin1().data(), H5P_DEFAULT );
 
-  int32_t rank =1;
+  int32_t rank = 1;
   hsize_t dims[1] = {3};
   err = QH5Lite::writePointerDataset(gid, H5_DIMENSIONS, rank, dims, volDims);
   if (err < 0)
@@ -258,7 +259,7 @@ int VolumeDataContainerWriter::writeMeshData(hid_t dcGid)
     int32_t* data = reinterpret_cast<int32_t*>(cellsPtr->getPointer(0));
 
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::CellsName, rank, dims, data);
-    if (err < 0) 
+    if (err < 0)
     {
       setErrorCondition(err);
       notifyErrorMessage("Error Writing Cell List to DREAM3D file", getErrorCondition());
@@ -288,8 +289,8 @@ int VolumeDataContainerWriter::writeMeshData(hid_t dcGid)
         int32_t* cells = cellNeighbors->getElementListPointer(v);
         ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
         offset += sizeof(uint16_t);
-        ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-        offset += ncells*sizeof(int32_t);
+        ::memcpy(bufPtr + offset, cells, ncells * sizeof(int32_t) );
+        offset += ncells * sizeof(int32_t);
       }
 
       int32_t rank = 1;
@@ -336,8 +337,8 @@ int VolumeDataContainerWriter::writeMeshData(hid_t dcGid)
       int32_t* cells = cellsContainingVert->getElementListPointer(v);
       ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
       offset += sizeof(uint16_t);
-      ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-      offset += ncells*sizeof(int32_t);
+      ::memcpy(bufPtr + offset, cells, ncells * sizeof(int32_t) );
+      offset += ncells * sizeof(int32_t);
     }
 
     rank = 1;
@@ -438,7 +439,7 @@ int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
 
 #endif
 
-  int64_t volDims[3] = { 0,0,0 };
+  int64_t volDims[3] = { 0, 0, 0 };
 
 
   // Write the Field Data
@@ -538,11 +539,11 @@ int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
-    #if WRITE_FIELD_XDMF
+#if WRITE_FIELD_XDMF
 
     QString ss = QObject::tr("Neighbor Data (%1)").arg(total);
     writeFieldXdmfGridHeader(total, ss.str());
-    #endif
+#endif
     for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
     {
       err = (*iter)->writeH5Data(fieldGroupId);

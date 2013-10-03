@@ -242,10 +242,12 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (m_WriteBinaryFile) {
+  if (m_WriteBinaryFile)
+  {
     fprintf(vtkFile, "BINARY\n");
   }
-  else {
+  else
+  {
     fprintf(vtkFile, "ASCII\n");
   }
   fprintf(vtkFile, "DATASET POLYDATA\n");
@@ -281,7 +283,8 @@ void SurfaceMeshToNonconformalVtk::execute()
         DREAM3D::Endian::FromSystemToBig::convert(pos[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
       }
-      else {
+      else
+      {
         fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
       }
     }
@@ -304,27 +307,27 @@ void SurfaceMeshToNonconformalVtk::execute()
   QMap<int32_t, int32_t> grainTriangleCount;
   for (int i = 0; i < triangleCount; i++)
   {
-    if (grainTriangleCount.find(faceLabels[i*2]) == grainTriangleCount.end())
+    if (grainTriangleCount.find(faceLabels[i * 2]) == grainTriangleCount.end())
     {
-      grainTriangleCount[faceLabels[i*2]] = 1;
+      grainTriangleCount[faceLabels[i * 2]] = 1;
     }
     else
     {
-      grainTriangleCount[faceLabels[i*2]]++;
+      grainTriangleCount[faceLabels[i * 2]]++;
     }
-    if (grainTriangleCount.find(faceLabels[i*2+1]) == grainTriangleCount.end())
+    if (grainTriangleCount.find(faceLabels[i * 2 + 1]) == grainTriangleCount.end())
     {
-      grainTriangleCount[faceLabels[i*2+1]] = 1;
+      grainTriangleCount[faceLabels[i * 2 + 1]] = 1;
     }
     else
     {
-      grainTriangleCount[faceLabels[i*2+1]]++;
+      grainTriangleCount[faceLabels[i * 2 + 1]]++;
     }
   }
 
   triangleCount = triangles.getNumberOfTuples();
   // Write the POLYGONS
-  fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount*2, (triangleCount*2*4));
+  fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount * 2, (triangleCount * 2 * 4));
 
   size_t totalCells = 0;
   // Loop over all the grains
@@ -352,8 +355,8 @@ void SurfaceMeshToNonconformalVtk::execute()
     {
       doWrite = 0;
 
-      if (faceLabels[j*2] == gid ) { doWrite = 1; }
-      else if (faceLabels[j*2+1] == gid) { doWrite = 2; } // We need to flip the winding of the triangle
+      if (faceLabels[j * 2] == gid ) { doWrite = 1; }
+      else if (faceLabels[j * 2 + 1] == gid) { doWrite = 2; } // We need to flip the winding of the triangle
       if (doWrite == 0) { continue; } // Labels in the triangle did match the current grain id.
 
       if (doWrite == 1)
@@ -414,7 +417,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointScalarData(DataContainer* dc, const QString &dataName, const QString &dataType,
+void writePointScalarData(DataContainer* dc, const QString& dataName, const QString& dataType,
                           bool writeBinaryData, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
@@ -451,8 +454,8 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
-                          bool writeBinaryData, const QString &vtkAttributeType,
+void writePointVectorData(DataContainer* dc, const QString& dataName, const QString& dataType,
+                          bool writeBinaryData, const QString& vtkAttributeType,
                           FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
@@ -470,9 +473,9 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
       T s2 = 0x00;
       if(writeBinaryData == true)
       {
-        s0 = static_cast<T>(m[i*3+0]);
-        s1 = static_cast<T>(m[i*3+1]);
-        s2 = static_cast<T>(m[i*3+2]);
+        s0 = static_cast<T>(m[i * 3 + 0]);
+        s1 = static_cast<T>(m[i * 3 + 1]);
+        s2 = static_cast<T>(m[i * 3 + 2]);
         DREAM3D::Endian::FromSystemToBig::convert(s0);
         DREAM3D::Endian::FromSystemToBig::convert(s1);
         DREAM3D::Endian::FromSystemToBig::convert(s2);
@@ -483,7 +486,7 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
       else
       {
 
-        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
+        ss << m[i * 3 + 0] << " " << m[i * 3 + 1] << " " << m[i * 3 + 2] << " ";
         fprintf(vtkFile, "%s ", buf.toLatin1().data());
         buf.clear();
         //if (i%50 == 0)
@@ -592,9 +595,9 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 //
 // -----------------------------------------------------------------------------
 
-    template<typename SurfaceDataContainer, typename T>
-void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, const QString &dataType,
-                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
+template<typename SurfaceDataContainer, typename T>
+void writeCellScalarData(SurfaceDataContainer* dc, const QString& dataName, const QString& dataType,
+                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t>& grainIds)
 {
   FaceArray& triangles = *(dc->getFaces());
 
@@ -607,52 +610,53 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, cons
   IDataArray::Pointer data = dc->getFaceData(dataName);
   QString ss;
   if (NULL != data.get())
-{
-  int32_t totalCellsWritten = 0;
-
-  T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
-  fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.toLatin1().data(), dataType.toLatin1().data());
-  fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  // Loop over all the grains
-  for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
-{
-  int32_t gid = grainIter.key(); // The current Grain Id
-  size_t size = grainIter.value(); // The number of triangles for this grain id
-  std::vector<T> buffer(size, 0);
-  totalCellsWritten += size;
-  size_t index = 0;
-
-  for (int j = 0; j < triangleCount; j++)
   {
-    if (faceLabels[j*2] != gid && faceLabels[j*2+1] != gid) { continue; }
-    // Get the data
-    T s0 = static_cast<T>(m[j]);
-    if (faceLabels[j*2+1] == gid)
-    { s0 = s0 * -1; }
+    int32_t totalCellsWritten = 0;
 
-
-    // Write the values to the buffer after an Endian swap.
-    if(writeBinaryData == true)
+    T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
+    fprintf(vtkFile, "\n");
+    fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.toLatin1().data(), dataType.toLatin1().data());
+    fprintf(vtkFile, "LOOKUP_TABLE default\n");
+    // Loop over all the grains
+    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
-      DREAM3D::Endian::FromSystemToBig::convert(s0);
-      buffer[index]=s0; ++index;
-    }
-    else
-    {
+      int32_t gid = grainIter.key(); // The current Grain Id
+      size_t size = grainIter.value(); // The number of triangles for this grain id
+      std::vector<T> buffer(size, 0);
+      totalCellsWritten += size;
+      size_t index = 0;
 
-      ss = QString::number(s0);
-      fprintf(vtkFile, "%s\n", ss.toLatin1().data());
+      for (int j = 0; j < triangleCount; j++)
+      {
+        if (faceLabels[j * 2] != gid && faceLabels[j * 2 + 1] != gid) { continue; }
+        // Get the data
+        T s0 = static_cast<T>(m[j]);
+        if (faceLabels[j * 2 + 1] == gid)
+        { s0 = s0 * -1; }
+
+
+        // Write the values to the buffer after an Endian swap.
+        if(writeBinaryData == true)
+        {
+          DREAM3D::Endian::FromSystemToBig::convert(s0);
+          buffer[index] = s0;
+          ++index;
+        }
+        else
+        {
+
+          ss = QString::number(s0);
+          fprintf(vtkFile, "%s\n", ss.toLatin1().data());
+        }
+      }
+
+      // Write the Buffer
+      if(writeBinaryData == true)
+      {
+        fwrite(&(buffer.front()), sizeof(T), size, vtkFile);
+      }
     }
   }
-
-  // Write the Buffer
-  if(writeBinaryData == true)
-  {
-    fwrite(&(buffer.front()), sizeof(T), size, vtkFile);
-  }
-}
-}
 
 }
 
@@ -661,8 +665,8 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, cons
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellNormalData(DataContainer* dc, const QString &dataName, const QString &dataType,
-                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
+void writeCellNormalData(DataContainer* dc, const QString& dataName, const QString& dataType,
+                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t>& grainIds)
 {
 
   FaceArray& triangles = *(dc->getFaces());
@@ -687,19 +691,19 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
     {
       int32_t gid = grainIter.key(); // The current Grain Id
       size_t size = grainIter.value(); // The number of triangles for this grain id
-      std::vector<T> buffer(size* 3, 0);
-      totalCellsWritten += size*3;
+      std::vector<T> buffer(size * 3, 0);
+      totalCellsWritten += size * 3;
       size_t index = 0;
 
       for (int j = 0; j < triangleCount; j++)
       {
-        if (faceLabels[j*2] != gid && faceLabels[j*2+1] != gid) { continue; }
+        if (faceLabels[j * 2] != gid && faceLabels[j * 2 + 1] != gid) { continue; }
         // Get the data
-        T s0 = static_cast<T>(m[j*3+0]);
-        T s1 = static_cast<T>(m[j*3+1]);
-        T s2 = static_cast<T>(m[j*3+2]);
+        T s0 = static_cast<T>(m[j * 3 + 0]);
+        T s1 = static_cast<T>(m[j * 3 + 1]);
+        T s2 = static_cast<T>(m[j * 3 + 2]);
         // Flip the normal if needed because the current grain id is assigned to the triangle.labels[1]
-        if (faceLabels[j*2+1] == gid )
+        if (faceLabels[j * 2 + 1] == gid )
         {
           s0 *= -1.0;
           s1 *= -1.0;
@@ -709,13 +713,16 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
         if(writeBinaryData == true)
         {
           DREAM3D::Endian::FromSystemToBig::convert(s0);
-          buffer[index]=s0; ++index;
+          buffer[index] = s0;
+          ++index;
 
           DREAM3D::Endian::FromSystemToBig::convert(s1);
-          buffer[index]=s1; ++index;
+          buffer[index] = s1;
+          ++index;
 
           DREAM3D::Endian::FromSystemToBig::convert(s2);
-          buffer[index]=s2; ++index;
+          buffer[index] = s2;
+          ++index;
         }
         else
         {
@@ -729,7 +736,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
       // Write the Buffer
       if(writeBinaryData == true)
       {
-        fwrite(&(buffer.front()), sizeof(T), size*3, vtkFile);
+        fwrite(&(buffer.front()), sizeof(T), size * 3, vtkFile);
       }
     }
   }
@@ -742,9 +749,9 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
-                         bool writeBinaryData, const QString &vtkAttributeType,
-                         FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
+void writeCellVectorData(DataContainer* dc, const QString& dataName, const QString& dataType,
+                         bool writeBinaryData, const QString& vtkAttributeType,
+                         FILE* vtkFile, QMap<int32_t, int32_t>& grainIds)
 {
   StructArray<FaceArray::Face_t>& triangles = *(dc->getFaces());
 
@@ -764,9 +771,9 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
       T s2 = 0x00;
       if(writeBinaryData == true)
       {
-        s0 = static_cast<T>(m[i*3+0]);
-        s1 = static_cast<T>(m[i*3+1]);
-        s2 = static_cast<T>(m[i*3+2]);
+        s0 = static_cast<T>(m[i * 3 + 0]);
+        s1 = static_cast<T>(m[i * 3 + 1]);
+        s2 = static_cast<T>(m[i * 3 + 2]);
         DREAM3D::Endian::FromSystemToBig::convert(s0);
         DREAM3D::Endian::FromSystemToBig::convert(s1);
         DREAM3D::Endian::FromSystemToBig::convert(s2);
@@ -778,10 +785,10 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
       else
       {
 
-        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
+        ss << m[i * 3 + 0] << " " << m[i * 3 + 1] << " " << m[i * 3 + 2] << " ";
 
         fprintf(vtkFile, "%s ", ss.toLatin1().data());
-        if (i%25 == 0) { fprintf(vtkFile, "\n"); }
+        if (i % 25 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
   }
@@ -790,7 +797,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
+int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int32_t>& grainIds)
 {
   int err = 0;
   if (NULL == vtkFile)
@@ -839,11 +846,11 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
       // in one chunk versus what we are doing here.
       for (int j = 0; j < triangleCount; j++)
       {
-        if (faceLabels[j*2] == gid || faceLabels[j*2+1] == gid)
+        if (faceLabels[j * 2] == gid || faceLabels[j * 2 + 1] == gid)
         {
           if(m_WriteBinaryFile == true)
           {
-            buffer[index]=swapped;
+            buffer[index] = swapped;
             ++index;
           }
           else

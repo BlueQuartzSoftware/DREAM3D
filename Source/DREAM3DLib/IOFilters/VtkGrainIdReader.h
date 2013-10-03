@@ -112,7 +112,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
      * @param value
      * @return Error Condition. Negative is Error.
      */
-    int parseCoordinateLine(const char* input, size_t &value);
+    int parseCoordinateLine(const char* input, size_t& value);
 
     /**
       * @brief Parses the byte size from a data set declaration line
@@ -124,13 +124,13 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
     /**
       *
       */
-    int ignoreData(QFile &in, int byteSize, char* type, size_t xDim, size_t yDim, size_t zDim);
+    int ignoreData(QFile& in, int byteSize, char* type, size_t xDim, size_t yDim, size_t zDim);
 
     /**
       *
       */
     template<typename T>
-    int skipVolume(QFile &inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim, T &diff)
+    int skipVolume(QFile& inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim, T& diff)
     {
       int err = 0;
       int64_t totalSize = (int64_t)xDim * (int64_t)yDim * (int64_t)zDim;
@@ -145,13 +145,14 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
                    << " vs " << (totalSize * sizeof(T)) ;
           return -1;
         }
-        if (totalSize > 1) {
-          T t = buffer[totalSize-1];
-          T t1 = buffer[totalSize-2];
+        if (totalSize > 1)
+        {
+          T t = buffer[totalSize - 1];
+          T t1 = buffer[totalSize - 2];
           // Dont forget to byte swap since VTK Binary Files are explicitly Big Endian formatted
           t = qFromBigEndian(t);
           t1 = qFromBigEndian(t1);
-          diff =t-t1;
+          diff = t - t1;
         }
         else
         {
@@ -180,7 +181,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
     }
 
     template<typename T>
-    int skipVolume(QFile &inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim)
+    int skipVolume(QFile& inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim)
     {
       int err = 0;
       if(getFileIsBinary() == true)

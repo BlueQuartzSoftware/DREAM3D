@@ -60,7 +60,7 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
 
     DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId)
 
-    virtual int openFilterGroup(AbstractFilter *filter, int index);
+    virtual int openFilterGroup(AbstractFilter* filter, int index);
     virtual int closeFilterGroup();
 
     virtual int writeValue(const QString name, const QString value);
@@ -96,8 +96,8 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     virtual int writeValue(const QString name, AxisAngleInput_t v, int vectorPos);
     virtual int writeValue(const QString name, QSet<QString> v);
 
-    protected:
-      H5FilterParametersWriter();
+  protected:
+    H5FilterParametersWriter();
 
   private:
     hid_t m_CurrentGroupId;

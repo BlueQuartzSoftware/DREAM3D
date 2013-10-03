@@ -12,18 +12,18 @@
 //
 // -----------------------------------------------------------------------------
 FindFieldClustering::FindFieldClustering() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
-m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_ClustersArrayName(DREAM3D::FieldData::Clusters),
-m_ClusteringListArrayName(DREAM3D::FieldData::ClusteringList),
-m_FieldPhases(NULL),
-m_Centroids(NULL),
-m_EquivalentDiameters(NULL),
-m_Clusters(NULL),
-m_ClusteringList(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
+  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_ClustersArrayName(DREAM3D::FieldData::Clusters),
+  m_ClusteringListArrayName(DREAM3D::FieldData::ClusteringList),
+  m_FieldPhases(NULL),
+  m_Centroids(NULL),
+  m_EquivalentDiameters(NULL),
+  m_Clusters(NULL),
+  m_ClusteringList(NULL)
 {
   setupFilterParameters();
 }
@@ -45,8 +45,8 @@ void FindFieldClustering::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -73,7 +73,7 @@ void FindFieldClustering::dataCheck(bool preflight, size_t voxels, size_t fields
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_ClusteringList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >
-                                          (m->getCellFieldData(m_ClusteringListArrayName).get());
+                     (m->getCellFieldData(m_ClusteringListArrayName).get());
   if(m_ClusteringList == NULL)
   {
     NeighborList<float>::Pointer clusteringPtr = NeighborList<float>::New();
@@ -81,13 +81,14 @@ void FindFieldClustering::dataCheck(bool preflight, size_t voxels, size_t fields
     clusteringPtr->Resize(fields);
     clusteringPtr->setNumNeighborsArrayName(m_ClusteringListArrayName);
     m->addCellFieldData(m_ClusteringListArrayName, clusteringPtr);
-    if (clusteringPtr.get() == NULL) {
+    if (clusteringPtr.get() == NULL)
+    {
       QString ss = QObject::tr("Clustering Array Not Initialized at Beginning of FindFieldClustering Filter");
       setErrorCondition(-308);
       addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
     m_ClusteringList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >
-                                          (m->getCellFieldData(m_ClusteringListArrayName).get());
+                       (m->getCellFieldData(m_ClusteringListArrayName).get());
 
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
@@ -166,26 +167,26 @@ void FindFieldClustering::find_clustering()
 
   for (size_t i = 1; i < totalFields; i++)
   {
-      x = m_Centroids[3*i];
-      y = m_Centroids[3*i+1];
-      z = m_Centroids[3*i+2];
+    x = m_Centroids[3 * i];
+    y = m_Centroids[3 * i + 1];
+    z = m_Centroids[3 * i + 2];
   }
   for (size_t i = 1; i < totalFields; i++)
   {
-    if (i%1000 == 0)
+    if (i % 1000 == 0)
     {
 
       QString ss = QObject::tr("Working On Grain %1 of %2").arg(i).arg(totalFields);
       notifyStatusMessage(ss);
     }
-    x = m_Centroids[3*i];
-    y = m_Centroids[3*i+1];
-    z = m_Centroids[3*i+2];
-    for (size_t j = i+1; j < totalFields; j++)
+    x = m_Centroids[3 * i];
+    y = m_Centroids[3 * i + 1];
+    z = m_Centroids[3 * i + 2];
+    for (size_t j = i + 1; j < totalFields; j++)
     {
-      xn = m_Centroids[3*j];
-      yn = m_Centroids[3*j+1];
-      zn = m_Centroids[3*j+2];
+      xn = m_Centroids[3 * j];
+      yn = m_Centroids[3 * j + 1];
+      zn = m_Centroids[3 * j + 2];
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
       m_Clusters[i]++;
       clusteringlist[i].push_back(r);
@@ -196,10 +197,10 @@ void FindFieldClustering::find_clustering()
   }
   for (size_t i = 1; i < totalFields; i++)
   {
-      // Set the vector for each list into the Clustering Object
-      NeighborList<float>::SharedVectorType sharedClustLst(new std::vector<float>);
-      sharedClustLst->assign(clusteringlist[i].begin(), clusteringlist[i].end());
-      m_ClusteringList->setList(static_cast<int>(i), sharedClustLst);
+    // Set the vector for each list into the Clustering Object
+    NeighborList<float>::SharedVectorType sharedClustLst(new std::vector<float>);
+    sharedClustLst->assign(clusteringlist[i].begin(), clusteringlist[i].end());
+    m_ClusteringList->setList(static_cast<int>(i), sharedClustLst);
   }
 }
 

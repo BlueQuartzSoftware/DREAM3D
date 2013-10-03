@@ -195,7 +195,7 @@ void BinaryNodesTrianglesReader::execute()
 int BinaryNodesTrianglesReader::read()
 {
 
-  SurfaceDataContainer *sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   int err = 0;
   setErrorCondition(err);
 
@@ -265,7 +265,7 @@ int BinaryNodesTrianglesReader::read()
   {
     QString ss = QObject::tr("Calc Triangle Count from Triangles.bin File: %1").arg(nTriangles);
     notifyStatusMessage(ss);
-    }
+  }
 
   // Allocate all the nodes
   VertexArray::Pointer m_NodeListPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);

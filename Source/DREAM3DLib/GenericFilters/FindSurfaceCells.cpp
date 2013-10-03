@@ -45,12 +45,12 @@
 //
 // -----------------------------------------------------------------------------
 FindSurfaceCells::FindSurfaceCells() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
-m_GrainIds(NULL),
-m_SurfaceVoxels(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
+  m_GrainIds(NULL),
+  m_SurfaceVoxels(NULL)
 {
 
 }
@@ -66,8 +66,8 @@ void FindSurfaceCells::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -88,7 +88,7 @@ void FindSurfaceCells::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
 
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -143,12 +143,12 @@ void FindSurfaceCells::execute()
   int zPoints = static_cast<int>(m->getZPoints());
 
   int neighpoints[6];
-  neighpoints[0] = -xPoints*yPoints;
+  neighpoints[0] = -xPoints * yPoints;
   neighpoints[1] = -xPoints;
   neighpoints[2] = -1;
   neighpoints[3] = 1;
   neighpoints[4] = xPoints;
-  neighpoints[5] = xPoints*yPoints;
+  neighpoints[5] = xPoints * yPoints;
 
   //float column, row, plane;
   int grain;
@@ -157,37 +157,37 @@ void FindSurfaceCells::execute()
   int neighbor = 0;
 
   int zStride, yStride;
-  for(int i=0;i<zPoints;i++)
+  for(int i = 0; i < zPoints; i++)
   {
-  zStride = i*xPoints*yPoints;
-  for (int j=0;j<yPoints;j++)
-  {
-    yStride = j*xPoints;
-    for(int k=0;k<xPoints;k++)
+    zStride = i * xPoints * yPoints;
+    for (int j = 0; j < yPoints; j++)
     {
-      onsurf = 0;
-      grain = m_GrainIds[zStride+yStride+k];
-      if(grain > 0)
+      yStride = j * xPoints;
+      for(int k = 0; k < xPoints; k++)
       {
-        for (int l = 0; l < 6; l++)
+        onsurf = 0;
+        grain = m_GrainIds[zStride + yStride + k];
+        if(grain > 0)
         {
-        good = 1;
-        neighbor = static_cast<int>( zStride+yStride+k + neighpoints[l] );
-        if(l == 0 && i == 0) good = 0;
-        if(l == 5 && i == (zPoints - 1)) good = 0;
-        if(l == 1 && j == 0) good = 0;
-        if(l == 4 && j == (yPoints - 1)) good = 0;
-        if(l == 2 && k == 0) good = 0;
-        if(l == 3 && k == (xPoints - 1)) good = 0;
-        if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
-        {
-          onsurf++;
+          for (int l = 0; l < 6; l++)
+          {
+            good = 1;
+            neighbor = static_cast<int>( zStride + yStride + k + neighpoints[l] );
+            if(l == 0 && i == 0) { good = 0; }
+            if(l == 5 && i == (zPoints - 1)) { good = 0; }
+            if(l == 1 && j == 0) { good = 0; }
+            if(l == 4 && j == (yPoints - 1)) { good = 0; }
+            if(l == 2 && k == 0) { good = 0; }
+            if(l == 3 && k == (xPoints - 1)) { good = 0; }
+            if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
+            {
+              onsurf++;
+            }
+          }
         }
-        }
+        m_SurfaceVoxels[zStride + yStride + k] = onsurf;
       }
-      m_SurfaceVoxels[zStride+yStride+k] = onsurf;
     }
-  }
   }
 
   notifyStatusMessage("Complete");

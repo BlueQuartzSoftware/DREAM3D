@@ -40,28 +40,28 @@
 #include "ShapeOps.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-  /*
-   *
-   */
-  class DREAM3DLib_EXPORT EllipsoidOps : public ShapeOps
-  {
-    public:
-      DREAM3D_SHARED_POINTERS(EllipsoidOps)
-      DREAM3D_TYPE_MACRO(EllipsoidOps)
-      DREAM3D_STATIC_NEW_MACRO(EllipsoidOps)
+/*
+ *
+ */
+class DREAM3DLib_EXPORT EllipsoidOps : public ShapeOps
+{
+  public:
+    DREAM3D_SHARED_POINTERS(EllipsoidOps)
+    DREAM3D_TYPE_MACRO(EllipsoidOps)
+    DREAM3D_STATIC_NEW_MACRO(EllipsoidOps)
 
-      virtual ~EllipsoidOps();
+    virtual ~EllipsoidOps();
 
-      virtual float radcur1(QMap<ArgName, float> args);
-      virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-      virtual void init() {  }
+    virtual float radcur1(QMap<ArgName, float> args);
+    virtual float inside(float axis1comp, float axis2comp, float axis3comp);
+    virtual void init() {  }
 
-    protected:
-      EllipsoidOps();
-    private:
-      EllipsoidOps(const EllipsoidOps&); // Copy Constructor Not Implemented
-      void operator=(const EllipsoidOps&); // Operator '=' Not Implemented
+  protected:
+    EllipsoidOps();
+  private:
+    EllipsoidOps(const EllipsoidOps&); // Copy Constructor Not Implemented
+    void operator=(const EllipsoidOps&); // Operator '=' Not Implemented
 
-  };
+};
 
 #endif /* ELLIPSOIDOPS_H_ */

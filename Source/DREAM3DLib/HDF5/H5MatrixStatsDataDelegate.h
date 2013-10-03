@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT H5MatrixStatsDataDelegate : public H5StatsDataDelegate
   protected:
     H5MatrixStatsDataDelegate();
 
-	int writePhaseFraction(MatrixStatsData* data, hid_t groupId);
+    int writePhaseFraction(MatrixStatsData* data, hid_t groupId);
     int readPhaseFraction(MatrixStatsData* data, hid_t groupId);
 
   private:

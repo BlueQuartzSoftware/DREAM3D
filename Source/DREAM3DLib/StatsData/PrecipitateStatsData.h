@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -107,9 +107,9 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
     virtual QString getStatsType();
     virtual unsigned int getPhaseType();
 
-   /**
-     * @breif this will generate the Bin Numbers values;
-     */
+    /**
+      * @breif this will generate the Bin Numbers values;
+      */
     FloatArrayType::Pointer generateBinNumbers();
     /**
      * @brief The values are encoded into 3 floats: Average, Max, Min
@@ -132,7 +132,7 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers)
 
-  size_t getNumberOfBins()
+    size_t getNumberOfBins()
     {
       return (m_BinNumbers.get() == NULL) ? 0 : m_BinNumbers->GetSize();
     }

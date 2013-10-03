@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -104,9 +104,9 @@ class DREAM3DLib_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -132,14 +132,14 @@ class DREAM3DLib_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
      * @brief Generates the Avizo Header for this file
      * @return The header as a string
      */
-    void generateHeader(QDataStream &out);
+    void generateHeader(QDataStream& out);
 
     /**
      * @brief Writes the data to the Avizo file
      * @param writer The MXAFileWriter object
      * @return Error code
      */
-    int writeData(QDataStream &writer);
+    int writeData(QDataStream& writer);
 
   private:
     int32_t* m_GrainIds;

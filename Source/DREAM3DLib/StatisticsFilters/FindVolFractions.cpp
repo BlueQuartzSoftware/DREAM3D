@@ -45,12 +45,12 @@
 //
 // -----------------------------------------------------------------------------
 FindVolFractions::FindVolFractions() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
-m_CellPhases(NULL),
-m_VolFractions(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
+  m_CellPhases(NULL),
+  m_VolFractions(NULL)
 {
 
 }
@@ -67,8 +67,8 @@ void FindVolFractions::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -88,7 +88,7 @@ void FindVolFractions::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
 
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -301, int32_t, Int32ArrayType, voxels, 1)

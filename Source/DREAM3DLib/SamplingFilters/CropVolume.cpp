@@ -156,7 +156,7 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setXMin( reader->readValue("XMin", getXMin()) );
   setYMin( reader->readValue("YMin", getYMin()) );
   setZMin( reader->readValue("ZMin", getZMin()) );
@@ -165,7 +165,7 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
   setZMax( reader->readValue("ZMax", getZMax()) );
   setRenumberGrains( reader->readValue("RenumberGrains", false) );
   setUpdateOrigin( reader->readValue("UpdateOrigin", false) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -197,7 +197,7 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   if(NULL == m)
   {
     setErrorCondition(-999);
-     addErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", -999);
     return;
   }
   if (m_RenumberGrains == true)
@@ -262,33 +262,33 @@ void CropVolume::preflight()
   if (getZMin() < 0)
   {
 
-     QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
+    QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
-  if (getXMax() > (static_cast<int64_t>(m->getXPoints())-1))
+  if (getXMax() > (static_cast<int64_t>(m->getXPoints()) - 1))
   {
 
-    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getXPoints())-1);
+    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getXPoints()) - 1);
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
-  if (getYMax() > (static_cast<int64_t>(m->getYPoints())-1))
+  if (getYMax() > (static_cast<int64_t>(m->getYPoints()) - 1))
   {
 
-    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getYPoints())-1);
+    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getYPoints()) - 1);
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5556);
   }
-  if (getZMax() > (static_cast<int64_t>(m->getZPoints())-1))
+  if (getZMax() > (static_cast<int64_t>(m->getZPoints()) - 1))
   {
 
-    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getZPoints())-1);
+    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getZPoints()) - 1);
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5557);
   }
 
-  m->setDimensions((getXMax()-getXMin())+1,(getYMax()-getYMin())+1,(getZMax()-getZMin())+1);
+  m->setDimensions((getXMax() - getXMin()) + 1, (getYMax() - getYMin()) + 1, (getZMax() - getZMin()) + 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -334,27 +334,27 @@ void CropVolume::execute()
   if (dims[0] <= m_XMax)
   {
     QString ss = QObject::tr("A Maximum value of %1 has been entered for the Max X which is larger than the input volume X Dimension of %2"
-       " This may lead to junk data being filled into the extra space.").arg(m_XMax).arg(dims[0]);
+                             " This may lead to junk data being filled into the extra space.").arg(m_XMax).arg(dims[0]);
     notifyWarningMessage(ss, -950);
   }
   if (dims[1] <= m_YMax)
   {
 
     QString ss = QObject::tr("A Maximum value of %1 has been entered for the Max Y which is larger than the input volume Y Dimension of %2"
-        " This may lead to junk data being filled into the extra space.").arg(m_YMax).arg(dims[1]);
+                             " This may lead to junk data being filled into the extra space.").arg(m_YMax).arg(dims[1]);
     notifyWarningMessage(ss, -950);
   }
   if (dims[2] <= m_ZMax)
   {
 
     QString ss = QObject::tr("A Maximum value of has been entered for the Max Z which is larger than the input volume Z Dimension of "
-        " This may lead to junk data being filled into the extra space.").arg(m_ZMax).arg(dims[2]);
+                             " This may lead to junk data being filled into the extra space.").arg(m_ZMax).arg(dims[2]);
     notifyWarningMessage(ss, -950);
   }
 
-  int64_t m_XP = ( (m_XMax - m_XMin)+1 );
-  int64_t m_YP = ( (m_YMax - m_YMin)+1 );
-  int64_t m_ZP = ( (m_ZMax - m_ZMin)+1 );
+  int64_t m_XP = ( (m_XMax - m_XMin) + 1 );
+  int64_t m_YP = ( (m_YMax - m_YMin) + 1 );
+  int64_t m_ZP = ( (m_ZMax - m_ZMin) + 1 );
 
   int64_t col, row, plane;
   int64_t colold, rowold, planeold;
@@ -365,12 +365,12 @@ void CropVolume::execute()
   {
     QString ss = QObject::tr("Cropping Volume - Slice %1 of %2 Complete").arg(i).arg(m_ZP);
     notifyStatusMessage(ss);
-    planeold = (i + m_ZMin)*(m->getXPoints() * m->getYPoints());
+    planeold = (i + m_ZMin) * (m->getXPoints() * m->getYPoints());
     plane = (i * m_XP * m_YP);
     for (int64_t j = 0; j < m_YP; j++)
     {
-      rowold = (j + m_YMin)*m->getXPoints();
-      row = (j*m_XP);
+      rowold = (j + m_YMin) * m->getXPoints();
+      row = (j * m_XP);
       for (int64_t k = 0; k < m_XP; k++)
       {
         colold = (k + m_XMin);
@@ -411,7 +411,7 @@ void CropVolume::execute()
     }
     dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
 
-    
+
 
     // Find the unique set of grain ids
     for (size_t i = 1; i < totalFields; ++i)

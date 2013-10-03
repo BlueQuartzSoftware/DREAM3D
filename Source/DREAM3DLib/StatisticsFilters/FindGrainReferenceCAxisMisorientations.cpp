@@ -92,8 +92,8 @@ void FindGrainReferenceCAxisMisorientations::readFilterParameters(AbstractFilter
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -144,7 +144,7 @@ void FindGrainReferenceCAxisMisorientations::preflight()
     return;
   }
 
-  dataCheck(true, 1,1,1);
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -182,7 +182,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
   typedef DataArray<unsigned int> XTalType;
 
   float w;
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef uint32_t DimType;
@@ -208,7 +208,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
 
   float g1[3][3];
   float g1t[3][3];
-  float caxis[3] = {0,0,1};
+  float caxis[3] = {0, 0, 1};
   float c1[3];
   float AvgCAxis[3];
   size_t index = 0;
@@ -231,21 +231,21 @@ void FindGrainReferenceCAxisMisorientations::execute()
           //normalize so that the magnitude is 1
           MatrixMath::Normalize3x1(c1);
 
-          AvgCAxis[0] = m_AvgCAxes[3*m_GrainIds[point]];
-          AvgCAxis[1] = m_AvgCAxes[3*m_GrainIds[point]+1];
-          AvgCAxis[2] = m_AvgCAxes[3*m_GrainIds[point]+2];
+          AvgCAxis[0] = m_AvgCAxes[3 * m_GrainIds[point]];
+          AvgCAxis[1] = m_AvgCAxes[3 * m_GrainIds[point] + 1];
+          AvgCAxis[2] = m_AvgCAxes[3 * m_GrainIds[point] + 2];
           //normalize so that the magnitude is 1
           MatrixMath::Normalize3x1(AvgCAxis);
-          w = MatrixMath::CosThetaBetweenVectors(c1,AvgCAxis);
-          DREAM3DMath::boundF(w,-1,1);
+          w = MatrixMath::CosThetaBetweenVectors(c1, AvgCAxis);
+          DREAM3DMath::boundF(w, -1, 1);
           w = acosf(w);
-          w = w *DREAM3D::Constants::k_180OverPi;
-          if(w > 90.0) w = 180.0-w;
+          w = w * DREAM3D::Constants::k_180OverPi;
+          if(w > 90.0) { w = 180.0 - w; }
 
           m_GrainReferenceCAxisMisorientations[point] = w;
           index = m_GrainIds[point] * avgMisoComps;
           avgmiso[index]++;
-          avgmiso[index+1] += w;
+          avgmiso[index + 1] += w;
         }
         if (m_GrainIds[point] == 0 || m_CellPhases[point] == 0)
         {
@@ -257,28 +257,28 @@ void FindGrainReferenceCAxisMisorientations::execute()
 
   for (size_t i = 1; i < numFields; i++)
   {
-    if (i%1000 == 0)
+    if (i % 1000 == 0)
     {
       QString ss = QObject::tr("Working On Grain %1 of %2").arg(i).arg(totalFields);
       notifyStatusMessage(ss);
     }
     index = i * avgMisoComps;
-    m_GrainAvgCAxisMisorientations[i] = avgmiso[index+1] / avgmiso[index];
+    m_GrainAvgCAxisMisorientations[i] = avgmiso[index + 1] / avgmiso[index];
     if(avgmiso[index] == 0) { m_GrainAvgCAxisMisorientations[i] = 0.0; }
   }
 
 
-    size_t gNum;
+  size_t gNum;
   for (size_t j = 0; j < totalPoints; j++)
   {
     gNum = m_GrainIds[j];
-    avgmiso[(gNum*avgMisoComps)+2] += ((m_GrainReferenceCAxisMisorientations[j] - m_GrainAvgCAxisMisorientations[gNum]) * (m_GrainReferenceCAxisMisorientations[j] - m_GrainAvgCAxisMisorientations[gNum]));
+    avgmiso[(gNum * avgMisoComps) + 2] += ((m_GrainReferenceCAxisMisorientations[j] - m_GrainAvgCAxisMisorientations[gNum]) * (m_GrainReferenceCAxisMisorientations[j] - m_GrainAvgCAxisMisorientations[gNum]));
   }
 
   for (size_t i = 1; i < numFields; i++)
   {
     index = i * avgMisoComps;
-    m_GrainStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * avgmiso[index+2]);
+    m_GrainStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * avgmiso[index + 2]);
   }
 
   notifyStatusMessage("Completed");

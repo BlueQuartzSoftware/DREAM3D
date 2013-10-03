@@ -35,7 +35,7 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerArray::DataContainerArray() :
-    Observable()
+  Observable()
 {
 
 }
@@ -123,7 +123,7 @@ bool DataContainerArray::empty()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainer::Pointer DataContainerArray::removeDataContainer(const QString &name)
+DataContainer::Pointer DataContainerArray::removeDataContainer(const QString& name)
 {
   DataContainer::Pointer f = DataContainer::NullPointer();
   for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
@@ -142,7 +142,7 @@ DataContainer::Pointer DataContainerArray::removeDataContainer(const QString &na
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainer::Pointer DataContainerArray::getDataContainer(const QString &name)
+DataContainer::Pointer DataContainerArray::getDataContainer(const QString& name)
 {
   DataContainer::Pointer f = DataContainer::NullPointer();
   for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
@@ -181,7 +181,7 @@ QList<DataContainer::Pointer>& DataContainerArray::getDataContainerArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArray::printDataContainerNames(QTextStream &out)
+void DataContainerArray::printDataContainerNames(QTextStream& out)
 {
   out << "---------------------------------------------------------------------" ;
   for (QList<DataContainer::Pointer>::iterator iter = m_Array.begin(); iter != m_Array.end(); ++iter )

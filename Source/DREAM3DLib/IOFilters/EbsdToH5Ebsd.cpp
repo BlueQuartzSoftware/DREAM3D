@@ -284,7 +284,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  QVector<hsize_t> dims(1,3);
+  QVector<hsize_t> dims(1, 3);
   err = QH5Lite::writeVectorDataset(fileId, Ebsd::H5::SampleTransformationAxis, dims, m_SampleTransformationAxis);
   if(err < 0)
   {
@@ -417,8 +417,8 @@ void EbsdToH5Ebsd::execute()
 
     fileImporter->getDims(xDim, yDim);
     fileImporter->getResolution(xRes, yRes);
-    if(xDim > biggestxDim) biggestxDim = xDim;
-    if(yDim > biggestyDim) biggestyDim = yDim;
+    if(xDim > biggestxDim) { biggestxDim = xDim; }
+    if(yDim > biggestyDim) { biggestyDim = yDim; }
 
     if(err < 0)
     {

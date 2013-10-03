@@ -46,24 +46,25 @@
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 
-namespace Detail {
-class H5GroupAutoCloser
+namespace Detail
 {
-public:
-  H5GroupAutoCloser(hid_t* groupId) :
-  gid(groupId)
-  {}
-
-  virtual ~H5GroupAutoCloser()
+  class H5GroupAutoCloser
   {
-    if (*gid > 0)
-    {
-      H5Gclose(*gid);
-    }
-  }
-  private:
-   hid_t* gid;
-};
+    public:
+      H5GroupAutoCloser(hid_t* groupId) :
+        gid(groupId)
+      {}
+
+      virtual ~H5GroupAutoCloser()
+      {
+        if (*gid > 0)
+        {
+          H5Gclose(*gid);
+        }
+      }
+    private:
+      hid_t* gid;
+  };
 
 }
 
@@ -72,7 +73,7 @@ public:
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainerReader::SurfaceDataContainerReader() :
-EdgeDataContainerReader(),
+  EdgeDataContainerReader(),
   m_ReadFaceData(true),
   m_ReadFaceFieldData(true),
   m_ReadFaceEnsembleData(true),
@@ -110,13 +111,13 @@ void SurfaceDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t
   }
   else if (preflight == true)
   {
-    if(m_FaceArraysToRead.size() == 0 && m_ReadAllFaceArrays != true) m_ReadFaceData = false;
-    if(m_FaceFieldArraysToRead.size() == 0 && m_ReadAllFaceFieldArrays != true) m_ReadFaceFieldData = false;
-    if(m_FaceEnsembleArraysToRead.size() == 0 && m_ReadAllFaceEnsembleArrays != true) m_ReadFaceEnsembleData = false;
+    if(m_FaceArraysToRead.size() == 0 && m_ReadAllFaceArrays != true) { m_ReadFaceData = false; }
+    if(m_FaceFieldArraysToRead.size() == 0 && m_ReadAllFaceFieldArrays != true) { m_ReadFaceFieldData = false; }
+    if(m_FaceEnsembleArraysToRead.size() == 0 && m_ReadAllFaceEnsembleArrays != true) { m_ReadFaceEnsembleData = false; }
 
-    if(m_ReadFaceData == true) dc->clearFaceData();
-    if(m_ReadFaceFieldData == true) dc->clearFaceFieldData();
-    if(m_ReadFaceEnsembleData == true) dc->clearFaceEnsembleData();
+    if(m_ReadFaceData == true) { dc->clearFaceData(); }
+    if(m_ReadFaceFieldData == true) { dc->clearFaceFieldData(); }
+    if(m_ReadFaceEnsembleData == true) { dc->clearFaceEnsembleData(); }
 
     int err = gatherData(preflight);
     if (err < 0)
@@ -154,13 +155,13 @@ void SurfaceDataContainerReader::execute()
   }
   setErrorCondition(0);
 
-  if(m_FaceArraysToRead.size() == 0 && m_ReadAllFaceArrays != true) m_ReadFaceData = false;
-  if(m_FaceFieldArraysToRead.size() == 0 && m_ReadAllFaceFieldArrays != true) m_ReadFaceFieldData = false;
-  if(m_FaceEnsembleArraysToRead.size() == 0 && m_ReadAllFaceEnsembleArrays != true) m_ReadFaceEnsembleData = false;
+  if(m_FaceArraysToRead.size() == 0 && m_ReadAllFaceArrays != true) { m_ReadFaceData = false; }
+  if(m_FaceFieldArraysToRead.size() == 0 && m_ReadAllFaceFieldArrays != true) { m_ReadFaceFieldData = false; }
+  if(m_FaceEnsembleArraysToRead.size() == 0 && m_ReadAllFaceEnsembleArrays != true) { m_ReadFaceEnsembleData = false; }
 
-  if(m_ReadFaceData == true) dc->clearFaceData();
-  if(m_ReadFaceFieldData == true) dc->clearFaceFieldData();
-  if(m_ReadFaceEnsembleData == true) dc->clearFaceEnsembleData();
+  if(m_ReadFaceData == true) { dc->clearFaceData(); }
+  if(m_ReadFaceFieldData == true) { dc->clearFaceFieldData(); }
+  if(m_ReadFaceEnsembleData == true) { dc->clearFaceEnsembleData(); }
 
   err = gatherData(false);
   setErrorCondition(err);
@@ -304,7 +305,7 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         return err;
       }
       dc->setFaces(facesPtr);
-      size_t nFaces= facesPtr->getNumberOfTuples();
+      size_t nFaces = facesPtr->getNumberOfTuples();
       err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FaceNeighbors, dims, type_class, type_size);
       if (err >= 0)
       {
@@ -347,10 +348,10 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead,
-                                                bool readAllCurrentArrays)
+int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupName, bool preflight,
+                                               QVector<QString>& namesRead,
+                                               QSet<QString>& namesToRead,
+                                               bool readAllCurrentArrays)
 {
 
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
@@ -407,7 +408,7 @@ int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &group
     {
       if(groupName.compare(H5_FACE_DATA_GROUP_NAME) == 0)
       {
-       dc->addFaceData(dPtr->GetName(), dPtr);
+        dc->addFaceData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_FACE_FIELD_DATA_GROUP_NAME) == 0)
       {

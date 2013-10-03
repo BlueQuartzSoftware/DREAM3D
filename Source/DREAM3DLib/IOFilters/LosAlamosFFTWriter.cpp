@@ -101,9 +101,9 @@ void LosAlamosFFTWriter::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -168,7 +168,7 @@ int LosAlamosFFTWriter::writeHeader()
 int LosAlamosFFTWriter::writeFile()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  
+
   int64_t totalPoints = m->getTotalPoints();
   size_t numgrains = m->getNumCellFieldTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
@@ -222,15 +222,15 @@ int LosAlamosFFTWriter::writeFile()
     {
       for (size_t x = 0; x < dims[0]; ++x)
       {
-        index = (z*dims[0]*dims[1]) + (dims[0]*y) + x;
-        phi1 = m_CellEulerAngles[index*3] * 180.0*DREAM3D::Constants::k_1OverPi;
-        phi = m_CellEulerAngles[index*3+1] * 180.0*DREAM3D::Constants::k_1OverPi;
-        phi2 = m_CellEulerAngles[index*3+2] * 180.0*DREAM3D::Constants::k_1OverPi;
+        index = (z * dims[0] * dims[1]) + (dims[0] * y) + x;
+        phi1 = m_CellEulerAngles[index * 3] * 180.0 * DREAM3D::Constants::k_1OverPi;
+        phi = m_CellEulerAngles[index * 3 + 1] * 180.0 * DREAM3D::Constants::k_1OverPi;
+        phi2 = m_CellEulerAngles[index * 3 + 2] * 180.0 * DREAM3D::Constants::k_1OverPi;
 
         grainId = m_GrainIds[index];
         phaseId = m_CellPhases[index];
 
-        fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n",phi1, phi, phi2, x+1, y+1, z+1, grainId, phaseId);
+        fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n", phi1, phi, phi2, x + 1, y + 1, z + 1, grainId, phaseId);
       }
     }
   }

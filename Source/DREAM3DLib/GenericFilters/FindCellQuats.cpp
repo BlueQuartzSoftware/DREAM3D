@@ -75,8 +75,8 @@ void FindCellQuats::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -97,7 +97,7 @@ void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
 
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, 3)
@@ -142,7 +142,7 @@ void FindCellQuats::execute()
     return;
   }
   setErrorCondition(0);
-  
+
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumCellFieldTuples();
   size_t totalEnsembles = m->getNumCellEnsembleTuples();
@@ -158,7 +158,7 @@ void FindCellQuats::execute()
   for (int i = 0; i < totalPoints; i++)
   {
     phase = m_CellPhases[i];
-    OrientationMath::EulertoQuat(qr, m_CellEulerAngles[3*i], m_CellEulerAngles[3*i + 1], m_CellEulerAngles[3*i + 2]);
+    OrientationMath::EulertoQuat(qr, m_CellEulerAngles[3 * i], m_CellEulerAngles[3 * i + 1], m_CellEulerAngles[3 * i + 2]);
     QuaternionMathF::UnitQuaternion(qr);
     if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
