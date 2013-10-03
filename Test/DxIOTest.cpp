@@ -49,81 +49,7 @@
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
-
-
-class GenerateGrainIds : public AbstractFilter
-{
-  public:
-    DREAM3D_SHARED_POINTERS(GenerateGrainIds)
-    DREAM3D_STATIC_NEW_MACRO(GenerateGrainIds)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateGrainIds, AbstractFilter)
-
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-
-    virtual ~GenerateGrainIds(){}
-
-    virtual const QString getGroupName()
-    {
-      return "UnitTest";
-    }
-    virtual const QString getHumanLabel()
-    {
-      return "Generate Grain Ids";
-    }
-    virtual void execute()
-    {
-      setErrorCondition(0);
-      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName);
-      if(NULL == m)
-      {
-        setErrorCondition(-1);
-        addErrorMessage(getHumanLabel(), " DataContainer was NULL", -1);
-        return;
-      }
-      int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
-
-      int64_t nx = UnitTest::DxIOTest::XSize;
-      int64_t ny = UnitTest::DxIOTest::YSize;
-      int64_t nz = UnitTest::DxIOTest::ZSize;
-      m->setDimensions(nx, ny, nz);
-
-      int64_t totalPoints = m->getTotalPoints();
-      dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
-      // Set the default data into the GrainIds
-      for (int i = 0; i < size; ++i)
-      {
-        m_GrainIds[i] = i + UnitTest::DxIOTest::Offset;
-      }
-
-    }
-    virtual void preflight()
-    {
-      dataCheck(true, 1, 1, 1);
-    }
-
-  protected:
-    GenerateGrainIds() :
-        AbstractFilter(),
-        m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-        m_GrainIds(NULL)
-    {
-    }
-
-  private:
-    int32_t* m_GrainIds;
-
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
-    {
-      setErrorCondition(0);
-      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName);
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
-    }
-
-    GenerateGrainIds(const GenerateGrainIds&); // Copy Constructor Not Implemented
-    void operator=(const GenerateGrainIds&); // Operator '=' Not Implemented
-};
-
+#include "GenerateGrainIds.h"
 
 
 // -----------------------------------------------------------------------------
@@ -143,8 +69,8 @@ int TestDxWriter()
 {
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-  // This should FAIL because there are no GrainIds anywhere to write. It should
-  // fail in the preflight
+
+  // This should FAIL because there is no Volume Data Container for the filter to get.
   DxWriter::Pointer writer = DxWriter::New();
   writer->setOutputFile(UnitTest::DxIOTest::TestFile);
   pipeline->pushBack(writer);
@@ -153,10 +79,22 @@ int TestDxWriter()
   pipeline->execute();
   err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE(err < 0);
+  pipeline->popFront();
+
+  // Now have a VolumeDataContainer created but NO grain Ids. This pipeline should still fail
+  CreateVolumeDataContainer::Pointer createVolumeDC = CreateVolumeDataContainer::New();
+  pipeline->pushBack(createVolumeDC);
+  pipeline->pushBack(writer);
+  err = pipeline->preflightPipeline();
+  DREAM3D_REQUIRE(err < 0);
+  pipeline->execute();
+  err = pipeline->getErrorCondition();
+  DREAM3D_REQUIRE(err < 0);
 
   // Now create some GrainIds and lets setup a real pipeline that should work
   pipeline->clear(); // Remove any filters from the pipeline first
-
+  // Put a filter that will just create an empty VolumeDataContainer
+  pipeline->pushBack(createVolumeDC);
 
   GenerateGrainIds::Pointer generateGrainIds = GenerateGrainIds::New();
   pipeline->pushBack(generateGrainIds);
@@ -203,16 +141,16 @@ int TestDxReader()
   IDataArray::Pointer mdata = reader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName)->getCellData(DREAM3D::CellData::GrainIds);
 
   DREAM3D_REQUIRE_EQUAL(err, 0);
-  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DxIOTest::XSize);
-  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DxIOTest::YSize);
-  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::DxIOTest::ZSize);
-  int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
+  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::GrainIdsTest::XSize);
+  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::GrainIdsTest::YSize);
+  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::GrainIdsTest::ZSize);
+  int size = UnitTest::GrainIdsTest::XSize * UnitTest::GrainIdsTest::YSize * UnitTest::GrainIdsTest::ZSize;
   int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
 
   for (int i = 0; i < size; ++i)
   {
     int32_t file_value = data[i];
-    int32_t memory_value = i+UnitTest::DxIOTest::Offset;
+    int32_t memory_value = i+UnitTest::GrainIdsTest::Offset;
     DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
   }
 
@@ -228,10 +166,10 @@ int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( TestDxWriter() )
-  DREAM3D_REGISTER_TEST( TestDxReader() )
+      DREAM3D_REGISTER_TEST( TestDxReader() )
 
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  PRINT_TEST_SUMMARY();
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+      PRINT_TEST_SUMMARY();
   return err;
 }
 

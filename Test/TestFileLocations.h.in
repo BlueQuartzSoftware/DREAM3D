@@ -45,23 +45,22 @@ namespace UnitTest
     const QString TestFile("@TEST_TEMP_DIR@/DataArrayTest/DataArrayTest.h5");
   }
 
+  namespace GrainIdsTest
+  {
+    static const size_t XSize = 3;
+    static const size_t YSize = 4;
+    static const size_t ZSize = 5;
+    static const size_t Offset = 200;
+  }
 
   namespace DxIOTest
   {
     static const QString TestFile("@TEST_TEMP_DIR@/DxIOTest.dx");
-    static const size_t XSize = 3;
-    static const size_t YSize = 4;
-    static const size_t ZSize = 5;
-    static const size_t Offset = 100;
   }
 
   namespace PhIOTest
   {
     const QString TestFile("@TEST_TEMP_DIR@/PhIOTest.ph");
-    static const size_t XSize = 5;
-    static const size_t YSize = 4;
-    static const size_t ZSize = 3;
-    static const size_t Offset = 200;
   }
 
   namespace VtkGrainIdIOTest

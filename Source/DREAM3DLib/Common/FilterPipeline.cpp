@@ -274,7 +274,7 @@ int FilterPipeline::preflightPipeline()
     }
     if(err < 0)
     {
-      preflightError |= err;
+      preflightError = err;
       setErrorCondition(preflightError);
       sendPipelineMessages( (*filter)->getPipelineMessages());
     }

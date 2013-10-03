@@ -133,8 +133,9 @@ void PhWriter::preflight()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
+    setErrorCondition(-1001);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

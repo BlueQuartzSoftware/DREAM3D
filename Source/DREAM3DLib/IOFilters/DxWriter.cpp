@@ -129,7 +129,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   if (getOutputFile().isEmpty() == true)
   {
     ss = QObject::tr( ": The output file must be set before executing this filter.");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    addErrorMessage(getHumanLabel(), ss, -1000);
     setErrorCondition(-1);
   }
   QFileInfo fi(getOutputFile());
@@ -156,8 +156,9 @@ void DxWriter::preflight()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
+    setErrorCondition(-1001);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
