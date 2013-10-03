@@ -37,6 +37,7 @@ set(_PublicFilters
   ConvertData
   GenerateMisorientationColors
   CreateFieldArrayFromCellArray
+  PerformMTRBridge
 )
 
 
