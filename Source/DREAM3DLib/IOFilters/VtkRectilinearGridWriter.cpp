@@ -49,43 +49,43 @@
 //
 // -----------------------------------------------------------------------------
 VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_GlobAlphaArrayName(DREAM3D::CellData::GlobAlpha),
-m_BCArrayName(Ebsd::Ctf::BC),
-m_ConfidenceIndexArrayName(Ebsd::Ang::ConfidenceIndex),
-m_ImageQualityArrayName(Ebsd::Ang::ImageQuality),
-m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
-m_GrainReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::GrainReferenceCAxisMisorientations),
-m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
-m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
-m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
-m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
-m_WriteGrainIds(false),
-m_WriteParentIds(false),
-m_WritePhaseIds(false),
-m_WriteBandContrasts(false),
-m_WriteConfidenceIndicies(false),
-m_WriteImageQualities(false),
-m_WriteGoodVoxels(false),
-m_WriteGlobAlpha(false),
-m_WriteGrainReferenceMisorientations(false),
-m_WriteGrainReferenceCAxisMisorientations(false),
-m_WriteKernelAverageMisorientations(false),
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_GlobAlphaArrayName(DREAM3D::CellData::GlobAlpha),
+  m_BCArrayName(Ebsd::Ctf::BC),
+  m_ConfidenceIndexArrayName(Ebsd::Ang::ConfidenceIndex),
+  m_ImageQualityArrayName(Ebsd::Ang::ImageQuality),
+  m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
+  m_GrainReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::GrainReferenceCAxisMisorientations),
+  m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
+  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
+  m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
+  m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+  m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
+  m_WriteGrainIds(false),
+  m_WriteParentIds(false),
+  m_WritePhaseIds(false),
+  m_WriteBandContrasts(false),
+  m_WriteConfidenceIndicies(false),
+  m_WriteImageQualities(false),
+  m_WriteGoodVoxels(false),
+  m_WriteGlobAlpha(false),
+  m_WriteGrainReferenceMisorientations(false),
+  m_WriteGrainReferenceCAxisMisorientations(false),
+  m_WriteKernelAverageMisorientations(false),
 //m_WriteIPFColors(false),
-m_WriteGBEuclideanDistanceMap(false),
-m_WriteTJEuclideanDistanceMap(false),
-m_WriteQPEuclideanDistanceMap(false),
-m_WriteSchmidFactors(false),
-m_WriteGrainSizes(false),
-m_WriteEulerAngles(false),
-m_WriteBinaryFile(false)
+  m_WriteGBEuclideanDistanceMap(false),
+  m_WriteTJEuclideanDistanceMap(false),
+  m_WriteQPEuclideanDistanceMap(false),
+  m_WriteSchmidFactors(false),
+  m_WriteGrainSizes(false),
+  m_WriteEulerAngles(false),
+  m_WriteBinaryFile(false)
 {
   setupFilterParameters();
 }
@@ -129,7 +129,8 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
-  }  {
+  }
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Phase Ids");
     option->setPropertyName("WritePhaseIds");
@@ -273,7 +274,7 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setWriteGrainIds( reader->readValue("WriteGrainIds", false) );
   setWriteParentIds( reader->readValue("WriteParentIds", false) );
@@ -294,7 +295,7 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
   setWriteGrainSizes( reader->readValue("WriteGrainSizes", false) );
   setWriteEulerAngles( reader->readValue("WriteEulerAngles", false) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", false) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -356,10 +357,10 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   }
   else
   {
-      ss.str("");
-      ss <<  "The output file path is a path to an existing directory. Please change the path to point to a file";
-      addErrorMessage(getHumanLabel(), ss.str(), -1);
-      setErrorCondition(-1);
+    ss.str("");
+    ss <<  "The output file path is a path to an existing directory. Please change the path to point to a file";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-1);
   }
 
   if(m_WriteGrainIds == true)
@@ -464,11 +465,11 @@ void VtkRectilinearGridWriter::execute()
   std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
   }
 
   int64_t totalPoints = m->getTotalPoints();
@@ -632,7 +633,7 @@ void VtkRectilinearGridWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkRectilinearGridWriter::write(const std::string &file, VolumeDataContainer* r, std::vector<VtkScalarWriter*> &scalars)
+int VtkRectilinearGridWriter::write(const std::string& file, VolumeDataContainer* r, std::vector<VtkScalarWriter*>& scalars)
 {
   int err = 0;
   FILE* f = NULL;
@@ -644,11 +645,11 @@ int VtkRectilinearGridWriter::write(const std::string &file, VolumeDataContainer
   // Write the correct header
   if(m_WriteBinaryFile == true)
   {
-    WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->getXPoints() + 1, r->getYPoints()+1, r->getZPoints()+1)
+    WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->getXPoints() + 1, r->getYPoints() + 1, r->getZPoints() + 1)
   }
   else
   {
-    WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->getXPoints() + 1, r->getYPoints()+1, r->getZPoints()+1)
+    WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->getXPoints() + 1, r->getYPoints() + 1, r->getZPoints() + 1)
   }
 
   // Write the XCoords

@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT FilterManager
      * @param name The name of the filter
      * @param factory An instance of the factory
      */
-    static void RegisterFilterFactory(const std::string &name, IFilterFactory::Pointer factory);
+    static void RegisterFilterFactory(const std::string& name, IFilterFactory::Pointer factory);
 
     /**
      * @brief RegisterKnownFilters This filter registers a factory for each filter that is included
@@ -97,21 +97,21 @@ class DREAM3DLib_EXPORT FilterManager
      * @param groupName The name of the group.
      * @return
      */
-    Collection getFactories(const std::string &groupName);
+    Collection getFactories(const std::string& groupName);
 
     /**
      * @brief Returns the mapping of names to the Factory instances for a given filter subgroup
      * @param subGroupName The name of the subgroup.
      * @return
      */
-    Collection getFactories(const std::string &groupName, const std::string &subGroupName);
+    Collection getFactories(const std::string& groupName, const std::string& subGroupName);
 
     /**
      * @brief Adds a Factory that creates QFilters
      * @param name
      * @param factory
      */
-    void addFilterFactory(const std::string &name, IFilterFactory::Pointer factory);
+    void addFilterFactory(const std::string& name, IFilterFactory::Pointer factory);
 
     /**
      * @brief getGroupNames Returns the uniqe set of group names for all the filters
@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT FilterManager
      * @param groupName The name of the Filter group
      * @return
      */
-    std::set<std::string> getSubGroupNames(const std::string &groupName);
+    std::set<std::string> getSubGroupNames(const std::string& groupName);
 
 
     /**
@@ -132,14 +132,14 @@ class DREAM3DLib_EXPORT FilterManager
      * @param filterName
      * @return
      */
-    IFilterFactory::Pointer getFactoryForFilter(const std::string &filterName);
+    IFilterFactory::Pointer getFactoryForFilter(const std::string& filterName);
 
     /**
      * @brief getFactoryForFilterHumanName For a given human label, the FilterFactory is given
      * @param humanName
      * @return
      */
-    IFilterFactory::Pointer getFactoryForFilterHumanName(const std::string &humanName);
+    IFilterFactory::Pointer getFactoryForFilterHumanName(const std::string& humanName);
 
 
   protected:

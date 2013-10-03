@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -197,7 +197,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
       latticeConstants->SetComponent(0, 4, 0.0f);
       latticeConstants->SetComponent(0, 5, 0.0f);
 
-      for(size_t i=0;i<phases.size();i++)
+      for(size_t i = 0; i < phases.size(); i++)
       {
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );

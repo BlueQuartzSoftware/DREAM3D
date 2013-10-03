@@ -56,39 +56,39 @@ class DREAM3DLib_EXPORT Observer
 
     /* --------- These methods are typically called from a subclass of Observer *******/
 
-     /**
-      * @brief This function prints a progress integer to the console.  Progress integers are assumed to be
-      * between 0 and 100.
-      * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
-      */
-     virtual void updatePipelineProgress(int progress);
+    /**
+     * @brief This function prints a progress integer to the console.  Progress integers are assumed to be
+     * between 0 and 100.
+     * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
+     */
+    virtual void updatePipelineProgress(int progress);
 
-     /**
-      * @brief These functions print human readable messages to the console.
-      * @param msg The message to be printed
-      */
-     virtual void updatePipelineMessage(const char* msg);
-     virtual void updatePipelineMessage(const std::string &msg);
+    /**
+     * @brief These functions print human readable messages to the console.
+     * @param msg The message to be printed
+     */
+    virtual void updatePipelineMessage(const char* msg);
+    virtual void updatePipelineMessage(const std::string& msg);
 
-     /**
-      * @brief These functions print both a human readable message and a progress integer to the console.
-      * Progress integers are assumed to be between 0 and 100.
-      * @param msg The message to be printed
-      * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
-      */
-     virtual void updatePipelineProgressAndMessage(const char* msg, int progress);
-     virtual void updatePipelineProgressAndMessage(const std::string &msg, int progress);
+    /**
+     * @brief These functions print both a human readable message and a progress integer to the console.
+     * Progress integers are assumed to be between 0 and 100.
+     * @param msg The message to be printed
+     * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
+     */
+    virtual void updatePipelineProgressAndMessage(const char* msg, int progress);
+    virtual void updatePipelineProgressAndMessage(const std::string& msg, int progress);
 
-     /* --------------------------------------- */
+    /* --------------------------------------- */
 
-     /**
-      * @brief These functions send one or many pipeline messages to the DREAM3D GUI.  Error and Warning messages
-      * are sent to the table widget, and status messages are sent to the status bar.
-      * @param msg The message to be printed
-      * @param msgs The messages to be printed
-      */
-     virtual void sendPipelineMessage(PipelineMessage &msg);
-     virtual void sendPipelineMessages(std::vector<PipelineMessage> msgs);
+    /**
+     * @brief These functions send one or many pipeline messages to the DREAM3D GUI.  Error and Warning messages
+     * are sent to the table widget, and status messages are sent to the status bar.
+     * @param msg The message to be printed
+     * @param msgs The messages to be printed
+     */
+    virtual void sendPipelineMessage(PipelineMessage& msg);
+    virtual void sendPipelineMessages(std::vector<PipelineMessage> msgs);
 
 
   private:

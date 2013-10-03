@@ -80,9 +80,9 @@ void LinkFieldMapToCellArray::readFilterParameters(AbstractFilterParametersReade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedCellDataArrayName( reader->readValue( "SelectedCellDataArrayName", getSelectedCellDataArrayName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -112,7 +112,7 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
     ss.str("");
     ss << "Selected array '" << m_SelectedCellDataArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
     setErrorCondition(-11001);
-    addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return;
   }
 
@@ -128,7 +128,7 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
     ss.str("");
     ss << "Selected array '" << m_SelectedCellDataArrayName << "' is not an Integer array. Is this the array you want to use?";
     setErrorCondition(-11001);
-    addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return;
   }
 
@@ -178,20 +178,20 @@ void LinkFieldMapToCellArray::execute()
 
   int maxIndex = 0;
   std::vector<bool> active;
-  for(int64_t i=0;i<voxels;i++)
+  for(int64_t i = 0; i < voxels; i++)
   {
     int index = m_SelectedCellData[i];
-    if((index+1) > maxIndex)
+    if((index + 1) > maxIndex)
     {
-      active.resize(index+1);
+      active.resize(index + 1);
       active[index] = true;
-      maxIndex = index+1;
+      maxIndex = index + 1;
     }
   }
 
   BoolArrayType::Pointer m_Active = BoolArrayType::CreateArray(maxIndex, 1, DREAM3D::FieldData::Active);
   bool* mActive = m_Active->GetPointer(0);
-  for(int i=0;i<maxIndex;i++)
+  for(int i = 0; i < maxIndex; i++)
   {
     mActive[i] = active[i];
   }

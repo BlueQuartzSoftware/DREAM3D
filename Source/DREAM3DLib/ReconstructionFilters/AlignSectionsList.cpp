@@ -63,8 +63,8 @@ using namespace std;
 //
 // -----------------------------------------------------------------------------
 AlignSectionsList::AlignSectionsList() :
-AlignSections(),
-m_GoodVoxels(NULL)
+  AlignSections(),
+  m_GoodVoxels(NULL)
 {
   setupFilterParameters();
 }
@@ -101,9 +101,9 @@ void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* rea
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -171,14 +171,14 @@ void AlignSectionsList::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Aligning Sections Complete");
+  notifyStatusMessage("Aligning Sections Complete");
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsList::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
@@ -186,14 +186,15 @@ void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> 
   ifstream inFile;
   inFile.open(m_InputFile.c_str());
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -203,9 +204,9 @@ void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> 
   int newxshift, newyshift;
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-	inFile >> slice >> newxshift >> newyshift;
-    xshifts[iter] = xshifts[iter-1] + newxshift;
-    yshifts[iter] = yshifts[iter-1] + newyshift;
+    inFile >> slice >> newxshift >> newyshift;
+    xshifts[iter] = xshifts[iter - 1] + newxshift;
+    yshifts[iter] = yshifts[iter - 1] + newyshift;
   }
 
   inFile.close();

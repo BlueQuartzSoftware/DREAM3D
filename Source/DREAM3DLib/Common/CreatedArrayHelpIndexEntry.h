@@ -65,13 +65,13 @@ class DREAM3DLib_EXPORT CreatedArrayHelpIndexEntry
     DREAM3D_INSTANCE_STRING_PROPERTY(ArrayDescription)
 
 
-protected:
-  CreatedArrayHelpIndexEntry();
+  protected:
+    CreatedArrayHelpIndexEntry();
 
 
   private:
-  CreatedArrayHelpIndexEntry(const CreatedArrayHelpIndexEntry&); // Copy Constructor Not Implemented
-  void operator=(const CreatedArrayHelpIndexEntry&); // Operator '=' Not Implemented
+    CreatedArrayHelpIndexEntry(const CreatedArrayHelpIndexEntry&); // Copy Constructor Not Implemented
+    void operator=(const CreatedArrayHelpIndexEntry&); // Operator '=' Not Implemented
 
 };
 

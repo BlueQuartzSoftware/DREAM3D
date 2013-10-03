@@ -1,38 +1,38 @@
- /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/* ============================================================================
+* Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+* Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+* BlueQuartz Software nor the names of its contributors may be used to endorse
+* or promote products derived from this software without specific prior written
+* permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+*  This code was written under United States Air Force Contract number
+*                           FA8650-07-D-5800
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "RenumberGrains.h"
 
@@ -45,11 +45,11 @@
 //
 // -----------------------------------------------------------------------------
 RenumberGrains::RenumberGrains() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_GrainIds(NULL),
-m_Active(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_GrainIds(NULL),
+  m_Active(NULL)
 {
 //  setupFilterParameters();
 }
@@ -132,9 +132,9 @@ void RenumberGrains::preflight()
   std::list<std::string> headers = m->getFieldArrayNameList();
   for (std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
-      IDataArray::Pointer p = m->getFieldData(*iter);
-	  std::string type = p->getTypeAsString();
-      if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
+    IDataArray::Pointer p = m->getFieldData(*iter);
+    std::string type = p->getTypeAsString();
+    if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
   }
 }
 
@@ -164,7 +164,7 @@ void RenumberGrains::execute()
   std::stringstream ss;
   size_t goodcount = 1;
   std::vector<size_t> NewNames;
-  NewNames.resize(totalFields,0);
+  NewNames.resize(totalFields, 0);
 
   ss.str("");
   ss << " - Generating Active Grain List";
@@ -196,7 +196,7 @@ void RenumberGrains::execute()
       //ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
       ss << "Updating Field Array '" << *iter << "'";
       notifyStatusMessage(ss.str());
-	  std::string type = p->getTypeAsString();
+      std::string type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
       else {p->EraseTuples(RemoveList);}
       //std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;

@@ -64,21 +64,21 @@
 //
 // -----------------------------------------------------------------------------
 CAxisSegmentGrains::CAxisSegmentGrains() :
-SegmentGrains(),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_MisorientationTolerance(5.0f),
-m_RandomizeGrainIds(true),
-m_GrainIds(NULL),
-m_Quats(NULL),
-m_CellPhases(NULL),
-m_GoodVoxels(NULL),
-m_Active(NULL),
-m_CrystalStructures(NULL)
+  SegmentGrains(),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_MisorientationTolerance(5.0f),
+  m_RandomizeGrainIds(true),
+  m_GrainIds(NULL),
+  m_Quats(NULL),
+  m_CellPhases(NULL),
+  m_GoodVoxels(NULL),
+  m_Active(NULL),
+  m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -107,7 +107,7 @@ void CAxisSegmentGrains::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-  option->setUnits("Degrees");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
 #if 0
@@ -130,9 +130,9 @@ void CAxisSegmentGrains::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -201,8 +201,8 @@ void CAxisSegmentGrains::execute()
   }
 
   //Convert user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi/180.0f;
-  for(int64_t i=0;i<totalPoints;i++)
+  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  for(int64_t i = 0; i < totalPoints; i++)
   {
     m_GrainIds[i] = 0;
   }
@@ -221,11 +221,11 @@ void CAxisSegmentGrains::execute()
 
     // Generate all the numbers up front
     const int rangeMin = 1;
-    const int rangeMax = totalFields-1;
+    const int rangeMax = totalFields - 1;
     typedef boost::uniform_int<int> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&,
-                                     NumberDistribution> Generator;
+    typedef boost::variate_generator < RandomNumberGenerator&,
+            NumberDistribution > Generator;
 
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
@@ -246,27 +246,28 @@ void CAxisSegmentGrains::execute()
     size_t r;
     size_t temp;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (size_t i=1; i< totalFields; i++) {
-        r = numberGenerator(); // Random remaining position.
+    for (size_t i = 1; i < totalFields; i++)
+    {
+      r = numberGenerator(); // Random remaining position.
 
-        temp = gid[i];
-        gid[i] = gid[r];
-        gid[r] = temp;
+      temp = gid[i];
+      gid[i] = gid[r];
+      gid[r] = temp;
     }
 
     // Now adjust all the Grain Id values for each Voxel
     for(int64_t i = 0; i < totalPoints; ++i)
     {
-       m_GrainIds[i] = gid[ m_GrainIds[i] ];
+      m_GrainIds[i] = gid[ m_GrainIds[i] ];
     }
-  for(size_t i = 0; i < totalFields; i++)
-  {
-    m_Active[i] = true;
-  }
+    for(size_t i = 0; i < totalFields; i++)
+    {
+      m_Active[i] = true;
+    }
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Completed");
+  notifyStatusMessage("Completed");
 }
 
 
@@ -299,15 +300,15 @@ int64_t CAxisSegmentGrains::getSeed(size_t gnum)
   randpoint = int64_t(float(rg.genrand_res53()) * float(totalPMinus1));
   while (seed == -1 && counter < totalPoints)
   {
-      if (randpoint > totalPMinus1) randpoint = static_cast<int64_t>( randpoint - totalPoints );
-      if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) seed = randpoint;
-      randpoint++;
-      counter++;
+    if (randpoint > totalPMinus1) { randpoint = static_cast<int64_t>( randpoint - totalPoints ); }
+    if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) { seed = randpoint; }
+    randpoint++;
+    counter++;
   }
   if (seed >= 0)
   {
     m_GrainIds[seed] = gnum;
-    m->resizeFieldDataArrays(gnum+1);
+    m->resizeFieldDataArrays(gnum + 1);
     dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   }
   return seed;
@@ -326,9 +327,9 @@ bool CAxisSegmentGrains::determineGrouping(int64_t referencepoint, int64_t neigh
   float g2[3][3];
   float g1t[3][3];
   float g2t[3][3];
- // float n1, n2, n3;
+// float n1, n2, n3;
   unsigned int phase1, phase2;
-  float caxis[3] = {0,0,1};
+  float caxis[3] = {0, 0, 1};
   float c1[3];
   float c2[3];
 
@@ -358,9 +359,9 @@ bool CAxisSegmentGrains::determineGrouping(int64_t referencepoint, int64_t neigh
       MatrixMath::Normalize3x1(c1);
       MatrixMath::Normalize3x1(c2);
 
-      w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
+      w = ((c1[0] * c2[0]) + (c1[1] * c2[1]) + (c1[2] * c2[2]));
       w = acosf(w);
-      if (w <= m_MisorientationTolerance || (DREAM3D::Constants::k_Pi-w) <= m_MisorientationTolerance)
+      if (w <= m_MisorientationTolerance || (DREAM3D::Constants::k_Pi - w) <= m_MisorientationTolerance)
       {
         group = true;
         m_GrainIds[neighborpoint] = gnum;

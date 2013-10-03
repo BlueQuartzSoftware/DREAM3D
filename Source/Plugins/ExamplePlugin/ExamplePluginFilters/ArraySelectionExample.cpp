@@ -78,7 +78,7 @@ void ArraySelectionExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
   reader->openFilterGroup(this, index);
   setSelectedVolumeCellArrays( reader->readValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() ) );
@@ -121,11 +121,11 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                             std::set<std::string> selectedEdgeArrays,
-                                                             std::set<std::string> selectedFaceArrays,
-                                                             std::set<std::string> selectedCellArrays,
-                                                             std::set<std::string> selectedFieldArrays,
-                                                             std::set<std::string> selectedEnsembleArrays)
+                                                        std::set<std::string> selectedEdgeArrays,
+                                                        std::set<std::string> selectedFaceArrays,
+                                                        std::set<std::string> selectedCellArrays,
+                                                        std::set<std::string> selectedFieldArrays,
+                                                        std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
@@ -139,10 +139,10 @@ void ArraySelectionExample::setVolumeSelectedArrayNames(std::set<std::string> se
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                             std::set<std::string> selectedEdgeArrays,
-                                                             std::set<std::string> selectedFaceArrays,
-                                                             std::set<std::string> selectedFieldArrays,
-                                                             std::set<std::string> selectedEnsembleArrays)
+                                                         std::set<std::string> selectedEdgeArrays,
+                                                         std::set<std::string> selectedFaceArrays,
+                                                         std::set<std::string> selectedFieldArrays,
+                                                         std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
@@ -155,9 +155,9 @@ void ArraySelectionExample::setSurfaceSelectedArrayNames(std::set<std::string> s
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                             std::set<std::string> selectedEdgeArrays,
-                                                             std::set<std::string> selectedFieldArrays,
-                                                             std::set<std::string> selectedEnsembleArrays)
+                                                      std::set<std::string> selectedEdgeArrays,
+                                                      std::set<std::string> selectedFieldArrays,
+                                                      std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
@@ -169,8 +169,8 @@ void ArraySelectionExample::setEdgeSelectedArrayNames(std::set<std::string> sele
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+                                                        std::set<std::string> selectedFieldArrays,
+                                                        std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
   m_SelectedVertexFieldArrays = selectedFieldArrays;

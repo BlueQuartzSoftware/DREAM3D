@@ -74,23 +74,23 @@ class ArraySelectionExample : public AbstractFilter
     typedef std::set<std::string> ArrayList_t;
 
     virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedCellArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                             std::set<std::string> selectedEdgeArrays,
+                                             std::set<std::string> selectedFaceArrays,
+                                             std::set<std::string> selectedCellArrays,
+                                             std::set<std::string> selectedFieldArrays,
+                                             std::set<std::string> selectedEnsembleArrays);
     virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                              std::set<std::string> selectedFaceArrays,
+                                              std::set<std::string> selectedEdgeArrays,
+                                              std::set<std::string> selectedFieldArrays,
+                                              std::set<std::string> selectedEnsembleArrays);
     virtual void setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                           std::set<std::string> selectedEdgeArrays,
+                                           std::set<std::string> selectedFieldArrays,
+                                           std::set<std::string> selectedEnsembleArrays);
     virtual void setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                             std::set<std::string> selectedFieldArrays,
+                                             std::set<std::string> selectedEnsembleArrays);
 
 
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeVertexArrays)
@@ -156,9 +156,9 @@ class ArraySelectionExample : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

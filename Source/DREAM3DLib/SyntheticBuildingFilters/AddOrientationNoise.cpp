@@ -52,10 +52,10 @@
 //
 // -----------------------------------------------------------------------------
 AddOrientationNoise::AddOrientationNoise() :
-AbstractFilter(),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_Magnitude(1.0f),
-m_CellEulerAngles(NULL)
+  AbstractFilter(),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_Magnitude(1.0f),
+  m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
 }
@@ -91,9 +91,9 @@ void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMagnitude( reader->readValue("Magnitude", getMagnitude()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -155,12 +155,12 @@ void AddOrientationNoise::execute()
     return;
   }
 
-  m_Magnitude = m_Magnitude*DREAM3D::Constants::k_Pi/180.0;
+  m_Magnitude = m_Magnitude * DREAM3D::Constants::k_Pi / 180.0;
 
   add_orientation_noise();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("AddOrientationNoises Completed");
+  notifyStatusMessage("AddOrientationNoises Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -168,7 +168,7 @@ void AddOrientationNoise::execute()
 // -----------------------------------------------------------------------------
 void  AddOrientationNoise::add_orientation_noise()
 {
- notifyStatusMessage("Adding Orientation Noise");
+  notifyStatusMessage("Adding Orientation Noise");
   DREAM3D_RANDOMNG_NEW()
 
   VolumeDataContainer* m = getVolumeDataContainer();
@@ -181,22 +181,22 @@ void  AddOrientationNoise::add_orientation_noise()
   int64_t totalPoints = m->getTotalPoints();
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
-    float ea1 = m_CellEulerAngles[3*i+0];
-    float ea2 = m_CellEulerAngles[3*i+1];
-    float ea3 = m_CellEulerAngles[3*i+2];
+    float ea1 = m_CellEulerAngles[3 * i + 0];
+    float ea2 = m_CellEulerAngles[3 * i + 1];
+    float ea3 = m_CellEulerAngles[3 * i + 2];
     OrientationMath::EulertoMat(ea1, ea2, ea3, g);
     n1 = static_cast<float>( rg.genrand_res53() );
     n2 = static_cast<float>( rg.genrand_res53() );
     n3 = static_cast<float>( rg.genrand_res53() );
     w = static_cast<float>( rg.genrand_res53() );
-    w = 2.0*(w-0.5);
-    w = (m_Magnitude*w);
+    w = 2.0 * (w - 0.5);
+    w = (m_Magnitude * w);
     OrientationMath::AxisAngletoMat(w, n1, n2, n3, rot);
     MatrixMath::Multiply3x3with3x3(g, rot, newg);
     OrientationMath::MattoEuler(newg, ea1, ea2, ea3);
-    m_CellEulerAngles[3*i+0] = ea1;
-    m_CellEulerAngles[3*i+1] = ea2;
-    m_CellEulerAngles[3*i+2] = ea3;
+    m_CellEulerAngles[3 * i + 0] = ea1;
+    m_CellEulerAngles[3 * i + 1] = ea2;
+    m_CellEulerAngles[3 * i + 2] = ea3;
   }
 }
 

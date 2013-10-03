@@ -51,17 +51,17 @@
 //
 // -----------------------------------------------------------------------------
 EstablishMatrixPhase::EstablishMatrixPhase() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_Active(NULL),
-m_FieldPhases(NULL),
-m_PhaseTypes(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+  m_GrainIds(NULL),
+  m_CellPhases(NULL),
+  m_Active(NULL),
+  m_FieldPhases(NULL),
+  m_PhaseTypes(NULL)
 {
 
 }
@@ -77,8 +77,8 @@ void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -148,8 +148,8 @@ void EstablishMatrixPhase::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
-  
-  if(totalFields == 0) totalFields = 1;
+
+  if(totalFields == 0) { totalFields = 1; }
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -159,7 +159,7 @@ void EstablishMatrixPhase::execute()
   establish_matrix();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("EstablishMatrixPhases Completed");
+  notifyStatusMessage("EstablishMatrixPhases Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -167,7 +167,7 @@ void EstablishMatrixPhase::execute()
 // -----------------------------------------------------------------------------
 void  EstablishMatrixPhase::establish_matrix()
 {
- notifyStatusMessage("Establishing Matrix");
+  notifyStatusMessage("Establishing Matrix");
   DREAM3D_RANDOMNG_NEW()
 
   VolumeDataContainer* m = getVolumeDataContainer();
@@ -183,23 +183,25 @@ void  EstablishMatrixPhase::establish_matrix()
   typedef int64_t DimType;
 #endif
   DimType dims[3] =
-  { static_cast<DimType>(udims[0]),
-      static_cast<DimType>(udims[1]),
-      static_cast<DimType>(udims[2]), };
+  {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
 
 
   sizex = dims[0] * m->getXRes();
   sizey = dims[1] * m->getYRes();
   sizez = dims[2] * m->getZRes();
-  totalvol = sizex*sizey*sizez;
+  totalvol = sizex * sizey * sizez;
 
   int64_t totalPoints = m->getTotalPoints();
   size_t currentnumgrains = m->getNumFieldTuples();
   if(currentnumgrains == 0)
   {
-	  m->resizeFieldDataArrays(1);
-	  dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
-	  currentnumgrains = 1;
+    m->resizeFieldDataArrays(1);
+    dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
+    currentnumgrains = 1;
   }
   firstMatrixField = currentnumgrains;
   // size_t index;
@@ -213,9 +215,9 @@ void  EstablishMatrixPhase::establish_matrix()
 
   for (size_t i = 1; i < numensembles; ++i)
   {
-	if(m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase)
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase)
     {
-	  MatrixStatsData* mp = MatrixStatsData::SafePointerDownCast(statsDataArray[i].get());
+      MatrixStatsData* mp = MatrixStatsData::SafePointerDownCast(statsDataArray[i].get());
       matrixphases.push_back(i);
       matrixphasefractions.push_back(mp->getPhaseFraction());
       totalmatrixfractions = totalmatrixfractions + mp->getPhaseFraction();
@@ -224,29 +226,29 @@ void  EstablishMatrixPhase::establish_matrix()
   for (size_t i = 0; i < matrixphases.size(); i++)
   {
     matrixphasefractions[i] = matrixphasefractions[i] / totalmatrixfractions;
-    if(i > 0) matrixphasefractions[i] = matrixphasefractions[i] + matrixphasefractions[i - 1];
+    if(i > 0) { matrixphasefractions[i] = matrixphasefractions[i] + matrixphasefractions[i - 1]; }
   }
   size_t j = 0;
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
-	  if(m_GrainIds[i] <= 0)
-	  {
-		random = static_cast<float>( rg.genrand_res53() );
-		j = 0;
-		while(random > matrixphasefractions[j])
-		{
-			j++;
-		}
-		if(m->getNumFieldTuples() <= (firstMatrixField+j))
-		{
-	      m->resizeFieldDataArrays((firstMatrixField+j) + 1);
-	      dataCheck(false, totalPoints, (firstMatrixField+j) + 1, m->getNumEnsembleTuples());
-		}
-		m_GrainIds[i] = (firstMatrixField+j);
-		m_CellPhases[i] = matrixphases[j];
-	    m_Active[(firstMatrixField+j)] = true;
-	    m_FieldPhases[(firstMatrixField+j)] = matrixphases[j];
-	  }
+    if(m_GrainIds[i] <= 0)
+    {
+      random = static_cast<float>( rg.genrand_res53() );
+      j = 0;
+      while(random > matrixphasefractions[j])
+      {
+        j++;
+      }
+      if(m->getNumFieldTuples() <= (firstMatrixField + j))
+      {
+        m->resizeFieldDataArrays((firstMatrixField + j) + 1);
+        dataCheck(false, totalPoints, (firstMatrixField + j) + 1, m->getNumEnsembleTuples());
+      }
+      m_GrainIds[i] = (firstMatrixField + j);
+      m_CellPhases[i] = matrixphases[j];
+      m_Active[(firstMatrixField + j)] = true;
+      m_FieldPhases[(firstMatrixField + j)] = matrixphases[j];
+    }
   }
 }
 

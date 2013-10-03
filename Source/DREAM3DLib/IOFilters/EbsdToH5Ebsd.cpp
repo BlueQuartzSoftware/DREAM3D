@@ -61,11 +61,11 @@
 //
 // -----------------------------------------------------------------------------
 EbsdToH5Ebsd::EbsdToH5Ebsd() :
-m_ZStartIndex(0),
-m_ZEndIndex(0),
-m_ZResolution(1.0),
-m_SampleTransformationAngle(0.0),
-m_EulerTransformationAngle(0.0)
+  m_ZStartIndex(0),
+  m_ZEndIndex(0),
+  m_ZResolution(1.0),
+  m_SampleTransformationAngle(0.0),
+  m_EulerTransformationAngle(0.0)
 {
   m_SampleTransformationAxis.resize(3);
   m_SampleTransformationAxis[0] = 0.0;
@@ -225,11 +225,11 @@ void EbsdToH5Ebsd::execute()
   std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
-      PipelineMessage em (getHumanLabel(), ss.str(), -1);
-      addErrorMessage(em);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    PipelineMessage em (getHumanLabel(), ss.str(), -1);
+    addErrorMessage(em);
+    setErrorCondition(-1);
+    return;
   }
 
   // Create File
@@ -283,7 +283,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  std::vector<hsize_t> dims(1,3);
+  std::vector<hsize_t> dims(1, 3);
   err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::SampleTransformationAxis, dims, m_SampleTransformationAxis);
   if(err < 0)
   {
@@ -415,8 +415,8 @@ void EbsdToH5Ebsd::execute()
 
     fileImporter->getDims(xDim, yDim);
     fileImporter->getResolution(xRes, yRes);
-    if(xDim > biggestxDim) biggestxDim = xDim;
-    if(yDim > biggestyDim) biggestyDim = yDim;
+    if(xDim > biggestxDim) { biggestxDim = xDim; }
+    if(yDim > biggestyDim) { biggestyDim = yDim; }
 
     if(err < 0)
     {
@@ -429,7 +429,7 @@ void EbsdToH5Ebsd::execute()
     ++z;
     if(getCancel() == true)
     {
-     notifyStatusMessage("Conversion was Canceled");
+      notifyStatusMessage("Conversion was Canceled");
       return;
     }
   }

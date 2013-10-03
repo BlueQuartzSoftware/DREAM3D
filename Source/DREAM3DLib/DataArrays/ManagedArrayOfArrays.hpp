@@ -48,7 +48,8 @@ class ManagedArrayOfArrays : public IDataArray
     DREAM3D_SHARED_POINTERS(ManagedArrayOfArrays<T> )
     DREAM3D_TYPE_MACRO_SUPER(ManagedArrayOfArrays<T>, IDataArray)
 
-    typedef struct {
+    typedef struct
+    {
       size_t count;
       T* data;
     } Data_t;
@@ -59,7 +60,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of ManagedArrayOfArraysTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const std::string &name)
+    static Pointer CreateArray(size_t numElements, const std::string& name)
     {
       if (name.empty() == true)
       {
@@ -67,7 +68,8 @@ class ManagedArrayOfArrays : public IDataArray
       }
       ManagedArrayOfArrays<T>* d = new ManagedArrayOfArrays<T> (numElements, true);
       if (d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
+      {
+        // Could not allocate enough memory, reset the pointer to null and return
         delete d;
         return ManagedArrayOfArrays<T>::NullPointer();
       }
@@ -83,7 +85,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string& name)
     {
       IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
       return p;
@@ -106,7 +108,8 @@ class ManagedArrayOfArrays : public IDataArray
      * @brief isAllocated
      * @return
      */
-    virtual bool isAllocated() {
+    virtual bool isAllocated()
+    {
       return m_IsAllocated;
     }
 
@@ -115,7 +118,7 @@ class ManagedArrayOfArrays : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(std::string& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -126,7 +129,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const std::string &name)
+    void SetName(const std::string& name)
     {
       m_Name = name;
     }
@@ -225,17 +228,17 @@ class ManagedArrayOfArrays : public IDataArray
     {
       for (size_t i = 0; i < this->Size; i++)
       {
-            // Free each Pointer in each of the structures first
-          for(size_t i = 0; i < MaxId; ++i)
+        // Free each Pointer in each of the structures first
+        for(size_t i = 0; i < MaxId; ++i)
+        {
+          Data_t& d = Array[i];
+          d.count = 1;
+          if (d.data != NULL)
           {
-            Data_t& d = Array[i];
-            d.count = 1;
-            if (d.data != NULL)
-            {
-              free(d.data);
-            }
-            d.data[0] = value;
+            free(d.data);
           }
+          d.data[0] = value;
+        }
       }
     }
 
@@ -247,7 +250,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(std::vector<size_t>& idxs)
     {
 
       int err = 0;
@@ -484,7 +487,7 @@ class ManagedArrayOfArrays : public IDataArray
       return RawResize(numTuples );
     }
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(std::ostream& out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
       //        for(int j = 0; j < NumberOfComponents; ++j)
@@ -493,7 +496,7 @@ class ManagedArrayOfArrays : public IDataArray
       //          out << Array[i + j];
       //        }
     }
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(std::ostream& out, size_t i, int j)
     {
       BOOST_ASSERT(false);
       //        out << Array[i + j];
@@ -520,8 +523,8 @@ class ManagedArrayOfArrays : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-                                    const std::string &groupPath, const std::string &labelb)
+    virtual int writeXdmfAttribute(std::ostream& out, int64_t* volDims, const std::string& hdfFileName,
+                                   const std::string& groupPath, const std::string& labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
@@ -576,7 +579,7 @@ class ManagedArrayOfArrays : public IDataArray
       m_IsAllocated(false)
     {
 
-      MaxId = (Size > 0) ? Size - 1: Size;
+      MaxId = (Size > 0) ? Size - 1 : Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
     /**
@@ -595,15 +598,15 @@ class ManagedArrayOfArrays : public IDataArray
         BOOST_ASSERT(false);
       }
 #endif
-    // Free each Pointer in each of the structures first
-    for(size_t i = 0; i < MaxId; ++i)
-    {
-      Data_t& d = Array[i];
-      free(d.data);
-      d.count = 0;
-      d.data = NULL;
-    }
-    // Then free this set of memory
+      // Free each Pointer in each of the structures first
+      for(size_t i = 0; i < MaxId; ++i)
+      {
+        Data_t& d = Array[i];
+        free(d.data);
+        d.count = 0;
+        d.data = NULL;
+      }
+      // Then free this set of memory
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
       _mm_free( this->m_buffer );
 #else
@@ -645,9 +648,9 @@ class ManagedArrayOfArrays : public IDataArray
       // OS X's realloc does not free memory if the new block is smaller.  This
       // is a very serious problem and causes huge amount of memory to be
       // wasted. Do not use realloc on the Mac.
-      bool dontUseRealloc=false;
+      bool dontUseRealloc = false;
 #if defined __APPLE__
-      dontUseRealloc=true;
+      dontUseRealloc = true;
 #endif
 
       // Allocate a new array if we DO NOT own the current array
@@ -685,7 +688,8 @@ class ManagedArrayOfArrays : public IDataArray
         }
 
         // Copy the data from the old array.
-        if (this->Array != NULL) {
+        if (this->Array != NULL)
+        {
           memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(Data_t));
         }
         // Free the old array
@@ -698,7 +702,7 @@ class ManagedArrayOfArrays : public IDataArray
       // This object has now allocated its memory and owns it.
       this->_ownsData = true;
 
-      this->MaxId = newSize-1;
+      this->MaxId = newSize - 1;
       m_IsAllocated = true;
       return this->Array;
     }

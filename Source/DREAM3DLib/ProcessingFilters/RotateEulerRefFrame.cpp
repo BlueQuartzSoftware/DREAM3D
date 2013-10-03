@@ -62,35 +62,35 @@ class RotateEulerRefFrameImpl
       angle(rotAngle),
       axis(rotAxis)
     {}
-    virtual ~RotateEulerRefFrameImpl(){}
+    virtual ~RotateEulerRefFrameImpl() {}
 
     void convert(size_t start, size_t end) const
     {
       float rotMat[3][3];
 
       OrientationMath::AxisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
-      float ea1=0, ea2=0, ea3=0;
-      float ea1new=0, ea2new=0, ea3new=0;
+      float ea1 = 0, ea2 = 0, ea3 = 0;
+      float ea1new = 0, ea2new = 0, ea3new = 0;
       float g[3][3];
       float gNew[3][3];
       for (size_t i = start; i < end; i++)
       {
-        ea1 = m_CellEulerAngles[3*i+0];
-        ea2 = m_CellEulerAngles[3*i+1];
-        ea3 = m_CellEulerAngles[3*i+2];
+        ea1 = m_CellEulerAngles[3 * i + 0];
+        ea2 = m_CellEulerAngles[3 * i + 1];
+        ea3 = m_CellEulerAngles[3 * i + 2];
         OrientationMath::EulertoMat(ea1, ea2, ea3, g);
         MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
         MatrixMath::Normalize3x3(gNew);
         OrientationMath::MattoEuler(gNew, ea1new, ea2new, ea3new);
-        m_CellEulerAngles[3*i+0] = ea1new;
-        m_CellEulerAngles[3*i+1] = ea2new;
+        m_CellEulerAngles[3 * i + 0] = ea1new;
+        m_CellEulerAngles[3 * i + 1] = ea2new;
 
-        m_CellEulerAngles[3*i+2] = ea3new;
+        m_CellEulerAngles[3 * i + 2] = ea3new;
       }
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       convert(r.begin(), r.end());
     }
@@ -160,10 +160,10 @@ void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setRotationAxis( reader->readValue("RotationAxis", getRotationAxis() ) );
   setRotationAngle( reader->readValue("RotationAngle", getRotationAngle()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -221,7 +221,7 @@ void RotateEulerRefFrame::execute()
     return;
   }
 
-  m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
+  m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;

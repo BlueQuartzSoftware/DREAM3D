@@ -198,7 +198,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       H5Utilities::closeFile(fileId);
       fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
       err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
-      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
+      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
       err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
       H5Utilities::closeFile(fileId);
       fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
@@ -326,7 +326,7 @@ void DataContainerReader::execute()
     H5Utilities::closeFile(fileId);
     fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
     err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
-    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
+    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
     err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
     H5Utilities::closeFile(fileId);
     fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
@@ -452,7 +452,7 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
 
   // Loop over the items getting the "ClassName" attribute from each group
   std::string classNameStr = "";
-  for (int i=0; i<groupList.size(); i++)
+  for (int i = 0; i < groupList.size(); i++)
   {
     std::stringstream ss;
     ss << i;
@@ -498,11 +498,11 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedCellArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+                                                      std::set<std::string> selectedFaceArrays,
+                                                      std::set<std::string> selectedEdgeArrays,
+                                                      std::set<std::string> selectedCellArrays,
+                                                      std::set<std::string> selectedFieldArrays,
+                                                      std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeFaceArrays = selectedFaceArrays;
@@ -517,10 +517,10 @@ void DataContainerReader::setVolumeSelectedArrayNames(std::set<std::string> sele
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+                                                       std::set<std::string> selectedEdgeArrays,
+                                                       std::set<std::string> selectedFaceArrays,
+                                                       std::set<std::string> selectedFieldArrays,
+                                                       std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
@@ -534,9 +534,9 @@ void DataContainerReader::setSurfaceSelectedArrayNames(std::set<std::string> sel
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+                                                    std::set<std::string> selectedEdgeArrays,
+                                                    std::set<std::string> selectedFieldArrays,
+                                                    std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
@@ -549,8 +549,8 @@ void DataContainerReader::setEdgeSelectedArrayNames(std::set<std::string> select
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                         std::set<std::string> selectedFieldArrays,
-                                                         std::set<std::string> selectedEnsembleArrays)
+                                                      std::set<std::string> selectedFieldArrays,
+                                                      std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
   m_SelectedVertexFieldArrays = selectedFieldArrays;

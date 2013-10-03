@@ -68,8 +68,8 @@ void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader, 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -133,17 +133,17 @@ void FindAvgCAxes::execute()
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g1[3][3];
   float g1t[3][3];
-  float caxis[3] = {0,0,1};
+  float caxis[3] = {0, 0, 1};
   float c1[3];
 
   std::vector<int> counter;
-  counter.resize(numgrains,0);
+  counter.resize(numgrains, 0);
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    m_AvgCAxes[3*i] = 0.0;
-    m_AvgCAxes[3*i+1] = 0.0;
-    m_AvgCAxes[3*i+2] = 0.0;
+    m_AvgCAxes[3 * i] = 0.0;
+    m_AvgCAxes[3 * i + 1] = 0.0;
+    m_AvgCAxes[3 * i + 2] = 0.0;
   }
   float curCAxis[3];
   size_t index;
@@ -162,30 +162,30 @@ void FindAvgCAxes::execute()
       //normalize so that the magnitude is 1
       MatrixMath::Normalize3x1(c1);
       curCAxis[0] = m_AvgCAxes[index] / counter[m_GrainIds[i]];
-      curCAxis[1] = m_AvgCAxes[index+1] / counter[m_GrainIds[i]];
-      curCAxis[2] = m_AvgCAxes[index+2] / counter[m_GrainIds[i]];
+      curCAxis[1] = m_AvgCAxes[index + 1] / counter[m_GrainIds[i]];
+      curCAxis[2] = m_AvgCAxes[index + 2] / counter[m_GrainIds[i]];
       MatrixMath::Normalize3x1(curCAxis);
-      w = MatrixMath::CosThetaBetweenVectors(c1,curCAxis);
-      if (w < 0) MatrixMath::Multiply3x1withConstant(c1,-1);
+      w = MatrixMath::CosThetaBetweenVectors(c1, curCAxis);
+      if (w < 0) { MatrixMath::Multiply3x1withConstant(c1, -1); }
       counter[m_GrainIds[i]]++;
       m_AvgCAxes[index] += c1[0];
-      m_AvgCAxes[index+1] += c1[1];
-      m_AvgCAxes[index+2] += c1[2];
+      m_AvgCAxes[index + 1] += c1[1];
+      m_AvgCAxes[index + 2] += c1[2];
     }
   }
   for (size_t i = 1; i < numgrains; i++)
   {
     if(counter[i] == 0)
     {
-      m_AvgCAxes[3*i] = 0;
-      m_AvgCAxes[3*i+1] = 0;
-      m_AvgCAxes[3*i+2] = 1;
+      m_AvgCAxes[3 * i] = 0;
+      m_AvgCAxes[3 * i + 1] = 0;
+      m_AvgCAxes[3 * i + 2] = 1;
     }
     else
     {
-      m_AvgCAxes[3*i] /= counter[i];
-      m_AvgCAxes[3*i+1] /= counter[i];
-      m_AvgCAxes[3*i+2] /= counter[i];
+      m_AvgCAxes[3 * i] /= counter[i];
+      m_AvgCAxes[3 * i + 1] /= counter[i];
+      m_AvgCAxes[3 * i + 2] /= counter[i];
     }
   }
 

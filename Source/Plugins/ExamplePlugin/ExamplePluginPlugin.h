@@ -45,14 +45,14 @@ class ExamplePluginPlugin : public QObject, public DREAM3DPluginInterface
      * @brief Writes the settings in the input gui to the Application's preference file
      * @param prefs A valid QSettings pointer.
      */
-    virtual void writeSettings(QSettings &prefs);
+    virtual void writeSettings(QSettings& prefs);
 
     /**
      * @brief Reads the settings from the Application's preference file and sets
      * the input GUI widgets accordingly.
      * @param prefs
      */
-    virtual void readSettings(QSettings &prefs);
+    virtual void readSettings(QSettings& prefs);
 
   private:
     ExamplePluginPlugin(const ExamplePluginPlugin&); // Copy Constructor Not Implemented

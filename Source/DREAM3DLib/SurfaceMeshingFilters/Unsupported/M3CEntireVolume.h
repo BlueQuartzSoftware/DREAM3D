@@ -103,14 +103,14 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-     /**
+    /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
@@ -151,9 +151,9 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
      * @return
      */
     int initialize_micro_from_grainIds(size_t dims[3], float res[3], size_t fileDims[3],
-                                        int32_t* grainIds,
-                                        DataArray<int32_t>::Pointer points,
-                                        SurfaceMesh::M3C::VoxelCoord* point);
+                                       int32_t* grainIds,
+                                       DataArray<int32_t>::Pointer points,
+                                       SurfaceMesh::M3C::VoxelCoord* point);
 
     /**
      * @brief get_neighbor_list
@@ -173,30 +173,30 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
     int  get_number_fEdges (SurfaceMesh::M3C::Face* sq, DataArray<int32_t>::Pointer points, SurfaceMesh::M3C::Neighbor* n, int eT2d[20][8], int ns);
     void get_nodes_fEdges (SurfaceMesh::M3C::Face* sq,
                            DataArray<int32_t>::Pointer points,
-                                               SurfaceMesh::M3C::Neighbor* neighbors,
-                                               SurfaceMesh::M3C::Node* v,
-                                               SurfaceMesh::M3C::Segment* e,
-                                               int eT2d[20][8],
-                                               int nsT2d[20][8],
-                                               int ns,
-                                               int nsp,
-                                               int xDim);
+                           SurfaceMesh::M3C::Neighbor* neighbors,
+                           SurfaceMesh::M3C::Node* v,
+                           SurfaceMesh::M3C::Segment* e,
+                           int eT2d[20][8],
+                           int nsT2d[20][8],
+                           int ns,
+                           int nsp,
+                           int xDim);
     int  get_square_index (int tns[4]);
     int  treat_anomaly (int tnst[4], DataArray<int32_t>::Pointer points, SurfaceMesh::M3C::Neighbor* n1, int sqid);
-    void get_nodes (int cst, int ord, int nidx[2], int *nid, int nsp1, int xDim1);
-    void get_spins (DataArray<int32_t>::Pointer points, int cst, int ord, int pID[2], int *pSpin, int nsp1, int xDim1);
+    void get_nodes (int cst, int ord, int nidx[2], int* nid, int nsp1, int xDim1);
+    void get_spins (DataArray<int32_t>::Pointer points, int cst, int ord, int pID[2], int* pSpin, int nsp1, int xDim1);
     int  get_number_triangles (DataArray<int32_t>::Pointer points,
-                                SurfaceMesh::M3C::Face* sq,
-                                SurfaceMesh::M3C::Node* v,
-                                SurfaceMesh::M3C::Segment* e,
-                                int ns,
-                                int nsp,
-                                int xDim);
-    int  get_number_case0_triangles (int *afe, SurfaceMesh::M3C::Node* v, SurfaceMesh::M3C::Segment* e1, int nfedge);
-    int  get_number_case2_triangles (int *afe, SurfaceMesh::M3C::Node* v1, SurfaceMesh::M3C::Segment* fedge, int nfedge, int *afc, int nfctr);
-    int  get_number_caseM_triangles (int *afe, SurfaceMesh::M3C::Node* v, SurfaceMesh::M3C::Segment* e1, int nfedge, int *afc, int nfctr);
+                               SurfaceMesh::M3C::Face* sq,
+                               SurfaceMesh::M3C::Node* v,
+                               SurfaceMesh::M3C::Segment* e,
+                               int ns,
+                               int nsp,
+                               int xDim);
+    int  get_number_case0_triangles (int* afe, SurfaceMesh::M3C::Node* v, SurfaceMesh::M3C::Segment* e1, int nfedge);
+    int  get_number_case2_triangles (int* afe, SurfaceMesh::M3C::Node* v1, SurfaceMesh::M3C::Segment* fedge, int nfedge, int* afc, int nfctr);
+    int  get_number_caseM_triangles (int* afe, SurfaceMesh::M3C::Node* v, SurfaceMesh::M3C::Segment* e1, int nfedge, int* afc, int nfctr);
     int  get_triangles (SurfaceMesh::M3C::VoxelCoord* p,
-                        SurfaceMesh::M3C::Triangle* t, int *mCubeID,
+                        SurfaceMesh::M3C::Triangle* t, int* mCubeID,
                         SurfaceMesh::M3C::Face* sq,
                         SurfaceMesh::M3C::Node* v,
                         SurfaceMesh::M3C::Segment* e,
@@ -204,22 +204,22 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
                         int ns,
                         int nsp,
                         int xDim);
-    void get_case0_triangles (SurfaceMesh::M3C::Triangle* t1, int *mCubeID, int *afe, SurfaceMesh::M3C::Node* v1, SurfaceMesh::M3C::Segment* e1,
-            int nfedge, int tin, int *tout, double tcrd1[3], double tcrd2[3], int mcid);
-    void get_case2_triangles (SurfaceMesh::M3C::Triangle* triangles1, int *mCubeID, int *afe, SurfaceMesh::M3C::Node* v1, SurfaceMesh::M3C::Segment* fedge,
-            int nfedge, int *afc, int nfctr, int tin, int *tout, double tcrd1[3], double tcrd2[3], int mcid);
-    void get_caseM_triangles (SurfaceMesh::M3C::Triangle* triangles1, int *mCubeID, int *afe, SurfaceMesh::M3C::Node* v1, SurfaceMesh::M3C::Segment* fedge,
-            int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn, double tcrd1[3], double tcrd2[3], int mcid);
+    void get_case0_triangles (SurfaceMesh::M3C::Triangle* t1, int* mCubeID, int* afe, SurfaceMesh::M3C::Node* v1, SurfaceMesh::M3C::Segment* e1,
+                              int nfedge, int tin, int* tout, double tcrd1[3], double tcrd2[3], int mcid);
+    void get_case2_triangles (SurfaceMesh::M3C::Triangle* triangles1, int* mCubeID, int* afe, SurfaceMesh::M3C::Node* v1, SurfaceMesh::M3C::Segment* fedge,
+                              int nfedge, int* afc, int nfctr, int tin, int* tout, double tcrd1[3], double tcrd2[3], int mcid);
+    void get_caseM_triangles (SurfaceMesh::M3C::Triangle* triangles1, int* mCubeID, int* afe, SurfaceMesh::M3C::Node* v1, SurfaceMesh::M3C::Segment* fedge,
+                              int nfedge, int* afc, int nfctr, int tin, int* tout, int ccn, double tcrd1[3], double tcrd2[3], int mcid);
     void find_edgePlace(double tvcrd1[3], double tvcrd2[3], double tvcrd3[3], int tw[3],
-            double xh, double xl, double yh, double yl, double zh, double zl);
-    int get_number_unique_inner_edges(SurfaceMesh::M3C::Triangle* triangles, int *mCubeID, int nT);
+                        double xh, double xl, double yh, double yl, double zh, double zl);
+    int get_number_unique_inner_edges(SurfaceMesh::M3C::Triangle* triangles, int* mCubeID, int nT);
     void get_unique_inner_edges(SurfaceMesh::M3C::Triangle* t, int* mCubeID, ISegment* ie, int nT, int nfedge);
-    void update_triangle_sides_with_fedge(SurfaceMesh::M3C::Triangle* t, int *mCubeID,
-                                                               SurfaceMesh::M3C::Segment* e,
-                                                               SurfaceMesh::M3C::Face* sq,
-                                                               int nT,
-                                                               int xDim,
-                                                               int nsp);
+    void update_triangle_sides_with_fedge(SurfaceMesh::M3C::Triangle* t, int* mCubeID,
+                                          SurfaceMesh::M3C::Segment* e,
+                                          SurfaceMesh::M3C::Face* sq,
+                                          int nT,
+                                          int xDim,
+                                          int nsp);
     void arrange_spins (DataArray<int32_t>::Pointer points,
                         SurfaceMesh::M3C::VoxelCoord* pCoord,
                         SurfaceMesh::M3C::Triangle* triangles,
@@ -229,12 +229,12 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
     int assign_new_nodeID (SurfaceMesh::M3C::Node* v, DataArray<int32_t>::Pointer node_ids, int ns);
     void generate_update_nodes_edges_array( DataArray<int32_t>::Pointer new_ids_for_nodes,
                                             DataArray<int8_t>::Pointer nodeKindPtr,
-                                           StructArray<SurfaceMesh::M3C::Node>::Pointer shortNodes,
-                                           StructArray<SurfaceMesh::M3C::Node>::Pointer vertices,
-                                           StructArray<SurfaceMesh::M3C::SurfaceMesh::M3C::Face_t>::Pointer triangles,
-                                           StructArray<SurfaceMesh::M3C::Segment>::Pointer faceEdges,
-                                           StructArray<ISegment>::Pointer internalEdges,
-                                           int maxGrainId);
+                                            StructArray<SurfaceMesh::M3C::Node>::Pointer shortNodes,
+                                            StructArray<SurfaceMesh::M3C::Node>::Pointer vertices,
+                                            StructArray<SurfaceMesh::M3C::SurfaceMesh::M3C::Face_t>::Pointer triangles,
+                                            StructArray<SurfaceMesh::M3C::Segment>::Pointer faceEdges,
+                                            StructArray<ISegment>::Pointer internalEdges,
+                                            int maxGrainId);
 
     //void get_output(SurfaceMesh::M3C::Node* v, SurfaceMesh::M3C::Segment* fedge, ISegment* iedge, SurfaceMesh::M3C::Triangle* triangles, int ns, int nN, int nfe, int nie, int nT, MMC_MeshParameters* mp);
 

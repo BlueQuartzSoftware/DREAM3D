@@ -133,10 +133,10 @@ void MergeTwins::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setAxisTolerance( reader->readValue("AxisTolerance", getAxisTolerance()) );
   setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -228,8 +228,8 @@ void MergeTwins::execute()
     const int rangeMax = numParents - 1;
     typedef boost::uniform_int<int> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&,
-        NumberDistribution> Generator;
+    typedef boost::variate_generator < RandomNumberGenerator&,
+            NumberDistribution > Generator;
 
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
@@ -250,9 +250,11 @@ void MergeTwins::execute()
     int r;
     size_t temp;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (int i=1; i< numParents; i++) {
+    for (int i = 1; i < numParents; i++)
+    {
       r = numberGenerator(); // Random remaining position.
-      if (r >= numParents) {
+      if (r >= numParents)
+      {
         continue;
       }
       temp = pid[i];
@@ -290,7 +292,7 @@ void MergeTwins::merge_twins()
   float w;
   float n1, n2, n3;
   float angtol = m_AngleTolerance;
-  float axistol = static_cast<float>( m_AxisTolerance*M_PI/180.0f );
+  float axistol = static_cast<float>( m_AxisTolerance * M_PI / 180.0f );
   QuatF q1;
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -327,10 +329,10 @@ void MergeTwins::merge_twins()
             if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Cubic_High))
             {
               w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-              w = w * (180.0f/DREAM3D::Constants::k_Pi);
-              float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
-              float angdiff60 = fabs(w-60.0f);
-              if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
+              w = w * (180.0f / DREAM3D::Constants::k_Pi);
+              float axisdiff111 = acosf(fabs(n1) * 0.57735f + fabs(n2) * 0.57735f + fabs(n3) * 0.57735f);
+              float angdiff60 = fabs(w - 60.0f);
+              if (axisdiff111 < axistol && angdiff60 < angtol) { twin = 1; }
               if (twin == 1)
               {
                 parentnumbers[neigh] = parentcount;
@@ -349,7 +351,7 @@ void MergeTwins::merge_twins()
     int grainname = m_GrainIds[k];
     m_CellParentIds[k] = parentnumbers[grainname];
   }
-  numParents = parentcount+1;
+  numParents = parentcount + 1;
 }
 
 void MergeTwins::characterize_twins()

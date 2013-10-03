@@ -43,7 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 ThresholdExample::ThresholdExample() :
-AbstractFilter()
+  AbstractFilter()
 {
 
   setupFilterParameters();
@@ -126,7 +126,7 @@ void ThresholdExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ThresholdExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
   reader->openFilterGroup(this, index);
   setCellComparisonInputs(reader->readValue("CellComparisonInputs", getCellComparisonInputs()));
@@ -221,5 +221,5 @@ void ThresholdExample::execute()
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
-   notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }

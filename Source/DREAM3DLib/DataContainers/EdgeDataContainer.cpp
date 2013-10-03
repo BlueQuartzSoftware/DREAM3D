@@ -51,9 +51,9 @@
 //
 // -----------------------------------------------------------------------------
 EdgeDataContainer::EdgeDataContainer() :
-Observable(),
-m_NumVertexTuples(0),
-m_NumEdgeTuples(0)
+  Observable(),
+  m_NumVertexTuples(0),
+  m_NumEdgeTuples(0)
 {
 
 }
@@ -110,7 +110,7 @@ MeshLinks::Pointer EdgeDataContainer::getMeshLinks()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::addVertexData(const std::string &name, IDataArray::Pointer data)
+void EdgeDataContainer::addVertexData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -126,7 +126,7 @@ void EdgeDataContainer::addVertexData(const std::string &name, IDataArray::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::getVertexData(const std::string &name)
+IDataArray::Pointer EdgeDataContainer::getVertexData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -141,7 +141,7 @@ IDataArray::Pointer EdgeDataContainer::getVertexData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::removeVertexData(const std::string &name)
+IDataArray::Pointer EdgeDataContainer::removeVertexData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -186,7 +186,7 @@ int EdgeDataContainer::getNumVertexArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::getEdgeData(const std::string &name)
+IDataArray::Pointer EdgeDataContainer::getEdgeData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
@@ -200,7 +200,7 @@ IDataArray::Pointer EdgeDataContainer::getEdgeData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::addEdgeData(const std::string &name, IDataArray::Pointer data)
+void EdgeDataContainer::addEdgeData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -217,7 +217,7 @@ void EdgeDataContainer::addEdgeData(const std::string &name, IDataArray::Pointer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::removeEdgeData(const std::string &name)
+IDataArray::Pointer EdgeDataContainer::removeEdgeData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
@@ -263,7 +263,7 @@ int EdgeDataContainer::getNumEdgeArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::getFieldData(const std::string &name)
+IDataArray::Pointer EdgeDataContainer::getFieldData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -277,7 +277,7 @@ IDataArray::Pointer EdgeDataContainer::getFieldData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+void EdgeDataContainer::addFieldData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -293,7 +293,7 @@ void EdgeDataContainer::addFieldData(const std::string &name, IDataArray::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::removeFieldData(const std::string &name)
+IDataArray::Pointer EdgeDataContainer::removeFieldData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -340,7 +340,7 @@ int EdgeDataContainer::getNumFieldArrays()
 // -----------------------------------------------------------------------------
 void EdgeDataContainer::resizeFieldDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
@@ -353,7 +353,7 @@ void EdgeDataContainer::resizeFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::getEnsembleData(const std::string &name)
+IDataArray::Pointer EdgeDataContainer::getEnsembleData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -367,7 +367,7 @@ IDataArray::Pointer EdgeDataContainer::getEnsembleData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+void EdgeDataContainer::addEnsembleData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -383,7 +383,7 @@ void EdgeDataContainer::addEnsembleData(const std::string &name, IDataArray::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::removeEnsembleData(const std::string &name)
+IDataArray::Pointer EdgeDataContainer::removeEnsembleData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -430,7 +430,7 @@ int EdgeDataContainer::getNumEnsembleArrays()
 // -----------------------------------------------------------------------------
 void EdgeDataContainer::resizeEnsembleDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;

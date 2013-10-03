@@ -87,9 +87,9 @@ void WriteAbaqusSurfaceMesh::readFilterParameters(AbstractFilterParametersReader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -122,7 +122,8 @@ void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fie
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
     setErrorCondition(-384);
   }
-  else {
+  else
+  {
     if (sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
@@ -170,16 +171,16 @@ void WriteAbaqusSurfaceMesh::execute()
     return;
   }
 
-   // Make sure any directory path is also available as the user may have just typed
+  // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
   }
 
   DREAM3D::Mesh::VertListPointer_t nodesPtr = sm->getVertices();
@@ -194,14 +195,14 @@ void WriteAbaqusSurfaceMesh::execute()
   std::set<int> uniqueSpins;
   for (int i = 0; i < trianglePtr->GetNumberOfTuples(); i++)
   {
-    uniqueSpins.insert(faceLabels[i*2]);
-    uniqueSpins.insert(faceLabels[i*2+1]);
+    uniqueSpins.insert(faceLabels[i * 2]);
+    uniqueSpins.insert(faceLabels[i * 2 + 1]);
   }
 
   FILE* f = fopen(m_OutputFile.c_str(), "wb");
   ScopedFileMonitor fileMonitor(f);
 
-  err = writeHeader(f, nodesPtr->GetNumberOfTuples(), trianglePtr->GetNumberOfTuples(), uniqueSpins.size()-1);
+  err = writeHeader(f, nodesPtr->GetNumberOfTuples(), trianglePtr->GetNumberOfTuples(), uniqueSpins.size() - 1);
   err = writeNodes(f);
   err = writeTriangles(f);
   err = writeGrains(f);
@@ -243,7 +244,7 @@ int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 
   for(size_t i = 1; i <= numNodes; ++i)
   {
-    DREAM3D::Mesh::Vert_t& n = nodes[i-1];
+    DREAM3D::Mesh::Vert_t& n = nodes[i - 1];
     fprintf(f, "%lu, %0.6f, %0.6f, %0.6f\n", i, n.pos[0], n.pos[1], n.pos[2]);
   }
 
@@ -265,9 +266,9 @@ int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
   {
 
     // When we get the node index, add 1 to it because Abaqus number is 1 based.
-    int nId0 = triangles[i-1].verts[0] + 1;
-    int nId1 = triangles[i-1].verts[1] + 1;
-    int nId2 = triangles[i-1].verts[2] + 1;
+    int nId0 = triangles[i - 1].verts[0] + 1;
+    int nId1 = triangles[i - 1].verts[1] + 1;
+    int nId2 = triangles[i - 1].verts[2] + 1;
     fprintf(f, "%lu, %d, %d, %d\n", i, nId0, nId1, nId2);
   }
   return err;
@@ -302,8 +303,8 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
   std::set<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
-    uniqueSpins.insert(faceLabels[i*2]);
-    uniqueSpins.insert(faceLabels[i*2+1]);
+    uniqueSpins.insert(faceLabels[i * 2]);
+    uniqueSpins.insert(faceLabels[i * 2 + 1]);
   }
 
   int spin = 0;
@@ -325,7 +326,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
     int lineCount = 0;
     for(int t = 0; t < nTriangles; ++t)
     {
-      if (faceLabels[t*2] != spin && faceLabels[t*2+1] != spin)
+      if (faceLabels[t * 2] != spin && faceLabels[t * 2 + 1] != spin)
       {
         continue; // We do not match either spin so move to the next triangle
       }
@@ -338,12 +339,12 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
       }
       else if(lineCount == 0) // First value on the line
       {
-        fprintf(f,"%d", t);
+        fprintf(f, "%d", t);
         lineCount++;
       }
       else
       {
-        fprintf(f,", %d", t);
+        fprintf(f, ", %d", t);
         lineCount++;
       }
 
@@ -351,7 +352,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
     // Make sure we have a new line at the end of the section
     if (lineCount != 0)
     {
-    fprintf(f, "\n");
+      fprintf(f, "\n");
     }
   }
   return err;

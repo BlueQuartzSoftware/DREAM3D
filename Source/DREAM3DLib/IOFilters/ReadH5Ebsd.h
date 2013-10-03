@@ -130,7 +130,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -144,23 +144,23 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual void preflight();
 
     virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                             std::set<std::string> selectedEdgeArrays,
-                                                             std::set<std::string> selectedFaceArrays,
-                                                             std::set<std::string> selectedCellArrays,
-                                                             std::set<std::string> selectedFieldArrays,
-                                                             std::set<std::string> selectedEnsembleArrays);
+                                             std::set<std::string> selectedEdgeArrays,
+                                             std::set<std::string> selectedFaceArrays,
+                                             std::set<std::string> selectedCellArrays,
+                                             std::set<std::string> selectedFieldArrays,
+                                             std::set<std::string> selectedEnsembleArrays);
     virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                              std::set<std::string> selectedEdgeArrays,
+                                              std::set<std::string> selectedFaceArrays,
+                                              std::set<std::string> selectedFieldArrays,
+                                              std::set<std::string> selectedEnsembleArrays);
     virtual void setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                           std::set<std::string> selectedEdgeArrays,
+                                           std::set<std::string> selectedFieldArrays,
+                                           std::set<std::string> selectedEnsembleArrays);
     virtual void setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                std::set<std::string> selectedFieldArrays,
-                                                std::set<std::string> selectedEnsembleArrays);
+                                             std::set<std::string> selectedFieldArrays,
+                                             std::set<std::string> selectedEnsembleArrays);
   protected:
     ReadH5Ebsd();
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
@@ -176,14 +176,14 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     void copyHEDMArrays(H5EbsdVolumeReader* ebsdReader);
 
 
-      /**
-     * @brief This method reads the values for the phase type, crystal structure
-     * and precipitate fractions from the EBSD file.
-     * @param reader The EbsdReader instance
-     * @param precipFractions Container to hold the precipitate fractions (out)
-     * @param crystalStructures Container to hold the crystal structures (out)
-     * @return Zero/Positive on Success - Negative on error.
-     */
+    /**
+    * @brief This method reads the values for the phase type, crystal structure
+    * and precipitate fractions from the EBSD file.
+    * @param reader The EbsdReader instance
+    * @param precipFractions Container to hold the precipitate fractions (out)
+    * @param crystalStructures Container to hold the crystal structures (out)
+    * @return Zero/Positive on Success - Negative on error.
+    */
     template<typename EbsdReader, typename EbsdPhase>
     int loadInfo(EbsdReader* reader)
     {
@@ -214,7 +214,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       latticeConstants->SetComponent(0, 4, 0.0f);
       latticeConstants->SetComponent(0, 5, 0.0f);
 
-      for(size_t i=0;i<phases.size();i++)
+      for(size_t i = 0; i < phases.size(); i++)
       {
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );

@@ -49,12 +49,12 @@
 //
 // -----------------------------------------------------------------------------
 EnsembleInfoReader::EnsembleInfoReader() :
-FileReader(),
-m_InputFile(""),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_CrystalStructures(NULL),
-m_PhaseTypes(NULL)
+  FileReader(),
+  m_InputFile(""),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+  m_CrystalStructures(NULL),
+  m_PhaseTypes(NULL)
 {
   setupFilterParameters();
 }
@@ -93,9 +93,9 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -163,7 +163,7 @@ int  EnsembleInfoReader::readFile()
   if(NULL == m)
   {
     std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
@@ -185,17 +185,17 @@ int  EnsembleInfoReader::readFile()
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PTypeArrayType;
-  XTalStructArrayType::Pointer m_XTalStructData = XTalStructArrayType::CreateArray(numphases+1, DREAM3D::EnsembleData::CrystalStructures);
-  PTypeArrayType::Pointer m_PhaseTypeData = PTypeArrayType::CreateArray(numphases+1, DREAM3D::EnsembleData::PhaseTypes);
+  XTalStructArrayType::Pointer m_XTalStructData = XTalStructArrayType::CreateArray(numphases + 1, DREAM3D::EnsembleData::CrystalStructures);
+  PTypeArrayType::Pointer m_PhaseTypeData = PTypeArrayType::CreateArray(numphases + 1, DREAM3D::EnsembleData::PhaseTypes);
   //Initialize the arrays with the "Unknown" value
   m_XTalStructData->initializeWithValues(999);
   m_PhaseTypeData->initializeWithValues(999);
 
-  for(int i=0;i<numphases;i++)
+  for(int i = 0; i < numphases; i++)
   {
     inFile >> pnum >> crystruct >> ptype;
-      m_XTalStructData->SetValue(pnum, crystruct);
-      m_PhaseTypeData->SetValue(pnum, ptype);
+    m_XTalStructData->SetValue(pnum, crystruct);
+    m_PhaseTypeData->SetValue(pnum, ptype);
   }
   m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, m_XTalStructData);
   m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypeData);

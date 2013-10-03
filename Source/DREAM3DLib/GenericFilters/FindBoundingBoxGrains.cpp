@@ -45,13 +45,13 @@
 //
 // -----------------------------------------------------------------------------
 FindBoundingBoxGrains::FindBoundingBoxGrains() :
-AbstractFilter(),
-m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
-m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
-m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
-m_Centroids(NULL),
-m_SurfaceFields(NULL),
-m_BiasedFields(NULL)
+  AbstractFilter(),
+  m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
+  m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+  m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
+  m_Centroids(NULL),
+  m_SurfaceFields(NULL),
+  m_BiasedFields(NULL)
 {
 }
 
@@ -66,8 +66,8 @@ void FindBoundingBoxGrains::readFilterParameters(AbstractFilterParametersReader*
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -93,23 +93,23 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, -301, float, FloatArrayType, fields, 3)
   if(getErrorCondition() == -301)
   {
-	setErrorCondition(0);
-	FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
-	find_graincentroids->setObservers(this->getObservers());
-	find_graincentroids->setVolumeDataContainer(getVolumeDataContainer());
-	if(preflight == true) find_graincentroids->preflight();
-	if(preflight == false) find_graincentroids->execute();
+    setErrorCondition(0);
+    FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
+    find_graincentroids->setObservers(this->getObservers());
+    find_graincentroids->setVolumeDataContainer(getVolumeDataContainer());
+    if(preflight == true) { find_graincentroids->preflight(); }
+    if(preflight == false) { find_graincentroids->execute(); }
     GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, -301, float, FloatArrayType, fields, 3)
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
   if(getErrorCondition() == -302)
   {
-	setErrorCondition(0);
-	FindSurfaceGrains::Pointer find_surfacegrains = FindSurfaceGrains::New();
-	find_surfacegrains->setObservers(this->getObservers());
-	find_surfacegrains->setVolumeDataContainer(getVolumeDataContainer());
-	if(preflight == true) find_surfacegrains->preflight();
-	if(preflight == false) find_surfacegrains->execute();
+    setErrorCondition(0);
+    FindSurfaceGrains::Pointer find_surfacegrains = FindSurfaceGrains::New();
+    find_surfacegrains->setObservers(this->getObservers());
+    find_surfacegrains->setVolumeDataContainer(getVolumeDataContainer());
+    if(preflight == true) { find_surfacegrains->preflight(); }
+    if(preflight == false) { find_surfacegrains->execute(); }
     GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
   }
 
@@ -122,7 +122,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 // -----------------------------------------------------------------------------
 void FindBoundingBoxGrains::preflight()
 {
-  dataCheck(true, 1,1,1);
+  dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
@@ -146,10 +146,10 @@ void FindBoundingBoxGrains::execute()
     return;
   }
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) find_boundingboxgrains();
-  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) find_boundingboxgrains2D();
+  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_boundingboxgrains(); }
+  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_boundingboxgrains2D(); }
 
- notifyStatusMessage("FindBoundingBoxGrains Completed");
+  notifyStatusMessage("FindBoundingBoxGrains Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -166,52 +166,52 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
   float mindist;
   int sidetomove, move;
   boundbox[1] = 0;
-  boundbox[2] = m->getXPoints()*m->getXRes();
+  boundbox[2] = m->getXPoints() * m->getXRes();
   boundbox[3] = 0;
-  boundbox[4] = m->getYPoints()*m->getYRes();
+  boundbox[4] = m->getYPoints() * m->getYRes();
   boundbox[5] = 0;
-  boundbox[6] = m->getZPoints()*m->getZRes();
+  boundbox[6] = m->getZPoints() * m->getZRes();
   for (size_t i = 1; i < size; i++)
   {
-	  if(m_SurfaceFields[i] == true)
-	  {
-		  move = 1;
-		  mindist = 10000000000.0;
-		  x = m_Centroids[3*i];
-		  y = m_Centroids[3*i+1];
-		  z = m_Centroids[3*i+2];
-		  coords[1] = x;
-		  coords[2] = x;
-		  coords[3] = y;
-		  coords[4] = y;
-		  coords[5] = z;
-		  coords[6] = z;
-		  for(int j=1;j<7;j++)
-		  {
-		    dist[j] = 10000000000.0;
-			if(j%2 == 1)
-			{
-				if(coords[j] > boundbox[j]) dist[j] = (coords[j]-boundbox[j]);
-				if(coords[j] <= boundbox[j]) move = 0;
-			}
-			if(j%2 == 0)
-			{
-				if(coords[j] < boundbox[j]) dist[j] = (boundbox[j]-coords[j]);
-				if(coords[j] >= boundbox[j]) move = 0;
-			}
-			if(dist[j] < mindist) mindist = dist[j], sidetomove = j;
-		  }
-		  if(move == 1) boundbox[sidetomove] = coords[sidetomove];
-	  }
+    if(m_SurfaceFields[i] == true)
+    {
+      move = 1;
+      mindist = 10000000000.0;
+      x = m_Centroids[3 * i];
+      y = m_Centroids[3 * i + 1];
+      z = m_Centroids[3 * i + 2];
+      coords[1] = x;
+      coords[2] = x;
+      coords[3] = y;
+      coords[4] = y;
+      coords[5] = z;
+      coords[6] = z;
+      for(int j = 1; j < 7; j++)
+      {
+        dist[j] = 10000000000.0;
+        if(j % 2 == 1)
+        {
+          if(coords[j] > boundbox[j]) { dist[j] = (coords[j] - boundbox[j]); }
+          if(coords[j] <= boundbox[j]) { move = 0; }
+        }
+        if(j % 2 == 0)
+        {
+          if(coords[j] < boundbox[j]) { dist[j] = (boundbox[j] - coords[j]); }
+          if(coords[j] >= boundbox[j]) { move = 0; }
+        }
+        if(dist[j] < mindist) { mindist = dist[j], sidetomove = j; }
+      }
+      if(move == 1) { boundbox[sidetomove] = coords[sidetomove]; }
+    }
   }
   for (size_t j = 1; j < size; j++)
   {
-	if(m_Centroids[3*j] <= boundbox[1]) m_BiasedFields[j] = true;
-	if(m_Centroids[3*j] >= boundbox[2]) m_BiasedFields[j] = true;
-	if(m_Centroids[3*j+1] <= boundbox[3]) m_BiasedFields[j] = true;
-	if(m_Centroids[3*j+1] >= boundbox[4]) m_BiasedFields[j] = true;
-	if(m_Centroids[3*j+2] <= boundbox[5]) m_BiasedFields[j] = true;
-	if(m_Centroids[3*j+2] >= boundbox[6]) m_BiasedFields[j] = true;
+    if(m_Centroids[3 * j] <= boundbox[1]) { m_BiasedFields[j] = true; }
+    if(m_Centroids[3 * j] >= boundbox[2]) { m_BiasedFields[j] = true; }
+    if(m_Centroids[3 * j + 1] <= boundbox[3]) { m_BiasedFields[j] = true; }
+    if(m_Centroids[3 * j + 1] >= boundbox[4]) { m_BiasedFields[j] = true; }
+    if(m_Centroids[3 * j + 2] <= boundbox[5]) { m_BiasedFields[j] = true; }
+    if(m_Centroids[3 * j + 2] >= boundbox[6]) { m_BiasedFields[j] = true; }
   }
 }
 void FindBoundingBoxGrains::find_boundingboxgrains2D()
@@ -230,65 +230,65 @@ void FindBoundingBoxGrains::find_boundingboxgrains2D()
 
   if(m->getXPoints() == 1)
   {
-	  xPoints = m->getYPoints();
-	  xRes = m->getYRes();
-	  yPoints = m->getZPoints();
-	  yRes = m->getZRes();
+    xPoints = m->getYPoints();
+    xRes = m->getYRes();
+    yPoints = m->getZPoints();
+    yRes = m->getZRes();
   }
   if(m->getYPoints() == 1)
   {
-	  xPoints = m->getXPoints();
-	  xRes = m->getXRes();
-	  yPoints = m->getZPoints();
-	  yRes = m->getZRes();
+    xPoints = m->getXPoints();
+    xRes = m->getXRes();
+    yPoints = m->getZPoints();
+    yRes = m->getZRes();
   }
   if(m->getZPoints() == 1)
   {
-	  xPoints = m->getXPoints();
-	  xRes = m->getXRes();
-	  yPoints = m->getYPoints();
-	  yRes = m->getYRes();
+    xPoints = m->getXPoints();
+    xRes = m->getXRes();
+    yPoints = m->getYPoints();
+    yRes = m->getYRes();
   }
 
   boundbox[1] = 0;
-  boundbox[2] = xPoints*xRes;
+  boundbox[2] = xPoints * xRes;
   boundbox[3] = 0;
-  boundbox[4] = yPoints*yRes;
+  boundbox[4] = yPoints * yRes;
   for (size_t i = 1; i < size; i++)
   {
-	  if(m_SurfaceFields[i] == true)
-	  {
-		  move = 1;
-		  mindist = 10000000000.0;
-		  x = m_Centroids[3*i];
-		  y = m_Centroids[3*i+1];
-		  coords[1] = x;
-		  coords[2] = x;
-		  coords[3] = y;
-		  coords[4] = y;
-		  for(int j=1;j<5;j++)
-		  {
-		    dist[j] = 10000000000.0;
-			if(j%2 == 1)
-			{
-				if(coords[j] > boundbox[j]) dist[j] = (coords[j]-boundbox[j]);
-				if(coords[j] <= boundbox[j]) move = 0;
-			}
-			if(j%2 == 0)
-			{
-				if(coords[j] < boundbox[j]) dist[j] = (boundbox[j]-coords[j]);
-				if(coords[j] >= boundbox[j]) move = 0;
-			}
-			if(dist[j] < mindist) mindist = dist[j], sidetomove = j;
-		  }
-		  if(move == 1) boundbox[sidetomove] = coords[sidetomove];
-	  }
+    if(m_SurfaceFields[i] == true)
+    {
+      move = 1;
+      mindist = 10000000000.0;
+      x = m_Centroids[3 * i];
+      y = m_Centroids[3 * i + 1];
+      coords[1] = x;
+      coords[2] = x;
+      coords[3] = y;
+      coords[4] = y;
+      for(int j = 1; j < 5; j++)
+      {
+        dist[j] = 10000000000.0;
+        if(j % 2 == 1)
+        {
+          if(coords[j] > boundbox[j]) { dist[j] = (coords[j] - boundbox[j]); }
+          if(coords[j] <= boundbox[j]) { move = 0; }
+        }
+        if(j % 2 == 0)
+        {
+          if(coords[j] < boundbox[j]) { dist[j] = (boundbox[j] - coords[j]); }
+          if(coords[j] >= boundbox[j]) { move = 0; }
+        }
+        if(dist[j] < mindist) { mindist = dist[j], sidetomove = j; }
+      }
+      if(move == 1) { boundbox[sidetomove] = coords[sidetomove]; }
+    }
   }
   for (size_t j = 1; j < size; j++)
   {
-	if(m_Centroids[3*j] <= boundbox[1]) m_BiasedFields[j] = true;
-	if(m_Centroids[3*j] >= boundbox[2]) m_BiasedFields[j] = true;
-	if(m_Centroids[3*j+1] <= boundbox[3]) m_BiasedFields[j] = true;
-	if(m_Centroids[3*j+1] >= boundbox[4]) m_BiasedFields[j] = true;
+    if(m_Centroids[3 * j] <= boundbox[1]) { m_BiasedFields[j] = true; }
+    if(m_Centroids[3 * j] >= boundbox[2]) { m_BiasedFields[j] = true; }
+    if(m_Centroids[3 * j + 1] <= boundbox[3]) { m_BiasedFields[j] = true; }
+    if(m_Centroids[3 * j + 1] >= boundbox[4]) { m_BiasedFields[j] = true; }
   }
 }

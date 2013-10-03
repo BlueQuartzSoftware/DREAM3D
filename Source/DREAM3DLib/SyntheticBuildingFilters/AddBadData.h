@@ -66,11 +66,11 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
 
     virtual ~AddBadData();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const std::string getHumanLabel() { return "Add Bad Data"; }
 
     DREAM3D_INSTANCE_PROPERTY(bool, PoissonNoise)
@@ -79,8 +79,8 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, BoundaryVolFraction)
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
   private:
     float* m_GBEuclideanDistances;
 
-	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     AddBadData(const AddBadData&); // Copy Constructor Not Implemented
     void operator=(const AddBadData&); // Operator '=' Not Implemented

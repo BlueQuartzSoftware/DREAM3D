@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -43,52 +43,53 @@
 
 
 float ShapeClass2Omega3[41][2] = {{0.0f, 0.0f},
-                    {0.0f, 0.25f},
-                    {0.0f, 0.5f},
-                    {0.0f, 0.75f},
-                    {0.0f, 1.0f},
-                    {0.0f, 1.25f},
-                    {0.0f, 1.5f},
-                    {0.0f, 1.75f},
-                    {0.0f, 2.0f},
-                    {0.0f, 2.25f},
-                    {0.0f, 2.5f},
-                    {0.0f, 2.75f},
-                    {0.0f, 3.0f},
-                    {0.0f, 3.25f},
-                    {0.0f, 3.5f},
-                    {0.0f, 3.75f},
-                    {0.0f, 4.0f},
-                    {0.0f, 4.25f},
-                    {0.0f, 4.5f},
-                    {0.0f, 4.75f},
-                    {0.0f, 5.0f},
-                    {0.0f, 5.25f},
-                    {0.0f, 5.5f},
-                    {0.0f, 5.75f},
-                    {0.0f, 6.0f},
-                    {0.0f, 6.25f},
-                    {0.0f, 6.5f},
-                    {0.0f, 6.75f},
-                    {0.0f, 7.0f},
-                    {0.0f, 7.25f},
-                    {0.0f, 7.5f},
-                    {0.0f, 7.75f},
-                    {0.0f, 8.0f},
-                    {0.0f, 8.25f},
-                    {0.0f, 8.5f},
-                    {0.0f, 8.75f},
-                    {0.0f, 9.0f},
-                    {0.0f, 9.25f},
-                    {0.0f, 9.5f},
-                    {0.0f, 9.75f},
-                    {0.0f, 10.0f}};
+  {0.0f, 0.25f},
+  {0.0f, 0.5f},
+  {0.0f, 0.75f},
+  {0.0f, 1.0f},
+  {0.0f, 1.25f},
+  {0.0f, 1.5f},
+  {0.0f, 1.75f},
+  {0.0f, 2.0f},
+  {0.0f, 2.25f},
+  {0.0f, 2.5f},
+  {0.0f, 2.75f},
+  {0.0f, 3.0f},
+  {0.0f, 3.25f},
+  {0.0f, 3.5f},
+  {0.0f, 3.75f},
+  {0.0f, 4.0f},
+  {0.0f, 4.25f},
+  {0.0f, 4.5f},
+  {0.0f, 4.75f},
+  {0.0f, 5.0f},
+  {0.0f, 5.25f},
+  {0.0f, 5.5f},
+  {0.0f, 5.75f},
+  {0.0f, 6.0f},
+  {0.0f, 6.25f},
+  {0.0f, 6.5f},
+  {0.0f, 6.75f},
+  {0.0f, 7.0f},
+  {0.0f, 7.25f},
+  {0.0f, 7.5f},
+  {0.0f, 7.75f},
+  {0.0f, 8.0f},
+  {0.0f, 8.25f},
+  {0.0f, 8.5f},
+  {0.0f, 8.75f},
+  {0.0f, 9.0f},
+  {0.0f, 9.25f},
+  {0.0f, 9.5f},
+  {0.0f, 9.75f},
+  {0.0f, 10.0f}
+};
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SuperEllipsoidOps::SuperEllipsoidOps() :
-Nvalue(0.0f)
+  Nvalue(0.0f)
 {
 
 }
@@ -120,7 +121,7 @@ float SuperEllipsoidOps::radcur1(std::map<ArgName, float> args)
     float b = DREAM3DMath::Gamma(5.0f / ShapeClass2Omega3[i][1]);
     float c = DREAM3DMath::Gamma(3.0f / ShapeClass2Omega3[i][1]);
     float d = DREAM3DMath::Gamma(1.0f + 3.0f / ShapeClass2Omega3[i][1]);
-    ShapeClass2Omega3[i][0] = static_cast<float>( powf(20.0f * ((a*a*a) * b) / (c * powf(d, 5.0f / 3.0f)), 3.0f) / (2000.0f * M_PI * M_PI / 9.0f) );
+    ShapeClass2Omega3[i][0] = static_cast<float>( powf(20.0f * ((a * a * a) * b) / (c * powf(d, 5.0f / 3.0f)), 3.0f) / (2000.0f * M_PI * M_PI / 9.0f) );
     Nvaluedist = fabsf(omega3 - ShapeClass2Omega3[i][0]);
     if (Nvaluedist < bestNvaluedist)
     {
@@ -128,8 +129,8 @@ float SuperEllipsoidOps::radcur1(std::map<ArgName, float> args)
       Nvalue = ShapeClass2Omega3[i][1];
     }
   }
-  float beta1 = (DREAM3DMath::Gamma((1.0f / Nvalue))*DREAM3DMath::Gamma((1.0f/Nvalue)))/DREAM3DMath::Gamma((2.0f/Nvalue));
-  float beta2 = (DREAM3DMath::Gamma((2.0f / Nvalue))*DREAM3DMath::Gamma((1.0f/Nvalue)))/DREAM3DMath::Gamma((3.0f/Nvalue));
+  float beta1 = (DREAM3DMath::Gamma((1.0f / Nvalue)) * DREAM3DMath::Gamma((1.0f / Nvalue))) / DREAM3DMath::Gamma((2.0f / Nvalue));
+  float beta2 = (DREAM3DMath::Gamma((2.0f / Nvalue)) * DREAM3DMath::Gamma((1.0f / Nvalue))) / DREAM3DMath::Gamma((3.0f / Nvalue));
   radcur1 = (volcur * (3.0f / 2.0f) * (1.0f / bovera) * (1.0f / covera) * ((Nvalue * Nvalue) / 4.0f) * (1.0f / beta1) * (1.0f / beta2));
   radcur1 = powf(radcur1, 0.333333333333f);
   return radcur1;

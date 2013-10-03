@@ -95,7 +95,7 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -127,7 +127,7 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    IDataArray::Pointer					array;
+    IDataArray::Pointer         array;
 
     ConvertData(const ConvertData&); // Copy Constructor Not Implemented
     void operator=(const ConvertData&); // Operator '=' Not Implemented

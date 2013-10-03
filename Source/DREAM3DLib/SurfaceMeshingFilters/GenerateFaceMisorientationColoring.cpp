@@ -80,7 +80,7 @@ class CalculateFaceMisorientationColorsImpl
     {
       m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
-    virtual ~CalculateFaceMisorientationColorsImpl(){}
+    virtual ~CalculateFaceMisorientationColorsImpl() {}
 
     /**
      * @brief generate Generates the Normals for the triangles
@@ -94,16 +94,16 @@ class CalculateFaceMisorientationColorsImpl
       QuatF q2;
       QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-      float w, n1, n2 ,n3;
-      float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
+      float w, n1, n2 , n3;
+      float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
       for (size_t i = start; i < end; i++)
       {
-        grain1 = m_Labels[2*i];
-        grain2 = m_Labels[2*i+1];
-        if(grain1 > 0) phase1 = m_Phases[grain1];
-        else phase1 = 0;
-        if(grain2 > 0) phase2 = m_Phases[grain2];
-        else phase2 = 0;
+        grain1 = m_Labels[2 * i];
+        grain2 = m_Labels[2 * i + 1];
+        if(grain1 > 0) { phase1 = m_Phases[grain1]; }
+        else { phase1 = 0; }
+        if(grain2 > 0) { phase2 = m_Phases[grain2]; }
+        else { phase2 = 0; }
         if(phase1 > 0)
         {
           if(phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High)
@@ -122,10 +122,10 @@ class CalculateFaceMisorientationColorsImpl
 //            q2[3] = m_Quats[5*grain2+3];
 //            q2[4] = m_Quats[5*grain2+4];
             w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
-            w=w*radToDeg;
-            m_Colors[3*i+0] = w*n1;
-            m_Colors[3*i+1] = w*n2;
-            m_Colors[3*i+2] = w*n3;
+            w = w * radToDeg;
+            m_Colors[3 * i + 0] = w * n1;
+            m_Colors[3 * i + 1] = w * n2;
+            m_Colors[3 * i + 2] = w * n3;
           }
           else if(phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal_High)
           {
@@ -142,17 +142,17 @@ class CalculateFaceMisorientationColorsImpl
 //            q2[3] = m_Quats[5*grain2+3];
 //            q2[4] = m_Quats[5*grain2+4];
             w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
-            w=w*radToDeg;
-            m_Colors[3*i+0] = w*n1;
-            m_Colors[3*i+1] = w*n2;
-            m_Colors[3*i+2] = w*n3;
+            w = w * radToDeg;
+            m_Colors[3 * i + 0] = w * n1;
+            m_Colors[3 * i + 1] = w * n2;
+            m_Colors[3 * i + 2] = w * n3;
           }
         }
         else
         {
-          m_Colors[3*i+0] = 0;
-          m_Colors[3*i+1] = 0;
-          m_Colors[3*i+2] = 0;
+          m_Colors[3 * i + 0] = 0;
+          m_Colors[3 * i + 1] = 0;
+          m_Colors[3 * i + 2] = 0;
         }
       }
     }
@@ -162,7 +162,7 @@ class CalculateFaceMisorientationColorsImpl
      * @brief operator () This is called from the TBB stye of code
      * @param r The range to compute the values
      */
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -216,8 +216,8 @@ void GenerateFaceMisorientationColoring::readFilterParameters(AbstractFilterPara
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -262,7 +262,7 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, si
     else
     {
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-          CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceMisorientationColors, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceMisorientationColors, float, FloatArrayType, 0, fields, 3)
     }
   }
 }
@@ -283,8 +283,8 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel(bool preflight, size_t v
   else
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
-        typedef DataArray<unsigned int> XTalStructArrayType;
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
+    typedef DataArray<unsigned int> XTalStructArrayType;
     GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }

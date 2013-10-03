@@ -68,7 +68,7 @@ BinaryNodesTrianglesReader::~BinaryNodesTrianglesReader()
 void BinaryNodesTrianglesReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-    {
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Binary Nodes Input File");
     option->setPropertyName("BinaryNodesFile");
@@ -76,7 +76,7 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
-    {
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Binary Triangles Input File");
     option->setPropertyName("BinaryTrianglesFile");
@@ -108,8 +108,8 @@ int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWr
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
- writer->writeValue("BinaryNodesFile", getBinaryNodesFile() );
- writer->writeValue("BinaryTrianglesFile", getBinaryTrianglesFile() );
+  writer->writeValue("BinaryNodesFile", getBinaryNodesFile() );
+  writer->writeValue("BinaryTrianglesFile", getBinaryTrianglesFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -186,7 +186,7 @@ void BinaryNodesTrianglesReader::execute()
 int BinaryNodesTrianglesReader::read()
 {
 
-  SurfaceDataContainer *sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   int err = 0;
   setErrorCondition(err);
 

@@ -61,7 +61,7 @@ class ThresholdExample : public AbstractFilter
 
     virtual ~ThresholdExample();
 
-   /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
     // -----------------------------------------------------------------------------
     /* Each Filter can ONLY have ONE of each of these types of widgets */
@@ -111,9 +111,9 @@ class ThresholdExample : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

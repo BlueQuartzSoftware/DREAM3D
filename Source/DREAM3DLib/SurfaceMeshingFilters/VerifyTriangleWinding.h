@@ -79,10 +79,10 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
-   /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
+    /**
+     * @brief This returns a string that is displayed in the GUI. It should be readable
+     * and understandable by humans.
+     */
     virtual const std::string getHumanLabel() { return "Verify Triangle Winding"; }
 
     /**
@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -132,7 +132,7 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
      * lable value.
      * @param trianglesToLabelMap
      */
-    void getLabelTriangelMap(LabelFaceMap_t &trianglesToLabelMap);
+    void getLabelTriangelMap(LabelFaceMap_t& trianglesToLabelMap);
 
     /**
      * @brief This method verifies the winding of all the triangles and makes them consistent
@@ -146,7 +146,7 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
      * @param triangleIndices
      * @return
      */
-    int32_t getSeedTriangle(int32_t label, std::set<int32_t> &triangleIndices);
+    int32_t getSeedTriangle(int32_t label, std::set<int32_t>& triangleIndices);
 
 
   private:

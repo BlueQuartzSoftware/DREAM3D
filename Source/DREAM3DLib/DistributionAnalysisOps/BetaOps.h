@@ -58,8 +58,8 @@ class DREAM3DLib_EXPORT BetaOps : public DistributionAnalysisOps
     virtual ~BetaOps();
 
 
-	int calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs);
-    int calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs);
+    int calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs);
+    int calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs);
 
   protected:
     BetaOps();

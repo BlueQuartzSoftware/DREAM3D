@@ -87,23 +87,23 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     typedef std::set<std::string> ArrayList_t;
 
     virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedCellArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                   std::set<std::string> selectedEnsembleArrays);
+                                             std::set<std::string> selectedEdgeArrays,
+                                             std::set<std::string> selectedFaceArrays,
+                                             std::set<std::string> selectedCellArrays,
+                                             std::set<std::string> selectedFieldArrays,
+                                             std::set<std::string> selectedEnsembleArrays);
     virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                              std::set<std::string> selectedEdgeArrays,
+                                              std::set<std::string> selectedFaceArrays,
+                                              std::set<std::string> selectedFieldArrays,
+                                              std::set<std::string> selectedEnsembleArrays);
     virtual void setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                           std::set<std::string> selectedEdgeArrays,
+                                           std::set<std::string> selectedFieldArrays,
+                                           std::set<std::string> selectedEnsembleArrays);
     virtual void setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedEdgeArrays);
+                                             std::set<std::string> selectedFaceArrays,
+                                             std::set<std::string> selectedEdgeArrays);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -111,7 +111,7 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -130,7 +130,7 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

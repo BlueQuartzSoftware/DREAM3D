@@ -46,7 +46,8 @@
 
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
-namespace Detail {
+namespace Detail
+{
   namespace QualityMetricFilter
   {
     template<typename T>

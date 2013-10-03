@@ -54,9 +54,9 @@ typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 //
 // -----------------------------------------------------------------------------
 GenerateUniqueEdges::GenerateUniqueEdges() :
-SurfaceMeshFilter(),
-m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
-m_SurfaceMeshUniqueEdges(NULL)
+  SurfaceMeshFilter(),
+  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
+  m_SurfaceMeshUniqueEdges(NULL)
 {
   setupFilterParameters();
 }
@@ -167,7 +167,7 @@ void GenerateUniqueEdges::execute()
   setErrorCondition(0);
 
   // Just to double check we have everything.
-  dataCheck(false, 0,0,0);
+  dataCheck(false, 0, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -207,15 +207,15 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
     //Edge 0
     int i = 0;
     edge.v0 = tri.verts[i];
-    edge.v1 = tri.verts[i+1];
-    if (edge.v0 > edge.v1) { edge.v0 = tri.verts[i+1]; edge.v1 = tri.verts[i]; }
+    edge.v1 = tri.verts[i + 1];
+    if (edge.v0 > edge.v1) { edge.v0 = tri.verts[i + 1]; edge.v1 = tri.verts[i]; }
     uedges_id_set.insert(*u64Edge);
 
     //Edge 1
     i = 1;
     edge.v0 = tri.verts[i];
-    edge.v1 = tri.verts[i+1];
-    if (edge.v0 > edge.v1) { edge.v0 = tri.verts[i+1]; edge.v1 = tri.verts[i]; }
+    edge.v1 = tri.verts[i + 1];
+    if (edge.v0 > edge.v1) { edge.v0 = tri.verts[i + 1]; edge.v1 = tri.verts[i]; }
     uedges_id_set.insert(*u64Edge);
 
     // Edge 2
@@ -228,15 +228,15 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   }
 
   notifyStatusMessage("Stage 1 of 2");
- // std::cout << "uedges_id_set size: " << uedges_id_set.size() << std::endl;
+// std::cout << "uedges_id_set size: " << uedges_id_set.size() << std::endl;
   DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), 2, m_SurfaceMeshUniqueEdgesArrayName);
   int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->GetPointer(0);
   int index = 0;
   for(EdgeSet_t::iterator iter = uedges_id_set.begin(); iter != uedges_id_set.end(); ++iter)
   {
     *u64Edge = *iter;
-    surfaceMeshUniqueEdges[index*2] = edge.v0;
-    surfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
+    surfaceMeshUniqueEdges[index * 2] = edge.v0;
+    surfaceMeshUniqueEdges[index * 2 + 1] = edge.v1;
     ++index;
   }
   sm->addEdgeData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
@@ -287,10 +287,10 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
   for(int i = 0; i < ntri; ++i)
   {
-    if ( static_cast<float>(i)/static_cast<float>(ntri) * 100.0f > (curPercent) )
+    if ( static_cast<float>(i) / static_cast<float>(ntri) * 100.0f > (curPercent) )
     {
       ss.str("");
-      ss << "Stage 1/2: " << (static_cast<float>(i)/static_cast<float>(ntri) * 100.0f) << "% Complete";
+      ss << "Stage 1/2: " << (static_cast<float>(i) / static_cast<float>(ntri) * 100.0f) << "% Complete";
       notifyStatusMessage(ss.str());
       curPercent += 5.0f;
     }
@@ -304,10 +304,10 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     EdgesIdMapIterator_t iter = uedges_id_map.find(*u64Edge);
     if ( iter == uedges_id_map.end())
     {
-       uedges_id_map[*u64Edge] = edge_id;
-       cur_edge_id = edge_id;
+      uedges_id_map[*u64Edge] = edge_id;
+      cur_edge_id = edge_id;
 //       tri.e_id[0] = cur_edge_id;
-       ++edge_id;
+      ++edge_id;
     }
     else
     {
@@ -322,10 +322,10 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     iter = uedges_id_map.find(*u64Edge);
     if ( iter == uedges_id_map.end())
     {
-       uedges_id_map[*u64Edge] = edge_id;
-       cur_edge_id = edge_id;
+      uedges_id_map[*u64Edge] = edge_id;
+      cur_edge_id = edge_id;
 //       tri.e_id[1] = cur_edge_id;
-       ++edge_id;
+      ++edge_id;
     }
     else
     {
@@ -340,10 +340,10 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     iter = uedges_id_map.find(*u64Edge);
     if ( iter == uedges_id_map.end())
     {
-       uedges_id_map[*u64Edge] = edge_id;
-       cur_edge_id = edge_id;
+      uedges_id_map[*u64Edge] = edge_id;
+      cur_edge_id = edge_id;
 //       tri.e_id[2] = cur_edge_id;
-       ++edge_id;
+      ++edge_id;
     }
     else
     {
@@ -369,10 +369,10 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   for(std::map<int64_t, int>::iterator iter = uedges_id_map.begin(); iter != uedges_id_map.end(); ++iter)
   {
 
-    if ( progIndex/total * 100.0f > (curPercent) )
+    if ( progIndex / total * 100.0f > (curPercent) )
     {
       ss.str("");
-      ss << "Stage 2/2: " << (progIndex/total * 100.0f) << "% Complete";
+      ss << "Stage 2/2: " << (progIndex / total * 100.0f) << "% Complete";
       notifyStatusMessage(ss.str());
       curPercent += 5.0f;
     }
@@ -381,8 +381,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
     *u64Edge = iter->first;
     index = iter->second;
-    m_SurfaceMeshUniqueEdges[index*2] = edge.v0;
-    m_SurfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
+    m_SurfaceMeshUniqueEdges[index * 2] = edge.v0;
+    m_SurfaceMeshUniqueEdges[index * 2 + 1] = edge.v1;
 
     ManagedArrayOfArrays<int>::Data_t& entry = *(edgeTriangleArray->GetPointer(index));
     DREAM3D::Mesh::UniqueFaceIds_t& triangles = edgeTriangleSet[*u64Edge];

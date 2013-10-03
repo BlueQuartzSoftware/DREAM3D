@@ -62,7 +62,7 @@ class CalculateDihedralAnglesImpl
       m_Triangles(triangles),
       m_DihedralAngles(DihedralAngles)
     {}
-    virtual ~CalculateDihedralAnglesImpl(){}
+    virtual ~CalculateDihedralAnglesImpl() {}
 
     void generate(size_t start, size_t end) const
     {
@@ -70,44 +70,44 @@ class CalculateDihedralAnglesImpl
       DREAM3D::Mesh::Vert_t* nodes = m_Nodes->GetPointer(0);
       DREAM3D::Mesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
-    float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
+      float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
 
-    float ABx, ABy, ABz, ACx, ACy, ACz, BCx, BCy, BCz;
-    float magAB, magAC, magBC;
-    float dihedralAngle1, dihedralAngle2, dihedralAngle3, minDihedralAngle;
+      float ABx, ABy, ABz, ACx, ACy, ACz, BCx, BCy, BCz;
+      float magAB, magAC, magBC;
+      float dihedralAngle1, dihedralAngle2, dihedralAngle3, minDihedralAngle;
       for (size_t i = start; i < end; i++)
       {
-    minDihedralAngle = 180.0;
+        minDihedralAngle = 180.0;
 
-    ABx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[1]].pos[0];
-    ABy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[1]].pos[1];
-    ABz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[1]].pos[2];
-    magAB = sqrt(ABx*ABx+ABy*ABy+ABz*ABz);
+        ABx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[1]].pos[0];
+        ABy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[1]].pos[1];
+        ABz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[1]].pos[2];
+        magAB = sqrt(ABx * ABx + ABy * ABy + ABz * ABz);
 
-    ACx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
-    ACy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
-    ACz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
-    magAC = sqrt(ACx*ACx+ACy*ACy+ACz*ACz);
+        ACx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
+        ACy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
+        ACz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
+        magAC = sqrt(ACx * ACx + ACy * ACy + ACz * ACz);
 
-    BCx = nodes[triangles[i].verts[1]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
-    BCy = nodes[triangles[i].verts[1]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
-    BCz = nodes[triangles[i].verts[1]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
-    magBC = sqrt(BCx*BCx+BCy*BCy+BCz*BCz);
+        BCx = nodes[triangles[i].verts[1]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
+        BCy = nodes[triangles[i].verts[1]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
+        BCz = nodes[triangles[i].verts[1]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
+        magBC = sqrt(BCx * BCx + BCy * BCy + BCz * BCz);
 
-    dihedralAngle1 = radToDeg*acos(((ABx*ACx)+(ABy*ACy)+(ABz*ACz))/(magAB*magAC));
-    // 180 - angle because AB points out of vertex and BC points into vertex, so angle is actually angle outside of triangle
-    dihedralAngle2 = 180.0 - (radToDeg*acos(((ABx*BCx)+(ABy*BCy)+(ABz*BCz))/(magAB*magBC)));
-    dihedralAngle3 = radToDeg*acos(((BCx*ACx)+(BCy*ACy)+(BCz*ACz))/(magBC*magAC));
-    minDihedralAngle = dihedralAngle1;
-    if(dihedralAngle2 < minDihedralAngle) minDihedralAngle = dihedralAngle2;
-    if(dihedralAngle3 < minDihedralAngle) minDihedralAngle = dihedralAngle3;
+        dihedralAngle1 = radToDeg * acos(((ABx * ACx) + (ABy * ACy) + (ABz * ACz)) / (magAB * magAC));
+        // 180 - angle because AB points out of vertex and BC points into vertex, so angle is actually angle outside of triangle
+        dihedralAngle2 = 180.0 - (radToDeg * acos(((ABx * BCx) + (ABy * BCy) + (ABz * BCz)) / (magAB * magBC)));
+        dihedralAngle3 = radToDeg * acos(((BCx * ACx) + (BCy * ACy) + (BCz * ACz)) / (magBC * magAC));
+        minDihedralAngle = dihedralAngle1;
+        if(dihedralAngle2 < minDihedralAngle) { minDihedralAngle = dihedralAngle2; }
+        if(dihedralAngle3 < minDihedralAngle) { minDihedralAngle = dihedralAngle3; }
         m_DihedralAngles[i]  = minDihedralAngle;
 
       }
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -151,8 +151,8 @@ void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersR
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

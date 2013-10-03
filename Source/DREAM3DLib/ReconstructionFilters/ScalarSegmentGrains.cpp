@@ -67,13 +67,13 @@
 // base class
 class CompareFunctor
 {
-public:
-  virtual ~CompareFunctor(){}
+  public:
+    virtual ~CompareFunctor() {}
 
-  virtual bool operator()(size_t index, size_t neighIndex, size_t gnum)  // call using operator
-  {
-    return false;
-  }
+    virtual bool operator()(size_t index, size_t neighIndex, size_t gnum)  // call using operator
+    {
+      return false;
+    }
 };
 
 
@@ -85,56 +85,58 @@ class TSpecificCompareFunctor : public CompareFunctor
       m_Length(length),
       m_Tolerance(tolerance),
       m_GrainIds(grainIds)
-      {
-        m_Data = reinterpret_cast<T*>(data);
-      }
-    virtual ~TSpecificCompareFunctor(){};
+    {
+      m_Data = reinterpret_cast<T*>(data);
+    }
+    virtual ~TSpecificCompareFunctor() {};
 
     virtual bool operator()(size_t referencepoint, size_t neighborpoint, size_t gnum)
     {
       // Sanity check the indices that are being passed in.
       if (referencepoint >= m_Length || neighborpoint >= m_Length) { return false; }
-      
+
       if(m_Data[referencepoint] >= m_Data[neighborpoint])
       {
-        if ((m_Data[referencepoint]-m_Data[neighborpoint]) <= m_Tolerance) { 
+        if ((m_Data[referencepoint] - m_Data[neighborpoint]) <= m_Tolerance)
+        {
           m_GrainIds[neighborpoint] = gnum;
-          return true; 
+          return true;
         }
       }
       else
       {
-        if ((m_Data[neighborpoint]-m_Data[referencepoint]) <= m_Tolerance) { 
+        if ((m_Data[neighborpoint] - m_Data[referencepoint]) <= m_Tolerance)
+        {
           m_GrainIds[neighborpoint] = gnum;
-          return true; 
+          return true;
         }
       }
       return false;
     }
-  
-protected:
-   TSpecificCompareFunctor(){}
 
-private:
-   T* m_Data;       // The data that is being compared
-   size_t m_Length; // Length of the Data Array
-   T      m_Tolerance; // The tolerance of the comparison
-   int32_t* m_GrainIds; // The grain Ids
+  protected:
+    TSpecificCompareFunctor() {}
+
+  private:
+    T* m_Data;       // The data that is being compared
+    size_t m_Length; // Length of the Data Array
+    T      m_Tolerance; // The tolerance of the comparison
+    int32_t* m_GrainIds; // The grain Ids
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ScalarSegmentGrains::ScalarSegmentGrains() :
-SegmentGrains(),
-m_ScalarArrayName(""),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_ScalarTolerance(5.0f),
-m_RandomizeGrainIds(true),
-m_GrainIds(NULL),
-m_Active(NULL),
-m_Compare(NULL)
+  SegmentGrains(),
+  m_ScalarArrayName(""),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_ScalarTolerance(5.0f),
+  m_RandomizeGrainIds(true),
+  m_GrainIds(NULL),
+  m_Active(NULL),
+  m_Compare(NULL)
 {
   setupFilterParameters();
 }
@@ -144,7 +146,8 @@ m_Compare(NULL)
 // -----------------------------------------------------------------------------
 ScalarSegmentGrains::~ScalarSegmentGrains()
 {
-  if (m_Compare != NULL) {
+  if (m_Compare != NULL)
+  {
     delete m_Compare;
   }
 }
@@ -194,10 +197,10 @@ void ScalarSegmentGrains::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setScalarArrayName( reader->readValue( "ScalarArrayName", getScalarArrayName() ) );
   setScalarTolerance( reader->readValue("ScalarTolerance", getScalarTolerance()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -280,7 +283,7 @@ void ScalarSegmentGrains::execute()
   // Tell the user we are starting the filter
   notifyStatusMessage("Starting");
 
-  for(int64_t i=0;i<totalPoints;i++)
+  for(int64_t i = 0; i < totalPoints; i++)
   {
     m_GrainIds[i] = 0;
   }
@@ -347,8 +350,8 @@ void ScalarSegmentGrains::execute()
     const int rangeMax = totalFields - 1;
     typedef boost::uniform_int<int> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&,
-                                     NumberDistribution> Generator;
+    typedef boost::variate_generator < RandomNumberGenerator&,
+            NumberDistribution > Generator;
 
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
@@ -369,25 +372,27 @@ void ScalarSegmentGrains::execute()
     size_t r;
     size_t temp;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (size_t i=1; i< totalFields; i++) {
-        r = numberGenerator(); // Random remaining position.
-        if (r >= totalFields) {
-          continue;
-        }
-        temp = gid[i];
-        gid[i] = gid[r];
-        gid[r] = temp;
+    for (size_t i = 1; i < totalFields; i++)
+    {
+      r = numberGenerator(); // Random remaining position.
+      if (r >= totalFields)
+      {
+        continue;
+      }
+      temp = gid[i];
+      gid[i] = gid[r];
+      gid[r] = temp;
     }
 
     // Now adjust all the Grain Id values for each Voxel
     for(int64_t i = 0; i < totalPoints; ++i)
     {
-       m_GrainIds[i] = gid[ m_GrainIds[i] ];
+      m_GrainIds[i] = gid[ m_GrainIds[i] ];
     }
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Completed");
+  notifyStatusMessage("Completed");
 }
 
 
@@ -420,15 +425,15 @@ int64_t ScalarSegmentGrains::getSeed(size_t gnum)
   randpoint = int64_t(float(rg.genrand_res53()) * float(totalPMinus1));
   while (seed == -1 && counter < totalPoints)
   {
-      if (randpoint > totalPMinus1) randpoint = static_cast<int64_t>( randpoint - totalPoints );
-      if (m_GrainIds[randpoint] == 0) seed = randpoint;
-      randpoint++;
-      counter++;
+    if (randpoint > totalPMinus1) { randpoint = static_cast<int64_t>( randpoint - totalPoints ); }
+    if (m_GrainIds[randpoint] == 0) { seed = randpoint; }
+    randpoint++;
+    counter++;
   }
   if (seed >= 0)
   {
     m_GrainIds[seed] = gnum;
-    m->resizeFieldDataArrays(gnum+1);
+    m->resizeFieldDataArrays(gnum + 1);
     dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   }
   return seed;

@@ -100,7 +100,7 @@ class AssignVoxelsGapsImpl
   public:
     AssignVoxelsGapsImpl(DimType* dimensions, float* resolution, int32_t* grainIds, float* radCur,
                          float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int cur_grain,
-    Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
+                         Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
       m_GrainIds(grainIds),
       m_ShapeOps(shapeOps),
       curGrain(cur_grain)
@@ -108,9 +108,9 @@ class AssignVoxelsGapsImpl
       dims[0] = dimensions[0];
       dims[1] = dimensions[1];
       dims[2] = dimensions[2];
-      Invradcur[0] = 1.0/radCur[0];
-      Invradcur[1] = 1.0/radCur[1];
-      Invradcur[2] = 1.0/radCur[2];
+      Invradcur[0] = 1.0 / radCur[0];
+      Invradcur[1] = 1.0 / radCur[1];
+      Invradcur[2] = 1.0 / radCur[2];
 
       res[0] = resolution[0];
       res[1] = resolution[1];
@@ -134,7 +134,7 @@ class AssignVoxelsGapsImpl
       ellipfuncsPtr = ellipfuncs;
 
     }
-    virtual ~AssignVoxelsGapsImpl(){}
+    virtual ~AssignVoxelsGapsImpl() {}
 
     // -----------------------------------------------------------------------------
     //
@@ -148,8 +148,8 @@ class AssignVoxelsGapsImpl
       int index = 0;
       float coords[3] = {0.0f, 0.0f, 0.0f};
       float inside = 0.0f;
-   //   float dist = 0.0f;
-   //   float radcur1squared = 1.0/(Invradcur[0]*Invradcur[0]);
+      //   float dist = 0.0f;
+      //   float radcur1squared = 1.0/(Invradcur[0]*Invradcur[0]);
       float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
       int32_t* newowners = newownersPtr->GetPointer(0);
       float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
@@ -157,21 +157,21 @@ class AssignVoxelsGapsImpl
       for (DimType iter1 = xStart; iter1 < xEnd; iter1++)
       {
         column = iter1;
-        if (iter1 < 0) column = iter1 + dims[0];
-        else if (iter1 > dims[0] - 1) column = iter1 - dims[0];
+        if (iter1 < 0) { column = iter1 + dims[0]; }
+        else if (iter1 > dims[0] - 1) { column = iter1 - dims[0]; }
 
         for (DimType iter2 = yStart; iter2 < yEnd; iter2++)
         {
           row = iter2;
-          if (iter2 < 0) row = iter2 + dims[1];
-          else if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+          if (iter2 < 0) { row = iter2 + dims[1]; }
+          else if (iter2 > dims[1] - 1) { row = iter2 - dims[1]; }
           size_t row_dim = row * dims[0];
 
           for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
           {
             plane = iter3;
-            if (iter3 < 0) plane = iter3 + dims[2];
-            else if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
+            if (iter3 < 0) { plane = iter3 + dims[2]; }
+            else if (iter3 > dims[2] - 1) { plane = iter3 - dims[2]; }
 
             index = static_cast<int>( (plane * dim0_dim_1) + (row_dim) + column );
 
@@ -185,27 +185,27 @@ class AssignVoxelsGapsImpl
 //              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
 //              if (dist < radcur1squared)
 //              {
-                coords[0] = coords[0] - xc;
-                coords[1] = coords[1] - yc;
-                coords[2] = coords[2] - zc;
-                MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
-                float axis1comp = coordsRotated[0] * Invradcur[0];
-                float axis2comp = coordsRotated[1] * Invradcur[1];
-                float axis3comp = coordsRotated[2] * Invradcur[2];
-                inside = m_ShapeOps->inside(axis1comp, axis2comp, axis3comp);
-                if (inside >= 0 && newowners[index] > 0)
+              coords[0] = coords[0] - xc;
+              coords[1] = coords[1] - yc;
+              coords[2] = coords[2] - zc;
+              MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
+              float axis1comp = coordsRotated[0] * Invradcur[0];
+              float axis2comp = coordsRotated[1] * Invradcur[1];
+              float axis3comp = coordsRotated[2] * Invradcur[2];
+              inside = m_ShapeOps->inside(axis1comp, axis2comp, axis3comp);
+              if (inside >= 0 && newowners[index] > 0)
                 //if (inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
-                {
-                  //                    newowners[index] = curGrain;
-                  //                    ellipfuncs[index] = inside;
-                  newowners[index] = -2;
-                  ellipfuncs[index] = inside;
-                }
-                else if (inside >= 0 && newowners[index] == -1)
-                {
-                  newowners[index] = curGrain;
-                  ellipfuncs[index] = inside;
-                }
+              {
+                //                    newowners[index] = curGrain;
+                //                    ellipfuncs[index] = inside;
+                newowners[index] = -2;
+                ellipfuncs[index] = inside;
+              }
+              else if (inside >= 0 && newowners[index] == -1)
+              {
+                newowners[index] = curGrain;
+                ellipfuncs[index] = inside;
+              }
 //              }
             }
 
@@ -215,7 +215,7 @@ class AssignVoxelsGapsImpl
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range3d<int, int, int> &r) const
+    void operator()(const tbb::blocked_range3d<int, int, int>& r) const
     {
       convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
     }
@@ -331,11 +331,11 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", false) );
   setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", false) );
   setCsvOutputFile( reader->readValue( "CsvOutputFile", getCsvOutputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -431,7 +431,7 @@ void PackPrimaryPhases::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
-  if(totalFields == 0) totalFields = 1;
+  if(totalFields == 0) { totalFields = 1; }
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -449,9 +449,11 @@ void PackPrimaryPhases::execute()
   typedef int64_t DimType;
 #endif
   DimType dims[3] =
-  { static_cast<DimType>(udims[0]),
+  {
+    static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]), };
+    static_cast<DimType>(udims[2]),
+  };
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -459,7 +461,7 @@ void PackPrimaryPhases::execute()
   sizex = dims[0] * m->getXRes();
   sizey = dims[1] * m->getYRes();
   sizez = dims[2] * m->getZRes();
-  totalvol = sizex*sizey*sizez;
+  totalvol = sizex * sizey * sizez;
 
   double totalprimaryvolTEMP = 0;
   //  float badcount = 0;
@@ -467,10 +469,10 @@ void PackPrimaryPhases::execute()
   size_t totalVox = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
   for (size_t i = 0; i < totalVox; i++)
   {
-    if(m_GrainIds[i] <= 0) totalprimaryvolTEMP++;
+    if(m_GrainIds[i] <= 0) { totalprimaryvolTEMP++; }
   }
   float totalprimaryvol = static_cast<float>(totalprimaryvolTEMP);
-  totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getYRes()*m->getZRes());
+  totalprimaryvol = totalprimaryvol * (m->getXRes() * m->getYRes() * m->getZRes());
 
   size_t numensembles = m->getNumEnsembleTuples();
   std::stringstream ss;
@@ -547,7 +549,7 @@ void PackPrimaryPhases::execute()
     VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
     float avg = GSdist[0]->GetValue(0);
     float stdev = GSdist[1]->GetValue(0);
-    float denominatorConst = 1.0/sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
+    float denominatorConst = 1.0 / sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
     for (size_t j = 0; j < grainsizedist[i].size(); j++)
     {
       input = (float(j + 1) * grainsizediststep[i]) + (pp->getMinGrainDiameter() / 2.0f);
@@ -590,7 +592,7 @@ void PackPrimaryPhases::execute()
   for (size_t j = 0; j < primaryphases.size(); ++j)
   {
     curphasevol[j] = 0;
-    float curphasetotalvol = totalprimaryvol*primaryphasefractions[j];
+    float curphasetotalvol = totalprimaryvol * primaryphasefractions[j];
     while (curphasevol[j] < (factor * curphasetotalvol))
     {
       iter++;
@@ -599,7 +601,7 @@ void PackPrimaryPhases::execute()
       generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase]);
       currentsizedisterror = check_sizedisterror(&field);
       change = (currentsizedisterror) - (oldsizedisterror);
-      if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
+      if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
       {
         std::stringstream ss;
         ss << "Packing Grains (1/2) - Generating Grain #" << gid;
@@ -634,14 +636,14 @@ void PackPrimaryPhases::execute()
   {
     iter = 0;
     int xgrains, ygrains, zgrains;
-    xgrains = int(powf((m->getNumFieldTuples()*(sizex/sizey)*(sizex/sizez)),(1.0f/3.0f))+1);
-    ygrains = int(xgrains*(sizey/sizex)+1);
-    zgrains = int(xgrains*(sizez/sizex)+1);
-    factor = 0.25f * (1.0f - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
+    xgrains = int(powf((m->getNumFieldTuples() * (sizex / sizey) * (sizex / sizez)), (1.0f / 3.0f)) + 1);
+    ygrains = int(xgrains * (sizey / sizex) + 1);
+    zgrains = int(xgrains * (sizez / sizex) + 1);
+    factor = 0.25f * (1.0f - (float((xgrains - 2) * (ygrains - 2) * (zgrains - 2)) / float(xgrains * ygrains * zgrains)));
     for (size_t j = 0; j < primaryphases.size(); ++j)
     {
-      float curphasetotalvol = totalprimaryvol*primaryphasefractions[j];
-      while (curphasevol[j] < ((1+factor) * curphasetotalvol))
+      float curphasetotalvol = totalprimaryvol * primaryphasefractions[j];
+      while (curphasevol[j] < ((1 + factor) * curphasetotalvol))
       {
         iter++;
         Seed++;
@@ -649,7 +651,7 @@ void PackPrimaryPhases::execute()
         generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase]);
         currentsizedisterror = check_sizedisterror(&field);
         change = (currentsizedisterror) - (oldsizedisterror);
-        if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
+        if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
         {
           std::stringstream ss;
           ss << "Packing Grains (2/2) - Generating Grain #" << gid;
@@ -713,7 +715,7 @@ void PackPrimaryPhases::execute()
       float avg = Neighdist[0]->GetValue(j);
       float stdev = Neighdist[1]->GetValue(j);
       neighbordiststep[i] = 2;
-      float denominatorConst = 1.0/sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
+      float denominatorConst = 1.0 / sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
       for (size_t k = 0; k < neighbordist[i][j].size(); k++)
       {
         input = (float(k + 1) * neighbordiststep[i]);
@@ -730,7 +732,7 @@ void PackPrimaryPhases::execute()
       }
       normalizer = normalizer + previoustotal;
     }
-    normalizer = 1.0/normalizer;
+    normalizer = 1.0 / normalizer;
     for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
       for (size_t k = 0; k < neighbordist[i][j].size(); k++)
@@ -787,7 +789,7 @@ void PackPrimaryPhases::execute()
     column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
     row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
     plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
-    grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
+    grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
     while(exclusionZones[grainOwnersIdx] == true && count < m_TotalPackingPoints)
     {
       column++;
@@ -805,12 +807,12 @@ void PackPrimaryPhases::execute()
           }
         }
       }
-      grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
+      grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
       count++;
     }
-    xc = static_cast<float>((column*m_PackingRes[0]) + (m_PackingRes[0]*0.5));
-    yc = static_cast<float>((row*m_PackingRes[1]) + (m_PackingRes[1]*0.5));
-    zc = static_cast<float>((plane*m_PackingRes[2]) + (m_PackingRes[2]*0.5));
+    xc = static_cast<float>((column * m_PackingRes[0]) + (m_PackingRes[0] * 0.5));
+    yc = static_cast<float>((row * m_PackingRes[1]) + (m_PackingRes[1] * 0.5));
+    zc = static_cast<float>((plane * m_PackingRes[2]) + (m_PackingRes[2] * 0.5));
     move_grain(i, xc, yc, zc);
     fillingerror = check_fillingerror(i, -1000, grainOwnersPtr, exclusionZonesPtr);
 
@@ -851,7 +853,7 @@ void PackPrimaryPhases::execute()
   }
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(10 * (numgrains-1));
+  int totalAdjustments = static_cast<int>(10 * (numgrains - 1));
 
   millis = MXA::getMilliSeconds();
   startMillis = millis;
@@ -900,21 +902,21 @@ void PackPrimaryPhases::execute()
     // JUMP - this option moves one grain to a random spot in the volume
     if(option == 0)
     {
-      randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
+      randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains - firstPrimaryField));
       good = false;
       count = 0;
-      while(good == false && count < static_cast<int>((numgrains-firstPrimaryField)) )
+      while(good == false && count < static_cast<int>((numgrains - firstPrimaryField)) )
       {
-        xc = m_Centroids[3*randomgrain];
-        yc = m_Centroids[3*randomgrain+1];
-        zc = m_Centroids[3*randomgrain+2];
+        xc = m_Centroids[3 * randomgrain];
+        yc = m_Centroids[3 * randomgrain + 1];
+        zc = m_Centroids[3 * randomgrain + 2];
         column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
         row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
         plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
-        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
-        if(grainOwners[grainOwnersIdx] > 1) good = true;
-        else randomgrain++;
-        if(static_cast<size_t>(randomgrain) >= numgrains) randomgrain = firstPrimaryField;
+        grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
+        if(grainOwners[grainOwnersIdx] > 1) { good = true; }
+        else { randomgrain++; }
+        if(static_cast<size_t>(randomgrain) >= numgrains) { randomgrain = firstPrimaryField; }
         count++;
       }
       Seed++;
@@ -929,7 +931,7 @@ void PackPrimaryPhases::execute()
 
       while(exclusionZones[grainOwnersIdx] == true && count < m_TotalPackingPoints)
       {
-        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
+        grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
         if(column >= m_PackingPoints[0])
         {
           column = 0;
@@ -946,9 +948,9 @@ void PackPrimaryPhases::execute()
         }
         count++;
       }
-      xc = static_cast<float>((column*m_PackingRes[0]) + (m_PackingRes[0]*0.5));
-      yc = static_cast<float>((row*m_PackingRes[1]) + (m_PackingRes[1]*0.5));
-      zc = static_cast<float>((plane*m_PackingRes[2]) + (m_PackingRes[2]*0.5));
+      xc = static_cast<float>((column * m_PackingRes[0]) + (m_PackingRes[0] * 0.5));
+      yc = static_cast<float>((row * m_PackingRes[1]) + (m_PackingRes[1] * 0.5));
+      zc = static_cast<float>((plane * m_PackingRes[2]) + (m_PackingRes[2] * 0.5));
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
@@ -972,21 +974,21 @@ void PackPrimaryPhases::execute()
     // NUDGE - this option moves one grain to a spot close to its current centroid
     if(option == 1)
     {
-      randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
+      randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains - firstPrimaryField));
       good = false;
       count = 0;
-      while(good == false && count < static_cast<int>((numgrains-firstPrimaryField)) )
+      while(good == false && count < static_cast<int>((numgrains - firstPrimaryField)) )
       {
-        xc = m_Centroids[3*randomgrain];
-        yc = m_Centroids[3*randomgrain+1];
-        zc = m_Centroids[3*randomgrain+2];
+        xc = m_Centroids[3 * randomgrain];
+        yc = m_Centroids[3 * randomgrain + 1];
+        zc = m_Centroids[3 * randomgrain + 2];
         column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
         row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
         plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
-        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
-        if(grainOwners[grainOwnersIdx] > 1) good = true;
-        else randomgrain++;
-        if(static_cast<size_t>(randomgrain) >= numgrains) randomgrain = firstPrimaryField;
+        grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
+        if(grainOwners[grainOwnersIdx] > 1) { good = true; }
+        else { randomgrain++; }
+        if(static_cast<size_t>(randomgrain) >= numgrains) { randomgrain = firstPrimaryField; }
         count++;
       }
       Seed++;
@@ -996,12 +998,12 @@ void PackPrimaryPhases::execute()
       xshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[0])) );
       yshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[1])) );
       zshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[2])) );
-      if((oldxc+xshift) < sizex && (oldxc+xshift) > 0) xc = oldxc + xshift;
-      else xc = oldxc;
-      if((oldyc+yshift) < sizey && (oldyc+yshift) > 0) yc = oldyc + yshift;
-      else yc = oldyc;
-      if((oldzc+zshift) < sizez && (oldzc+zshift) > 0) zc = oldzc + zshift;
-      else zc = oldzc;
+      if((oldxc + xshift) < sizex && (oldxc + xshift) > 0) { xc = oldxc + xshift; }
+      else { xc = oldxc; }
+      if((oldyc + yshift) < sizey && (oldyc + yshift) > 0) { yc = oldyc + yshift; }
+      else { yc = oldyc; }
+      if((oldzc + zshift) < sizez && (oldzc + zshift) > 0) { zc = oldzc + zshift; }
+      else { zc = oldzc; }
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr, exclusionZonesPtr);
       move_grain(randomgrain, xc, yc, zc);
@@ -1111,12 +1113,12 @@ int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners, bool* exclusionZones)
     {
       for (int k = 0; k < (m_PackingPoints[0]); k++)
       {
-        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*i) + (m_PackingPoints[0]*j) + k;
+        grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * i) + (m_PackingPoints[0] * j) + k;
         int name = grainOwners[grainOwnersIdx];
-        if(i % 20 == 0 && i > 0) outFile << std::endl;
+        if(i % 20 == 0 && i > 0) { outFile << std::endl; }
         outFile << "     ";
-        if(name < 100) outFile << " ";
-        if(name < 10) outFile << " ";
+        if(name < 100) { outFile << " "; }
+        if(name < 10) { outFile << " "; }
         outFile << name;
       }
     }
@@ -1129,12 +1131,12 @@ int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners, bool* exclusionZones)
     {
       for (int k = 0; k < (m_PackingPoints[0]); k++)
       {
-        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*i) + (m_PackingPoints[0]*j) + k;
+        grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * i) + (m_PackingPoints[0] * j) + k;
         bool val = exclusionZones[grainOwnersIdx];
-        if(i % 20 == 0 && i > 0) outFile << std::endl;
+        if(i % 20 == 0 && i > 0) { outFile << std::endl; }
         outFile << "       ";
-        if(val == true) outFile << 1;
-        else outFile << 0;
+        if(val == true) { outFile << 1; }
+        else { outFile << 0; }
       }
     }
   }
@@ -1153,21 +1155,21 @@ void PackPrimaryPhases::initialize_packinggrid()
   m_PackingRes[1] = m->getYRes() * 2.0f;
   m_PackingRes[2] = m->getZRes() * 2.0f;
 
-  m_HalfPackingRes[0] = m_PackingRes[0]*0.5;
-  m_HalfPackingRes[1] = m_PackingRes[1]*0.5;
-  m_HalfPackingRes[2] = m_PackingRes[2]*0.5;
+  m_HalfPackingRes[0] = m_PackingRes[0] * 0.5;
+  m_HalfPackingRes[1] = m_PackingRes[1] * 0.5;
+  m_HalfPackingRes[2] = m_PackingRes[2] * 0.5;
 
-  m_OneOverHalfPackingRes[0] = 1.0f/m_HalfPackingRes[0];
-  m_OneOverHalfPackingRes[1] = 1.0f/m_HalfPackingRes[1];
-  m_OneOverHalfPackingRes[2] = 1.0f/m_HalfPackingRes[2];
+  m_OneOverHalfPackingRes[0] = 1.0f / m_HalfPackingRes[0];
+  m_OneOverHalfPackingRes[1] = 1.0f / m_HalfPackingRes[1];
+  m_OneOverHalfPackingRes[2] = 1.0f / m_HalfPackingRes[2];
 
-  m_OneOverPackingRes[0] = 1.0f/m_PackingRes[0];
-  m_OneOverPackingRes[1] = 1.0f/m_PackingRes[1];
-  m_OneOverPackingRes[2] = 1.0f/m_PackingRes[2];
+  m_OneOverPackingRes[0] = 1.0f / m_PackingRes[0];
+  m_OneOverPackingRes[1] = 1.0f / m_PackingRes[1];
+  m_OneOverPackingRes[2] = 1.0f / m_PackingRes[2];
 
-  m_PackingPoints[0] = m->getXPoints()/2;
-  m_PackingPoints[1] = m->getYPoints()/2;
-  m_PackingPoints[2] = m->getZPoints()/2;
+  m_PackingPoints[0] = m->getXPoints() / 2;
+  m_PackingPoints[1] = m->getYPoints() / 2;
+  m_PackingPoints[2] = m->getZPoints() / 2;
 
   m_TotalPackingPoints = m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2];
 }
@@ -1179,7 +1181,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-      StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   float r1 = 1;
   float a2 = 0, a3 = 0;
@@ -1188,7 +1190,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
   float vol = 0;
   int volgood = 0;
   float phi1, PHI, phi2;
-  float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi))/8.0f);
+  float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi)) / 8.0f);
   PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
   float avg = GSdist[0]->GetValue(0);
@@ -1198,8 +1200,8 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
     volgood = 1;
     diam = static_cast<float>(rg.genrand_norm(avg, stdev));
     diam = exp(diam);
-    if(diam >= pp->getMaxGrainDiameter()) volgood = 0;
-    if(diam < pp->getMinGrainDiameter()) volgood = 0;
+    if(diam >= pp->getMaxGrainDiameter()) { volgood = 0; }
+    if(diam < pp->getMinGrainDiameter()) { volgood = 0; }
     vol = fourThirdsPiOverEight * (diam * diam * diam);
   }
   int diameter = int((diam - pp->getMinGrainDiameter()) / pp->getBinStepSize());
@@ -1213,16 +1215,16 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
     b2 = bovera[1]->GetValue(diameter);
     if(a2 == 0)
     {
-      a2 = bovera[0]->GetValue(diameter-1);
-      b2 = bovera[1]->GetValue(diameter-1);
+      a2 = bovera[0]->GetValue(diameter - 1);
+      b2 = bovera[1]->GetValue(diameter - 1);
     }
     r2 = static_cast<float>(rg.genrand_beta(a2, b2));
     a3 = covera[0]->GetValue(diameter);
     b3 = covera[1]->GetValue(diameter);
     if(a3 == 0)
     {
-      a3 = covera[0]->GetValue(diameter-1);
-      b3 = covera[1]->GetValue(diameter-1);
+      a3 = covera[0]->GetValue(diameter - 1);
+      b3 = covera[1]->GetValue(diameter - 1);
     }
     r3 = static_cast<float>( rg.genrand_beta(a3, b3) );
   }
@@ -1240,7 +1242,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
   float mf = omega3[0]->GetValue(diameter);
   float s = omega3[1]->GetValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  if(shapeclass == DREAM3D::ShapeType::EllipsoidShape) omega3f = 1;
+  if(shapeclass == DREAM3D::ShapeType::EllipsoidShape) { omega3f = 1; }
 
   field->m_Volumes = vol;
   field->m_EquivalentDiameters = diam;
@@ -1262,12 +1264,12 @@ void PackPrimaryPhases::transfer_attributes(int gnum, Field* field)
 {
   m_Volumes[gnum] = field->m_Volumes;
   m_EquivalentDiameters[gnum] = field->m_EquivalentDiameters;
-  m_AxisLengths[3*gnum+0] = field->m_AxisLengths[0];
-  m_AxisLengths[3*gnum+1] = field->m_AxisLengths[1];
-  m_AxisLengths[3*gnum+2] = field->m_AxisLengths[2];
-  m_AxisEulerAngles[3*gnum+0] = field->m_AxisEulerAngles[0];
-  m_AxisEulerAngles[3*gnum+1] = field->m_AxisEulerAngles[1];
-  m_AxisEulerAngles[3*gnum+2] = field->m_AxisEulerAngles[2];
+  m_AxisLengths[3 * gnum + 0] = field->m_AxisLengths[0];
+  m_AxisLengths[3 * gnum + 1] = field->m_AxisLengths[1];
+  m_AxisLengths[3 * gnum + 2] = field->m_AxisLengths[2];
+  m_AxisEulerAngles[3 * gnum + 0] = field->m_AxisEulerAngles[0];
+  m_AxisEulerAngles[3 * gnum + 1] = field->m_AxisEulerAngles[1];
+  m_AxisEulerAngles[3 * gnum + 2] = field->m_AxisEulerAngles[2];
   m_Omega3s[gnum] = field->m_Omega3s;
   m_FieldPhases[gnum] = field->m_FieldPhases;
   m_Neighborhoods[gnum] = field->m_Neighborhoods;
@@ -1281,9 +1283,9 @@ void PackPrimaryPhases::move_grain(size_t gnum, float xc, float yc, float zc)
   int occolumn, ocrow, ocplane;
   int nccolumn, ncrow, ncplane;
   int shiftcolumn, shiftrow, shiftplane;
-  float oxc = m_Centroids[3*gnum];
-  float oyc = m_Centroids[3*gnum+1];
-  float ozc = m_Centroids[3*gnum+2];
+  float oxc = m_Centroids[3 * gnum];
+  float oyc = m_Centroids[3 * gnum + 1];
+  float ozc = m_Centroids[3 * gnum + 2];
   occolumn = static_cast<int>( (oxc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
   ocrow = static_cast<int>( (oyc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
   ocplane = static_cast<int>( (ozc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
@@ -1293,9 +1295,9 @@ void PackPrimaryPhases::move_grain(size_t gnum, float xc, float yc, float zc)
   shiftcolumn = nccolumn - occolumn;
   shiftrow = ncrow - ocrow;
   shiftplane = ncplane - ocplane;
-  m_Centroids[3*gnum] = xc;
-  m_Centroids[3*gnum+1] = yc;
-  m_Centroids[3*gnum+2] = zc;
+  m_Centroids[3 * gnum] = xc;
+  m_Centroids[3 * gnum + 1] = yc;
+  m_Centroids[3 * gnum + 2] = zc;
   size_t size = columnlist[gnum].size();
 
   for (size_t i = 0; i < size; i++)
@@ -1319,9 +1321,9 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
   float xn, yn, zn;
   float dia, dia2;
   float dx, dy, dz;
-  x = m_Centroids[3*gnum];
-  y = m_Centroids[3*gnum+1];
-  z = m_Centroids[3*gnum+2];
+  x = m_Centroids[3 * gnum];
+  y = m_Centroids[3 * gnum + 1];
+  z = m_Centroids[3 * gnum + 2];
   dia = m_EquivalentDiameters[gnum];
   size_t numFieldTuples = m->getNumFieldTuples();
   int32_t increment = 0;
@@ -1329,9 +1331,9 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
   if(add < 0) { increment = -1; }
   for (size_t n = firstPrimaryField; n < numFieldTuples; n++)
   {
-    xn = m_Centroids[3*n];
-    yn = m_Centroids[3*n+1];
-    zn = m_Centroids[3*n+2];
+    xn = m_Centroids[3 * n];
+    yn = m_Centroids[3 * n + 1];
+    zn = m_Centroids[3 * n + 2];
     dia2 = m_EquivalentDiameters[n];
     dx = fabs(x - xn);
     dy = fabs(y - yn);
@@ -1373,7 +1375,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
     VectOfVectFloat_t& curSimNeighborDist = simneighbordist[iter];
     size_t curSImNeighborDist_Size = curSimNeighborDist.size();
-    float oneOverNeighborDistStep = 1.0f/neighbordiststep[iter];
+    float oneOverNeighborDistStep = 1.0f / neighbordiststep[iter];
 
     count.resize(curSImNeighborDist_Size, 0);
     for (size_t i = 0; i < curSImNeighborDist_Size; i++)
@@ -1395,7 +1397,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 
     float maxGrainDia = pp->getMaxGrainDiameter();
     float minGrainDia = pp->getMinGrainDiameter();
-    float oneOverBinStepSize = 1.0f/pp->getBinStepSize();
+    float oneOverBinStepSize = 1.0f / pp->getBinStepSize();
 
 
     for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
@@ -1477,19 +1479,19 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float &bhattdist)
+void PackPrimaryPhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float& bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
   {
-    bhattdist = bhattdist + sqrt((array1[i]*array2[i]));
+    bhattdist = bhattdist + sqrt((array1[i] * array2[i]));
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2, float &bhattdist)
+void PackPrimaryPhases::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2, float& bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
@@ -1504,7 +1506,7 @@ void PackPrimaryPhases::compare_2Ddistributions(std::vector<std::vector<float> >
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2, float &bhattdist)
+void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2, float& bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
@@ -1513,7 +1515,7 @@ void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vec
     {
       for (size_t k = 0; k < array1[i][j].size(); k++)
       {
-        bhattdist = bhattdist + sqrt((array1[i][j][k]*array2[i][j][k]));
+        bhattdist = bhattdist + sqrt((array1[i][j][k] * array2[i][j][k]));
       }
     }
   }
@@ -1550,7 +1552,7 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
     }
 
     size_t nFieldTuples = m->getNumFieldTuples();
-    float oneOverCurGrainSizeDistStep = 1.0f/grainsizediststep[iter];
+    float oneOverCurGrainSizeDistStep = 1.0f / grainsizediststep[iter];
     float halfMinGrainDiameter = pp->getMinGrainDiameter() * 0.5f;
     for (size_t b = firstPrimaryField; b < nFieldTuples; b++)
     {
@@ -1571,11 +1573,11 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
       dia = field->m_EquivalentDiameters;
       dia = (dia - halfMinGrainDiameter) * oneOverCurGrainSizeDistStep;
       if(dia < 0) { dia = 0; }
-      if(dia > curGrainSizeDistSize - 1.0f) dia = curGrainSizeDistSize - 1.0f;
+      if(dia > curGrainSizeDistSize - 1.0f) { dia = curGrainSizeDistSize - 1.0f; }
       curSimGrainSizeDist[int(dia)]++;
       count++;
     }
-    float oneOverCount = 1.0f/count;
+    float oneOverCount = 1.0f / count;
 
     if (count == 0)
     {
@@ -1624,28 +1626,28 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
       plane = pl[i];
       if(m_PeriodicBoundaries == true)
       {
-        if(col < 0) col = col + m_PackingPoints[0];
-        if(col > m_PackingPoints[0] - 1) col = col - m_PackingPoints[0];
-        if(row < 0) row = row + m_PackingPoints[1];
-        if(row > m_PackingPoints[1] - 1) row = row - m_PackingPoints[1];
-        if(plane < 0) plane = plane + m_PackingPoints[2];
-        if(plane > m_PackingPoints[2] - 1) plane = plane - m_PackingPoints[2];
-        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
+        if(col < 0) { col = col + m_PackingPoints[0]; }
+        if(col > m_PackingPoints[0] - 1) { col = col - m_PackingPoints[0]; }
+        if(row < 0) { row = row + m_PackingPoints[1]; }
+        if(row > m_PackingPoints[1] - 1) { row = row - m_PackingPoints[1]; }
+        if(plane < 0) { plane = plane + m_PackingPoints[2]; }
+        if(plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
+        grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
         int currentGrainOwner = grainOwners[grainOwnersIdx];
         fillingerror = fillingerror + (k1 * currentGrainOwner  + k2);
         grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-        if(efl[i] > 0.25) exclusionZones[grainOwnersIdx] = true;
+        if(efl[i] > 0.25) { exclusionZones[grainOwnersIdx] = true; }
         packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
       }
       else
       {
         if(col >= 0 && col < m_PackingPoints[0] && row >= 0 && row < m_PackingPoints[1] && plane >= 0 && plane < m_PackingPoints[2])
         {
-          grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
+          grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
           int currentGrainOwner = grainOwners[grainOwnersIdx];
           fillingerror = fillingerror + (k1 * currentGrainOwner + k2);
           grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-          if(efl[i] > 0.25) exclusionZones[grainOwnersIdx] = true;
+          if(efl[i] > 0.25) { exclusionZones[grainOwnersIdx] = true; }
           packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
         }
       }
@@ -1669,27 +1671,27 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
       plane = pl[i];
       if(m_PeriodicBoundaries == true)
       {
-        if(col < 0) col = col + m_PackingPoints[0];
-        if(col > m_PackingPoints[0] - 1) col = col - m_PackingPoints[0];
-        if(row < 0) row = row + m_PackingPoints[1];
-        if(row > m_PackingPoints[1] - 1) row = row - m_PackingPoints[1];
-        if(plane < 0) plane = plane + m_PackingPoints[2];
-        if(plane > m_PackingPoints[2] - 1) plane = plane - m_PackingPoints[2];
-        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
+        if(col < 0) { col = col + m_PackingPoints[0]; }
+        if(col > m_PackingPoints[0] - 1) { col = col - m_PackingPoints[0]; }
+        if(row < 0) { row = row + m_PackingPoints[1]; }
+        if(row > m_PackingPoints[1] - 1) { row = row - m_PackingPoints[1]; }
+        if(plane < 0) { plane = plane + m_PackingPoints[2]; }
+        if(plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
+        grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
         int currentGrainOwner = grainOwners[grainOwnersIdx];
         fillingerror = fillingerror + ( k1 * currentGrainOwner + k2);
         grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-        if(efl[i] > 0.25 && grainOwners[grainOwnersIdx] == 0) exclusionZones[grainOwnersIdx] = false;
+        if(efl[i] > 0.25 && grainOwners[grainOwnersIdx] == 0) { exclusionZones[grainOwnersIdx] = false; }
       }
       else
       {
         if(col >= 0 && col < m_PackingPoints[0] && row >= 0 && row < m_PackingPoints[1] && plane >= 0 && plane < m_PackingPoints[2])
         {
-          grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
+          grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
           int currentGrainOwner = grainOwners[grainOwnersIdx];
           fillingerror = fillingerror + (k1 * currentGrainOwner + k2);
           grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-          if(efl[i] > 0.25 && grainOwners[grainOwnersIdx] == 0) exclusionZones[grainOwnersIdx] = false;
+          if(efl[i] > 0.25 && grainOwners[grainOwnersIdx] == 0) { exclusionZones[grainOwnersIdx] = false; }
         }
       }
     }
@@ -1713,8 +1715,8 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
   float coordsRotated[3];
   float coords[3];
   float volcur = m_Volumes[gnum];
-  float bovera = m_AxisLengths[3*gnum+1];
-  float covera = m_AxisLengths[3*gnum+2];
+  float bovera = m_AxisLengths[3 * gnum + 1];
+  float covera = m_AxisLengths[3 * gnum + 2];
   float omega3 = m_Omega3s[gnum];
   float radcur1 = 1;
   unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[gnum]];
@@ -1735,14 +1737,14 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
 
   float radcur2 = (radcur1 * bovera);
   float radcur3 = (radcur1 * covera);
-  float phi1 = m_AxisEulerAngles[3*gnum];
-  float PHI = m_AxisEulerAngles[3*gnum+1];
-  float phi2 = m_AxisEulerAngles[3*gnum+2];
+  float phi1 = m_AxisEulerAngles[3 * gnum];
+  float PHI = m_AxisEulerAngles[3 * gnum + 1];
+  float phi2 = m_AxisEulerAngles[3 * gnum + 2];
   float ga[3][3];
   OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
-  xc = m_Centroids[3*gnum];
-  yc = m_Centroids[3*gnum+1];
-  zc = m_Centroids[3*gnum+2];
+  xc = m_Centroids[3 * gnum];
+  yc = m_Centroids[3 * gnum + 1];
+  zc = m_Centroids[3 * gnum + 2];
   centercolumn = static_cast<int>( (xc - (m_PackingRes[0] * 0.5)) * m_OneOverPackingRes[0] );
   centerrow = static_cast<int>( (yc - (m_PackingRes[1] * 0.5)) * m_OneOverPackingRes[1] );
   centerplane = static_cast<int>( (zc - (m_PackingRes[2] * 0.5)) * m_OneOverPackingRes[2] );
@@ -1752,16 +1754,16 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
   ymax = int(centerrow + ((radcur1 * m_OneOverPackingRes[1]) + 1));
   zmin = int(centerplane - ((radcur1 * m_OneOverPackingRes[2]) + 1));
   zmax = int(centerplane + ((radcur1 * m_OneOverPackingRes[2]) + 1));
-  if(xmin < -m_PackingPoints[0]) xmin = -m_PackingPoints[0];
-  if(xmax > 2 * m_PackingPoints[0] - 1) xmax = (2 * m_PackingPoints[0] - 1);
-  if(ymin < -m_PackingPoints[1]) ymin = -m_PackingPoints[1];
-  if(ymax > 2 * m_PackingPoints[1] - 1) ymax = (2 * m_PackingPoints[1] - 1);
-  if(zmin < -m_PackingPoints[2]) zmin = -m_PackingPoints[2];
-  if(zmax > 2 * m_PackingPoints[2] - 1) zmax = (2 * m_PackingPoints[2] - 1);
+  if(xmin < -m_PackingPoints[0]) { xmin = -m_PackingPoints[0]; }
+  if(xmax > 2 * m_PackingPoints[0] - 1) { xmax = (2 * m_PackingPoints[0] - 1); }
+  if(ymin < -m_PackingPoints[1]) { ymin = -m_PackingPoints[1]; }
+  if(ymax > 2 * m_PackingPoints[1] - 1) { ymax = (2 * m_PackingPoints[1] - 1); }
+  if(zmin < -m_PackingPoints[2]) { zmin = -m_PackingPoints[2]; }
+  if(zmax > 2 * m_PackingPoints[2] - 1) { zmax = (2 * m_PackingPoints[2] - 1); }
 
-  float OneOverRadcur1 = 1.0/radcur1;
-  float OneOverRadcur2 = 1.0/radcur2;
-  float OneOverRadcur3 = 1.0/radcur3;
+  float OneOverRadcur1 = 1.0 / radcur1;
+  float OneOverRadcur2 = 1.0 / radcur2;
+  float OneOverRadcur3 = 1.0 / radcur3;
   for (int iter1 = xmin; iter1 < xmax + 1; iter1++)
   {
     for (int iter2 = ymin; iter2 < ymax + 1; iter2++)
@@ -1807,10 +1809,11 @@ void PackPrimaryPhases::assign_voxels()
 
   std::stringstream ss;
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -1851,7 +1854,7 @@ void PackPrimaryPhases::assign_voxels()
     currentMillis = MXA::getMilliSeconds();
     if (currentMillis - millis > 1000)
     {
-      float rate = grainsPerTime / ( (float)(currentMillis-millis) ) * 1000.0f;
+      float rate = grainsPerTime / ( (float)(currentMillis - millis) ) * 1000.0f;
       ss.str("");
       ss << "Assign Voxels & Gaps|| Grains Checked: " << i << " || Grains/Second: " << (int)rate;
       notifyStatusMessage(ss.str());
@@ -1859,12 +1862,12 @@ void PackPrimaryPhases::assign_voxels()
       millis = MXA::getMilliSeconds();
     }
     float volcur = m_Volumes[i];
-    float bovera = m_AxisLengths[3*i+1];
-    float covera = m_AxisLengths[3*i+2];
+    float bovera = m_AxisLengths[3 * i + 1];
+    float covera = m_AxisLengths[3 * i + 2];
     float omega3 = m_Omega3s[i];
-    xc = m_Centroids[3*i];
-    yc = m_Centroids[3*i+1];
-    zc = m_Centroids[3*i+2];
+    xc = m_Centroids[3 * i];
+    yc = m_Centroids[3 * i + 1];
+    zc = m_Centroids[3 * i + 2];
     float radcur1 = 0.0f;
     //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
     unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
@@ -1885,9 +1888,9 @@ void PackPrimaryPhases::assign_voxels()
 
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
-    float phi1 = m_AxisEulerAngles[3*i];
-    float PHI = m_AxisEulerAngles[3*i+1];
-    float phi2 = m_AxisEulerAngles[3*i+2];
+    float phi1 = m_AxisEulerAngles[3 * i];
+    float PHI = m_AxisEulerAngles[3 * i + 1];
+    float phi2 = m_AxisEulerAngles[3 * i + 2];
     float ga[3][3];
     OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
     column = static_cast<DimType>( (xc - (xRes * 0.5)) / xRes );
@@ -1902,21 +1905,21 @@ void PackPrimaryPhases::assign_voxels()
 
     if (m_PeriodicBoundaries == true)
     {
-      if (xmin < -dims[0]) xmin = -dims[0];
-      if (xmax > 2 * dims[0] - 1) xmax = (2 *dims[0] - 1);
-      if (ymin < -dims[1]) ymin = -dims[1];
-      if (ymax > 2 * dims[1] - 1) ymax = (2 * dims[1] - 1);
-      if (zmin < -dims[2]) zmin = -dims[2];
-      if (zmax > 2 * dims[2] - 1) zmax = (2 * dims[2] - 1);
+      if (xmin < -dims[0]) { xmin = -dims[0]; }
+      if (xmax > 2 * dims[0] - 1) { xmax = (2 * dims[0] - 1); }
+      if (ymin < -dims[1]) { ymin = -dims[1]; }
+      if (ymax > 2 * dims[1] - 1) { ymax = (2 * dims[1] - 1); }
+      if (zmin < -dims[2]) { zmin = -dims[2]; }
+      if (zmax > 2 * dims[2] - 1) { zmax = (2 * dims[2] - 1); }
     }
     else
     {
-      if (xmin < 0) xmin = 0;
-      if (xmax > dims[0] - 1) xmax = dims[0] - 1;
-      if (ymin < 0) ymin = 0;
-      if (ymax > dims[1] - 1) ymax = dims[1] - 1;
-      if (zmin < 0) zmin = 0;
-      if (zmax > dims[2] - 1) zmax = dims[2] - 1;
+      if (xmin < 0) { xmin = 0; }
+      if (xmax > dims[0] - 1) { xmax = dims[0] - 1; }
+      if (ymin < 0) { ymin = 0; }
+      if (ymax > dims[1] - 1) { ymax = dims[1] - 1; }
+      if (zmin < 0) { zmin = 0; }
+      if (zmax > dims[2] - 1) { zmax = dims[2] - 1; }
     }
 
     float radCur[3] = { radcur1, radcur2, radcur3 };
@@ -1926,7 +1929,7 @@ void PackPrimaryPhases::assign_voxels()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range3d<int, int, int>(zmin, zmax+1, ymin, ymax+1, xmin, xmax+1),
+      tbb::parallel_for(tbb::blocked_range3d<int, int, int>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
                         AssignVoxelsGapsImpl(dims, res, m_GrainIds, radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
 
     }
@@ -1934,7 +1937,7 @@ void PackPrimaryPhases::assign_voxels()
 #endif
     {
       AssignVoxelsGapsImpl serial(dims, res, m_GrainIds, radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr);
-      serial.convert(zmin, zmax+1, ymin, ymax+1, xmin, xmax+1);
+      serial.convert(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1);
     }
 
 
@@ -1947,9 +1950,9 @@ void PackPrimaryPhases::assign_voxels()
   }
   for (size_t i = 0; i < static_cast<size_t>(totpoints); i++)
   {
-    if(ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
+    if(ellipfuncs[i] >= 0) { m_GrainIds[i] = newowners[i]; }
     gnum = m_GrainIds[i];
-    if(gnum >= 0) m_Active[gnum] = true;
+    if(gnum >= 0) { m_Active[gnum] = true; }
     newowners[i] = -1;
     ellipfuncs[i] = -1.0;
   }
@@ -1980,7 +1983,7 @@ void PackPrimaryPhases::assign_voxels()
   {
     m_Active[i] = false;
   }
-  for(int64_t i=0;i<totpoints;i++)
+  for(int64_t i = 0; i < totpoints; i++)
   {
     gnum = m_GrainIds[i];
     if(gnum >= 0)
@@ -2012,21 +2015,21 @@ void PackPrimaryPhases::assign_gaps_only()
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());
   int zPoints = static_cast<int>(m->getZPoints());
-  int totalPoints = xPoints*yPoints*zPoints;
+  int totalPoints = xPoints * yPoints * zPoints;
 
   int neighpoints[6];
-  neighpoints[0] = -xPoints*yPoints;
+  neighpoints[0] = -xPoints * yPoints;
   neighpoints[1] = -xPoints;
   neighpoints[2] = -1;
   neighpoints[3] = 1;
   neighpoints[4] = xPoints;
-  neighpoints[5] = xPoints*yPoints;
+  neighpoints[5] = xPoints * yPoints;
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getTotalPoints(), "Neighbors");
   m_Neighbors = neighborsPtr->GetPointer(0);
   neighborsPtr->initializeWithValues(-1);
 
-  std::vector<int > n(m->getNumFieldTuples() + 1,0);
+  std::vector<int > n(m->getNumFieldTuples() + 1, 0);
   uint64_t millis = MXA::getMilliSeconds();
   uint64_t currentMillis = millis;
 
@@ -2035,15 +2038,15 @@ void PackPrimaryPhases::assign_gaps_only()
     counter++;
     count = 0;
     int zStride, yStride;
-    for(int i=0;i<zPoints;i++)
+    for(int i = 0; i < zPoints; i++)
     {
-      zStride = i*xPoints*yPoints;
-      for (int j=0;j<yPoints;j++)
+      zStride = i * xPoints * yPoints;
+      for (int j = 0; j < yPoints; j++)
       {
-        yStride = j*xPoints;
-        for(int k=0;k<xPoints;k++)
+        yStride = j * xPoints;
+        for(int k = 0; k < xPoints; k++)
         {
-          grainname = m_GrainIds[zStride+yStride+k];
+          grainname = m_GrainIds[zStride + yStride + k];
           if (grainname < 0)
           {
             count++;
@@ -2060,13 +2063,13 @@ void PackPrimaryPhases::assign_gaps_only()
             for (int l = 0; l < 6; l++)
             {
               good = 1;
-              neighpoint = zStride+yStride+k + neighpoints[l];
-              if (l == 0 && i == 0) good = 0;
-              if (l == 5 && i == (zPoints - 1)) good = 0;
-              if (l == 1 && j == 0) good = 0;
-              if (l == 4 && j == (yPoints - 1)) good = 0;
-              if (l == 2 && k == 0) good = 0;
-              if (l == 3 && k == (xPoints - 1)) good = 0;
+              neighpoint = zStride + yStride + k + neighpoints[l];
+              if (l == 0 && i == 0) { good = 0; }
+              if (l == 5 && i == (zPoints - 1)) { good = 0; }
+              if (l == 1 && j == 0) { good = 0; }
+              if (l == 4 && j == (yPoints - 1)) { good = 0; }
+              if (l == 2 && k == 0) { good = 0; }
+              if (l == 3 && k == (xPoints - 1)) { good = 0; }
               if (good == 1)
               {
                 grain = m_GrainIds[neighpoint];
@@ -2077,7 +2080,7 @@ void PackPrimaryPhases::assign_gaps_only()
                   if (current > most)
                   {
                     most = current;
-                    m_Neighbors[zStride+yStride+k] = neighpoint;
+                    m_Neighbors[zStride + yStride + k] = neighpoint;
                   }
                 }
               }
@@ -2085,17 +2088,17 @@ void PackPrimaryPhases::assign_gaps_only()
             for (int l = 0; l < 6; l++)
             {
               good = 1;
-              neighpoint = zStride+yStride+k + neighpoints[l];
-              if (l == 0 && i == 0) good = 0;
-              if (l == 5 && i == (zPoints - 1)) good = 0;
-              if (l == 1 && j == 0) good = 0;
-              if (l == 4 && j == (yPoints - 1)) good = 0;
-              if (l == 2 && k == 0) good = 0;
-              if (l == 3 && k == (xPoints - 1)) good = 0;
+              neighpoint = zStride + yStride + k + neighpoints[l];
+              if (l == 0 && i == 0) { good = 0; }
+              if (l == 5 && i == (zPoints - 1)) { good = 0; }
+              if (l == 1 && j == 0) { good = 0; }
+              if (l == 4 && j == (yPoints - 1)) { good = 0; }
+              if (l == 2 && k == 0) { good = 0; }
+              if (l == 3 && k == (xPoints - 1)) { good = 0; }
               if (good == 1)
               {
                 grain = m_GrainIds[neighpoint];
-                if(grain > 0) n[grain] = 0;
+                if(grain > 0) { n[grain] = 0; }
               }
             }
           }
@@ -2134,14 +2137,15 @@ void PackPrimaryPhases::cleanup_grains()
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   int64_t totpoints = m->getTotalPoints();
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -2162,7 +2166,7 @@ void PackPrimaryPhases::cleanup_grains()
   vlists.resize(m->getNumFieldTuples());
   std::vector<int> currentvlist;
   std::vector<bool> checked;
-  checked.resize(totpoints,false);
+  checked.resize(totpoints, false);
   size_t count;
   int touchessurface = 0;
   int good;
@@ -2194,19 +2198,19 @@ void PackPrimaryPhases::cleanup_grains()
         column = index % xp;
         row = (index / xp) % yp;
         plane = index / (xp * yp);
-        if(column == 0 || column == xp || row == 0 || row == yp || plane == 0 || plane == zp) touchessurface = 1;
+        if(column == 0 || column == xp || row == 0 || row == yp || plane == 0 || plane == zp) { touchessurface = 1; }
         for (int j = 0; j < 6; j++)
         {
           good = 1;
           neighbor = static_cast<int>( index + neighpoints[j] );
           if(m_PeriodicBoundaries == false)
           {
-            if(j == 0 && plane == 0) good = 0;
-            if(j == 5 && plane == (zp - 1)) good = 0;
-            if(j == 1 && row == 0) good = 0;
-            if(j == 4 && row == (yp - 1)) good = 0;
-            if(j == 2 && column == 0) good = 0;
-            if(j == 3 && column == (xp - 1)) good = 0;
+            if(j == 0 && plane == 0) { good = 0; }
+            if(j == 5 && plane == (zp - 1)) { good = 0; }
+            if(j == 1 && row == 0) { good = 0; }
+            if(j == 4 && row == (yp - 1)) { good = 0; }
+            if(j == 2 && column == 0) { good = 0; }
+            if(j == 3 && column == (xp - 1)) { good = 0; }
             if(good == 1 && m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
             {
               currentvlist.push_back(neighbor);
@@ -2215,12 +2219,12 @@ void PackPrimaryPhases::cleanup_grains()
           }
           else if(m_PeriodicBoundaries == true)
           {
-            if(j == 0 && plane == 0) neighbor = static_cast<int>( neighbor + (xp * yp * zp) );
-            if(j == 5 && plane == (zp - 1)) neighbor = static_cast<int>( neighbor - (xp * yp * zp) );
-            if(j == 1 && row == 0) neighbor = static_cast<int>( neighbor + (xp * yp) );
-            if(j == 4 && row == (yp - 1)) neighbor = static_cast<int>( neighbor - (xp * yp) );
-            if(j == 2 && column == 0) neighbor = static_cast<int>( neighbor + (xp) );
-            if(j == 3 && column == (xp - 1)) neighbor = static_cast<int>( neighbor - (xp) );
+            if(j == 0 && plane == 0) { neighbor = static_cast<int>( neighbor + (xp * yp * zp) ); }
+            if(j == 5 && plane == (zp - 1)) { neighbor = static_cast<int>( neighbor - (xp * yp * zp) ); }
+            if(j == 1 && row == 0) { neighbor = static_cast<int>( neighbor + (xp * yp) ); }
+            if(j == 4 && row == (yp - 1)) { neighbor = static_cast<int>( neighbor - (xp * yp) ); }
+            if(j == 2 && column == 0) { neighbor = static_cast<int>( neighbor + (xp) ); }
+            if(j == 3 && column == (xp - 1)) { neighbor = static_cast<int>( neighbor - (xp) ); }
             if(m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
             {
               currentvlist.push_back(neighbor);
@@ -2271,11 +2275,11 @@ void PackPrimaryPhases::cleanup_grains()
   assign_gaps_only();
   for (int i = 0; i < totpoints; i++)
   {
-    if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
+    if(m_GrainIds[i] > 0) { gsizes[m_GrainIds[i]]++; }
   }
   for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
-    if(gsizes[i] == 0) m_Active[i] = false;
+    if(gsizes[i] == 0) { m_Active[i] = false; }
   }
   for (int i = 0; i < totpoints; i++)
   {
@@ -2316,7 +2320,7 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
 
   DREAM3D_RANDOMNG_NEW()
 
-      std::vector<int> primaryphases;
+  std::vector<int> primaryphases;
   std::vector<double> primaryphasefractions;
   double totalprimaryfractions = 0.0;
   StatsData::Pointer statsData = StatsData::NullPointer();
@@ -2361,8 +2365,8 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
           float sddiam = pp->getGrainSizeDistribution().at(1)->GetValue(0);
           diam = rg.genrand_norm(avgdiam, sddiam);
           diam = exp(diam);
-          if(diam >= pp->getMaxGrainDiameter()) volgood = 0;
-          if(diam < pp->getMinGrainDiameter()) volgood = 0;
+          if(diam >= pp->getMaxGrainDiameter()) { volgood = 0; }
+          if(diam < pp->getMinGrainDiameter()) { volgood = 0; }
           vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
         }
       }
@@ -2403,7 +2407,7 @@ void PackPrimaryPhases::write_goal_attributes()
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumFieldTuples()-firstPrimaryField << std::endl;
+  outFile << m->getNumFieldTuples() - firstPrimaryField << std::endl;
   // Get all the names of the arrays from the Data Container
   std::list<std::string> headers = m->getFieldArrayNameList();
 
@@ -2421,7 +2425,8 @@ void PackPrimaryPhases::write_goal_attributes()
     IDataArray::Pointer p = m->getFieldData(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
-      if (p->GetNumberOfComponents() == 1) {
+      if (p->GetNumberOfComponents() == 1)
+      {
         outFile << space << (*iter);
       }
       else // There are more than a single component so we need to add multiple header values
@@ -2445,12 +2450,14 @@ void PackPrimaryPhases::write_goal_attributes()
   // Skip the first grain
   for(size_t i = firstPrimaryField; i < numTuples; ++i)
   {
-    if (((float)i / numTuples) * 100.0f > threshold) {
+    if (((float)i / numTuples) * 100.0f > threshold)
+    {
       ss.str("");
       ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
       notifyStatusMessage(ss.str());
       threshold = threshold + 5.0f;
-      if (threshold < ((float)i / numTuples) * 100.0f) {
+      if (threshold < ((float)i / numTuples) * 100.0f)
+      {
         threshold = ((float)i / numTuples) * 100.0f;
       }
     }

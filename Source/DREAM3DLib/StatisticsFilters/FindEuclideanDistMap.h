@@ -63,16 +63,16 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
 
     virtual ~FindEuclideanDistMap();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const std::string getHumanLabel() { return "Find Euclidean Distance Map"; }
 
     virtual void setupFilterParameters();
@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -109,7 +109,7 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
     float* m_TJEuclideanDistances;
     float* m_QPEuclideanDistances;
 
-	  void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
     FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented

@@ -48,7 +48,7 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 FindAxisODF::FindAxisODF() :
-    AbstractFilter(), m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles), m_FieldPhasesArrayName(DREAM3D::FieldData::Phases), m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields), m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes), m_SurfaceFields(NULL), m_FieldPhases(NULL), m_AxisEulerAngles(NULL), m_PhaseTypes(NULL)
+  AbstractFilter(), m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles), m_FieldPhasesArrayName(DREAM3D::FieldData::Phases), m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields), m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes), m_SurfaceFields(NULL), m_FieldPhases(NULL), m_AxisEulerAngles(NULL), m_PhaseTypes(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
@@ -104,8 +104,8 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
     find_surfacefields->setObservers(this->getObservers());
     find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_surfacefields->preflight();
-    if(preflight == false) find_surfacefields->execute();
+    if(preflight == true) { find_surfacefields->preflight(); }
+    if(preflight == false) { find_surfacefields->execute(); }
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
 
@@ -117,8 +117,8 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
     find_grainphases->setObservers(this->getObservers());
     find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
+    if(preflight == true) { find_grainphases->preflight(); }
+    if(preflight == false) { find_grainphases->execute(); }
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 

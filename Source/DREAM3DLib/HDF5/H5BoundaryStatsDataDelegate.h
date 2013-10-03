@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT H5BoundaryStatsDataDelegate : public H5StatsDataDelegate
     int writeBoundaryArea(BoundaryStatsData* data, hid_t groupId);
     int readBoundaryArea(BoundaryStatsData* data, hid_t groupId);
 
-	int writePhaseFraction(BoundaryStatsData* data, hid_t groupId);
+    int writePhaseFraction(BoundaryStatsData* data, hid_t groupId);
     int readPhaseFraction(BoundaryStatsData* data, hid_t groupId);
 
     int writeParentPhase(BoundaryStatsData* data, hid_t groupId);

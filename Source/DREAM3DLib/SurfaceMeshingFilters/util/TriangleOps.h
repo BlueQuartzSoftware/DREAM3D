@@ -58,7 +58,7 @@ class TriangleOps
 
     static int getLabelIndex(int32_t* t, int label);
 
-    std::vector<int> getNodeIndices(DREAM3D::Mesh::Face_t &t, int32_t* faceLabel, int label);
+    std::vector<int> getNodeIndices(DREAM3D::Mesh::Face_t& t, int32_t* faceLabel, int label);
 
     static void flipWinding(DREAM3D::Mesh::Face_t& triangle);
 
@@ -67,14 +67,14 @@ class TriangleOps
     static std::set<int32_t> generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr);
 
     static std::vector<int32_t> findAdjacentTriangles(SurfaceDataContainer* sm,
-                                                        int32_t triangleIndex,
-                                                        int32_t label);
+                                                      int32_t triangleIndex,
+                                                      int32_t label);
 
     static bool verifyWinding(DREAM3D::Mesh::Face_t& source, DREAM3D::Mesh::Face_t& tri,
-                                int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label);
+                              int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label);
 
 
-    static void getWindingIndices4(DREAM3D::Mesh::Face_t &triangle, int32_t* faceLabel, int ids[4], int32_t label);
+    static void getWindingIndices4(DREAM3D::Mesh::Face_t& triangle, int32_t* faceLabel, int ids[4], int32_t label);
 
   protected:
     TriangleOps();

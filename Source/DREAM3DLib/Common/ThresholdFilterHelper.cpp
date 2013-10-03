@@ -39,9 +39,9 @@
 //
 // -----------------------------------------------------------------------------
 ThresholdFilterHelper::ThresholdFilterHelper(DREAM3D::Comparison::Enumeration compType, double compValue, BoolArrayType* output) :
-      comparisonOperator(compType),
-      comparisonValue(compValue),
-      m_Output(output)
+  comparisonOperator(compType),
+  comparisonValue(compValue),
+  m_Output(output)
 {
 
 }
@@ -61,17 +61,17 @@ ThresholdFilterHelper::~ThresholdFilterHelper()
 // -----------------------------------------------------------------------------
 #define FILTER_DATA_HELPER(dType, ops, Type) \
   if (dType.compare(#Type) == 0) {\
-  if (ops == DREAM3D::Comparison::Operator_LessThan) filterDataLessThan<Type>(input);\
-  else if (ops == DREAM3D::Comparison::Operator_GreaterThan) filterDataGreaterThan<Type>(input);\
-  else if (ops == DREAM3D::Comparison::Operator_Equal) filterDataEqualTo<Type>(input);\
-  return 1;\
+    if (ops == DREAM3D::Comparison::Operator_LessThan) filterDataLessThan<Type>(input);\
+    else if (ops == DREAM3D::Comparison::Operator_GreaterThan) filterDataGreaterThan<Type>(input);\
+    else if (ops == DREAM3D::Comparison::Operator_Equal) filterDataEqualTo<Type>(input);\
+    return 1;\
   }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ThresholdFilterHelper::execute(IDataArray *input, IDataArray *output)
+int ThresholdFilterHelper::execute(IDataArray* input, IDataArray* output)
 {
   if (NULL == input) { return -1; }
   m_Output->initializeWithZeros();

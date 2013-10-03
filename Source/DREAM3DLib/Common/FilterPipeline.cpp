@@ -39,9 +39,9 @@
 //
 // -----------------------------------------------------------------------------
 FilterPipeline::FilterPipeline() :
-    Observer(),
-    m_ErrorCondition(0),
-    m_Cancel(false)
+  Observer(),
+  m_ErrorCondition(0),
+  m_Cancel(false)
 {
 
 }
@@ -179,7 +179,7 @@ bool FilterPipeline::empty()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FilterPipeline::removeFirstFilterByName(const std::string &name)
+AbstractFilter::Pointer FilterPipeline::removeFirstFilterByName(const std::string& name)
 {
   AbstractFilter::Pointer f = AbstractFilter::NullPointer();
   for(FilterContainerType::iterator it = m_Pipeline.begin(); it != m_Pipeline.end(); ++it)
@@ -272,14 +272,14 @@ int FilterPipeline::preflightPipeline()
     // a nice message to the user.
     for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
     {
-       if ( (*iter).getMessageType() == PipelineMessage::Error)
-        {
-          err |= (*filter)->getErrorCondition();
-        }
-        else if ((*iter).getMessageType() == PipelineMessage::Warning)
-        {
-          err |= 0;
-        }
+      if ( (*iter).getMessageType() == PipelineMessage::Error)
+      {
+        err |= (*filter)->getErrorCondition();
+      }
+      else if ((*iter).getMessageType() == PipelineMessage::Warning)
+      {
+        err |= 0;
+      }
     }
     if(err < 0)
     {
@@ -349,7 +349,7 @@ void FilterPipeline::execute()
 
     ss.str("");
     ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
-  //  std::cout << ss.str() << std::endl;
+    //  std::cout << ss.str() << std::endl;
     progValue.setMessageType(PipelineMessage::StatusMessage);
     progValue.setMessageText(ss.str());
     sendPipelineMessage(progValue);
@@ -380,7 +380,7 @@ void FilterPipeline::execute()
       break;
     }
     ss.str("");
-     ss << (*iter)->getNameOfClass() << " Filter Complete";
+    ss << (*iter)->getNameOfClass() << " Filter Complete";
     END_CLOCK(ss.str());
   }
 
@@ -391,7 +391,7 @@ void FilterPipeline::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterPipeline::printFilterNames(std::ostream &out)
+void FilterPipeline::printFilterNames(std::ostream& out)
 {
   out << "---------------------------------------------------------------------" << std::endl;
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter )

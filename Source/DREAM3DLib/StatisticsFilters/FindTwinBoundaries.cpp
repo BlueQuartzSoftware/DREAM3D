@@ -82,7 +82,7 @@ class CalculateTwinBoundaryImpl
       m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
 
-    virtual ~CalculateTwinBoundaryImpl(){}
+    virtual ~CalculateTwinBoundaryImpl() {}
 
     void generate(size_t start, size_t end) const
     {
@@ -96,7 +96,7 @@ class CalculateTwinBoundaryImpl
       float axisdiff111, angdiff60;
       float n[3];
       float incoherence;
-      float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
+      float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
 
       QuatF misq;
       QuatF sym_q;
@@ -108,11 +108,11 @@ class CalculateTwinBoundaryImpl
 
       for (size_t i = start; i < end; i++)
       {
-        grain1 = m_Labels[2*i];
-        grain2 = m_Labels[2*i+1];
-        normal[0] = m_Normals[3*i];
-        normal[1] = m_Normals[3*i+1];
-        normal[2] = m_Normals[3*i+2];
+        grain1 = m_Labels[2 * i];
+        grain2 = m_Labels[2 * i + 1];
+        normal[0] = m_Normals[3 * i];
+        normal[1] = m_Normals[3 * i + 1];
+        normal[2] = m_Normals[3 * i + 2];
         if(grain1 > 0 && grain2 > 0 && m_Phases[grain1] == m_Phases[grain2])
         {
           w = 10000.0;
@@ -133,31 +133,31 @@ class CalculateTwinBoundaryImpl
             QuaternionMathF::Conjugate(q2);
             QuaternionMathF::Multiply(q2, q1, misq);
             OrientationMath::QuattoMat(q1, g1);
-            MatrixMath::Multiply3x3with3x1(g1,normal,xstl_norm);
-            for (int j = 0; j < nsym;j++)
+            MatrixMath::Multiply3x3with3x1(g1, normal, xstl_norm);
+            for (int j = 0; j < nsym; j++)
             {
               m_OrientationOps[phase1]->getQuatSymOp(j, sym_q);
               //calculate crystal direction parallel to normal
               QuaternionMathF::Multiply(sym_q, misq, s1_misq);
               OrientationMath::MultiplyQuaternionVector(sym_q, xstl_norm, s_xstl_norm);
-              for (int k=0; k< nsym;k++)
+              for (int k = 0; k < nsym; k++)
               {
                 //calculate the symmetric misorienation
                 m_OrientationOps[phase1]->getQuatSymOp(k, sym_q);
                 QuaternionMathF::Conjugate(sym_q);
                 QuaternionMathF::Multiply(s1_misq, sym_q, s2_misq);
                 OrientationMath::QuattoAxisAngle(s2_misq, w, n1, n2, n3);
-                w = w*180.0/DREAM3D::Constants::k_Pi;
-                axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
-                angdiff60 = fabs(w-60.0f);
+                w = w * 180.0 / DREAM3D::Constants::k_Pi;
+                axisdiff111 = acosf(fabs(n1) * 0.57735f + fabs(n2) * 0.57735f + fabs(n3) * 0.57735f);
+                angdiff60 = fabs(w - 60.0f);
                 if (axisdiff111 < m_AxisTol && angdiff60 < m_AngTol)
                 {
                   n[0] = n1;
                   n[1] = n2;
                   n[2] = n3;
                   m_TwinBoundary[i] = true;
-                  incoherence = 180.0*acos(MatrixMath::CosThetaBetweenVectors(n, s_xstl_norm))/DREAM3D::Constants::k_Pi;
-                  if(incoherence < m_TwinBoundaryIncoherence[i]) m_TwinBoundaryIncoherence[i] = incoherence;
+                  incoherence = 180.0 * acos(MatrixMath::CosThetaBetweenVectors(n, s_xstl_norm)) / DREAM3D::Constants::k_Pi;
+                  if(incoherence < m_TwinBoundaryIncoherence[i]) { m_TwinBoundaryIncoherence[i] = incoherence; }
                 }
               }
             }
@@ -167,7 +167,7 @@ class CalculateTwinBoundaryImpl
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -227,7 +227,7 @@ void FindTwinBoundaries::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-  option->setUnits("Degrees");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -237,10 +237,10 @@ void FindTwinBoundaries::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setAxisTolerance( reader->readValue("AxisTolerance", getAxisTolerance() ) );
   setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -332,22 +332,22 @@ void FindTwinBoundaries::execute()
   }
 
   float angtol = m_AngleTolerance;
-  float axistol = static_cast<float>( m_AxisTolerance*M_PI/180.0f );
+  float axistol = static_cast<float>( m_AxisTolerance * M_PI / 180.0f );
 
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
-    {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
-        CalculateTwinBoundaryImpl(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundaryIncoherence), tbb::auto_partitioner());
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
+                      CalculateTwinBoundaryImpl(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundaryIncoherence), tbb::auto_partitioner());
 
-    }
-    else
+  }
+  else
 #endif
-    {
-      CalculateTwinBoundaryImpl serial(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundaryIncoherence);
-      serial.generate(0, numTriangles);
-    }
+  {
+    CalculateTwinBoundaryImpl serial(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundaryIncoherence);
+    serial.generate(0, numTriangles);
+  }
 
   notifyStatusMessage("FindTwinBoundaries Completed");
 }

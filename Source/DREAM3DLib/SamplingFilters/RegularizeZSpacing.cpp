@@ -54,8 +54,8 @@ using namespace std;
 //
 // -----------------------------------------------------------------------------
 RegularizeZSpacing::RegularizeZSpacing() :
-AbstractFilter(),
-m_NewZRes(1.0f)
+  AbstractFilter(),
+  m_NewZRes(1.0f)
 {
   setupFilterParameters();
 }
@@ -102,10 +102,10 @@ void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
   setNewZRes( reader->readValue("NewZRes", getNewZRes()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -138,7 +138,7 @@ void RegularizeZSpacing::preflight()
   }
   size_t zP = static_cast<size_t>(zval / getNewZRes());
 
-  m->setDimensions(m->getXPoints(),m->getYPoints(),zP);
+  m->setDimensions(m->getXPoints(), m->getYPoints(), zP);
 
   inFile.close();
 }
@@ -200,7 +200,7 @@ void RegularizeZSpacing::execute()
     plane = 0;
     for (size_t iter = 1; iter < dims[2]; iter++)
     {
-      if((i * m_NewZRes) > zboundvalues[iter]) plane = iter;
+      if((i * m_NewZRes) > zboundvalues[iter]) { plane = iter; }
     }
     for (size_t j = 0; j < m_YP; j++)
     {

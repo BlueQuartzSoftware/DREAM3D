@@ -44,10 +44,10 @@
 //
 // -----------------------------------------------------------------------------
 DxReader::DxReader() :
-FileReader(),
-m_InputFile(""),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL)
+  FileReader(),
+  m_InputFile(""),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_GrainIds(NULL)
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
@@ -57,7 +57,9 @@ m_GrainIds(NULL)
   m_Resolution.y = 1.0;
   m_Resolution.z = 1.0;
 
-  m_Dims[0] = 0; m_Dims[1] = 0; m_Dims[2] = 0;
+  m_Dims[0] = 0;
+  m_Dims[1] = 0;
+  m_Dims[2] = 0;
   setupFilterParameters();
 }
 
@@ -109,11 +111,11 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
   setOrigin( reader->readValue("Origin", getOrigin() ) );
   setResolution( reader->readValue("Resolution", getResolution() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -166,7 +168,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   {
     ss.clear();
     ss << " Runtime Error. The input file '" << getInputFile() << "' could not be"
-        << " opened for reading. Do you have access to this file?";
+       << " opened for reading. Do you have access to this file?";
     setErrorCondition(-49800);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return;
@@ -205,7 +207,7 @@ void DxReader::execute()
   {
     ss.clear();
     ss << " Runtime Error. The input file '" << getInputFile() << "' could not be"
-        << " opened for reading. Do you have access to this file?";
+       << " opened for reading. Do you have access to this file?";
     setErrorCondition(-49801);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return;
@@ -247,7 +249,8 @@ int DxReader::readHeader()
   // Then read the data size after that
   size_t pos1 = 0;
   while (pos1 == 0)
-  { // continue until we find the keyword
+  {
+    // continue until we find the keyword
     for (size_t i = 0; i < tokens.size(); i++)
     {
       if(tokens[i] == "counts")
@@ -309,7 +312,8 @@ int DxReader::readHeader()
 
   pos1 = 0;
   while (pos1 == 0)
-  { // continue until we find the keyword
+  {
+    // continue until we find the keyword
     for (size_t i = 0; i < tokens.size(); i++)
     {
       if(tokens[i] == "items")
@@ -357,7 +361,7 @@ int DxReader::readFile()
   if (NULL == m)
   {
     ss.clear();
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     addErrorMessage(getHumanLabel(), ss.str(), -5);
     setErrorCondition(-5);
     return -1;

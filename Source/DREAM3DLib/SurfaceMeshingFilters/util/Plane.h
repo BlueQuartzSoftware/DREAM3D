@@ -1,6 +1,6 @@
 /***
- * Name:	Plane.h
- * Purpose:	m3c_basics.math.geom.Plane Interface
+ * Name:  Plane.h
+ * Purpose: m3c_basics.math.geom.Plane Interface
  * Notice:  Copyright Stuart Golodetz, 2008. All rights reserved.
 * This work is licensed under the Creative Commons Attribution-NonCommercial 3.0
 * Unported License. To view a copy of this license, visit
@@ -26,42 +26,42 @@ Datatype invariant: |n| = 1
 */
 class Plane
 {
-  //#################### ENUMERATIONS ####################
-public:
-  enum CP				// classification against a plane
-  {
-    CP_BACK,
-    CP_COPLANAR,
-    CP_FRONT,
-    CP_STRADDLE		// entities with extent (e.g. polygons) only
-  };
+    //#################### ENUMERATIONS ####################
+  public:
+    enum CP       // classification against a plane
+    {
+      CP_BACK,
+      CP_COPLANAR,
+      CP_FRONT,
+      CP_STRADDLE   // entities with extent (e.g. polygons) only
+    };
 
-  //#################### TYPEDEFS ####################
-private:
+    //#################### TYPEDEFS ####################
+  private:
 //  typedef m3c_basics::math_vectors::VectorType VectorType;
 
-  //#################### PRIVATE VARIABLES ####################
-private:
-  VectorType m_normal;
-  VectorType m_center;
-  double m_d;
+    //#################### PRIVATE VARIABLES ####################
+  private:
+    VectorType m_normal;
+    VectorType m_center;
+    double m_d;
 
-  //####################RUCTORS ####################
-public:
-  Plane(VectorType& normal, double d);
-  Plane(VectorType& normal, VectorType& x);
-  Plane(VectorType& normal, DREAM3D::Mesh::Vert_t &x);
+    //####################RUCTORS ####################
+  public:
+    Plane(VectorType& normal, double d);
+    Plane(VectorType& normal, VectorType& x);
+    Plane(VectorType& normal, DREAM3D::Mesh::Vert_t& x);
 
-  //#################### PUBLIC METHODS ####################
-public:
-  CP classify_point(VectorType& p);
-  double distance_to_point(VectorType& p);
-  double distance_value();
-  VectorType& normal();
+    //#################### PUBLIC METHODS ####################
+  public:
+    CP classify_point(VectorType& p);
+    double distance_to_point(VectorType& p);
+    double distance_value();
+    VectorType& normal();
 
-  //#################### PRIVATE METHODS ####################
-private:
-  void ensure_invariant();
+    //#################### PRIVATE METHODS ####################
+  private:
+    void ensure_invariant();
 };
 
 //#################### GLOBAL OPERATORS ####################

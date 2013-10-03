@@ -43,11 +43,11 @@
 //
 // -----------------------------------------------------------------------------
 NodesTrianglesToVtk::NodesTrianglesToVtk() :
-AbstractFilter(),
-m_NodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
-m_WriteBinaryFile(false),
-m_WriteConformalMesh(true),
-m_NodeKind(NULL)
+  AbstractFilter(),
+  m_NodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_WriteBinaryFile(false),
+  m_WriteConformalMesh(true),
+  m_NodeKind(NULL)
 {
   setupFilterParameters();
 }
@@ -66,47 +66,47 @@ void NodesTrianglesToVtk::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Nodes File");
-     option->setPropertyName("NodesFile");
-     option->setWidgetType(FilterParameter::InputFileWidget);
-     option->setValueType("string");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Triangles File");
-     option->setPropertyName("TrianglesFile");
-     option->setWidgetType(FilterParameter::InputFileWidget);
-     option->setValueType("string");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Output Vtk File");
-     option->setPropertyName("OutputVtkFile");
-     option->setWidgetType(FilterParameter::OutputFileWidget);
-     option->setValueType("string");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Write Binary Vtk File");
-     option->setPropertyName("WriteBinaryFile");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Write Conformal Mesh");
-     option->setPropertyName("WriteConformalMesh");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     parameters.push_back(option);
-   }
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Nodes File");
+    option->setPropertyName("NodesFile");
+    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Triangles File");
+    option->setPropertyName("TrianglesFile");
+    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Output Vtk File");
+    option->setPropertyName("OutputVtkFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Binary Vtk File");
+    option->setPropertyName("WriteBinaryFile");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Conformal Mesh");
+    option->setPropertyName("WriteConformalMesh");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
 
-   setFilterParameters(parameters);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -116,13 +116,13 @@ void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setNodesFile( reader->readValue( "NodesFile", getNodesFile() ) );
   setTrianglesFile( reader->readValue( "TrianglesFile", getTrianglesFile() ) );
   setOutputVtkFile( reader->readValue( "OutputVtkFile", getOutputVtkFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
   setWriteConformalMesh( reader->readValue("WriteConformalMesh", getWriteConformalMesh()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -158,10 +158,11 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields
   {
 
     if (preflight == true)
-    addWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
-    else {
-    setErrorCondition(-1001);
-    addErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+    { addWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
+    else
+    {
+      setErrorCondition(-1001);
+      addErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
     }
   }
 
@@ -170,12 +171,13 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-1002);
     addErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
-  else if (MXADir::exists(m_NodesFile)== false)
+  else if (MXADir::exists(m_NodesFile) == false)
   {
 
     if (preflight == true)
-    addWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
-    else {
+    { addWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
+    else
+    {
       setErrorCondition(-1002);
       addErrorMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
     }
@@ -263,10 +265,12 @@ void NodesTrianglesToVtk::execute()
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (m_WriteBinaryFile) {
+  if (m_WriteBinaryFile)
+  {
     fprintf(vtkFile, "BINARY\n");
   }
-  else {
+  else
+  {
     fprintf(vtkFile, "ASCII\n");
   }
   fprintf(vtkFile, "DATASET POLYDATA\n");
@@ -282,12 +286,13 @@ void NodesTrianglesToVtk::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos+1, pos+2); // Read one set of positions from the nodes file
+    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if (nread != 5)
     {
-        break;
+      break;
     }
-    if (m_WriteBinaryFile == true) {
+    if (m_WriteBinaryFile == true)
+    {
       MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
       MXA::Endian::FromSystemToBig::convert<float>(pos[1]);
       MXA::Endian::FromSystemToBig::convert<float>(pos[2]);
@@ -297,7 +302,8 @@ void NodesTrianglesToVtk::execute()
 
       }
     }
-    else {
+    else
+    {
       fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
     }
   }
@@ -319,7 +325,7 @@ void NodesTrianglesToVtk::execute()
   for (int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData+1,tData+2,tData+3,tData+4,tData+5,tData+6,tData+7,tData+8 );
+    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8 );
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
@@ -388,7 +394,7 @@ void NodesTrianglesToVtk::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryPointData(const std::string& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
 {
 //# first line = number of nodes
 //# column 1 = node id, starts from zero.
@@ -415,10 +421,10 @@ int NodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, FILE
   std::vector<int> data (nNodes, 0);
   for (int i = 0; i < nNodes; i++)
   {
-    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos+1, pos+2); // Read one set of positions from the nodes file
+    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if (nread != 5)
     {
-        break;
+      break;
     }
     swapped = nodeKind;
     MXA::Endian::FromSystemToBig::convert<int>( swapped );
@@ -436,7 +442,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, FILE
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIIPointData(const std::string& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
 {
   int err = 0;
   int nodeId = 0;
@@ -453,10 +459,10 @@ int NodesTrianglesToVtk::writeASCIIPointData(const std::string &NodesFile, FILE*
   fscanf(nodesFile, "%d", &nodeId); // Read the number of nodes
   for (int i = 0; i < nNodes; i++)
   {
-    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos+1, pos+2); // Read one set of positions from the nodes file
+    nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if (nread != 5)
     {
-        break;
+      break;
     }
     fprintf(vtkFile, "%d\n", nodeKind); // Write the Node Kind to the output file
   }
@@ -469,7 +475,7 @@ int NodesTrianglesToVtk::writeASCIIPointData(const std::string &NodesFile, FILE*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryCellData(const std::string& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
 //# first line = number of triangles
 //# column 1 = triangle id, starts from zero
@@ -502,19 +508,20 @@ int NodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, F
   std::vector<int> cell_data(triangleCount);
   for (int i = 0; i < nTriangles; i++)
   {
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData+1,tData+2,tData+3,tData+4,tData+5,tData+6,tData+7,tData+8 );
-    if (nread != 9) {
+    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8 );
+    if (nread != 9)
+    {
       return -1;
     }
     MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
-    tri_ids[i*offset] = tData[0];
+    tri_ids[i * offset] = tData[0];
     MXA::Endian::FromSystemToBig::convert<int>(tData[7]);
-    cell_data[i*offset] = tData[7];
+    cell_data[i * offset] = tData[7];
     if (false == conformalMesh)
     {
       MXA::Endian::FromSystemToBig::convert<int>(tData[8]);
-      cell_data[i*offset + 1] = tData[8];
-      tri_ids[i*offset + 1] = tData[0];
+      cell_data[i * offset + 1] = tData[8];
+      tri_ids[i * offset + 1] = tData[0];
     }
   }
 
@@ -543,7 +550,7 @@ int NodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, F
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIICellData(const std::string& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
   int nread = 0;
   // Open the triangles file for reading
@@ -564,8 +571,9 @@ int NodesTrianglesToVtk::writeASCIICellData(const std::string &TrianglesFile, FI
   int tData[9];
   for (int i = 0; i < nTriangles; i++)
   {
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData+1,tData+2,tData+3,tData+4,tData+5,tData+6,tData+7,tData+8 );
-    if (nread != 9) {
+    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8 );
+    if (nread != 9)
+    {
       return -1;
     }
     fprintf(vtkFile, "%d\n", tData[7]);

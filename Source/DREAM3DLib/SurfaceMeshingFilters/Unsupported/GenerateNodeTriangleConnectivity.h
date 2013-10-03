@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConnectivity : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
 
- //   NodeTrianglesMap_t& getNode2TriangleMap();
+//   NodeTrianglesMap_t& getNode2TriangleMap();
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConnectivity : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -129,7 +129,7 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConnectivity : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
- //   int32_t* m_SurfaceMeshUniqueEdges;
+//   int32_t* m_SurfaceMeshUniqueEdges;
     int32_t* m_SurfaceMeshTriangleEdges;
 
 

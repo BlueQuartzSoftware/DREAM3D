@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT GBCDTriangleDumper : public SurfaceMeshFilter
 
     virtual ~GBCDTriangleDumper();
 
-      DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceAreasArrayName)
@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT GBCDTriangleDumper : public SurfaceMeshFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

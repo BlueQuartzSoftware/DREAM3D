@@ -62,9 +62,9 @@ class DREAM3DLib_EXPORT GenerateSurfaceMeshConnectivity : public SurfaceMeshFilt
     virtual ~GenerateSurfaceMeshConnectivity();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-     DREAM3D_INSTANCE_PROPERTY(bool, GenerateVertexTriangleLists)
-     DREAM3D_INSTANCE_PROPERTY(bool, GenerateTriangleNeighbors)
-     DREAM3D_INSTANCE_PROPERTY(bool, GenerateEdgeIdList)
+    DREAM3D_INSTANCE_PROPERTY(bool, GenerateVertexTriangleLists)
+    DREAM3D_INSTANCE_PROPERTY(bool, GenerateTriangleNeighbors)
+    DREAM3D_INSTANCE_PROPERTY(bool, GenerateEdgeIdList)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT GenerateSurfaceMeshConnectivity : public SurfaceMeshFilt
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT GenerateSurfaceMeshConnectivity : public SurfaceMeshFilt
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

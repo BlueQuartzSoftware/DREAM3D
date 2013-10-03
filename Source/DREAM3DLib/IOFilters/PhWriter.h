@@ -70,10 +70,10 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
-     /**
-     * @brief getSubGroupName Returns the Subgroup Name for this filter
-     * @return
-     */
+    /**
+    * @brief getSubGroupName Returns the Subgroup Name for this filter
+    * @return
+    */
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
@@ -82,10 +82,10 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
     */
     virtual const std::string getHumanLabel() { return "Write Ph File (Grain Ids)"; }
 
-   /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
+    /**
+     * @brief This method will instantiate all the end user settable options/parameters
+     * for this filter
+     */
     virtual void setupFilterParameters();
 
     /**
@@ -93,7 +93,7 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

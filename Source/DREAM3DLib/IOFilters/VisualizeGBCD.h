@@ -156,22 +156,22 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     {
       int err = 0;
       fprintf(f, "%s %lld %s\n", axis, npoints, type);
-        float* data = new float[npoints];
-        float d;
-        for (int idx = 0; idx < npoints; ++idx)
-        {
-          d = idx * step + min;
-          MXA::Endian::FromSystemToBig::convert<float>(d);
-          data[idx] = d;
-        }
-        size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
-        delete[] data;
-        if (totalWritten != static_cast<size_t>(npoints) )
-        {
-          std::cout << "Error Writing Binary VTK Data into file " << std::endl;
-          fclose(f);
-          return -1;
-        }
+      float* data = new float[npoints];
+      float d;
+      for (int idx = 0; idx < npoints; ++idx)
+      {
+        d = idx * step + min;
+        MXA::Endian::FromSystemToBig::convert<float>(d);
+        data[idx] = d;
+      }
+      size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
+      delete[] data;
+      if (totalWritten != static_cast<size_t>(npoints) )
+      {
+        std::cout << "Error Writing Binary VTK Data into file " << std::endl;
+        fclose(f);
+        return -1;
+      }
       return err;
     }
 

@@ -51,9 +51,9 @@
 //
 // -----------------------------------------------------------------------------
 SPParksWriter::SPParksWriter() :
-FileWriter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL)
+  FileWriter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -89,9 +89,9 @@ void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -131,11 +131,11 @@ void SPParksWriter::preflight()
 // -----------------------------------------------------------------------------
 int SPParksWriter::writeHeader()
 {
-    VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
     return -1;
@@ -148,14 +148,15 @@ int SPParksWriter::writeHeader()
     return -40;
   }
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -194,7 +195,7 @@ int SPParksWriter::writeFile()
   if (NULL == m)
   {
     std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
     return -1;
@@ -207,14 +208,15 @@ int SPParksWriter::writeFile()
     return -40;
   }
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -252,7 +254,7 @@ int SPParksWriter::writeFile()
       if (currentMillis - millis > 1000)
       {
         ss.str("");
-        ss << static_cast<int>((float)(k)/(float)(totalpoints) * 100)<< " % Completed ";
+        ss << static_cast<int>((float)(k) / (float)(totalpoints) * 100) << " % Completed ";
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
         ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);

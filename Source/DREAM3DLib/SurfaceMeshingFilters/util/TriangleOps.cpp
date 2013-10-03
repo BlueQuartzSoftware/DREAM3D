@@ -92,8 +92,8 @@ std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm
     // Iterate over the indices to find triangles that match the label and are NOT the current triangle index
     for (uint16_t n = 0; n < count; ++n)
     {
-      int32_t fl_0 = faceLabels[nList[n]*2];
-      int32_t fl_1 = faceLabels[nList[n]*2 + 1];
+      int32_t fl_0 = faceLabels[nList[n] * 2];
+      int32_t fl_1 = faceLabels[nList[n] * 2 + 1];
       if ( (fl_0 == label || fl_1 == label)  && (nList[n] != triangleIndex) )
       {
         //  std::cout << "    Found Adjacent Triangle: " << t->tIndex << std::endl;
@@ -109,8 +109,8 @@ std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::getWindingIndices4(DREAM3D::Mesh::Face_t &triangle,
-                                     int32_t *faceLabel,
+void TriangleOps::getWindingIndices4(DREAM3D::Mesh::Face_t& triangle,
+                                     int32_t* faceLabel,
                                      int ids[4], int32_t label)
 {
   int idx = TriangleOps::getLabelIndex(faceLabel, label);
@@ -134,8 +134,8 @@ void TriangleOps::getWindingIndices4(DREAM3D::Mesh::Face_t &triangle,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool TriangleOps::verifyWinding(DREAM3D::Mesh::Face_t &source,
-                                DREAM3D::Mesh::Face_t &tri,
+bool TriangleOps::verifyWinding(DREAM3D::Mesh::Face_t& source,
+                                DREAM3D::Mesh::Face_t& tri,
                                 int32_t* faceLabelSource,
                                 int32_t* faceLabelTri,
                                 int32_t label)
@@ -165,14 +165,14 @@ bool TriangleOps::verifyWinding(DREAM3D::Mesh::Face_t &source,
       }
       else if (i0 == nids[j] && i1 == nids[j + 1])
       {
-     //   std::cout << "!!!!!! Winding Bad " << std::endl;
+        //   std::cout << "!!!!!! Winding Bad " << std::endl;
         done = true;
         TriangleOps::flipWinding(tri);
         flipped = true;
         break;
       }
     }
-    if (done) break;
+    if (done) { break; }
   }
   return flipped;
 }
@@ -181,17 +181,17 @@ bool TriangleOps::verifyWinding(DREAM3D::Mesh::Face_t &source,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TriangleOps::getLabelIndex(int32_t *t, int label)
+int TriangleOps::getLabelIndex(int32_t* t, int label)
 {
-  if (label == t[0]) return 0;
-  if (label == t[1]) return 1;
+  if (label == t[0]) { return 0; }
+  if (label == t[1]) { return 1; }
   return 2; // Error condition. Valid values are 0 or 1 since there are only 2 elements to the array.
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int> TriangleOps::getNodeIndices(DREAM3D::Mesh::Face_t &t, int32_t* faceLabel, int label)
+std::vector<int> TriangleOps::getNodeIndices(DREAM3D::Mesh::Face_t& t, int32_t* faceLabel, int label)
 {
   std::vector<int > tNodes(3);
   int idx = TriangleOps::getLabelIndex(faceLabel, label);
@@ -213,7 +213,7 @@ std::vector<int> TriangleOps::getNodeIndices(DREAM3D::Mesh::Face_t &t, int32_t* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::flipWinding(DREAM3D::Mesh::Face_t &t)
+void TriangleOps::flipWinding(DREAM3D::Mesh::Face_t& t)
 {
   int tmp = t.verts[0];
   t.verts[0] = t.verts[2];
@@ -269,10 +269,10 @@ std::set<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>* faceLabe
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   size_t count = faceLabelsPtr->GetNumberOfTuples();
-  for (size_t i =0; i < count; ++i)
+  for (size_t i = 0; i < count; ++i)
   {
-    uniqueLabels.insert(faceLabels[i*2]);
-    uniqueLabels.insert(faceLabels[i*2+1]);
+    uniqueLabels.insert(faceLabels[i * 2]);
+    uniqueLabels.insert(faceLabels[i * 2 + 1]);
   }
   return uniqueLabels;
 }

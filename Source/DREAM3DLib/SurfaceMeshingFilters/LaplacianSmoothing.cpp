@@ -83,7 +83,7 @@ class LaplacianSmoothingImpl
       m_lambdasPtr(lambdasPtr)
     {}
 
-    virtual ~LaplacianSmoothingImpl(){}
+    virtual ~LaplacianSmoothingImpl() {}
 
     /**
      * @brief generate Generates the Normals for the triangles
@@ -119,7 +119,7 @@ class LaplacianSmoothingImpl
         }
         neighbours.erase(v); // Remove the current vertex id from the list as we don't need it
 
-        DREAM3D::Mesh::Float_t konst1 = lambdas[v]/neighbours.size();
+        DREAM3D::Mesh::Float_t konst1 = lambdas[v] / neighbours.size();
 
         // Now that we have our connectivity iterate over the vertices generating a new position
         for(std::set<int32_t>::iterator iter = neighbours.begin(); iter != neighbours.end(); ++iter)
@@ -138,7 +138,7 @@ class LaplacianSmoothingImpl
      * @brief operator () This is called from the TBB stye of code
      * @param r The range to compute the values
      */
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -261,7 +261,7 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setIterationSteps( reader->readValue("IterationSteps", getIterationSteps()) );
   setLambda( reader->readValue("Lambda", getLambda()) );
   setTripleLineLambda( reader->readValue("TripleLineLambda", getTripleLineLambda()) );
@@ -269,7 +269,7 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
   setSurfacePointLambda( reader->readValue("SurfacePointLambda", getSurfacePointLambda()) );
   setSurfaceTripleLineLambda( reader->readValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda()) );
   setSurfaceQuadPointLambda( reader->readValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -325,7 +325,8 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
     if (sm->getEdgeData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
     {
       m_DoConnectivityFilter = true;
-    } else
+    }
+    else
     {
       m_DoConnectivityFilter = false;
     }
@@ -527,17 +528,17 @@ int LaplacianSmoothing::edgeBasedSmoothing()
     notifyStatusMessage(ss.str());
     for (int i = 0; i < nedges; i++)
     {
-      int in_edge = 2*i;
+      int in_edge = 2 * i;
       int in1 = uedges[in_edge]; // row of the first vertex
-      int in2 = uedges[in_edge+1]; //row the second vertex
+      int in2 = uedges[in_edge + 1]; //row the second vertex
 
       for (int j = 0; j < 3; j++)
       {
-        BOOST_ASSERT( 3*in1+j < nvert*3);
-        BOOST_ASSERT( 3*in2+j < nvert*3);
+        BOOST_ASSERT( 3 * in1 + j < nvert * 3);
+        BOOST_ASSERT( 3 * in2 + j < nvert * 3);
         dlta = vsm[in2].pos[j] - vsm[in1].pos[j];
-        delta[3*in1+j] += dlta;
-        delta[3*in2+j] += -1.0*dlta;
+        delta[3 * in1 + j] += dlta;
+        delta[3 * in2 + j] += -1.0 * dlta;
       }
       ncon[in1] += 1;
       ncon[in2] += 1;
@@ -545,16 +546,16 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 
 
     float ll = 0.0f;
-    for (int i=0; i < nvert; i++)
+    for (int i = 0; i < nvert; i++)
     {
       for (int j = 0; j < 3; j++)
       {
-        int in0 = 3*i+j;
+        int in0 = 3 * i + j;
         dlta = delta[in0] / ncon[i];
 
         ll = lambda[i];
         DREAM3D::Mesh::Vert_t& node = vsm[i];
-        node.pos[j] += ll*dlta;
+        node.pos[j] += ll * dlta;
         delta[in0] = 0.0; //reset for next iteration
       }
       ncon[i] = 0;//reset for next iteration
@@ -647,7 +648,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
 
   std::stringstream ss;
-  for (int q=0; q<m_IterationSteps; q++)
+  for (int q = 0; q < m_IterationSteps; q++)
   {
     if (getCancel() == true) { return -1; }
     ss.str("");
@@ -657,13 +658,13 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, numVerts),
-                        LaplacianSmoothingImpl(vertsPtr, newPositionsPtr,MeshLinks,facesPtr,lambdasPtr), tbb::auto_partitioner());
+                        LaplacianSmoothingImpl(vertsPtr, newPositionsPtr, MeshLinks, facesPtr, lambdasPtr), tbb::auto_partitioner());
 
     }
     else
 #endif
     {
-      LaplacianSmoothingImpl serial(vertsPtr, newPositionsPtr,MeshLinks,facesPtr,lambdasPtr);
+      LaplacianSmoothingImpl serial(vertsPtr, newPositionsPtr, MeshLinks, facesPtr, lambdasPtr);
       serial.generate(0, numVerts);
     }
 
@@ -687,11 +688,12 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
 
 #if OUTPUT_DEBUG_VTK_FILES
-namespace Detail {
+namespace Detail
+{
   /**
- * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
- * when the object goes out of scope.
- */
+  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
+  * when the object goes out of scope.
+  */
   class ScopedFileMonitor
   {
     public:
@@ -710,7 +712,7 @@ namespace Detail {
 // -----------------------------------------------------------------------------
 // This is just here for some debugging issues.
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
+void LaplacianSmoothing::writeVTKFile(const std::string& outputVtkFile)
 {
 
   SurfaceDataContainer* m = getSurfaceDataContainer();
@@ -737,10 +739,12 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (m_WriteBinaryFile) {
+  if (m_WriteBinaryFile)
+  {
     fprintf(vtkFile, "BINARY\n");
   }
-  else {
+  else
+  {
     fprintf(vtkFile, "ASCII\n");
   }
   fprintf(vtkFile, "DATASET POLYDATA\n");
@@ -770,7 +774,8 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
 
         }
       }
-      else {
+      else
+      {
         fprintf(vtkFile, "%4.4f %4.4f %4.4f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
       }
     }
@@ -784,7 +789,7 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   for(int i = 0; i < end; ++i)
   {
     //DREAM3D::Mesh::Face_t* tri = triangles.GetPointer(i);
-    if (faceLabels[i*2] == grainInterest || faceLabels[i*2+1] == grainInterest)
+    if (faceLabels[i * 2] == grainInterest || faceLabels[i * 2 + 1] == grainInterest)
     {
       ++triangleCount;
     }
@@ -802,7 +807,7 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   for (int tid = 0; tid < end; ++tid)
   {
     //DREAM3D::Mesh::Face_t* tri = triangles.GetPointer(tid);
-    if (faceLabels[tid*2] == grainInterest || faceLabels[tid*2+1] == grainInterest)
+    if (faceLabels[tid * 2] == grainInterest || faceLabels[tid * 2 + 1] == grainInterest)
     {
       tData[1] = triangles[tid].verts[0];
       tData[2] = triangles[tid].verts[1];

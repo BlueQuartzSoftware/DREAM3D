@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT RenumberGrains : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
     virtual const std::string getHumanLabel() { return "Renumber Grains"; }
 
     virtual void execute();
@@ -81,17 +81,17 @@ class DREAM3DLib_EXPORT RenumberGrains : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   protected:
-     RenumberGrains();
+  protected:
+    RenumberGrains();
 
-   private:
+  private:
     int32_t* m_GrainIds;
     bool* m_Active;
 

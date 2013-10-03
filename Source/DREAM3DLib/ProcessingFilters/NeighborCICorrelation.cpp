@@ -53,11 +53,11 @@
 //
 // -----------------------------------------------------------------------------
 NeighborCICorrelation::NeighborCICorrelation() :
-AbstractFilter(),
-m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
-m_MinConfidence(0.1),
-m_Loop(false),
-m_ConfidenceIndex(NULL)
+  AbstractFilter(),
+  m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
+  m_MinConfidence(0.1),
+  m_Loop(false),
+  m_ConfidenceIndex(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
@@ -83,7 +83,7 @@ void NeighborCICorrelation::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-  option->setUnits("");
+    option->setUnits("");
     parameters.push_back(option);
   }
   {
@@ -102,10 +102,10 @@ void NeighborCICorrelation::readFilterParameters(AbstractFilterParametersReader*
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMinConfidence( reader->readValue("MinConfidence", getMinConfidence()) );
   setLoop( reader->readValue("Loop", false) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -148,7 +148,7 @@ void NeighborCICorrelation::preflight()
 void NeighborCICorrelation::execute()
 {
   setErrorCondition(0);
- // int err = 0;
+// int err = 0;
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
@@ -166,14 +166,15 @@ void NeighborCICorrelation::execute()
   }
   setErrorCondition(0);
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -183,7 +184,7 @@ void NeighborCICorrelation::execute()
   int neighbor;
   DimType column, row, plane;
   //int neighpoint;
- // size_t numgrains = m->getNumFieldTuples();
+// size_t numgrains = m->getNumFieldTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -193,7 +194,7 @@ void NeighborCICorrelation::execute()
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
 
-  std::vector<int> bestNeighbor(totalPoints,-1);
+  std::vector<int> bestNeighbor(totalPoints, -1);
 
   int count = 0;
   float best;
@@ -216,12 +217,12 @@ void NeighborCICorrelation::execute()
         {
           good = 1;
           neighbor = i + neighpoints[j];
-          if (j == 0 && plane == 0) good = 0;
-          if (j == 5 && plane == (dims[2] - 1)) good = 0;
-          if (j == 1 && row == 0) good = 0;
-          if (j == 4 && row == (dims[1] - 1)) good = 0;
-          if (j == 2 && column == 0) good = 0;
-          if (j == 3 && column == (dims[0] - 1)) good = 0;
+          if (j == 0 && plane == 0) { good = 0; }
+          if (j == 5 && plane == (dims[2] - 1)) { good = 0; }
+          if (j == 1 && row == 0) { good = 0; }
+          if (j == 4 && row == (dims[1] - 1)) { good = 0; }
+          if (j == 2 && column == 0) { good = 0; }
+          if (j == 3 && column == (dims[0] - 1)) { good = 0; }
           if (good == 1)
           {
             if(m_ConfidenceIndex[neighbor] >= m_MinConfidence && m_ConfidenceIndex[neighbor] > best)
@@ -233,23 +234,23 @@ void NeighborCICorrelation::execute()
         }
       }
     }
-      std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-      for (size_t j = 0; j < totalPoints; j++)
+    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+    for (size_t j = 0; j < totalPoints; j++)
+    {
+      neighbor = bestNeighbor[j];
+      if (neighbor != -1)
       {
-        neighbor = bestNeighbor[j];
-        if (neighbor != -1)
+        for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            std::string name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-            p->CopyTuple(neighbor, j);
-          }
+          std::string name = *iter;
+          IDataArray::Pointer p = m->getCellData(*iter);
+          p->CopyTuple(neighbor, j);
         }
       }
-    if(m_Loop == true && count > 0) keepGoing = true;
+    }
+    if(m_Loop == true && count > 0) { keepGoing = true; }
   }
 
 // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Filling Bad Data Complete");
+  notifyStatusMessage("Filling Bad Data Complete");
 }

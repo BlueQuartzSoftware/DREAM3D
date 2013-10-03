@@ -148,14 +148,14 @@ void DataContainerWriter::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setWriteVolumeData( reader->readValue("WriteVolumeData", getWriteVolumeData()) );
   setWriteEdgeData( reader->readValue("WriteEdgeData", getWriteEdgeData() ) );
   setWriteSurfaceData( reader->readValue("WriteSurfaceData", getWriteSurfaceData() ) );
   setWriteVertexData( reader->readValue("WriteVertexData", getWriteVertexData() ) );
   setWriteXdmfFile( reader->readValue("WriteXdmfFile", getWriteXdmfFile()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -249,7 +249,7 @@ void DataContainerWriter::execute()
   if (err < 0)
   {
     ss.str("");
-    ss <<  ": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_OutputFile<< "]";
+    ss <<  ": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_OutputFile << "]";
     setErrorCondition(-59);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
@@ -274,7 +274,8 @@ void DataContainerWriter::execute()
       name = parentPath + MXAFileInfo::Separator + name + ".xdmf";
     }
     xdmf.open(name.c_str(), std::ios_base::binary);
-    if (xdmf.is_open() == true) {
+    if (xdmf.is_open() == true)
+    {
       writeXdmfHeader(xdmf);
     }
   }
@@ -372,7 +373,7 @@ void DataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::writeXdmfHeader(std::ostream &xdmf)
+void DataContainerWriter::writeXdmfHeader(std::ostream& xdmf)
 {
   xdmf << "<?xml version=\"1.0\"?>" << std::endl;
   xdmf << "<!DOCTYPE Xdmf SYSTEM \"Xdmf.dtd\"[]>" << std::endl;
@@ -383,7 +384,7 @@ void DataContainerWriter::writeXdmfHeader(std::ostream &xdmf)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::writeXdmfFooter(std::ostream &xdmf)
+void DataContainerWriter::writeXdmfFooter(std::ostream& xdmf)
 {
   xdmf << " </Domain>" << std::endl;
   xdmf << "</Xdmf>" << std::endl;

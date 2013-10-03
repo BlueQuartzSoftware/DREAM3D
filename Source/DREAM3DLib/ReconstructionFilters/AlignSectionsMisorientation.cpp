@@ -130,11 +130,11 @@ void AlignSectionsMisorientation::readFilterParameters(AbstractFilterParametersR
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
   setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", getWriteAlignmentShifts()) );
   setAlignmentShiftFileName( reader->readValue( "AlignmentShiftFileName", getAlignmentShiftFileName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -212,7 +212,7 @@ void AlignSectionsMisorientation::execute()
   }
 
   //Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance*DREAM3D::Constants::k_Pi/180.0f;
+  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
   AlignSections::execute();
 
@@ -224,24 +224,26 @@ void AlignSectionsMisorientation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsMisorientation::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;
-  if (getWriteAlignmentShifts() == true) {
+  if (getWriteAlignmentShifts() == true)
+  {
     outFile.open(getAlignmentShiftFileName().c_str());
   }
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -276,7 +278,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     std::stringstream ss;
-    progInt = ((float)iter/dims[2])*100.0f;
+    progInt = ((float)iter / dims[2]) * 100.0f;
     ss << "Determining Shifts - " << progInt << "% Complete";
     notifyStatusMessage(ss.str());
     if (getCancel() == true)
@@ -307,7 +309,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
           disorientation = 0;
           count = 0;
           if(misorients[k + oldxshift + size_t(dims[0] / 2)][j + oldyshift + (size_t)(dims[1] / 2)] == 0 && abs(k + oldxshift) < (dims[0] / 2)
-             && (j + oldyshift) < (dims[1] / 2))
+              && (j + oldyshift) < (dims[1] / 2))
           {
             for (DimType l = 0; l < dims[1]; l = l + 4)
             {
@@ -340,10 +342,10 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
                         w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                       }
                     }
-                    if(w > m_MisorientationTolerance) disorientation++;
+                    if(w > m_MisorientationTolerance) { disorientation++; }
                   }
-                  if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false) disorientation++;
-                  if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true) disorientation++;
+                  if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false) { disorientation++; }
+                  if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true) { disorientation++; }
                 }
                 else
                 {
@@ -351,9 +353,9 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
                 }
               }
             }
-            disorientation = disorientation/count;
+            disorientation = disorientation / count;
             misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
-            if(disorientation < mindisorientation || (disorientation == mindisorientation && ((abs(k+oldxshift) < abs(newxshift)) || (abs(j+oldyshift) < abs(newyshift)))))
+            if(disorientation < mindisorientation || (disorientation == mindisorientation && ((abs(k + oldxshift) < abs(newxshift)) || (abs(j + oldyshift) < abs(newyshift)))))
             {
               newxshift = k + oldxshift;
               newyshift = j + oldyshift;
@@ -363,13 +365,15 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
         }
       }
     }
-    xshifts[iter] = xshifts[iter-1] + newxshift;
-    yshifts[iter] = yshifts[iter-1] + newyshift;
-    if (getWriteAlignmentShifts() == true) {
-      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
+    xshifts[iter] = xshifts[iter - 1] + newxshift;
+    yshifts[iter] = yshifts[iter - 1] + newyshift;
+    if (getWriteAlignmentShifts() == true)
+    {
+      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
     }
   }
-  if (getWriteAlignmentShifts() == true) {
+  if (getWriteAlignmentShifts() == true)
+  {
     outFile.close();
   }
 }

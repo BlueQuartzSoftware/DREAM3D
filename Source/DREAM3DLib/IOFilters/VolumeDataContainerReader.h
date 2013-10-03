@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -141,9 +141,9 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
-    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                       std::vector<std::string> &namesRead,
-                       std::set<std::string> &namesToRead);
+    int readGroupsData(hid_t dcGid, const std::string& groupName, bool preflight,
+                       std::vector<std::string>& namesRead,
+                       std::set<std::string>& namesToRead);
     int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:

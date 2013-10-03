@@ -93,10 +93,10 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputStlDirectory( reader->readValue( "OutputStlDirectory", getOutputStlDirectory() ) );
   setOutputStlPrefix( reader->readValue( "OutputStlPrefix", getOutputStlPrefix() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -124,22 +124,23 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, s
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
-    SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if (NULL == sm)
   {
-      addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
-  else {
+  else
+  {
     if (sm->getFaces().get() == NULL)
     {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-        setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
+      setErrorCondition(-384);
     }
     if (sm->getVertices().get() == NULL)
     {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-        setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+      setErrorCondition(-384);
     }
   }
 }
@@ -160,10 +161,10 @@ void SurfaceMeshToStl::preflight()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToStl::execute()
 {
- int err = 0;
+  int err = 0;
   std::stringstream ss;
 
-    SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-999);
@@ -182,11 +183,11 @@ void SurfaceMeshToStl::execute()
   // in a path without actually creating the full path
   if(!MXADir::mkdir(getOutputStlDirectory(), true))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << getOutputStlDirectory() << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    ss << "Error creating parent path '" << getOutputStlDirectory() << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
   }
 
   DREAM3D::Mesh::VertListPointer_t nodesPtr = sm->getVertices();
@@ -204,8 +205,8 @@ void SurfaceMeshToStl::execute()
   std::set<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
-    uniqueSpins.insert(faceLabels[i*2]);
-    uniqueSpins.insert(faceLabels[i*2+1]);
+    uniqueSpins.insert(faceLabels[i * 2]);
+    uniqueSpins.insert(faceLabels[i * 2 + 1]);
   }
 
   unsigned char data[50];
@@ -256,11 +257,11 @@ void SurfaceMeshToStl::execute()
       vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
       vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
 
-      if (faceLabels[t*2] == spin)
+      if (faceLabels[t * 2] == spin)
       {
         winding = 0; // 0 = Write it using forward spin
       }
-      else if (faceLabels[t*2+1] == spin)
+      else if (faceLabels[t * 2 + 1] == spin)
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices
@@ -322,7 +323,7 @@ void SurfaceMeshToStl::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToStl::writeHeader(FILE* f, const std::string &header, int triCount)
+int SurfaceMeshToStl::writeHeader(FILE* f, const std::string& header, int triCount)
 {
   if (NULL == f)
   {
@@ -330,7 +331,7 @@ int SurfaceMeshToStl::writeHeader(FILE* f, const std::string &header, int triCou
   }
   char h[80];
   size_t headlength = 80;
-  if(header.length() < 80) headlength = header.length();
+  if(header.length() < 80) { headlength = header.length(); }
   ::memset(h, 0, 80);
   ::memcpy(h, header.data(), headlength);
   // Return the number of bytes written - which should be 80
@@ -342,10 +343,10 @@ int SurfaceMeshToStl::writeHeader(FILE* f, const std::string &header, int triCou
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToStl::writeNumTrianglesToFile(const std::string &filename, int triCount)
+int SurfaceMeshToStl::writeNumTrianglesToFile(const std::string& filename, int triCount)
 {
   // We need to update the number of triangles in the file
-  int err =0;
+  int err = 0;
 
   FILE* out = fopen(filename.c_str(), "r+b");
   fseek(out, 80L, SEEK_SET);

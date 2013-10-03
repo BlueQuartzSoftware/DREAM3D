@@ -105,14 +105,14 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     void find_neighborhoods();
 
-private:
+  private:
     int32_t* m_FieldPhases;
     float* m_Centroids;
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
     NeighborList<int>* m_NeighborhoodList;
 
-  void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
     void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented

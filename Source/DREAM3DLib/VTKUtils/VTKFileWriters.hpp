@@ -64,10 +64,10 @@
 class VtkScalarWriter : public AbstractFilter
 {
   public:
-    VtkScalarWriter() : AbstractFilter(), m_WriteBinaryFiles(true), m_ErrorCondition(0){}
+    VtkScalarWriter() : AbstractFilter(), m_WriteBinaryFiles(true), m_ErrorCondition(0) {}
     DREAM3D_TYPE_MACRO(VtkScalarWriter)
 
-    virtual ~VtkScalarWriter(){}
+    virtual ~VtkScalarWriter() {}
 
     bool m_WriteBinaryFiles;
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
@@ -92,27 +92,28 @@ template<typename T>
 class VoxelGrainIdScalarWriter : public VtkScalarWriter
 {
   public:
-  VoxelGrainIdScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
-  DREAM3D_TYPE_MACRO_SUPER(VoxelGrainIdScalarWriter<T>, VtkScalarWriter)
-  virtual ~VoxelGrainIdScalarWriter(){}
+    VoxelGrainIdScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
+    DREAM3D_TYPE_MACRO_SUPER(VoxelGrainIdScalarWriter<T>, VtkScalarWriter)
+    virtual ~VoxelGrainIdScalarWriter() {}
 
 
-  int writeScalars(FILE* f)
-  {
-    int err = 0;
-    std::string file;
-    int64_t totalPoints = r->getTotalPoints();
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
-
-    if (m_WriteBinaryFiles == true) {
-      WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::CellData::GrainIds);
-    }
-    else
+    int writeScalars(FILE* f)
     {
-      WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::CellData::GrainIds, grain_indicies)
+      int err = 0;
+      std::string file;
+      int64_t totalPoints = r->getTotalPoints();
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+
+      if (m_WriteBinaryFiles == true)
+      {
+        WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::CellData::GrainIds);
+      }
+      else
+      {
+        WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::CellData::GrainIds, grain_indicies)
+      }
+      return err;
     }
-    return err;
-  }
 
   private:
     T* r;
@@ -126,84 +127,84 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
  * properties to the VTK file
  */
 #define VtkSCALARWRITER_CLASS_DEF(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
-template<typename T>\
-class name : public VtkScalarWriter\
-{\
-  public:\
-    name(T* r) : VtkScalarWriter(), r(r) {}\
-    DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
-    virtual ~name(){}\
-    int writeScalars(FILE* f)  {\
-      int err = 0;\
-      std::string file;\
-      int64_t totalPoints = r->getTotalPoints();\
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
-      if (m_WriteBinaryFiles == true) {\
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, m_msgType, var)\
-      }    else    {\
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
+  template<typename T>\
+  class name : public VtkScalarWriter\
+  {\
+    public:\
+      name(T* r) : VtkScalarWriter(), r(r) {}\
+      DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
+      virtual ~name(){}\
+      int writeScalars(FILE* f)  {\
+        int err = 0;\
+        std::string file;\
+        int64_t totalPoints = r->getTotalPoints();\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
+        if (m_WriteBinaryFiles == true) {\
+          WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, m_msgType, var)\
+        }    else    {\
+          WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
+        }\
+        return err;\
       }\
-      return err;\
-  }\
-  private:\
-    T* r;\
-    name(const name&); \
-    void operator=(const name&);\
-};
+    private:\
+      T* r;\
+      name(const name&); \
+      void operator=(const name&);\
+  };
 
 #define VtkSCALARWRITER_CLASS_DEF_FIELD(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
-template<typename T>\
-class name : public VtkScalarWriter\
-{\
-  public:\
-    name(T* r) : VtkScalarWriter(), r(r) {}\
-    DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
-    virtual ~name(){}\
-    int writeScalars(FILE* f)  {\
-      int err = 0;\
-      std::string file;\
-      int64_t totalFields = r->getNumFieldTuples();\
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalFields, var);\
-      int64_t totalPoints = r->getTotalPoints();\
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);\
-      if (m_WriteBinaryFiles == true) {\
-        WRITE_VTK_SCALARS_FROM_FIELD_BINARY(r, scalarName, m_msgType, var, grain_indicies)\
-      }    else    {\
-        WRITE_VTK_SCALARS_FROM_FIELD_ASCII(r, scalarName, m_msgType, var, grain_indicies, format)\
+  template<typename T>\
+  class name : public VtkScalarWriter\
+  {\
+    public:\
+      name(T* r) : VtkScalarWriter(), r(r) {}\
+      DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
+      virtual ~name(){}\
+      int writeScalars(FILE* f)  {\
+        int err = 0;\
+        std::string file;\
+        int64_t totalFields = r->getNumFieldTuples();\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalFields, var);\
+        int64_t totalPoints = r->getTotalPoints();\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);\
+        if (m_WriteBinaryFiles == true) {\
+          WRITE_VTK_SCALARS_FROM_FIELD_BINARY(r, scalarName, m_msgType, var, grain_indicies)\
+        }    else    {\
+          WRITE_VTK_SCALARS_FROM_FIELD_ASCII(r, scalarName, m_msgType, var, grain_indicies, format)\
+        }\
+        return err;\
       }\
-      return err;\
-  }\
-  private:\
-    T* r;\
-    name(const name&); \
-    void operator=(const name&);\
-};
+    private:\
+      T* r;\
+      name(const name&); \
+      void operator=(const name&);\
+  };
 
 #define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
-template<typename T>\
-class name : public VtkScalarWriter\
-{\
-  public:\
-    name(T* r) : VtkScalarWriter(), r(r) {}\
-    DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
-    virtual ~name(){}\
-    int writeScalars(FILE* f)  {\
-    int err = 0;\
-    std::string file;\
-    int64_t totalPoints = r->getTotalPoints();\
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
-    if (m_WriteBinaryFiles == true) {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, m_msgType, var)\
-    }    else    {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
-    }\
-    return err;\
-  }\
-  private:\
-    T* r;\
-    name(const name&); \
-    void operator=(const name&);\
-};
+  template<typename T>\
+  class name : public VtkScalarWriter\
+  {\
+    public:\
+      name(T* r) : VtkScalarWriter(), r(r) {}\
+      DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
+      virtual ~name(){}\
+      int writeScalars(FILE* f)  {\
+        int err = 0;\
+        std::string file;\
+        int64_t totalPoints = r->getTotalPoints();\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
+        if (m_WriteBinaryFiles == true) {\
+          WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, m_msgType, var)\
+        }    else    {\
+          WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
+        }\
+        return err;\
+      }\
+    private:\
+      T* r;\
+      name(const name&); \
+      void operator=(const name&);\
+  };
 
 
 VtkSCALARWRITER_CLASS_DEF(VoxelParentIdScalarWriter, r, Cell, DREAM3D::CellData::ParentIds, DREAM3D::CellData::ParentIds, Int32ArrayType, int, "%d ")
@@ -227,81 +228,81 @@ template<typename T>
 class VoxelEulerAngleScalarWriter : public VtkScalarWriter
 {
   public:
-  VoxelEulerAngleScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
-  DREAM3D_TYPE_MACRO_SUPER(VoxelEulerAngleScalarWriter<T>, VtkScalarWriter)\
+    VoxelEulerAngleScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
+    DREAM3D_TYPE_MACRO_SUPER(VoxelEulerAngleScalarWriter<T>, VtkScalarWriter)\
 
-      virtual ~VoxelEulerAngleScalarWriter(){}
+    virtual ~VoxelEulerAngleScalarWriter() {}
 
-  int writeScalars(FILE* f)
-  {
-    int err = 0;
-    int64_t totalPoints = r->getTotalPoints();
-    size_t dims[3];
-    r->getDimensions(dims);
-
-    std::vector<std::string> names(3);
-    names[0] = "Phi1";
-    names[1] = "Phi";
-    names[2] = "Phi2";
-
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
-
-    boost::shared_array<float> buffer(new float[dims[0]]);
-
-    //std::vector<float> buffer(dims[0]);
-    // Loop over each component of the Euler Angles
-    for (int eIndex = 0; eIndex < 3; ++eIndex)
+    int writeScalars(FILE* f)
     {
-      std::string name = names[eIndex];
-      fprintf(f, "SCALARS %s %s 1\n", name.c_str(), "float");
-      fprintf(f, "LOOKUP_TABLE default\n");
-      size_t index = 0;
-      for(size_t z = 0; z < dims[2]; ++z)
+      int err = 0;
+      int64_t totalPoints = r->getTotalPoints();
+      size_t dims[3];
+      r->getDimensions(dims);
+
+      std::vector<std::string> names(3);
+      names[0] = "Phi1";
+      names[1] = "Phi";
+      names[2] = "Phi2";
+
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3 * totalPoints), eulerangles);
+
+      boost::shared_array<float> buffer(new float[dims[0]]);
+
+      //std::vector<float> buffer(dims[0]);
+      // Loop over each component of the Euler Angles
+      for (int eIndex = 0; eIndex < 3; ++eIndex)
       {
-        for(size_t y = 0; y < dims[1]; ++y)
+        std::string name = names[eIndex];
+        fprintf(f, "SCALARS %s %s 1\n", name.c_str(), "float");
+        fprintf(f, "LOOKUP_TABLE default\n");
+        size_t index = 0;
+        for(size_t z = 0; z < dims[2]; ++z)
         {
-          for(size_t x = 0; x < dims[0]; ++x)
+          for(size_t y = 0; y < dims[1]; ++y)
           {
-            index = (z * dims[0] * dims[1]) + (y*dims[0]) + x;
-            buffer[x] = eulerangles[3*index + eIndex];
-            if (false == m_WriteBinaryFiles)
+            for(size_t x = 0; x < dims[0]; ++x)
             {
-              fprintf(f, "%f ", buffer[x]);
+              index = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
+              buffer[x] = eulerangles[3 * index + eIndex];
+              if (false == m_WriteBinaryFiles)
+              {
+                fprintf(f, "%f ", buffer[x]);
+              }
             }
-          }
-          // We just buffered an dim[0] worth of data, now write it out.
-          if (true == m_WriteBinaryFiles)
-          {
-            float tmp = 0.0f;
-            // VTK Binary files are written with Big Endian Byte Ordering
-            for(size_t ii = 0; ii < dims[0]; ++ii)
+            // We just buffered an dim[0] worth of data, now write it out.
+            if (true == m_WriteBinaryFiles)
             {
-              tmp = buffer[ii];
-              MXA::Endian::FromSystemToBig::convert<float>(tmp);
-              buffer[ii] = tmp;
+              float tmp = 0.0f;
+              // VTK Binary files are written with Big Endian Byte Ordering
+              for(size_t ii = 0; ii < dims[0]; ++ii)
+              {
+                tmp = buffer[ii];
+                MXA::Endian::FromSystemToBig::convert<float>(tmp);
+                buffer[ii] = tmp;
+              }
+              size_t totalWritten = fwrite( buffer.get(), sizeof(char), dims[0] * sizeof(float), f);
+              if (totalWritten != dims[0] * 4)
+              {
+                std::cout << "Error Writing Binary Data for Euler Angles to file " << std::endl;
+                fclose(f);
+                return -1;
+              }
             }
-            size_t totalWritten = fwrite( buffer.get(), sizeof(char), dims[0] * sizeof(float), f);
-            if (totalWritten != dims[0] * 4)
+            else
             {
-              std::cout << "Error Writing Binary Data for Euler Angles to file " << std::endl;
-              fclose(f);
-              return -1;
+              fprintf(f, "\n"); // Add a new line after each row.
             }
-          }
-          else
-          {
-            fprintf(f, "\n"); // Add a new line after each row.
           }
         }
       }
+      return err;
     }
-    return err;
-  }
 
   private:
-  T* r;
-  VoxelEulerAngleScalarWriter(const VoxelEulerAngleScalarWriter&); // Copy Constructor Not Implemented
-  void operator=(const VoxelEulerAngleScalarWriter&); // Operator '=' Not Implemented
+    T* r;
+    VoxelEulerAngleScalarWriter(const VoxelEulerAngleScalarWriter&); // Copy Constructor Not Implemented
+    void operator=(const VoxelEulerAngleScalarWriter&); // Operator '=' Not Implemented
 
 
 };
@@ -315,106 +316,106 @@ template<typename T>
 class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
 {
   public:
-  VoxelRodriguesColorScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
-  DREAM3D_TYPE_MACRO_SUPER(VoxelRodriguesColorScalarWriter<T>, VtkScalarWriter)\
+    VoxelRodriguesColorScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
+    DREAM3D_TYPE_MACRO_SUPER(VoxelRodriguesColorScalarWriter<T>, VtkScalarWriter)\
 
-  virtual ~VoxelRodriguesColorScalarWriter(){}
+    virtual ~VoxelRodriguesColorScalarWriter() {}
 
-  int writeScalars(FILE* f)
-  {
-    int err = 0;
-    size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
-    int phase;
-    unsigned char* rgba = NULL;
-    float red, green, blue;
-    size_t index = 0;
-    if (m_WriteBinaryFiles == true)
+    int writeScalars(FILE* f)
     {
-      fprintf(f, "COLOR_SCALARS Rodrigues_Colors 4\n");
-      rgba = new unsigned char[total * 4]; // We need the whole array because we build it and write it all at the end
-    }
-    else
-    {
-      fprintf(f, "COLOR_SCALARS Rodrigues_Colors 3\n");
-      rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
-    }
-
-    int64_t totalPoints = r->getTotalPoints();
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, totalPoints, gnums);
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, totalPoints, phases);
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulers);
-
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Ensemble, DREAM3D::EnsembleData::CrystalStructures, DataArray<unsigned int>, unsigned int, (r->getNumEnsembleTuples()), crystruct);
-
-    // Write the Rodrigues Coloring Cell Data
-    float r1, r2, r3;
-
-  std::vector<OrientationOps::Pointer> m_OrientationOps = OrientationOps::getOrientationOpsVector();
-
-    for (size_t i = 0; i < total; i++)
-    {
-      phase = phases[i];
-      if(true == m_WriteBinaryFiles)
+      int err = 0;
+      size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
+      int phase;
+      unsigned char* rgba = NULL;
+      float red, green, blue;
+      size_t index = 0;
+      if (m_WriteBinaryFiles == true)
       {
-        index = i * 4;
+        fprintf(f, "COLOR_SCALARS Rodrigues_Colors 4\n");
+        rgba = new unsigned char[total * 4]; // We need the whole array because we build it and write it all at the end
       }
       else
       {
-        index = 0;
+        fprintf(f, "COLOR_SCALARS Rodrigues_Colors 3\n");
+        rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
       }
-      if(phase > 0)
-      {
-        if(crystruct[phase] == Ebsd::CrystalStructure::Cubic_High)
-        {
-          OrientationMath::EulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
-          m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);
-          CubicOps ops;
-          ops.generateRodriguesColor(r1, r2, r3, &rgba[index]);
-          //            EbsdColoring::GenerateRodriguesColor(rodvectors[3*i], rodvectors[3*i + 1], rodvectors[3*i + 2], &rgba[index]);
-        }
-        else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal_High)
-        {
-          OrientationMath::EulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
-          m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);
-          HexagonalOps ops;
-          ops.generateRodriguesColor(r1, r2, r3, &rgba[index]);
-          //            EbsdColoring::GenerateHexRodriguesColor(rodvectors[3*i], rodvectors[3*i + 1], rodvectors[3*i + 2], &rgba[index]);
-        }
-      }
-      else if(phase <= 0)
-      {
-        rgba[index] = 0;
-        rgba[index + 1] = 0;
-        rgba[index + 2] = 0;
-      }
-      if(true == m_WriteBinaryFiles)
-      {
-        rgba[index + 3] = 255;
-      }
-      else
-      {
-        red = static_cast<float>(float(rgba[index]) / 255.0f);
-        green = static_cast<float>(float(rgba[index + 1]) / 255.0f);
-        blue = static_cast<float>(float(rgba[index + 2]) / 255.0f);
-        fprintf(f, "%f %f %f\n", red, green, blue);
-      }
-    }
 
-    if (true == m_WriteBinaryFiles)
-    {
-      size_t totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
-      if (totalWritten != total * 4)
-      {
-        std::cout << "Error Writing Binary Data for IPF Colors to file " << std::endl;
-        fclose( f);
-        return -1;
-      }
-    }
-    // Clean up the allocated memory
-    delete[] rgba;
+      int64_t totalPoints = r->getTotalPoints();
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, totalPoints, gnums);
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, totalPoints, phases);
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3 * totalPoints), eulers);
 
-    return err;
-  }
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Ensemble, DREAM3D::EnsembleData::CrystalStructures, DataArray<unsigned int>, unsigned int, (r->getNumEnsembleTuples()), crystruct);
+
+      // Write the Rodrigues Coloring Cell Data
+      float r1, r2, r3;
+
+      std::vector<OrientationOps::Pointer> m_OrientationOps = OrientationOps::getOrientationOpsVector();
+
+      for (size_t i = 0; i < total; i++)
+      {
+        phase = phases[i];
+        if(true == m_WriteBinaryFiles)
+        {
+          index = i * 4;
+        }
+        else
+        {
+          index = 0;
+        }
+        if(phase > 0)
+        {
+          if(crystruct[phase] == Ebsd::CrystalStructure::Cubic_High)
+          {
+            OrientationMath::EulertoRod(r1, r2, r3, eulers[3 * i], eulers[3 * i + 1], eulers[3 * i + 2]);
+            m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);
+            CubicOps ops;
+            ops.generateRodriguesColor(r1, r2, r3, &rgba[index]);
+            //            EbsdColoring::GenerateRodriguesColor(rodvectors[3*i], rodvectors[3*i + 1], rodvectors[3*i + 2], &rgba[index]);
+          }
+          else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal_High)
+          {
+            OrientationMath::EulertoRod(r1, r2, r3, eulers[3 * i], eulers[3 * i + 1], eulers[3 * i + 2]);
+            m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);
+            HexagonalOps ops;
+            ops.generateRodriguesColor(r1, r2, r3, &rgba[index]);
+            //            EbsdColoring::GenerateHexRodriguesColor(rodvectors[3*i], rodvectors[3*i + 1], rodvectors[3*i + 2], &rgba[index]);
+          }
+        }
+        else if(phase <= 0)
+        {
+          rgba[index] = 0;
+          rgba[index + 1] = 0;
+          rgba[index + 2] = 0;
+        }
+        if(true == m_WriteBinaryFiles)
+        {
+          rgba[index + 3] = 255;
+        }
+        else
+        {
+          red = static_cast<float>(float(rgba[index]) / 255.0f);
+          green = static_cast<float>(float(rgba[index + 1]) / 255.0f);
+          blue = static_cast<float>(float(rgba[index + 2]) / 255.0f);
+          fprintf(f, "%f %f %f\n", red, green, blue);
+        }
+      }
+
+      if (true == m_WriteBinaryFiles)
+      {
+        size_t totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
+        if (totalWritten != total * 4)
+        {
+          std::cout << "Error Writing Binary Data for IPF Colors to file " << std::endl;
+          fclose( f);
+          return -1;
+        }
+      }
+      // Clean up the allocated memory
+      delete[] rgba;
+
+      return err;
+    }
 
   private:
     T* r;
@@ -508,7 +509,7 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
      * @return Negative Value on error
      */
     template<typename T>
-    int write(const std::string &file, T* r, std::vector<VtkScalarWriter*> scalars)
+    int write(const std::string& file, T* r, std::vector<VtkScalarWriter*> scalars)
     {
       int err = 0;
       FILE* f = NULL;
@@ -520,11 +521,11 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
       // Write the correct header
       if (m_WriteBinaryFiles == true)
       {
-        WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->getXPoints() + 1, r->getYPoints()+1, r->getZPoints()+1)
+        WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->getXPoints() + 1, r->getYPoints() + 1, r->getZPoints() + 1)
       }
       else
       {
-        WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->getXPoints() + 1, r->getYPoints()+1, r->getZPoints()+1)
+        WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->getXPoints() + 1, r->getYPoints() + 1, r->getZPoints() + 1)
       }
 
       // Write the XCoords
@@ -568,12 +569,12 @@ class VTKStructuredPointsFileWriter
     DREAM3D_STATIC_NEW_MACRO(VTKStructuredPointsFileWriter)
     DREAM3D_TYPE_MACRO(VTKStructuredPointsFileWriter)
 
-    virtual ~VTKStructuredPointsFileWriter(){}
+    virtual ~VTKStructuredPointsFileWriter() {}
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
 
     template<typename T>
-    int write(const std::string &file, T* r, std::vector<VtkScalarWriter*> scalars)
+    int write(const std::string& file, T* r, std::vector<VtkScalarWriter*> scalars)
     {
       int err = 0;
       FILE* f = NULL;
@@ -630,7 +631,7 @@ class VtkMiscFileWriter : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(VtkMiscFileWriter)
     DREAM3D_TYPE_MACRO(VtkMiscFileWriter)
 
-    virtual ~VtkMiscFileWriter(){}
+    virtual ~VtkMiscFileWriter() {}
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
@@ -641,7 +642,7 @@ class VtkMiscFileWriter : public AbstractFilter
      * @return 0 on Success
      */
     template <typename T>
-    int writeDisorientationFile(T* m, const std::string &file)
+    int writeDisorientationFile(T* m, const std::string& file)
     {
 
       FILE* f = NULL;
@@ -671,14 +672,14 @@ class VtkMiscFileWriter : public AbstractFilter
         WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::CellData::GrainIds);
         WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::KernelAvgMisorientations, float, kernelmisorientation)
         WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::GrainAvgMisorientations, float, grainmisorientation)
-   //     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::LMG, float, misorientationgradient)
+        //     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::LMG, float, misorientationgradient)
       }
       else
       {
         WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds, grain_indicies)
         WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::KernelAvgMisorientations, float, kernelmisorientation, "%f ")
         WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::GrainAvgMisorientations, float, grainmisorientation, "%f ")
- //       WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::LMG, float, misorientationgradient, "%f ")
+//       WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::LMG, float, misorientationgradient, "%f ")
       }
       fclose(f);
       return 0;
@@ -692,7 +693,7 @@ class VtkMiscFileWriter : public AbstractFilter
      * @return 0 on Success
      */
     template <typename T>
-    int writeSchmidFactorVizFile(T* m, const std::string &file)
+    int writeSchmidFactorVizFile(T* m, const std::string& file)
     {
       FILE* f = NULL;
       f = fopen(file.c_str(), "wb");

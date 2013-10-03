@@ -64,7 +64,7 @@ float CylinderOps::radcur1(std::map<ArgName, float> args)
   float bovera = args[B_OverA];
   float covera = args[C_OverA];
 
-  radcur1 = static_cast<float>( (volcur*(1.0/DREAM3D::Constants::k_Pi)*(1.0/bovera)*(1.0/covera)) );
+  radcur1 = static_cast<float>( (volcur * (1.0 / DREAM3D::Constants::k_Pi) * (1.0 / bovera) * (1.0 / covera)) );
   radcur1 = powf(radcur1, 0.333333333333f);
   return radcur1;
 }
@@ -77,11 +77,11 @@ float CylinderOps::inside(float axis1comp, float axis2comp, float axis3comp)
   float inside = -1.0;
   if (fabs(axis1comp) <= 1.0)
   {
-   // inside = 1.0;
+    // inside = 1.0;
     axis2comp = fabs(axis2comp);
     axis3comp = fabs(axis3comp);
-    axis2comp = axis2comp*axis2comp;
-    axis3comp = axis3comp*axis3comp;
+    axis2comp = axis2comp * axis2comp;
+    axis3comp = axis3comp * axis3comp;
     inside = static_cast<float>( 1.0 - axis2comp - axis3comp );
   }
   return inside;

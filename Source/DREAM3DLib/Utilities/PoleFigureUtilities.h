@@ -39,7 +39,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
-typedef struct {
+typedef struct
+{
   FloatArrayType* eulers;
   int imageDim;
   int lambertDim;
@@ -58,59 +59,59 @@ typedef struct {
  */
 class DREAM3DLib_EXPORT PoleFigureUtilities
 {
-public:
-  PoleFigureUtilities();
-  virtual ~PoleFigureUtilities();
+  public:
+    PoleFigureUtilities();
+    virtual ~PoleFigureUtilities();
 
 #if 0
-  /**
-   * @brief GenerateCubicPoleFigures
-   * @param eulers
-   * @param lambertDimension
-   * @param poleFigureDim
-   * @param intensity001 [output]
-   * @param intensity011 [output]
-   * @param intensity111 [output]
-   */
-  static void GenerateCubicPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
-                                              DoubleArrayType::Pointer &intensity001,
-                                              DoubleArrayType::Pointer &intensity011,
-                                              DoubleArrayType::Pointer &intensity111);
+    /**
+     * @brief GenerateCubicPoleFigures
+     * @param eulers
+     * @param lambertDimension
+     * @param poleFigureDim
+     * @param intensity001 [output]
+     * @param intensity011 [output]
+     * @param intensity111 [output]
+     */
+    static void GenerateCubicPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
+                                         DoubleArrayType::Pointer& intensity001,
+                                         DoubleArrayType::Pointer& intensity011,
+                                         DoubleArrayType::Pointer& intensity111);
 #endif
-  /**
-   * @brief GenerateHexPoleFigures
-   * @param eulers
-   * @param lambertDimension
-   * @param poleFigureDim
-   * @param intensity0001 [output]
-   * @param intensity1010 [output]
-   * @param intensity1120 [output]
-   */
-  static void GenerateHexPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
-                                              DoubleArrayType::Pointer &intensity0001,
-                                              DoubleArrayType::Pointer &intensity1010,
-                                              DoubleArrayType::Pointer &intensity1120);
+    /**
+     * @brief GenerateHexPoleFigures
+     * @param eulers
+     * @param lambertDimension
+     * @param poleFigureDim
+     * @param intensity0001 [output]
+     * @param intensity1010 [output]
+     * @param intensity1120 [output]
+     */
+    static void GenerateHexPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
+                                       DoubleArrayType::Pointer& intensity0001,
+                                       DoubleArrayType::Pointer& intensity1010,
+                                       DoubleArrayType::Pointer& intensity1120);
 
 
-  /**
-   * @brief GenerateHexPoleFigures
-   * @param eulers
-   * @param lambertDimension
-   * @param poleFigureDim
-   * @param intensity100 [output]
-   * @param intensity010 [output]
-   * @param intensity001 [output]
-   */
-  static void GenerateOrthoPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
-                                              DoubleArrayType::Pointer &intensity100,
-                                              DoubleArrayType::Pointer &intensity010,
-                                              DoubleArrayType::Pointer &intensity001);
+    /**
+     * @brief GenerateHexPoleFigures
+     * @param eulers
+     * @param lambertDimension
+     * @param poleFigureDim
+     * @param intensity100 [output]
+     * @param intensity010 [output]
+     * @param intensity001 [output]
+     */
+    static void GenerateOrthoPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
+                                         DoubleArrayType::Pointer& intensity100,
+                                         DoubleArrayType::Pointer& intensity010,
+                                         DoubleArrayType::Pointer& intensity001);
 
 
 
   private:
-  PoleFigureUtilities(const PoleFigureUtilities&); // Copy Constructor Not Implemented
-  void operator=(const PoleFigureUtilities&); // Operator '=' Not Implemented
+    PoleFigureUtilities(const PoleFigureUtilities&); // Copy Constructor Not Implemented
+    void operator=(const PoleFigureUtilities&); // Operator '=' Not Implemented
 
 
 };

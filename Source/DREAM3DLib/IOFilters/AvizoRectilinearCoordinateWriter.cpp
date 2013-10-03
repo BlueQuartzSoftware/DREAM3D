@@ -45,11 +45,11 @@
 //
 // -----------------------------------------------------------------------------
 AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_WriteGrainIds(true),
-m_WriteBinaryFile(false),
-m_GrainIds(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_WriteGrainIds(true),
+  m_WriteBinaryFile(false),
+  m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -72,8 +72,8 @@ void AvizoRectilinearCoordinateWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-  option->setFileExtension("*.am");
-  option->setFileType("Amira Mesh");
+    option->setFileExtension("*.am");
+    option->setFileType("Amira Mesh");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -92,10 +92,10 @@ void AvizoRectilinearCoordinateWriter::readFilterParameters(AbstractFilterParame
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -250,7 +250,7 @@ std::string AvizoRectilinearCoordinateWriter::generateHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
+int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64& writer)
 {
   size_t dims[3];
   getVolumeDataContainer()->getDimensions(dims);

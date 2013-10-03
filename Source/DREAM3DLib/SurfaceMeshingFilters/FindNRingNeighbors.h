@@ -80,7 +80,7 @@ class FindNRingNeighbors
     DREAM3D_INSTANCE_PROPERTY(int, Ring)
 
 
-    DREAM3D::Mesh::UniqueFaceIds_t &getNRingTriangles();
+    DREAM3D::Mesh::UniqueFaceIds_t& getNRingTriangles();
 
     /**
      * @brief generate
@@ -94,15 +94,15 @@ class FindNRingNeighbors
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
-     /**
-     * @brief writeVTKFile
-     * @param node2Triangle
-     * @param twoRingNeighbors
-     */
-    void writeVTKFile(const std::string &outputFile);
+    /**
+    * @brief writeVTKFile
+    * @param node2Triangle
+    * @param twoRingNeighbors
+    */
+    void writeVTKFile(const std::string& outputFile);
 
   protected:
-      FindNRingNeighbors();
+    FindNRingNeighbors();
 
   private:
     DREAM3D::Mesh::UniqueFaceIds_t  m_NRingTriangles;

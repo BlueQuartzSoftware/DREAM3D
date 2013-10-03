@@ -101,10 +101,10 @@ void FieldDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setFieldDataFile( reader->readValue( "FieldDataFile", getFieldDataFile() ) );
   setWriteNeighborListData( reader->readValue("WriteNeighborListData", getWriteNeighborListData()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -185,7 +185,7 @@ void FieldDataCSVWriter::execute()
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumFieldTuples()-1 << std::endl;
+  outFile << m->getNumFieldTuples() - 1 << std::endl;
   // Get all the names of the arrays from the Data Container
   std::list<std::string> headers = m->getFieldArrayNameList();
 
@@ -203,7 +203,8 @@ void FieldDataCSVWriter::execute()
     IDataArray::Pointer p = m->getFieldData(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
-      if (p->GetNumberOfComponents() == 1) {
+      if (p->GetNumberOfComponents() == 1)
+      {
         outFile << space << (*iter);
       }
       else // There are more than a single component so we need to add multiple header values
@@ -227,12 +228,14 @@ void FieldDataCSVWriter::execute()
   // Skip the first grain
   for(size_t i = 1; i < numTuples; ++i)
   {
-    if (((float)i / numTuples) * 100.0f > threshold) {
+    if (((float)i / numTuples) * 100.0f > threshold)
+    {
       ss.str("");
       ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
       notifyStatusMessage(ss.str());
       threshold = threshold + 5.0f;
-      if (threshold < ((float)i / numTuples) * 100.0f) {
+      if (threshold < ((float)i / numTuples) * 100.0f)
+      {
         threshold = ((float)i / numTuples) * 100.0f;
       }
     }
@@ -260,7 +263,7 @@ void FieldDataCSVWriter::execute()
       {
         outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;
         size_t numTuples = p->GetNumberOfTuples();
-        //	  float threshold = 0.0f;
+        //    float threshold = 0.0f;
 
         // Skip the first grain
         for(size_t i = 1; i < numTuples; ++i)

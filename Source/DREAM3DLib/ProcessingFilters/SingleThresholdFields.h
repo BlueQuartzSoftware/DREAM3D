@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT SingleThresholdFields : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -92,9 +92,9 @@ class DREAM3DLib_EXPORT SingleThresholdFields : public AbstractFilter
 
 
   protected:
-      SingleThresholdFields();
+    SingleThresholdFields();
 
-      void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
     bool* m_Output;

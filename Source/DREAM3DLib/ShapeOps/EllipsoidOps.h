@@ -40,28 +40,28 @@
 #include "ShapeOps.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
-  /*
-   *
-   */
-  class DREAM3DLib_EXPORT EllipsoidOps : public ShapeOps
-  {
-    public:
-      MXA_SHARED_POINTERS(EllipsoidOps)
-      MXA_TYPE_MACRO(EllipsoidOps)
-      MXA_STATIC_NEW_MACRO(EllipsoidOps)
+/*
+ *
+ */
+class DREAM3DLib_EXPORT EllipsoidOps : public ShapeOps
+{
+  public:
+    MXA_SHARED_POINTERS(EllipsoidOps)
+    MXA_TYPE_MACRO(EllipsoidOps)
+    MXA_STATIC_NEW_MACRO(EllipsoidOps)
 
-      virtual ~EllipsoidOps();
+    virtual ~EllipsoidOps();
 
-      virtual float radcur1(std::map<ArgName, float> args);
-      virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-      virtual void init() {  }
+    virtual float radcur1(std::map<ArgName, float> args);
+    virtual float inside(float axis1comp, float axis2comp, float axis3comp);
+    virtual void init() {  }
 
-    protected:
-      EllipsoidOps();
-    private:
-      EllipsoidOps(const EllipsoidOps&); // Copy Constructor Not Implemented
-      void operator=(const EllipsoidOps&); // Operator '=' Not Implemented
+  protected:
+    EllipsoidOps();
+  private:
+    EllipsoidOps(const EllipsoidOps&); // Copy Constructor Not Implemented
+    void operator=(const EllipsoidOps&); // Operator '=' Not Implemented
 
-  };
+};
 
 #endif /* ELLIPSOIDOPS_H_ */

@@ -60,14 +60,14 @@ class ScopedFileMonitor
 // -----------------------------------------------------------------------------
 GoldfeatherReader::GoldfeatherReader() :
   AbstractFilter(),
-m_Principal_Curvature_1ArrayName("Principal_Curvature_1"),
-m_Principal_Curvature_2ArrayName("Principal_Curvature_2"),
-m_Principal_Direction_1ArrayName("Principal_Direction_1"),
-m_Principal_Direction_2ArrayName("Principal_Direction_2"),
-m_SurfaceMeshNodeNormalsArrayName(DREAM3D::VertexData::SurfaceMeshNodeNormals),
-m_SurfaceMeshTriangleLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
-m_SurfaceMeshTrianglesArrayName(DREAM3D::FaceData::SurfaceMeshFaces)
+  m_Principal_Curvature_1ArrayName("Principal_Curvature_1"),
+  m_Principal_Curvature_2ArrayName("Principal_Curvature_2"),
+  m_Principal_Direction_1ArrayName("Principal_Direction_1"),
+  m_Principal_Direction_2ArrayName("Principal_Direction_2"),
+  m_SurfaceMeshNodeNormalsArrayName(DREAM3D::VertexData::SurfaceMeshNodeNormals),
+  m_SurfaceMeshTriangleLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_SurfaceMeshTrianglesArrayName(DREAM3D::FaceData::SurfaceMeshFaces)
 {
   setupFilterParameters();
 }
@@ -86,7 +86,7 @@ void GoldfeatherReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
   /*   For an input file use this code*/
-   {
+  {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Input File");
     parameter->setPropertyName("InputFile");
@@ -117,7 +117,7 @@ int GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* wri
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-    writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("InputFile", getInputFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -160,11 +160,11 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   sm->addVertexData(pcurv1Ptr->GetName(), pcurv1Ptr);
 
   DoubleArrayType::Pointer pcurv2Ptr = DoubleArrayType::CreateArray(1, 1, "Principal_Curvature_2");
- // addCreatedCellData( pcurv2Ptr->GetName());
+// addCreatedCellData( pcurv2Ptr->GetName());
   sm->addVertexData(pcurv2Ptr->GetName(), pcurv2Ptr);
 
   DoubleArrayType::Pointer pDirection1Ptr = DoubleArrayType::CreateArray(1, 3, "Principal_Direction_1");
- // addCreatedCellData( pDirection1Ptr->GetName());
+// addCreatedCellData( pDirection1Ptr->GetName());
   sm->addVertexData(pDirection1Ptr->GetName(), pDirection1Ptr);
 
   DoubleArrayType::Pointer pDirection2Ptr = DoubleArrayType::CreateArray(1, 3, "Principal_Direction_2");
@@ -254,21 +254,21 @@ void GoldfeatherReader::execute()
     nodes[n].pos[0] = x;
     nodes[n].pos[1] = y;
     nodes[n].pos[2] = z;
-    normals[n*3+0] = n0;
-    normals[n*3+1] = n1;
-    normals[n*3+2] = n2;
+    normals[n * 3 + 0] = n0;
+    normals[n * 3 + 1] = n1;
+    normals[n * 3 + 2] = n2;
     pcurv1[n] = p1;
     pcurv2[n] = p2;
 
     // Read the next line of the data which is the principal direction vectors
     fscanf(f, "%f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2);
-    pDirection1[n*3+0] = x;
-    pDirection1[n*3+1] = y;
-    pDirection1[n*3+2] = z;
+    pDirection1[n * 3 + 0] = x;
+    pDirection1[n * 3 + 1] = y;
+    pDirection1[n * 3 + 2] = z;
 
-    pDirection2[n*3+0] = n0;
-    pDirection2[n*3+1] = n1;
-    pDirection2[n*3+2] = n2;
+    pDirection2[n * 3 + 0] = n0;
+    pDirection2[n * 3 + 1] = n1;
+    pDirection2[n * 3 + 2] = n2;
 
   }
 
@@ -307,12 +307,12 @@ void GoldfeatherReader::execute()
     triangles[t].verts[0] = x;
     triangles[t].verts[1] = y;
     triangles[t].verts[2] = z;
-  //  triangles[t].tIndex = t;
-    faceLabels[t*2] = 0;
-    faceLabels[t*2+1] = 1;
-    triNormals[t*3+0] = n0;
-    triNormals[t*3+1] = n1;
-    triNormals[t*3+2] = n2;
+    //  triangles[t].tIndex = t;
+    faceLabels[t * 2] = 0;
+    faceLabels[t * 2 + 1] = 1;
+    triNormals[t * 3 + 0] = n0;
+    triNormals[t * 3 + 1] = n1;
+    triNormals[t * 3 + 2] = n2;
   }
 
   m->setFaces(trianglesPtr);

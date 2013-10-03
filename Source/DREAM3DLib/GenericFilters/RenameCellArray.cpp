@@ -89,10 +89,10 @@ void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
   setNewCellArrayName( reader->readValue( "NewCellArrayName", getNewCellArrayName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -127,7 +127,7 @@ void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, si
   {
     setErrorCondition(-11000);
     ss << "An array from the Voxel Data Container must be selected.";
-    addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   else
   {
@@ -135,7 +135,7 @@ void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, si
     if(check == false)
     {
       ss << "Array to be renamed could not be found in DataContainer";
-      addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     }
   }
 }
@@ -171,9 +171,9 @@ void RenameCellArray::execute()
 
   if(check == false)
   {
-  ss << "Array to be renamed could not be found in DataContainer";
-  setErrorCondition(-11000);
-  notifyErrorMessage(ss.str(), getErrorCondition());
+    ss << "Array to be renamed could not be found in DataContainer";
+    setErrorCondition(-11000);
+    notifyErrorMessage(ss.str(), getErrorCondition());
   }
 
   notifyStatusMessage("Complete");

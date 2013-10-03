@@ -53,37 +53,37 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(FindSurfaceCells)
-     DREAM3D_STATIC_NEW_MACRO(FindSurfaceCells)
-     DREAM3D_TYPE_MACRO_SUPER(FindSurfaceCells, AbstractFilter)
+    DREAM3D_STATIC_NEW_MACRO(FindSurfaceCells)
+    DREAM3D_TYPE_MACRO_SUPER(FindSurfaceCells, AbstractFilter)
 
-     virtual ~FindSurfaceCells();
+    virtual ~FindSurfaceCells();
 
-	 //------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
 
-     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
-     virtual const std::string getHumanLabel() { return "Find Boundary Cells"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
+    virtual const std::string getHumanLabel() { return "Find Boundary Cells"; }
 
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-	virtual void execute();
-     virtual void preflight();
+    virtual void execute();
+    virtual void preflight();
 
-   protected:
-     FindSurfaceCells();
+  protected:
+    FindSurfaceCells();
 
-   private:
+  private:
     int32_t* m_GrainIds;
     int8_t* m_SurfaceVoxels;
 

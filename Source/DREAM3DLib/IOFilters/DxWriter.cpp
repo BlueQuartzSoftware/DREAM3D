@@ -46,7 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter() :
-    FileWriter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_AddSurfaceLayer(false), m_GrainIds(NULL)
+  FileWriter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_AddSurfaceLayer(false), m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -93,10 +93,10 @@ void DxWriter::readFilterParameters(AbstractFilterParametersReader* reader, int 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setAddSurfaceLayer( reader->readValue("AddSurfaceLayer", getAddSurfaceLayer()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -169,7 +169,7 @@ int DxWriter::writeFile()
   if (NULL == m)
   {
     std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;

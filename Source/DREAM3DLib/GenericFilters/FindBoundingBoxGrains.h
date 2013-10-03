@@ -63,30 +63,30 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
 
     virtual ~FindBoundingBoxGrains();
 
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
 
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
     virtual const std::string getHumanLabel() { return "Find Biased Fields (Bounding Box)"; }
 
 
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-	/**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+    /**
+       * @brief Reimplemented from @see AbstractFilter class
+       */
     virtual void execute();
     virtual void preflight();
 

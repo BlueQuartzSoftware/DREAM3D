@@ -118,23 +118,23 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual void preflight();
 
     virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedCellArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                             std::set<std::string> selectedFaceArrays,
+                                             std::set<std::string> selectedEdgeArrays,
+                                             std::set<std::string> selectedCellArrays,
+                                             std::set<std::string> selectedFieldArrays,
+                                             std::set<std::string> selectedEnsembleArrays);
     virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                              std::set<std::string> selectedEdgeArrays,
+                                              std::set<std::string> selectedFaceArrays,
+                                              std::set<std::string> selectedFieldArrays,
+                                              std::set<std::string> selectedEnsembleArrays);
     virtual void setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                           std::set<std::string> selectedEdgeArrays,
+                                           std::set<std::string> selectedFieldArrays,
+                                           std::set<std::string> selectedEnsembleArrays);
     virtual void setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+                                             std::set<std::string> selectedFieldArrays,
+                                             std::set<std::string> selectedEnsembleArrays);
     /**
      * @brief readExistingPipelineFromFile This will read the existing pipeline that is stored in the file and store it
      * in the class instance for later writing to another dream3d data file

@@ -179,14 +179,15 @@ void AlignSections::execute()
     return;
   }
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -200,13 +201,13 @@ void AlignSections::execute()
 
   std::vector<int> xshifts;
   std::vector<int> yshifts;
-  xshifts.resize(dims[2],0);
-  yshifts.resize(dims[2],0);
+  xshifts.resize(dims[2], 0);
+  yshifts.resize(dims[2], 0);
 
   find_shifts(xshifts, yshifts);
 
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-  DimType progIncrement = dims[2]/100;
+  DimType progIncrement = dims[2] / 100;
   DimType prog = 1;
   int progressInt = 0;
   std::stringstream ss;
@@ -216,7 +217,7 @@ void AlignSections::execute()
     if (i > prog)
     {
       ss.str("");
-      progressInt = ((float)i/dims[2])*100.0;
+      progressInt = ((float)i / dims[2]) * 100.0;
       ss << "Transferring Cell Data - " << progressInt << "% Complete";
       notifyStatusMessage(ss.str());
       prog = prog + progIncrement;
@@ -230,14 +231,14 @@ void AlignSections::execute()
     {
       for (DimType n = 0; n < dims[0]; n++)
       {
-        if(yshifts[i] >= 0) yspot = static_cast<int>(l);
-        else if(yshifts[i] < 0) yspot = static_cast<int>( dims[1] - 1 - l );
-        if(xshifts[i] >= 0) xspot = static_cast<int>(n);
-        else if(xshifts[i] < 0) xspot = static_cast<int>( dims[0] - 1 - n );
+        if(yshifts[i] >= 0) { yspot = static_cast<int>(l); }
+        else if(yshifts[i] < 0) { yspot = static_cast<int>( dims[1] - 1 - l ); }
+        if(xshifts[i] >= 0) { xspot = static_cast<int>(n); }
+        else if(xshifts[i] < 0) { xspot = static_cast<int>( dims[0] - 1 - n ); }
         newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
         currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
         if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
-           && (xspot + xshifts[i]) <= dims[0] - 1)
+            && (xspot + xshifts[i]) <= dims[0] - 1)
         {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
@@ -247,13 +248,14 @@ void AlignSections::execute()
           }
         }
         if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
-           || (xspot + xshifts[i]) > dims[0] - 1)
+            || (xspot + xshifts[i]) > dims[0] - 1)
         {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
-            p->InitializeTuple(newPosition, 0.0);          }
+            p->InitializeTuple(newPosition, 0.0);
+          }
         }
       }
     }
@@ -267,7 +269,7 @@ void AlignSections::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSections::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
 
 }

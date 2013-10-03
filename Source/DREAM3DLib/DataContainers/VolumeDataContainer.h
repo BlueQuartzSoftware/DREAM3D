@@ -37,7 +37,7 @@
 #define _VolumeDataContainer_H_
 
 #if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
 
@@ -142,19 +142,19 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
      */
     void setMeshCellNeighborLists(MeshCellNeighbors::Pointer neighbors);
 
-   /**
-   * @brief Adds/overwrites the data for a named array
-   * @param name The name that the array will be known by
-   * @param data The IDataArray::Pointer that will hold the data
-   */
-    virtual void addVertexData(const std::string &name, IDataArray::Pointer data);
+    /**
+    * @brief Adds/overwrites the data for a named array
+    * @param name The name that the array will be known by
+    * @param data The IDataArray::Pointer that will hold the data
+    */
+    virtual void addVertexData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getVertexData(const std::string &name);
+    virtual IDataArray::Pointer getVertexData(const std::string& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -162,17 +162,17 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeVertexData(const std::string &name);
+    virtual IDataArray::Pointer removeVertexData(const std::string& name);
 
     /**
-    * @brief Renames a Vertex data array from the Data Container 
+    * @brief Renames a Vertex data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameVertexData(const std::string &oldname, const std::string &newname);
+    virtual bool renameVertexData(const std::string& oldname, const std::string& newname);
 
-	/**
-     * @brief Removes all the Vertex Arrays
-     */
+    /**
+       * @brief Removes all the Vertex Arrays
+       */
     virtual void clearVertexData();
 
     /**
@@ -195,19 +195,19 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     */
     DREAM3D_INSTANCE_PROPERTY(size_t, NumVertexTuples)
 
-   /**
-   * @brief Adds/overwrites the data for a named array
-   * @param name The name that the array will be known by
-   * @param data The IDataArray::Pointer that will hold the data
-   */
-    virtual void addEdgeData(const std::string &name, IDataArray::Pointer data);
+    /**
+    * @brief Adds/overwrites the data for a named array
+    * @param name The name that the array will be known by
+    * @param data The IDataArray::Pointer that will hold the data
+    */
+    virtual void addEdgeData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getEdgeData(const std::string &name);
+    virtual IDataArray::Pointer getEdgeData(const std::string& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -215,17 +215,17 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeEdgeData(const std::string &name);
+    virtual IDataArray::Pointer removeEdgeData(const std::string& name);
 
     /**
-    * @brief Renames a Edge data array from the Data Container 
+    * @brief Renames a Edge data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameEdgeData(const std::string &oldname, const std::string &newname);
+    virtual bool renameEdgeData(const std::string& oldname, const std::string& newname);
 
-	/**
-     * @brief Removes all the Edge Arrays
-     */
+    /**
+       * @brief Removes all the Edge Arrays
+       */
     virtual void clearEdgeData();
 
     /**
@@ -248,19 +248,19 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     */
     DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeTuples)
 
-   /**
-   * @brief Adds/overwrites the data for a named array
-   * @param name The name that the array will be known by
-   * @param data The IDataArray::Pointer that will hold the data
-   */
-    virtual void addFaceData(const std::string &name, IDataArray::Pointer data);
+    /**
+    * @brief Adds/overwrites the data for a named array
+    * @param name The name that the array will be known by
+    * @param data The IDataArray::Pointer that will hold the data
+    */
+    virtual void addFaceData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getFaceData(const std::string &name);
+    virtual IDataArray::Pointer getFaceData(const std::string& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -268,17 +268,17 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeFaceData(const std::string &name);
+    virtual IDataArray::Pointer removeFaceData(const std::string& name);
 
     /**
-    * @brief Renames a Face data array from the Data Container 
+    * @brief Renames a Face data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameFaceData(const std::string &oldname, const std::string &newname);
+    virtual bool renameFaceData(const std::string& oldname, const std::string& newname);
 
-	/**
-     * @brief Removes all the Face Arrays
-     */
+    /**
+       * @brief Removes all the Face Arrays
+       */
     virtual void clearFaceData();
 
     /**
@@ -301,19 +301,19 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     */
     DREAM3D_INSTANCE_PROPERTY(size_t, NumFaceTuples)
 
-   /**
-   * @brief Adds/overwrites the data for a named array
-   * @param name The name that the array will be known by
-   * @param data The IDataArray::Pointer that will hold the data
-   */
-    virtual void addCellData(const std::string &name, IDataArray::Pointer data);
+    /**
+    * @brief Adds/overwrites the data for a named array
+    * @param name The name that the array will be known by
+    * @param data The IDataArray::Pointer that will hold the data
+    */
+    virtual void addCellData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getCellData(const std::string &name);
+    virtual IDataArray::Pointer getCellData(const std::string& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -321,17 +321,17 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeCellData(const std::string &name);
+    virtual IDataArray::Pointer removeCellData(const std::string& name);
 
     /**
-    * @brief Renames a cell data array from the Data Container 
+    * @brief Renames a cell data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameCellData(const std::string &oldname, const std::string &newname);
+    virtual bool renameCellData(const std::string& oldname, const std::string& newname);
 
-	/**
-     * @brief Removes all the Cell Arrays
-     */
+    /**
+       * @brief Removes all the Cell Arrays
+       */
     virtual void clearCellData();
 
     /**
@@ -359,14 +359,14 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
     */
-    virtual void addFieldData(const std::string &name, IDataArray::Pointer data);
+    virtual void addFieldData(const std::string& name, IDataArray::Pointer data);
 
     /**
     * @brief Returns the array for a given named array or the equivelant to a
     * null pointer if the name does not exist.
     * @param name The name of the data array
     */
-    virtual IDataArray::Pointer getFieldData(const std::string &name);
+    virtual IDataArray::Pointer getFieldData(const std::string& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -374,17 +374,17 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeFieldData(const std::string &name);
+    virtual IDataArray::Pointer removeFieldData(const std::string& name);
 
     /**
-    * @brief Renames a field data array from the Data Container 
+    * @brief Renames a field data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameFieldData(const std::string &oldname, const std::string &newname);
+    virtual bool renameFieldData(const std::string& oldname, const std::string& newname);
 
-	/**
-     * @brief Removes all the Field Arrays
-     */
+    /**
+       * @brief Removes all the Field Arrays
+       */
     virtual void clearFieldData();
 
     /**
@@ -418,14 +418,14 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
     */
-    virtual void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+    virtual void addEnsembleData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getEnsembleData(const std::string &name);
+    virtual IDataArray::Pointer getEnsembleData(const std::string& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -433,7 +433,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeEnsembleData(const std::string &name);
+    virtual IDataArray::Pointer removeEnsembleData(const std::string& name);
 
     /**
      * @brief Removes all the ensemble data
@@ -442,9 +442,9 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
 
     virtual std::list<std::string> getEnsembleArrayNameList();
 
-     /**
-     * @brief Returns if a data set with the name exists in the data container for the Cell Data
-     */
+    /**
+    * @brief Returns if a data set with the name exists in the data container for the Cell Data
+    */
 
     virtual int getNumEnsembleArrays();
 

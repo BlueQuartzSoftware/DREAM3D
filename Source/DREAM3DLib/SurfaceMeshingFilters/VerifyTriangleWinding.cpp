@@ -71,7 +71,7 @@ class Mesh
 
     DREAM3D_SHARED_POINTERS(Mesh)
     DREAM3D_STATIC_NEW_MACRO(Mesh)
-    virtual ~Mesh(){}
+    virtual ~Mesh() {}
     int getMaxLabel() {return -1;}
     int getMinLabel() {return -1;}
     void setMaxLabel(int32_t l) { m_MaxLabel = l; }
@@ -116,7 +116,7 @@ class LabelVisitorInfo
 
     int32_t getLabel()
     {
-      if (m_Relabeled) return m_NewLabel;
+      if (m_Relabeled) { return m_NewLabel; }
       return m_Label;
     }
 
@@ -129,14 +129,14 @@ class LabelVisitorInfo
     std::set<int32_t>  m_OriginalFaceList;
 
     /**
- *
- * @param mesh
- * @param masterVisited
- * @return
- */
+    *
+    * @param mesh
+    * @param masterVisited
+    * @return
+    */
     Pointer relabelFaces(Mesh::Pointer mesh,
-                             DataArray<int32_t>* masterFaceListPtr,
-                             const std::vector<bool> &masterVisited)
+                         DataArray<int32_t>* masterFaceListPtr,
+                         const std::vector<bool>& masterVisited)
     {
       size_t triangleIndex = *(m_Faces.begin());
       int32_t newLabel = mesh->getMaxLabel() + 1;
@@ -156,7 +156,8 @@ class LabelVisitorInfo
         if (masterFaceList[ (*triIter) * 2 + 1] == m_Label) { masterFaceList[ (*triIter) * 2 + 1] = newLabel; }
         if (masterVisited[*triIter]) { p->setStartIndex(*triIter); seedIsSet = true; }
       }
-      if (seedIsSet) {
+      if (seedIsSet)
+      {
         p->setPrimed(true);
       }
 
@@ -242,8 +243,8 @@ void VerifyTriangleWinding::readFilterParameters(AbstractFilterParametersReader*
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -298,7 +299,8 @@ void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fiel
     if (sm->getEdgeData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
     {
       m_DoUniqueEdgesFilter = true;
-    } else
+    }
+    else
     {
       m_DoUniqueEdgesFilter = false;
     }
@@ -402,7 +404,7 @@ void VerifyTriangleWinding::execute()
 // -----------------------------------------------------------------------------
 // Groups the triangles according to which Grain they are a part of
 // -----------------------------------------------------------------------------
-void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabelMap)
+void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t& trianglesToLabelMap)
 {
   DREAM3D::Mesh::FaceList_t::Pointer masterFaceList = getSurfaceDataContainer()->getFaces();
   if(NULL == masterFaceList.get())
@@ -422,7 +424,7 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
   // Loop over all the triangles and group them according to which grain/region they are a part of
   for(int t = 0; t < ntri; ++t)
   {
-    int32_t* label = faceLabels + t*2;
+    int32_t* label = faceLabels + t * 2;
     trianglesToLabelMap[label[0]].insert(t);
     trianglesToLabelMap[label[1]].insert(t);
   }
@@ -432,7 +434,7 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t> &triangleIndices)
+int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t>& triangleIndices)
 {
 
   DREAM3D::Mesh::Vert_t* verts = getSurfaceDataContainer()->getVertices()->GetPointer(0);
@@ -449,7 +451,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t> 
   for (std::set<int32_t>::iterator iter = triangleIndices.begin(); iter != triangleIndices.end(); ++iter)
   {
     int32_t i = *iter;
-    avgX  = (verts[triangles[i].verts[0]].pos[0] + verts[triangles[i].verts[1]].pos[0] + verts[triangles[i].verts[2]].pos[0])/3.0;
+    avgX  = (verts[triangles[i].verts[0]].pos[0] + verts[triangles[i].verts[1]].pos[0] + verts[triangles[i].verts[2]].pos[0]) / 3.0;
     if (avgX > xMax)
     {
       xMax = avgX;
@@ -461,7 +463,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t> 
   // Now we have the "right most" triangle based on x component of the centroid of the triangles for this label.
   // Lets now figure out if the normal points generally in the positive or negative X direction.
 
-  int32_t* faceLabel = faceLabels + seedFaceIdx*2;
+  int32_t* faceLabel = faceLabels + seedFaceIdx * 2;
   VectorType normal;
   if (faceLabel[0] == label)
   {
@@ -508,13 +510,13 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t> 
   std::cout << "Face ID: " << index << std::endl;\
   std::cout << "Face.labels[0] " << triangles[index].labels[0] << std::endl;\
   std::cout << "Face.labels[1] " << triangles[index].labels[1] << std::endl;\
-
+   
 #define PRINT_VERT(index)\
   std::cout << index << " " << verts[index].pos[0] << " " << verts[index].pos[1] << " " << verts[index].pos[2] << std::endl;
 
 #define PRINT_NORMAL(i, nodes, triangles)\
-{ VectorType normal = TriangleOps::computeNormal(nodes[triangles[i].verts[0]], nodes[triangles[i].verts[1]], nodes[triangles[i].verts[2]]);\
-  std::cout << normal.x << " " << normal.y << " " << normal.z << std::endl;}
+  { VectorType normal = TriangleOps::computeNormal(nodes[triangles[i].verts[0]], nodes[triangles[i].verts[1]], nodes[triangles[i].verts[2]]);\
+    std::cout << normal.x << " " << normal.y << " " << normal.z << std::endl;}
 
 // -----------------------------------------------------------------------------
 //
@@ -556,10 +558,10 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   // Set the min and Max labels in the Mesh class;
   for(int n = 0; n < numFaces; ++n)
   {
-    int l = faceLabels[n*2];
+    int l = faceLabels[n * 2];
     if (l < min) { min = l;}
     if (l > max) { max = l;}
-    l = faceLabels[n*2 + 1];
+    l = faceLabels[n * 2 + 1];
     if (l < min) { min = l;}
     if (l > max) { max = l;}
   }
@@ -624,10 +626,10 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   while (labelObjectsToVisit.empty() == false)
   {
     if (getCancel() == true) { return -1; }
-    if ( (progressIndex/total * 100.0f) > (curPercent) )
+    if ( (progressIndex / total * 100.0f) > (curPercent) )
     {
       ss.str("");
-      ss << static_cast<int>(progressIndex/total * 100.0f) << "% Complete";
+      ss << static_cast<int>(progressIndex / total * 100.0f) << "% Complete";
       notifyStatusMessage(ss.str());
       curPercent += 5.0f;
     }
@@ -640,7 +642,8 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     currentLabel = curLdo->getLabel();
     labelsToVisitSet.erase(currentLabel);
     labelsVisitedSet.insert(currentLabel);
-    if (curLdo->getPrimed() == false && curLdo->getRelabeled() == false) {
+    if (curLdo->getPrimed() == false && curLdo->getRelabeled() == false)
+    {
       curLdo->m_Faces = trianglesToLabelMap[currentLabel];
       curLdo->setPrimed(true);
     }
@@ -686,7 +689,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
           //    std::cout << "   * Checking Winding: " << *adjTri << std::endl;
           if (TriangleOps::verifyWinding(triangle, triangles[*adjTri], faceLabel, faceLabels + (*adjTri * 2), currentLabel) == true)
           {
-         //   std::cout << "Face winding flipped for triangle id = " << *adjTri << " Grain Id: " << currentLabel << std::endl;
+            //   std::cout << "Face winding flipped for triangle id = " << *adjTri << " Grain Id: " << currentLabel << std::endl;
           }
         }
 
@@ -702,10 +705,12 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
       // Just add the neighbor label to a set so we end up with a list of unique
       // labels that are neighbors to the current label
-      if (currentLabel != faceLabel[0]) {
+      if (currentLabel != faceLabel[0])
+      {
         neighborlabels.insert(std::pair<int32_t, int32_t>(faceLabel[0], triangleIndex));
       }
-      if (currentLabel != faceLabel[1]) {
+      if (currentLabel != faceLabel[1])
+      {
         neighborlabels.insert(std::pair<int32_t, int32_t>(faceLabel[1], triangleIndex));
       }
 
@@ -721,7 +726,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     for (std::map<int32_t, int32_t>::iterator neigh = neighborlabels.begin(); neigh != neighborlabels.end(); ++neigh )
     {
       int32_t triangleIndex = (*neigh).second;
-      int32_t* triangleLabel = faceLabels + triangleIndex*2;
+      int32_t* triangleLabel = faceLabels + triangleIndex * 2;
 
       if ( labelsToVisitSet.find(triangleLabel[0]) == labelsToVisitSet.end()
            && (labelsVisitedSet.find(triangleLabel[0]) == labelsVisitedSet.end() ) )
@@ -776,7 +781,8 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
   //std::cout << "Total: "<< total << std::endl;
   //std::cout << "labelsToVisitSet.size() :" << labelsToVisitSet.size() << std::endl;
-  if (labelsToVisitSet.size() != 0) {
+  if (labelsToVisitSet.size() != 0)
+  {
     //std::cout << " labelsToVisitSet:" << std::endl;
     for (STDEXT::hash_set<int32_t>::iterator iter = labelsToVisitSet.begin(); iter != labelsToVisitSet.end(); ++iter )
     {

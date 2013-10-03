@@ -67,24 +67,24 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
 
     virtual ~NeighborOrientationCorrelation();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-	DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
-	DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)
-	DREAM3D_INSTANCE_PROPERTY(int, Level)
+    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
+    DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)
+    DREAM3D_INSTANCE_PROPERTY(int, Level)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const std::string getHumanLabel() { return "Neighbor Orientation Correlation"; }
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

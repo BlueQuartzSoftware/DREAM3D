@@ -132,14 +132,14 @@ void ClearData::readFilterParameters(AbstractFilterParametersReader* reader, int
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setXMin( reader->readValue("XMin", getXMin()) );
   setYMin( reader->readValue("YMin", getYMin()) );
   setZMin( reader->readValue("ZMin", getZMin()) );
   setXMax( reader->readValue("XMax", getXMax()) );
   setYMax( reader->readValue("YMax", getYMax()) );
   setZMax( reader->readValue("ZMax", getZMax()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -207,28 +207,28 @@ void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   if (getZMin() < 0)
   {
     ss.str("");
-    ss <<"Z Min (" << getZMin() << ") less than 0";
-    addErrorMessage(getHumanLabel(), ss.str(), -5555);
-    setErrorCondition(-5555);
-  }  
-  if (getXMax() > (static_cast<int64_t>(m->getXPoints())-1))
-  {
-    ss.str("");
-	ss << "The X Max you entered of " << getXMax() << " is greater than your Max X Point of " << static_cast<int64_t>(m->getXPoints())-1;
+    ss << "Z Min (" << getZMin() << ") less than 0";
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
-  if (getYMax() > (static_cast<int64_t>(m->getYPoints())-1))
+  if (getXMax() > (static_cast<int64_t>(m->getXPoints()) - 1))
   {
     ss.str("");
-    ss << "The Y Max you entered of " << getYMax() << " is greater than your Max Y Point of " << static_cast<int64_t>(m->getYPoints())-1;
+    ss << "The X Max you entered of " << getXMax() << " is greater than your Max X Point of " << static_cast<int64_t>(m->getXPoints()) - 1;
+    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+    setErrorCondition(-5555);
+  }
+  if (getYMax() > (static_cast<int64_t>(m->getYPoints()) - 1))
+  {
+    ss.str("");
+    ss << "The Y Max you entered of " << getYMax() << " is greater than your Max Y Point of " << static_cast<int64_t>(m->getYPoints()) - 1;
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5556);
   }
-  if (getZMax() > (static_cast<int64_t>(m->getZPoints())-1))
+  if (getZMax() > (static_cast<int64_t>(m->getZPoints()) - 1))
   {
     ss.str("");
-    ss << "The Z Max you entered of " << getZMax() << ") greater than your Max Z Point of " << static_cast<int64_t>(m->getZPoints())-1;
+    ss << "The Z Max you entered of " << getZMax() << ") greater than your Max Z Point of " << static_cast<int64_t>(m->getZPoints()) - 1;
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5557);
   }
@@ -280,18 +280,18 @@ void ClearData::execute()
 
   int index;
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-  for (int k = m_ZMin; k < m_ZMax+1; k++)
+  for (int k = m_ZMin; k < m_ZMax + 1; k++)
   {
-    for (int j = m_YMin; j < m_YMax+1; j++)
+    for (int j = m_YMin; j < m_YMax + 1; j++)
     {
-      for (int i = m_XMin; i < m_XMax+1; i++)
+      for (int i = m_XMin; i < m_XMax + 1; i++)
       {
         index = (k * dims[0] * dims[1]) + (j * dims[0]) + i;
         for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           std::string name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
-          p->InitializeTuple(index,0);
+          p->InitializeTuple(index, 0);
         }
       }
     }

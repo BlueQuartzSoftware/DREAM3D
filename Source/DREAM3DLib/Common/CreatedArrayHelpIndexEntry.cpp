@@ -34,14 +34,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
- #include "CreatedArrayHelpIndexEntry.h"
+#include "CreatedArrayHelpIndexEntry.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 CreatedArrayHelpIndexEntry::CreatedArrayHelpIndexEntry() :
-m_ArrayNumComponents(0)
+  m_ArrayNumComponents(0)
 {
 
 }

@@ -45,9 +45,9 @@
 //
 // -----------------------------------------------------------------------------
 QuickSolidMesh::QuickSolidMesh() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_GrainIds(NULL)
 {
 
 }
@@ -92,10 +92,10 @@ void QuickSolidMesh::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   SolidMeshDataContainer* sm = getSolidMeshDataContainer();
   if (NULL == sm)
   {
-      addErrorMessage(getHumanLabel(), "SolidMeshDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SolidMeshDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
-  else 
+  else
   {
     StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SolidMeshNodes);
     StructArray<Tetrahedron>::Pointer tetrahedrons = StructArray<Tetrahedron>::CreateArray(1, DREAM3D::CellData::SolidMeshTetrahedrons);
@@ -140,14 +140,15 @@ void QuickSolidMesh::execute()
     return;
   }
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -160,8 +161,8 @@ void QuickSolidMesh::execute()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  int numNodes = (xP+1)*(yP+1)*(zP+1);
-  int numTetrahedrons = 6*(xP*yP*zP);
+  int numNodes = (xP + 1) * (yP + 1) * (zP + 1);
+  int numTetrahedrons = 6 * (xP * yP * zP);
 
   size_t point;
   size_t nodeId1, nodeId2, nodeId3, nodeId4, nodeId5, nodeId6, nodeId7, nodeId8;
@@ -173,90 +174,90 @@ void QuickSolidMesh::execute()
 
   for(size_t k = 0; k < zP; k++)
   {
-	  for(size_t j = 0; j < yP; j++)
-	  {
-		  for(size_t i = 0; i < xP; i++)
-		  {
-			point = (k*xP*yP)+(j*xP)+i;
+    for(size_t j = 0; j < yP; j++)
+    {
+      for(size_t i = 0; i < xP; i++)
+      {
+        point = (k * xP * yP) + (j * xP) + i;
 
-			nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-			vertex[nodeId1].coord[0] = (i*xRes) - (xRes/2.0);
-			vertex[nodeId1].coord[1] = (j*yRes) - (yRes/2.0);
-			vertex[nodeId1].coord[2] = (k*zRes) - (zRes/2.0);
+        nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
+        vertex[nodeId1].coord[0] = (i * xRes) - (xRes / 2.0);
+        vertex[nodeId1].coord[1] = (j * yRes) - (yRes / 2.0);
+        vertex[nodeId1].coord[2] = (k * zRes) - (zRes / 2.0);
 
-			nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			vertex[nodeId2].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-			vertex[nodeId2].coord[1] = (j*yRes) - (yRes/2.0);
-			vertex[nodeId2].coord[2] = (k*zRes) - (zRes/2.0);
+        nodeId2 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
+        vertex[nodeId2].coord[0] = ((i + 1) * xRes) - (xRes / 2.0);
+        vertex[nodeId2].coord[1] = (j * yRes) - (yRes / 2.0);
+        vertex[nodeId2].coord[2] = (k * zRes) - (zRes / 2.0);
 
-			nodeId3 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			vertex[nodeId3].coord[0] = (i*xRes) - (xRes/2.0);
-			vertex[nodeId3].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-			vertex[nodeId3].coord[2] = (k*zRes) - (zRes/2.0);
+        nodeId3 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
+        vertex[nodeId3].coord[0] = (i * xRes) - (xRes / 2.0);
+        vertex[nodeId3].coord[1] = ((j + 1) * yRes) - (yRes / 2.0);
+        vertex[nodeId3].coord[2] = (k * zRes) - (zRes / 2.0);
 
-			nodeId4 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[nodeId4].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-			vertex[nodeId4].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-			vertex[nodeId4].coord[2] = (k*zRes) - (zRes/2.0);
+        nodeId4 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
+        vertex[nodeId4].coord[0] = ((i + 1) * xRes) - (xRes / 2.0);
+        vertex[nodeId4].coord[1] = ((j + 1) * yRes) - (yRes / 2.0);
+        vertex[nodeId4].coord[2] = (k * zRes) - (zRes / 2.0);
 
-			nodeId5 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-			vertex[nodeId5].coord[0] = (i*xRes) - (xRes/2.0);
-			vertex[nodeId5].coord[1] = (j*yRes) - (yRes/2.0);
-			vertex[nodeId5].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+        nodeId5 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
+        vertex[nodeId5].coord[0] = (i * xRes) - (xRes / 2.0);
+        vertex[nodeId5].coord[1] = (j * yRes) - (yRes / 2.0);
+        vertex[nodeId5].coord[2] = ((k + 1) * zRes) - (zRes / 2.0);
 
-			nodeId6 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			vertex[nodeId6].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-			vertex[nodeId6].coord[1] = (j*yRes) - (yRes/2.0);
-			vertex[nodeId6].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+        nodeId6 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
+        vertex[nodeId6].coord[0] = ((i + 1) * xRes) - (xRes / 2.0);
+        vertex[nodeId6].coord[1] = (j * yRes) - (yRes / 2.0);
+        vertex[nodeId6].coord[2] = ((k + 1) * zRes) - (zRes / 2.0);
 
-			nodeId7 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			vertex[nodeId7].coord[0] = (i*xRes) - (xRes/2.0);
-			vertex[nodeId7].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-			vertex[nodeId7].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+        nodeId7 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
+        vertex[nodeId7].coord[0] = (i * xRes) - (xRes / 2.0);
+        vertex[nodeId7].coord[1] = ((j + 1) * yRes) - (yRes / 2.0);
+        vertex[nodeId7].coord[2] = ((k + 1) * zRes) - (zRes / 2.0);
 
-			nodeId8 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[nodeId8].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-			vertex[nodeId8].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-			vertex[nodeId8].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+        nodeId8 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
+        vertex[nodeId8].coord[0] = ((i + 1) * xRes) - (xRes / 2.0);
+        vertex[nodeId8].coord[1] = ((j + 1) * yRes) - (yRes / 2.0);
+        vertex[nodeId8].coord[2] = ((k + 1) * zRes) - (zRes / 2.0);
 
-			tetrahedron[6*point].node_id[0] = nodeId1;
-			tetrahedron[6*point].node_id[1] = nodeId2;
-			tetrahedron[6*point].node_id[2] = nodeId3;
-			tetrahedron[6*point].node_id[3] = nodeId7;
-			tetrahedron[6*point].nSpin = m_GrainIds[point];
+        tetrahedron[6 * point].node_id[0] = nodeId1;
+        tetrahedron[6 * point].node_id[1] = nodeId2;
+        tetrahedron[6 * point].node_id[2] = nodeId3;
+        tetrahedron[6 * point].node_id[3] = nodeId7;
+        tetrahedron[6 * point].nSpin = m_GrainIds[point];
 
-			tetrahedron[6*point+1].node_id[0] = nodeId2;
-			tetrahedron[6*point+1].node_id[1] = nodeId4;
-			tetrahedron[6*point+1].node_id[2] = nodeId3;
-			tetrahedron[6*point+1].node_id[3] = nodeId7;
-			tetrahedron[6*point+1].nSpin = m_GrainIds[point];
+        tetrahedron[6 * point + 1].node_id[0] = nodeId2;
+        tetrahedron[6 * point + 1].node_id[1] = nodeId4;
+        tetrahedron[6 * point + 1].node_id[2] = nodeId3;
+        tetrahedron[6 * point + 1].node_id[3] = nodeId7;
+        tetrahedron[6 * point + 1].nSpin = m_GrainIds[point];
 
-			tetrahedron[6*point+2].node_id[0] = nodeId1;
-			tetrahedron[6*point+2].node_id[1] = nodeId2;
-			tetrahedron[6*point+2].node_id[2] = nodeId7;
-			tetrahedron[6*point+2].node_id[3] = nodeId5;
-			tetrahedron[6*point+2].nSpin = m_GrainIds[point];
+        tetrahedron[6 * point + 2].node_id[0] = nodeId1;
+        tetrahedron[6 * point + 2].node_id[1] = nodeId2;
+        tetrahedron[6 * point + 2].node_id[2] = nodeId7;
+        tetrahedron[6 * point + 2].node_id[3] = nodeId5;
+        tetrahedron[6 * point + 2].nSpin = m_GrainIds[point];
 
-			tetrahedron[6*point+3].node_id[0] = nodeId2;
-			tetrahedron[6*point+3].node_id[1] = nodeId4;
-			tetrahedron[6*point+3].node_id[2] = nodeId7;
-			tetrahedron[6*point+3].node_id[3] = nodeId8;
-			tetrahedron[6*point+3].nSpin = m_GrainIds[point];
+        tetrahedron[6 * point + 3].node_id[0] = nodeId2;
+        tetrahedron[6 * point + 3].node_id[1] = nodeId4;
+        tetrahedron[6 * point + 3].node_id[2] = nodeId7;
+        tetrahedron[6 * point + 3].node_id[3] = nodeId8;
+        tetrahedron[6 * point + 3].nSpin = m_GrainIds[point];
 
-			tetrahedron[6*point+4].node_id[0] = nodeId2;
-			tetrahedron[6*point+4].node_id[1] = nodeId5;
-			tetrahedron[6*point+4].node_id[2] = nodeId6;
-			tetrahedron[6*point+4].node_id[3] = nodeId7;
-			tetrahedron[6*point+4].nSpin = m_GrainIds[point];
+        tetrahedron[6 * point + 4].node_id[0] = nodeId2;
+        tetrahedron[6 * point + 4].node_id[1] = nodeId5;
+        tetrahedron[6 * point + 4].node_id[2] = nodeId6;
+        tetrahedron[6 * point + 4].node_id[3] = nodeId7;
+        tetrahedron[6 * point + 4].nSpin = m_GrainIds[point];
 
-			tetrahedron[6*point+5].node_id[0] = nodeId6;
-			tetrahedron[6*point+5].node_id[1] = nodeId8;
-			tetrahedron[6*point+5].node_id[2] = nodeId2;
-			tetrahedron[6*point+5].node_id[3] = nodeId7;
-			tetrahedron[6*point+5].nSpin = m_GrainIds[point];
-		  }
+        tetrahedron[6 * point + 5].node_id[0] = nodeId6;
+        tetrahedron[6 * point + 5].node_id[1] = nodeId8;
+        tetrahedron[6 * point + 5].node_id[2] = nodeId2;
+        tetrahedron[6 * point + 5].node_id[3] = nodeId7;
+        tetrahedron[6 * point + 5].nSpin = m_GrainIds[point];
+      }
 
-	  }
+    }
   }
 
   sm->setTetrahedrons(tetrahedrons);
