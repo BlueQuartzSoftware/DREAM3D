@@ -237,9 +237,6 @@ void GroupMicroTextureRegions::execute()
   notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
 
-  notifyStatusMessage("Characterizing MicroTexture Regions");
-  // characterize_micro_texture_regions();
-
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("GroupMicroTextureRegions Completed");
 }
