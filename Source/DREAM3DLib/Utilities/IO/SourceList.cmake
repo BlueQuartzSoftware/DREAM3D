@@ -11,14 +11,10 @@
 
 
 set(DREAM3DLib_Utilities_IO_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/Utilities/IO/QFilterParametersWriter.h
-  ${DREAM3DLib_SOURCE_DIR}/Utilities/IO/QFilterParametersReader.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/IO/AngleFileLoader.h
 )
 
 set(DREAM3DLib_Utilities_IO_SRCS
-  ${DREAM3DLib_SOURCE_DIR}/Utilities/IO/QFilterParametersWriter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Utilities/IO/QFilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/IO/AngleFileLoader.cpp
 )
 

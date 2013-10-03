@@ -46,7 +46,7 @@
 #include "DREAM3DLib/IOFilters/util/SurfaceDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/util/VertexDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/util/EdgeDataContainerReader.h"
-#include "DREAM3DLib/HDF5/H5FilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 
 
@@ -65,19 +65,19 @@ DataContainerReader::DataContainerReader() :
   m_ReadSurfaceData(false),
   m_ReadVertexData(false),
   m_ReadEdgeData(false),
+  m_ReadAllArrays(false),
   m_ReadAllVertexArrays(false),
+  m_ReadAllEdgeArrays(false),
+  m_ReadAllFaceArrays(false),
+  m_ReadAllCellArrays(false),
   m_ReadAllVertexFieldArrays(false),
   m_ReadAllVertexEnsembleArrays(false),
-  m_ReadAllEdgeArrays(false),
   m_ReadAllEdgeFieldArrays(false),
   m_ReadAllEdgeEnsembleArrays(false),
-  m_ReadAllFaceArrays(false),
   m_ReadAllFaceFieldArrays(false),
   m_ReadAllFaceEnsembleArrays(false),
-  m_ReadAllCellArrays(false),
   m_ReadAllCellFieldArrays(false),
-  m_ReadAllCellEnsembleArrays(false),
-  m_ReadAllArrays(false)
+  m_ReadAllCellEnsembleArrays(false)
 {
   m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();

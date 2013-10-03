@@ -49,7 +49,7 @@
 #include "EbsdLib/EbsdConstants.h"
 
 
-#include "DREAM3DLib/HDF5/H5FilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
 #include "DREAM3DLib/IOFilters/util/VolumeDataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/util/SurfaceDataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/util/VertexDataContainerWriter.h"

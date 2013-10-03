@@ -40,7 +40,7 @@
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
 
-#include "DREAM3DLib/HDF5/H5FilterParametersConstants.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersConstants.h"
 
 
 // -----------------------------------------------------------------------------
