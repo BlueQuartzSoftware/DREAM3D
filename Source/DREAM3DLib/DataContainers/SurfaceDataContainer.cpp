@@ -51,8 +51,8 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainer::SurfaceDataContainer() :
-  EdgeDataContainer(),
-  m_NumFaceTuples(0)
+EdgeDataContainer(),
+m_NumFaceTuples(0)
 {
   setName(DREAM3D::HDF5::SurfaceDataContainerName);
 }
@@ -75,7 +75,7 @@ DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, FaceEnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::getFaceData(const QString& name)
+IDataArray::Pointer SurfaceDataContainer::getFaceData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
@@ -89,7 +89,7 @@ IDataArray::Pointer SurfaceDataContainer::getFaceData(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::addFaceData(const QString& name, IDataArray::Pointer data)
+void SurfaceDataContainer::addFaceData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -105,7 +105,7 @@ void SurfaceDataContainer::addFaceData(const QString& name, IDataArray::Pointer 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::removeFaceData(const QString& name)
+IDataArray::Pointer SurfaceDataContainer::removeFaceData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
@@ -152,7 +152,7 @@ int SurfaceDataContainer::getNumFaceArrays()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainer::resizeFaceDataArrays(size_t size)
 {
-// int success = 0;
+ // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
@@ -165,7 +165,7 @@ void SurfaceDataContainer::resizeFaceDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::getFaceFieldData(const QString& name)
+IDataArray::Pointer SurfaceDataContainer::getFaceFieldData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceFieldData.find(name);
@@ -179,7 +179,7 @@ IDataArray::Pointer SurfaceDataContainer::getFaceFieldData(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::addFaceFieldData(const QString& name, IDataArray::Pointer data)
+void SurfaceDataContainer::addFaceFieldData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -195,7 +195,7 @@ void SurfaceDataContainer::addFaceFieldData(const QString& name, IDataArray::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::removeFaceFieldData(const QString& name)
+IDataArray::Pointer SurfaceDataContainer::removeFaceFieldData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceFieldData.find(name);
@@ -242,7 +242,7 @@ int SurfaceDataContainer::getNumFaceFieldArrays()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainer::resizeFaceFieldDataArrays(size_t size)
 {
-// int success = 0;
+ // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceFieldData.begin(); iter != m_FaceFieldData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
@@ -255,7 +255,7 @@ void SurfaceDataContainer::resizeFaceFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::getFaceEnsembleData(const QString& name)
+IDataArray::Pointer SurfaceDataContainer::getFaceEnsembleData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceEnsembleData.find(name);
@@ -269,7 +269,7 @@ IDataArray::Pointer SurfaceDataContainer::getFaceEnsembleData(const QString& nam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::addFaceEnsembleData(const QString& name, IDataArray::Pointer data)
+void SurfaceDataContainer::addFaceEnsembleData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -285,7 +285,7 @@ void SurfaceDataContainer::addFaceEnsembleData(const QString& name, IDataArray::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::removeFaceEnsembleData(const QString& name)
+IDataArray::Pointer SurfaceDataContainer::removeFaceEnsembleData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceEnsembleData.find(name);
@@ -332,7 +332,7 @@ int SurfaceDataContainer::getNumFaceEnsembleArrays()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainer::resizeFaceEnsembleDataArrays(size_t size)
 {
-// int success = 0;
+ // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceEnsembleData.begin(); iter != m_FaceEnsembleData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";

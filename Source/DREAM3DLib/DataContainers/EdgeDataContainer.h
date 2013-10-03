@@ -94,9 +94,9 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
     DOES_DATASET_EXIST_DECL(EdgeFieldData)
     DOES_DATASET_EXIST_DECL(EdgeEnsembleData)
 
-    /* ************ THESE ARE GOING TO GO AWAY I THINK. THEY ARE HERE TO GET THINGS TO COMPILE ******* */
+/* ************ THESE ARE GOING TO GO AWAY I THINK. THEY ARE HERE TO GET THINGS TO COMPILE ******* */
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, MeshLinks)
-    /* ************************************************************************************************* */
+/* ************************************************************************************************* */
 
 
     /**
@@ -104,14 +104,14 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEdgeData(const QString& name, IDataArray::Pointer data);
+    void addEdgeData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEdgeData(const QString& name);
+    IDataArray::Pointer getEdgeData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -119,7 +119,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEdgeData(const QString& name);
+    IDataArray::Pointer removeEdgeData(const QString &name);
 
     /**
      * @brief Removes all the ensemble data
@@ -137,14 +137,14 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEdgeFieldData(const QString& name, IDataArray::Pointer data);
+    void addEdgeFieldData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEdgeFieldData(const QString& name);
+    IDataArray::Pointer getEdgeFieldData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -152,7 +152,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEdgeFieldData(const QString& name);
+    IDataArray::Pointer removeEdgeFieldData(const QString &name);
 
     /**
      * @brief Removes all the Field Arrays
@@ -190,14 +190,14 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEdgeEnsembleData(const QString& name, IDataArray::Pointer data);
+    void addEdgeEnsembleData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEdgeEnsembleData(const QString& name);
+    IDataArray::Pointer getEdgeEnsembleData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -205,7 +205,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEdgeEnsembleData(const QString& name);
+    IDataArray::Pointer removeEdgeEnsembleData(const QString &name);
 
     /**
      * @brief Removes all the Ensemble Arrays
@@ -241,16 +241,16 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
 
 
   protected:
-    EdgeDataContainer();
+     EdgeDataContainer();
 
-  private:
+   private:
 
-    QMap<QString, IDataArray::Pointer> m_EdgeData;
-    QMap<QString, IDataArray::Pointer> m_EdgeFieldData;
-    QMap<QString, IDataArray::Pointer> m_EdgeEnsembleData;
+     QMap<QString, IDataArray::Pointer> m_EdgeData;
+     QMap<QString, IDataArray::Pointer> m_EdgeFieldData;
+     QMap<QString, IDataArray::Pointer> m_EdgeEnsembleData;
 
-    EdgeDataContainer(const EdgeDataContainer&);
-    void operator =(const EdgeDataContainer&);
+     EdgeDataContainer(const EdgeDataContainer&);
+     void operator =(const EdgeDataContainer&);
 
 };
 

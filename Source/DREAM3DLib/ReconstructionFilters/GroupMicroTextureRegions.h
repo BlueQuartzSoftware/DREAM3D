@@ -133,7 +133,6 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     std::vector<int> parentnumbers;
     std::vector<bool> beenChecked;
     std::vector<float> intensities;
-    std::vector<int> grandparenttallynumbers;
 
 
     QVector<OrientationOps::Pointer> m_OrientationOps;

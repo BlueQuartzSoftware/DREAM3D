@@ -58,11 +58,10 @@ class DynamicListArray
     DREAM3D_STATIC_NEW_MACRO(DynamicListArray<T>)
     DREAM3D_TYPE_MACRO(DynamicListArray<T>)
 
-    class ElementList
-    {
+    class ElementList {
       public:
-        uint16_t ncells;
-        T* cells;
+      uint16_t ncells;
+      T* cells;
     };
 
 
@@ -70,10 +69,9 @@ class DynamicListArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    virtual ~DynamicListArray()
-    {
-      // This makes sure we deallocate any lists that have been created
-      for (size_t i = 0; i < this->m_Size; i++)
+    virtual ~DynamicListArray(){
+     // This makes sure we deallocate any lists that have been created
+      for (size_t i=0; i<this->m_Size; i++)
       {
         if ( this->m_Array[i].cells != NULL )
         {
@@ -86,7 +84,7 @@ class DynamicListArray
         delete [] this->m_Array;
       }
 
-    }
+     }
 
     //----------------------------------------------------------------------------
     inline void insertCellReference(size_t ptId, unsigned short pos, size_t cellId)
@@ -107,7 +105,7 @@ class DynamicListArray
      */
     bool setElementList(size_t ptId, uint16_t nCells, T* data)
     {
-      if(ptId >= m_Size) { return false; }
+      if(ptId >= m_Size) return false;
       if(NULL != m_Array[ptId].cells && m_Array[ptId].ncells > 0)
       {
         m_Array[ptId].cells = NULL;
@@ -131,7 +129,7 @@ class DynamicListArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void deserializeLinks(QVector<uint8_t>& buffer, size_t nElements)
+    void deserializeLinks(QVector<uint8_t> &buffer, size_t nElements)
     {
       size_t offset = 0;
       allocate(nElements); // Allocate all the links with 0 and NULL;
@@ -154,7 +152,7 @@ class DynamicListArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void deserializeLinks(std::vector<uint8_t>& buffer, size_t nElements)
+    void deserializeLinks(std::vector<uint8_t> &buffer, size_t nElements)
     {
       size_t offset = 0;
       allocate(nElements); // Allocate all the links with 0 and NULL;
@@ -174,10 +172,10 @@ class DynamicListArray
       }
     }
 
-    void allocateLists(QVector<uint16_t>& linkCounts)
+    void allocateLists(QVector<uint16_t> &linkCounts)
     {
       allocate(linkCounts.size());
-      for (size_t i = 0; i < linkCounts.size(); i++)
+      for (size_t i=0; i < linkCounts.size(); i++)
       {
         this->m_Array[i].cells = new int[this->m_Array[i].ncells];
         this->m_Array[i].ncells = linkCounts[i];
@@ -186,19 +184,19 @@ class DynamicListArray
 
   protected:
     DynamicListArray() :
-      m_Array(NULL),
-      m_Size(0)
+    m_Array(NULL),
+    m_Size(0)
     {}
 
     //----------------------------------------------------------------------------
     // This will allocate memory to hold all the NeighborList structures where each
     // structure is initialized to Zero Entries and a NULL Pointer
-    void allocate(size_t sz, size_t ext = 1000)
+    void allocate(size_t sz, size_t ext=1000)
     {
-      static DynamicListArray<T>::ElementList linkInit = {0, NULL};
+      static DynamicListArray<T>::ElementList linkInit = {0,NULL};
 
       // This makes sure we deallocate any lists that have been created
-      for (size_t i = 0; i < this->m_Size; i++)
+      for (size_t i=0; i<this->m_Size; i++)
       {
         if ( this->m_Array[i].cells != NULL )
         {
@@ -216,7 +214,7 @@ class DynamicListArray
       this->m_Array = new DynamicListArray<T>::ElementList[sz];
 
       // Initialize each structure to have 0 entries and NULL pointer.
-      for (size_t i = 0; i < sz; i++)
+      for (size_t i=0; i < sz; i++)
       {
         this->m_Array[i] = linkInit;
       }

@@ -1,14 +1,11 @@
-Identify MicroTexture (C-Axis Misorientation) {#groupmicrotextureregions}
+Perform MTR Bridge {#performmtrbridge}
 ======
 
 ## Group (Subgroup) ##
-Reconstruction Filters (Grouping)
+Generic Filters (Memory Management)
 
 ## Description ##
-This Filter groups neighboring **Fields** that have c-axes aligned within a user defined tolerance.  The algorithm for grouping the **Fields** is analogous to the algorithm for segmenting the **Fields** - only the average orientation of the **Fields** are used instead of the orientations of the individual **Cells** and the criterion for grouping only considers the alignment of the c-axes.  The user can specify a tolerance for how closely aligned the c-axes must be for neighbor **Fields** to be grouped.
-
-
-NOTE: This filter is intended for use with *Heaxgonal* materials.  While the c-axis is actually just referring to the <001> direction and thus will operate on any symmetry, the utility of grouping by <001> alignment is likely only important/useful in materials with anisotropy in that direction (like materials with *Hexagonal* symmetry). 
+This Filter makes interior calls to Rename Cell Array and Link Field Data To Cell Array.  It is meant as a temporary solution to the need for two data containers at the same time.
 
 
 ## Parameters ##

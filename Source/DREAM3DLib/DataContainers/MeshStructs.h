@@ -41,94 +41,88 @@
 #include "DREAM3DLib/DataArrays/StructArray.hpp"
 
 
-// -----------------------------------------------------------------------------
-// These structures are specific to the MultiMaterial Marching Cubes "M3C" algorithms
-// -----------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------
+  // These structures are specific to the MultiMaterial Marching Cubes "M3C" algorithms
+  // -----------------------------------------------------------------------------
 #define num_neigh 26
 
-namespace SurfaceMesh
-{
-  namespace M3C
+  namespace SurfaceMesh
   {
-    typedef struct
+    namespace M3C
     {
-      float coord[3];
-    } VoxelCoord;
+      typedef struct {
+          float coord[3];
+      } VoxelCoord;
 
-    typedef struct
-    {
-      int neigh_id[num_neigh + 1];
-    } Neighbor;
+      typedef struct {
+          int neigh_id[num_neigh+1];
+      } Neighbor;
 
-    typedef struct
-    {
-      int site_id[4];    // stores 4 sites at the corners of each square...
-      int edge_id[4];    // stores edge id turned on...others will have dummy -1...
-      int nEdge;         // number of edges on the square...
-      int FCnode;        // face center node...if not, it's -1...
-      int effect;        // 0 if the square is useless; 1 is good...
-    } Face;
+      typedef struct {
+          int site_id[4];    // stores 4 sites at the corners of each square...
+          int edge_id[4];    // stores edge id turned on...others will have dummy -1...
+          int nEdge;         // number of edges on the square...
+          int FCnode;        // face center node...if not, it's -1...
+          int effect;        // 0 if the square is useless; 1 is good...
+      } Face;
 
-    typedef struct
-    {
-      int node_id[2];    // the segment heads from node_id[0] to node_id[1]...
-      int edgeKind;      // initially marked as 2; for face edges it's always 2...
-      int nSpin[2];      // 0 is to the left of the arrow; 1 is at right...
-    } Segment;
+      typedef struct {
+          int node_id[2];    // the segment heads from node_id[0] to node_id[1]...
+          int edgeKind;      // initially marked as 2; for face edges it's always 2...
+          int nSpin[2];      // 0 is to the left of the arrow; 1 is at right...
+      } Segment;
 
-    /* Used for "inner edge" spin calculations */
-    typedef struct
-    {
-      int node_id[2];    // the segment heads from node_id[0] to node_id[1]...
-      int edgeKind;      // initially marked with 2...
-      int nSpin[4];
-    } ISegment;
+      /* Used for "inner edge" spin calculations */
+      typedef struct {
+          int node_id[2];    // the segment heads from node_id[0] to node_id[1]...
+          int edgeKind;      // initially marked with 2...
+          int nSpin[4];
+      } ISegment;
 
-    typedef struct
-    {
-      int node_id[3];    // stores three new node id for vertices of the triangles...
-      uint64_t e_id[3];       // stores three new edge id for sides of the triangles...
-      int nSpin[2];      // two spins...
-      int edgePlace[3];
-    } Triangle;
+      typedef struct {
+          int node_id[3];    // stores three new node id for vertices of the triangles...
+          uint64_t e_id[3];       // stores three new edge id for sides of the triangles...
+          int nSpin[2];      // two spins...
+          int edgePlace[3];
+      } Triangle;
 
-    typedef Triangle Patch; // This is here for compatibility
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-// These structures are used to write the binary temp files during some of the
-// meshing algorithms.
-// -----------------------------------------------------------------------------
-namespace SurfaceMesh
-{
-  namespace NodesFile
-  {
-    typedef struct
-    {
-      int nodeId;
-      int nodeKind;
-      float x;
-      float y;
-      float z;
-    } NodesFileRecord_t;
-    const int ByteCount = sizeof(NodesFileRecord_t);
+      typedef Triangle Patch; // This is here for compatibility
+    }
   }
 
-  namespace TrianglesFile
+
+  // -----------------------------------------------------------------------------
+  // These structures are used to write the binary temp files during some of the
+  // meshing algorithms.
+  // -----------------------------------------------------------------------------
+  namespace SurfaceMesh
   {
-    typedef struct
+    namespace NodesFile
     {
-      int triId;
-      int nodeId_0;
-      int nodeId_1;
-      int nodeId_2;
-      int label_0;
-      int label_1;
-    } TrianglesFileRecord_t;
-    const int ByteCount = sizeof(TrianglesFileRecord_t);
+      typedef struct
+      {
+          int nodeId;
+          int nodeKind;
+          float x;
+          float y;
+          float z;
+      } NodesFileRecord_t;
+      const int ByteCount = sizeof(NodesFileRecord_t);
+    }
+
+    namespace TrianglesFile
+    {
+      typedef struct
+      {
+          int triId;
+          int nodeId_0;
+          int nodeId_1;
+          int nodeId_2;
+          int label_0;
+          int label_1;
+      } TrianglesFileRecord_t;
+      const int ByteCount = sizeof(TrianglesFileRecord_t);
+    }
   }
-}
 
 #endif /* MESHSTRUCTS_H_ */
