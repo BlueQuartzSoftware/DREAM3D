@@ -223,7 +223,6 @@ void importSmallIN100()
 // -----------------------------------------------------------------------------
 void TestReadQSettingsBasedFile()
 {
-  Observer obs;
   int err = 0;
 
   FilterManager::Pointer filtManager = FilterManager::Instance();
@@ -234,8 +233,11 @@ void TestReadQSettingsBasedFile()
 
   qDebug() << "Current Path: " << QDir::currentPath();
   // Read in the first Pipeline that converts the Small IN100 files to an .h5ebsd file
-  // importSmallIN100();
-
+  //importSmallIN100();
+  QDir cwd = QDir::current();
+  cwd.cdUp();
+  cwd.cd("Bin");
+  QDir::setCurrent(cwd.absolutePath());
 
 
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
