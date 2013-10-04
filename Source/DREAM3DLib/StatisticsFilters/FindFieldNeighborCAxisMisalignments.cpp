@@ -192,7 +192,7 @@ void FindFieldNeighborCAxisMisalignments::execute()
       phase2 = m_CrystalStructures[m_FieldPhases[nname]];
       if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
       {
-      QuaternionMathF::Copy(avgQuats[nname], q2);
+        QuaternionMathF::Copy(avgQuats[nname], q2);
         OrientationMath::QuattoMat(q2, g2);
         //transpose the g matrix so when caxis is multiplied by it
         //it will give the sample direction that the caxis is along
