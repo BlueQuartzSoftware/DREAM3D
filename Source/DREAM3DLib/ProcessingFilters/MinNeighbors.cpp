@@ -334,7 +334,7 @@ void MinNeighbors::assign_badpoints()
       }
     }
     QList<QString> voxelArrayNames = m->getCellArrayNameList();
-    for (size_t j = 0; j < totalPoints; j++)
+    for (int64_t j = 0; j < totalPoints; j++)
     {
       grainname = m_GrainIds[j];
       neighbor = m_Neighbors[j];
