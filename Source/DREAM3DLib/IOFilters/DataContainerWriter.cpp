@@ -438,7 +438,7 @@ void DataContainerWriter::execute()
     writeXdmfFooter(out);
   }
 
-
+  H5Gclose(dcaGid);
   notifyStatusMessage("Complete");
 }
 

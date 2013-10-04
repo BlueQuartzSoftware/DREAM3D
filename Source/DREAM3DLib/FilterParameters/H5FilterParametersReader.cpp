@@ -431,52 +431,61 @@ FloatVec3Widget_t H5FilterParametersReader::readFloatVec3(const QString name, Fl
 // -----------------------------------------------------------------------------
 ComparisonInput_t H5FilterParametersReader::readComparisonInput(const QString name, ComparisonInput_t defaultValue, int vectorPos)
 {
-  bool ok = false;
-  int err = 0;
-  ComparisonInput_t v;
-
-  QString ss = QString::number(vectorPos) + H5FilterParameter::AxisAngleInput;
-
-
-  QString data;
-
-  err = QH5Lite::readStringAttribute(m_CurrentGroupId, name, ss, data);
-  if(err < 0)
+  QVector<ComparisonInput_t> comps(1, defaultValue);
+  QVector<ComparisonInput_t> values = readComparisonInputs(name, comps);
+  if(values.size() >= 1)
   {
-    return defaultValue;
+    return values[0];
   }
-
-
-  QStringList tokens = data.split('\n');
-  if(tokens.size() >= 1)
-  {
-    v.arrayName = tokens[0];
-  }
-  if(tokens.size() >= 2)
-  {
-    v.compOperator = QString(tokens[1]).toInt(&ok, 10);
-  }
-  if(tokens.size() >= 3)
-  {
-    v.compValue = QString(tokens[2]).toInt(&ok, 10);
-  }
-
-  return v;
+  return defaultValue;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<ComparisonInput_t> H5FilterParametersReader::readComparisonInputs(const QString name, QVector<ComparisonInput_t> v)
+QVector<ComparisonInput_t> H5FilterParametersReader::readComparisonInputs(const QString name, QVector<ComparisonInput_t> defValue)
 {
-  QVector<ComparisonInput_t> comparisons;
-  ComparisonInput_t cellComparisonDefault;
-  int numQFilters = static_cast<int>( readValue(name, 0) );
-  for(int i = 0; i < numQFilters; i++)
+  size_t size = 0;
+  QString strData = "";
+  bool ok = false;
+  // See if the data set actually exists, if it does NOT just return what the user passed in as a default value
+  if(false == QH5Lite::datasetExists(m_CurrentGroupId, name) ) { return defValue; }
+
+  herr_t err = QH5Lite::readStringDataset(m_CurrentGroupId, name, strData);
+  if(err < 0) { return defValue; } // If the data set does not exist no point in going any further
+
+  // Now read the the attribute that says how many arrays are in the data set.
+  err = QH5Lite::readScalarAttribute(m_CurrentGroupId, name, "NumInputs", size);
+
+  QStringList strVector = strData.split('\n', QString::SkipEmptyParts);
+  qint32 strVecSize = strVector.size();
+  if (strVecSize != size)
   {
-    comparisons.push_back( readComparisonInput(name, cellComparisonDefault, i) );
+    // Something has gone wrong in the tokenization and the number of tokens does not match what
+    // was written to the HDF5 file.
+    return defValue;
   }
-  return comparisons;
+
+  QVector<ComparisonInput_t> values(size);
+  for(qint32 i = 0; i < size; ++i)
+  {
+    ComparisonInput_t& v = values[i];
+    QStringList tokens = strVector[i].split(',', QString::SkipEmptyParts);
+    if(tokens.size() >= 1)
+    {
+      v.arrayName = tokens[0];
+    }
+    if(tokens.size() >= 2)
+    {
+      v.compOperator = QString(tokens[1]).toInt(&ok, 10);
+    }
+    if(tokens.size() >= 3)
+    {
+      v.compValue = QString(tokens[2]).toDouble(&ok);
+    }
+  }
+  return values;
+
 }
 
 // -----------------------------------------------------------------------------
@@ -519,15 +528,18 @@ QSet<QString> H5FilterParametersReader::readArraySelections(const QString name, 
   size_t size = 0;
   QString strData = "";
 
+  // See if the data set actually exists, if it does NOT just return what the user passed in as a default value
+  if(false == QH5Lite::datasetExists(m_CurrentGroupId, name) ) { return v; }
+
   herr_t err = QH5Lite::readStringDataset(m_CurrentGroupId, name, strData);
   if(err < 0) { return v; } // If the data set does not exist no point in going any further
 
   // Now read the the attribute that says how many arrays are in the data set.
   err = QH5Lite::readScalarAttribute(m_CurrentGroupId, name, "NumArrays", size);
 
-  QStringList strVector = strData.split('\n');
-
-  if (strVector.size() != size)
+  QStringList strVector = strData.split('\n', QString::SkipEmptyParts);
+  qint32 strVecSize = strVector.size();
+  if (strVecSize != size)
   {
     // Something has gone wrong in the tokenization and the number of tokens does not match what
     // was written to the HDF5 file.

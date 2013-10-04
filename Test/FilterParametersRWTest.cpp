@@ -35,6 +35,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
+#include "H5Support/QH5Utilities.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
@@ -44,16 +46,18 @@
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
-
-#include "H5Support/QH5Utilities.h"
-
-#include "UnitTestSupport.hpp"
-#include "TestFileLocations.h"
-
 #include "DREAM3DLib/TestFilters/GenericExample.h"
 #include "DREAM3DLib/TestFilters/ThresholdExample.h"
 #include "DREAM3DLib/TestFilters/ArraySelectionExample.h"
 #include "DREAM3DLib/TestFilters/TestFilters.h"
+
+
+
+#include "UnitTestSupport.hpp"
+#include "TestFileLocations.h"
+#include "GenerateGrainIds.h"
+
+
 
 
 #define StlFilePrefixTestValue "StlFilePrefixTestValue"
@@ -184,7 +188,9 @@ FilterPipeline::Pointer m_PipelineFromFile;
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::FilterParametersRWTest::OutputFile);
+  QFile::remove(UnitTest::FilterParametersRWTest::ArraySelectionFile);
+  QFile::remove(UnitTest::FilterParametersRWTest::GenericExampleFile);
+  QFile::remove(UnitTest::FilterParametersRWTest::ThresholdFile);
 #endif
 }
 
@@ -230,7 +236,6 @@ void ArraySelectionExampleTest()
 {
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
 
   ArraySelectionExample::Pointer filt = ArraySelectionExample::New();
 
@@ -279,8 +284,10 @@ void ArraySelectionExampleTest()
   filt->setSelectedVertexVertexEnsembleArrays(set11);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
+  writer->setOutputFile(UnitTest::FilterParametersRWTest::ArraySelectionFile);
 
+  CreateVolumeDataContainer::Pointer cdc = CreateVolumeDataContainer::New();
+  pipeline->pushBack(cdc);
   pipeline->pushBack(filt);
   pipeline->pushBack(writer);
 
@@ -291,138 +298,84 @@ void ArraySelectionExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = ArraySelectionExample::New();
-  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::ArraySelectionFile);
   DREAM3D_REQUIRED(fid, > , 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
-  int index = 0;
+  int index = 1; // The "filt" is index=1 in the pipeline
 
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index);
 
-  QSet<QString> set1Read = filt->getSelectedVolumeCellArrays();
-  QSet<QString>::iterator iter = set1Read.begin();
+  QSet<QString> comp = filt->getSelectedVolumeCellArrays();
+  DREAM3D_REQUIRE_EQUAL(comp.size(), 4);
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellArraysString4), ==, true)
 
-  DREAM3D_REQUIRED(SelectedVolumeCellArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellArraysString4, == , *iter)
+  comp = filt->getSelectedVolumeCellFieldArrays();
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellFieldArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellFieldArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellFieldArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellFieldArraysString4), ==, true)
 
-  QSet<QString> set2Read = filt->getSelectedVolumeCellFieldArrays();
-  iter = set2Read.begin();
+  comp = filt->getSelectedVolumeCellEnsembleArrays();
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellEnsembleArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellEnsembleArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellEnsembleArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVolumeCellEnsembleArraysString4), ==, true)
 
-  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString4, == , *iter)
+  comp = filt->getSelectedSurfaceVertexArrays();
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceVertexArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceVertexArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceVertexArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceVertexArraysString4), ==, true)
 
-  QSet<QString> set3Read = filt->getSelectedVolumeCellEnsembleArrays();
-  iter = set3Read.begin();
+  comp = filt->getSelectedSurfaceFaceArrays();
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceArraysString4), ==, true)
 
-  DREAM3D_REQUIRED(SelectedVolumeCellEnsembleArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellEnsembleArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellEnsembleArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellEnsembleArraysString4, == , *iter)
+  comp = filt->getSelectedSurfaceEdgeArrays();
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceEdgeArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceEdgeArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceEdgeArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceEdgeArraysString4), ==, true)
 
-  QSet<QString> set4Read = filt->getSelectedSurfaceVertexArrays();
-  iter = set4Read.begin();
+  comp = filt->getSelectedSurfaceFaceFieldArrays();
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceFieldArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceFieldArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceFieldArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceFieldArraysString4), ==, true)
 
-  DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString4, == , *iter)
+  comp = filt->getSelectedSurfaceFaceEnsembleArrays();
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceEnsembleArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceEnsembleArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceEnsembleArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedSurfaceFaceEnsembleArraysString4), ==, true)
 
-  QSet<QString> set5Read = filt->getSelectedSurfaceFaceArrays();
-  iter = set5Read.begin();
+  comp = filt->getSelectedVertexVertexArrays();
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexArraysString4), ==, true)
 
-  DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString4, == , *iter)
+  comp = filt->getSelectedVertexVertexFieldArrays();
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexFieldArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexFieldArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexFieldArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexFieldArraysString4), ==, true)
 
-  QSet<QString> set6Read = filt->getSelectedSurfaceEdgeArrays();
-  iter = set6Read.begin();
-
-  DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString4, == , *iter)
-
-  QSet<QString> set7Read = filt->getSelectedSurfaceFaceFieldArrays();
-  iter = set7Read.begin();
-
-  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString4, == , *iter)
-
-  QSet<QString> set8Read = filt->getSelectedSurfaceFaceEnsembleArrays();
-  iter = set8Read.begin();
-
-  DREAM3D_REQUIRED(SelectedSurfaceFaceEnsembleArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceEnsembleArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceEnsembleArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceEnsembleArraysString4, == , *iter)
-
-  QSet<QString> set9Read = filt->getSelectedVertexVertexArrays();
-  iter = set9Read.begin();
-
-  DREAM3D_REQUIRED(SelectedVertexVertexArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexArraysString4, == , *iter)
-
-  QSet<QString> set10Read = filt->getSelectedVertexVertexFieldArrays();
-  iter = set10Read.begin();
-
-  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString4, == , *iter)
-
-  QSet<QString> set11Read = filt->getSelectedVertexVertexEnsembleArrays();
-  iter = set11Read.begin();
-
-  DREAM3D_REQUIRED(SelectedVertexVertexEnsembleArraysString1, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexEnsembleArraysString2, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexEnsembleArraysString3, == , *iter)
-  iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexEnsembleArraysString4, == , *iter)
+  comp = filt->getSelectedVertexVertexEnsembleArrays();
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexEnsembleArraysString1), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexEnsembleArraysString2), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexEnsembleArraysString3), ==, true)
+  DREAM3D_REQUIRED(comp.contains(SelectedVertexVertexEnsembleArraysString4), ==, true)
 
 
   H5Gclose(pipelineGroupId); // Closes the "Pipeline" group
@@ -501,8 +454,10 @@ void GenericExampleTest()
   filt->setCrystalSymmetryRotations(axisAngleInputsVector);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
+  writer->setOutputFile(UnitTest::FilterParametersRWTest::GenericExampleFile);
 
+  CreateVolumeDataContainer::Pointer cdc = CreateVolumeDataContainer::New();
+  pipeline->pushBack(cdc);
   pipeline->pushBack(filt);
   pipeline->pushBack(writer);
 
@@ -513,14 +468,14 @@ void GenericExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = GenericExample::New();
-  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::GenericExampleFile);
   DREAM3D_REQUIRED(fid, > , 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
-  int index = 0;
+  int index = 1;
 
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index);
@@ -631,8 +586,10 @@ void ThresholdExampleTest()
 
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
+  writer->setOutputFile(UnitTest::FilterParametersRWTest::ThresholdFile);
 
+  CreateVolumeDataContainer::Pointer cdc = CreateVolumeDataContainer::New();
+  pipeline->pushBack(cdc);
   pipeline->pushBack(filt);
   pipeline->pushBack(writer);
 
@@ -643,14 +600,14 @@ void ThresholdExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = ThresholdExample::New();
-  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::ThresholdFile);
   DREAM3D_REQUIRED(fid, > , 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
-  int index = 0;
+  int index = 1;
 
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index );
@@ -973,7 +930,7 @@ int main(int argc, char** argv)
 
 
 #if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+//  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
 

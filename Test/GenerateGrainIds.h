@@ -65,6 +65,19 @@ class GenerateGrainIds : public AbstractFilter
       dataCheck(true, 1, 1, 1);
     }
 
+    void readFilterParameters(AbstractFilterParametersReader* reader, int index) {
+      reader->openFilterGroup(this, index);
+      reader->closeFilterGroup();
+    }
+
+    int writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+    {
+      writer->openFilterGroup(this, index);
+      writer->closeFilterGroup();
+      return ++index; // we want to return the next index that was just written to
+    }
+
+
   protected:
     GenerateGrainIds() :
       AbstractFilter(),
@@ -142,6 +155,18 @@ class CreateVolumeDataContainer : public AbstractFilter
     virtual void preflight()
     {
       dataCheck(true, 1, 1, 1);
+    }
+
+    void readFilterParameters(AbstractFilterParametersReader* reader, int index) {
+      reader->openFilterGroup(this, index);
+      reader->closeFilterGroup();
+    }
+
+    int writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+    {
+      writer->openFilterGroup(this, index);
+      writer->closeFilterGroup();
+      return ++index; // we want to return the next index that was just written to
     }
 
   protected:
