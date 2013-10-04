@@ -374,14 +374,14 @@ int MicReader::readMicFile()
   // Delete any currently existing pointers
   deletePointers();
   // Initialize new pointers
-  size_t totalDataRows = 0;
-  size_t totalPossibleDataRows = 0;
+  int32_t totalDataRows = 0;
+  int32_t totalPossibleDataRows = 0;
 //  size_t fieldsRead = 0;
   float origEdgeLength;
   float xMax = 0, yMax = 0;
   float xMin = 1000000000, yMin = 1000000000;
   float xMinUM, yMinUM;
-  size_t counter = 0;
+  int32_t counter = 0;
   bool ok = false;
   QByteArray buf;
 

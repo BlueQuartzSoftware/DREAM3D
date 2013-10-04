@@ -62,7 +62,7 @@
   err = H5Utilities::closeFile(fileId);\
   return err;\
   } else {\
-  var.resize(data.size());\
+  var.resize(static_cast<qint32>(data.size()));\
   ::memcpy(var.data(), &(data.front()), sizeof(type) * var.size());\
   }\
   }

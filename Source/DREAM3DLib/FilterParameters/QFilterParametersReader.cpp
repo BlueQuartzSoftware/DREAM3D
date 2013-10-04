@@ -537,6 +537,7 @@ FloatVec3Widget_t QFilterParametersReader::readValue(const QString name, FloatVe
   v3.z = m_Prefs->value("z", v3.z).toFloat(&ok);
   if(!ok) { v3.z = defaultValue.z; }
 
+
   m_Prefs->endArray();
 
   return v3;
