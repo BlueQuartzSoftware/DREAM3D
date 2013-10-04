@@ -42,6 +42,7 @@ set(_PublicFilters
   FindTwinBoundarySchmidFactors
   GenerateEnsembleStatistics
   FindFieldClustering
+  FindFieldNeighborCAxisMisalignments
 )
 
 

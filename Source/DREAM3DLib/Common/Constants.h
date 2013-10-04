@@ -189,6 +189,8 @@ namespace DREAM3D
     const DREAM3D_STRING BasalLoadingFactor("BasalLoadingFactor");
     const DREAM3D_STRING Clusters("Clusters");
     const DREAM3D_STRING ClusteringList("ClusteringList");
+    const DREAM3D_STRING CAxisMisalignmentList("CAxisMisalignmentList");
+    const DREAM3D_STRING AvgCAxisMisalignments("AvgCAxisMisalignments");
   }
 
   namespace EnsembleData
