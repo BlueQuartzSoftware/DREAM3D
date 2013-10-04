@@ -497,7 +497,7 @@ IntVec3Widget_t QFilterParametersReader::readValue(const QString name, IntVec3Wi
   QVariant var = m_Prefs->value(name);
   bool ok = false;
   IntVec3Widget_t v3 = var.value<IntVec3Widget_t>();
-  m_Prefs->beginReadArray("Dimensions");
+  m_Prefs->beginReadArray(name);
   m_Prefs->setArrayIndex(0);
   v3.x = m_Prefs->value("x", v3.x).toInt(&ok);
   if(!ok) { v3.x = defaultValue.x; }
@@ -524,18 +524,18 @@ FloatVec3Widget_t QFilterParametersReader::readValue(const QString name, FloatVe
   QVariant var = m_Prefs->value(name);
   bool ok = false;
   FloatVec3Widget_t v3 = var.value<FloatVec3Widget_t>();
-  m_Prefs->beginReadArray("Dimensions");
+  m_Prefs->beginReadArray(name);
   m_Prefs->setArrayIndex(0);
   v3.x = m_Prefs->value("x", v3.x).toFloat(&ok);
   if(!ok) { v3.x = defaultValue.x; }
 
   m_Prefs->setArrayIndex(1);
   v3.y = m_Prefs->value("y", v3.y).toFloat(&ok);
-  if(!ok) { v3.x = defaultValue.x; }
+  if(!ok) { v3.x = defaultValue.y; }
 
   m_Prefs->setArrayIndex(2);
   v3.z = m_Prefs->value("z", v3.z).toFloat(&ok);
-  if(!ok) { v3.x = defaultValue.x; }
+  if(!ok) { v3.x = defaultValue.z; }
 
   m_Prefs->endArray();
 
