@@ -183,6 +183,7 @@ namespace DREAM3D
     const DREAM3D_STRING NeighborList("NeighborList");
     const DREAM3D_STRING NeighborhoodList("NeighborhoodList");
     const DREAM3D_STRING MisorientationList("MisorientationList");
+    const DREAM3D_STRING avgMisorientation("avgMisorientation");
     const DREAM3D_STRING SharedSurfaceAreaList("SharedSurfaceAreaList");
     const DREAM3D_STRING LMG("LMG");
     const DREAM3D_STRING BasalLoadingFactor("BasalLoadingFactor");
