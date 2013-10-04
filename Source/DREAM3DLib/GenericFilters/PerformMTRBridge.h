@@ -45,7 +45,7 @@ class DREAM3DLib_EXPORT PerformMTRBridge : public AbstractFilter
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::MemoryManagementFilters;}
-    virtual const std::string getHumanLabel() { return "Perform MTR Bridge"; }
+    virtual const std::string getHumanLabel() { return "Bridge ParentIds Statistics To GrainIds"; }
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
