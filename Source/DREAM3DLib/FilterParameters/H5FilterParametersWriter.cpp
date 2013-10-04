@@ -404,7 +404,7 @@ int H5FilterParametersWriter::writeValue(const QString name, ComparisonInput_t v
 {
   int err = 0;
 
-  QString ss = QString::number(vectorPos) + H5FilterParameter::AxisAngleInput;
+  QString ss = QString::number(vectorPos) + H5FilterParameter::ComparisonInput;
 
   QString data = v.arrayName + "\n" + QString::number(v.compOperator, 10) + "\n" + QString(v.compValue, 10) + "\n";
   err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, ss, data);

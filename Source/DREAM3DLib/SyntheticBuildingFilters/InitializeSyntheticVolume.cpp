@@ -257,7 +257,7 @@ void InitializeSyntheticVolume::execute()
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);
 
-  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromStdVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
+  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
   m->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   int64_t totalPoints = m->getTotalPoints();

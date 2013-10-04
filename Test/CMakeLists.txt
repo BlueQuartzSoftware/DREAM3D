@@ -33,6 +33,7 @@ file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}" DREAM3DProj_BUILD_DIR_NATIVE)
 file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}/Bin" DREAM3DProj_BIN_DIR_NATIVE)
 file(TO_NATIVE_PATH "${PROJECT_RESOURCES_DIR}/EbsdTestFiles/" EBSD_REFERENCE_DATA_DIR_NATIVE)
 file(TO_NATIVE_PATH "${PROJECT_RESOURCES_DIR}/HedmTestFiles/" HEDM_REFERENCE_DATA_DIR_NATIVE)
+file(TO_NATIVE_PATH "${DREAM3D_SUPPORT_DIR}" DREAM3D_SUPPORT_DIR_NATIVE)
 
 #-- Convert all '\' to '\\' so that they are properly escaped in the header file
 set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${TEST_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
@@ -42,6 +43,7 @@ ConvertPathToHeaderCompatible(DREAM3DProj_BUILD_DIR_NATIVE)
 ConvertPathToHeaderCompatible(DREAM3DProj_BIN_DIR_NATIVE)
 ConvertPathToHeaderCompatible(EBSD_REFERENCE_DATA_DIR_NATIVE)
 ConvertPathToHeaderCompatible(HEDM_REFERENCE_DATA_DIR_NATIVE)
+ConvertPathToHeaderCompatible(DREAM3D_SUPPORT_DIR_NATIVE)
 
 configure_file(${PROJECT_RESOURCES_DIR}/EbsdTestFiles/EbsdTestFileLocation.h.in
                ${DREAM3DTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)
@@ -282,10 +284,18 @@ set_target_properties(SyntheticTest PROPERTIES FOLDER Test)
 add_test(SyntheticTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticTest)
 
 # --------------------------------------------------------------------------
+# FilterParametersRWTest Test
+# --------------------------------------------------------------------------
+add_executable(FilterParametersRWTest ${DREAM3DTest_SOURCE_DIR}/FilterParametersRWTest.cpp )
+target_link_libraries(FilterParametersRWTest DREAM3DLib )
+set_target_properties(FilterParametersRWTest PROPERTIES FOLDER Test)
+add_test(FilterParametersRWTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterParametersRWTest)
+
+# --------------------------------------------------------------------------
 # Data Fusion Test
 # --------------------------------------------------------------------------
-add_executable(UMich ${DREAM3DTest_SOURCE_DIR}/UMich.cpp)
-set_target_properties(UMich PROPERTIES FOLDER Test)
+#add_executable(UMich ${DREAM3DTest_SOURCE_DIR}/UMich.cpp)
+#set_target_properties(UMich PROPERTIES FOLDER Test)
 
 
 if(0)
@@ -299,65 +309,3 @@ endif()
 
 
 
-
-if(0)
-
-
-# --------
-add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest.cpp
-                                ${DREAM3DTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
-set_target_properties(GrainDataReaderTest PROPERTIES FOLDER Test)
-
-
-# --------------------------------------------------------------------------
-# Pole Figure Test
-# --------------------------------------------------------------------------
-set(PFTest_SRCS
-    PFTest.cpp
-)
-# and finally this will run moc:
-add_executable(PFTest ${PFTest_SRCS} ${PFTest_Generated_MOC_SRCS})
-target_link_libraries(PFTest EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} QtSupport)
-set_target_properties(PFTest PROPERTIES FOLDER Test)
-add_test(PFTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PFTest)
-
-if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
-    message(STATUS "Synthetic Builder Test using ${DREAM3D_DATA_DIR} as data directory.")
-    message(STATUS "  Please make sure the proper files are available in that directory")
-
-    # --------------------------------------------------------------------------
-    # FindNeighbors Testing
-    # --------------------------------------------------------------------------
-    add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
-    target_link_libraries(FindNeighborsTest DREAM3DLib)
-  set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
-    add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
-
-    # --------------------------------------------------------------------------
-    # SyntheticBuilder Test
-    # --------------------------------------------------------------------------
-    add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
-    target_link_libraries(SyntheticBuilderTest DREAM3DLib)
-    set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
-    add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
-endif()
-
-# --------------------------------------------------------------------------
-# Preflight Test
-# --------------------------------------------------------------------------
-#add_executable(PreFlightTest ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp)
-#target_link_libraries(PreFlightTest DREAM3DLib)
-#add_test(PreFlightTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PreFlightTest)
-
-
-# --------
-#add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackPrimaryPhases.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/StructureReaders/DXStructureReader.cpp  )
-#target_link_libraries(DxTest DREAM3DLib)
-
-
-
-endif()

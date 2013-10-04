@@ -36,7 +36,7 @@
 #ifndef _ArraySelectionExample_H_
 #define _ArraySelectionExample_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -61,61 +61,42 @@
 class ArraySelectionExample : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ArraySelectionExample);
-    DREAM3D_STATIC_NEW_MACRO(ArraySelectionExample);
-    DREAM3D_TYPE_MACRO_SUPER(ArraySelectionExample, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(ArraySelectionExample)
+    DREAM3D_STATIC_NEW_MACRO(ArraySelectionExample)
+    DREAM3D_TYPE_MACRO_SUPER(ArraySelectionExample, AbstractFilter)
 
     virtual ~ArraySelectionExample();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
     // -----------------------------------------------------------------------------
     /* These methods are needed if you use the ArraySelectionWidget as an input */
-    typedef std::set<QString> ArrayList_t;
+    typedef QSet<QString> ArrayList_t;
 
-    virtual void setVoxelSelectedArrayNames(std::set<QString> selectedCellArrays,
-                                            std::set<QString> selectedFieldArrays,
-                                            std::set<QString> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(std::set<QString> selectedVertexArrays,
-                                                  std::set<QString> selectedFaceArrays,
-                                                  std::set<QString> selectedEdgeArrays,
-                                                  std::set<QString> selectedFieldArrays,
-                                                  std::set<QString> selectedEnsembleArrays);
-    virtual void setSolidMeshSelectedArrayNames(std::set<QString> selectedVertexArrays,
-                                                std::set<QString> selectedFaceArrays,
-                                                std::set<QString> selectedEdgeArrays);
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellEnsembleArrays)
 
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedVoxelCellArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedVoxelFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedVoxelEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSurfaceMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSurfaceMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSurfaceMeshEdgeArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSurfaceMeshFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSurfaceMeshEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSolidMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSolidMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSolidMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceEnsembleArrays)
 
-  public:
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeEnsembleArrays)
 
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexEnsembleArrays)
+    /* END BLOCK FOR ArraySelectionWidget Input */
     // -----------------------------------------------------------------------------
-    /* Each Filter can ONLY have ONE of these types of widgets */
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, CellComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, FieldComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EnsembleComparisonInputs)
-
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, PointComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, FaceComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EdgeComparisonInputs)
-
-    /* And if you have one of those Widgets then you need this to support that widget */
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
-    // -----------------------------------------------------------------------------
-
-
-    DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
 
 
 
@@ -154,11 +135,11 @@ class ArraySelectionExample : public AbstractFilter
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -166,6 +147,26 @@ class ArraySelectionExample : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+
+    virtual void setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                             QSet<QString> selectedFaceArrays,
+                                             QSet<QString> selectedEdgeArrays,
+                                             QSet<QString> selectedCellArrays,
+                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedEnsembleArrays);
+    virtual void setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                              QSet<QString> selectedEdgeArrays,
+                                              QSet<QString> selectedFaceArrays,
+                                              QSet<QString> selectedFieldArrays,
+                                              QSet<QString> selectedEnsembleArrays);
+    virtual void setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                           QSet<QString> selectedEdgeArrays,
+                                           QSet<QString> selectedFieldArrays,
+                                           QSet<QString> selectedEnsembleArrays);
+    virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedEnsembleArrays);
 
   protected:
     ArraySelectionExample();

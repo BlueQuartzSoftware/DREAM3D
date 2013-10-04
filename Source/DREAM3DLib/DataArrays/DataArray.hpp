@@ -216,7 +216,21 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer FromStdVector(QVector<T>& vec, const QString& name)
+    static Pointer FromQVector(QVector<T>& vec, const QString& name)
+    {
+      Pointer p = CreateArray(vec.size(), name);
+      ::memcpy(p->getPointer(0), vec.data(), vec.size() * sizeof(T));
+      return p;
+    }
+
+    /**
+     * @brief Static Method to create a DataArray from a QVector through a deep copy of the data
+     * contained in the vector. The number of components will be set to 1.
+     * @param vec The vector to copy the data from
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     */
+    static Pointer FromStdVector(std::vector<T>& vec, const QString& name)
     {
       Pointer p = CreateArray(vec.size(), name);
       ::memcpy(p->getPointer(0), &(vec.front()), vec.size() * sizeof(T));
