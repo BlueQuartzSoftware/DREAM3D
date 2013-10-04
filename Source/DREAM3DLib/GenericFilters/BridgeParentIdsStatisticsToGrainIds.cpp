@@ -1,4 +1,4 @@
-#include "PerformMTRBridge.h"
+#include "BridgeParentIdsStatisticsToGrainIds.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
@@ -25,7 +25,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PerformMTRBridge::PerformMTRBridge() :
+BridgeParentIdsStatisticsToGrainIds::BridgeParentIdsStatisticsToGrainIds() :
   AbstractFilter(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
@@ -44,21 +44,21 @@ PerformMTRBridge::PerformMTRBridge() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PerformMTRBridge::~PerformMTRBridge()
+BridgeParentIdsStatisticsToGrainIds::~BridgeParentIdsStatisticsToGrainIds()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::setupFilterParameters()
+void BridgeParentIdsStatisticsToGrainIds::setupFilterParameters()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void BridgeParentIdsStatisticsToGrainIds::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -70,7 +70,7 @@ void PerformMTRBridge::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PerformMTRBridge::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int BridgeParentIdsStatisticsToGrainIds::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->closeFilterGroup();
@@ -80,7 +80,7 @@ int PerformMTRBridge::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles, bool afterLink)
+void BridgeParentIdsStatisticsToGrainIds::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles, bool afterLink)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -100,7 +100,7 @@ void PerformMTRBridge::dataCheck(bool preflight, size_t voxels, size_t fields, s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::preflight()
+void BridgeParentIdsStatisticsToGrainIds::preflight()
 {
   dataCheck(true, 1, 1, 1, false);
 
@@ -145,7 +145,7 @@ void PerformMTRBridge::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::execute()
+void BridgeParentIdsStatisticsToGrainIds::execute()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -192,7 +192,7 @@ void PerformMTRBridge::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("PerformMTRBridge Completed");
+  notifyStatusMessage("BridgeParentIdsStatisticsToGrainIds Completed");
 }
 
 // -----------------------------------------------------------------------------
