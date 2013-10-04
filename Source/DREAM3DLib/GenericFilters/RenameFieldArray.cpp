@@ -90,8 +90,8 @@ void RenameFieldArray::readFilterParameters(AbstractFilterParametersReader* read
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedFieldArrayName( reader->readValue( "SelectedFieldArrayName", getSelectedFieldArrayName() ) );
-  setNewFieldArrayName( reader->readValue( "NewFieldArrayName", getNewFieldArrayName() ) );
+  setSelectedFieldArrayName( reader->readString( "SelectedFieldArrayName", getSelectedFieldArrayName() ) );
+  setNewFieldArrayName( reader->readString( "NewFieldArrayName", getNewFieldArrayName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

@@ -94,14 +94,14 @@ void InitializeSyntheticVolume::setupFilterParameters()
 void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setInputFile( reader->readValue("InputFile", getInputFile() ) );
+  setInputFile(reader->readString("InputFile", getInputFile() ) );
   setXVoxels( reader->readValue("XVoxels", getXVoxels() ) );
   setYVoxels( reader->readValue("YVoxels", getYVoxels() ) );
   setZVoxels( reader->readValue("ZVoxels", getZVoxels() ) );
   setXRes( reader->readValue("XRes", getXRes() ) );
   setYRes( reader->readValue("YRes", getYRes() ) );
   setZRes( reader->readValue("ZRes", getZRes() ) );
-  setShapeTypes( reader->readValue("ShapeTypes", getShapeTypes() ) );
+  setShapeTypes( reader->readArray("ShapeTypes", getShapeTypes() ) );
   reader->closeFilterGroup();
 }
 

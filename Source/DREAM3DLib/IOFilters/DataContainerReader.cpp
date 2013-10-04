@@ -106,7 +106,7 @@ void DataContainerReader::setupFilterParameters()
 void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setInputFile( reader->readValue("InputFile", getInputFile() ) );
+  setInputFile(reader->readString("InputFile", getInputFile() ) );
   setReadVolumeData( reader->readValue("ReadVolumeData", getReadVolumeData() ) );
   setReadSurfaceData( reader->readValue("ReadSurfaceData", getReadSurfaceData() ) );
   setReadEdgeData( reader->readValue("ReadEdgeData", getReadEdgeData() ) );

@@ -120,7 +120,7 @@ void FieldInfoReader::readFilterParameters(AbstractFilterParametersReader* reade
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setInputFile( reader->readValue( "InputFile", getInputFile()) );
+  setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setCreateCellLevelArrays( reader->readValue("CreateCellLevelArrays", getCreateCellLevelArrays()) );
   setRenumberGrains( reader->readValue("RenumberGrains", getRenumberGrains()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/

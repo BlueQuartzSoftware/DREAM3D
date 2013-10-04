@@ -134,7 +134,7 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
   setUseReferenceSlice( reader->readValue("UseReferenceSlice", false) );
   setReferenceSlice( reader->readValue("ReferenceSlice", getReferenceSlice()) );
   setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", false) );
-  setAlignmentShiftFileName( reader->readValue( "AlignmentShiftFileName", getAlignmentShiftFileName() ) );
+  setAlignmentShiftFileName( reader->readString( "AlignmentShiftFileName", getAlignmentShiftFileName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

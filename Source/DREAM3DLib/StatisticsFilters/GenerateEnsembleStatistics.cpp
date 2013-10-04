@@ -127,7 +127,7 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
   setCalculateMDF( reader->readValue("CalculateMDF", getCalculateMDF() ) );
   setCalculateAxisODF( reader->readValue("CalculateAxisODF", getCalculateAxisODF() ) );
   setSizeCorrelationResolution( reader->readValue("SizeCorrelationResolution", getSizeCorrelationResolution() ) );
-  setPhaseTypeArray( reader->readValue("PhaseTypeArray", getPhaseTypeArray() ) );
+  setPhaseTypeArray( reader->readArray("PhaseTypeArray", getPhaseTypeArray() ) );
   reader->closeFilterGroup();
 }
 

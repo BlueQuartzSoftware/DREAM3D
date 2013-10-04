@@ -130,7 +130,7 @@ int QFilterParametersReader::closeFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString QFilterParametersReader::readValue(const QString name, QString value)
+QString QFilterParametersReader::readString(const QString name, QString value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   return m_Prefs->value(name, value).toString();
@@ -139,7 +139,7 @@ QString QFilterParametersReader::readValue(const QString name, QString value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<QString> QFilterParametersReader::readValue(const QString name, QVector<QString> value)
+QVector<QString> QFilterParametersReader::readStrings(const QString name, QVector<QString> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   int count = m_Prefs->beginReadArray(name);
@@ -300,7 +300,7 @@ bool QFilterParametersReader::readValue(const QString name, bool def)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int8_t> QFilterParametersReader::readValue(const QString name, QVector<int8_t> value)
+QVector<int8_t> QFilterParametersReader::readArray(const QString name, QVector<int8_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -319,7 +319,7 @@ QVector<int8_t> QFilterParametersReader::readValue(const QString name, QVector<i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int16_t> QFilterParametersReader::readValue(const QString name, QVector<int16_t> value)
+QVector<int16_t> QFilterParametersReader::readArray(const QString name, QVector<int16_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -338,7 +338,7 @@ QVector<int16_t> QFilterParametersReader::readValue(const QString name, QVector<
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int32_t> QFilterParametersReader::readValue(const QString name, QVector<int32_t> value)
+QVector<int32_t> QFilterParametersReader::readArray(const QString name, QVector<int32_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -357,7 +357,7 @@ QVector<int32_t> QFilterParametersReader::readValue(const QString name, QVector<
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int64_t> QFilterParametersReader::readValue(const QString name, QVector<int64_t> value)
+QVector<int64_t> QFilterParametersReader::readArray(const QString name, QVector<int64_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -376,7 +376,7 @@ QVector<int64_t> QFilterParametersReader::readValue(const QString name, QVector<
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<uint8_t> QFilterParametersReader::readValue(const QString name, QVector<uint8_t> value)
+QVector<uint8_t> QFilterParametersReader::readArray(const QString name, QVector<uint8_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -395,7 +395,7 @@ QVector<uint8_t> QFilterParametersReader::readValue(const QString name, QVector<
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<uint16_t> QFilterParametersReader::readValue(const QString name, QVector<uint16_t> value)
+QVector<uint16_t> QFilterParametersReader::readArray(const QString name, QVector<uint16_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -414,7 +414,7 @@ QVector<uint16_t> QFilterParametersReader::readValue(const QString name, QVector
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<uint32_t> QFilterParametersReader::readValue(const QString name, QVector<uint32_t> value)
+QVector<uint32_t> QFilterParametersReader::readArray(const QString name, QVector<uint32_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -433,7 +433,7 @@ QVector<uint32_t> QFilterParametersReader::readValue(const QString name, QVector
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<uint64_t> QFilterParametersReader::readValue(const QString name, QVector<uint64_t> value)
+QVector<uint64_t> QFilterParametersReader::readArray(const QString name, QVector<uint64_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -452,7 +452,7 @@ QVector<uint64_t> QFilterParametersReader::readValue(const QString name, QVector
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float> QFilterParametersReader::readValue(const QString name, QVector<float> value)
+QVector<float> QFilterParametersReader::readArray(const QString name, QVector<float> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -471,7 +471,7 @@ QVector<float> QFilterParametersReader::readValue(const QString name, QVector<fl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double> QFilterParametersReader::readValue(const QString name, QVector<double> value)
+QVector<double> QFilterParametersReader::readArray(const QString name, QVector<double> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -491,7 +491,7 @@ QVector<double> QFilterParametersReader::readValue(const QString name, QVector<d
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IntVec3Widget_t QFilterParametersReader::readValue(const QString name, IntVec3Widget_t defaultValue)
+IntVec3Widget_t QFilterParametersReader::readIntVec3(const QString name, IntVec3Widget_t defaultValue)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   QVariant var = m_Prefs->value(name);
@@ -518,7 +518,7 @@ IntVec3Widget_t QFilterParametersReader::readValue(const QString name, IntVec3Wi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatVec3Widget_t QFilterParametersReader::readValue(const QString name, FloatVec3Widget_t defaultValue)
+FloatVec3Widget_t QFilterParametersReader::readFloatVec3(const QString name, FloatVec3Widget_t defaultValue)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   QVariant var = m_Prefs->value(name);
@@ -546,7 +546,7 @@ FloatVec3Widget_t QFilterParametersReader::readValue(const QString name, FloatVe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComparisonInput_t QFilterParametersReader::readValue(const QString name, ComparisonInput_t defaultValue, int arrayIndex)
+ComparisonInput_t QFilterParametersReader::readComparisonInput(const QString name, ComparisonInput_t defaultValue, int arrayIndex)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
@@ -594,7 +594,7 @@ QVector<ComparisonInput_t> QFilterParametersReader::readComparisonInputs(const Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AxisAngleInput_t QFilterParametersReader::readValue(const QString name, AxisAngleInput_t v, int vectorPos)
+AxisAngleInput_t QFilterParametersReader::readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   int count = m_Prefs->beginReadArray(name);
@@ -617,7 +617,7 @@ AxisAngleInput_t QFilterParametersReader::readValue(const QString name, AxisAngl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<AxisAngleInput_t> QFilterParametersReader::readValue(const QString name, QVector<AxisAngleInput_t> v)
+QVector<AxisAngleInput_t> QFilterParametersReader::readAxisAngles(const QString name, QVector<AxisAngleInput_t> v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   QVector<AxisAngleInput_t> axisAngleInputsVector;
@@ -629,7 +629,7 @@ QVector<AxisAngleInput_t> QFilterParametersReader::readValue(const QString name,
   int vectorSize = static_cast<int>( readValue(name, 0) );
   for(int i = 0; i < vectorSize; i++)
   {
-    axisAngleInputsVector.push_back( readValue(name, axisAngleDummyInput, i) );
+    axisAngleInputsVector.push_back( readAxisAngle(name, axisAngleDummyInput, i) );
   }
   return axisAngleInputsVector;
 }

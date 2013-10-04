@@ -115,7 +115,7 @@ void GenerateMisorientationColors::readFilterParameters(AbstractFilterParameters
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setReferenceAxis( reader->readValue("ReferenceAxis", getReferenceAxis() ) );
+  setReferenceAxis( reader->readFloatVec3("ReferenceAxis", getReferenceAxis() ) );
   setReferenceAngle( reader->readValue("ReferenceAngle", getReferenceAngle() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();

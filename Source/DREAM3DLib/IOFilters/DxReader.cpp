@@ -113,9 +113,9 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setInputFile( reader->readValue( "InputFile", getInputFile() ) );
-  setOrigin( reader->readValue("Origin", getOrigin() ) );
-  setResolution( reader->readValue("Resolution", getResolution() ) );
+  setInputFile( reader->readString( "InputFile", getInputFile() ) );
+  setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
+  setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

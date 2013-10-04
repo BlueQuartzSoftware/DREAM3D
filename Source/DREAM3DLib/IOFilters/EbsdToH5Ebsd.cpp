@@ -102,16 +102,16 @@ void EbsdToH5Ebsd::setupFilterParameters()
 void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setOutputFile( reader->readValue("OutputFile", getOutputFile()) );
+  setOutputFile( reader->readString("OutputFile", getOutputFile()) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
   setZResolution( reader->readValue("ZResolution", getZResolution()) );
   setSampleTransformationAngle( reader->readValue("SampleTransformationAngle", getSampleTransformationAngle()) );
-  setSampleTransformationAxis( reader->readValue("SampleTransformationAxis", getSampleTransformationAxis()) );
+  setSampleTransformationAxis( reader->readArray("SampleTransformationAxis", getSampleTransformationAxis()) );
   setEulerTransformationAngle( reader->readValue("EulerTransformationAngle", getEulerTransformationAngle()) );
-  setEulerTransformationAxis( reader->readValue("EulerTransformationAxis", getEulerTransformationAxis()) );
+  setEulerTransformationAxis( reader->readArray("EulerTransformationAxis", getEulerTransformationAxis()) );
   setRefFrameZDir( static_cast<Ebsd::RefFrameZDir>( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
-  setEbsdFileList( reader->readValue("EbsdFileList", getEbsdFileList()) );
+  setEbsdFileList( reader->readStrings("EbsdFileList", getEbsdFileList()) );
   reader->closeFilterGroup();
 }
 

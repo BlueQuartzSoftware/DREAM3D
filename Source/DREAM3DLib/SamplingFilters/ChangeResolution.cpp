@@ -75,7 +75,6 @@ void ChangeResolution::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-
     option->setHumanLabel("Resolution");
     option->setPropertyName("Resolution");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
@@ -93,7 +92,7 @@ void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* read
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setResolution( reader->readValue("Resolution", getResolution() ) );
+  setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

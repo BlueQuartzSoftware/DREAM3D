@@ -82,7 +82,7 @@ void LinkFieldMapToCellArray::readFilterParameters(AbstractFilterParametersReade
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedCellDataArrayName( reader->readValue( "SelectedCellDataArrayName", getSelectedCellDataArrayName() ) );
+  setSelectedCellDataArrayName( reader->readString( "SelectedCellDataArrayName", getSelectedCellDataArrayName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

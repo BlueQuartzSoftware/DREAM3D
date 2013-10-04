@@ -95,7 +95,7 @@ void Hex2SqrConverter::readFilterParameters(AbstractFilterParametersReader* read
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex() ) );
   setXResolution( reader->readValue("XResolution", getXResolution() ) );
   setYResolution( reader->readValue("YResolution", getYResolution() ) );
-  setEbsdFileList( reader->readValue("EbsdFileList", getEbsdFileList() ) );
+  setEbsdFileList( reader->readStrings("EbsdFileList", getEbsdFileList() ) );
   reader->closeFilterGroup();
 }
 

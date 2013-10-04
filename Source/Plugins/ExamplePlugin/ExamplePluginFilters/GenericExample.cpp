@@ -361,7 +361,7 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
   setInputFile( reader->readValue("InputFile", getInputFile()) );
   setInputPath( reader->readValue("InputPath", getInputPath()) );
-  setOutputFile( reader->readValue("OutputFile", getOutputFile()) );
+  setOutputFile( reader->readString("OutputFile", getOutputFile()) );
   setOutputPath( reader->readValue("OutputPath", getOutputPath()) );
   setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", getWriteAlignmentShifts()) );
   setConversionType( reader->readValue("ConversionType", getConversionType()) );
