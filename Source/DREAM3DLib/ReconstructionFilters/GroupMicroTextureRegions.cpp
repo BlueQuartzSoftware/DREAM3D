@@ -70,7 +70,6 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_NonContiguousNeighborListArrayName(DREAM3D::FieldData::NeighborhoodList),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
   m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
-  m_MTRgKAMArrayName(DREAM3D::FieldData::MTRgKAM),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CAxisTolerance(1.0f),
   m_UseNonContiguousNeighbors(false),
@@ -82,7 +81,6 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_Volumes(NULL),
   m_Active(NULL),
   m_FieldParentIds(NULL),
-  m_MTRgKAM(NULL),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -174,7 +172,6 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, int32_t, Int32ArrayType, 0, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, MTRgKAM, float, FloatArrayType, 0, fields, 1)
 
   if(m_UseNonContiguousNeighbors == false)
   {
@@ -270,8 +267,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   QuatF q1;
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-  int misoCount = 0;
-  float misoTotal = 0.0f;
 
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
@@ -348,8 +343,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
                 w = MatrixMath::CosThetaBetweenVectors(c1, c2);
                 DREAM3DMath::boundF(w, -1, 1);
                 w = acosf(w);
-                if (k == 0) { misoTotal += w; }
-                if (k == 0) { misoCount++; }
                 if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - w) <= m_CAxisTolerance)
                 {
                   parentnumbers[neigh] = parentcount;
@@ -373,10 +366,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
     totalCheckList.clear();
     microtexturevolume = 0.0f;
     totalCheckVolume = 0.0f;
-    if (misoCount > 0) { m_MTRgKAM[i] = misoTotal / misoCount * DREAM3D::Constants::k_180OverPi; }
-    else { m_MTRgKAM[i] = -1.0f; }
-    misoTotal = 0.0f;
-    misoCount = 0;
   }
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
 
