@@ -30,12 +30,10 @@ PerformMTRBridge::PerformMTRBridge() :
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
-  m_MTRgKAMArrayName(DREAM3D::FieldData::MTRgKAM),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GrainIds(NULL),
   m_CellParentIds(NULL),
   m_FieldParentIds(NULL),
-  m_MTRgKAM(NULL),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -94,7 +92,6 @@ void PerformMTRBridge::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, -302, int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, MTRgKAM, -303, float, FloatArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
