@@ -111,7 +111,6 @@ namespace DREAM3D
     const DREAM3D_STRING CellPhases("Phases");
     const DREAM3D_STRING BandContrast("BandContrast");
     const DREAM3D_STRING EulerAngles("EulerAngles");
-    const DREAM3D_STRING MTRgKAM("MTRgKAM");
     const DREAM3D_STRING SurfaceVoxels("SurfaceVoxels");
     const DREAM3D_STRING Quats("Quats");
     const DREAM3D_STRING GoodVoxels("GoodVoxels");
