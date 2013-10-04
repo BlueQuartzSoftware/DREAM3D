@@ -305,7 +305,7 @@ QVector<int8_t> QFilterParametersReader::readValue(const QString name, QVector<i
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   int count = m_Prefs->beginReadArray(name);
-  QVector<int8_t> selections(count);
+  QVector<int8_t> selections(count, 0);
   for(int i = 0; i < count; ++i)
   {
     m_Prefs->setArrayIndex(i);
@@ -324,7 +324,7 @@ QVector<int16_t> QFilterParametersReader::readValue(const QString name, QVector<
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   int count = m_Prefs->beginReadArray(name);
-  QVector<int16_t> selections;
+  QVector<int16_t> selections(count, 0);
   for(int i = 0; i < count; ++i)
   {
     m_Prefs->setArrayIndex(i);
@@ -343,7 +343,7 @@ QVector<int32_t> QFilterParametersReader::readValue(const QString name, QVector<
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   int count = m_Prefs->beginReadArray(name);
-  QVector<int32_t> selections;
+  QVector<int32_t> selections(count, 0);
   for(int i = 0; i < count; ++i)
   {
     m_Prefs->setArrayIndex(i);
@@ -362,7 +362,7 @@ QVector<int64_t> QFilterParametersReader::readValue(const QString name, QVector<
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   int count = m_Prefs->beginReadArray(name);
-  QVector<int64_t> selections;
+  QVector<int64_t> selections(count, 0);
   for(int i = 0; i < count; ++i)
   {
     m_Prefs->setArrayIndex(i);
@@ -381,7 +381,7 @@ QVector<uint8_t> QFilterParametersReader::readValue(const QString name, QVector<
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   int count = m_Prefs->beginReadArray(name);
-  QVector<uint8_t> selections;
+  QVector<uint8_t> selections(count, 0);
   for(int i = 0; i < count; ++i)
   {
     m_Prefs->setArrayIndex(i);
@@ -400,7 +400,7 @@ QVector<uint16_t> QFilterParametersReader::readValue(const QString name, QVector
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   int count = m_Prefs->beginReadArray(name);
-  QVector<int8_t> selections;
+  QVector<uint16_t> selections(count, 0);
   for(int i = 0; i < count; ++i)
   {
     m_Prefs->setArrayIndex(i);
@@ -419,7 +419,7 @@ QVector<uint32_t> QFilterParametersReader::readValue(const QString name, QVector
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   int count = m_Prefs->beginReadArray(name);
-  QVector<int8_t> selections;
+  QVector<uint32_t> selections(count, 0);
   for(int i = 0; i < count; ++i)
   {
     m_Prefs->setArrayIndex(i);
@@ -438,7 +438,7 @@ QVector<uint64_t> QFilterParametersReader::readValue(const QString name, QVector
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   int count = m_Prefs->beginReadArray(name);
-  QVector<uint64_t> selections;
+  QVector<uint64_t> selections(count, 0);
   for(int i = 0; i < count; ++i)
   {
     m_Prefs->setArrayIndex(i);
@@ -457,7 +457,7 @@ QVector<float> QFilterParametersReader::readValue(const QString name, QVector<fl
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   int count = m_Prefs->beginReadArray(name);
-  QVector<float> selections;
+  QVector<float> selections(count, 0);
   for(int i = 0; i < count; ++i)
   {
     m_Prefs->setArrayIndex(i);
@@ -476,7 +476,7 @@ QVector<double> QFilterParametersReader::readValue(const QString name, QVector<d
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   int count = m_Prefs->beginReadArray(name);
-  QVector<double> selections;
+  QVector<double> selections(count, 0);
   for(int i = 0; i < count; ++i)
   {
     m_Prefs->setArrayIndex(i);
@@ -497,7 +497,7 @@ IntVec3Widget_t QFilterParametersReader::readValue(const QString name, IntVec3Wi
   QVariant var = m_Prefs->value(name);
   bool ok = false;
   IntVec3Widget_t v3 = var.value<IntVec3Widget_t>();
-  m_Prefs->beginReadArray("Dimensions");
+  m_Prefs->beginReadArray(name);
   m_Prefs->setArrayIndex(0);
   v3.x = m_Prefs->value("x", v3.x).toInt(&ok);
   if(!ok) { v3.x = defaultValue.x; }
@@ -524,18 +524,18 @@ FloatVec3Widget_t QFilterParametersReader::readValue(const QString name, FloatVe
   QVariant var = m_Prefs->value(name);
   bool ok = false;
   FloatVec3Widget_t v3 = var.value<FloatVec3Widget_t>();
-  m_Prefs->beginReadArray("Dimensions");
+  m_Prefs->beginReadArray(name);
   m_Prefs->setArrayIndex(0);
   v3.x = m_Prefs->value("x", v3.x).toFloat(&ok);
   if(!ok) { v3.x = defaultValue.x; }
 
   m_Prefs->setArrayIndex(1);
   v3.y = m_Prefs->value("y", v3.y).toFloat(&ok);
-  if(!ok) { v3.x = defaultValue.x; }
+  if(!ok) { v3.y = defaultValue.y; }
 
   m_Prefs->setArrayIndex(2);
   v3.z = m_Prefs->value("z", v3.z).toFloat(&ok);
-  if(!ok) { v3.x = defaultValue.x; }
+  if(!ok) { v3.z = defaultValue.z; }
 
   m_Prefs->endArray();
 

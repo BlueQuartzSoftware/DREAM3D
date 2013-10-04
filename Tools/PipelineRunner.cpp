@@ -50,156 +50,80 @@
 #include <boost/assert.hpp>
 
 // Qt Includes
-#include "QtGui/QApplication"
-#include "QtCore/QSettings"
+#include <QtCore/QtDebug>
+#include <QtCore/QString>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QSettings>
 
 // DREAM3DLib includes
-#include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-
-#include "FilterWidgets/FilterWidgetsLib.h"
-#include "PipelineBuilder/FilterWidgetManager.h"
-#include "PipelineBuilder/IFilterWidgetFactory.h"
-
-
-
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main (int argc, char  *argv[])
+void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline::Pointer pipeline)
 {
-
-  QuatF q = QuaternionMathF::New(0.565907, -0.24196, 0.106982, -0.7808710);
-  float euler[3] = {0.0, 0.0, 0.0};
-
-
-  OrientationMath::QuattoEuler(q, euler[0], euler[1], euler[2]);
-
-//2.6014, 1.32595, 3.40947
-  std::cout << "Quat:  " << q.x << ", " << q.y << ", " << q.z << ", " << q.w << std::endl;
-  std::cout << "Euler: " << euler[0] << ", " << euler[1] << ", "  << euler[2] << std::endl;
-}
-
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int main (int argc, char  *argv[])
-{
-  QApplication app(argc, argv);
-
-  FilterWidgetsLib::RegisterKnownQFilterWidgets();
-
-
-
-
-  FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
-
-  FilterWidgetManager::Collection allFactories = wm->getFactories();
-
-
-  for(FilterWidgetManager::Collection::iterator iter = allFactories.begin(); iter != allFactories.end(); ++iter)
-  {
-    QString filterName = (iter.key());
-    std::cout << "Writing " << filterName() << std::endl;
-    IFilterWidgetFactory::Pointer wf = iter.value();
-    if (NULL == wf) { return EXIT_FAILURE;}
-    QFilterWidget* w = wf->createWidget();
-    QString filePath = QString("/tmp/") + filterName + QString(".ini");
-    QSettings prefs(filePath, QSettings::IniFormat, NULL);
-    prefs.beginGroup(QString("FILTER_NUMBER"));
-    w->writeOptions(prefs);
-    prefs.endGroup();
-
-  }
-
-
-  return EXIT_SUCCESS;
-}
-
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void readSettings(QSettings &prefs)
-{
-
-  //PipelineViewWidget viewWidget;
-
-  prefs.beginGroup("PipelineBuilder");
-
+  FilterManager::Pointer filtManager = FilterManager::Instance();
+  QSettings* prefs = paramsReader->getPrefs();
+  prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   bool ok = false;
-  int filterCount = prefs.value("Number_Filters").toInt(&ok);
-  prefs.endGroup();
-
+  int filterCount = prefs->value("Number_Filters").toInt(&ok);
+  prefs->endGroup();
   if (false == ok) {filterCount = 0;}
+
   for (int i = 0; i < filterCount; ++i)
   {
     QString gName = QString::number(i);
 
-    prefs.beginGroup(gName);
+    // Open the group to get the name of the filter then close again.
+    prefs->beginGroup(gName);
+    QString filterName = prefs->value("Filter_Name", "").toString();
+    prefs->endGroup();
+  //  qDebug() << filterName;
 
-    QString filterName = prefs.value("Filter_Name", "").toString();
+    IFilterFactory::Pointer factory = filtManager->getFactoryForFilter(filterName);
+        AbstractFilter::Pointer filter = factory->create();
 
-    std::cout << "Adding Filter " << filterName() << std::endl;
-//    QFilterWidget* w = viewWidget.addFilter(filterName); // This will set the variable m_SelectedFilterWidget
-//    if(w) {
-//      w->blockSignals(true);
-//      w->readOptions(prefs);
-//      w->blockSignals(false);
-//      //w->emitParametersChanged();
-//    }
-    prefs.endGroup();
+    if(NULL != filter.get())
+    {
+      filter->readFilterParameters(paramsReader.get(), i);
+      pipeline->pushBack(filter);
+    }
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main (int argc, char const *argv[])
+int main (int argc, char  *argv[])
 {
-   // This code is NOT READY to run AT ALL. IT was just a PLACE TO START
-  BOOST_ASSERT(false);
-  QString configFile;
 
-  try
-  {
+  Observer obs;
+  int err = 0;
 
-   // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("PipelineRunner", ' ', DREAM3DLib::Version::Complete());
+  FilterManager::Pointer filtManager = FilterManager::Instance();
+  // THIS IS A VERY IMPORTANT LINE: It will register all the known filters in the dream3d library. This
+  // will NOT however get filters from plugins. We are going to have to figure out how to compile filters
+  // into their own plugin and load the plugins from a command line.
+  filtManager->RegisterKnownFilters(filtManager.get());
 
-    TCLAP::ValueArg<std::string> inputFileArg( "c", "config", "The text file containing the pipeline information.", true, "", "Pipeline Config File");
-    cmd.add(inputFileArg);
+  qDebug() << "Current Path: " << QDir::currentPath();
 
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  QFilterParametersReader::Pointer paramsReader = QFilterParametersReader::New();
+  paramsReader->openFile(argv[1]);
+  readPipeline(paramsReader, pipeline);
+  err = pipeline->preflightPipeline();
 
-    // Parse the argv array.
-    cmd.parse(argc, argv);
-    if (argc == 1)
-    {
-      std::cout << "PipelineRunner program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
-      return EXIT_FAILURE;
-    }
+  pipeline->execute();
+  err = pipeline->getErrorCondition();
 
-    configFile = (inputFileArg.getValue());
-
-
-  }
-  catch (TCLAP::ArgException &e) // catch any exceptions
-  {
-    std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
-    return EXIT_FAILURE;
-  }
-
-
-  // Create the QSettings Object
-  QSettings prefs(configFile, QSettings::IniFormat, NULL);
-  readSettings(prefs);
-
-  return EXIT_SUCCESS;
 }
-#endif
+
