@@ -105,7 +105,7 @@ class GenerateGrainIds : public AbstractFilter
  * @date
  * @version 1.0
  */
-class CreateVolumeDataContainer : public AbstractFilter
+class DREAM3DLib_EXPORT CreateVolumeDataContainer : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(CreateVolumeDataContainer)

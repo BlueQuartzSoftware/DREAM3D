@@ -96,6 +96,15 @@ set_target_properties(AngImportTest PROPERTIES FOLDER Test)
 add_test(AngImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/AngImportTest)
 
 # --------------------------------------------------------------------------
+# Filter Parameters IO Test
+# --------------------------------------------------------------------------
+add_executable(QFilterParameterIOTest ${DREAM3DTest_SOURCE_DIR}/QFilterParameterIOTest.cpp)
+target_link_libraries(QFilterParameterIOTest ${QT_QTCORE_LIBRARY} DREAM3DLib)
+set_target_properties(QFilterParameterIOTest PROPERTIES FOLDER Test)
+add_test(QFilterParameterIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/QFilterParameterIOTest)
+
+
+# --------------------------------------------------------------------------
 # CTF Data File Testing
 # --------------------------------------------------------------------------
 add_executable(CtfReaderTest ${DREAM3DTest_SOURCE_DIR}/CtfReaderTest.cpp)

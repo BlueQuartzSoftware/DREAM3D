@@ -323,7 +323,7 @@ int TextFilterParametersWriter::writeValue(const QString name, AxisAngleInput_t 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QSet<QString> v)
+int TextFilterParametersWriter::writeArraySelections(const QString name, QSet<QString> v)
 {
   int err = -1;
   return err;

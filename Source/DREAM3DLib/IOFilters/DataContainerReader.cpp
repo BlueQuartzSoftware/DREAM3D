@@ -112,24 +112,29 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
   setReadEdgeData( reader->readValue("ReadEdgeData", getReadEdgeData() ) );
   setReadVertexData( reader->readValue("ReadVertexData", getReadVertexData() ) );
 
-  setSelectedVolumeVertexArrays( reader->readValue("SelectedVolumeVertexArrays", getSelectedVolumeVertexArrays() ) );
-  setSelectedVolumeFaceArrays( reader->readValue("SelectedVolumeFaceArrays", getSelectedVolumeFaceArrays() ) );
-  setSelectedVolumeEdgeArrays( reader->readValue("SelectedVolumeEdgeArrays", getSelectedVolumeEdgeArrays() ) );
-  setSelectedVolumeCellArrays( reader->readValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() ) );
-  setSelectedVolumeCellFieldArrays( reader->readValue("SelectedVolumeCellFieldArrays", getSelectedVolumeCellFieldArrays() ) );
-  setSelectedVolumeCellEnsembleArrays( reader->readValue("SelectedVolumeCellEnsembleArrays", getSelectedVolumeCellEnsembleArrays() ) );
-  setSelectedSurfaceVertexArrays( reader->readValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() ) );
-  setSelectedSurfaceFaceArrays( reader->readValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() ) );
-  setSelectedSurfaceEdgeArrays( reader->readValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() ) );
-  setSelectedSurfaceFaceFieldArrays( reader->readValue("SelectedSurfaceFaceFieldArrays", getSelectedSurfaceFaceFieldArrays() ) );
-  setSelectedSurfaceFaceEnsembleArrays( reader->readValue("SelectedSurfaceFaceEnsembleArrays", getSelectedSurfaceFaceEnsembleArrays() ) );
-  setSelectedEdgeVertexArrays( reader->readValue("SelectedEdgeVertexArrays", getSelectedEdgeVertexArrays() ) );
-  setSelectedEdgeEdgeArrays( reader->readValue("SelectedEdgeEdgeArrays", getSelectedEdgeEdgeArrays() ) );
-  setSelectedEdgeEdgeFieldArrays( reader->readValue("SelectedEdgeEdgeFieldArrays", getSelectedEdgeEdgeFieldArrays() ) );
-  setSelectedEdgeEdgeEnsembleArrays( reader->readValue("SelectedEdgeEdgeEnsembleArrays", getSelectedEdgeEdgeEnsembleArrays() ) );
-  setSelectedVertexVertexArrays( reader->readValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() ) );
-  setSelectedVertexVertexFieldArrays( reader->readValue("SelectedVertexVertexFieldArrays", getSelectedVertexVertexFieldArrays() ) );
-  setSelectedVertexVertexEnsembleArrays( reader->readValue("SelectedVertexVertexEnsembleArrays", getSelectedVertexVertexEnsembleArrays() ) );
+
+  READ_ARRAY_SELECTION_PARAMETER(VolumeVertex)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeCellField)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
+
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceField)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
+
+  READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeField)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
+
+  READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
+  READ_ARRAY_SELECTION_PARAMETER(VertexVertexField)
+  READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+
   reader->closeFilterGroup();
 }
 
@@ -147,24 +152,28 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
   writer->writeValue("ReadEdgeData", getReadEdgeData() );
   writer->writeValue("ReadVertexData", getReadVertexData() );
 
-  writer->writeValue("SelectedVolumeVertexArrays", getSelectedVolumeVertexArrays() );
-  writer->writeValue("SelectedVolumeFaceArrays", getSelectedVolumeFaceArrays() );
-  writer->writeValue("SelectedVolumeEdgeArrays", getSelectedVolumeEdgeArrays() );
-  writer->writeValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() );
-  writer->writeValue("SelectedVolumeCellFieldArrays", getSelectedVolumeCellFieldArrays() );
-  writer->writeValue("SelectedVolumeCellEnsembleArrays", getSelectedVolumeCellEnsembleArrays() );
-  writer->writeValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() );
-  writer->writeValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() );
-  writer->writeValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() );
-  writer->writeValue("SelectedSurfaceFaceFieldArrays", getSelectedSurfaceFaceFieldArrays() );
-  writer->writeValue("SelectedSurfaceFaceEnsembleArrays", getSelectedSurfaceFaceEnsembleArrays() );
-  writer->writeValue("SelectedEdgeVertexArrays", getSelectedEdgeVertexArrays() );
-  writer->writeValue("SelectedEdgeEdgeArrays", getSelectedEdgeEdgeArrays() );
-  writer->writeValue("SelectedEdgeEdgeFieldArrays", getSelectedEdgeEdgeFieldArrays() );
-  writer->writeValue("SelectedEdgeEdgeEnsembleArrays", getSelectedEdgeEdgeEnsembleArrays() );
-  writer->writeValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() );
-  writer->writeValue("SelectedVertexVertexFieldArrays", getSelectedVertexVertexFieldArrays() );
-  writer->writeValue("SelectedVertexVertexEnsembleArrays", getSelectedVertexVertexEnsembleArrays() );
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeVertex)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellField)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
+
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceField)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
+
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeField)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
+
+  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
+  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexField)
+  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+
   writer->closeFilterGroup();
   return ++index; // we want to return the index after the one we just wrote to
 }

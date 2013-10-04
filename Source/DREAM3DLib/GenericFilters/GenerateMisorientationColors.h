@@ -50,9 +50,9 @@
 class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenerateMisorientationColors);
-    DREAM3D_STATIC_NEW_MACRO(GenerateMisorientationColors);
-    DREAM3D_TYPE_MACRO_SUPER(GenerateMisorientationColors, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GenerateMisorientationColors)
+    DREAM3D_STATIC_NEW_MACRO(GenerateMisorientationColors)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateMisorientationColors, AbstractFilter)
 
     virtual ~GenerateMisorientationColors();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)

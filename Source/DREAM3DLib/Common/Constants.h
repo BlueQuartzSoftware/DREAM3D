@@ -264,6 +264,15 @@ namespace DREAM3D
     const DREAM3D_STRING SurfaceMeshEdgeFaces("SurfaceMeshEdgeFaces");
   }
 
+  namespace Settings
+  {
+    const DREAM3D_STRING Library("Filter Library");
+    const DREAM3D_STRING PrebuiltPipelines("Prebuilt Pipelines");
+    const DREAM3D_STRING FavoritePipelines("Favorite Pipelines");
+    const DREAM3D_STRING PipelineBuilderGroup("PipelineBuilder");
+    const DREAM3D_STRING FavoriteConfig("favorite_config");
+  }
+
 
   namespace HDF5
   {
@@ -342,7 +351,6 @@ namespace DREAM3D
     const DREAM3D_STRING VolumeDataContainerName("VolumeDataContainer");
     const DREAM3D_STRING VoxelDataName("VoxelData");
     const DREAM3D_STRING Weight("Weight");
-
 
     enum ColumnCount
     {

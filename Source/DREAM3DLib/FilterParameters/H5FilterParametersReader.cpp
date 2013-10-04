@@ -211,6 +211,15 @@ double H5FilterParametersReader::readValue(const QString name, double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool H5FilterParametersReader::readValue(const QString name, bool value)
+{
+  QH5Lite::readScalarDataset(m_CurrentGroupId, name, value);
+  return value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QVector<int8_t> H5FilterParametersReader::readValue(const QString name, QVector<int8_t> value)
 {
   int vectorSize = 0;
@@ -458,7 +467,7 @@ ComparisonInput_t H5FilterParametersReader::readValue(const QString name, Compar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<ComparisonInput_t> H5FilterParametersReader::readValue(const QString name, QVector<ComparisonInput_t> v)
+QVector<ComparisonInput_t> H5FilterParametersReader::readComparisonInputs(const QString name, QVector<ComparisonInput_t> v)
 {
   QVector<ComparisonInput_t> comparisons;
   ComparisonInput_t cellComparisonDefault;
@@ -505,7 +514,7 @@ QVector<AxisAngleInput_t> H5FilterParametersReader::readValue(const QString name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<QString> H5FilterParametersReader::readValue(const QString name, QSet<QString> v)
+QSet<QString> H5FilterParametersReader::readArraySelections(const QString name, QSet<QString> v)
 {
   size_t size = 0;
   QString strData = "";

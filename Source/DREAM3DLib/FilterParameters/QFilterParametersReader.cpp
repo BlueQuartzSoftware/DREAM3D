@@ -79,6 +79,14 @@ QFilterParametersReader::~QFilterParametersReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QSettings* QFilterParametersReader::getPrefs()
+{
+  return m_Prefs;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterParametersReader::openFile(QString filename)
 {
   if(NULL != m_Prefs)
@@ -100,7 +108,7 @@ void QFilterParametersReader::closeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersReader::openFilterGroup(AbstractFilter* filter, int index)
+int QFilterParametersReader::openFilterGroup(AbstractFilter* unused, int index)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   int err = 0;
@@ -275,6 +283,18 @@ double QFilterParametersReader::readValue(const QString name, double value)
   value = m_Prefs->value(name, def).toDouble(&ok);
   if(ok) { return value; }
   return def;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool QFilterParametersReader::readValue(const QString name, bool def)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  //QByteArray ba = name.toAscii();
+  QVariant v = m_Prefs->value(name, def);
+  bool bvalue = v.toBool();
+  return bvalue;
 }
 
 // -----------------------------------------------------------------------------
@@ -545,16 +565,28 @@ ComparisonInput_t QFilterParametersReader::readValue(const QString name, Compari
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<ComparisonInput_t> QFilterParametersReader::readValue(const QString name, QVector<ComparisonInput_t> v)
+QVector<ComparisonInput_t> QFilterParametersReader::readComparisonInputs(const QString name, QVector<ComparisonInput_t> defValues)
 {
   BOOST_ASSERT(m_Prefs != NULL);
+  QByteArray ba = name.toAscii();
   QVector<ComparisonInput_t> comparisons;
-  ComparisonInput_t cellComparisonDefault;
-  int numQFilters = static_cast<int>( readValue(name, 0) );
-  for(int i = 0; i < numQFilters; i++)
+  int count = m_Prefs->beginReadArray(name);
+  bool ok = false;
+  ComparisonInput_t v;
+  v.compOperator = 0;
+  v.compValue = 0.0;
+  for(int i = 0; i < count; i++)
   {
-    comparisons.push_back( readValue(name, cellComparisonDefault, i) );
+
+    m_Prefs->setArrayIndex(i);
+    v.arrayName = m_Prefs->value("ArrayName").toString();
+    v.compOperator = m_Prefs->value("CompOperator").toInt(&ok);
+    if(!ok) { continue; }
+    v.compValue = m_Prefs->value("CompValue").toFloat(&ok);
+    if(!ok) { continue; }
+    comparisons.push_back(v);
   }
+  m_Prefs->endArray();
   return comparisons;
 }
 
@@ -604,12 +636,19 @@ QVector<AxisAngleInput_t> QFilterParametersReader::readValue(const QString name,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<QString> QFilterParametersReader::readValue(const QString name, QSet<QString> v)
+QSet<QString> QFilterParametersReader::readArraySelections(const QString name, QSet<QString> v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-
-  BOOST_ASSERT(false);
-  QSet<QString> empty;
-  return empty;
+  QString arrayName = QString("ArraySelections_") + name;
+  int count = m_Prefs->beginReadArray(arrayName);
+  QSet<QString> selections;
+  for(int i = 0; i < count; ++i)
+  {
+    m_Prefs->setArrayIndex(i);
+    QString str = m_Prefs->value(name, QString::fromUtf8("NOT_FOUND")).toString();
+    selections.insert(str);
+  }
+  m_Prefs->endArray();
+  return selections;
 }
 

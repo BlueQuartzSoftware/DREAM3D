@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------
 GenerateMisorientationColors::GenerateMisorientationColors() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),

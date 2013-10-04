@@ -47,6 +47,10 @@
 
 class AbstractFilter;
 
+#define WRITE_ARRAY_SELECTION_PARAMETER(Name)\
+  writer->writeArraySelections( #Name, getSelected##Name##Arrays() );
+
+
 
 /**
  * @class AbstractFilterParametersWriter AbstractFilterParametersWriter.h DREAM3DLib/Common/AbstractFilterParametersWriter.h
@@ -99,7 +103,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
     virtual int writeValue(const QString name, QVector<ComparisonInput_t> v) = 0;
     virtual int writeValue(const QString name, AxisAngleInput_t v, int vectorPos) = 0;
     virtual int writeValue(const QString name, QVector<AxisAngleInput_t> v) = 0;
-    virtual int writeValue(const QString name, QSet<QString> v) = 0;
+    virtual int writeArraySelections(const QString name, QSet<QString> v) = 0;
 
 
 

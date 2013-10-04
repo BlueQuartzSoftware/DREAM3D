@@ -61,11 +61,14 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
 
     virtual ~QFilterParametersReader();
 
+
+    QSettings* getPrefs();
+
     //DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     void openFile(QString filename);
     void closeFile();
 
-    virtual int openFilterGroup(AbstractFilter* filter, int index);
+    virtual int openFilterGroup(AbstractFilter* unused, int index);
     virtual int closeFilterGroup();
 
     virtual QString readValue(const QString name, QString value);
@@ -81,6 +84,7 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
     virtual uint64_t readValue(const QString name, uint64_t value);
     virtual float readValue(const QString name, float value);
     virtual double readValue(const QString name, double value);
+    virtual bool readValue(const QString name, bool value);
 
     virtual QVector<int8_t> readValue(const QString name, QVector<int8_t> value);
     virtual QVector<int16_t> readValue(const QString name, QVector<int16_t> value);
@@ -97,10 +101,10 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
     virtual IntVec3Widget_t readValue(const QString name, IntVec3Widget_t v);
     virtual FloatVec3Widget_t readValue(const QString name, FloatVec3Widget_t v);
     virtual ComparisonInput_t readValue(const QString name, ComparisonInput_t v, int arrayIndex);
-    virtual QVector<ComparisonInput_t> readValue(const QString name, QVector<ComparisonInput_t> v);
+    virtual QVector<ComparisonInput_t> readComparisonInputs(const QString name, QVector<ComparisonInput_t> v);
     virtual AxisAngleInput_t readValue(const QString name, AxisAngleInput_t v, int vectorPos);
     virtual QVector<AxisAngleInput_t> readValue(const QString name, QVector<AxisAngleInput_t> v);
-    virtual QSet<QString> readValue(const QString name, QSet<QString> v);
+    virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v);
 
   protected:
     QFilterParametersReader();

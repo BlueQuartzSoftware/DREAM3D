@@ -254,6 +254,7 @@ int FilterPipeline::preflightPipeline()
   {
     (*filter)->setDataContainerArray(dca);
     setCurrentFilter(*filter);
+    //qDebug() << "Preflighting Filter [" << (*filter)->getHumanLabel() << "] (" << (*filter)->getNameOfClass() << ")";
     (*filter)->preflight();
     (*filter)->setDataContainerArray(DataContainerArray::NullPointer());
     QVector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
@@ -374,7 +375,7 @@ void FilterPipeline::printFilterNames(QTextStream& out)
   out << "---------------------------------------------------------------------" ;
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter )
   {
-    out << (*iter)->getNameOfClass() ;
+    out << (*iter)->getNameOfClass() << "\n";
   }
   out << "---------------------------------------------------------------------" ;
 }

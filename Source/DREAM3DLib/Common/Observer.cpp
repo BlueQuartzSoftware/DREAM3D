@@ -112,7 +112,7 @@ void Observer::sendPipelineMessage(PipelineMessage& msg)
   {
     ss = QObject::tr("%1 %  %2").arg(msg.getProgressValue()).arg(msg.generateStatusString());
   }
-  qDebug() << ss;
+  qDebug() << msg.getFilterHumanLabel() << ": " << ss;
 
 }
 

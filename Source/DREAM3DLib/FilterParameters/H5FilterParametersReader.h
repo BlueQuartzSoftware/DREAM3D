@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual uint64_t readValue(const QString name, uint64_t value);
     virtual float readValue(const QString name, float value);
     virtual double readValue(const QString name, double value);
+    virtual bool readValue(const QString name, bool value);
 
     virtual QVector<int8_t> readValue(const QString name, QVector<int8_t> value);
     virtual QVector<int16_t> readValue(const QString name, QVector<int16_t> value);
@@ -93,10 +94,10 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual IntVec3Widget_t readValue(const QString name, IntVec3Widget_t v);
     virtual FloatVec3Widget_t readValue(const QString name, FloatVec3Widget_t v);
     virtual ComparisonInput_t readValue(const QString name, ComparisonInput_t v, int vectorPos);
-    virtual QVector<ComparisonInput_t> readValue(const QString name, QVector<ComparisonInput_t> v);
+    virtual QVector<ComparisonInput_t> readComparisonInputs(const QString name, QVector<ComparisonInput_t> v);
     virtual AxisAngleInput_t readValue(const QString name, AxisAngleInput_t v, int vectorPos);
     virtual QVector<AxisAngleInput_t> readValue(const QString name, QVector<AxisAngleInput_t> v);
-    virtual QSet<QString> readValue(const QString name, QSet<QString> v);
+    virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v);
 
   protected:
     H5FilterParametersReader();

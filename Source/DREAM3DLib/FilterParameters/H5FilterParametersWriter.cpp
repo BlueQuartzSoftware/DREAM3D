@@ -463,7 +463,7 @@ int H5FilterParametersWriter::writeValue(const QString name, QVector<AxisAngleIn
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, QSet<QString> v)
+int H5FilterParametersWriter::writeArraySelections(const QString name, QSet<QString> v)
 {
   size_t size = v.size();
   herr_t err = 0;

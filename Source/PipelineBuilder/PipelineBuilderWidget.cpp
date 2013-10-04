@@ -81,14 +81,7 @@
 #include "AddFavoriteWidget.h"
 #include "DREAM3DFileDragMessageBox.h"
 
-namespace Detail
-{
-  const QString Library("Filter Library");
-  const QString PrebuiltPipelines("Prebuilt Pipelines");
-  const QString FavoritePipelines("Favorite Pipelines");
-  const QString PipelineBuilderGroup("PipelineBuilder");
-  const QString FavoriteConfig("favorite_config");
-}
+
 
 
 // -----------------------------------------------------------------------------
