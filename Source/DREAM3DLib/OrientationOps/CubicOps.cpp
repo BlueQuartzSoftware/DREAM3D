@@ -850,7 +850,7 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
         MatrixMath::Normalize3x1(uvw2);
         directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
         planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
-        schmidFactor2 = directionComponent2 * planeComponent2;
+        //schmidFactor2 = directionComponent2 * planeComponent2;
         directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
@@ -920,7 +920,7 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
         MatrixMath::Normalize3x1(uvw2);
         directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
         planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
-        schmidFactor2 = directionComponent2 * planeComponent2;
+       // schmidFactor2 = directionComponent2 * planeComponent2;
         directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
         planeMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(hkl1, hkl2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
@@ -989,7 +989,7 @@ void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
         MatrixMath::Normalize3x1(uvw2);
         directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
         planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
-        schmidFactor2 = directionComponent2 * planeComponent2;
+        //schmidFactor2 = directionComponent2 * planeComponent2;
         directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
@@ -1520,21 +1520,21 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 
   float indexConst1 = 0.414 / imageDim;
   float indexConst2 = 0.207 / imageDim;
-  float temp = 0.0f;
+//  float temp = 0.0f;
   float red1 = 0.0f;
-  float green1 = 0.0f;
-  float blue1 = 0.0f;
-  float red2 = 0.0f;
-  float green2 = 0.0f;
-  float blue2 = 0.0f;
+//  float green1 = 0.0f;
+//  float blue1 = 0.0f;
+//  float red2 = 0.0f;
+//  float green2 = 0.0f;
+//  float blue2 = 0.0f;
   float x = 0.0f;
   float y = 0.0f;
-  float z = 0.0f;
+//  float z = 0.0f;
   float a = 0.0f;
   float b = 0.0f;
   float c = 0.0f;
-  float check1 = 0.0f;
-  float check2 = 0.0f;
+//  float check1 = 0.0f;
+//  float check2 = 0.0f;
   float val = 0.0f;
   float x1 = 0.0f;
   float y1 = 0.0f;
@@ -1558,21 +1558,21 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
     for (size_t xIndex = 0; xIndex < imageDim; ++xIndex)
     {
       idx = (imageDim * yScanLineIndex) + xIndex;
-      temp = 0;
-      red1 = 0;
-      green1 = 0;
-      blue1 = 0;
-      red2 = 0;
-      green2 = 0;
-      blue2 = 0;
+//      temp = 0;
+//      red1 = 0;
+//      green1 = 0;
+//      blue1 = 0;
+//      red2 = 0;
+//      green2 = 0;
+//      blue2 = 0;
       x = xIndex * indexConst1 + indexConst2;
       y = yIndex * indexConst1 + indexConst2;
-      z = -1.0;
+ //     z = -1.0;
       a = (x * x + y * y + 1);
       b = (2 * x * x + 2 * y * y);
       c = (x * x + y * y - 1);
-      check1 = b * b;
-      check2 = 4 * a * c;
+//      check1 = b * b;
+//      check2 = 4 * a * c;
       val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
       x1 = (1 + val) * x;
       y1 = (1 + val) * y;
@@ -1706,7 +1706,7 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& 
 UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float angle, int n1, int n2, int imageDim)
 {
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, 4, "Cubic High Misorientation Triangle Legend");
-  uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
+  //uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
   double maxk = DREAM3D::Constants::k_Sqrt2 - 1;
   double maxdeg = 2 * atan(sqrt(6 * maxk * maxk - 4 * maxk + 1));
@@ -1857,8 +1857,8 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   ///create image, fill with empty pixels, setup painter
   int width = 1000;
   double scale = width / tan(M_PI / 8);
-  int height = ceil(0.349159 * scale);
-  /*
+   /*
+    int height = ceil(0.349159 * scale);
   QPainter painter;
   image = QImage(width, height, QImage::Format_ARGB32_Premultiplied);
   image.fill(0x00000000);
@@ -1924,7 +1924,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   ///find triangle vertices by converting misorientation space grid to pixels
   std::vector< std::pair<double, double> > ba;
   std::vector<double> d0, d1, d2, d3;
-  int k = 0;
+  //int k = 0;
   for(int i = 0; i < n1; i++)
   {
     for(int j = 0; j < n2; j++)
@@ -1932,8 +1932,8 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
       d3.push_back(tan(A)*cos(B[j]));
       d2.push_back(tan(A)*sin(B[j])*sin(C[j][i]));
       d1.push_back(tan(A)*sin(B[j])*cos(C[j][i]));
-      double d = 1 - d1[k] * d1[k] - d2[k] * d2[k] - d3[k] * d3[k];
-      k++;
+//      double d = 1 - d1[k] * d1[k] - d2[k] * d2[k] - d3[k] * d3[k];
+//      k++;
     }
   }
 
@@ -2038,8 +2038,8 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
 
     if(color)
     {
-      double x1, x2, x3, y1, y2, y3;
-      int r1, r2, r3, g1, g2, g3, b1, b2, b3;
+      double x1 = 0.0, x2 = 0.0, x3 = 0.0, y1 = 0.0, y2 = 0.0, y3 = 0.0;
+      int r1 = 0, r2 = 0, r3 = 0, g1 = 0, g2 = 0, g3 = 0, b1 = 0, b2 = 0, b3 = 0;
       x1 = vert1.first;
       x2 = vert2.first;
       x3 = vert3.first;
@@ -2113,15 +2113,17 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   ///Draw Solid Border
   //pen.setStyle(Qt::SolidLine);
   //painter.setPen(pen);
-
+  double k = 0;
   if(A <= M_PI / 8)
   {
-    std::vector<double> x, y, z;
+    x.clear();
+    y.clear();
+    z.clear();
     y = DREAM3DMath::linspace(0.0f, r / sqrt(2.0f), 100);
     for(int i = 0; i < y.size(); i++)
     {
       z.push_back(0);
-      double k = r * r - y[i] * y[i];
+      k = r * r - y[i] * y[i];
       if(k < 0) { k = 0; }
       x.push_back(sqrt(k));
     }
@@ -2136,7 +2138,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x = DREAM3DMath::linspace(r / DREAM3D::Constants::k_Sqrt3, r, 100);
     for(int i = 0; i < x.size(); i++)
     {
-      double k = (r * r - x[i] * x[i]) / 2;
+      k = (r * r - x[i] * x[i]) / 2;
       if(k < 0) { k = 0; }
       y.push_back(sqrt(k));
       z.push_back(y[i]);
@@ -2153,7 +2155,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     for(int i = 0; i < x.size(); i++)
     {
       y.push_back(x[i]);
-      double k = r * r - 2 * x[i] * x[i];
+      k = r * r - 2 * x[i] * x[i];
       if(k < 0) { k = 0; }
       z.push_back(sqrt(k));
     }
@@ -2165,7 +2167,9 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
 
   else if(A > M_PI / 8 && A <= M_PI / 6)
   {
-    std::vector<double> x, y, z;
+    x.clear();
+    y.clear();
+    z.clear();
     double theta1 = atan(1 / sin(M_PI_4));
     double theta2 = acos(-(maxk * maxk) / (tan(A) * tan(A))) / 2;
     double theta3 = M_PI_2;
@@ -2227,7 +2231,9 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   }
   else if(A > M_PI / 6 && A <= deg1 / 2)
   {
-    std::vector<double> x, y, z;
+    x.clear();
+    y.clear();
+    z.clear();
     double thetac = acos((2 - sqrt(6 * (tan(A) * tan(A)) - 2)) / (6 * tan(A)));
     double thetaa = acos((1 - sqrt(6 * (tan(A) * tan(A)) - 2)) / (3 * tan(A)));
     double thetad = acos(-(maxk * maxk) / (tan(A) * tan(A))) / 2;
@@ -2252,8 +2258,8 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     for(int i = 0; i < z.size(); i++)
     {
       y.push_back(z[i]);
-      double k = r * r - 2 * (z[i] * z[i]);
-      if(k < 0) { k = 0; }
+      k = r * r - 2 * (z[i] * z[i]);
+      if(k < 0.0) { k = 0.0; }
       x.push_back(sqrt(k));
     }
     ptsa = rodri2pair(x, y, z);
@@ -2297,8 +2303,8 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     for(int i = 0; i < theta.size(); i++)
     {
       tempd3.push_back(tan(A)*cos(theta[i]));
-      double k = 2 * ((tan(A) * tan(A)) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
-      if(k < 0) { k = 0; }
+      k = 2 * ((tan(A) * tan(A)) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
+      if(k < 0.0) { k = 0.0; }
       phi.push_back(acos((((1 - tempd3[i]) + (sqrt(k))) / 2) / (tan(A)*sin(theta[i]))));
       z.push_back(r * cos(theta[i]));
       x.push_back(r * sin(theta[i])*cos(phi[i]));
@@ -2311,7 +2317,9 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   }
   else if(A >= deg1 / 2 && A <= maxdeg / 2)
   {
-    std::vector<double> x, y, z;
+    x.clear();
+    y.clear();
+    z.clear();
     double theta1 = acos(((1 - maxk) - sqrt(2 * (tan(A) * tan(A) - maxk * maxk) - (1 - maxk) * (1 - maxk))) / (2 * tan(A)));
     double theta2 = acos((1 - sqrt(6 * tan(A) * tan(A) - 2)) / (3 * tan(A)));
     double theta3 = acos((sqrt(tan(A) * tan(A) - 2 * maxk * maxk)) / (tan(A)));
@@ -2335,8 +2343,8 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     for(int i = 0; i < theta.size(); i++)
     {
       tempd3.push_back(tan(A)*cos(theta[i]));
-      double k = 2 * (tan(A) * tan(A) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
-      if(k < 0) { k = 0; }
+      k = 2 * (tan(A) * tan(A) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
+      if(k < 0.0) { k = 0.0; }
       phi.push_back(acos((((1 - tempd3[i]) + (sqrt(k))) / 2) / (tan(A)*sin(theta[i]))));
       x.push_back(r * sin(theta[i])*cos(phi[i]));
       z.push_back(r * cos(theta[i]));

@@ -572,7 +572,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
     m_Centroids[3 * i + 2] = zc;
     insert_precipitate(i);
     fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
-    for (int iter = 0; iter < 10; iter++)
+    for (int iter_fill = 0; iter_fill < 10; iter_fill++)
     {
       random = static_cast<float>(rg.genrand_res53());
       if(random <= precipboundaryfraction)
@@ -736,9 +736,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps)
+void InsertPrecipitatePhases::generate_precipitate(int phase, int seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps)
 {
-  DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
+  DREAM3D_RANDOMNG_NEW_SEEDED(seed)
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -764,12 +764,12 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
     vol = fourThirdsPi * ((diam / 2.0f) * (diam / 2.0f) * (diam / 2.0f));
   }
   int diameter = int((diam - pp->getMinGrainDiameter()) / pp->getBinStepSize());
-  float r2 = 0, r3 = 1;
+  float r2 = 0.0f, r3 = 1.0f;
   VectorOfFloatArray bovera = pp->getGrainSize_BOverA();
   VectorOfFloatArray covera = pp->getGrainSize_COverA();
   while (r2 < r3)
   {
-    r2 = 0, r3 = 0;
+    r2 = 0.0f, r3 = 0.0f;
     a2 = bovera[0]->GetValue(diameter);
     b2 = bovera[1]->GetValue(diameter);
     if(a2 == 0)

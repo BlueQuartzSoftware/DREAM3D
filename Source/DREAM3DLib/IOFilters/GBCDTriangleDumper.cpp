@@ -152,7 +152,13 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
+  if(NULL == m)
+  {
+    QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
+    setErrorCondition(-1001);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
   //      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
 //       typedef DataArray<unsigned int> XTalStructArrayType;

@@ -120,7 +120,6 @@ int Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writ
 void Hex2SqrConverter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
 
   if (m_EbsdFileList.size() == 0)
   {
@@ -180,14 +179,12 @@ void Hex2SqrConverter::execute()
   for (QVector<QString>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
     QString ebsdFName = *filepath;
-
-    progress = static_cast<int>( z - m_ZStartIndex );
-    progress = (int)(100.0f * (float)(progress) / total);
-    QString msg = "Converting File: " + ebsdFName;
-
-
-    notifyStatusMessage(msg.toLatin1().data());
-
+    {
+      progress = static_cast<int>( z - m_ZStartIndex );
+      progress = (int)(100.0f * (float)(progress) / total);
+      QString msg = "Converting File: " + ebsdFName;
+      notifyStatusMessage(msg.toLatin1().data());
+    }
     // Write the Manufacturer of the OIM file here
     // This list will grow to be the number of EBSD file formats we support
     QFileInfo fi(ebsdFName);
@@ -199,7 +196,7 @@ void Hex2SqrConverter::execute()
       AngReader reader;
       reader.setFileName(ebsdFName);
       reader.setReadHexGrid(true);
-      int err = reader.readFile();
+      err = reader.readFile();
       if(err < 0)
       {
         addErrorMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());

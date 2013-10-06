@@ -100,7 +100,12 @@ void SharedGrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fiel
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-
+  if(NULL == sm)
+  {
+    setErrorCondition(-10000);
+    addErrorMessage(getHumanLabel(), "Surface Data Container is NULL", getErrorCondition());
+    return;
+  }
   // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {

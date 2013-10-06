@@ -209,7 +209,6 @@ void NodesTrianglesToVtk::preflight()
 void NodesTrianglesToVtk::execute()
 {
   int err = 0;
-  QString ss;
 
   dataCheck(false, 1, 1, 1);
   if (getErrorCondition() < 0)

@@ -399,7 +399,6 @@ int M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* write
 void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1);
@@ -588,7 +587,7 @@ void M3CSliceBySlice::execute()
     if (getCancel() == true)
     {
 
-      QString ss = QObject::tr("Cancelling filter");
+      ss = QObject::tr("Cancelling filter");
       notifyWarningMessage(ss, -1);
       setErrorCondition(-1);
       break;
@@ -609,9 +608,9 @@ void M3CSliceBySlice::execute()
     }
     else if (i == dims[2] && isWrapped == false)
     {
-      for (int i = NSP; i < 2 * NSP + 1; ++i)
+      for (int n = NSP; n < 2 * NSP + 1; ++n)
       {
-        voxels[i] = -3;
+        voxels[n] = -3;
       }
     }
     else
@@ -651,7 +650,7 @@ void M3CSliceBySlice::execute()
     if (err < 0)
     {
 
-      QString ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
+      ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
       notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
@@ -661,7 +660,7 @@ void M3CSliceBySlice::execute()
     if (err < 0)
     {
 
-      QString ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
+      ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
       notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
@@ -1053,7 +1052,6 @@ void M3CSliceBySlice::initialize_squares(int zID, int NSP,
 
   // Gather initial information on each square...
   int id;
-  int i, j;
   int csite;
 
   SurfaceMesh::M3C::Face* cSquare = cSquarePtr->getPointer(0);
@@ -1063,7 +1061,7 @@ void M3CSliceBySlice::initialize_squares(int zID, int NSP,
   // notice that point at the surface will have the wrong values of Node at the other end...
   // since it includes periodic boundary condition...
   // but, since the structure surrounded by ghost layer of grainname -3, it's OK...
-  for (i = 1; i <= 2 * NSP; i++)
+  for (int i = 1; i <= 2 * NSP; i++)
   {
     id = 3 * (i - 1);
     csite = i;
@@ -1081,7 +1079,7 @@ void M3CSliceBySlice::initialize_squares(int zID, int NSP,
     cSquare[id + 2].site_id[2] = neigh[i].neigh_id[18];
     cSquare[id + 2].site_id[3] = neigh[i].neigh_id[25];
     // initialize Node, edge...-1 is dummy initial value...
-    for (j = 0; j < 4; j++)
+    for (int j = 0; j < 4; j++)
     {
       cSquare[id].edge_id[j] = -1;
       cSquare[id + 1].edge_id[j] = -1;
@@ -1710,22 +1708,14 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
         Detail::triangleResize *= 10;\
       }\
       cTrianglePtr->Resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
-      /*    StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
-      for(size_t xx_xx = current_##cTrianglePtr##_size; xx_xx < current_##cTrianglePtr##_size + Detail::triangleResize; ++xx_xx){\
-      cTriangle[xx_xx].node_id[0] = 0xABABABAB; cTriangle[xx_xx].node_id[1] = 0xABABABAB; cTriangle[xx_xx].node_id[1] = 0xABABABAB;\
-      cTriangle[xx_xx].e_id[0] = 0xABABABAB; cTriangle[xx_xx].e_id[1] = 0xABABABAB; cTriangle[xx_xx].e_id[2] = 0xABABABAB;\
-      cTriangle[xx_xx].nSpin[0] = 0xABABABAB; cTriangle[xx_xx].nSpin[2] = 0xABABABAB;\
-      cTriangle[xx_xx].edgePlace[0] = 0xABABABAB;cTriangle[xx_xx].edgePlace[1] = 0xABABABAB; cTriangle[xx_xx].edgePlace[2] = 0xABABABAB;\
-      }*/\
     }\
-  }\
   StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
   cTriangle[ctid].node_id[0] = n0;\
   cTriangle[ctid].node_id[1] = n1;\
   cTriangle[ctid].node_id[2] = n2;\
   cTriangle[ctid].nSpin[0] = label0;\
   cTriangle[ctid].nSpin[1] = label1;\
-  if (ctid == 3112052) { qDebug() << "ctid: " << ctid << "  " << label0 << " " << label1 << ":: " << cTriangle[ctid].nSpin[0] << "  " << cTriangle[ctid].nSpin[1] << "\n";}
+  }
 
 
 // -----------------------------------------------------------------------------
@@ -1907,8 +1897,9 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
       tv0 = cEdge[te0].node_id[0];
       tcVertex = cEdge[te0].node_id[1];
       tv2 = cEdge[te1].node_id[0];
-      ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
-
+      {
+        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
+      }
       new_node0 = tv2;
       //  new_node1 = tcVertex;
       cnumT++;
@@ -2144,8 +2135,9 @@ void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_li
     tv0 = cEdge[te0].node_id[0];
     tcVertex = cEdge[te0].node_id[1];
     tv2 = cEdge[te1].node_id[0];
-    ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
-
+    {
+      ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
+    }
     new_node0 = tv2;
     //  new_node1 = tcVertex;
     cnumT++;
@@ -2332,8 +2324,9 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
         tv0 = cEdge[te0].node_id[0];
         tcVertex = cEdge[te0].node_id[1];
         tv2 = cEdge[te1].node_id[1];
-        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
-
+        {
+          ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
+        }
         new_node0 = tv2;
         //    new_node1 = tcVertex;
         cnumT++;

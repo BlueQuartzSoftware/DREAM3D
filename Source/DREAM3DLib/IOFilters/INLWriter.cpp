@@ -277,7 +277,7 @@ int INLWriter::writeFile()
     QString matName = materialNames->GetValue(i);
     fprintf(f, "# Phase_%d: %s\r\n", i, matName.toLatin1().data());
     symmetry = m_CrystalStructures[i];
-    fprintf(f, "# Phase_%lu: %s\r\n", i, materialNames->GetValue(i).toLatin1().data());
+    fprintf(f, "# Phase_%u: %s\r\n", i, materialNames->GetValue(i).toLatin1().data());
     if(symmetry == Ebsd::CrystalStructure::Cubic_High)
     {
       symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;

@@ -198,7 +198,7 @@ class EdgeArray
 
       size_t nEdges = m_Array->getNumberOfTuples();
 
-      Int32DynamicListArray::Pointer m_EdgeNeighbors = Int32DynamicListArray::New();
+      m_EdgeNeighbors = Int32DynamicListArray::New();
 
       QVector<uint16_t> linkCount(nEdges, 0);
 

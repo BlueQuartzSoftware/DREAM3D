@@ -76,12 +76,14 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_UseNonContiguousNeighbors(false),
   m_GrainIds(NULL),
   m_CellParentIds(NULL),
+  m_FieldParentIds(NULL),
   m_MTRdensity(NULL),
   m_AvgQuats(NULL),
+  m_Active(NULL),
   m_FieldPhases(NULL),
   m_Volumes(NULL),
-  m_Active(NULL),
-  m_FieldParentIds(NULL),
+  m_ContiguousNeighborList(NULL),
+  m_NonContiguousNeighborList(NULL),
   m_MTRgKAM(NULL),
   m_CrystalStructures(NULL)
 {
@@ -159,7 +161,7 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
 void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
@@ -251,7 +253,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
-  std::stringstream ss;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   NeighborList<int>& neighborlist = *m_ContiguousNeighborList;

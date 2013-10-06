@@ -81,6 +81,7 @@ void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
   {
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "Vertex DataContainer is NULL", getErrorCondition());
+    return;
   }
   if(getHdfGroupId() < 0)
   {

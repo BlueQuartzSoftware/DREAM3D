@@ -191,8 +191,6 @@ void SingleThresholdFields::execute()
   {
     return;
   }
-  //int err = 0;
-  QString ss;
 
   IDataArray::Pointer inputData = m->getCellFieldData(m_SelectedFieldArrayName);
   if (NULL == inputData.get())

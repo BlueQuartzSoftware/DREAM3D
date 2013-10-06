@@ -217,7 +217,6 @@ void CropVolume::preflight()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   setErrorCondition(0);
-  QString ss;
   if(NULL == m)
   {
     setErrorCondition(-999);

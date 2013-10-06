@@ -141,18 +141,17 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  QString ss;
   QFileInfo fi(getInputFile());
 
   if (getInputFile().isEmpty() == true)
   {
-    ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (fi.exists() == false)
   {
-    ss = QObject::tr("The input file does not exist.");
+    QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -183,7 +182,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     if (error < 0)
     {
       setErrorCondition(error);
-      ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
+      QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
       addErrorMessage(getHumanLabel(), ss, -11000);
     }
   }
@@ -211,7 +210,6 @@ void DxReader::preflight()
 // -----------------------------------------------------------------------------
 void DxReader::execute()
 {
-  QString ss;
   int err = 0;
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -332,11 +330,11 @@ int DxReader::readHeader()
       }
     }
   } // when we get here, we are looking at data
-  int points = 0;
+  //int points = 0;
   if(pos1 != 0)
   {
     error = 0;
-    points = tokens[pos1 + 1].toInt(&ok, 10);
+   // points = tokens[pos1 + 1].toInt(&ok, 10);
   }
   m->setDimensions(nx, ny, nz);
   //  qDebug() << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz ;
@@ -349,12 +347,10 @@ int DxReader::readHeader()
 int DxReader::readFile()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  QString ss;
 
   QString line;
   QString delimeters(", ;\t"); /* delimeters to split the data */
-  QVector<QString> tokens; /* vector to store the split data */
-
+  
   int error; /* dummy variables */
 
   bool finished_header, finished_data;
@@ -412,14 +408,13 @@ int DxReader::readFile()
 
   if(index != static_cast<size_t>(m->getTotalPoints()))
   {
-    ss = QObject::tr("ERROR: data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getTotalPoints());
+    QString ss = QObject::tr("ERROR: data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getTotalPoints());
     setErrorCondition(-495);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     m_InStream.close();
     return getErrorCondition();
   }
 
-  tokens.clear();
   m_InStream.close();
 
 

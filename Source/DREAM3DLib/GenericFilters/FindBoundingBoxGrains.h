@@ -94,8 +94,7 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
   protected:
     FindBoundingBoxGrains();
 
-    void find_boundingboxgrains();
-    void find_boundingboxgrains2D();
+
 
   private:
     float* m_Centroids;
@@ -103,7 +102,10 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
     bool* m_BiasedFields;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
+  
+    void find_boundingboxgrains();
+    void find_boundingboxgrains2D();
+  
 
     FindBoundingBoxGrains(const FindBoundingBoxGrains&); // Copy Constructor Not Implemented
     void operator=(const FindBoundingBoxGrains&); // Operator '=' Not Implemented

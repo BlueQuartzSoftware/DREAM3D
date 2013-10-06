@@ -150,7 +150,6 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  QString ss;
   //int err = 0;
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -172,7 +171,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if (NULL == m->getCellFieldData(m_NeighborListArrayName).get())
   {
 
-    ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
+    QString ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -184,7 +183,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if(NULL == m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get())
   {
 
-    ss = QObject::tr("'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
+    QString ss = QObject::tr("'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
     setErrorCondition(-306);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -196,7 +195,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if(NULL == m->getCellEnsembleData(m_StatsDataArrayName).get())
   {
 
-    ss = QObject::tr("'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
+    QString ss = QObject::tr("'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
     setErrorCondition(-310);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -648,7 +647,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
           QuaternionMathF::Copy(q1, avgQuats[selectedgrain1]);
           simodf->SetValue(choose, (simodf->GetValue(choose) + (m_Volumes[selectedgrain1] / unbiasedvol[ensem])));
           simodf->SetValue(g1odfbin, (simodf->GetValue(g1odfbin) - (m_Volumes[selectedgrain1] / unbiasedvol[ensem])));
-          size_t size = 0;
+          size = 0;
           if(neighborlist[selectedgrain1].size() != 0) { size = neighborlist[selectedgrain1].size(); }
           for (size_t j = 0; j < size; j++)
           {

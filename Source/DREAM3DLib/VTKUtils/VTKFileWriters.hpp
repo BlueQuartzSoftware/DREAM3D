@@ -93,7 +93,7 @@ template<typename T>
 class VoxelGrainIdScalarWriter : public VtkScalarWriter
 {
   public:
-    VoxelGrainIdScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
+    VoxelGrainIdScalarWriter(T* rPtr) : VtkScalarWriter(), r(rPtr) {}
     DREAM3D_TYPE_MACRO_SUPER(VoxelGrainIdScalarWriter<T>, VtkScalarWriter)
     virtual ~VoxelGrainIdScalarWriter() {}
 
@@ -186,7 +186,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
   class name : public VtkScalarWriter\
   {\
     public:\
-      name(T* r) : VtkScalarWriter(), r(r) {}\
+      name(T* rPtr) : VtkScalarWriter(), r(rPtr) {}\
       DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
       virtual ~name(){}\
       int writeScalars(FILE* f)  {\
@@ -229,7 +229,7 @@ template<typename T>
 class VoxelEulerAngleScalarWriter : public VtkScalarWriter
 {
   public:
-    VoxelEulerAngleScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
+    VoxelEulerAngleScalarWriter(T* rPtr) : VtkScalarWriter(), r(rPtr) {}
     DREAM3D_TYPE_MACRO_SUPER(VoxelEulerAngleScalarWriter<T>, VtkScalarWriter)\
 
     virtual ~VoxelEulerAngleScalarWriter() {}
