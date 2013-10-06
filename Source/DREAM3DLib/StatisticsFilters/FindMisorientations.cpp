@@ -56,10 +56,12 @@ FindMisorientations::FindMisorientations()  :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_NeighborListArrayName(DREAM3D::FieldData::NeighborList),
   m_MisorientationListArrayName(DREAM3D::FieldData::MisorientationList),
+  m_avgMisorientationArrayName(DREAM3D::FieldData::avgMisorientation),
   m_AvgQuats(NULL),
   m_FieldPhases(NULL),
   m_NeighborList(NULL),
   m_MisorientationList(NULL),
+  m_avgMisorientation(NULL),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -102,6 +104,8 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, avgMisorientation, float, FloatArrayType, 0, fields, 1)
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   IDataArray::Pointer neighborListPtr = m->getCellFieldData(m_NeighborListArrayName);
@@ -187,6 +191,7 @@ void FindMisorientations::execute()
   //float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
   // int mbin = 0;
   float w;
+  float neighMisoTot = 0.0f;
   QuatF q1;
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -220,7 +225,10 @@ void FindMisorientations::execute()
       {
         misorientationlists[i][j] = -100;
       }
+      neighMisoTot += misorientationlists[i][j];
     }
+    m_avgMisorientation[i] = neighMisoTot / neighborlist[i].size();
+    neighMisoTot = 0.0f;
   }
 
   // We do this to create new set of MisorientationList objects

@@ -70,7 +70,6 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_NonContiguousNeighborListArrayName(DREAM3D::FieldData::NeighborhoodList),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
   m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
-  m_MTRgKAMArrayName(DREAM3D::FieldData::MTRgKAM),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CAxisTolerance(1.0f),
   m_UseNonContiguousNeighbors(false),
@@ -176,7 +175,6 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldParentIds, int32_t, Int32ArrayType, 0, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MTRgKAM, float, FloatArrayType, 0, fields, 1)
 
   if(m_UseNonContiguousNeighbors == false)
   {
@@ -274,8 +272,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   QuatF q1;
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-  int misoCount = 0;
-  float misoTotal = 0.0f;
 
   size_t numgrains = m->getNumCellFieldTuples();
   unsigned int phase1, phase2;
@@ -351,8 +347,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
                 w = MatrixMath::CosThetaBetweenVectors(c1, c2);
                 DREAM3DMath::boundF(w, -1, 1);
                 w = acosf(w);
-                if (k == 0) { misoTotal += w; }
-                if (k == 0) { misoCount++; }
                 if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - w) <= m_CAxisTolerance)
                 {
                   parentnumbers[neigh] = parentcount;

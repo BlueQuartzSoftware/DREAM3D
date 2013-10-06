@@ -1,5 +1,5 @@
-#ifndef PERFORMMTRBRIDGE_H_
-#define PERFORMMTRBRIDGE_H_
+#ifndef BridgeParentIdsStatisticsToGrainIds_H_
+#define BridgeParentIdsStatisticsToGrainIds_H_
 
 #include <vector>
 #include <string>
@@ -14,21 +14,21 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 /**
- * @class PerformMTRBridge PerformMTRBridge.h DREAM3DLib/GenericFilters/PerformMTRBridge.h
+ * @class BridgeParentIdsStatisticsToGrainIds BridgeParentIdsStatisticsToGrainIds.h DREAM3DLib/GenericFilters/BridgeParentIdsStatisticsToGrainIds.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT PerformMTRBridge : public AbstractFilter
+class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToGrainIds : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(PerformMTRBridge)
-    DREAM3D_STATIC_NEW_MACRO(PerformMTRBridge)
-    DREAM3D_TYPE_MACRO_SUPER(PerformMTRBridge, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(BridgeParentIdsStatisticsToGrainIds)
+    DREAM3D_STATIC_NEW_MACRO(BridgeParentIdsStatisticsToGrainIds)
+    DREAM3D_TYPE_MACRO_SUPER(BridgeParentIdsStatisticsToGrainIds, AbstractFilter)
 
 
-    virtual ~PerformMTRBridge();
+    virtual ~BridgeParentIdsStatisticsToGrainIds();
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
@@ -36,14 +36,14 @@ class DREAM3DLib_EXPORT PerformMTRBridge : public AbstractFilter
     //------ Created Cell Data
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldParentIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(MTRgKAMArrayName)
     //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(NumGrainsPerParentArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::MemoryManagementFilters;}
-    virtual const std::string getHumanLabel() { return "Perform MTR Bridge"; }
+    virtual const std::string getHumanLabel() { return "Bridge ParentIds Statistics To GrainIds"; }
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -61,23 +61,22 @@ class DREAM3DLib_EXPORT PerformMTRBridge : public AbstractFilter
     virtual void preflight();
 
   protected:
-    PerformMTRBridge();
+    BridgeParentIdsStatisticsToGrainIds();
 
   private:
     int32_t* m_GrainIds;
     int32_t* m_CellParentIds;
     int32_t* m_FieldParentIds;
-    float* m_MTRgKAM;
+    int32_t* m_NumGrainsPerParent;
 
     unsigned int* m_CrystalStructures;
-
     std::vector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles, bool afterLink);
 
 
-    PerformMTRBridge(const PerformMTRBridge&); // Copy Constructor Not Implemented
-    void operator=(const PerformMTRBridge&); // Operator '=' Not Implemented
+    BridgeParentIdsStatisticsToGrainIds(const BridgeParentIdsStatisticsToGrainIds&); // Copy Constructor Not Implemented
+    void operator=(const BridgeParentIdsStatisticsToGrainIds&); // Operator '=' Not Implemented
 };
 
-#endif /* PERFORMMTRBRIDGE_H_ */
+#endif /* BridgeParentIdsStatisticsToGrainIds_H_ */
