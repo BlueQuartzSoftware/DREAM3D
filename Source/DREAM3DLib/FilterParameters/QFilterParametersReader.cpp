@@ -313,7 +313,7 @@ QVector<int8_t> QFilterParametersReader::readValue(const QString name, QVector<i
     if (!ok) { selections[i] = 0; }
   }
   m_Prefs->endArray();
-  return value;
+  return selections;
 }
 
 // -----------------------------------------------------------------------------
@@ -332,7 +332,7 @@ QVector<int16_t> QFilterParametersReader::readValue(const QString name, QVector<
     if (!ok) { selections[i] = 0; }
   }
   m_Prefs->endArray();
-  return value;
+  return selections;
 }
 
 // -----------------------------------------------------------------------------
@@ -351,7 +351,7 @@ QVector<int32_t> QFilterParametersReader::readValue(const QString name, QVector<
     if (!ok) { selections[i] = 0; }
   }
   m_Prefs->endArray();
-  return value;
+  return selections;
 }
 
 // -----------------------------------------------------------------------------
@@ -370,7 +370,7 @@ QVector<int64_t> QFilterParametersReader::readValue(const QString name, QVector<
     if (!ok) { selections[i] = 0; }
   }
   m_Prefs->endArray();
-  return value;
+  return selections;
 }
 
 // -----------------------------------------------------------------------------
@@ -389,7 +389,7 @@ QVector<uint8_t> QFilterParametersReader::readValue(const QString name, QVector<
     if (!ok) { selections[i] = 0; }
   }
   m_Prefs->endArray();
-  return value;
+  return selections;
 }
 
 // -----------------------------------------------------------------------------
@@ -408,7 +408,7 @@ QVector<uint16_t> QFilterParametersReader::readValue(const QString name, QVector
     if (!ok) { selections[i] = 0; }
   }
   m_Prefs->endArray();
-  return value;
+  return selections;
 }
 
 // -----------------------------------------------------------------------------
@@ -427,7 +427,7 @@ QVector<uint32_t> QFilterParametersReader::readValue(const QString name, QVector
     if (!ok) { selections[i] = 0; }
   }
   m_Prefs->endArray();
-  return value;
+  return selections;
 }
 
 // -----------------------------------------------------------------------------
@@ -446,7 +446,7 @@ QVector<uint64_t> QFilterParametersReader::readValue(const QString name, QVector
     if (!ok) { selections[i] = 0; }
   }
   m_Prefs->endArray();
-  return value;
+  return selections;
 }
 
 // -----------------------------------------------------------------------------
@@ -465,7 +465,7 @@ QVector<float> QFilterParametersReader::readValue(const QString name, QVector<fl
     if (!ok) { selections[i] = 0.0f; }
   }
   m_Prefs->endArray();
-  return value;
+  return selections;
 }
 
 // -----------------------------------------------------------------------------
@@ -484,9 +484,8 @@ QVector<double> QFilterParametersReader::readValue(const QString name, QVector<d
     if (!ok) { selections[i] = 0.0; }
   }
   m_Prefs->endArray();
-  return value;
+  return selections;
 }
-
 
 // -----------------------------------------------------------------------------
 //
