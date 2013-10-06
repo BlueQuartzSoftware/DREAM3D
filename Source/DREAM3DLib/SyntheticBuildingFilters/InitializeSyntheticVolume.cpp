@@ -94,14 +94,14 @@ void InitializeSyntheticVolume::setupFilterParameters()
 void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setInputFile( reader->readValue("InputFile", getInputFile() ) );
+  setInputFile(reader->readString("InputFile", getInputFile() ) );
   setXVoxels( reader->readValue("XVoxels", getXVoxels() ) );
   setYVoxels( reader->readValue("YVoxels", getYVoxels() ) );
   setZVoxels( reader->readValue("ZVoxels", getZVoxels() ) );
   setXRes( reader->readValue("XRes", getXRes() ) );
   setYRes( reader->readValue("YRes", getYRes() ) );
   setZRes( reader->readValue("ZRes", getZRes() ) );
-  setShapeTypes( reader->readValue("ShapeTypes", getShapeTypes() ) );
+  setShapeTypes( reader->readArray("ShapeTypes", getShapeTypes() ) );
   reader->closeFilterGroup();
 }
 
@@ -257,7 +257,7 @@ void InitializeSyntheticVolume::execute()
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);
 
-  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromStdVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
+  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
   m->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   int64_t totalPoints = m->getTotalPoints();

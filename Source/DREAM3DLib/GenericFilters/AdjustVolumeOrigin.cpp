@@ -158,7 +158,7 @@ void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* re
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", false) );
   setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", false) );
-  setOrigin( reader->readValue("Origin", getOrigin() ) );
+  setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

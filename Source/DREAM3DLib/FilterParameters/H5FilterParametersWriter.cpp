@@ -400,15 +400,11 @@ int H5FilterParametersWriter::writeValue(const QString name, FloatVec3Widget_t v
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, ComparisonInput_t v, int vectorPos)
+int H5FilterParametersWriter::writeValue(const QString name, ComparisonInput_t v, int notUsed)
 {
-  int err = 0;
-
-  QString ss = QString::number(vectorPos) + H5FilterParameter::AxisAngleInput;
-
-  QString data = v.arrayName + "\n" + QString::number(v.compOperator, 10) + "\n" + QString(v.compValue, 10) + "\n";
-  err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, ss, data);
-  return err;
+  QVector<ComparisonInput_t> comps(1);
+  comps[0] = v;
+  return writeValue(name, comps);
 }
 
 // -----------------------------------------------------------------------------
@@ -417,16 +413,37 @@ int H5FilterParametersWriter::writeValue(const QString name, ComparisonInput_t v
 int H5FilterParametersWriter::writeValue(const QString name, QVector<ComparisonInput_t> v)
 {
   int numQFilters = static_cast<int>( v.size() );
-  int err = writeValue(name,  numQFilters);
+  int err = 0;
+  QString buf;
+  QTextStream ss(&buf);
+
+  // Create a string that is comma delimited for each comparison operator and new line delimited
+  // to mark the end of each ComparisonOpertor struct
   for(int i = 0; i < numQFilters; i++)
   {
-    err = writeValue(name, v[i], i);
+    ss << v[i].arrayName << "," <<  v[i].compOperator << "," << v[i].compValue << "\n";
   }
+
+  // Write the data set to the file and attach an attribute that says how many there were.
+  if(numQFilters > 0)
+  {
+    err = QH5Lite::writeStringDataset(m_CurrentGroupId, name, buf);
+    if (err < 0)
+    {
+      return err;
+    }
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, "NumInputs", numQFilters);
+    if (err < 0)
+    {
+      return err;
+    }
+  }
+
   return err;
 }
 
 // -----------------------------------------------------------------------------
-//
+// These are actually written as a binary 4x1 float array as an attribute
 // -----------------------------------------------------------------------------
 int H5FilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v, int vectorPos)
 {

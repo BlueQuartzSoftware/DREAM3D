@@ -135,9 +135,9 @@ void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader,
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
-  setMisAxis( reader->readValue("MisAxis", getMisAxis() ) );
-  setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
-  setMisorientationRotations(reader->readValue("MisorientationRotations", getMisorientationRotations()));
+  setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
+  setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
+  setMisorientationRotations(reader->readAxisAngles("MisorientationRotations", getMisorientationRotations()));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

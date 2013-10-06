@@ -64,8 +64,8 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual int openFilterGroup(AbstractFilter* filter, int index);
     virtual int closeFilterGroup();
 
-    virtual QString readValue(const QString name, QString value);
-    virtual QVector<QString> readValue(const QString name, QVector<QString> value);
+    virtual QString readString(const QString name, QString value);
+    virtual QVector<QString> readStrings(const QString name, QVector<QString> value);
 
     virtual int8_t readValue(const QString name, int8_t value);
     virtual int16_t readValue(const QString name, int16_t value);
@@ -79,24 +79,24 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual double readValue(const QString name, double value);
     virtual bool readValue(const QString name, bool value);
 
-    virtual QVector<int8_t> readValue(const QString name, QVector<int8_t> value);
-    virtual QVector<int16_t> readValue(const QString name, QVector<int16_t> value);
-    virtual QVector<int32_t> readValue(const QString name, QVector<int32_t> value);
-    virtual QVector<int64_t> readValue(const QString name, QVector<int64_t> value);
-    virtual QVector<uint8_t> readValue(const QString name, QVector<uint8_t> value);
-    virtual QVector<uint16_t> readValue(const QString name, QVector<uint16_t> value);
-    virtual QVector<uint32_t> readValue(const QString name, QVector<uint32_t> value);
-    virtual QVector<uint64_t> readValue(const QString name, QVector<uint64_t> value);
-    virtual QVector<float> readValue(const QString name, QVector<float> value);
-    virtual QVector<double> readValue(const QString name, QVector<double> value);
+    virtual QVector<int8_t> readArray(const QString name, QVector<int8_t> value);
+    virtual QVector<int16_t> readArray(const QString name, QVector<int16_t> value);
+    virtual QVector<int32_t> readArray(const QString name, QVector<int32_t> value);
+    virtual QVector<int64_t> readArray(const QString name, QVector<int64_t> value);
+    virtual QVector<uint8_t> readArray(const QString name, QVector<uint8_t> value);
+    virtual QVector<uint16_t> readArray(const QString name, QVector<uint16_t> value);
+    virtual QVector<uint32_t> readArray(const QString name, QVector<uint32_t> value);
+    virtual QVector<uint64_t> readArray(const QString name, QVector<uint64_t> value);
+    virtual QVector<float> readArray(const QString name, QVector<float> value);
+    virtual QVector<double> readArray(const QString name, QVector<double> value);
 
 
-    virtual IntVec3Widget_t readValue(const QString name, IntVec3Widget_t v);
-    virtual FloatVec3Widget_t readValue(const QString name, FloatVec3Widget_t v);
-    virtual ComparisonInput_t readValue(const QString name, ComparisonInput_t v, int vectorPos);
-    virtual QVector<ComparisonInput_t> readComparisonInputs(const QString name, QVector<ComparisonInput_t> v);
-    virtual AxisAngleInput_t readValue(const QString name, AxisAngleInput_t v, int vectorPos);
-    virtual QVector<AxisAngleInput_t> readValue(const QString name, QVector<AxisAngleInput_t> v);
+    virtual IntVec3Widget_t readIntVec3(const QString name, IntVec3Widget_t v);
+    virtual FloatVec3Widget_t readFloatVec3(const QString name, FloatVec3Widget_t v);
+    virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos);
+    virtual QVector<ComparisonInput_t> readComparisonInputs(const QString name, QVector<ComparisonInput_t> defValue);
+    virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos);
+    virtual QVector<AxisAngleInput_t> readAxisAngles(const QString name, QVector<AxisAngleInput_t> defValue);
     virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v);
 
   protected:

@@ -5,7 +5,7 @@
 #ifndef _Filt0_H_
 #define _Filt0_H_
 
-#include <string>
+#include <QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -24,9 +24,10 @@ class Filt0 : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(Filt0, AbstractFilter);
 
     virtual ~Filt0();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-   DREAM3D_INSTANCE_PROPERTY(float, Filt0_Float)
-   DREAM3D_INSTANCE_PROPERTY(int32_t, Filt0_Integer)
+    DREAM3D_INSTANCE_PROPERTY(float, Filt0_Float)
+    DREAM3D_INSTANCE_PROPERTY(int32_t, Filt0_Integer)
 
 
     /**
@@ -66,9 +67,9 @@ class Filt0 : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -107,9 +108,11 @@ class Filt1 : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(Filt1, AbstractFilter);
 
     virtual ~Filt1();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-   DREAM3D_INSTANCE_PROPERTY(float, Filt1_Float)
-   DREAM3D_INSTANCE_PROPERTY(int32_t, Filt1_Integer)
+
+    DREAM3D_INSTANCE_PROPERTY(float, Filt1_Float)
+    DREAM3D_INSTANCE_PROPERTY(int32_t, Filt1_Integer)
 
 
     /**
@@ -149,9 +152,9 @@ class Filt1 : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

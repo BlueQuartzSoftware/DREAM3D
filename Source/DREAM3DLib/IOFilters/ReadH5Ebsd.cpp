@@ -119,7 +119,7 @@ ReadH5Ebsd::~ReadH5Ebsd()
 void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setInputFile( reader->readValue("InputFile", getInputFile() ) );
+  setInputFile(reader->readString("InputFile", getInputFile() ) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex() ) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex() ) );
   setUseTransformations( reader->readValue("UseTransformations", getUseTransformations() ) );

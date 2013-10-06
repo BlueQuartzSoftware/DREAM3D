@@ -107,8 +107,8 @@ void SurfaceMeshToNodesTrianglesEdges::readFilterParameters(AbstractFilterParame
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setOutputNodesFile( reader->readValue( "OutputNodesFile", getOutputNodesFile() ) );
-  setOutputTrianglesFile( reader->readValue( "OutputTrianglesFile", getOutputTrianglesFile() ) );
+  setOutputNodesFile( reader->readString( "OutputNodesFile", getOutputNodesFile() ) );
+  setOutputTrianglesFile( reader->readString( "OutputTrianglesFile", getOutputTrianglesFile() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

@@ -12,6 +12,7 @@
 // -----------------------------------------------------------------------------
 Filt0::Filt0() :
   AbstractFilter(),
+    m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_Filt0_Float(6.6f),
   m_Filt0_Integer(15)
 {
@@ -30,7 +31,7 @@ Filt0::~Filt0()
 // -----------------------------------------------------------------------------
 void Filt0::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
   /* Place all your option initialization code here */
 
   /*  For an Integer use this code*/
@@ -111,11 +112,13 @@ void Filt0::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
+  setErrorCondition(err);
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if (NULL == m)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", getErrorCondition());
+    setErrorCondition(-1);
+    QString ss = QObject::tr(" DataContainer was NULL");
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), -1);
     return;
   }
   setErrorCondition(0);
@@ -131,6 +134,7 @@ void Filt0::execute()
 // -----------------------------------------------------------------------------
 Filt1::Filt1() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_Filt1_Float(9.9f),
   m_Filt1_Integer(123)
 {
@@ -149,7 +153,7 @@ Filt1::~Filt1()
 // -----------------------------------------------------------------------------
 void Filt1::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
   /* Place all your option initialization code here */
 
   /*  For an Integer use this code*/
@@ -230,11 +234,12 @@ void Filt1::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if (NULL == m)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", getErrorCondition());
+    setErrorCondition(-1);
+    QString ss = QObject::tr(" DataContainer was NULL");
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), -1);
     return;
   }
   setErrorCondition(0);

@@ -316,17 +316,17 @@ void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reade
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setInputFile( reader->readValue( "InputFile", getInputFile() ) );
+  setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setScalarType( reader->readValue("ScalarType", getScalarType()) );
   setDimensionality( reader->readValue("Dimensionality", getDimensionality()) );
   setNumberOfComponents( reader->readValue("NumberOfComponents", getNumberOfComponents()) );
   setEndian( reader->readValue("Endian", getEndian()) );
-  setDimensions( reader->readValue("Dimensions", getDimensions() ) );
-  setOrigin( reader->readValue("Origin", getOrigin() ) );
-  setResolution( reader->readValue("Resolution", getResolution() ) );
+  setDimensions( reader->readIntVec3("Dimensions", getDimensions() ) );
+  setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
+  setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
   setOverRideOriginResolution( reader->readValue("OverRideOriginResolution", getOverRideOriginResolution()) );
   setSkipHeaderBytes( reader->readValue("SkipHeaderBytes", getSkipHeaderBytes()) );
-  setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
+  setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

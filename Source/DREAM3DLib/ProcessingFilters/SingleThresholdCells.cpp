@@ -120,10 +120,10 @@ void SingleThresholdCells::readFilterParameters(AbstractFilterParametersReader* 
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
+  setSelectedCellArrayName( reader->readString( "SelectedCellArrayName", getSelectedCellArrayName() ) );
   setComparisonOperator( reader->readValue("ComparisonOperator", getComparisonOperator()) );
   setComparisonValue( reader->readValue("ComparisonValue",  getComparisonValue()) );
-  setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
+  setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
