@@ -83,7 +83,6 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_Volumes(NULL),
   m_ContiguousNeighborList(NULL),
   m_NonContiguousNeighborList(NULL),
-  m_MTRgKAM(NULL),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -370,10 +369,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
     totalCheckList.clear();
     microtexturevolume = 0.0f;
     totalCheckVolume = 0.0f;
-    if (misoCount > 0) { m_MTRgKAM[i] = misoTotal / misoCount; }
-    else { m_MTRgKAM[i] = -1.0f; }
-    misoTotal = 0.0f;
-    misoCount = 0;
   }
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
 

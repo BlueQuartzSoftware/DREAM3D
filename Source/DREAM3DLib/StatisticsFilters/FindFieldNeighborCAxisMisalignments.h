@@ -32,6 +32,8 @@ class DREAM3DLib_EXPORT FindFieldNeighborCAxisMisalignments : public AbstractFil
 
     virtual ~FindFieldNeighborCAxisMisalignments();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     //------ Required Ensemble Data
@@ -41,9 +43,9 @@ class DREAM3DLib_EXPORT FindFieldNeighborCAxisMisalignments : public AbstractFil
     DREAM3D_INSTANCE_STRING_PROPERTY(CAxisMisalignmentListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgCAxisMisalignmentsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Neighbor C-Axis Misalignments"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getHumanLabel() { return "Find Field Neighbor C-Axis Misalignments"; }
 
     /**
     * @brief This method will write the options to a file
@@ -67,7 +69,7 @@ class DREAM3DLib_EXPORT FindFieldNeighborCAxisMisalignments : public AbstractFil
     FindFieldNeighborCAxisMisalignments();
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

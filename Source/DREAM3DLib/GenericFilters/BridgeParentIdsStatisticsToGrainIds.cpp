@@ -27,6 +27,7 @@
 // -----------------------------------------------------------------------------
 BridgeParentIdsStatisticsToGrainIds::BridgeParentIdsStatisticsToGrainIds() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
@@ -83,18 +84,17 @@ int BridgeParentIdsStatisticsToGrainIds::writeFilterParameters(AbstractFilterPar
 void BridgeParentIdsStatisticsToGrainIds::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles, bool afterLink)
 {
   setErrorCondition(0);
-  std::stringstream ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, -304, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldParentIds, -302, int32_t, Int32ArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -104,7 +104,7 @@ void BridgeParentIdsStatisticsToGrainIds::preflight()
 {
   dataCheck(true, 1, 1, 1, false);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -114,7 +114,7 @@ void BridgeParentIdsStatisticsToGrainIds::preflight()
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
   rename_cell_array->setObservers(this->getObservers());
-  rename_cell_array->setVolumeDataContainer(m);
+  rename_cell_array->setDataContainerArray(getDataContainerArray());
   rename_cell_array->setMessagePrefix(getMessagePrefix());
   rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
   rename_cell_array->setNewCellArrayName(m_GrainIdsArrayName);
@@ -129,7 +129,7 @@ void BridgeParentIdsStatisticsToGrainIds::preflight()
 
   LinkFieldMapToCellArray::Pointer link_field_map_to_cell_array = LinkFieldMapToCellArray::New();
   link_field_map_to_cell_array->setObservers(this->getObservers());
-  link_field_map_to_cell_array->setVolumeDataContainer(m);
+  link_field_map_to_cell_array->setDataContainerArray(getDataContainerArray());
   link_field_map_to_cell_array->setMessagePrefix(getMessagePrefix());
   link_field_map_to_cell_array->setSelectedCellDataArrayName(m_GrainIdsArrayName);
   link_field_map_to_cell_array->preflight();
@@ -147,7 +147,7 @@ void BridgeParentIdsStatisticsToGrainIds::preflight()
 // -----------------------------------------------------------------------------
 void BridgeParentIdsStatisticsToGrainIds::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -156,7 +156,7 @@ void BridgeParentIdsStatisticsToGrainIds::execute()
   }
 
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples(), true);
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples(), true);
   if (getErrorCondition() < 0)
   {
     return;
@@ -164,7 +164,7 @@ void BridgeParentIdsStatisticsToGrainIds::execute()
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
   rename_cell_array->setObservers(this->getObservers());
-  rename_cell_array->setVolumeDataContainer(m);
+  rename_cell_array->setDataContainerArray(getDataContainerArray());
   rename_cell_array->setMessagePrefix(getMessagePrefix());
   rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
   rename_cell_array->setNewCellArrayName(m_GrainIdsArrayName);
@@ -179,7 +179,7 @@ void BridgeParentIdsStatisticsToGrainIds::execute()
 
   LinkFieldMapToCellArray::Pointer link_field_map_to_cell_array = LinkFieldMapToCellArray::New();
   link_field_map_to_cell_array->setObservers(this->getObservers());
-  link_field_map_to_cell_array->setVolumeDataContainer(m);
+  link_field_map_to_cell_array->setDataContainerArray(getDataContainerArray());
   link_field_map_to_cell_array->setMessagePrefix(getMessagePrefix());
   link_field_map_to_cell_array->setSelectedCellDataArrayName(m_GrainIdsArrayName);
   link_field_map_to_cell_array->preflight();

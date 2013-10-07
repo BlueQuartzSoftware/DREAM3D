@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------------
 FindFieldNeighborCAxisMisalignments::FindFieldNeighborCAxisMisalignments()  :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
@@ -66,44 +67,42 @@ int FindFieldNeighborCAxisMisalignments::writeFilterParameters(AbstractFilterPar
 void FindFieldNeighborCAxisMisalignments::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  QString ss;
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxisMisalignments, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxisMisalignments, float, FloatArrayType, 0, fields, 1)
 
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  IDataArray::Pointer neighborListPtr = m->getFieldData(m_NeighborListArrayName);
+  IDataArray::Pointer neighborListPtr = m->getCellFieldData(m_NeighborListArrayName);
   if (NULL == neighborListPtr.get())
   {
-    ss.str("");
-    ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
+    ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(neighborListPtr.get());
   }
 
-  IDataArray::Pointer misalignmentPtr = m->getFieldData(m_CAxisMisalignmentListArrayName);
+  IDataArray::Pointer misalignmentPtr = m->getCellFieldData(m_CAxisMisalignmentListArrayName);
   if(NULL == misalignmentPtr.get())
   {
     NeighborList<float>::Pointer misalignmentListPtr = NeighborList<float>::New();
     misalignmentListPtr->SetName(m_CAxisMisalignmentListArrayName);
     misalignmentListPtr->Resize(fields);
-    m->addFieldData(m_CAxisMisalignmentListArrayName, misalignmentListPtr);
+    m->addCellFieldData(m_CAxisMisalignmentListArrayName, misalignmentListPtr);
     m_CAxisMisalignmentList = misalignmentListPtr.get();
     if (misalignmentListPtr.get() == NULL)
     {
-      ss.str("");
-      ss << "MisalignmentLists Array Not Initialized correctly" << std::endl;
+      ss = QObject::tr("MisalignmentLists Array Not Initialized correctly");
       setErrorCondition(-308);
-      addErrorMessage(getHumanLabel(), ss.str(), -308);
+      addErrorMessage(getHumanLabel(), ss, -308);
     }
   }
   else
@@ -113,7 +112,7 @@ void FindFieldNeighborCAxisMisalignments::dataCheck(bool preflight, size_t voxel
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -128,7 +127,7 @@ void FindFieldNeighborCAxisMisalignments::preflight()
 // -----------------------------------------------------------------------------
 void FindFieldNeighborCAxisMisalignments::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -137,7 +136,7 @@ void FindFieldNeighborCAxisMisalignments::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -164,7 +163,7 @@ void FindFieldNeighborCAxisMisalignments::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   unsigned int phase1, phase2;
 
   float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
@@ -218,9 +217,9 @@ void FindFieldNeighborCAxisMisalignments::execute()
   }
 
   // We do this to create new set of MisalignmentList objects
-  dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getNumCellTuples(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
 
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   {
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType misaL(new std::vector<float>);
