@@ -6,8 +6,8 @@
 // -----------------------------------------------------------------------------
 CreateFieldArrayFromCellArray::CreateFieldArrayFromCellArray() :
   AbstractFilter(),
+ m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SelectedCellArrayName(""),
   m_GrainIds(NULL)
 {
@@ -71,7 +71,12 @@ void CreateFieldArrayFromCellArray::dataCheck(bool preflight, size_t voxels, siz
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
+  if(NULL == m)
+  {
+    setErrorCondition(-10000);
+    addErrorMessage(getHumanLabel(), "Volume Data Container is NULL", getErrorCondition());
+    return;
+  }
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
   if(m_SelectedCellArrayName.isEmpty() == true)

@@ -125,8 +125,6 @@ int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* wri
 void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-
 
   if(true == m_InputFile.isEmpty())
   {

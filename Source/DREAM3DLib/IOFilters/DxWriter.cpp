@@ -125,10 +125,9 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  QString ss;
   if (getOutputFile().isEmpty() == true)
   {
-    ss = QObject::tr( ": The output file must be set before executing this filter.");
+    QString ss = QObject::tr( ": The output file must be set before executing this filter.");
     addErrorMessage(getHumanLabel(), ss, -1000);
     setErrorCondition(-1);
   }
@@ -136,7 +135,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   QDir parentPath = fi.path();
   if (parentPath.exists() == false)
   {
-    ss = QObject::tr( "The directory path for the output file does not exist.");
+    QString ss = QObject::tr( "The directory path for the output file does not exist.");
     addWarningMessage(getHumanLabel(), ss, -1);
   }
 

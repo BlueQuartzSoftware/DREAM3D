@@ -367,7 +367,6 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
@@ -595,7 +594,7 @@ void FindGBCD::execute()
     {
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalFaces - i) / timeDiff;
-      QString ss = QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
+      ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
       millis = QDateTime::currentMSecsSinceEpoch();
       numIterationsPerTime = i - lastIteration;
       lastIteration = i;

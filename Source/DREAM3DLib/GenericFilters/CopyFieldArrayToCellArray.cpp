@@ -106,8 +106,13 @@ int CopyFieldArrayToCellArray::writeFilterParameters(AbstractFilterParametersWri
 void CopyFieldArrayToCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-10000);
+    addErrorMessage(getHumanLabel(), "Volume Data Container is NULL", getErrorCondition());
+    return;
+  }
 
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 

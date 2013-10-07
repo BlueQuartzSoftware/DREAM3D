@@ -350,7 +350,7 @@ int VertexDataContainerWriter::writeVertexData(hid_t dcGid, QString groupName)
     err = array->writeH5Data(cellGroupId);
     if(err < 0)
     {
-      QString ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
+      ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
       addErrorMessage(getHumanLabel(), ss, err);
       setErrorCondition(err);
       H5Gclose(cellGroupId); // Close the Cell Group

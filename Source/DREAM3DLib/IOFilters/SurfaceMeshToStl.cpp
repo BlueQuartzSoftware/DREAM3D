@@ -230,14 +230,16 @@ void SurfaceMeshToStl::execute()
     QString filename = getOutputStlDirectory() + "/" + getOutputStlPrefix() + QString::number(spin) + ".stl";
     FILE* f = fopen(filename.toLatin1().data(), "wb");
 
-
-    QString ss = QObject::tr("Writing STL for Grain Id ").arg(spin);
-    notifyStatusMessage(ss);
-
+    {
+      QString ss = QObject::tr("Writing STL for Grain Id ").arg(spin);
+      notifyStatusMessage(ss);
+    }
 
 
     QString header = "DREAM3D Generated For Grain ID " + QString::number(spin);
     err = writeHeader(f, header, 0);
+    if(err < 0) {
+    }
     triCount = 0; // Reset this to Zero. Increment for every triangle written
 
     // Loop over all the triangles for this spin
@@ -261,9 +263,9 @@ void SurfaceMeshToStl::execute()
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices
-        int t = nId1;
+        int temp = nId1;
         nId1 = nId2;
-        nId2 = t;
+        nId2 = temp;
       }
       else
       {

@@ -179,7 +179,6 @@ class ScopedFileMonitor
 void SurfaceMeshToNonconformalVtk::execute()
 {
   int err = 0;
-  QString ss;
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)

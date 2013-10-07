@@ -333,7 +333,7 @@ void MergeTwins::merge_twins()
           size_t neigh = neighborlist[firstgrain][l];
           if (neigh != i && m_ParentNumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
-            w = 10000.0f;
+            //w = 10000.0f;
             QuaternionMathF::Copy(avgQuats[firstgrain], q1);
             phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
             QuaternionMathF::Copy(avgQuats[neigh], q2);

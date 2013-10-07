@@ -231,7 +231,6 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
 void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QFileInfo fi(m_InputFile);
@@ -324,21 +323,21 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   if (m_Manufacturer == Ebsd::TSL)
   {
-    AngFields fields;
+    AngFields angFields;
     reader = H5AngVolumeReader::New();
-    names = fields.getFilterFields<QVector<QString> > ();
+    names = angFields.getFilterFields<QVector<QString> > ();
   }
   else if (m_Manufacturer == Ebsd::HKL)
   {
-    CtfFields fields;
+    CtfFields cfields;
     reader = H5CtfVolumeReader::New();
-    names = fields.getFilterFields<QVector<QString> > ();
+    names = cfields.getFilterFields<QVector<QString> > ();
   }
   else if (m_Manufacturer == Ebsd::HEDM)
   {
-    MicFields fields;
+    MicFields mfields;
     reader = H5MicVolumeReader::New();
-    names = fields.getFilterFields<QVector<QString> > ();
+    names = mfields.getFilterFields<QVector<QString> > ();
   }
   else
   {
@@ -492,13 +491,16 @@ void ReadH5Ebsd::execute()
   }
 
   // Initialize all the arrays with some default values
+  
   int64_t totalPoints = m->getTotalPoints();
-  QString ss = QObject::tr(" - Initializing %1 voxels").arg(totalPoints);
-  notifyStatusMessage(ss);
-
-  ss = QObject::tr(" - Reading Ebsd Data from file");
-
-  notifyStatusMessage(ss);
+  {
+    QString ss = QObject::tr(" - Initializing %1 voxels").arg(totalPoints);
+    notifyStatusMessage(ss);
+  }
+  {
+    QString ss = QObject::tr(" - Reading Ebsd Data from file");
+    notifyStatusMessage(ss);
+  }
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
   ebsdReader->readAllArrays(false);

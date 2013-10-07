@@ -112,18 +112,17 @@ void VASPReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   setErrorCondition(0);
   VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
 
-  QString ss;
   QFileInfo fi(getInputFile());
 
   if (getInputFile().isEmpty() == true)
   {
-    ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (fi.exists() == false)
   {
-    ss = QObject::tr("The input file does not exist.");
+    QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -152,7 +151,7 @@ void VASPReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     if (error < 0)
     {
       setErrorCondition(error);
-      ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
+      QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
       addErrorMessage(getHumanLabel(), ss, -11000);
     }
   }
@@ -180,7 +179,7 @@ void VASPReader::preflight()
 // -----------------------------------------------------------------------------
 void VASPReader::execute()
 {
-  QString ss;
+
   int err = 0;
 
   VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
@@ -288,12 +287,9 @@ int VASPReader::readHeader()
 int VASPReader::readFile()
 {
   VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
-  QString ss;
 
   QByteArray buf;
   QList<QByteArray> tokens; /* vector to store the split data */
-
-  int error; /* dummy variables */
 
   // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
   // method which is performed before this function. This will cause an error -501 because the array with the name

@@ -293,8 +293,8 @@ int VolumeDataContainerWriter::writeMeshData(hid_t dcGid)
         offset += ncells * sizeof(int32_t);
       }
 
-      int32_t rank = 1;
-      hsize_t dims[1] = {totalBytes};
+      rank = 1;
+      dims[0] = totalBytes;
 
       err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::CellNeighbors, rank, dims, bufPtr);
       if (err < 0)
@@ -316,7 +316,7 @@ int VolumeDataContainerWriter::writeMeshData(hid_t dcGid)
       return -1;
     }
 
-    herr_t err = -1;
+    err = -1;
     size_t total = 0;
     size_t nVerts = verticesPtr->getNumberOfTuples();
     for(size_t v = 0; v < nVerts; ++v)
@@ -359,13 +359,11 @@ int VolumeDataContainerWriter::writeMeshData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 {
-  QString ss;
   int err = 0;
   VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
   int64_t volDims[3] =
   { dc->getXPoints(), dc->getYPoints(), dc->getZPoints() };
-  float spacing[3] =
-  { dc->getXRes(), dc->getYRes(), dc->getZRes() };
+ // float spacing[3] = { dc->getXRes(), dc->getYRes(), dc->getZRes() };
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
   dc->getOrigin(origin);
@@ -405,7 +403,7 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
     if(err < 0)
     {
 
-      QString ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
+      ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
       notifyErrorMessage(ss, err);
       setErrorCondition(err);
       H5Gclose(cellGroupId); // Close the Cell Group
@@ -424,7 +422,6 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
 {
-  QString ss;
   int err = 0;
   VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
 
@@ -497,7 +494,6 @@ int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
       err = array->writeH5Data(fieldGroupId);
       if(err < 0)
       {
-
         QString ss = QObject::tr("Error writing field array '%1' to the HDF5 File").arg(*iter);
         addErrorMessage(getHumanLabel(), ss, err);
         setErrorCondition(err);
@@ -577,7 +573,6 @@ int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::writeCellEnsembleData(hid_t dcGid)
 {
-  QString ss;
   int err = 0;
   VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
 

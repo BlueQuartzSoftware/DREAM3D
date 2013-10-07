@@ -142,8 +142,7 @@ void FindBoundingBoxGrains::execute()
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QString ss = QObject::tr(" DataContainer was NULL");
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), -1);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   setErrorCondition(0);

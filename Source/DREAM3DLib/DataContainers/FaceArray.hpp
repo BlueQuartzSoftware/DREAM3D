@@ -207,7 +207,7 @@ class FaceArray
 
       size_t nFaces = m_Array->getNumberOfTuples();
 
-      Int32DynamicListArray::Pointer m_FaceNeighbors = Int32DynamicListArray::New();
+      m_FaceNeighbors = Int32DynamicListArray::New();
 
       QVector<uint16_t> linkCount(nFaces, 0);
 

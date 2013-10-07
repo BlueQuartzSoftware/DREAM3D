@@ -44,7 +44,7 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 + Dr. Greg Rohrer (CC)
 + Dr. Marc De Graef (CC)
 + Dr. Sukbin Lee (CC)
-+ Dr. Joe Tucker (CC)
++ Dr. Joseph C. Tucker (VC, CC)
 + Dr. Lisa Chan (CC)
 + Dr. Stephen Sintay (CC)
 + Dr. Abhijeet Brahme (CC)
@@ -56,7 +56,7 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 ### Navy Research Laboratory (NRL) ###
 + Dr. Dave Rowenhorst (VC, CC)
 
-### Other Insitituations ###
+### Other Institutions ###
 + Mr. Joey Kleingers (CC) (SOCHE)
 + Mr. Jarrell Waggoner (CC) (Univ. South Carolina)
 

@@ -328,7 +328,7 @@ void OpenCloseBadData::execute()
     QList<QString> voxelArrayNames = m->getCellArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
-      int grainname = m_GrainIds[j];
+      grainname = m_GrainIds[j];
       int neighbor = m_Neighbors[j];
       if (neighbor >= 0)
       {

@@ -226,20 +226,22 @@ class ManagedArrayOfArrays : public IDataArray
      */
     void initializeWithValues(T value)
     {
-      for (size_t i = 0; i < this->Size; i++)
-      {
-        // Free each Pointer in each of the structures first
-        for(size_t i = 0; i < MaxId; ++i)
-        {
-          Data_t& d = Array[i];
-          d.count = 1;
-          if (d.data != NULL)
-          {
-            free(d.data);
-          }
-          d.data[0] = value;
-        }
-      }
+      BOOST_ASSERT(false);
+      
+      //      for (size_t i = 0; i < this->Size; i++)
+//      {
+//        // Free each Pointer in each of the structures first
+//        for(size_t i = 0; i < MaxId; ++i)
+//        {
+//          Data_t& d = Array[i];
+//          d.count = 1;
+//          if (d.data != NULL)
+//          {
+//            free(d.data);
+//          }
+//          d.data[0] = value;
+//        }
+//      }
     }
 
     /**

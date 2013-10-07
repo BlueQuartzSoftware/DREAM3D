@@ -361,8 +361,8 @@ int SurfaceDataContainerWriter::writeMeshData(hid_t dcGid)
         offset += ncells * sizeof(int32_t);
       }
 
-      int32_t rank = 1;
-      hsize_t dims[1] = {totalBytes};
+      rank = 1;
+      dims[0] = totalBytes;
 
       err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FaceNeighbors, rank, dims, bufPtr);
       if (err < 0)
@@ -384,7 +384,7 @@ int SurfaceDataContainerWriter::writeMeshData(hid_t dcGid)
       return -1;
     }
 
-    herr_t err = -1;
+    err = -1;
     size_t total = 0;
     size_t nVerts = verticesPtr->getNumberOfTuples();
     for(size_t v = 0; v < nVerts; ++v)
@@ -461,7 +461,7 @@ int SurfaceDataContainerWriter::writeFaceData(hid_t dcGid, QString groupName)
     err = array->writeH5Data(cellGroupId);
     if(err < 0)
     {
-      QString ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
+      ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
       addErrorMessage(getHumanLabel(), ss, err);
       setErrorCondition(err);
       H5Gclose(cellGroupId); // Close the Cell Group

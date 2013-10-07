@@ -166,7 +166,6 @@ int ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 

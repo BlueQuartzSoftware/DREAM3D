@@ -1,4 +1,4 @@
-#include "PerformMTRBridge.h"
+#include "BridgeParentIdsStatisticsToGrainIds.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
@@ -25,17 +25,15 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PerformMTRBridge::PerformMTRBridge() :
+BridgeParentIdsStatisticsToGrainIds::BridgeParentIdsStatisticsToGrainIds() :
   AbstractFilter(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
-  m_MTRgKAMArrayName(DREAM3D::FieldData::MTRgKAM),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GrainIds(NULL),
   m_CellParentIds(NULL),
   m_FieldParentIds(NULL),
-  m_MTRgKAM(NULL),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -46,21 +44,21 @@ PerformMTRBridge::PerformMTRBridge() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PerformMTRBridge::~PerformMTRBridge()
+BridgeParentIdsStatisticsToGrainIds::~BridgeParentIdsStatisticsToGrainIds()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::setupFilterParameters()
+void BridgeParentIdsStatisticsToGrainIds::setupFilterParameters()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void BridgeParentIdsStatisticsToGrainIds::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -72,7 +70,7 @@ void PerformMTRBridge::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PerformMTRBridge::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int BridgeParentIdsStatisticsToGrainIds::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->closeFilterGroup();
@@ -82,7 +80,7 @@ int PerformMTRBridge::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void BridgeParentIdsStatisticsToGrainIds::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles, bool afterLink)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -94,7 +92,6 @@ void PerformMTRBridge::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, -302, int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, MTRgKAM, -303, float, FloatArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
@@ -103,9 +100,9 @@ void PerformMTRBridge::dataCheck(bool preflight, size_t voxels, size_t fields, s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::preflight()
+void BridgeParentIdsStatisticsToGrainIds::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck(true, 1, 1, 1, false);
 
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -148,7 +145,7 @@ void PerformMTRBridge::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::execute()
+void BridgeParentIdsStatisticsToGrainIds::execute()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -159,7 +156,7 @@ void PerformMTRBridge::execute()
   }
 
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples(), true);
   if (getErrorCondition() < 0)
   {
     return;
@@ -195,7 +192,7 @@ void PerformMTRBridge::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("PerformMTRBridge Completed");
+  notifyStatusMessage("BridgeParentIdsStatisticsToGrainIds Completed");
 }
 
 // -----------------------------------------------------------------------------

@@ -201,7 +201,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     QVector<QVector<int> > planelist;
     QVector<QVector<float> > ellipfunclist;
 
-    unsigned long long int Seed;
+    unsigned long long int m_Seed;
 
     int firstPrimaryField;
 

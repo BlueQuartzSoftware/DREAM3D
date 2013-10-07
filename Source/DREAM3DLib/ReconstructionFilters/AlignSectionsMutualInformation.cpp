@@ -544,7 +544,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
                 {
                   size = voxelslist.size();
                   voxelslist.resize(size + initialVoxelsListSize);
-                  for(qint32 i = size; i < voxelslist.size(); ++i) { voxelslist[i] = -1; }
+                  for(qint32 v = size; v < voxelslist.size(); ++v) { voxelslist[v] = -1; }
                 }
               }
             }

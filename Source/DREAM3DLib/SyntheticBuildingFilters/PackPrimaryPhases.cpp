@@ -279,7 +279,7 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_HalfPackingRes[0] = m_HalfPackingRes[1] = m_HalfPackingRes[2] = 1.0f;
   m_OneOverHalfPackingRes[0] = m_OneOverHalfPackingRes[1] = m_OneOverHalfPackingRes[2] = 1.0f;
 
-  Seed = QDateTime::currentMSecsSinceEpoch();
+  m_Seed = QDateTime::currentMSecsSinceEpoch();
   setupFilterParameters();
 }
 
@@ -438,8 +438,8 @@ void PackPrimaryPhases::execute()
 
   int err = 0;
   setErrorCondition(err);
-  unsigned long long int Seed = QDateTime::currentMSecsSinceEpoch();
-  DREAM3D_RANDOMNG_NEW_SEEDED(Seed);
+  m_Seed = QDateTime::currentMSecsSinceEpoch();
+  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumCellFieldTuples();
@@ -608,9 +608,9 @@ void PackPrimaryPhases::execute()
     while (curphasevol[j] < (factor * curphasetotalvol))
     {
       iter++;
-      Seed++;
+      m_Seed++;
       phase = primaryphases[j];
-      generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase]);
+      generate_grain(phase, static_cast<int>(m_Seed), &field, m_ShapeTypes[phase]);
       currentsizedisterror = check_sizedisterror(&field);
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
@@ -657,9 +657,9 @@ void PackPrimaryPhases::execute()
       while (curphasevol[j] < ((1 + factor) * curphasetotalvol))
       {
         iter++;
-        Seed++;
+        m_Seed++;
         phase = primaryphases[j];
-        generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase]);
+        generate_grain(phase, static_cast<int>(m_Seed), &field, m_ShapeTypes[phase]);
         currentsizedisterror = check_sizedisterror(&field);
         change = (currentsizedisterror) - (oldsizedisterror);
         if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
@@ -929,7 +929,7 @@ void PackPrimaryPhases::execute()
         if(static_cast<size_t>(randomgrain) >= numgrains) { randomgrain = firstPrimaryField; }
         count++;
       }
-      Seed++;
+      m_Seed++;
 
       count = 0;
       xc = static_cast<float>(rg.genrand_res53() * sizex);
@@ -1001,7 +1001,7 @@ void PackPrimaryPhases::execute()
         if(static_cast<size_t>(randomgrain) >= numgrains) { randomgrain = firstPrimaryField; }
         count++;
       }
-      Seed++;
+      m_Seed++;
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
@@ -2297,11 +2297,11 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
 {
   //  int err = -1;
 
-  float totalvol;
+  float ptotalvol;
   int phase;
 
-  totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
-  if (totalvol == 0.0)
+  ptotalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
+  if (ptotalvol == 0.0)
   {
     return 1;
   }
