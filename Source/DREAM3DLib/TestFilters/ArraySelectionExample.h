@@ -58,7 +58,7 @@
  * @date
  * @version 1.0
  */
-class ArraySelectionExample : public AbstractFilter
+class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(ArraySelectionExample)

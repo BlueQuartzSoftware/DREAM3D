@@ -16,7 +16,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Filt0 : public AbstractFilter
+class DREAM3DLib_EXPORT Filt0 : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(Filt0);
@@ -100,7 +100,7 @@ class Filt0 : public AbstractFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Filt1 : public AbstractFilter
+class DREAM3DLib_EXPORT Filt1 : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(Filt1);
