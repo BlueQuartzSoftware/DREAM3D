@@ -195,7 +195,8 @@ int QFilterParametersWriter::writeValue(const QString name, int32_t value)
 int QFilterParametersWriter::writeValue(const QString name, int64_t value)
 {
   int err = 0;
-  m_Prefs->setValue(name, value);
+  qint64 _val = static_cast<qint64>(value);
+  m_Prefs->setValue(name, _val);
   return err;
 }
 
@@ -235,7 +236,8 @@ int QFilterParametersWriter::writeValue(const QString name, uint32_t value)
 int QFilterParametersWriter::writeValue(const QString name, uint64_t value)
 {
   int err = 0;
-  m_Prefs->setValue(name, value);
+  quint64 _val = static_cast<quint64>(value);
+  m_Prefs->setValue(name, _val);
   return err;
 }
 

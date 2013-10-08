@@ -44,7 +44,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataArrays/GBCDDataArray.hpp"
+#include "DREAM3DLib/DataArrays/GbcdDataArray.hpp"
 
 #include "UnitTestSupport.hpp"
 

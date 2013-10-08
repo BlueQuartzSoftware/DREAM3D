@@ -191,14 +191,15 @@ int32_t QFilterParametersReader::readValue(const QString name, int32_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t QFilterParametersReader::readValue(const QString name, int64_t value)
+int64_t QFilterParametersReader::readValue(const QString name, int64_t v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int64_t def = value;
-  value = m_Prefs->value(name, def).toLongLong(&ok);
-  if(ok) { return value; }
-  return def;
+  qint64 def = static_cast<qint64>(v);
+  QVariant var = m_Prefs->value(name, def);
+  qint64 value = var.toLongLong(&ok);
+  if(ok) { return static_cast<int64_t>(value); }
+  return v;
 }
 
 // -----------------------------------------------------------------------------
@@ -243,14 +244,15 @@ uint32_t QFilterParametersReader::readValue(const QString name, uint32_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-uint64_t QFilterParametersReader::readValue(const QString name, uint64_t value)
+uint64_t QFilterParametersReader::readValue(const QString name, uint64_t v)
 {
-  BOOST_ASSERT(m_Prefs != NULL);
-  bool ok = false;
-  uint64_t def = value;
-  value = m_Prefs->value(name, def).toULongLong(&ok);
-  if(ok) { return value; }
-  return def;
+    BOOST_ASSERT(m_Prefs != NULL);
+    bool ok = false;
+    quint64 def = static_cast<quint64>(v);
+    QVariant var = m_Prefs->value(name, def);
+    quint64 value = var.toULongLong(&ok);
+    if(ok) { return static_cast<uint64_t>(value); }
+    return v;
 }
 
 // -----------------------------------------------------------------------------
