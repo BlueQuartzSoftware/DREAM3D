@@ -117,7 +117,7 @@ int TestManagedPointerArray()
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 

@@ -295,14 +295,14 @@ void __TestEraseElements()
     int err = array->EraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , -100)
 
-        eraseElements.clear();
+    eraseElements.clear();
     err = array->EraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , 0)
 
-        eraseElements.resize(20);
+    eraseElements.resize(20);
     err = array->EraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , 0)
-        size_t nTuples = array->getNumberOfTuples();
+    size_t nTuples = array->getNumberOfTuples();
     DREAM3D_REQUIRE_EQUAL(nTuples, 0)
   }
 
@@ -371,7 +371,7 @@ void TestDataArray()
     {
       for (int c = 0; c < NUM_COMPONENTS; ++c)
       {
-        DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i+c))
+        DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i + c))
       }
     }
 
@@ -386,7 +386,7 @@ void TestDataArray()
     {
       for (int c = 0; c < NUM_COMPONENTS; ++c)
       {
-        DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i+c))
+        DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i + c))
       }
     }
 
@@ -417,9 +417,11 @@ void __TestNeighborList()
   typename NeighborList<T>::Pointer n = NeighborList<T>::New();
   n->SetName("Test");
 
-  for(int i = 0; i < 4; ++i) {
-    for(T j = 0; j < (T)(i+4); ++j) {
-      n->addEntry(i, static_cast<T>(j*i+3) );
+  for(int i = 0; i < 4; ++i)
+  {
+    for(T j = 0; j < (T)(i + 4); ++j)
+    {
+      n->addEntry(i, static_cast<T>(j * i + 3) );
     }
   }
 
@@ -440,17 +442,20 @@ void __TestNeighborList()
   {
     v = n->getList(i);
     DREAM3D_REQUIRE_NE(v.get(), 0);
-    DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+2+4) );
-    for(T j = 0; j < (T)(i+4+2); ++j) {
-      DREAM3D_REQUIRE_EQUAL(v->at(j), j*(i+2)+3);
+    DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i + 2 + 4) );
+    for(T j = 0; j < (T)(i + 4 + 2); ++j)
+    {
+      DREAM3D_REQUIRE_EQUAL(v->at(j), j * (i + 2) + 3);
     }
   }
 
   // Reset and erase the back 2 "Tuples"
   n->clearAllLists();
-  for(int i = 0; i < 4; ++i) {
-    for(T j = 0; j < (T)(i+4); ++j) {
-      n->addEntry(i, j*i+3);
+  for(int i = 0; i < 4; ++i)
+  {
+    for(T j = 0; j < (T)(i + 4); ++j)
+    {
+      n->addEntry(i, j * i + 3);
     }
   }
   eraseElements.clear();
@@ -461,17 +466,20 @@ void __TestNeighborList()
   {
     v = n->getList(i);
     DREAM3D_REQUIRE_NE(v.get(), 0);
-    DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
-    for(T j = 0; j < (T)(i+4); ++j) {
-      DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
+    DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i + 4) );
+    for(T j = 0; j < (T)(i + 4); ++j)
+    {
+      DREAM3D_REQUIRE_EQUAL(v->at(j), j * i + 3);
     }
   }
 
   // Reset and erase the back 2 "Tuples"
   n->clearAllLists();
-  for(int i = 0; i < 4; ++i) {
-    for(T j = 0; j < (T)(i+4); ++j) {
-      n->addEntry(i, j*i+3);
+  for(int i = 0; i < 4; ++i)
+  {
+    for(T j = 0; j < (T)(i + 4); ++j)
+    {
+      n->addEntry(i, j * i + 3);
     }
   }
   eraseElements.clear();
@@ -481,17 +489,19 @@ void __TestNeighborList()
   int i = 0;
   v = n->getList(i);
   DREAM3D_REQUIRE_NE(v.get(), 0);
-  DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
-  for(T j = 0; j < (T)(i+4); ++j) {
-    DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
+  DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i + 4) );
+  for(T j = 0; j < (T)(i + 4); ++j)
+  {
+    DREAM3D_REQUIRE_EQUAL(v->at(j), j * i + 3);
   }
   i = 1;
   v = n->getList(i);
   DREAM3D_REQUIRE_NE(v.get(), 0);
-  i=3;
-  DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
-  for(T j = 0; j < (T)(i+4); ++j) {
-    DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
+  i = 3;
+  DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i + 4) );
+  for(T j = 0; j < (T)(i + 4); ++j)
+  {
+    DREAM3D_REQUIRE_EQUAL(v->at(j), j * i + 3);
   }
 }
 
@@ -518,8 +528,8 @@ void TestNeighborList()
 void TestGbcdDataArray()
 {
 
-  size_t dims[5] = {60,29,60,60,29};
-  size_t size = dims[0]*dims[1]*dims[2]*dims[3]*dims[4];
+  size_t dims[5] = {60, 29, 60, 60, 29};
+  size_t size = dims[0] * dims[1] * dims[2] * dims[3] * dims[4];
   GBCDFloatArrayType::Pointer m_GBCD = GBCDFloatArrayType::CreateArray(dims, "GBCD Data", false);
 
   size_t retDims[5];
@@ -538,15 +548,15 @@ void TestGbcdDataArray()
   {
     hid_t fid = QH5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
     DREAM3D_REQUIRE(fid > 0)
-        int err = m_GBCD->writeH5Data(fid);
+    int err = m_GBCD->writeH5Data(fid);
     DREAM3D_REQUIRE(err < 0)
-        QH5Utilities::closeFile(fid);
+    QH5Utilities::closeFile(fid);
   }
 
   // Now allocate all the memory we need
   m_GBCD->Allocate();
   DREAM3D_REQUIRE_EQUAL(true, m_GBCD->isAllocated())
-      float* ptr = m_GBCD->getPointer(0);
+  float* ptr = m_GBCD->getPointer(0);
   size_t idx = 0;
   // Now dump some actual data in the arrays
   for(size_t i = 0; i < dims[0]; ++i)
@@ -559,7 +569,7 @@ void TestGbcdDataArray()
         {
           for(size_t m = 0; m < dims[4]; ++m)
           {
-            ptr[idx] = static_cast<float>(i+j+k+l+m);
+            ptr[idx] = static_cast<float>(i + j + k + l + m);
             idx++;
           }
         }
@@ -573,18 +583,18 @@ void TestGbcdDataArray()
   {
     hid_t fid = QH5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
     DREAM3D_REQUIRE(fid > 0)
-        int err = m_GBCD->writeH5Data(fid);
+    int err = m_GBCD->writeH5Data(fid);
     DREAM3D_REQUIRE(err >= 0)
-        QH5Utilities::closeFile(fid);
+    QH5Utilities::closeFile(fid);
   }
 
   {
     hid_t fid = QH5Utilities::openFile(UnitTest::DataArrayTest::TestFile, true);
     DREAM3D_REQUIRE(fid > 0)
-        m_GBCD->initializeWithZeros();
+    m_GBCD->initializeWithZeros();
     int err = m_GBCD->readH5Data(fid);
     DREAM3D_REQUIRE(err >= 0)
-        QH5Utilities::closeFile(fid);
+    QH5Utilities::closeFile(fid);
     ptr = m_GBCD->getPointer(0);
     idx = 0;
     // Now dump some actual data in the arrays
@@ -598,7 +608,7 @@ void TestGbcdDataArray()
           {
             for(size_t m = 0; m < dims[4]; ++m)
             {
-              DREAM3D_REQUIRE(ptr[idx] == i+j+k+l+m)
+              DREAM3D_REQUIRE(ptr[idx] == i + j + k + l + m)
               idx++;
             }
           }
@@ -613,29 +623,29 @@ void TestGbcdDataArray()
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 
   QDir dir(UnitTest::DataArrayTest::TestDir);
-dir.mkpath(".");
+  dir.mkpath(".");
 
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    #endif
+#endif
 
-      DREAM3D_REGISTER_TEST( TestDataArray() )
-      DREAM3D_REGISTER_TEST( TestEraseElements() )
-      DREAM3D_REGISTER_TEST( TestCopyTuples() )
-      DREAM3D_REGISTER_TEST( TestNeighborList() )
-      DREAM3D_REGISTER_TEST( TestGbcdDataArray() )
+  DREAM3D_REGISTER_TEST( TestDataArray() )
+  DREAM3D_REGISTER_TEST( TestEraseElements() )
+  DREAM3D_REGISTER_TEST( TestCopyTuples() )
+  DREAM3D_REGISTER_TEST( TestNeighborList() )
+  DREAM3D_REGISTER_TEST( TestGbcdDataArray() )
 
-    #if REMOVE_TEST_FILES
-      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    #endif
+#if REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
 
 
-      PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
   return err;
 }
 

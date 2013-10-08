@@ -78,7 +78,7 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 
   QApplication app(argc, argv);

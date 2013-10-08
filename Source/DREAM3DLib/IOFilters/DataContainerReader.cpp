@@ -77,7 +77,8 @@ DataContainerReader::DataContainerReader() :
   m_ReadAllFaceFieldArrays(false),
   m_ReadAllFaceEnsembleArrays(false),
   m_ReadAllCellFieldArrays(false),
-  m_ReadAllCellEnsembleArrays(false)
+  m_ReadAllCellEnsembleArrays(false),
+  m_OverwriteExistingDataContainers(false)
 {
   m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();
@@ -328,15 +329,25 @@ void DataContainerReader::readData(bool preflight)
     }
     hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
 
-    QList<QString> dcNames;
-    err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, dcNames);
-
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+    scopedFileSentinel.addGroupId(&dcGid);
+
+
+    QList<QString> dcNames;
+    err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, dcNames);
+    DataContainerArray::Pointer dca = getDataContainerArray();
 
     int32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
     for(int iter = 0; iter < dcNames.size(); iter++)
     {
+      if (dca->containsDataContainer(dcNames[iter]) == true )
+      {
+        setErrorCondition(-10987);
+        QString ss = QObject::tr("A Data Container with name %1 already exists in Memory. Reading a Data Container with the same name would over write the one in memory. Currently this is not allowed.").arg(dcNames[iter]);
+        notifyErrorMessage(ss, getErrorCondition());
+        return;
+      }
       err = QH5Lite::readScalarAttribute(dcGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
       if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_ReadVolumeData == true) ||
           (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_ReadSurfaceData == true) ||
@@ -376,6 +387,7 @@ void DataContainerReader::readData(bool preflight)
           vReader->setReadAllVertexArrays(m_ReadAllVertexArrays);
           vReader->setReadAllVertexFieldArrays(m_ReadAllVertexFieldArrays);
           vReader->setReadAllVertexEnsembleArrays(m_ReadAllVertexEnsembleArrays);
+          if (getReadAllArrays() == true) { vReader->setReadAllArrays(); }
           vReader->setHdfFileId(fileId);
           vReader->setHdfGroupId(dcGid);
           vReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
@@ -408,6 +420,7 @@ void DataContainerReader::readData(bool preflight)
           eReader->setReadAllEdgeArrays(m_ReadAllEdgeArrays);
           eReader->setReadAllEdgeFieldArrays(m_ReadAllEdgeFieldArrays);
           eReader->setReadAllEdgeEnsembleArrays(m_ReadAllEdgeEnsembleArrays);
+          if (getReadAllArrays() == true) { eReader->setReadAllArrays(); }
           eReader->setHdfFileId(fileId);
           eReader->setHdfGroupId(dcGid);
           eReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
@@ -440,6 +453,7 @@ void DataContainerReader::readData(bool preflight)
           smReader->setReadAllFaceArrays(m_ReadAllFaceArrays);
           smReader->setReadAllFaceFieldArrays(m_ReadAllFaceFieldArrays);
           smReader->setReadAllFaceEnsembleArrays(m_ReadAllFaceEnsembleArrays);
+          if (getReadAllArrays() == true) { smReader->setReadAllArrays(); }
           smReader->setHdfFileId(fileId);
           smReader->setHdfGroupId(dcGid);
           smReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
@@ -472,6 +486,7 @@ void DataContainerReader::readData(bool preflight)
           volumeReader->setReadAllCellArrays(m_ReadAllCellArrays);
           volumeReader->setReadAllCellFieldArrays(m_ReadAllCellFieldArrays);
           volumeReader->setReadAllCellEnsembleArrays(m_ReadAllCellEnsembleArrays);
+          if (getReadAllArrays() == true) { volumeReader->setReadAllArrays(); }
           volumeReader->setHdfFileId(fileId);
           volumeReader->setHdfGroupId(dcGid);
           volumeReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
@@ -497,6 +512,9 @@ void DataContainerReader::readData(bool preflight)
         }
       }
     }
+
+    err = H5Gclose(dcGid);
+    dcGid = -1;
   }
 
 }

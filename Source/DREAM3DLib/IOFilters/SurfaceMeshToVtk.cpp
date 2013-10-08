@@ -132,7 +132,6 @@ int SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writ
 void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
 
   if (m_OutputVtkFile.isEmpty() == true)
   {

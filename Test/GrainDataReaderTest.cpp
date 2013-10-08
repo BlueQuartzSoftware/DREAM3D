@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -41,7 +41,7 @@
 
 #include "CSVGrainDataReader.h"
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 
   QString csvFile (argv[1]);
@@ -59,7 +59,8 @@ int main(int argc, char **argv)
   // If the 'reader' object goes out of scope then all the pointers are going
   // to be invalid as the CSVGrainDataReader manages the memory for you.
   int* grain_ids = reader.getGrainIdPointer();
-  if (grain_ids > 0) {
+  if (grain_ids > 0)
+  {
 
   }
   std::cout << "Success Reading the Grain Data File" << std::endl;

@@ -41,7 +41,8 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
-static const float CubicQuatSym[24][4] = {
+static const float CubicQuatSym[24][4] =
+{
   { 0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f},
   { 1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f},
   { 0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f},
@@ -65,7 +66,8 @@ static const float CubicQuatSym[24][4] = {
   { -0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f},
   { 0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f},
   { -0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f},
-  { 0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f}};
+  { 0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f}
+};
 
 /**
  * @brief eulertoQuat This converts an Euler Angle to a Quaternion
@@ -83,10 +85,10 @@ void EulertoQuat(float* q, float ea1, float ea2, float ea3)
   c1 = cosf(0.5f * (ea1 - ea3));
   s2 = sinf(0.5f * (ea1 + ea3));
   c2 = cosf(0.5f * (ea1 + ea3));
-  q[0] = s*c1;
-  q[1] = s*s1;
-  q[2] = c*s2;
-  q[3] = c*c2;
+  q[0] = s * c1;
+  q[1] = s * s1;
+  q[2] = c * s2;
+  q[3] = c * c2;
 }
 
 /**
@@ -96,17 +98,17 @@ void EulertoQuat(float* q, float ea1, float ea2, float ea3)
  * @param ea2 Output Euler Angle 2 (Phi)
  * @param ea3 Output Euler Angle 3 (phi2)
  */
-void QuattoEuler(float* q, float &ea1, float &ea2, float &ea3)
+void QuattoEuler(float* q, float& ea1, float& ea2, float& ea3)
 {
   float diff, sum, tmp;
-  diff=atan2(q[1],q[0]);
-  sum=atan2(q[2],q[3]);
-  ea1=(diff+sum);
-  ea3=(sum-diff);
-  tmp=(q[2]*q[2])+(q[3]*q[3]);
+  diff = atan2(q[1], q[0]);
+  sum = atan2(q[2], q[3]);
+  ea1 = (diff + sum);
+  ea3 = (sum - diff);
+  tmp = (q[2] * q[2]) + (q[3] * q[3]);
   tmp = sqrt(tmp);
-  if(tmp > 1.0f) tmp=1.0f;
-  ea2=2*acos(tmp);
+  if(tmp > 1.0f) { tmp = 1.0f; }
+  ea2 = 2 * acos(tmp);
 }
 
 

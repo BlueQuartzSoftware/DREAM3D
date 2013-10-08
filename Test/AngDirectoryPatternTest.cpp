@@ -60,9 +60,9 @@ void GrainTest()
 
 
 
-void test(const QString &curAbsFile,
-                 const QString &mosDirPrefix,
-                 const QString &zeissExportDirSuffix)
+void test(const QString& curAbsFile,
+          const QString& mosDirPrefix,
+          const QString& zeissExportDirSuffix)
 {
   QString fn = MXAFileSystemPath::filename(curAbsFile);
   //std::cout << logTime() << "Found: '" << *dir_iter << "'" << std::endl;
@@ -90,7 +90,7 @@ void test(const QString &curAbsFile,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 
   GrainTest();

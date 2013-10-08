@@ -246,37 +246,37 @@ uint32_t QFilterParametersReader::readValue(const QString name, uint32_t value)
 // -----------------------------------------------------------------------------
 uint64_t QFilterParametersReader::readValue(const QString name, uint64_t v)
 {
-    BOOST_ASSERT(m_Prefs != NULL);
-    bool ok = false;
-    quint64 def = static_cast<quint64>(v);
-    QVariant var = m_Prefs->value(name, def);
-    quint64 value = var.toULongLong(&ok);
-    if(ok) { return static_cast<uint64_t>(value); }
-    return v;
+  BOOST_ASSERT(m_Prefs != NULL);
+  bool ok = false;
+  quint64 def = static_cast<quint64>(v);
+  QVariant var = m_Prefs->value(name, def);
+  quint64 value = var.toULongLong(&ok);
+  if(ok) { return static_cast<uint64_t>(value); }
+  return v;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float QFilterParametersReader::readValue(const QString name, float value)
+float QFilterParametersReader::readValue(const QString name, float def)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  float def = value;
-  value = m_Prefs->value(name, def).toFloat(&ok);
-  if(ok) { return value; }
+  QVariant var = m_Prefs->value(name, def);
+  double value = var.toDouble(&ok);
+  if(ok) { return static_cast<float>(value); }
   return def;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double QFilterParametersReader::readValue(const QString name, double value)
+double QFilterParametersReader::readValue(const QString name, double def)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  double def = value;
-  value = m_Prefs->value(name, def).toDouble(&ok);
+  QVariant var = m_Prefs->value(name, def);
+  double value = var.toDouble(&ok);
   if(ok) { return value; }
   return def;
 }
@@ -287,10 +287,8 @@ double QFilterParametersReader::readValue(const QString name, double value)
 bool QFilterParametersReader::readValue(const QString name, bool def)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  //QByteArray ba = name.toAscii();
-  QVariant v = m_Prefs->value(name, def);
-  bool bvalue = v.toBool();
-  return bvalue;
+  QVariant var = m_Prefs->value(name, def);
+  return var.toBool();
 }
 
 // -----------------------------------------------------------------------------
@@ -656,7 +654,7 @@ AxisAngleInput_t QFilterParametersReader::readAxisAngle(const QString name, Axis
 
   m_Prefs->setArrayIndex(vectorPos);
   v.angle = m_Prefs->value("Angle").toFloat(&ok);
-  v.h= m_Prefs->value("H").toFloat(&ok);
+  v.h = m_Prefs->value("H").toFloat(&ok);
   v.k = m_Prefs->value("K").toFloat(&ok);
   v.l = m_Prefs->value("L").toFloat(&ok);
 
@@ -681,7 +679,9 @@ QVector<AxisAngleInput_t> QFilterParametersReader::readAxisAngles(const QString 
   for(int i = 0; i < count; i++)
   {
     if (i < v.size()) { defValue = v[i]; }
-    else {  defValue.angle = 0.0f;
+    else
+    {
+      defValue.angle = 0.0f;
       defValue.h = 0.0f;
       defValue.k = 0.0f;
       defValue.l = 0.0f;
@@ -699,16 +699,17 @@ QVector<AxisAngleInput_t> QFilterParametersReader::readAxisAngles(const QString 
 QSet<QString> QFilterParametersReader::readArraySelections(const QString name, QSet<QString> v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  QString arrayName = QString("ArraySelections_") + name;
-  int count = m_Prefs->beginReadArray(arrayName);
-  QSet<QString> selections;
-  for(int i = 0; i < count; ++i)
+  QString defValue;
+  int count = m_Prefs->beginReadArray("ArraySelections_" + name);
+  QSet<QString> values;
+  for(int i = 0; i < count; i++)
   {
     m_Prefs->setArrayIndex(i);
-    QString str = m_Prefs->value(name, QString::fromUtf8("NOT_FOUND")).toString();
-    selections.insert(str);
+    QString data = m_Prefs->value(name, defValue).toString();
+    values.insert(data);
   }
   m_Prefs->endArray();
-  return selections;
+
+  return values;
 }
 

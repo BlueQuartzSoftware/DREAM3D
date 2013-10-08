@@ -76,8 +76,7 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
 
-    DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, AxisAngleInput)
-    DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, CrystalSymmetryRotations)
+    DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, AxisAngleInputs)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, StrVector)
 

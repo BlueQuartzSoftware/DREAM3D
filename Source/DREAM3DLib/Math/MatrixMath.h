@@ -158,7 +158,7 @@ class DREAM3DLib_EXPORT MatrixMath
      * @param b
      * @return
      */
-    float AngleBetweenVectors(float a[3], float b[3]);
+    static float AngleBetweenVectors(float a[3], float b[3]);
 
     /**
      * @brief The dot product of 2 vectors a & b

@@ -49,17 +49,17 @@
 
 /* Testing Notes:
  *
- *	testCase1: This tests when the file size is equal to the allocated size, and checks to see if the data read is the same as the data written.
+ *  testCase1: This tests when the file size is equal to the allocated size, and checks to see if the data read is the same as the data written.
  *
  *  testCase2: This tests when the file size is smaller than the allocated size. (Reading past the end of the file)
  *
- *	testCase3: This tests when the file size is larger than the allocated size and there is junk at the end of the file.
+ *  testCase3: This tests when the file size is larger than the allocated size and there is junk at the end of the file.
  *
- *	testCase4: This tests when the file size is larger than the allocated size and there is junk at the beginning of the file.
+ *  testCase4: This tests when the file size is larger than the allocated size and there is junk at the beginning of the file.
  *
- *	testCase5: This tests when the file size is larger than the allocated size and there is junk at the beginning and end of the file.
+ *  testCase5: This tests when the file size is larger than the allocated size and there is junk at the beginning and end of the file.
  *
- *	testCase6: This tests when skipHeaderBytes equals the file size
+ *  testCase6: This tests when skipHeaderBytes equals the file size
  */
 
 
@@ -80,7 +80,8 @@
 
 namespace Detail
 {
-  enum NumType {
+  enum NumType
+  {
     Int8 = 0,
     UInt8,
     Int16,
@@ -130,10 +131,10 @@ bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t ju
    *      If the junkArray has values and junkPlacement is set to NONE
    *      If junkArray is NULL and junkPlacement is not set to NONE
    *      If junkPlacement is set to an invalid value
-   *	  If the dataArray is NULL
+   *    If the dataArray is NULL
    */
   if ( (NULL != junkArray && junkPlacement <= 0) || (NULL == junkArray && junkPlacement > 0)
-    || junkPlacement < 0 || dataArray == NULL)
+       || junkPlacement < 0 || dataArray == NULL)
   {
     return false;
   }
@@ -228,7 +229,7 @@ RawBinaryReader::Pointer createRawBinaryReaderFilter(int scalarType, size_t N, i
 // -----------------------------------------------------------------------------
 // testCase1: This tests when the file size is equal to the allocated size, and checks to see if the data read is the same as the data written.
 template<typename T, size_t N>
-int testCase1_Execute(const QString &name, int scalarType)
+int testCase1_Execute(const QString& name, int scalarType)
 {
   int err = 0;
   int dataArraySize = ARRAY_SIZE * N;
@@ -254,7 +255,7 @@ int testCase1_Execute(const QString &name, int scalarType)
   bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::None);
 
   // Test to make sure that the file was created and written to successfully
-  DREAM3D_REQUIRED(result, ==, true)
+  DREAM3D_REQUIRED(result, == , true)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
@@ -269,11 +270,11 @@ int testCase1_Execute(const QString &name, int scalarType)
   // Preflight, get the error condition, and check that there are no errors
   filt->preflight();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, >=, 0)
+  DREAM3D_REQUIRED(err, >= , 0)
 
   // Execute the filter, check that there are no errors, and compare the data
   filt->execute();
-  DREAM3D_REQUIRED(err, >=, 0)
+  DREAM3D_REQUIRED(err, >= , 0)
 
   IDataArray::Pointer iData = m->getCellData("Test_Array");
   T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
@@ -291,7 +292,7 @@ int testCase1_Execute(const QString &name, int scalarType)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase1_TestPrimitives(const QString &name, int scalarType)
+void testCase1_TestPrimitives(const QString& name, int scalarType)
 {
   testCase1_Execute<T, 1>(name, scalarType);
   testCase1_Execute<T, 2>(name, scalarType);
@@ -330,10 +331,10 @@ void testCase1()
 // -----------------------------------------------------------------------------
 // testCase2: This tests when the file size is smaller than the allocated size. (Reading past the end of the file)
 template<typename T, size_t N>
-void testCase2_Execute(const QString &name, int scalarType)
+void testCase2_Execute(const QString& name, int scalarType)
 {
   int err = 0;
-  int dataArraySize = ARRAY_SIZE * N / 2;		// We don't care what is written...we just need the data array size to be less than the file size
+  int dataArraySize = ARRAY_SIZE * N / 2;   // We don't care what is written...we just need the data array size to be less than the file size
   int junkArraySize = 0;
   int skipHeaderBytes = junkArraySize * sizeof(T);
   qDebug() << "Testing case 2: " << name << " with num comps " << N;
@@ -355,7 +356,7 @@ void testCase2_Execute(const QString &name, int scalarType)
   bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::None);
 
   // Test to make sure that the file was created and written to successfully
-  DREAM3D_REQUIRED(result, ==, true)
+  DREAM3D_REQUIRED(result, == , true)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
@@ -370,19 +371,19 @@ void testCase2_Execute(const QString &name, int scalarType)
   // Preflight, get error condition, and check that the "file is too small" error is returned
   filt->preflight();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
+  DREAM3D_REQUIRED(err, == , RBRT_FILE_TOO_SMALL)
 
   // Execute, get error condition, and check that the "file is too small" error is returned
   filt->execute();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
+  DREAM3D_REQUIRED(err, == , RBRT_FILE_TOO_SMALL)
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase2_TestPrimitives(const QString &name, int scalarType)
+void testCase2_TestPrimitives(const QString& name, int scalarType)
 {
   testCase2_Execute<T, 1>(name, scalarType);
   testCase2_Execute<T, 2>(name, scalarType);
@@ -423,7 +424,7 @@ void testCase2()
 // -----------------------------------------------------------------------------
 // testCase3: This tests when the file size is larger than the allocated size and there is junk at the end of the file.
 template<typename T, size_t N>
-void testCase3_Execute(const QString &name, int scalarType)
+void testCase3_Execute(const QString& name, int scalarType)
 {
   int dataArraySize = ARRAY_SIZE * N;
   int junkArraySize = 10;
@@ -454,7 +455,7 @@ void testCase3_Execute(const QString &name, int scalarType)
   bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::End);
 
   // Test to make sure that the file was created and written to successfully
-  DREAM3D_REQUIRED(result, ==, true)
+  DREAM3D_REQUIRED(result, == , true)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
@@ -469,12 +470,12 @@ void testCase3_Execute(const QString &name, int scalarType)
   // Preflight, get the error condition, and check that there are no errors
   filt->preflight();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, >=, 0)
+  DREAM3D_REQUIRED(err, >= , 0)
 
   // Execute, get the error condition, check that there are no errors, and compare the data
   filt->execute();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, >=, 0)
+  DREAM3D_REQUIRED(err, >= , 0)
 
   IDataArray::Pointer iData = m->getCellData("Test_Array");
   T* readData = reinterpret_cast<T*>(iData->GetVoidPointer(0));
@@ -491,7 +492,7 @@ void testCase3_Execute(const QString &name, int scalarType)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase3_TestPrimitives(const QString &name, int scalarType)
+void testCase3_TestPrimitives(const QString& name, int scalarType)
 {
   testCase3_Execute<T, 1>(name, scalarType);
   testCase3_Execute<T, 2>(name, scalarType);
@@ -530,7 +531,7 @@ void testCase3()
 // -----------------------------------------------------------------------------
 // testCase4: This tests when the file size is larger than the allocated size and there is junk at the beginning of the file.
 template<typename T, size_t N>
-void testCase4_Execute(const QString &name, int scalarType)
+void testCase4_Execute(const QString& name, int scalarType)
 {
   int dataArraySize = ARRAY_SIZE * N;
   int junkArraySize = 5;
@@ -562,7 +563,7 @@ void testCase4_Execute(const QString &name, int scalarType)
   bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Start);
 
   // Test to make sure that the file was created and written to successfully
-  DREAM3D_REQUIRED(result, ==, true)
+  DREAM3D_REQUIRED(result, == , true)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
@@ -577,12 +578,12 @@ void testCase4_Execute(const QString &name, int scalarType)
   // Preflight, get error condition, and check that there are no errors
   filt->preflight();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, >=, 0)
+  DREAM3D_REQUIRED(err, >= , 0)
 
   // Execute, get error condition, check that there are no errors, and compare the data
   filt->execute();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, >=, 0)
+  DREAM3D_REQUIRED(err, >= , 0)
 
   IDataArray::Pointer iData = m->getCellData("Test_Array");
   T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
@@ -605,25 +606,25 @@ void testCase4_Execute(const QString &name, int scalarType)
   dca2->pushBack(m2);
 
   // Create another filter, passing in the skipHeaderBytes + 1
-  RawBinaryReader::Pointer filt2 = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes+1);
+  RawBinaryReader::Pointer filt2 = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes + 1);
   filt2->setDataContainerArray(dca2);
 
   // Preflight, get error condition, and check that there are errors
   filt2->preflight();
   err = filt2->getErrorCondition();
-  DREAM3D_REQUIRED(err, <, 0)
+  DREAM3D_REQUIRED(err, < , 0)
 
   // Execute, get error condition, and check that the "file too small" error occurred
   filt2->execute();
   err = filt2->getErrorCondition();
-  DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
+  DREAM3D_REQUIRED(err, == , RBRT_FILE_TOO_SMALL)
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase4_TestPrimitives(const QString &name, int scalarType)
+void testCase4_TestPrimitives(const QString& name, int scalarType)
 {
   testCase4_Execute<T, 1>(name, scalarType);
   testCase4_Execute<T, 2>(name, scalarType);
@@ -662,7 +663,7 @@ void testCase4()
 // -----------------------------------------------------------------------------
 // testCase5: This tests when the file size is larger than the allocated size and there is junk both at the beginning and end of the file.
 template<typename T, size_t N>
-void testCase5_Execute(const QString &name, int scalarType)
+void testCase5_Execute(const QString& name, int scalarType)
 {
   int dataArraySize = ARRAY_SIZE * N;
   int junkArraySize = 10;
@@ -694,7 +695,7 @@ void testCase5_Execute(const QString &name, int scalarType)
   bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Both);
 
   // Test to make sure that the file was created and written to successfully
-  DREAM3D_REQUIRED(result, ==, true)
+  DREAM3D_REQUIRED(result, == , true)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
@@ -709,12 +710,12 @@ void testCase5_Execute(const QString &name, int scalarType)
   // Preflight, get error condition, and check that there are no errors
   filt->preflight();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, >=, 0)
+  DREAM3D_REQUIRED(err, >= , 0)
 
   // Execute, get error condition, check that there are no errors, and compare the data
   filt->execute();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, >=, 0)
+  DREAM3D_REQUIRED(err, >= , 0)
 
   IDataArray::Pointer iData = m->getCellData("Test_Array");
   T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
@@ -731,7 +732,7 @@ void testCase5_Execute(const QString &name, int scalarType)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase5_TestPrimitives(const QString &name, int scalarType)
+void testCase5_TestPrimitives(const QString& name, int scalarType)
 {
   testCase5_Execute<T, 1>(name, scalarType);
   testCase5_Execute<T, 2>(name, scalarType);
@@ -770,7 +771,7 @@ void testCase5()
 // -----------------------------------------------------------------------------
 // testCase6: This tests when skipHeaderBytes equals the file size
 template<typename T, size_t N>
-void testCase6_Execute(const QString &name, int scalarType)
+void testCase6_Execute(const QString& name, int scalarType)
 {
   int dataArraySize = 0;
   int junkArraySize = ARRAY_SIZE * N;
@@ -802,7 +803,7 @@ void testCase6_Execute(const QString &name, int scalarType)
   bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Start);
 
   // Test to make sure that the file was created and written to successfully
-  DREAM3D_REQUIRED(result, ==, true)
+  DREAM3D_REQUIRED(result, == , true)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
@@ -817,19 +818,19 @@ void testCase6_Execute(const QString &name, int scalarType)
   // Preflight, get error condition, and check that the "file too small" error has occurred
   filt->preflight();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
+  DREAM3D_REQUIRED(err, == , RBRT_FILE_TOO_SMALL)
 
   // Execute, get error condition, and check that there are errors
   filt->execute();
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, <, 0)
+  DREAM3D_REQUIRED(err, < , 0)
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase6_TestPrimitives(const QString &name, int scalarType)
+void testCase6_TestPrimitives(const QString& name, int scalarType)
 {
   testCase6_Execute<T, 1>(name, scalarType);
   testCase6_Execute<T, 2>(name, scalarType);
@@ -866,7 +867,7 @@ void testCase6()
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 
@@ -888,6 +889,6 @@ int main(int argc, char **argv)
 #endif
 
 
-      PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
   return err;
 }

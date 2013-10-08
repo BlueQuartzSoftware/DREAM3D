@@ -120,9 +120,9 @@ Vec3IntListPointer_t initializeStructArray()
   for (size_t i = 0; i < nTuples; ++i)
   {
     Vec3Int_t* node = nodes->getPointer(i);
-    node->pos[0] = i+23;
-    node->pos[1] = i+11;
-    node->pos[2] = i+20;
+    node->pos[0] = i + 23;
+    node->pos[1] = i + 11;
+    node->pos[2] = i + 20;
   }
 
   QString name = "foo";
@@ -158,9 +158,9 @@ void TestOperatorOverloads()
   for (size_t i = 0; i < size; ++i)
   {
     Vec3Int_t node = vertices[i]; // Uses the [] operator overload
-    DREAM3D_REQUIRE_EQUAL(node.pos[0] , i+23);
-    DREAM3D_REQUIRE_EQUAL(node.pos[1] , i+11);
-    DREAM3D_REQUIRE_EQUAL(node.pos[2] , i+20);
+    DREAM3D_REQUIRE_EQUAL(node.pos[0] , i + 23);
+    DREAM3D_REQUIRE_EQUAL(node.pos[1] , i + 11);
+    DREAM3D_REQUIRE_EQUAL(node.pos[2] , i + 20);
   }
 
 }
@@ -213,7 +213,7 @@ void TestInitialization()
 
   // Next, initialize all the structs in the array with Zeros
   nodes->initializeWithZeros();
-    // Check data using the operator[] overload
+  // Check data using the operator[] overload
   {
     Vec3IntList_t& vertices = *nodes; // Dereference the Shared_Pointer using the * operator which allows the [] operators
     for (size_t i = 0; i < size; ++i)
@@ -249,9 +249,9 @@ void TestResizeArray()
   for (size_t i = 0; i < nTuples; ++i)
   {
     Vec3Int_t* node = nodes->getPointer(i);
-    DREAM3D_REQUIRE_EQUAL(node->pos[0] , i+23);
-    DREAM3D_REQUIRE_EQUAL(node->pos[1] , i+11);
-    DREAM3D_REQUIRE_EQUAL(node->pos[2] , i+20);
+    DREAM3D_REQUIRE_EQUAL(node->pos[0] , i + 23);
+    DREAM3D_REQUIRE_EQUAL(node->pos[1] , i + 11);
+    DREAM3D_REQUIRE_EQUAL(node->pos[2] , i + 20);
   }
 
   // Resize to a larger Array
@@ -264,17 +264,17 @@ void TestResizeArray()
   for (size_t i = 0; i < size; ++i)
   {
     Vec3Int_t* node = nodes->getPointer(i);
-    node->pos[0] = i+23;
-    node->pos[1] = i+11;
-    node->pos[2] = i+20;
+    node->pos[0] = i + 23;
+    node->pos[1] = i + 11;
+    node->pos[2] = i + 20;
   }
   // Now check the data that was assigned to each of the structures
   for (size_t i = 0; i < size; ++i)
   {
     Vec3Int_t* node = nodes->getPointer(i);
-    DREAM3D_REQUIRE_EQUAL(node->pos[0] , i+23);
-    DREAM3D_REQUIRE_EQUAL(node->pos[1] , i+11);
-    DREAM3D_REQUIRE_EQUAL(node->pos[2] , i+20);
+    DREAM3D_REQUIRE_EQUAL(node->pos[0] , i + 23);
+    DREAM3D_REQUIRE_EQUAL(node->pos[1] , i + 11);
+    DREAM3D_REQUIRE_EQUAL(node->pos[2] , i + 20);
   }
 
 
@@ -301,9 +301,9 @@ void TestTupleCopy()
   Vec3IntListPointer_t nodes = initializeStructArray();
 
   // Try to put in a range that is Too large
-  int err = nodes->CopyTuple(0, ARRAY_SIZE+1);
+  int err = nodes->CopyTuple(0, ARRAY_SIZE + 1);
   DREAM3D_REQUIRE_EQUAL(err, -1)
-  err = nodes->CopyTuple(ARRAY_SIZE+1, 0);
+  err = nodes->CopyTuple(ARRAY_SIZE + 1, 0);
   DREAM3D_REQUIRE_EQUAL(err, -1)
 
   // Copy the values from Index 0 to Index 1 in the Struct Array and Check values
@@ -383,13 +383,13 @@ void TestTupleErase()
   err = nodes->EraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, 0)
   size_t nTuples = nodes->getNumberOfTuples();
-  DREAM3D_REQUIRE_EQUAL(nTuples, ARRAY_SIZE-1);
+  DREAM3D_REQUIRE_EQUAL(nTuples, ARRAY_SIZE - 1);
   for (size_t i = 0; i < nTuples; ++i)
   {
     Vec3Int_t* node = nodes->getPointer(i);
-    DREAM3D_REQUIRE_EQUAL(node->pos[0] , i+1+23);
-    DREAM3D_REQUIRE_EQUAL(node->pos[1] , i+1+11);
-    DREAM3D_REQUIRE_EQUAL(node->pos[2] , i+1+20);
+    DREAM3D_REQUIRE_EQUAL(node->pos[0] , i + 1 + 23);
+    DREAM3D_REQUIRE_EQUAL(node->pos[1] , i + 1 + 11);
+    DREAM3D_REQUIRE_EQUAL(node->pos[2] , i + 1 + 20);
   }
 
   // Remove the structs located at the even indices
@@ -401,35 +401,35 @@ void TestTupleErase()
   err = nodes->EraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, 0)
   nTuples = nodes->getNumberOfTuples();
-  DREAM3D_REQUIRE_EQUAL(nTuples, ARRAY_SIZE-5);
+  DREAM3D_REQUIRE_EQUAL(nTuples, ARRAY_SIZE - 5);
   for (size_t i = 0; i < nTuples; ++i)
   {
     Vec3Int_t* node = nodes->getPointer(i);
-    DREAM3D_REQUIRE_EQUAL(node->pos[0] , i*2+1+23);
-    DREAM3D_REQUIRE_EQUAL(node->pos[1] , i*2+1+11);
-    DREAM3D_REQUIRE_EQUAL(node->pos[2] , i*2+1+20);
+    DREAM3D_REQUIRE_EQUAL(node->pos[0] , i * 2 + 1 + 23);
+    DREAM3D_REQUIRE_EQUAL(node->pos[1] , i * 2 + 1 + 11);
+    DREAM3D_REQUIRE_EQUAL(node->pos[2] , i * 2 + 1 + 20);
   }
 
   // Try to erase an index that is larger than the number of tuples in the array
   idxs.resize(0);
-  idxs.push_back(ARRAY_SIZE-1);
+  idxs.push_back(ARRAY_SIZE - 1);
   err = nodes->EraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, -100)
 
   // Remove the last Struct from the Array
   nodes = initializeStructArray();
   idxs.resize(0);
-  idxs.push_back(ARRAY_SIZE-1);
+  idxs.push_back(ARRAY_SIZE - 1);
   err = nodes->EraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, 0)
   nTuples = nodes->getNumberOfTuples();
-  DREAM3D_REQUIRE_EQUAL(nTuples, ARRAY_SIZE-1);
+  DREAM3D_REQUIRE_EQUAL(nTuples, ARRAY_SIZE - 1);
   for (size_t i = 0; i < nTuples; ++i)
   {
     Vec3Int_t* node = nodes->getPointer(i);
-    DREAM3D_REQUIRE_EQUAL(node->pos[0] , i+23);
-    DREAM3D_REQUIRE_EQUAL(node->pos[1] , i+11);
-    DREAM3D_REQUIRE_EQUAL(node->pos[2] , i+20);
+    DREAM3D_REQUIRE_EQUAL(node->pos[0] , i + 23);
+    DREAM3D_REQUIRE_EQUAL(node->pos[1] , i + 11);
+    DREAM3D_REQUIRE_EQUAL(node->pos[2] , i + 20);
   }
 }
 
@@ -437,13 +437,13 @@ void TestTupleErase()
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 
-  #if !REMOVE_TEST_FILES
-    DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  #endif
+#if !REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
 
   DREAM3D_REGISTER_TEST( TestInitialization() )
   DREAM3D_REGISTER_TEST( TestResizeArray() )
@@ -451,9 +451,9 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( TestTupleCopy() )
   DREAM3D_REGISTER_TEST( TestTupleErase() )
 
-  #if REMOVE_TEST_FILES
+#if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  #endif
+#endif
 
 
   PRINT_TEST_SUMMARY();

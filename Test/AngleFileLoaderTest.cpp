@@ -66,7 +66,7 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void makeTestFile(const QString delim, const QString &outputFile)
+void makeTestFile(const QString delim, const QString& outputFile)
 {
   int count = 1000;
   float e0, e1, e2;
@@ -94,7 +94,7 @@ void makeTestFile(const QString delim, const QString &outputFile)
 void TestLoadingSpaceDelimited()
 {
   // Create a Teset File
-   makeTestFile(" ", UnitTest::AngleFileLoaderTest::OutputFile);
+  makeTestFile(" ", UnitTest::AngleFileLoaderTest::OutputFile);
 
   AngleFileLoader::Pointer reader = AngleFileLoader::New();
   reader->setInputFile(UnitTest::AngleFileLoaderTest::OutputFile);
@@ -114,7 +114,7 @@ void TestLoadingSpaceDelimited()
 void TestLoadingCommaDelimited()
 {
   // Create a Teset File
-   makeTestFile(", ", UnitTest::AngleFileLoaderTest::OutputFile);
+  makeTestFile(", ", UnitTest::AngleFileLoaderTest::OutputFile);
 
   AngleFileLoader::Pointer reader = AngleFileLoader::New();
   reader->setInputFile(UnitTest::AngleFileLoaderTest::OutputFile);
@@ -131,7 +131,7 @@ void TestLoadingCommaDelimited()
 void TestLoadingSemiColonDelimited()
 {
   // Create a Teset File
-   makeTestFile(";", UnitTest::AngleFileLoaderTest::OutputFile);
+  makeTestFile(";", UnitTest::AngleFileLoaderTest::OutputFile);
 
   AngleFileLoader::Pointer reader = AngleFileLoader::New();
   reader->setInputFile(UnitTest::AngleFileLoaderTest::OutputFile);
@@ -148,7 +148,7 @@ void TestLoadingSemiColonDelimited()
 void TestLoadingTabDelimited()
 {
   // Create a Teset File
-   makeTestFile("\t", UnitTest::AngleFileLoaderTest::OutputFile);
+  makeTestFile("\t", UnitTest::AngleFileLoaderTest::OutputFile);
 
   AngleFileLoader::Pointer reader = AngleFileLoader::New();
   reader->setInputFile(UnitTest::AngleFileLoaderTest::OutputFile);
@@ -163,7 +163,7 @@ void TestLoadingTabDelimited()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 
   int err = EXIT_SUCCESS;
@@ -173,18 +173,18 @@ int main(int argc, char *argv[])
 
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    #endif
+#endif
 
-      DREAM3D_REGISTER_TEST( TestLoadingSpaceDelimited() )
-      DREAM3D_REGISTER_TEST( TestLoadingCommaDelimited() )
-      DREAM3D_REGISTER_TEST( TestLoadingSemiColonDelimited() )
-      DREAM3D_REGISTER_TEST( TestLoadingTabDelimited() )
+  DREAM3D_REGISTER_TEST( TestLoadingSpaceDelimited() )
+  DREAM3D_REGISTER_TEST( TestLoadingCommaDelimited() )
+  DREAM3D_REGISTER_TEST( TestLoadingSemiColonDelimited() )
+  DREAM3D_REGISTER_TEST( TestLoadingTabDelimited() )
 
-    #if REMOVE_TEST_FILES
-      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    #endif
+#if REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
 
 
-      PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
   return err;
 }

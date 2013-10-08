@@ -52,10 +52,12 @@ class H5Support_EXPORT HDF5ScopedFileSentinel
 
     void setFileId(hid_t* fileId);
     hid_t* getFileId();
+    void addGroupId(hid_t *gid);
 
   private:
     hid_t* m_FileId;
     bool m_TurnOffErrors;
+    std::vector<hid_t*> m_Groups;
 
     herr_t (*_oldHDF_error_func)(hid_t, void*);
     void* _oldHDF_error_client_data;

@@ -247,7 +247,9 @@ int QFilterParametersWriter::writeValue(const QString name, uint64_t value)
 int QFilterParametersWriter::writeValue(const QString name, float value)
 {
   int err = 0;
-  m_Prefs->setValue(name, static_cast<double>(value));
+  QByteArray buf;
+  buf = buf.setNum(value, 'g', 8);
+  m_Prefs->setValue(name, QString(buf));
   return err;
 }
 
@@ -257,7 +259,9 @@ int QFilterParametersWriter::writeValue(const QString name, float value)
 int QFilterParametersWriter::writeValue(const QString name, double value)
 {
   int err = 0;
-  m_Prefs->setValue(name, value);
+  QByteArray buf;
+  buf = buf.setNum(value, 'g', 8);
+  m_Prefs->setValue(name, QString(buf));
   return err;
 }
 
@@ -265,7 +269,7 @@ int QFilterParametersWriter::writeValue(const QString name, double value)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void writeArray(QSettings* prefs, const QString name, QVector<T> &value)
+void writeArray(QSettings* prefs, const QString name, QVector<T>& value)
 {
   QString buf;
   QTextStream out(&buf);
@@ -478,8 +482,19 @@ int QFilterParametersWriter::writeValue(const QString name, QVector<AxisAngleInp
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeArraySelections(const QString name, QSet<QString> v)
 {
-  size_t size = v.size();
-  herr_t err = 0;
-#warning THIS NEEDS IMPLEMENTED
+  int err = 0;
+  int count = v.size();
+  m_Prefs->beginWriteArray("ArraySelections_" + name, count);
+  count = 0;
+  QSetIterator<QString> i(v);
+  while (i.hasNext())
+  {
+    QString data = i.next();
+    m_Prefs->setArrayIndex(count);
+    m_Prefs->setValue(name, data);
+    count++;
+  }
+
+  m_Prefs->endArray();
   return err;
 }

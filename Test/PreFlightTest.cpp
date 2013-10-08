@@ -193,34 +193,34 @@ void SyntheticBuilder_PreFlight()
 #define FAIL_IS_PASS 1
 
 #define MAKE_FILTER_TEST(name, condition)\
-void name##_PreFlightTest() {\
-  int err = 0;\
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
-  std::vector<AbstractFilter::Pointer> pipeline;\
-  name::Pointer filter = name::New();\
-  pipeline.push_back(filter);\
-  int preflightError = 0;\
-  QStringstream ss;\
-  ss << "------------------------------------------------" << std::endl;\
-  ss << "Starting Preflight test for " << #name << std::endl;\
-  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter) {\
-    (*filter)->setVoxelDataContainer(m.get());\
-    setCurrentFilter(*filter);\
-    (*filter)->preflight();\
-    err = (*filter)->getErrorCondition();\
-    if(err < 0) {\
-      preflightError |= err;\
-      ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
-      std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();\
-      for (std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
-        ss << (*iter).generateErrorString();\
+  void name##_PreFlightTest() {\
+    int err = 0;\
+    VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
+    std::vector<AbstractFilter::Pointer> pipeline;\
+    name::Pointer filter = name::New();\
+    pipeline.push_back(filter);\
+    int preflightError = 0;\
+    QStringstream ss;\
+    ss << "------------------------------------------------" << std::endl;\
+    ss << "Starting Preflight test for " << #name << std::endl;\
+    for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter) {\
+      (*filter)->setVoxelDataContainer(m.get());\
+      setCurrentFilter(*filter);\
+      (*filter)->preflight();\
+      err = (*filter)->getErrorCondition();\
+      if(err < 0) {\
+        preflightError |= err;\
+        ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
+        std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();\
+        for (std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
+          ss << (*iter).generateErrorString();\
+        }\
       }\
     }\
-  }\
-  std::cout << ss.str() << std::endl;\
-  if (condition) { DREAM3D_REQUIRE_NE(preflightError, 0);}\
-  else { DREAM3D_REQUIRE_EQUAL(preflightError, 0);  }\
-}
+    std::cout << ss.str() << std::endl;\
+    if (condition) { DREAM3D_REQUIRE_NE(preflightError, 0);}\
+    else { DREAM3D_REQUIRE_EQUAL(preflightError, 0);  }\
+  }
 
 
 MAKE_FILTER_TEST(  FindNeighbors, FAIL_IS_PASS)
@@ -288,7 +288,7 @@ MAKE_FILTER_TEST(  InitializeSyntheticVolume, FAIL_IS_PASS)
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( FindNeighbors_PreFlightTest() )

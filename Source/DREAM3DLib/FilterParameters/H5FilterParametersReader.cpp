@@ -47,8 +47,8 @@
 //
 // -----------------------------------------------------------------------------
 H5FilterParametersReader::H5FilterParametersReader() :
-AbstractFilterParametersReader(),
-m_PipelineGroupId(-1)
+  AbstractFilterParametersReader(),
+  m_PipelineGroupId(-1)
 {
 
 }
@@ -64,7 +64,7 @@ H5FilterParametersReader::~H5FilterParametersReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5FilterParametersReader::Pointer H5FilterParametersReader::OpenDREAM3DFileForReadingPipeline(QString filePath, hid_t &fid)
+H5FilterParametersReader::Pointer H5FilterParametersReader::OpenDREAM3DFileForReadingPipeline(QString filePath, hid_t& fid)
 {
   fid = -1;
   fid = QH5Utilities::openFile(filePath);

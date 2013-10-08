@@ -99,6 +99,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
       return m;
     }
 
+    bool containsDataContainer(const QString &name);
 
   protected:
     DataContainerArray();

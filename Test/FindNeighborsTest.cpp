@@ -95,7 +95,7 @@ void RemoveTestFiles()
 }
 
 
-void updateProgressAndMessage(const QString &msg, int prog)
+void updateProgressAndMessage(const QString& msg, int prog)
 {
   std::cout << prog << "% - " << msg << std::endl;
 }
@@ -111,7 +111,7 @@ int getZEndIndex() { return 250; }
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
-                = DataArray<unsigned int>::CreateArray(2, DREAM3D::EnsembleData::PhaseTypes);
+    = DataArray<unsigned int>::CreateArray(2, DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
   phaseTypes->SetValue(1, DREAM3D::PhaseType::PrimaryPhase);
   return phaseTypes;
@@ -164,7 +164,7 @@ void pipelineProgress(int value)
   std::cout << value << "%" << std::endl;
 }
 
-void pipelineProgressMessage(const QString &msg)
+void pipelineProgressMessage(const QString& msg)
 {
   std::cout << msg << std::endl;
 }
@@ -174,7 +174,8 @@ void pipelineErrorMessage(const char* message)
   std::cout << "Error Message: " << message << std::endl;
 }
 
-void setErrorCondition(int err) {
+void setErrorCondition(int err)
+{
   std::cout << "Error Condition: " << err << std::endl;
 }
 
@@ -204,9 +205,9 @@ void TestFindNeighbors()
 
   QString m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::FindNeighborTest::TestDir);
   QDir dir(m_OutputDirectory);
-dir.mkpath(".");
+  dir.mkpath(".");
 
- // updateProgressAndMessage(("Loading Slices"), 10);
+// updateProgressAndMessage(("Loading Slices"), 10);
   ReadH5Ebsd::Pointer read_h5ebsd = ReadH5Ebsd::New();
   read_h5ebsd->setH5EbsdFile(getH5EbsdFile());
   read_h5ebsd->setRefFrameZDir(Ebsd::LowtoHigh);
@@ -217,7 +218,7 @@ dir.mkpath(".");
   pipeline->pushBack(read_h5ebsd);
 
   AlignSectionsFeature::Pointer align_sections = AlignSectionsFeature::New();
- // align_sections->setCrystalStructures(xtal);
+// align_sections->setCrystalStructures(xtal);
   pipeline->pushBack(align_sections);
 
   EBSDSegmentGrains::Pointer ebsdsegment_grains = EBSDSegmentGrains::New();
@@ -376,7 +377,8 @@ void OtherTest()
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
   int err = EXIT_SUCCESS;
 #if !REMOVE_TEST_FILES
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )

@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
     virtual uint16_t readValue(const QString name, uint16_t value);
     virtual uint32_t readValue(const QString name, uint32_t value);
     virtual uint64_t readValue(const QString name, uint64_t value);
-    virtual float readValue(const QString name, float value);
+    virtual float readValue(const QString name, float def);
     virtual double readValue(const QString name, double value);
     virtual bool readValue(const QString name, bool value);
 

@@ -47,7 +47,17 @@ GenericExample::GenericExample() :
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_StlFilePrefix(""),
   m_MaxIterations(0),
-  m_MisorientationTolerance(0)
+  m_MisorientationTolerance(0),
+  m_Int8Value(0),
+  m_Int16Value(0),
+  m_Int32Value(0),
+  m_Int64Value(0),
+  m_UInt8Value(0),
+  m_UInt16Value(0),
+  m_UInt32Value(0),
+  m_UInt64Value(0),
+  m_FloatValue(0.0),
+  m_DoubleValue(0.0)
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;
@@ -400,7 +410,7 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
   setConversionType( reader->readValue("ConversionType", getConversionType()) );
   setDimensions( reader->readIntVec3("Dimensions", getDimensions()) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin()) );
-  setCrystalSymmetryRotations( reader->readAxisAngles("CrystalSymmetryRotations", getCrystalSymmetryRotations()) );
+  setAxisAngleInputs(reader->readAxisAngles("AxisAngleInputs", getAxisAngleInputs()) );
 
   setSelectedVolumeVertexArrayName( reader->readString("SelectedVolumeVertexArrayName", getSelectedVolumeVertexArrayName()) );
   setSelectedVolumeEdgeArrayName( reader->readString("SelectedVolumeEdgeArrayName", getSelectedVolumeEdgeArrayName()) );
@@ -422,28 +432,28 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
   setSelectedVertexEnsembleArrayName( reader->readString("SelectedVertexEnsembleArrayName", getSelectedVertexEnsembleArrayName()) );
 
 
-   setInt8Array(reader->readArray("Int8Array", getInt8Array()) );
-   setInt16Array(reader->readArray("Int16Array", getInt16Array()) );
-   setInt32Array(reader->readArray("Int32Array", getInt32Array()) );
-   setInt64Array(reader->readArray("Int64Array", getInt64Array()) );
-   setUInt8Array(reader->readArray("UInt8Array", getUInt8Array()) );
-   setUInt16Array(reader->readArray("UInt16Array", getUInt16Array()) );
-   setUInt32Array(reader->readArray("UInt32Array", getUInt32Array()) );
-   setUInt64Array(reader->readArray("UInt64Array", getUInt64Array()) );
-   setFloatArray(reader->readArray("FloatArray", getFloatArray()) );
-   setDoubleArray(reader->readArray("DoubleArray", getDoubleArray()) );
+  setInt8Array(reader->readArray("Int8Array", getInt8Array()) );
+  setInt16Array(reader->readArray("Int16Array", getInt16Array()) );
+  setInt32Array(reader->readArray("Int32Array", getInt32Array()) );
+  setInt64Array(reader->readArray("Int64Array", getInt64Array()) );
+  setUInt8Array(reader->readArray("UInt8Array", getUInt8Array()) );
+  setUInt16Array(reader->readArray("UInt16Array", getUInt16Array()) );
+  setUInt32Array(reader->readArray("UInt32Array", getUInt32Array()) );
+  setUInt64Array(reader->readArray("UInt64Array", getUInt64Array()) );
+  setFloatArray(reader->readArray("FloatArray", getFloatArray()) );
+  setDoubleArray(reader->readArray("DoubleArray", getDoubleArray()) );
 
 
-   setInt8Value(reader->readValue("Int8Value", getInt8Value()) );
-   setInt16Value(reader->readValue("Int16Value", getInt16Value()) );
-   setInt32Value(reader->readValue("Int32Value", getInt32Value()) );
-   setInt64Value(reader->readValue("Int64Value", getInt64Value()) );
-   setUInt8Value(reader->readValue("UInt8Value", getUInt8Value()) );
-   setUInt16Value(reader->readValue("UInt16Value", getUInt16Value()) );
-   setUInt32Value(reader->readValue("UInt32Value", getUInt32Value()) );
-   setUInt64Value(reader->readValue("UInt64Value", getUInt64Value()) );
-   setFloatValue(reader->readValue("FloatValue", getFloatValue()) );
-   setDoubleValue(reader->readValue("DoubleValue", getDoubleValue()) );
+  setInt8Value(reader->readValue("Int8Value", getInt8Value()) );
+  setInt16Value(reader->readValue("Int16Value", getInt16Value()) );
+  setInt32Value(reader->readValue("Int32Value", getInt32Value()) );
+  setInt64Value(reader->readValue("Int64Value", getInt64Value()) );
+  setUInt8Value(reader->readValue("UInt8Value", getUInt8Value()) );
+  setUInt16Value(reader->readValue("UInt16Value", getUInt16Value()) );
+  setUInt32Value(reader->readValue("UInt32Value", getUInt32Value()) );
+  setUInt64Value(reader->readValue("UInt64Value", getUInt64Value()) );
+  setFloatValue(reader->readValue("FloatValue", getFloatValue()) );
+  setDoubleValue(reader->readValue("DoubleValue", getDoubleValue()) );
 
   setStrVector( reader->readStrings("StrVector", getStrVector()) );
   reader->closeFilterGroup();
@@ -468,7 +478,7 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("ConversionType", getConversionType());
   writer->writeValue("Dimensions", getDimensions());
   writer->writeValue("Origin", getOrigin());
-  writer->writeValue("CrystalSymmetryRotations", getCrystalSymmetryRotations());
+  writer->writeValue("AxisAngleInputs", getAxisAngleInputs());
 
   writer->writeValue("SelectedVolumeVertexArrayName", getSelectedVolumeVertexArrayName());
   writer->writeValue("SelectedVolumeEdgeArrayName", getSelectedVolumeEdgeArrayName());

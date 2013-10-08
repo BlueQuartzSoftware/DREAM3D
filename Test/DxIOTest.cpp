@@ -150,7 +150,7 @@ int TestDxReader()
   for (int i = 0; i < size; ++i)
   {
     int32_t file_value = data[i];
-    int32_t memory_value = i+UnitTest::GrainIdsTest::Offset;
+    int32_t memory_value = i + UnitTest::GrainIdsTest::Offset;
     DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
   }
 
@@ -162,14 +162,15 @@ int TestDxReader()
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( TestDxWriter() )
-      DREAM3D_REGISTER_TEST( TestDxReader() )
+  DREAM3D_REGISTER_TEST( TestDxReader() )
 
-      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-      PRINT_TEST_SUMMARY();
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+  PRINT_TEST_SUMMARY();
   return err;
 }
 

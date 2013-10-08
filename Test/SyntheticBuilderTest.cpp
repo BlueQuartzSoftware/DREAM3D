@@ -135,7 +135,7 @@ void TestSyntheticBuilder()
 {
 
   QDir dir(m_OutputDirectory);
-dir.mkpath(".");
+  dir.mkpath(".");
 
   Observer* observer = new Observer;
 
@@ -147,42 +147,42 @@ dir.mkpath(".");
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   pipeline->setVoxelDataContainer(m);
 
-    ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(4, DREAM3D::EnsembleData::ShapeTypes);
-    m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
-    m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
-    m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
-    m_ShapeTypes->SetValue(3, DREAM3D::ShapeType::EllipsoidShape);
+  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(4, DREAM3D::EnsembleData::ShapeTypes);
+  m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
+  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
+  m_ShapeTypes->SetValue(3, DREAM3D::ShapeType::EllipsoidShape);
 
-    InitializeSyntheticVolume::Pointer init_volume = InitializeSyntheticVolume::New();
-    init_volume->setShapeTypes(m_ShapeTypes);
-    init_volume->setInputFile(getH5StatsFile());
-    init_volume->setXVoxels(m_XPoints);
-    init_volume->setYVoxels(m_YPoints);
-    init_volume->setZVoxels(m_ZPoints);
-    init_volume->setXRes(m_XResolution);
-    init_volume->setYRes(m_YResolution);
-    init_volume->setZRes(m_ZResolution);
-	pipeline->pushBack(init_volume);
+  InitializeSyntheticVolume::Pointer init_volume = InitializeSyntheticVolume::New();
+  init_volume->setShapeTypes(m_ShapeTypes);
+  init_volume->setInputFile(getH5StatsFile());
+  init_volume->setXVoxels(m_XPoints);
+  init_volume->setYVoxels(m_YPoints);
+  init_volume->setZVoxels(m_ZPoints);
+  init_volume->setXRes(m_XResolution);
+  init_volume->setYRes(m_YResolution);
+  init_volume->setZRes(m_ZResolution);
+  pipeline->pushBack(init_volume);
 
-    PackPrimaryPhases::Pointer pack_grains = PackPrimaryPhases::New();
-    pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
-    pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
+  PackPrimaryPhases::Pointer pack_grains = PackPrimaryPhases::New();
+  pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
+  pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
 #if PACK_GRAINS_ERROR_TXT_OUT
-    MAKE_OUTPUT_FILE_PATH( errorFile, DREAM3D::SyntheticBuilder::ErrorFile)
-    pack_grains->setErrorOutputFile(errorFile);
+  MAKE_OUTPUT_FILE_PATH( errorFile, DREAM3D::SyntheticBuilder::ErrorFile)
+  pack_grains->setErrorOutputFile(errorFile);
 #endif
 #if PACK_GRAINS_VTK_FILE_OUT
-    MAKE_OUTPUT_FILE_PATH( vtkFile, DREAM3D::SyntheticBuilder::VtkFile)
-    pack_grains->setVtkOutputFile(vtkFile);
+  MAKE_OUTPUT_FILE_PATH( vtkFile, DREAM3D::SyntheticBuilder::VtkFile)
+  pack_grains->setVtkOutputFile(vtkFile);
 #endif
-    pipeline->pushBack(pack_grains);
+  pipeline->pushBack(pack_grains);
 
-    AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
-    pipeline->pushBack(adjust_grains);
+  AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
+  pipeline->pushBack(adjust_grains);
 
-    InsertPrecipitatePhases::Pointer place_precipitates = InsertPrecipitatePhases::New();
-    place_precipitates->setPeriodicBoundaries(m_PeriodicBoundary);
-    pipeline->pushBack(place_precipitates);
+  InsertPrecipitatePhases::Pointer place_precipitates = InsertPrecipitatePhases::New();
+  place_precipitates->setPeriodicBoundaries(m_PeriodicBoundary);
+  pipeline->pushBack(place_precipitates);
 
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
 //  pipeline->pushBack(match_crystallography);
@@ -206,7 +206,7 @@ dir.mkpath(".");
     vtkWriter->setOutputFile(UnitTest::SyntheticBuilderTest::VtkOutputFile);
     vtkWriter->setWriteGrainIds(true);
     vtkWriter->setWritePhaseIds(m_WritePhaseId);
-   // vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
+    // vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
     vtkWriter->setWriteIPFColors(m_WriteIPFColor);
     vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
     pipeline->pushBack(vtkWriter);
@@ -235,7 +235,7 @@ dir.mkpath(".");
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 

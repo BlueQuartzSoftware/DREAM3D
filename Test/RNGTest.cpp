@@ -33,11 +33,11 @@
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   std::cout << "RNGTest Start..." << std::endl;
   DREAM3D_RANDOMNG_NEW()
-    float random;
+  float random;
   for (int i = 0; i < 1000000; ++i)
   {
     random = static_cast<float>( rg.genrand_res53() );

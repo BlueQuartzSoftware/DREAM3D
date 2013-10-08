@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
- 
- 
+
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -53,20 +53,20 @@ void MyTest()
 {
   int i = 0;
   int j = 1;
-  
+
   // This will pass because i < j
-  DREAM3D_REQUIRED(i, <, j) 
-  
+  DREAM3D_REQUIRED(i, < , j)
+
   // This will FAIL because i != j
   DREAM3D_REQUIRE_EQUAL(i, j)
-  
-  
+
+
 }
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( MyTest() )

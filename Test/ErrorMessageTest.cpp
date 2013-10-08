@@ -71,7 +71,7 @@ void TestErrorMessage()
   AbstractFilter::Pointer f = AbstractFilter::New();
   f->addErrorMessage(a0, a1, eCode);
   f->addErrorMessage("Some Other Class", "A description", -10);
-  
+
   PipelineMessage pm("Joey's Test", "Testing Warning Message...", -23, PipelineMessage::Warning);
   PipelineMessage pm1("Joey's Test", "Testing Error Message...", -23, PipelineMessage::Error);
   PipelineMessage pm2("Joey's Test", "Testing Status Message...", -23, PipelineMessage::StatusMessage);
@@ -81,14 +81,14 @@ void TestErrorMessage()
   f->notifyMessage(pm2);
 
   if (true)
-    return;
+  { return; }
 
 }
 
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 
   int err = EXIT_SUCCESS;

@@ -57,7 +57,7 @@
 
 
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   // Resize the ODF vector properly for Cubic
   std::vector<float> odf(CubicOps::k_OdfSize);
@@ -74,8 +74,8 @@ int main(int argc, char **argv)
 
   size_t numEntries = e1s.size();
   Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
-                                &(weights.front()), &(sigmas.front()), true,
-                                &(odf.front()), numEntries);
+                                 &(weights.front()), &(sigmas.front()), true,
+                                 &(odf.front()), numEntries);
 
   size_t npoints = 1000;
   std::vector<float > x001(npoints * 3);

@@ -67,7 +67,7 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
      * @return Return a pointer to a newly instantiated instance of this class. A Null Pointer will be returned if
      * the file can not be opened or the group is missing.
      */
-    static Pointer OpenDREAM3DFileForReadingPipeline(QString filePath, hid_t &fid);
+    static Pointer OpenDREAM3DFileForReadingPipeline(QString filePath, hid_t& fid);
 
 
     DREAM3D_INSTANCE_PROPERTY(hid_t, PipelineGroupId)
