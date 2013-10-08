@@ -309,6 +309,10 @@ foreach(p ${DREAM3D_PLUGIN_LIST})
 endforeach()
 
 
+# --------------------------------------------------------------------
+# Build the FilterWidgets Static Library which is ONLY needed by this plugin
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
+
 if(DREAM3D_BUILD_DREAM3D)
 # Build the static QtSupport library - which MUST be a static library or the linking
 # will not work due to signals/slots mechanism.

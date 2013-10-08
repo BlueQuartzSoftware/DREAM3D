@@ -201,8 +201,7 @@ void DataContainerReader::preflight()
 // -----------------------------------------------------------------------------
 void DataContainerReader::execute()
 {
-  int32_t err = 0;
-  QString ss;
+
 
   readData(false);
 
@@ -221,7 +220,7 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
 
   // HDF5: Open the "Pipeline" Group
   hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
-  reader->setGroupId(pipelineGroupId);
+  reader->setPipelineGroupId(pipelineGroupId);
 
   // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
   QList<QString> groupList;

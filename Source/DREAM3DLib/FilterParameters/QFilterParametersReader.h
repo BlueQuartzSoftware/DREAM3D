@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
-
+//#include "DREAM3DLib/FilterParameters/QFilterParamtersOperators.h"
 
 /*
  *
@@ -64,7 +64,6 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
 
     QSettings* getPrefs();
 
-    //DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     void openFile(QString filename);
     void closeFile();
 

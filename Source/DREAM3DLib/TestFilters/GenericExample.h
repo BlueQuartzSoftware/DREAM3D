@@ -75,9 +75,34 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+
+    DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, AxisAngleInput)
     DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, CrystalSymmetryRotations)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, StrVector)
+
+    DREAM3D_INSTANCE_PROPERTY(QVector<int8_t>, Int8Array)
+    DREAM3D_INSTANCE_PROPERTY(QVector<int16_t>, Int16Array)
+    DREAM3D_INSTANCE_PROPERTY(QVector<int32_t>, Int32Array)
+    DREAM3D_INSTANCE_PROPERTY(QVector<int64_t>, Int64Array)
+    DREAM3D_INSTANCE_PROPERTY(QVector<uint8_t>, UInt8Array)
+    DREAM3D_INSTANCE_PROPERTY(QVector<uint16_t>, UInt16Array)
+    DREAM3D_INSTANCE_PROPERTY(QVector<uint32_t>, UInt32Array)
+    DREAM3D_INSTANCE_PROPERTY(QVector<uint64_t>, UInt64Array)
+    DREAM3D_INSTANCE_PROPERTY(QVector<float>, FloatArray)
+    DREAM3D_INSTANCE_PROPERTY(QVector<double>, DoubleArray)
+
+    DREAM3D_INSTANCE_PROPERTY(int8_t, Int8Value)
+    DREAM3D_INSTANCE_PROPERTY(int16_t, Int16Value)
+    DREAM3D_INSTANCE_PROPERTY(int32_t, Int32Value)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, Int64Value)
+    DREAM3D_INSTANCE_PROPERTY(uint8_t, UInt8Value)
+    DREAM3D_INSTANCE_PROPERTY(uint16_t, UInt16Value)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, UInt32Value)
+    DREAM3D_INSTANCE_PROPERTY(uint64_t, UInt64Value)
+    DREAM3D_INSTANCE_PROPERTY(float, FloatValue)
+    DREAM3D_INSTANCE_PROPERTY(double, DoubleValue)
+
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeVertexArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeEdgeArrayName)

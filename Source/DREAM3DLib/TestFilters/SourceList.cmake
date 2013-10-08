@@ -20,7 +20,7 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "TestFil
 #---------
 # List your public filters here
 set(_PublicFilters
-
+ThresholdExample
 )
 
 
@@ -39,8 +39,8 @@ endforeach()
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
   ArraySelectionExample
-  GenericExample
-  ThresholdExample
+GenericExample
+
   TestFilters
 )
 

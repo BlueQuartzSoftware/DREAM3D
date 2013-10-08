@@ -52,21 +52,21 @@ endif()
 
 add_executable(FilterWidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
                                     ${FilterWidgetsLib_BINARY_DIR}/FilterWidgetCodeGen.h)
+include_directories(${FilterWidgetsLib_BINARY_DIR})
+
 target_link_libraries(FilterWidgetCodeGen  EbsdLib DREAM3DLib)
-
-
 
 # Now run the code to generate the header files which will over write the place
 # holder files that were generated from above
 add_custom_command(TARGET FilterWidgetCodeGen POST_BUILD
                     COMMAND $<TARGET_FILE:FilterWidgetCodeGen> )
 
+if(0)
 
 # --------------------------------------------------------------------
 # Set some Include directories
 include_directories(${FilterWidgetsLib_SOURCE_DIR}/..)
 include_directories(${FilterWidgetsLib_SOURCE_DIR})
-include_directories(${FilterWidgetsLib_BINARY_DIR})
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder)
 include_directories(${DREAM3DProj_BINARY_DIR}/PipelineBuilder)
@@ -199,3 +199,5 @@ target_link_libraries(FilterWidgetsLib
 #add_dependencies(FilterWidgetsLib_automoc FilterWidgetCodeGen)
 add_dependencies(FilterWidgetsLib FilterWidgetCodeGen)
 LibraryProperties( FilterWidgetsLib ${EXE_DEBUG_EXTENSION})
+
+endif()

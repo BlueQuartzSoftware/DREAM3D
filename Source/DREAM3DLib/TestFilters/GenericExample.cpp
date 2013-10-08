@@ -422,7 +422,30 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
   setSelectedVertexEnsembleArrayName( reader->readString("SelectedVertexEnsembleArrayName", getSelectedVertexEnsembleArrayName()) );
 
 
-  setStrVector( reader->readStrings("StrVector", getStrVector() ) );
+   setInt8Array(reader->readArray("Int8Array", getInt8Array()) );
+   setInt16Array(reader->readArray("Int16Array", getInt16Array()) );
+   setInt32Array(reader->readArray("Int32Array", getInt32Array()) );
+   setInt64Array(reader->readArray("Int64Array", getInt64Array()) );
+   setUInt8Array(reader->readArray("UInt8Array", getUInt8Array()) );
+   setUInt16Array(reader->readArray("UInt16Array", getUInt16Array()) );
+   setUInt32Array(reader->readArray("UInt32Array", getUInt32Array()) );
+   setUInt64Array(reader->readArray("UInt64Array", getUInt64Array()) );
+   setFloatArray(reader->readArray("FloatArray", getFloatArray()) );
+   setDoubleArray(reader->readArray("DoubleArray", getDoubleArray()) );
+
+
+   setInt8Value(reader->readValue("Int8Value", getInt8Value()) );
+   setInt16Value(reader->readValue("Int16Value", getInt16Value()) );
+   setInt32Value(reader->readValue("Int32Value", getInt32Value()) );
+   setInt64Value(reader->readValue("Int64Value", getInt64Value()) );
+   setUInt8Value(reader->readValue("UInt8Value", getUInt8Value()) );
+   setUInt16Value(reader->readValue("UInt16Value", getUInt16Value()) );
+   setUInt32Value(reader->readValue("UInt32Value", getUInt32Value()) );
+   setUInt64Value(reader->readValue("UInt64Value", getUInt64Value()) );
+   setFloatValue(reader->readValue("FloatValue", getFloatValue()) );
+   setDoubleValue(reader->readValue("DoubleValue", getDoubleValue()) );
+
+  setStrVector( reader->readStrings("StrVector", getStrVector()) );
   reader->closeFilterGroup();
 }
 
@@ -465,6 +488,29 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("SelectedVertexVertexArrayName", getSelectedVertexVertexArrayName());
   writer->writeValue("SelectedVertexFieldArrayName", getSelectedVertexFieldArrayName());
   writer->writeValue("SelectedVertexEnsembleArrayName", getSelectedVertexEnsembleArrayName());
+
+  writer->writeValue("Int8Array", getInt8Array());
+  writer->writeValue("Int16Array", getInt16Array());
+  writer->writeValue("Int32Array", getInt32Array());
+  writer->writeValue("Int64Array", getInt64Array());
+  writer->writeValue("UInt8Array", getUInt8Array());
+  writer->writeValue("UInt16Array", getUInt16Array());
+  writer->writeValue("UInt32Array", getUInt32Array());
+  writer->writeValue("UInt64Array", getUInt64Array());
+  writer->writeValue("FloatArray", getFloatArray());
+  writer->writeValue("DoubleArray", getDoubleArray());
+
+  writer->writeValue("Int8Value", getInt8Value());
+  writer->writeValue("Int16Value", getInt16Value());
+  writer->writeValue("Int32Value", getInt32Value());
+  writer->writeValue("Int64Value", getInt64Value());
+  writer->writeValue("UInt8Value", getUInt8Value());
+  writer->writeValue("UInt16Value", getUInt16Value());
+  writer->writeValue("UInt32Value", getUInt32Value());
+  writer->writeValue("UInt64Value", getUInt64Value());
+  writer->writeValue("FloatValue", getFloatValue());
+  writer->writeValue("DoubleValue", getDoubleValue());
+
 
   writer->writeValue("StrVector", getStrVector());
 

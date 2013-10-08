@@ -37,32 +37,21 @@
 
 #include <QtCore/QMetaType>
 #include <QtCore/QDataStream>
-
-
-// These Streams need to be implemented so that our 3 Element Vectors can be read/write to disk/prefs files
-QDataStream& operator<<( QDataStream& out, const IntVec3Widget_t& v)
-{
-  out << v.x << v.y << v.z;
-  return out;
-}
-QDataStream& operator>>( QDataStream& in, IntVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
-
-QDataStream& operator<<( QDataStream& out, const FloatVec3Widget_t& v) { out << v.x << v.y << v.z; return out; }
-QDataStream& operator>>( QDataStream& in, FloatVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
-
+#include <QtCore/QStringList>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QFilterParametersReader::QFilterParametersReader() :
+  AbstractFilterParametersReader(),
   m_Prefs(NULL)
 {
 
-  qRegisterMetaType<IntVec3Widget_t>("IntVec3Widget_t");
-  qRegisterMetaTypeStreamOperators<IntVec3Widget_t>("IntVec3Widget_t");
+  //  qRegisterMetaType<IntVec3Widget_t>("IntVec3Widget_t");
+  //  qRegisterMetaTypeStreamOperators<IntVec3Widget_t>("IntVec3Widget_t");
 
-  qRegisterMetaType<FloatVec3Widget_t>("FloatVec3Widget_t");
-  qRegisterMetaTypeStreamOperators<FloatVec3Widget_t>("FloatVec3Widget_t");
+  //  qRegisterMetaType<FloatVec3Widget_t>("FloatVec3Widget_t");
+  //  qRegisterMetaTypeStreamOperators<FloatVec3Widget_t>("FloatVec3Widget_t");
 }
 
 // -----------------------------------------------------------------------------
@@ -142,16 +131,21 @@ QString QFilterParametersReader::readString(const QString name, QString value)
 QVector<QString> QFilterParametersReader::readStrings(const QString name, QVector<QString> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  int count = m_Prefs->beginReadArray(name);
-  QVector<QString> selections;
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    QString str = m_Prefs->value(name, QString::fromUtf8("NOT_FOUND")).toString();
-    selections.push_back(str);
+    return value;
   }
-  m_Prefs->endArray();
-  return value;
+
+  QVector<QString> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split('|');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).trimmed());
+  }
+  return values;
 }
 
 
@@ -254,7 +248,7 @@ uint64_t QFilterParametersReader::readValue(const QString name, uint64_t value)
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
   uint64_t def = value;
-  value = m_Prefs->value(name, def).toLongLong(&ok);
+  value = m_Prefs->value(name, def).toULongLong(&ok);
   if(ok) { return value; }
   return def;
 }
@@ -304,16 +298,22 @@ QVector<int8_t> QFilterParametersReader::readArray(const QString name, QVector<i
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int count = m_Prefs->beginReadArray(name);
-  QVector<int8_t> selections(count, 0);
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    selections[i] = m_Prefs->value(name, 0).toInt(&ok);
-    if (!ok) { selections[i] = 0; }
+    return value;
   }
-  m_Prefs->endArray();
-  return selections;
+
+  QVector<int8_t> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split(' ');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).toInt(&ok));
+    if (false == ok) { return value; }
+  }
+  return values;
 }
 
 // -----------------------------------------------------------------------------
@@ -323,16 +323,22 @@ QVector<int16_t> QFilterParametersReader::readArray(const QString name, QVector<
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int count = m_Prefs->beginReadArray(name);
-  QVector<int16_t> selections(count, 0);
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    selections[i] = m_Prefs->value(name, 0).toInt(&ok);
-    if (!ok) { selections[i] = 0; }
+    return value;
   }
-  m_Prefs->endArray();
-  return selections;
+
+  QVector<int16_t> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split(' ');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).toShort(&ok));
+    if (false == ok) { return value; }
+  }
+  return values;
 }
 
 // -----------------------------------------------------------------------------
@@ -342,16 +348,22 @@ QVector<int32_t> QFilterParametersReader::readArray(const QString name, QVector<
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int count = m_Prefs->beginReadArray(name);
-  QVector<int32_t> selections(count, 0);
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    selections[i] = m_Prefs->value(name, 0).toInt(&ok);
-    if (!ok) { selections[i] = 0; }
+    return value;
   }
-  m_Prefs->endArray();
-  return selections;
+
+  QVector<int32_t> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split(' ');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).toInt(&ok));
+    if (false == ok) { return value; }
+  }
+  return values;
 }
 
 // -----------------------------------------------------------------------------
@@ -361,16 +373,22 @@ QVector<int64_t> QFilterParametersReader::readArray(const QString name, QVector<
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int count = m_Prefs->beginReadArray(name);
-  QVector<int64_t> selections(count, 0);
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    selections[i] = m_Prefs->value(name, 0).toLongLong(&ok);
-    if (!ok) { selections[i] = 0; }
+    return value;
   }
-  m_Prefs->endArray();
-  return selections;
+
+  QVector<int64_t> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split(' ');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).toLongLong(&ok));
+    if (false == ok) { return value; }
+  }
+  return values;
 }
 
 // -----------------------------------------------------------------------------
@@ -380,16 +398,22 @@ QVector<uint8_t> QFilterParametersReader::readArray(const QString name, QVector<
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int count = m_Prefs->beginReadArray(name);
-  QVector<uint8_t> selections(count, 0);
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    selections[i] = m_Prefs->value(name, 0).toUInt(&ok);
-    if (!ok) { selections[i] = 0; }
+    return value;
   }
-  m_Prefs->endArray();
-  return selections;
+
+  QVector<uint8_t> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split(' ');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).toUInt(&ok));
+    if (false == ok) { return value; }
+  }
+  return values;
 }
 
 // -----------------------------------------------------------------------------
@@ -399,16 +423,22 @@ QVector<uint16_t> QFilterParametersReader::readArray(const QString name, QVector
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int count = m_Prefs->beginReadArray(name);
-  QVector<uint16_t> selections(count, 0);
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    selections[i] = m_Prefs->value(name, 0).toUInt(&ok);
-    if (!ok) { selections[i] = 0; }
+    return value;
   }
-  m_Prefs->endArray();
-  return selections;
+
+  QVector<uint16_t> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split(' ');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).toUShort(&ok));
+    if (false == ok) { return value; }
+  }
+  return values;
 }
 
 // -----------------------------------------------------------------------------
@@ -418,16 +448,22 @@ QVector<uint32_t> QFilterParametersReader::readArray(const QString name, QVector
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int count = m_Prefs->beginReadArray(name);
-  QVector<uint32_t> selections(count, 0);
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    selections[i] = m_Prefs->value(name, 0).toUInt(&ok);
-    if (!ok) { selections[i] = 0; }
+    return value;
   }
-  m_Prefs->endArray();
-  return selections;
+
+  QVector<uint32_t> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split(' ');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).toUInt(&ok));
+    if (false == ok) { return value; }
+  }
+  return values;
 }
 
 // -----------------------------------------------------------------------------
@@ -437,16 +473,22 @@ QVector<uint64_t> QFilterParametersReader::readArray(const QString name, QVector
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int count = m_Prefs->beginReadArray(name);
-  QVector<uint64_t> selections(count, 0);
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    selections[i] = m_Prefs->value(name, 0).toLongLong(&ok);
-    if (!ok) { selections[i] = 0; }
+    return value;
   }
-  m_Prefs->endArray();
-  return selections;
+
+  QVector<uint64_t> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split(' ');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).toULongLong(&ok));
+    if (false == ok) { return value; }
+  }
+  return values;
 }
 
 // -----------------------------------------------------------------------------
@@ -456,16 +498,22 @@ QVector<float> QFilterParametersReader::readArray(const QString name, QVector<fl
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int count = m_Prefs->beginReadArray(name);
-  QVector<float> selections(count, 0);
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    selections[i] = m_Prefs->value(name, 0.0f).toFloat(&ok);
-    if (!ok) { selections[i] = 0.0f; }
+    return value;
   }
-  m_Prefs->endArray();
-  return selections;
+
+  QVector<float> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split(' ');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).toFloat(&ok));
+    if (false == ok) { return value; }
+  }
+  return values;
 }
 
 // -----------------------------------------------------------------------------
@@ -475,16 +523,22 @@ QVector<double> QFilterParametersReader::readArray(const QString name, QVector<d
 {
   BOOST_ASSERT(m_Prefs != NULL);
   bool ok = false;
-  int count = m_Prefs->beginReadArray(name);
-  QVector<double> selections(count, 0);
-  for(int i = 0; i < count; ++i)
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if(data.size() == 0)
   {
-    m_Prefs->setArrayIndex(i);
-    selections[i] = m_Prefs->value(name, 0.0).toDouble(&ok);
-    if (!ok) { selections[i] = 0.0; }
+    return value;
   }
-  m_Prefs->endArray();
-  return selections;
+
+  QVector<double> values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split(' ');
+  for(qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).toDouble(&ok));
+    if (false == ok) { return value; }
+  }
+  return values;
 }
 
 // -----------------------------------------------------------------------------
@@ -493,9 +547,10 @@ QVector<double> QFilterParametersReader::readArray(const QString name, QVector<d
 IntVec3Widget_t QFilterParametersReader::readIntVec3(const QString name, IntVec3Widget_t defaultValue)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  QVariant var = m_Prefs->value(name);
+  //QVariant var = m_Prefs->value(name);
   bool ok = false;
-  IntVec3Widget_t v3 = var.value<IntVec3Widget_t>();
+  IntVec3Widget_t v3;// = var.value<IntVec3Widget_t>();
+
   m_Prefs->beginReadArray(name);
   m_Prefs->setArrayIndex(0);
   v3.x = m_Prefs->value("x", v3.x).toInt(&ok);
@@ -555,7 +610,7 @@ ComparisonInput_t QFilterParametersReader::readComparisonInput(const QString nam
   v.arrayName = m_Prefs->value("ArrayName").toString();
   v.compOperator = m_Prefs->value("CompOperator").toInt(&ok);
   if(!ok) { m_Prefs->endArray(); return defaultValue; }
-  v.compValue = m_Prefs->value("CompValue").toFloat(&ok);
+  v.compValue = m_Prefs->value("CompValue").toDouble(&ok);
   if(!ok) { m_Prefs->endArray(); return defaultValue; }
 
   m_Prefs->endArray();
@@ -568,7 +623,6 @@ ComparisonInput_t QFilterParametersReader::readComparisonInput(const QString nam
 QVector<ComparisonInput_t> QFilterParametersReader::readComparisonInputs(const QString name, QVector<ComparisonInput_t> defValues)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  QByteArray ba = name.toAscii();
   QVector<ComparisonInput_t> comparisons;
   int count = m_Prefs->beginReadArray(name);
   bool ok = false;
@@ -577,12 +631,11 @@ QVector<ComparisonInput_t> QFilterParametersReader::readComparisonInputs(const Q
   v.compValue = 0.0;
   for(int i = 0; i < count; i++)
   {
-
     m_Prefs->setArrayIndex(i);
     v.arrayName = m_Prefs->value("ArrayName").toString();
     v.compOperator = m_Prefs->value("CompOperator").toInt(&ok);
     if(!ok) { continue; }
-    v.compValue = m_Prefs->value("CompValue").toFloat(&ok);
+    v.compValue = m_Prefs->value("CompValue").toDouble(&ok);
     if(!ok) { continue; }
     comparisons.push_back(v);
   }
@@ -596,20 +649,15 @@ QVector<ComparisonInput_t> QFilterParametersReader::readComparisonInputs(const Q
 AxisAngleInput_t QFilterParametersReader::readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  int count = m_Prefs->beginReadArray(name);
 
-  QVector<float> angles(count);
-  QVector<float> axis(count * 3);
   bool ok = false;
-  for(int i = 0; i < count; ++i)
-  {
-    m_Prefs->setArrayIndex(i);
-    angles[i] = m_Prefs->value("Angle").toFloat(&ok);
-    axis[i * 3 + 0] = m_Prefs->value("H").toFloat(&ok);
-    axis[i * 3 + 1] = m_Prefs->value("K").toFloat(&ok);
-    axis[i * 3 + 2] = m_Prefs->value("L").toFloat(&ok);
-  }
-  m_Prefs->endArray();
+
+  m_Prefs->setArrayIndex(vectorPos);
+  v.angle = m_Prefs->value("Angle").toFloat(&ok);
+  v.h= m_Prefs->value("H").toFloat(&ok);
+  v.k = m_Prefs->value("K").toFloat(&ok);
+  v.l = m_Prefs->value("L").toFloat(&ok);
+
   return v;
 }
 
@@ -619,18 +667,28 @@ AxisAngleInput_t QFilterParametersReader::readAxisAngle(const QString name, Axis
 QVector<AxisAngleInput_t> QFilterParametersReader::readAxisAngles(const QString name, QVector<AxisAngleInput_t> v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  QVector<AxisAngleInput_t> axisAngleInputsVector;
-  AxisAngleInput_t axisAngleDummyInput;
-  axisAngleDummyInput.angle = 0.0f;
-  axisAngleDummyInput.h = 0.0f;
-  axisAngleDummyInput.k = 0.0f;
-  axisAngleDummyInput.l = 0.0f;
-  int vectorSize = static_cast<int>( readValue(name, 0) );
-  for(int i = 0; i < vectorSize; i++)
+
+  AxisAngleInput_t defValue;
+  defValue.angle = 0.0f;
+  defValue.h = 0.0f;
+  defValue.k = 0.0f;
+  defValue.l = 0.0f;
+
+  int count = m_Prefs->beginReadArray(name);
+  QVector<AxisAngleInput_t> values(count);
+  for(int i = 0; i < count; i++)
   {
-    axisAngleInputsVector.push_back( readAxisAngle(name, axisAngleDummyInput, i) );
+    if (i < v.size()) { defValue = v[i]; }
+    else {  defValue.angle = 0.0f;
+      defValue.h = 0.0f;
+      defValue.k = 0.0f;
+      defValue.l = 0.0f;
+    }
+    values[i] = readAxisAngle(name, defValue, i);
   }
-  return axisAngleInputsVector;
+  m_Prefs->endArray();
+
+  return values;
 }
 
 // -----------------------------------------------------------------------------

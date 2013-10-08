@@ -46,7 +46,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5FilterParametersReader::H5FilterParametersReader()
+H5FilterParametersReader::H5FilterParametersReader() :
+AbstractFilterParametersReader(),
+m_PipelineGroupId(-1)
 {
 
 }
@@ -58,19 +60,41 @@ H5FilterParametersReader::~H5FilterParametersReader()
 {
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+H5FilterParametersReader::Pointer H5FilterParametersReader::OpenDREAM3DFileForReadingPipeline(QString filePath, hid_t &fid)
+{
+  fid = -1;
+  fid = QH5Utilities::openFile(filePath);
+  if(fid < 0) { return H5FilterParametersReader::NullPointer(); }
+
+  H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
+  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  if (pipelineGroupId < 0)
+  {
+    H5Fclose(fid);
+    fid = -1;
+    return H5FilterParametersReader::NullPointer();
+  }
+  reader->setPipelineGroupId(pipelineGroupId);
+  return reader;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int H5FilterParametersReader::openFilterGroup(AbstractFilter* filter, int index)
 {
   int err = 0;
-  if (m_GroupId <= 0)
+  if (m_PipelineGroupId <= 0)
   {
     return -1;
   }
 
   QString name = QString::number(index);
-  m_CurrentGroupId = H5Gopen(m_GroupId, name.toLatin1().data(), H5P_DEFAULT);
+  m_CurrentGroupId = H5Gopen(m_PipelineGroupId, name.toLatin1().data(), H5P_DEFAULT);
   return err;
 }
 

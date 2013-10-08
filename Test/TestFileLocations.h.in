@@ -139,8 +139,11 @@ namespace UnitTest
   {
     const QString TestDir("@TEST_TEMP_DIR@/FilterParametersRWTest");
     const QString ArraySelectionFile("@TEST_TEMP_DIR@/FilterParametersRWTest/ArraySelectionFile.h5");
+    const QString ArraySelectionFileQSettings("@TEST_TEMP_DIR@/FilterParametersRWTest/ArraySelectionFile.ini");
     const QString GenericExampleFile("@TEST_TEMP_DIR@/FilterParametersRWTest/GenericExampleFile.h5");
+    const QString GenericExampleFileQSettings("@TEST_TEMP_DIR@/FilterParametersRWTest/GenericExampleFile.ini");
     const QString ThresholdFile("@TEST_TEMP_DIR@/FilterParametersRWTest/ThresholdFile.h5");
+    const QString ThresholdFileQSettings("@TEST_TEMP_DIR@/FilterParametersRWTest/ThresholdFile.ini");
     const QString TestFile_1("@TEST_TEMP_DIR@/FilterParametersRWTest/TestFile_1.h5");
     const QString TestFile_2("@TEST_TEMP_DIR@/FilterParametersRWTest/TestFile_2.h5");
     const QString TestFile_3("@TEST_TEMP_DIR@/FilterParametersRWTest/TestFile_3.h5");

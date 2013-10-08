@@ -59,7 +59,18 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
 
     virtual ~H5FilterParametersReader();
 
-    DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId)
+    /**
+     * @brief OpenDREAM3DFile This will open the HDF5 based DREAM3D file and open the proper HDF5 internal
+     * group that is associated with the pipeline storage
+     * @param filepath
+     * @param fid The HDF5 file Id that represents the open HDF5 file
+     * @return Return a pointer to a newly instantiated instance of this class. A Null Pointer will be returned if
+     * the file can not be opened or the group is missing.
+     */
+    static Pointer OpenDREAM3DFileForReadingPipeline(QString filePath, hid_t &fid);
+
+
+    DREAM3D_INSTANCE_PROPERTY(hid_t, PipelineGroupId)
 
     virtual int openFilterGroup(AbstractFilter* filter, int index);
     virtual int closeFilterGroup();

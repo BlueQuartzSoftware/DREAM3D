@@ -18,13 +18,14 @@ set(DREAM3DLib_FilterParameters_HDRS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/H5FilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/QFilterParametersReader.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/QFilterParametersWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/QFilterParamtersOperators.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/TextFilterParametersWriter.h
 )
 
 set(DREAM3DLib_FilterParameters_SRCS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AbstractFilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AbstractFilterParametersWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/FilterParameters/H5FilterParametersReader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/H5FilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/H5FilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/QFilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/QFilterParametersWriter.cpp

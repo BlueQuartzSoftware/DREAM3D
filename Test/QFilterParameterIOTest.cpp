@@ -84,7 +84,7 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
   QSettings* prefs = paramsReader->getPrefs();
   prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   bool ok = false;
-  int filterCount = prefs->value("Number_Filters").toInt(&ok);
+  int filterCount = prefs->value(DREAM3D::Settings::NumFilters).toInt(&ok);
   prefs->endGroup();
   if (false == ok) {filterCount = 0;}
 
@@ -94,7 +94,7 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
 
     // Open the group to get the name of the filter then close again.
     prefs->beginGroup(gName);
-    QString filterName = prefs->value("Filter_Name", "").toString();
+    QString filterName = prefs->value(DREAM3D::Settings::FilterName, "").toString();
     prefs->endGroup();
   //  qDebug() << filterName;
 

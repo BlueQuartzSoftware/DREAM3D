@@ -263,17 +263,22 @@ void GenerateFaceMisorientationColoring::preflight()
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-383);
+    QString ss = QObject::tr("The Surface Data Container with name '%1'' was not found in the Data Container Array.").arg(getSurfaceDataContainerName());
+    setErrorCondition(-10000);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
+
 
   dataCheckSurfaceMesh(true, 1, 1, 1);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
-    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
-    setErrorCondition(-383);
+    QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
+    setErrorCondition(-10000);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   dataCheckVoxel(true, 1, 1, 1);

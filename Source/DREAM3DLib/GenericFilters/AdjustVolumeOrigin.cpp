@@ -200,9 +200,12 @@ void AdjustVolumeOrigin::dataCheck(bool preflight, size_t voxels, size_t fields,
 // -----------------------------------------------------------------------------
 void AdjustVolumeOrigin::preflight()
 {
+  VolumeDataContainer* m = NULL;
+  SurfaceDataContainer* sm  = NULL;
+
   if (m_ApplyToVoxelVolume == true)
   {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
     if(NULL == m)
     {
       setErrorCondition(-383);
@@ -211,15 +214,16 @@ void AdjustVolumeOrigin::preflight()
   }
   if (m_ApplyToSurfaceMesh == true)
   {
-    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
     if(NULL == sm)
     {
       setErrorCondition(-383);
       addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
     }
   }
-
-  dataCheck(true, 1, 1, 1);
+  if(NULL != sm && NULL != m) {
+    dataCheck(true, 1, 1, 1);
+  }
 }
 
 

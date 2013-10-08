@@ -508,8 +508,7 @@ int DataContainerWriter::writePipeline()
     currentFilter = currentFilter->getNextFilter();
   }
 
-
-
+  int err = QH5Lite::writeScalarAttribute(m_FileId, DREAM3D::HDF5::PipelineGroupName, DREAM3D::Settings::NumFilters, index);
   H5Gclose(pipelineGroupId);
   return 1;
 }
