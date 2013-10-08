@@ -109,7 +109,13 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-
+  if(NULL == sm)
+  {
+    QString ss = QObject::tr("The Surface Data Container with name '%1'' was not found in the Data Container Array.").arg(getSurfaceDataContainerName());
+    setErrorCondition(-1001);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
   // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {
@@ -380,14 +386,14 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     m_SurfaceMeshUniqueEdges[index * 2 + 1] = edge.v1;
 
     ManagedArrayOfArrays<int>::Data_t& entry = *(edgeTriangleArray->getPointer(index));
-    FaceArray::UniqueFaceIds_t& triangles = edgeTriangleSet[*u64Edge];
+    FaceArray::UniqueFaceIds_t& tris = edgeTriangleSet[*u64Edge];
     // Allocate enough memory to hold the list of triangles
-    entry.count = triangles.size();
+    entry.count = tris.size();
     if (entry.count > 0)
     {
       entry.data = (int*)(malloc(sizeof(int) * entry.count));
-      int index = 0;
-      for(FaceArray::UniqueFaceIds_t::iterator tIter = triangles.begin(); tIter != triangles.end(); ++tIter)
+      index = 0;
+      for(FaceArray::UniqueFaceIds_t::iterator tIter = tris.begin(); tIter != tris.end(); ++tIter)
       {
         entry.data[index++] = *tIter; // Copy the value from the triangle Ids set into the ManagedPointer
       }

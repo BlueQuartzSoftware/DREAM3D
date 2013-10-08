@@ -1,4 +1,4 @@
-Perform MTR Bridge {#performmtrbridge}
+Bridge ParentIds Statistics To GrainIds {#bridgeparentidsstatisticstograinids}
 ======
 
 ## Group (Subgroup) ##
@@ -31,7 +31,7 @@ Voxel
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Field | Active | Boolean value specifying if the **Field** is still in the sample (1 if the **Field** is in the sample and 0 if it is not). | At the end of the filter, all **Fields** will be "Active" as the "Inactive" **Fields** will have been removed.  |  
-| Field | MTRgKAM | Float of the microtexture region "grain"-kernel average c-axis misalignment. | Only calculated if "Use Non-Contiguous Neighbors" is UNCHECKED. |  
+| Field | Avg | Float of the microtexture region "grain"-kernel average c-axis misalignment. | Only calculated if "Use Non-Contiguous Neighbors" is UNCHECKED. |  
 | Cell | MTRdensity | Float of the voxel fraction of "flipped" microtexture against the region searched in Find Neighborhoods filter. | To convert to a **Field**, use Create Field Array From Cell Array Filter. |  
 | Field | ParentIds | List of grouped microtexture region **Fields**. |  |
 | Cell | ParentIds | List of grouped microtexture region **Cells**.  |  |  

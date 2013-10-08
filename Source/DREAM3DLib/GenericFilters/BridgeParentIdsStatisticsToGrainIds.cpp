@@ -1,4 +1,4 @@
-#include "PerformMTRBridge.h"
+#include "BridgeParentIdsStatisticsToGrainIds.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
@@ -25,17 +25,16 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PerformMTRBridge::PerformMTRBridge() :
+BridgeParentIdsStatisticsToGrainIds::BridgeParentIdsStatisticsToGrainIds() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
-  m_MTRgKAMArrayName(DREAM3D::FieldData::MTRgKAM),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GrainIds(NULL),
   m_CellParentIds(NULL),
   m_FieldParentIds(NULL),
-  m_MTRgKAM(NULL),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -46,21 +45,21 @@ PerformMTRBridge::PerformMTRBridge() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PerformMTRBridge::~PerformMTRBridge()
+BridgeParentIdsStatisticsToGrainIds::~BridgeParentIdsStatisticsToGrainIds()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::setupFilterParameters()
+void BridgeParentIdsStatisticsToGrainIds::setupFilterParameters()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void BridgeParentIdsStatisticsToGrainIds::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -72,7 +71,7 @@ void PerformMTRBridge::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PerformMTRBridge::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int BridgeParentIdsStatisticsToGrainIds::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->closeFilterGroup();
@@ -82,32 +81,30 @@ int PerformMTRBridge::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void BridgeParentIdsStatisticsToGrainIds::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles, bool afterLink)
 {
   setErrorCondition(0);
-  std::stringstream ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, -304, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, -302, int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, MTRgKAM, -303, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldParentIds, -302, int32_t, Int32ArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::preflight()
+void BridgeParentIdsStatisticsToGrainIds::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck(true, 1, 1, 1, false);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -117,7 +114,7 @@ void PerformMTRBridge::preflight()
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
   rename_cell_array->setObservers(this->getObservers());
-  rename_cell_array->setVolumeDataContainer(m);
+  rename_cell_array->setDataContainerArray(getDataContainerArray());
   rename_cell_array->setMessagePrefix(getMessagePrefix());
   rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
   rename_cell_array->setNewCellArrayName(m_GrainIdsArrayName);
@@ -132,7 +129,7 @@ void PerformMTRBridge::preflight()
 
   LinkFieldMapToCellArray::Pointer link_field_map_to_cell_array = LinkFieldMapToCellArray::New();
   link_field_map_to_cell_array->setObservers(this->getObservers());
-  link_field_map_to_cell_array->setVolumeDataContainer(m);
+  link_field_map_to_cell_array->setDataContainerArray(getDataContainerArray());
   link_field_map_to_cell_array->setMessagePrefix(getMessagePrefix());
   link_field_map_to_cell_array->setSelectedCellDataArrayName(m_GrainIdsArrayName);
   link_field_map_to_cell_array->preflight();
@@ -148,9 +145,9 @@ void PerformMTRBridge::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::execute()
+void BridgeParentIdsStatisticsToGrainIds::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -159,7 +156,7 @@ void PerformMTRBridge::execute()
   }
 
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples(), true);
   if (getErrorCondition() < 0)
   {
     return;
@@ -167,7 +164,7 @@ void PerformMTRBridge::execute()
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
   rename_cell_array->setObservers(this->getObservers());
-  rename_cell_array->setVolumeDataContainer(m);
+  rename_cell_array->setDataContainerArray(getDataContainerArray());
   rename_cell_array->setMessagePrefix(getMessagePrefix());
   rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
   rename_cell_array->setNewCellArrayName(m_GrainIdsArrayName);
@@ -182,7 +179,7 @@ void PerformMTRBridge::execute()
 
   LinkFieldMapToCellArray::Pointer link_field_map_to_cell_array = LinkFieldMapToCellArray::New();
   link_field_map_to_cell_array->setObservers(this->getObservers());
-  link_field_map_to_cell_array->setVolumeDataContainer(m);
+  link_field_map_to_cell_array->setDataContainerArray(getDataContainerArray());
   link_field_map_to_cell_array->setMessagePrefix(getMessagePrefix());
   link_field_map_to_cell_array->setSelectedCellDataArrayName(m_GrainIdsArrayName);
   link_field_map_to_cell_array->preflight();
@@ -195,7 +192,7 @@ void PerformMTRBridge::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("PerformMTRBridge Completed");
+  notifyStatusMessage("BridgeParentIdsStatisticsToGrainIds Completed");
 }
 
 // -----------------------------------------------------------------------------

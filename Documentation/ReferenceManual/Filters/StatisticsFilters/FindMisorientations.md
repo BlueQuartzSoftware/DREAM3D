@@ -25,7 +25,8 @@ Voxel
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | MisorientationLists | List of the misorientation angles with the contiguous neighboring **Fields** for a given **Field** |  |
+| Field | MisorientationLists | List of the misorientation angles with the contiguous neighboring **Fields** for a given **Field** |  |  
+| Field | avgMisorientation | Number weighted average of neighbor misorientations.
 
 ## Authors ##
 

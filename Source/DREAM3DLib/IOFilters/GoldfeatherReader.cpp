@@ -129,7 +129,7 @@ int GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   QFileInfo fi(getInputFile());

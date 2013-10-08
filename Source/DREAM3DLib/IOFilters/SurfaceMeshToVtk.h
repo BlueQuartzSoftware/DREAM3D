@@ -59,7 +59,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToVtk, AbstractFilter)
 
     virtual ~SurfaceMeshToVtk();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     // DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 

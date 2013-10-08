@@ -476,7 +476,7 @@ namespace MFE
       type alpha = inner1 / inner(Ap, Ap);
       x += alpha * p;
       r -= alpha * Ap;
-      type rnorm = norm(r);
+      rnorm = norm(r);
       if(rnorm / bnorm < tolerance) { return iteration; }
       Ar = A * r;
       type beta = inner(r, Ar) / inner1;

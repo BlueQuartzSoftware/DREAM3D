@@ -24,6 +24,7 @@ set(_PublicFilters
   FindBoundaryStrengths
   FindEuclideanDistMap
   FindFieldClustering
+  FindFieldNeighborCAxisMisalignments
   FindGBCD
   FindGrainReferenceCAxisMisorientations
   FindGrainReferenceMisorientations

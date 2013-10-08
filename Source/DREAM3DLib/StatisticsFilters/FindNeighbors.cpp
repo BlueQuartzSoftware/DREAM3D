@@ -319,10 +319,10 @@ void FindNeighbors::execute()
     }
 
 
-    QMap<int, int>::Iterator iter = neighToCount.find(0);
-    neighToCount.erase(iter);
-    iter = neighToCount.find(-1);
-    neighToCount.erase(iter);
+    QMap<int, int>::Iterator neighiter = neighToCount.find(0);
+    neighToCount.erase(neighiter);
+    neighiter = neighToCount.find(-1);
+    neighToCount.erase(neighiter);
     //Resize the grains neighbor list to zero
     neighborlist[i].resize(0);
     neighborsurfacearealist[i].resize(0);

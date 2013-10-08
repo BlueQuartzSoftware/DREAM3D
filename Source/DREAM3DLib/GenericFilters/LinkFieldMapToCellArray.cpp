@@ -105,7 +105,12 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
+  if(NULL == m)
+  {
+    setErrorCondition(-10000);
+    addErrorMessage(getHumanLabel(), "Volume Data Container is NULL", getErrorCondition());
+    return;
+  }
   IDataArray::Pointer data = m->getCellData(m_SelectedCellDataArrayName);
   if (NULL == data.get())
   {

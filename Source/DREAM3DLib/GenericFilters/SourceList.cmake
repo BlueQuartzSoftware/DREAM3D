@@ -19,6 +19,7 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic
 
 set(_PublicFilters
   AdjustVolumeOrigin
+  BridgeParentIdsStatisticsToGrainIds
   ConvertData
   CopyFieldArrayToCellArray
   CreateFieldArrayFromCellArray

@@ -267,7 +267,6 @@ QVector<int16_t> H5FilterParametersReader::readArray(const QString name, QVector
   int vectorSize = 0;
   int16_t scalar = 0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -286,7 +285,6 @@ QVector<int32_t> H5FilterParametersReader::readArray(const QString name, QVector
   int vectorSize = 0;
   int32_t scalar = 0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);

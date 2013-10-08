@@ -241,11 +241,9 @@ void DataContainerWriter::preflight()
 // -----------------------------------------------------------------------------
 void DataContainerWriter::execute()
 {
-
   setErrorCondition(0);
   dataCheck(false, 1, 1, 1);
 
-  QString ss;
   int err = 0;
 
   // Make sure any directory path is also available as the user may have just typed
@@ -280,8 +278,8 @@ void DataContainerWriter::execute()
   QTextStream out(&xdmfFile);
   if (m_WriteXdmfFile == true)
   {
-    QFileInfo fi(m_OutputFile);
-    QString name = fi.baseName();
+    QFileInfo ofFi(m_OutputFile);
+    QString name = ofFi.baseName();
     if(parentPath.isEmpty() == true)
     {
       name = name + ".xdmf";
@@ -355,7 +353,7 @@ void DataContainerWriter::execute()
         volWriter->setWriteXdmfFile(getWriteXdmfFile());
         volWriter->setXdmfOStream(&out);
 
-        ss = QObject::tr("%1 |--> Writing Volume Data ").arg(getMessagePrefix());
+        QString ss = QObject::tr("%1 |--> Writing Volume Data ").arg(getMessagePrefix());
         volWriter->setMessagePrefix(ss);
         volWriter->execute();
         if (volWriter->getErrorCondition() < 0)
@@ -375,7 +373,7 @@ void DataContainerWriter::execute()
         surfWriter->setWriteXdmfFile(getWriteXdmfFile());
         surfWriter->setXdmfOStream(&out);
 
-        ss = QObject::tr("%1 |--> Writing Surface Data ").arg(getMessagePrefix());
+        QString ss = QObject::tr("%1 |--> Writing Surface Data ").arg(getMessagePrefix());
         surfWriter->setMessagePrefix(ss);
         surfWriter->execute();
         if (surfWriter->getErrorCondition() < 0)
@@ -395,7 +393,7 @@ void DataContainerWriter::execute()
         edgeWriter->setWriteXdmfFile(getWriteXdmfFile());
         edgeWriter->setXdmfOStream(&out);
 
-        ss = QObject::tr("%1 |--> Writing Edge Data ").arg(getMessagePrefix());
+        QString ss = QObject::tr("%1 |--> Writing Edge Data ").arg(getMessagePrefix());
         edgeWriter->setMessagePrefix(ss);
         edgeWriter->execute();
         if (edgeWriter->getErrorCondition() < 0)
@@ -415,7 +413,7 @@ void DataContainerWriter::execute()
         vertWriter->setWriteXdmfFile(getWriteXdmfFile());
         vertWriter->setXdmfOStream(&out);
 
-        ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
+        QString ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
         vertWriter->setMessagePrefix(ss);
         vertWriter->execute();
         if (vertWriter->getErrorCondition() < 0)

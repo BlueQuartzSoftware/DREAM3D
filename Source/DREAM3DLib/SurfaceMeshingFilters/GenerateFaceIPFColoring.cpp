@@ -198,8 +198,8 @@ class CalculateFaceIPFColorsImpl
 GenerateFaceIPFColoring::GenerateFaceIPFColoring() :
   SurfaceMeshFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceIPFColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceIPFColors),
   m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),

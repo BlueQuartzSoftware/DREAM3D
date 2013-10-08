@@ -114,10 +114,14 @@ int RenameFieldArray::writeFilterParameters(AbstractFilterParametersWriter* writ
 void RenameFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
+  if(NULL == m)
+  {
+    setErrorCondition(-10000);
+    addErrorMessage(getHumanLabel(), "Volume Data Container is NULL", getErrorCondition());
+    return;
+  }
   if(m_SelectedFieldArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
@@ -165,8 +169,6 @@ void RenameFieldArray::execute()
     return;
   }
   setErrorCondition(0);
-  QString ss;
-
   bool check = m->renameCellFieldData(m_SelectedFieldArrayName, m_NewFieldArrayName);
 
   if(check == false)

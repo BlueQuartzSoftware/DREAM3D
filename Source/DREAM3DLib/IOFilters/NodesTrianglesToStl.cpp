@@ -375,9 +375,9 @@ void NodesTrianglesToStl::execute()
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices
-        int t = nId1;
+        int temp = nId1;
         nId1 = nId2;
-        nId2 = t;
+        nId2 = temp;
       }
       else
       {

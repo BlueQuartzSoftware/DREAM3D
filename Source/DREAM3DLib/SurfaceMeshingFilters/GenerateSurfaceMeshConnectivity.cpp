@@ -136,7 +136,13 @@ void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, s
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-
+  if(NULL == sm)
+  {
+    QString ss = QObject::tr("The Surface Data Container with name '%1'' was not found in the Data Container Array.").arg(getSurfaceDataContainerName());
+    setErrorCondition(-1001);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
   // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {

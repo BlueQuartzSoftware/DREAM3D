@@ -259,9 +259,9 @@ class NeighborList : public IDataArray
       VectorType* vec = sharedVec.get();
       size_t size = vec->size();
       out << size;
-      for(size_t i = 0; i < size; i++)
+      for(size_t j = 0; j < size; j++)
       {
-        out << delimiter << vec->at(i);
+        out << delimiter << vec->at(j);
       }
     }
 

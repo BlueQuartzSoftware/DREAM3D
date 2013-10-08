@@ -204,7 +204,7 @@ class CellArray
 
       size_t nCells = m_Array->getNumberOfTuples();
 
-      Int32DynamicListArray::Pointer m_CellNeighbors = Int32DynamicListArray::New();
+      m_CellNeighbors = Int32DynamicListArray::New();
 
       std::vector<uint16_t> linkCount(nCells, 0);
 

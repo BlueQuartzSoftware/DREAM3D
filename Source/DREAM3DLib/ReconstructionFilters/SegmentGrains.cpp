@@ -128,7 +128,7 @@ void SegmentGrains::preflight()
 void SegmentGrains::execute()
 {
   setErrorCondition(0);
-  QString ss;
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
@@ -203,7 +203,7 @@ void SegmentGrains::execute()
               {
                 size = voxelslist.size();
                 voxelslist.resize(size + initialVoxelsListSize);
-                for(qint32 i = size; i < voxelslist.size(); ++i) { voxelslist[i] = -1; }
+                for(qint32 j = size; j < voxelslist.size(); ++j) { voxelslist[j] = -1; }
               }
 
             }

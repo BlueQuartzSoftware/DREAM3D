@@ -74,8 +74,9 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
+    //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationListArrayName)
-
+    DREAM3D_INSTANCE_STRING_PROPERTY(avgMisorientationArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
@@ -112,6 +113,7 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     int32_t* m_FieldPhases;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_MisorientationList;
+    float* m_avgMisorientation;
 
     unsigned int* m_CrystalStructures;
 
