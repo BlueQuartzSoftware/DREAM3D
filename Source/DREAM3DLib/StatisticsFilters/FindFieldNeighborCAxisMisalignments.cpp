@@ -201,7 +201,7 @@ void FindFieldNeighborCAxisMisalignments::execute()
         //dividing by the magnitudes (they would be 1)
         MatrixMath::Normalize3x1(c2);
 
-        w = MatrixMath::CosThetaBetweenVectors(c1, c2);
+        w = GeometryMath::CosThetaBetweenVectors(c1, c2);
         DREAM3DMath::boundF(w, -1, 1);
         w = acosf(w);
         misalignmentlists[i][j] = w * DREAM3D::Constants::k_180OverPi;

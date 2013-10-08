@@ -156,7 +156,7 @@ void FindBasalLoadingFactor::execute()
     //normalize so that the magnitude is 1
     MatrixMath::Normalize3x1(c1);
     if(c1[2] < 0) { MatrixMath::Multiply3x1withConstant(c1, -1); }
-    w = MatrixMath::CosThetaBetweenVectors(c1, sampleLoading);
+    w = GeometryMath::CosThetaBetweenVectors(c1, sampleLoading);
     w = acos(w);
     w *= DREAM3D::Constants::k_180OverPi;
     m_BasalLoadingFactor[i] = w;

@@ -12,12 +12,14 @@
 
 
 set(DREAM3DLib_Math_HDRS
+  ${DREAM3DLib_SOURCE_DIR}/Math/GeometryMath.h
   ${DREAM3DLib_SOURCE_DIR}/Math/OrientationMath.h
   ${DREAM3DLib_SOURCE_DIR}/Math/MatrixMath.h
   ${DREAM3DLib_SOURCE_DIR}/Math/QuaternionMath.hpp
   ${DREAM3DLib_SOURCE_DIR}/Math/DREAM3DMath.h
 )
 set(DREAM3DLib_Math_SRCS
+  ${DREAM3DLib_SOURCE_DIR}/Math/GeometryMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Math/OrientationMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Math/MatrixMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Math/DREAM3DMath.cpp  

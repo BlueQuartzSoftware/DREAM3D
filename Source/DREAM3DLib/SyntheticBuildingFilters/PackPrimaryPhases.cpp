@@ -875,7 +875,7 @@ void PackPrimaryPhases::execute()
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
     currentMillis = QDateTime::currentMSecsSinceEpoch();
-    if (currentMillis - millis > 1000)
+    if (currentMillis - millis > 5000)
     {
 
       QString ss = QObject::tr("Swapping/Moving/Adding/Removing Grains Iteration %1/%2").arg(iteration).arg(totalAdjustments);
@@ -2015,6 +2015,7 @@ void PackPrimaryPhases::assign_gaps_only()
   int current = 0;
   int most = 0;
   int count = 1;
+  int fixedCount = 1;
   int counter = 0;
   int neighpoint;
   int good;
@@ -2045,6 +2046,7 @@ void PackPrimaryPhases::assign_gaps_only()
   {
     counter++;
     count = 0;
+    fixedCount = 0;
     int zStride, yStride;
     for(int i = 0; i < zPoints; i++)
     {
@@ -2058,13 +2060,6 @@ void PackPrimaryPhases::assign_gaps_only()
           if (grainname < 0)
           {
             count++;
-            currentMillis = QDateTime::currentMSecsSinceEpoch();
-            if (currentMillis - millis > 1000)
-            {
-              QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
-              notifyStatusMessage(ss);
-              millis = QDateTime::currentMSecsSinceEpoch();
-            }
             current = 0;
             most = 0;
             for (int l = 0; l < 6; l++)
@@ -2120,9 +2115,10 @@ void PackPrimaryPhases::assign_gaps_only()
       {
         m_GrainIds[j] = m_GrainIds[neighbor];
         m_CellPhases[j] = m_FieldPhases[m_GrainIds[neighbor]];
+        fixedCount++;
       }
     }
-    if(counter == 1)
+    if(counter >= 1)
     {
       QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
       notifyStatusMessage(ss);

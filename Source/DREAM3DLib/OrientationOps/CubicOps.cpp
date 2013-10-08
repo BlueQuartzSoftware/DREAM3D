@@ -739,8 +739,8 @@ void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw1));
-    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl1));
+    directionComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor)
     {
@@ -772,8 +772,8 @@ void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
     MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
     MatrixMath::Normalize3x1(hkl2);
     MatrixMath::Normalize3x1(uvw2);
-    directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
-    planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
+    directionComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
+    planeComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
     schmidFactor2 = directionComponent2 * planeComponent2;
     if(schmidFactor2 > maxSchmidFactor)
     {
@@ -791,8 +791,8 @@ void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
   MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
   MatrixMath::Normalize3x1(hkl2);
   MatrixMath::Normalize3x1(uvw2);
-  planeMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(hkl1, hkl2));
-  directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
+  planeMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(hkl1, hkl2));
+  directionMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
   mPrime = planeMisalignment * directionMisalignment;
 }
 
@@ -829,8 +829,8 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw1));
-    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl1));
+    directionComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -848,10 +848,10 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
         MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
-        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
+        directionComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
+        planeComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
         //schmidFactor2 = directionComponent2 * planeComponent2;
-        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
+        directionMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
       F1 = schmidFactor1 * directionComponent1 * totalDirectionMisalignment;
@@ -898,8 +898,8 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw1));
-    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl1));
+    directionComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -918,11 +918,11 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
         MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
-        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
+        directionComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
+        planeComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
        // schmidFactor2 = directionComponent2 * planeComponent2;
-        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
-        planeMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(hkl1, hkl2));
+        directionMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
+        planeMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(hkl1, hkl2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
         totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
       }
@@ -968,8 +968,8 @@ void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw1));
-    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl1));
+    directionComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -987,10 +987,10 @@ void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
         MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
-        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
+        directionComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
+        planeComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
         //schmidFactor2 = directionComponent2 * planeComponent2;
-        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
+        directionMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
       F7 = directionComponent1 * directionComponent1 * totalDirectionMisalignment;

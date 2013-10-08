@@ -315,17 +315,17 @@ void RotateSampleRefFrame::preflight()
   MatrixMath::Multiply3x3with3x1(rotMat, zAxis, zAxisNew);
   float closestAxis;
   xResNew = xRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, xAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis) { xResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, xAxisNew)); }
-  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis) { xResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, xAxisNew)); }
+  closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, xAxisNew));
+  if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis) { xResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)); }
+  if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis) { xResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)); }
   yResNew = yRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, yAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis) { yResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, yAxisNew)); }
-  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis) { yResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, yAxisNew)); }
+  closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, yAxisNew));
+  if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis) { yResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)); }
+  if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis) { yResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)); }
   zResNew = zRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, zAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
-  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
+  closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, zAxisNew));
+  if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
+  if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
 
   xpNew = ((xMax - xMin) / xResNew) + 1;
   ypNew = ((yMax - yMin) / yResNew) + 1;
@@ -429,17 +429,17 @@ void RotateSampleRefFrame::execute()
   MatrixMath::Multiply3x3with3x1(rotMat, zAxis, zAxisNew);
   float closestAxis;
   xResNew = xRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, xAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis) { xResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, xAxisNew)); }
-  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis) { xResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, xAxisNew)); }
+  closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, xAxisNew));
+  if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis) { xResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)); }
+  if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis) { xResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)); }
   yResNew = yRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, yAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis) { yResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, yAxisNew)); }
-  if(fabs(MatrixMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis) { yResNew = zRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, yAxisNew)); }
+  closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, yAxisNew));
+  if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis) { yResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)); }
+  if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis) { yResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)); }
   zResNew = zRes;
-  closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(zAxis, zAxisNew));
-  if(fabs(MatrixMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
-  if(fabs(MatrixMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(MatrixMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
+  closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, zAxisNew));
+  if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
+  if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
 
   xpNew = ((xMax - xMin) / xResNew) + 1;
   ypNew = ((yMax - yMin) / yResNew) + 1;

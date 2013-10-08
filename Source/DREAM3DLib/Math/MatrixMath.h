@@ -79,6 +79,22 @@ class DREAM3DLib_EXPORT MatrixMath
     static void Multiply3x3with3x1(double g1[3][3], double g2[3], double outMat[3]);
 
     /**
+     * @brief Performs the Matrix Addition of g1 and g2 and puts the result into outMat. (Single Precision version)
+     * @param g1
+     * @param g2
+     * @param outMat
+     */
+    static void Add3x1s(const float g1[3], float g2[3], float outMat[3]);
+
+    /**
+     * @brief Performs the Matrix Subtraction of g2 from g1 and puts the result into outMat. (Single Precision version)
+     * @param g1
+     * @param g2
+     * @param outMat
+     */
+    static void Subtract3x1s(const float g1[3], float g2[3], float outMat[3]);
+
+    /**
      * @brief Multiplies each element of a 3x1 matrix by the value v.
      * @param g Input Matrix
      * @param v Value to mutliply each element by.
@@ -142,23 +158,6 @@ class DREAM3DLib_EXPORT MatrixMath
     static void Normalize3x1(double& i, double& j, double& k);
 //    static void NormalizeVector(float a[3]);
     static void Normalize3x1(float& i, float& j, float& k);
-
-    /**
-     * @brief Calculates the Cosine of the angle between 2 vectors. To get the actual angle the programmer should
-     * use the following form: float radians = acos(MatrixMath::CosThetaBetweenVectors(a, b));
-     * @param a 1x3 Vector
-     * @param b 1x3 Vector
-     * @return
-     */
-    static float CosThetaBetweenVectors(float a[3], float b[3]);
-
-    /**
-     * @brief Computes the angle in RADIANS between 2 vectors.
-     * @param a
-     * @param b
-     * @return
-     */
-    float AngleBetweenVectors(float a[3], float b[3]);
 
     /**
      * @brief The dot product of 2 vectors a & b

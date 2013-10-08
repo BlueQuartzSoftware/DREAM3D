@@ -559,7 +559,7 @@ void RunPipeline1()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   InitializeSyntheticVolume::Pointer isv = InitializeSyntheticVolume::New();
-  isv->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTest.dream3d");
+  isv->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTest.dream3d");
   isv->setXVoxels(128);
   isv->setYVoxels(128);
   isv->setZVoxels(128);
@@ -591,7 +591,7 @@ void RunPipeline1()
   pipeline->pushBack(gipfc);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut.dream3d");
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut.dream3d");
   dcw->setWriteVolumeData(true);
   dcw->setWriteSurfaceData(false);
   dcw->setWriteEdgeData(false);
@@ -612,12 +612,12 @@ void RunPipeline2()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut.dream3d");
-  dcr->setReadVertexData(false);
+  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut.dream3d");
   dcr->setReadVertexData(false);
   dcr->setReadEdgeData(false);
   dcr->setReadSurfaceData(false);
   dcr->setReadVolumeData(true);
+  dcr->setReadAllVertexArrays(true);
   dcr->setReadAllCellArrays(true);
   dcr->setReadAllCellFieldArrays(true);
   dcr->setReadAllCellEnsembleArrays(true);
@@ -627,7 +627,7 @@ void RunPipeline2()
   pipeline->pushBack(qsm);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut2.dream3d");
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut2.dream3d");
   dcw->setWriteVolumeData(true);
   dcw->setWriteSurfaceData(true);
   dcw->setWriteEdgeData(false);
@@ -648,7 +648,7 @@ void RunPipeline3()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut2.dream3d");
+  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut2.dream3d");
   dcr->setReadVertexData(false);
   dcr->setReadEdgeData(false);
   dcr->setReadSurfaceData(true);
@@ -671,7 +671,7 @@ void RunPipeline3()
   pipeline->pushBack(ls);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut3.dream3d");
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut3.dream3d");
   dcw->setWriteVolumeData(true);
   dcw->setWriteSurfaceData(true);
   dcw->setWriteEdgeData(false);
@@ -779,11 +779,11 @@ int main(int argc, char **argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-//  RunPipeline1();
-//  RunPipeline2();
+  RunPipeline1();
+  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();
-  RunPipeline5();
+//  RunPipeline5();
 //  RunPipeline6();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )

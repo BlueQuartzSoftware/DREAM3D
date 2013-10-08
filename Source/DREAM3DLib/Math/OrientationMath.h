@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
 
 
 // Here the order of multiplication is q1*q2 not q2*q1

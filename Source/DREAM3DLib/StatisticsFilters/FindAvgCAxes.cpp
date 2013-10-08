@@ -172,7 +172,7 @@ void FindAvgCAxes::execute()
       curCAxis[1] = m_AvgCAxes[index + 1] / counter[m_GrainIds[i]];
       curCAxis[2] = m_AvgCAxes[index + 2] / counter[m_GrainIds[i]];
       MatrixMath::Normalize3x1(curCAxis);
-      w = MatrixMath::CosThetaBetweenVectors(c1, curCAxis);
+      w = GeometryMath::CosThetaBetweenVectors(c1, curCAxis);
       if (w < 0) { MatrixMath::Multiply3x1withConstant(c1, -1); }
       counter[m_GrainIds[i]]++;
       m_AvgCAxes[index] += c1[0];

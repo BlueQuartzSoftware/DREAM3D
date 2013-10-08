@@ -236,7 +236,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
           AvgCAxis[2] = m_AvgCAxes[3 * m_GrainIds[point] + 2];
           //normalize so that the magnitude is 1
           MatrixMath::Normalize3x1(AvgCAxis);
-          w = MatrixMath::CosThetaBetweenVectors(c1, AvgCAxis);
+          w = GeometryMath::CosThetaBetweenVectors(c1, AvgCAxis);
           DREAM3DMath::boundF(w, -1, 1);
           w = acosf(w);
           w = w * DREAM3D::Constants::k_180OverPi;

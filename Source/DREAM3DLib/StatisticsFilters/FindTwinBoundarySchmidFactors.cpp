@@ -124,15 +124,15 @@ class CalculateTwinBoundarySchmidFactorsImpl
           {
             //   plane = 1;
             n[0] = 1, n[1] = 1, n[2] = 1;
-            cosPhi = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, n));
+            cosPhi = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
             b[0] = 1, b[1] = -1, b[2] = 0;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid1 = cosPhi * cosLambda;
             b[0] = -1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid2 = cosPhi * cosLambda;
             b[0] = 0, b[1] = -1, b[2] = 1;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid3 = cosPhi * cosLambda;
             m_TwinBoundarySchmidFactors[3 * i] = schmid1;
             m_TwinBoundarySchmidFactors[3 * i + 1] = schmid2;
@@ -142,15 +142,15 @@ class CalculateTwinBoundarySchmidFactorsImpl
           {
             //       plane = 2;
             n[0] = 1, n[1] = -1, n[2] = 1;
-            cosPhi = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, n));
+            cosPhi = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
             b[0] = 1, b[1] = 1, b[2] = 0;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid1 = cosPhi * cosLambda;
             b[0] = 0, b[1] = 1, b[2] = 1;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid2 = cosPhi * cosLambda;
             b[0] = -1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid3 = cosPhi * cosLambda;
             m_TwinBoundarySchmidFactors[3 * i] = schmid1;
             m_TwinBoundarySchmidFactors[3 * i + 1] = schmid2;
@@ -160,15 +160,15 @@ class CalculateTwinBoundarySchmidFactorsImpl
           {
             //       plane = 3;
             n[0] = -1, n[1] = 1, n[2] = 1;
-            cosPhi = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, n));
+            cosPhi = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
             b[0] = 1, b[1] = 1, b[2] = 0;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid1 = cosPhi * cosLambda;
             b[0] = 1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid2 = cosPhi * cosLambda;
             b[0] = 0, b[1] = -1, b[2] = 1;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid3 = cosPhi * cosLambda;
             m_TwinBoundarySchmidFactors[3 * i] = schmid1;
             m_TwinBoundarySchmidFactors[3 * i + 1] = schmid2;
@@ -178,15 +178,15 @@ class CalculateTwinBoundarySchmidFactorsImpl
           {
             //     plane = 4;
             n[0] = -1, n[1] = -1, n[2] = 1;
-            cosPhi = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, n));
+            cosPhi = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
             b[0] = 1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid1 = cosPhi * cosLambda;
             b[0] = 0, b[1] = 1, b[2] = 1;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid2 = cosPhi * cosLambda;
             b[0] = 1, b[1] = -1, b[2] = 0;
-            cosLambda = fabs(MatrixMath::CosThetaBetweenVectors(crystalLoading, b));
+            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid3 = cosPhi * cosLambda;
             m_TwinBoundarySchmidFactors[3 * i] = schmid1;
             m_TwinBoundarySchmidFactors[3 * i + 1] = schmid2;
