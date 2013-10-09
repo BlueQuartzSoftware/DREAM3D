@@ -84,15 +84,15 @@
 
 
 #define TEST_DATA_CONTAINER(Type, DCType)\
-{  IDataArray::Pointer t_##Type = Type::CreateArray(5);\
-  t_##Type->SetName( #Type );\
-  m->add##DCType(#Type, t_##Type);\
-  IDataArray::Pointer t = m->get##DCType(#Type);\
-  DREAM3D_REQUIRE_NE(t.get(), NULL);\
-  t = m->removeCellFieldData(#Type);\
-  DREAM3D_REQUIRE_NE(t.get(), NULL);\
-  t = m->get##DCType(#Type);\
-  DREAM3D_REQUIRE_EQUAL(t.get(), NULL);\
+  {  IDataArray::Pointer t_##Type = Type::CreateArray(5);\
+    t_##Type->SetName( #Type );\
+    m->add##DCType(#Type, t_##Type);\
+    IDataArray::Pointer t = m->get##DCType(#Type);\
+    DREAM3D_REQUIRE_NE(t.get(), NULL);\
+    t = m->removeCellFieldData(#Type);\
+    DREAM3D_REQUIRE_NE(t.get(), NULL);\
+    t = m->get##DCType(#Type);\
+    DREAM3D_REQUIRE_EQUAL(t.get(), NULL);\
   }
 
 // -----------------------------------------------------------------------------
@@ -143,9 +143,9 @@ void TestDataContainerWriter()
   avgEuler->SetNumberOfComponents(3);
   for(size_t i = 0; i < 4; ++i)
   {
-    avgEuler->SetComponent(i, 0, i*0.665f);
-    avgEuler->SetComponent(i, 1, i*0.665f);
-    avgEuler->SetComponent(i, 2, i*0.665f);
+    avgEuler->SetComponent(i, 0, i * 0.665f);
+    avgEuler->SetComponent(i, 1, i * 0.665f);
+    avgEuler->SetComponent(i, 2, i * 0.665f);
   }
   m->addCellFieldData(DREAM3D::FieldData::AxisEulerAngles, avgEuler);
 
@@ -165,9 +165,9 @@ void TestDataContainerWriter()
 
   for(int i = 0; i < 4; ++i)
   {
-    for(int j = 0; j < i+4; ++j)
+    for(int j = 0; j < i + 4; ++j)
     {
-      neighborlistPtr->addEntry(i, j*i+3);
+      neighborlistPtr->addEntry(i, j * i + 3);
     }
   }
 
@@ -214,7 +214,7 @@ void TestDataContainerReader()
 
   // Validate the NeighborList Data
   NeighborList<int32_t>* neighborlistPtr
-      = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
+    = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   DREAM3D_REQUIRE_NE(NULL, neighborlistPtr);
   NeighborList<int32_t>::SharedVectorType vec;
   size_t nLists = neighborlistPtr->getNumberOfTuples();
@@ -222,9 +222,9 @@ void TestDataContainerReader()
   for(size_t l = 0; l < nLists; ++l)
   {
     vec = neighborlistPtr->getList(l);
-    for(int j = 0; j < (int)(l+4); ++j)
+    for(int j = 0; j < (int)(l + 4); ++j)
     {
-      DREAM3D_REQUIRE_EQUAL(vec->at(j), (int32_t)((j*l+3)) );
+      DREAM3D_REQUIRE_EQUAL(vec->at(j), (int32_t)((j * l + 3)) );
     }
 
   }
@@ -320,21 +320,21 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   // and negative error condition
   ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-      DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
+  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
   ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
   bool* bool_ptr =  m->getCellDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
-      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
@@ -356,21 +356,21 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   // and negative error condition
   ptr =  m->getCellFieldDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-      DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
+  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
   ptr =  m->getCellFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
   bool_ptr =  m->getCellFieldDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
-      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
@@ -393,21 +393,21 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   // and negative error condition
   ptr =  m->getCellEnsembleDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-      DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
+  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
   ptr =  m->getCellEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
   bool_ptr =  m->getCellEnsembleDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
-      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
@@ -472,9 +472,9 @@ void TestDataContainer()
 
   for (int grainId = 0; grainId < 10; ++grainId)
   {
-    for (int neighborId = 0; neighborId < grainId+5; ++neighborId)
+    for (int neighborId = 0; neighborId < grainId + 5; ++neighborId)
     {
-      neighborList->addEntry(grainId, neighborId*23);
+      neighborList->addEntry(grainId, neighborId * 23);
     }
   }
   bool ok = true;
@@ -771,7 +771,7 @@ void RunPipeline6()
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 
@@ -797,6 +797,6 @@ int main(int argc, char **argv)
 #endif
 
 //  PRINT_TEST_SUMMARY();
-return err;
+  return err;
 }
 

@@ -307,6 +307,7 @@ void DataContainerWriter::execute()
     return;
   }
   hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), H5P_DEFAULT );
+  scopedFileSentinel.addGroupId(&dcaGid);
 
   int32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
   QList<QString> dcNames = getDataContainerArray()->getDataContainerNames();
@@ -437,6 +438,7 @@ void DataContainerWriter::execute()
   }
 
   H5Gclose(dcaGid);
+  dcaGid = -1;
   notifyStatusMessage("Complete");
 }
 

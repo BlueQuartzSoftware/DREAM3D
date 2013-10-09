@@ -32,6 +32,7 @@
 #include "GeometryMath.h"
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -92,10 +93,40 @@ bool GeometryMath::RayIntersectsBox(float p[3], float q[3], float ll[3], float u
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float GeometryMath::GenerateRandomRay(float p[3], float length, float ray[3])
+void GeometryMath::GenerateRandomRay(float p[3], float length, float ray[3])
 {
-  float x, y, z, w, t;
+  float w, t;
 
-  z = 2.0;
-  return z;
+  unsigned long long int m_Seed = QDateTime::currentMSecsSinceEpoch();
+  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+
+  ray[2] = (2.0 * rg.genrand_real1())-1.0;
+  t = (DREAM3D::Constants::k_2Pi * rg.genrand_real1());
+  w = sqrt(1.0 - (ray[2]*ray[2]));
+  ray[0] = w * cos(t);
+  ray[1] = w * sin(t);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeometryMath::FindBoundingBoxOfVertices(VertexArray::Pointer verts, float ll[3], float ur[3])
+{
+  ll[0] = 100000000.0;
+  ll[1] = 100000000.0;
+  ll[2] = 100000000.0;
+  ur[0] = 0.0;
+  ur[1] = 0.0;
+  ur[2] = 0.0;
+
+  VertexArray::Vert_t* v = verts->getPointer(0);
+  for(int i=0;i<verts->count();i++)
+  {
+    if(v[i].pos[0] < ll[0]) ll[0] = v[i].pos[0];
+    if(v[i].pos[0] > ur[0]) ur[0] = v[i].pos[0];
+    if(v[i].pos[1] < ll[1]) ll[1] = v[i].pos[1];
+    if(v[i].pos[1] > ur[1]) ur[1] = v[i].pos[1];
+    if(v[i].pos[2] < ll[2]) ll[2] = v[i].pos[2];
+    if(v[i].pos[2] > ur[2]) ur[2] = v[i].pos[2];
+  }
 }

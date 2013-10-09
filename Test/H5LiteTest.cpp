@@ -90,7 +90,7 @@ herr_t testMakeStringAttribute(hid_t file_id);
 void QH5LiteTest();
 //MXADataModel::Pointer createModelTemplate();
 template<typename T>
-herr_t testWritePointer1DArrayAttribute(hid_t file_id, const QString &dsetName);
+herr_t testWritePointer1DArrayAttribute(hid_t file_id, const QString& dsetName);
 
 
 
@@ -110,7 +110,7 @@ void RemoveTestFiles()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testWritePointer1DArrayAttribute(hid_t file_id, const QString &dsetName)
+herr_t testWritePointer1DArrayAttribute(hid_t file_id, const QString& dsetName)
 {
   T value = 0x0;
   herr_t err = -1;
@@ -135,7 +135,7 @@ herr_t testWritePointer1DArrayAttribute(hid_t file_id, const QString &dsetName)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testReadPointer1DArrayAttribute(hid_t file_id, const QString &dsetName)
+herr_t testReadPointer1DArrayAttribute(hid_t file_id, const QString& dsetName)
 {
   T value = 0x0;
   herr_t err = -1;
@@ -179,7 +179,7 @@ herr_t testReadPointer1DArrayAttribute(hid_t file_id, const QString &dsetName)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testWritePointer2DArrayAttribute(hid_t file_id, const QString &dsetName)
+herr_t testWritePointer2DArrayAttribute(hid_t file_id, const QString& dsetName)
 {
   //qDebug() << DEBUG_OUT(logTime) << "testWritePointer2DArrayAttribute" << "\n";
   T value = 0x0;
@@ -192,7 +192,8 @@ herr_t testWritePointer2DArrayAttribute(hid_t file_id, const QString &dsetName)
   T data[DIM0][DIM1];
   for(int i = 0; i < DIM0; ++i)
   {
-    for (int j = 0; j < DIM1; ++j) {
+    for (int j = 0; j < DIM1; ++j)
+    {
       data[i][j] = (T)(i * j);
     }
   }
@@ -208,7 +209,7 @@ herr_t testWritePointer2DArrayAttribute(hid_t file_id, const QString &dsetName)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testReadPointer2DArrayAttribute(hid_t file_id, const QString &dsetName)
+herr_t testReadPointer2DArrayAttribute(hid_t file_id, const QString& dsetName)
 {
   T value = 0x0;
   herr_t err = -1;
@@ -219,7 +220,8 @@ herr_t testReadPointer2DArrayAttribute(hid_t file_id, const QString &dsetName)
   T referenceData[DIM0][DIM1];
   for(int i = 0; i < DIM0; ++i)
   {
-    for (int j = 0; j < DIM1; ++j) {
+    for (int j = 0; j < DIM1; ++j)
+    {
       referenceData[i][j] = (T)(i * j);
     }
   }
@@ -254,7 +256,7 @@ herr_t testReadPointer2DArrayAttribute(hid_t file_id, const QString &dsetName)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testWritePointer3DArrayAttribute(hid_t file_id, const QString &dsetName)
+herr_t testWritePointer3DArrayAttribute(hid_t file_id, const QString& dsetName)
 {
   T value = 0x0;
   herr_t err = -1;
@@ -263,9 +265,12 @@ herr_t testWritePointer3DArrayAttribute(hid_t file_id, const QString &dsetName)
   attributeKey = "3DArrayAttribute<" + attributeKey + ">";
   int32_t rank = RANK_3D;
   T data[DIM0][DIM1][DIM2];
-  for(int i = 0; i < DIM0; ++i) {
-    for (int j = 0; j < DIM1; ++j) {
-      for (int k = 0; k < DIM2; ++k) {
+  for(int i = 0; i < DIM0; ++i)
+  {
+    for (int j = 0; j < DIM1; ++j)
+    {
+      for (int k = 0; k < DIM2; ++k)
+      {
         data[i][j][k] = (T)(i * j * k);
       }
     }
@@ -283,7 +288,7 @@ herr_t testWritePointer3DArrayAttribute(hid_t file_id, const QString &dsetName)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testReadPointer3DArrayAttribute(hid_t file_id, const QString &dsetName)
+herr_t testReadPointer3DArrayAttribute(hid_t file_id, const QString& dsetName)
 {
   T value = 0x0;
   herr_t err = -1;
@@ -292,9 +297,12 @@ herr_t testReadPointer3DArrayAttribute(hid_t file_id, const QString &dsetName)
   DREAM3D_REQUIRE(attributeKey.isEmpty() == false);
   attributeKey = "3DArrayAttribute<" + attributeKey + ">";
   T referenceData[DIM0][DIM1][DIM2];
-  for(int i = 0; i < DIM0; ++i) {
-    for (int j = 0; j < DIM1; ++j) {
-      for (int k = 0; k < DIM2; ++k) {
+  for(int i = 0; i < DIM0; ++i)
+  {
+    for (int j = 0; j < DIM1; ++j)
+    {
+      for (int k = 0; k < DIM2; ++k)
+      {
         referenceData[i][j][k] = (T)(i * j * k);
       }
     }
@@ -342,7 +350,8 @@ herr_t testWriteVectorAttribute(hid_t file_id, QString dsetName )
 
   /* Make dataset */
   QVector<T> data (DIM0, 0);
-  for (int i = 0; i < numElements; ++i) {
+  for (int i = 0; i < numElements; ++i)
+  {
     data[i] = (T)(i);
   }
   //qDebug() << "Attribute->Write: " << objName;
@@ -367,7 +376,8 @@ herr_t testReadVectorAttribute(hid_t file_id, QString dsetName )
   QVector<hsize_t> dims (1, DIM0);
 
   std::vector<T> data (DIM0, 0);
-  for (int i = 0; i < numElements; ++i) {
+  for (int i = 0; i < numElements; ++i)
+  {
     data[i] = (T)(i);
   }
   std::vector<T> rData(numElements, 0); //allocate and zero out the memory
@@ -381,7 +391,7 @@ herr_t testReadVectorAttribute(hid_t file_id, QString dsetName )
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testWriteScalarAttribute(hid_t file_id, const QString &dsetName)
+herr_t testWriteScalarAttribute(hid_t file_id, const QString& dsetName)
 {
   T value = 0x0F;
   herr_t err = -1;
@@ -397,7 +407,7 @@ herr_t testWriteScalarAttribute(hid_t file_id, const QString &dsetName)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testReadScalarAttribute(hid_t file_id, const QString &dsetName)
+herr_t testReadScalarAttribute(hid_t file_id, const QString& dsetName)
 {
   T value = 0x0F;
   T refValue = value;
@@ -425,13 +435,15 @@ herr_t testWritePointer2DArrayDataset(hid_t file_id)
   int32_t rank = 2;
   // Create the Dimensions
   hsize_t dims[2];
-  dims[0] = DIM0; dims[1] = DIM1;
+  dims[0] = DIM0;
+  dims[1] = DIM1;
 
   /* Make dataset char */
   int32_t tSize = dims[0] * dims[1];
- // T data[dimx*dimy];
+// T data[dimx*dimy];
   QVector<T> data(tSize);
-  for (int32_t i = 0; i < tSize; ++i) {
+  for (int32_t i = 0; i < tSize; ++i)
+  {
     data[i] = static_cast<T>( i * 5);
   }
 
@@ -511,7 +523,8 @@ herr_t testWriteVectorDataset(hid_t file_id)
   QVector<hsize_t> dims(RANK_1D, DIM0);
   /* Make dataset char */
   QVector<T> data(DIM0, 0);
-  for (int32_t i = 0; i < DIM0; ++i) {
+  for (int32_t i = 0; i < DIM0; ++i)
+  {
     data[i] = static_cast<T>( i * 5);
   }
 
@@ -536,7 +549,8 @@ herr_t testReadVectorDataset(hid_t file_id)
 
   std::vector<hsize_t> dims(RANK_1D, DIM0);
   std::vector<T> referenceData(DIM0, 0);
-  for (int32_t i = 0; i < DIM0; ++i) {
+  for (int32_t i = 0; i < DIM0; ++i)
+  {
     referenceData[i] = static_cast<T>( i * 5);
   }
 
@@ -606,7 +620,7 @@ herr_t testReadScalarDataset(hid_t file_id)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testMXAAttribute(hid_t file_id, const QString &dsetName)
+herr_t testMXAAttribute(hid_t file_id, const QString& dsetName)
 {
   T value = 0x0F;
   herr_t err = -1;
@@ -616,8 +630,9 @@ herr_t testMXAAttribute(hid_t file_id, const QString &dsetName)
   IMXAArray* array = MXAArrayTemplate<T>::New(10);
   IMXAArray::Pointer arrayPtr (array);
   T* p = static_cast<T*>(array->getVoidPointer(0));
-  for (int var = 0; var < 10; ++var) {
-    p[var] = static_cast<T>(var+65);
+  for (int var = 0; var < 10; ++var)
+  {
+    p[var] = static_cast<T>(var + 65);
   }
   err = QH5Lite::writeMXAAttribute(file_id, dsetName, attributeKey, array);
   DREAM3D_REQUIRE(err >= 0);
@@ -660,32 +675,33 @@ herr_t testWriteMXAArray(hid_t file_id)
   IMXAArray* array = MXAArrayTemplate<T>::New(10);
   IMXAArray::Pointer arrayPtr (array);
   T* p = static_cast<T*>(array->getVoidPointer(0));
-  for (int var = 0; var < 10; ++var) {
+  for (int var = 0; var < 10; ++var)
+  {
     p[var] = static_cast<T>(var);
   }
   err = QH5Lite::writeMXAArray(file_id, dsetName, array);
   DREAM3D_REQUIRE(err >= 0);
 
-   DREAM3D_REQUIRE ( testMXAAttribute<int8_t>(file_id, dsetName) >= 0 );
-   DREAM3D_REQUIRE ( testMXAAttribute<uint8_t>(file_id, dsetName) >= 0 );
-   DREAM3D_REQUIRE ( testMXAAttribute<int16_t>(file_id, dsetName) >= 0 );
-   DREAM3D_REQUIRE ( testMXAAttribute<uint16_t>(file_id, dsetName) >= 0 );
-   DREAM3D_REQUIRE ( testMXAAttribute<int32_t>(file_id, dsetName) >= 0 );
-   DREAM3D_REQUIRE ( testMXAAttribute<uint32_t>(file_id, dsetName) >= 0 );
-   DREAM3D_REQUIRE ( testMXAAttribute<int64_t>(file_id, dsetName) >= 0 );
-   DREAM3D_REQUIRE ( testMXAAttribute<uint64_t>(file_id, dsetName) >= 0 );
-   DREAM3D_REQUIRE ( testMXAAttribute<float32>(file_id, dsetName) >= 0 );
-   DREAM3D_REQUIRE ( testMXAAttribute<float64>(file_id, dsetName) >= 0 );
+  DREAM3D_REQUIRE ( testMXAAttribute<int8_t>(file_id, dsetName) >= 0 );
+  DREAM3D_REQUIRE ( testMXAAttribute<uint8_t>(file_id, dsetName) >= 0 );
+  DREAM3D_REQUIRE ( testMXAAttribute<int16_t>(file_id, dsetName) >= 0 );
+  DREAM3D_REQUIRE ( testMXAAttribute<uint16_t>(file_id, dsetName) >= 0 );
+  DREAM3D_REQUIRE ( testMXAAttribute<int32_t>(file_id, dsetName) >= 0 );
+  DREAM3D_REQUIRE ( testMXAAttribute<uint32_t>(file_id, dsetName) >= 0 );
+  DREAM3D_REQUIRE ( testMXAAttribute<int64_t>(file_id, dsetName) >= 0 );
+  DREAM3D_REQUIRE ( testMXAAttribute<uint64_t>(file_id, dsetName) >= 0 );
+  DREAM3D_REQUIRE ( testMXAAttribute<float32>(file_id, dsetName) >= 0 );
+  DREAM3D_REQUIRE ( testMXAAttribute<float64>(file_id, dsetName) >= 0 );
 
-   // Now Read the Attribute back into an MXAArray object and test against the previous for equality
-   IMXAArray* rArray = QH5Lite::readMXAArray(file_id, dsetName);
-   DREAM3D_REQUIRE (rArray != NULL);
-   IMXAArray::Pointer rArrayPtr(rArray); // Let boost clean up the pointer
-   T* r = static_cast<T*>(rArrayPtr->getVoidPointer(0));
- //  for (int var = 0; var < 10; ++var) {
- //    qDebug() << "p=" << p[var] << "  r=" << (r[var]) << "\n";
- //  }
-   DREAM3D_REQUIRE( ::memcmp(r, p, sizeof(T) * 10) == 0);
+  // Now Read the Attribute back into an MXAArray object and test against the previous for equality
+  IMXAArray* rArray = QH5Lite::readMXAArray(file_id, dsetName);
+  DREAM3D_REQUIRE (rArray != NULL);
+  IMXAArray::Pointer rArrayPtr(rArray); // Let boost clean up the pointer
+  T* r = static_cast<T*>(rArrayPtr->getVoidPointer(0));
+//  for (int var = 0; var < 10; ++var) {
+//    qDebug() << "p=" << p[var] << "  r=" << (r[var]) << "\n";
+//  }
+  DREAM3D_REQUIRE( ::memcmp(r, p, sizeof(T) * 10) == 0);
 
   qDebug() << " Passed" << "\n";
   return err;
@@ -742,7 +758,7 @@ herr_t testWriteStringDatasetAndAttributes(hid_t file_id)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-herr_t HDF5Dump_datatype(hid_t dataset_id, std::ostream &iostr)
+herr_t HDF5Dump_datatype(hid_t dataset_id, std::ostream& iostr)
 {
   herr_t status = 0;
 
@@ -751,41 +767,47 @@ herr_t HDF5Dump_datatype(hid_t dataset_id, std::ostream &iostr)
   iostr << "    ";
   iostr << "DATATYPE \"";
 
-  switch (H5Tget_class(type_id)) {
-  case H5T_INTEGER:
-    iostr << "Integer";
-    break;
+  switch (H5Tget_class(type_id))
+  {
+    case H5T_INTEGER:
+      iostr << "Integer";
+      break;
 
-  case H5T_FLOAT:
-    if (H5Tequal(type_id, H5T_IEEE_F32BE) ||
-  H5Tequal(type_id, H5T_IEEE_F32LE) ||
-  H5Tequal(type_id, H5T_NATIVE_FLOAT)) {
-      // Float
-      iostr << "Float";
+    case H5T_FLOAT:
+      if (H5Tequal(type_id, H5T_IEEE_F32BE) ||
+          H5Tequal(type_id, H5T_IEEE_F32LE) ||
+          H5Tequal(type_id, H5T_NATIVE_FLOAT))
+      {
+        // Float
+        iostr << "Float";
 
-    } else if (H5Tequal(type_id, H5T_IEEE_F64BE) ||
-         H5Tequal(type_id, H5T_IEEE_F64LE) ||
-         H5Tequal(type_id, H5T_NATIVE_DOUBLE) ||
-         H5Tequal(type_id, H5T_NATIVE_LDOUBLE)) {
-      // Double
-      iostr << "Double";
+      }
+      else if (H5Tequal(type_id, H5T_IEEE_F64BE) ||
+               H5Tequal(type_id, H5T_IEEE_F64LE) ||
+               H5Tequal(type_id, H5T_NATIVE_DOUBLE) ||
+               H5Tequal(type_id, H5T_NATIVE_LDOUBLE))
+      {
+        // Double
+        iostr << "Double";
 
-    } else {
-      iostr << "Undefined HDF5 float.";
-    }
-    break;
+      }
+      else
+      {
+        iostr << "Undefined HDF5 float.";
+      }
+      break;
 
-  case H5T_STRING:
-    iostr << "String - Unsupported";
-    break;
+    case H5T_STRING:
+      iostr << "String - Unsupported";
+      break;
 
-  case H5T_COMPOUND:
-    iostr << "Compound - Unsupported";
-    break;
+    case H5T_COMPOUND:
+      iostr << "Compound - Unsupported";
+      break;
 
-  default:
-    iostr << "Unsupported or unknown data type";
-    break;
+    default:
+      iostr << "Unsupported or unknown data type";
+      break;
   }
 
   iostr << "\"" << "\n";
@@ -806,11 +828,13 @@ herr_t testReadPointer2DArrayDataset(hid_t file_id)
   T value = 0x0;
   herr_t err = 1;
   QVector<hsize_t> dims(2, 0);
-  dims[0] = DIM0; dims[1] = DIM1;
+  dims[0] = DIM0;
+  dims[1] = DIM1;
 
   int32_t tSize = dims[0] * dims[1];
   QVector<T> referenceData(tSize);
-  for (int32_t i = 0; i < tSize; ++i) {
+  for (int32_t i = 0; i < tSize; ++i)
+  {
     referenceData[i] = static_cast<T>( i * 5);
   }
   // Generate the data set name
@@ -820,6 +844,9 @@ herr_t testReadPointer2DArrayDataset(hid_t file_id)
 
   H5T_class_t attr_type;
   size_t attr_size;
+
+  err = QH5Lite::getDatasetInfo(file_id, "FOOBAR", dims, attr_type, attr_size);
+  DREAM3D_REQUIRE(err < 0);
 
   err = QH5Lite::getDatasetInfo(file_id, dsetName, dims, attr_type, attr_size);
   DREAM3D_REQUIRE(err >= 0);
@@ -841,7 +868,7 @@ herr_t testReadPointer2DArrayDataset(hid_t file_id)
   /* Open the dataset. */
   if ( (did = H5Dopen( file_id, dsetName.toAscii().data(), H5P_DEFAULT )) < 0 )
   {
-     return -2;
+    return -2;
   }
   /* Get an identifier for the datatype. */
   hid_t tid =  H5Dget_type( did );
@@ -940,14 +967,17 @@ herr_t testReadPointer2DArrayDataset(hid_t file_id)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void printData(QVector<T> &data, QVector<T> &rData) {
- // qDebug() << "Wrote/Read" << "\n";
-  for (typename QVector<T>::iterator iter = data.begin(); iter < data.end(); ++iter ) {
+void printData(QVector<T>& data, QVector<T>& rData)
+{
+// qDebug() << "Wrote/Read" << "\n";
+  for (typename QVector<T>::iterator iter = data.begin(); iter < data.end(); ++iter )
+  {
     qDebug() << *iter << " ";
   }
   qDebug() << "\n";
 
-  for (typename QVector<T>::iterator iter = rData.begin(); iter < rData.end(); ++iter ) {
+  for (typename QVector<T>::iterator iter = rData.begin(); iter < rData.end(); ++iter )
+  {
     qDebug() << *iter << " ";
   }
 
@@ -1010,7 +1040,7 @@ herr_t testReadStringDatasetAndAttributes(hid_t file_id)
   DREAM3D_REQUIRE(err >= 0);
   DREAM3D_REQUIRE( refAttrData.compare(mapString) == 0);
 
-   err = QH5Lite::readStringAttribute(file_id, dsetNameBytes, attributeKey, mapString);
+  err = QH5Lite::readStringAttribute(file_id, dsetNameBytes, attributeKey, mapString);
   DREAM3D_REQUIRE(err >= 0);
   DREAM3D_REQUIRE( refAttrData.compare(mapString) == 0);
 
@@ -1023,7 +1053,7 @@ herr_t testReadStringDatasetAndAttributes(hid_t file_id)
 // -----------------------------------------------------------------------------
 void QH5LiteTest()
 {
- // herr_t err = -1;
+// herr_t err = -1;
   hid_t   file_id = 0;
   /* Create a new file using default properties. */
   file_id = H5Fcreate( UnitTest::H5LiteTest::FileName.toAscii().data(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
@@ -1052,40 +1082,40 @@ void QH5LiteTest()
   }
 
   // qDebug() << logTime() << "----------- Testing Writing/Reading of Datasets using Raw Pointers -----------" << "\n";
-   DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<int8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<uint8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<int16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<uint16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<int32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<uint32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<int64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<uint64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<float32>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<float64>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<int8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<uint8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<int16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<uint16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<int32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<uint32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<int64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<uint64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<float32>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<float64>(file_id) >= 0);
 
-   DREAM3D_REQUIRE ( testWriteVectorDataset<int8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteVectorDataset<uint8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteVectorDataset<int16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteVectorDataset<uint16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteVectorDataset<int32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteVectorDataset<uint32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteVectorDataset<int64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteVectorDataset<uint64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteVectorDataset<float32>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteVectorDataset<float64>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteVectorDataset<int8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteVectorDataset<uint8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteVectorDataset<int16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteVectorDataset<uint16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteVectorDataset<int32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteVectorDataset<uint32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteVectorDataset<int64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteVectorDataset<uint64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteVectorDataset<float32>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteVectorDataset<float64>(file_id) >= 0);
 
-   DREAM3D_REQUIRE ( testWriteScalarDataset<int8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteScalarDataset<uint8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteScalarDataset<int16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteScalarDataset<uint16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteScalarDataset<int32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteScalarDataset<uint32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteScalarDataset<int64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteScalarDataset<uint64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteScalarDataset<float32>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testWriteScalarDataset<float64>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteScalarDataset<int8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteScalarDataset<uint8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteScalarDataset<int16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteScalarDataset<uint16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteScalarDataset<int32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteScalarDataset<uint32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteScalarDataset<int64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteScalarDataset<uint64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteScalarDataset<float32>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteScalarDataset<float64>(file_id) >= 0);
 
-   DREAM3D_REQUIRE ( testWriteStringDatasetAndAttributes(file_id) >= 0);
+  DREAM3D_REQUIRE ( testWriteStringDatasetAndAttributes(file_id) >= 0);
 
 //   DREAM3D_REQUIRE ( testWriteMXAArray<int8_t>(file_id) >= 0);
 //   DREAM3D_REQUIRE ( testWriteMXAArray<uint8_t>(file_id) >= 0);
@@ -1100,45 +1130,45 @@ void QH5LiteTest()
 
 
 //  // ******************* Test Reading Data *************************************
-   DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<int8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<uint8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<int16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<uint16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<int32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<uint32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<int64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<uint64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<float32>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<float64>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<int8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<uint8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<int16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<uint16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<int32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<uint32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<int64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<uint64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<float32>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadPointer2DArrayDataset<float64>(file_id) >= 0);
 
 
-   DREAM3D_REQUIRE ( testReadVectorDataset<int8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadVectorDataset<uint8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadVectorDataset<int16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadVectorDataset<uint16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadVectorDataset<int32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadVectorDataset<uint32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadVectorDataset<int64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadVectorDataset<uint64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadVectorDataset<float32>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadVectorDataset<float64>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadVectorDataset<int8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadVectorDataset<uint8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadVectorDataset<int16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadVectorDataset<uint16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadVectorDataset<int32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadVectorDataset<uint32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadVectorDataset<int64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadVectorDataset<uint64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadVectorDataset<float32>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadVectorDataset<float64>(file_id) >= 0);
 //
-   DREAM3D_REQUIRE ( testReadScalarDataset<int8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadScalarDataset<uint8_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadScalarDataset<int16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadScalarDataset<uint16_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadScalarDataset<int32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadScalarDataset<uint32_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadScalarDataset<int64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadScalarDataset<uint64_t>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadScalarDataset<float32>(file_id) >= 0);
-   DREAM3D_REQUIRE ( testReadScalarDataset<float64>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadScalarDataset<int8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadScalarDataset<uint8_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadScalarDataset<int16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadScalarDataset<uint16_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadScalarDataset<int32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadScalarDataset<uint32_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadScalarDataset<int64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadScalarDataset<uint64_t>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadScalarDataset<float32>(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadScalarDataset<float64>(file_id) >= 0);
 
-   DREAM3D_REQUIRE ( testReadStringDatasetAndAttributes(file_id) >= 0);
+  DREAM3D_REQUIRE ( testReadStringDatasetAndAttributes(file_id) >= 0);
 
   /* Close the file. */
   H5Fclose( file_id );
- // qDebug() << logTime() << "Testing Complete" << "\n";
+// qDebug() << logTime() << "Testing Complete" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -1169,11 +1199,11 @@ void TestLargeFileSupport()
 }
 
 #define TYPE_DETECTION(m_msgType, check)\
-{\
-  m_msgType v = 0x00;\
-  hid_t t = QH5Lite::HDFTypeForPrimitive<m_msgType>(v);\
-  DREAM3D_REQUIRE_EQUAL(t, check);\
-}
+  {\
+    m_msgType v = 0x00;\
+    hid_t t = QH5Lite::HDFTypeForPrimitive<m_msgType>(v);\
+    DREAM3D_REQUIRE_EQUAL(t, check);\
+  }
 
 
 template<typename T>
@@ -1210,7 +1240,7 @@ void TestTypeDetection()
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestTypeDetection() )

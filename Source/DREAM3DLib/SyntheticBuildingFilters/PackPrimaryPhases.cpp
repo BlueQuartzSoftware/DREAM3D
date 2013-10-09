@@ -2319,8 +2319,8 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
 
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<int> primaryphases;
-  QVector<double> primaryphasefractions;
+  QVector<int> primaryPhasesLocal;
+  QVector<double> primaryPhaseFractionsLocal;
   double totalprimaryfractions = 0.0;
   StatsData::Pointer statsData = StatsData::NullPointer();
   // find which phases are primary phases
@@ -2329,15 +2329,15 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
     if(phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-      primaryphases.push_back(i);
-      primaryphasefractions.push_back(pp->getPhaseFraction());
+      primaryPhasesLocal.push_back(i);
+      primaryPhaseFractionsLocal.push_back(pp->getPhaseFraction());
       totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
     }
   }
   // scale the primary phase fractions to total to 1
-  for (size_t i = 0; i < primaryphasefractions.size(); i++)
+  for (size_t i = 0; i < primaryPhaseFractionsLocal.size(); i++)
   {
-    primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
+    primaryPhaseFractionsLocal[i] = primaryPhaseFractionsLocal[i] / totalprimaryfractions;
   }
   // generate the grains
   int gid = 1;
@@ -2346,13 +2346,13 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
   float vol;
   float diam;
   int volgood = 0;
-  for (size_t j = 0; j < primaryphases.size(); ++j)
+  for (size_t j = 0; j < primaryPhasesLocal.size(); ++j)
   {
-    float curphasetotalvol = totalvol * primaryphasefractions[j];
+    float curphasetotalvol = totalvol * primaryPhaseFractionsLocal[j];
     while (currentvol < (curphasetotalvol))
     {
       volgood = 0;
-      phase = primaryphases[j];
+      phase = primaryPhasesLocal[j];
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
       while (volgood == 0)
       {

@@ -71,7 +71,7 @@ class AngResFixer
     virtual int fixFile();
     QString headerWord(QByteArray buf);
     int fixHeaderValues(QString in,
-                       QVector<QString> &headerLines);
+                        QVector<QString>& headerLines);
 
     /** @brief Sets the file name of the ebsd file to be read */
     DREAM3D_INSTANCE_STRING_PROPERTY(FileName)
@@ -81,8 +81,8 @@ class AngResFixer
   private:
 
 
-      AngResFixer(const AngResFixer&); // Copy Constructor Not Implemented
-      void operator=(const AngResFixer&); // Operator '=' Not Implemented
+    AngResFixer(const AngResFixer&); // Copy Constructor Not Implemented
+    void operator=(const AngResFixer&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ AngResFixer::AngResFixer()
 //
 // -----------------------------------------------------------------------------
 int AngResFixer::fixHeaderValues(QString str,
-                                QVector<QString> &headerLines)
+                                 QVector<QString>& headerLines)
 {
   QTextStream in(&str);
   int err = 0;
@@ -167,8 +167,8 @@ int AngResFixer::fixFile()
   float* fit = reader.getFitPointer();
 
   size_t count = reader.getNumberOfElements();
- // float xstep_old = reader.getXStep();
- // float ystep_old = reader.getYStep();
+// float xstep_old = reader.getXStep();
+// float ystep_old = reader.getYStep();
   float xFactor = m_XStepFix / reader.getXStep();
   float yFactor = m_YStepFix / reader.getYStep();
 
@@ -186,7 +186,7 @@ int AngResFixer::fixFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   std::cout << "Starting Resolution Fixer" << std::endl;
 
@@ -248,7 +248,7 @@ int main(int argc, char **argv)
     }
 
   }
-  catch (TCLAP::ArgException &e) // catch any exceptions
+  catch (TCLAP::ArgException& e) // catch any exceptions
   {
     std::cerr  << " error: " << e.error() << " for arg " << e.argId() << std::endl;
     return EXIT_FAILURE;

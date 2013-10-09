@@ -282,13 +282,13 @@ int computeBinsAndCutOffs(float mu,
                           float minCutOff,
                           float maxCutOff,
                           float binStepSize,
-                          std::vector<float> &binsizes,
-                          std::vector<float> &xCo,
-                          std::vector<float> &yCo,
-                          float &xMax,
-                          float &yMax,
-                          std::vector<float> &x,
-                          std::vector<float> &y)
+                          std::vector<float>& binsizes,
+                          std::vector<float>& xCo,
+                          std::vector<float>& yCo,
+                          float& xMax,
+                          float& yMax,
+                          std::vector<float>& x,
+                          std::vector<float>& y)
 {
   int err = 0;
   int size = 250;
@@ -445,7 +445,7 @@ void TestWriteData()
 {
   // Make sure the output directory is created
   QDir dir(UnitTest::StatsDataTest::TestDir);
-dir.mkpath(".");
+  dir.mkpath(".");
 
   // Create some test data for a 2 phase material
   StatsDataArray::Pointer statsArray = createStatsDataArray();
@@ -564,7 +564,7 @@ void TestReadData()
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 #if !REMOVE_TEST_FILES

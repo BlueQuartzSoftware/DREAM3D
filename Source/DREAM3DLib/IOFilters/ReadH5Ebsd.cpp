@@ -491,14 +491,14 @@ void ReadH5Ebsd::execute()
   }
 
   // Initialize all the arrays with some default values
-  
+
   int64_t totalPoints = m->getTotalPoints();
   {
-    QString ss = QObject::tr(" - Initializing %1 voxels").arg(totalPoints);
+    QString ss = QObject::tr("Initializing %1 voxels").arg(totalPoints);
     notifyStatusMessage(ss);
   }
   {
-    QString ss = QObject::tr(" - Reading Ebsd Data from file");
+    QString ss = QObject::tr("Reading Ebsd Data from file %1").arg(getInputFile());
     notifyStatusMessage(ss);
   }
   ebsdReader->setSliceStart(m_ZStartIndex);

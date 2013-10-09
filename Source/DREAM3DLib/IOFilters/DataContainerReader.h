@@ -84,6 +84,8 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellEnsembleArrays)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, OverwriteExistingDataContainers)
+
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFaceArrays)

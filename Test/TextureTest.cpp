@@ -49,7 +49,7 @@
  * @param argv
  * @return
  */
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 
   QVector<float> e1s;
@@ -64,12 +64,12 @@ int main(int argc, char **argv)
   Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
   odf.resize(HexagonalOps::k_OdfSize);
   Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
-                                 odf.data(), numEntries);
+                               odf.data(), numEntries);
 
 
   odf.resize(OrthoRhombicOps::k_OdfSize);
   Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
-                                  odf.data(), numEntries);
+                                        odf.data(), numEntries);
 
 
   //int size = 1000;

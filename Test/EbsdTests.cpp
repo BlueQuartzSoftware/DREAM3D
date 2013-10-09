@@ -72,19 +72,19 @@ void TestCrystalStructureTest()
   bool b = Ebsd::CrystalStructure::Cubic_High == chigh;
   DREAM3D_REQUIRE_EQUAL(b, true)
 
-      b = Ebsd::CrystalStructure::Cubic_High == clow;
+  b = Ebsd::CrystalStructure::Cubic_High == clow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
-      b = Ebsd::CrystalStructure::Cubic_High == hlow;
+  b = Ebsd::CrystalStructure::Cubic_High == hlow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
-      b = Ebsd::CrystalStructure::Hexagonal_High == hhigh;
+  b = Ebsd::CrystalStructure::Hexagonal_High == hhigh;
   DREAM3D_REQUIRE_EQUAL(b, true)
 
-      b = Ebsd::CrystalStructure::Hexagonal_High == hlow;
+  b = Ebsd::CrystalStructure::Hexagonal_High == hlow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
-      b = Ebsd::CrystalStructure::Hexagonal_High == clow;
+  b = Ebsd::CrystalStructure::Hexagonal_High == clow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
 }
@@ -133,7 +133,7 @@ void TestEbsdColoring()
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestEbsdColoring() )

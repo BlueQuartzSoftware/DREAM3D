@@ -234,7 +234,7 @@ int ParaDisReader::readHeader()
 
   bool ok = false;
   // Process the header information
-  bool done = false;
+  //bool done = false;
   //read Version line
   buf = m_InStream.readLine();
   buf = buf.trimmed();

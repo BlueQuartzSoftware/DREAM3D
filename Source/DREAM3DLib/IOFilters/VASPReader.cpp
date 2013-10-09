@@ -231,7 +231,7 @@ int VASPReader::readHeader()
 
   bool ok = false;
   // Process the header information
-  bool done = false;
+//  bool done = false;
   //read Title line
   buf = m_InStream.readLine();
   //read Lattice Constant line

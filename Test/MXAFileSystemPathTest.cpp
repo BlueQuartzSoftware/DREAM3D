@@ -40,54 +40,54 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CheckFile(const QString &filepath,
-               const QString &filename,
-               const QString &extension)
+void CheckFile(const QString& filepath,
+               const QString& filename,
+               const QString& extension)
 {
   std::cout  << "|-- CheckFile " << filepath << std::endl;
   bool exists;
   bool isDir;
   bool isFile;
   bool ok;
-    {
-      // Write a file so we can try and delete it
-      std::cout << "|--  Create: '" << filepath << "'" << std::endl;
-      std::ofstream outStream(filepath.c_str(), std::ios::out | std::ios::binary);
-      DREAM3D_REQUIRE_EQUAL(false, outStream.fail() );
-      QString data ( "MXADir_Test Contents");
-      outStream.write(data.c_str(), data.length());
-      DREAM3D_REQUIRE_EQUAL (outStream.bad(), false);
-      outStream.close();
-    }
+  {
+    // Write a file so we can try and delete it
+    std::cout << "|--  Create: '" << filepath << "'" << std::endl;
+    std::ofstream outStream(filepath.c_str(), std::ios::out | std::ios::binary);
+    DREAM3D_REQUIRE_EQUAL(false, outStream.fail() );
+    QString data ( "MXADir_Test Contents");
+    outStream.write(data.c_str(), data.length());
+    DREAM3D_REQUIRE_EQUAL (outStream.bad(), false);
+    outStream.close();
+  }
 
 
-    QString compName = filename;
-    if (compName.at(compName.size()-1) == '.')
-    {
-      compName = compName.substr(0, compName.size() - 1);
-    }
+  QString compName = filename;
+  if (compName.at(compName.size() - 1) == '.')
+  {
+    compName = compName.substr(0, compName.size() - 1);
+  }
 
-    isDir = MXADir::isDirectory(filepath);
-    DREAM3D_REQUIRE_EQUAL(isDir, false);
-    isFile = MXADir::isFile(filepath);
-    DREAM3D_REQUIRE_EQUAL(isFile, true);
-    exists = MXADir::exists(filepath);
-    DREAM3D_REQUIRE_EQUAL(exists, true);
-    QString fn = MXAFileInfo::filename(filepath);
-    DREAM3D_REQUIRE_EQUAL(fn, compName);
-    QString ext = MXAFileInfo::extension(filepath);
-    DREAM3D_REQUIRE_EQUAL(ext, extension);
+  isDir = MXADir::isDirectory(filepath);
+  DREAM3D_REQUIRE_EQUAL(isDir, false);
+  isFile = MXADir::isFile(filepath);
+  DREAM3D_REQUIRE_EQUAL(isFile, true);
+  exists = MXADir::exists(filepath);
+  DREAM3D_REQUIRE_EQUAL(exists, true);
+  QString fn = MXAFileInfo::filename(filepath);
+  DREAM3D_REQUIRE_EQUAL(fn, compName);
+  QString ext = MXAFileInfo::extension(filepath);
+  DREAM3D_REQUIRE_EQUAL(ext, extension);
 
-    // Now try to delete the file
-    std::cout << "|--  Delete: '" << filepath << "'" << std::endl;
-    ok = QFile::remove(filepath);
-    DREAM3D_REQUIRE_EQUAL(ok, true);
-    exists = MXADir::exists(filepath);
-    DREAM3D_REQUIRE_EQUAL(exists, false);
+  // Now try to delete the file
+  std::cout << "|--  Delete: '" << filepath << "'" << std::endl;
+  ok = QFile::remove(filepath);
+  DREAM3D_REQUIRE_EQUAL(ok, true);
+  exists = MXADir::exists(filepath);
+  DREAM3D_REQUIRE_EQUAL(exists, false);
 
-    std::cout << "|--  Delete Again:" << std::endl;
-    ok = QFile::remove(filepath);
-    DREAM3D_REQUIRE_EQUAL(ok, false);
+  std::cout << "|--  Delete Again:" << std::endl;
+  ok = QFile::remove(filepath);
+  DREAM3D_REQUIRE_EQUAL(ok, false);
 }
 
 // -----------------------------------------------------------------------------
@@ -130,9 +130,9 @@ int FileNameTest()
 
 //------------------------------------------------------
 #if defined (WIN32)
-    const QString DirSeparator = "\\";
+  const QString DirSeparator = "\\";
 #else
-    const QString DirSeparator = "/";
+  const QString DirSeparator = "/";
 #endif
   filename = "some.thing";
   filepath = MXAUnitTest::MXATempDir + filename;
@@ -154,7 +154,7 @@ int FileNameTest()
   ext = "";
   CheckFile(filepath, filename, ext);
 
-  filename ="something.";
+  filename = "something.";
   filepath =  MXAUnitTest::MXATempDir + filename;
   ext = "";
   CheckFile(filepath, filename, ext);
@@ -184,8 +184,8 @@ int FilesTest()
 
 
   CheckFile(MXAUnitTest::MXAFileSystemPathTest::OutputFile,
-                 MXAUnitTest::MXAFileSystemPathTest::OutputFileName,
-                 MXAUnitTest::MXAFileSystemPathTest::Extension);
+            MXAUnitTest::MXAFileSystemPathTest::OutputFileName,
+            MXAUnitTest::MXAFileSystemPathTest::Extension);
 
   QString testFileName = ".hidden_file";
   QString testFilePath = testdir + MXAUnitTest::DirSeparator + testFileName;
@@ -194,7 +194,7 @@ int FilesTest()
 
   testFileName = "Normal.txt";
   ok = QDir dir(testdir + MXAUnitTest::DirSeparator + "Dot.Dir" + MXAUnitTest::DirSeparator);
-dir.mkpath(".");
+  dir.mkpath(".");
   DREAM3D_REQUIRE_EQUAL(ok, true);
   testFilePath = testdir + MXAUnitTest::DirSeparator + "Dot.Dir" + MXAUnitTest::DirSeparator + testFileName;
   ext = "txt";
@@ -204,7 +204,7 @@ dir.mkpath(".");
 
   testFileName = "No_Extension";
   ok = QDir dir(testdir + MXAUnitTest::DirSeparator + "Dot.Dir" + MXAUnitTest::DirSeparator);
-dir.mkpath(".");
+  dir.mkpath(".");
   DREAM3D_REQUIRE_EQUAL(ok, true);
   testFilePath = testdir + MXAUnitTest::DirSeparator + "Dot.Dir" + MXAUnitTest::DirSeparator + testFileName;
   ext = "";
@@ -214,7 +214,7 @@ dir.mkpath(".");
 
   testFileName = "EndsWithDot.";
   ok = QDir dir(testdir + MXAUnitTest::DirSeparator + "Dot.Dir" + MXAUnitTest::DirSeparator);
-dir.mkpath(".");
+  dir.mkpath(".");
   DREAM3D_REQUIRE_EQUAL(ok, true);
   testFilePath = testdir + MXAUnitTest::DirSeparator + "Dot.Dir" + MXAUnitTest::DirSeparator + testFileName;
   ext = "";
@@ -293,7 +293,7 @@ int MakeDirectoriesTest()
 {
 
   std::cout  << "|- MakeDirectoriesTest -----------------" << std::endl;
-    int err = 0;
+  int err = 0;
   bool exists;
   bool isDir;
   bool isFile;
@@ -305,15 +305,15 @@ int MakeDirectoriesTest()
 
 
   QString dirPath( testdir
-                      + MXADir::Separator
-                      + MXAUnitTest::MXAFileSystemPathTest::TestDirName1
-                      + MXADir::Separator);
+                   + MXADir::Separator
+                   + MXAUnitTest::MXAFileSystemPathTest::TestDirName1
+                   + MXADir::Separator);
   std::cout << "|-- Creating Deeply Nested Directories: '" << dirPath << "'" << std::endl;
 
   exists = MXADir::exists(dirPath);
   DREAM3D_REQUIRE_EQUAL(exists, false);
   err = QDir dir(dirPath);
-dir.mkpath(".");
+  dir.mkpath(".");
   DREAM3D_REQUIRE_EQUAL(err, 1);
   isDir = MXADir::isDirectory(dirPath);
   DREAM3D_REQUIRE_EQUAL(isDir, true);
@@ -327,13 +327,13 @@ dir.mkpath(".");
   DREAM3D_REQUIRE_EQUAL(exists, false);
 
   dirPath = testdir
-              + MXADir::Separator
-              + MXAUnitTest::MXAFileSystemPathTest::TestDirName1;
+            + MXADir::Separator
+            + MXAUnitTest::MXAFileSystemPathTest::TestDirName1;
 
   exists = MXADir::exists(dirPath);
   DREAM3D_REQUIRE_EQUAL(exists, false);
   err = QDir dir(dirPath);
-dir.mkpath(".");
+  dir.mkpath(".");
   DREAM3D_REQUIRE_EQUAL(err, 1);
   isDir = MXADir::isDirectory(dirPath);
   DREAM3D_REQUIRE_EQUAL(isDir, true);
@@ -353,7 +353,7 @@ dir.mkpath(".");
 
 
 #if defined (WIN32)
-    dirPath = "C:\\";
+  dirPath = "C:\\";
 #else
   dirPath = "/tmp";
 #endif
@@ -365,7 +365,7 @@ dir.mkpath(".");
   DREAM3D_REQUIRE_EQUAL(path.compare(dirPath), 0)
 
   err = QDir dir(dirPath);
-dir.mkpath(".");
+  dir.mkpath(".");
   DREAM3D_REQUIRE_EQUAL(err, 1);
 
   isDir = MXADir::isDirectory(dirPath);
@@ -388,13 +388,13 @@ dir.mkpath(".");
   path = MXADir::cleanPath("/tmp/");
   if (path.compare("/tmp") != 0)
   {
-      std::cout << "This is bad" << std::endl;
+    std::cout << "This is bad" << std::endl;
   }
 
   path = MXADir::cleanPath("/tmp/Other");
   if (path.compare("/tmp/Other") != 0)
   {
-      std::cout << "This is bad" << std::endl;
+    std::cout << "This is bad" << std::endl;
   }
 #endif
 
@@ -428,7 +428,8 @@ int DirListTest()
   int err = 0;
   std::vector<QString> list = MXADir::entryList(MXAUnitTest::MXABuildDir);
 
-  for (std::vector<QString>::iterator iter = list.begin(); iter != list.end(); ++iter ) {
+  for (std::vector<QString>::iterator iter = list.begin(); iter != list.end(); ++iter )
+  {
     std::cout << "|--- DIR_LIST_ENTRY--> " << *iter << std::endl;
   }
 
@@ -453,21 +454,21 @@ int FileNameExtensionTest()
   QString base = MXADir::fileNameWithOutExtension(file);
   DREAM3D_REQUIRE_EQUAL(base, "SomeFile");
 
-  file ="SomeFile";
+  file = "SomeFile";
   base = MXADir::fileNameWithOutExtension(file);
   DREAM3D_REQUIRE_EQUAL(base, "SomeFile");
 
 
-  file ="SomeFile.";
+  file = "SomeFile.";
   base = MXADir::fileNameWithOutExtension(file);
   DREAM3D_REQUIRE_EQUAL(base, "SomeFile.");
 
 
-  file ="SomeFile.txt.bin";
+  file = "SomeFile.txt.bin";
   base = MXADir::fileNameWithOutExtension(file);
   DREAM3D_REQUIRE_EQUAL(base, "SomeFile.txt");
 
-  file ="/SomePath/To/SomeFile.txt.bin";
+  file = "/SomePath/To/SomeFile.txt.bin";
   base = MXADir::fileNameWithOutExtension(file);
   DREAM3D_REQUIRE_EQUAL(base, "SomeFile.txt");
 #endif
@@ -542,7 +543,7 @@ void TestTempDir()
 // -----------------------------------------------------------------------------
 //  Use Boost unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestTempDir() );

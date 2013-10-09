@@ -88,7 +88,7 @@ int main(int argc, char** argv)
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
   {
-    std::cout << "Error Code: "<< binaryReader->getErrorCondition()  << std::endl;
+    std::cout << "Error Code: " << binaryReader->getErrorCondition()  << std::endl;
   }
   // END_CLOCK("Reading Nodes & Triangles");
 

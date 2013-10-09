@@ -57,9 +57,9 @@
 //
 // -----------------------------------------------------------------------------
 CSVGrainDataReader::CSVGrainDataReader() :
-m_FileName(""),
-m_NumberOfElements(0),
-m_ManageMemory(true)
+  m_FileName(""),
+  m_NumberOfElements(0),
+  m_ManageMemory(true)
 {
   // Init all the arrays to NULL
   m_GrainId = NULL;
@@ -175,20 +175,20 @@ int CSVGrainDataReader::readFile()
     return -100;
   }
 
-    ::memset(buf, 0, kBufferSize);
-    in.getline(buf, kBufferSize);
-    if (sscanf(buf, "%lu", &m_NumberOfElements) != 1)
-    {
-      std::cout << "First Line of file not parsed." << std::endl;
-    }
-    else
-    {
-      std::cout << "m_NumberOfElements = " << m_NumberOfElements << std::endl;
-    }
+  ::memset(buf, 0, kBufferSize);
+  in.getline(buf, kBufferSize);
+  if (sscanf(buf, "%lu", &m_NumberOfElements) != 1)
+  {
+    std::cout << "First Line of file not parsed." << std::endl;
+  }
+  else
+  {
+    std::cout << "m_NumberOfElements = " << m_NumberOfElements << std::endl;
+  }
 
-    ::memset(buf, 0, kBufferSize);
-    in.getline(buf, kBufferSize);
-    parseHeaderLine(buf, kBufferSize);
+  ::memset(buf, 0, kBufferSize);
+  in.getline(buf, kBufferSize);
+  parseHeaderLine(buf, kBufferSize);
 
   // Delete any currently existing pointers
   deletePointers();
@@ -223,9 +223,9 @@ int CSVGrainDataReader::readFile()
   {
 
     std::cout << "Premature End Of File reached.\n" << m_FileName
-        << "\nNumRows=" << m_NumberOfElements
-        << "\ncounter=" << counter << " m_NumberOfElements=" << m_NumberOfElements
-        << "\nTotal Data Points Read=" << counter << std::endl;
+              << "\nNumRows=" << m_NumberOfElements
+              << "\ncounter=" << counter << " m_NumberOfElements=" << m_NumberOfElements
+              << "\nTotal Data Points Read=" << counter << std::endl;
   }
 
   return err;
@@ -246,7 +246,7 @@ void CSVGrainDataReader::parseHeaderLine(char* buf, size_t length)
 // -----------------------------------------------------------------------------
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
-void CSVGrainDataReader::readData(const QString &line, int row, size_t i)
+void CSVGrainDataReader::readData(const QString& line, int row, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 11 columns of data. The column names should be the following:
@@ -261,7 +261,7 @@ void CSVGrainDataReader::readData(const QString &line, int row, size_t i)
 
   int gid, obb, nn, sg;
 
-  m_NumFields = sscanf(line.c_str(), "%d,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d", &gid, &p1, &p,&p2, &eq, &ba, &ca, &o3, &obb, &nn, &sg);
+  m_NumFields = sscanf(line.c_str(), "%d,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d", &gid, &p1, &p, &p2, &eq, &ba, &ca, &o3, &obb, &nn, &sg);
 
 
   m_GrainId[row] = gid;

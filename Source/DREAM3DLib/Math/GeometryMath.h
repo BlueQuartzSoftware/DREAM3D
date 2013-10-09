@@ -36,6 +36,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataContainers/VertexArray.h"
 
 
 /*
@@ -72,6 +73,16 @@ class DREAM3DLib_EXPORT GeometryMath
     static float AngleBetweenVectors(float a[3], float b[3]);
 
     /**
+     * @brief Computes the normal vector to a plane containing 3 points.
+     * @param a
+     * @param b
+     * @param c
+     * @param n
+     * @return
+     */
+    static void FindPlaneNormalVector(float a[3], float b[3], float c[3], float n[3]);
+
+    /**
      * @brief Determines if a point is inside of a box defined by the lower left and upper right corners
      * @param p 1x3 Vector
      * @param lowerLeft 1x3 Vector
@@ -97,7 +108,15 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param ray 1x3 Vector
      * @return
      */
-    static float GenerateRandomRay(float p[3], float length, float ray[3]);
+    static void GenerateRandomRay(float p[3], float length, float ray[3]);
+    /**
+     * @brief Determines the bounding box defined by the lower left and upper right corners of a set of vertices
+     * @param verts pointer to vertex array
+     * @param lowerLeft 1x3 Vector
+     * @param upperRight 1x3 Vector
+     * @return
+     */
+    static void FindBoundingBoxOfVertices(VertexArray::Pointer verts, float lowerLeft[3], float upperRight[3]);
 
   protected:
     GeometryMath();

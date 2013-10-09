@@ -72,24 +72,24 @@ void TestMissingHeaders()
   // It should read through this header just fine
   DREAM3D_REQUIRE(err > 0)
 
-      int value = reader.getNumEvenCols();
+  int value = reader.getNumEvenCols();
   DREAM3D_REQUIRE_EQUAL(value, -1)
 
-      value = reader.getNumOddCols();
+  value = reader.getNumOddCols();
   DREAM3D_REQUIRE_EQUAL(value, -1)
 
-      value = reader.getNumRows();
+  value = reader.getNumRows();
   DREAM3D_REQUIRE_EQUAL(value, -1)
 
-      float step = reader.getXStep();
+  float step = reader.getXStep();
   DREAM3D_REQUIRE_EQUAL(step, 0.0f)
 
-      step = reader.getYStep();
+  step = reader.getYStep();
   DREAM3D_REQUIRE_EQUAL(step, 0.0f)
 
-      err = reader.readFile();
+  err = reader.readFile();
   qDebug() << reader.getErrorMessage();
-  DREAM3D_REQUIRED(err, ==, -110)
+  DREAM3D_REQUIRED(err, == , -110)
 }
 
 
@@ -107,9 +107,9 @@ void TestMissingGrid()
 
 
 
-      err = reader.readFile();
+  err = reader.readFile();
   qDebug() << reader.getErrorMessage();
-  DREAM3D_REQUIRED(err, ==, -300)
+  DREAM3D_REQUIRED(err, == , -300)
 }
 
 // -----------------------------------------------------------------------------
@@ -126,9 +126,9 @@ void TestHexGrid()
 
 
 
-      err = reader.readFile();
+  err = reader.readFile();
   qDebug() << reader.getErrorMessage();
-  DREAM3D_REQUIRED(err, ==, -400)
+  DREAM3D_REQUIRED(err, == , -400)
 }
 
 // -----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ void TestShortFile()
   int err = reader.readFile();
   // It should read through this header just fine but die when reading the file because there is not enough data being read
   qDebug() << reader.getErrorMessage();
-  DREAM3D_REQUIRED(err, <, 0)
+  DREAM3D_REQUIRED(err, < , 0)
 }
 
 // -----------------------------------------------------------------------------
@@ -154,25 +154,25 @@ void TestNormalFile()
   reader.setFileName(EbsdImportTest::TestFile1);
   int err = reader.readFile();
   qDebug() << reader.getErrorMessage();
-  DREAM3D_REQUIRED(err, ==, 0)
+  DREAM3D_REQUIRED(err, == , 0)
 }
 
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( TestMissingHeaders() )
-      DREAM3D_REGISTER_TEST( TestHexGrid() )
-      DREAM3D_REGISTER_TEST( TestMissingGrid() )
-      DREAM3D_REGISTER_TEST( TestShortFile() )
-DREAM3D_REGISTER_TEST( TestNormalFile() )
-      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+  DREAM3D_REGISTER_TEST( TestHexGrid() )
+  DREAM3D_REGISTER_TEST( TestMissingGrid() )
+  DREAM3D_REGISTER_TEST( TestShortFile() )
+  DREAM3D_REGISTER_TEST( TestNormalFile() )
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 
-      PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
   return err;
 }
 

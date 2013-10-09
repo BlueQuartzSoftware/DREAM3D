@@ -57,10 +57,10 @@ class GenerateGrainIds : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(GenerateGrainIds)
     DREAM3D_TYPE_MACRO_SUPER(GenerateGrainIds, AbstractFilter)
 
-	  //------ Required Cell Data
-	  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-    virtual ~GenerateGrainIds(){};
+    virtual ~GenerateGrainIds() {};
     virtual const QString getGroupName()
     {
       return "UnitTest";
@@ -106,9 +106,9 @@ class GenerateGrainIds : public AbstractFilter
 
   protected:
     GenerateGrainIds() :
-           AbstractFilter(),
-             m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-             m_GrainIds(NULL)
+      AbstractFilter(),
+      m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+      m_GrainIds(NULL)
     {
     }
 
@@ -191,7 +191,8 @@ int TestVtkGrainIdReader()
   reader->setVoxelDataContainer(m.get());
   reader->execute( );
   int err = reader->getErrorCondition();
-  if (err < 0) {
+  if (err < 0)
+  {
     std::cout << reader->getErrorMessage() << std::endl;
   }
   DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -209,7 +210,7 @@ int TestVtkGrainIdReader()
   for (int i = 0; i < size; ++i)
   {
     int32_t file_value = data[i];
-    int32_t memory_value = i+UnitTest::VtkGrainIdIOTest::Offset;
+    int32_t memory_value = i + UnitTest::VtkGrainIdIOTest::Offset;
     DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
   }
 
@@ -221,7 +222,8 @@ int TestVtkGrainIdReader()
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( TestVtkGrainIdWriter() )

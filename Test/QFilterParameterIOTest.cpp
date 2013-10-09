@@ -96,11 +96,11 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
     prefs->beginGroup(gName);
     QString filterName = prefs->value(DREAM3D::Settings::FilterName, "").toString();
     prefs->endGroup();
-  //  qDebug() << filterName;
+    //  qDebug() << filterName;
 
     IFilterFactory::Pointer factory = filtManager->getFactoryForFilter(filterName);
     DREAM3D_REQUIRE(NULL != factory) // We should know about all the filters
-        AbstractFilter::Pointer filter = factory->create();
+    AbstractFilter::Pointer filter = factory->create();
 
     if(NULL != filter.get())
     {
@@ -119,12 +119,12 @@ QString m_FileExt("ang");
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles, bool stackLowToHigh)
+QVector<QString> generateFileList(int start, int end, bool& hasMissingFiles, bool stackLowToHigh)
 {
   int index = 0;
   QVector<QString> fileList;
 
-  for (int i = 0; i < (end-start)+1; ++i)
+  for (int i = 0; i < (end - start) + 1; ++i)
   {
     if (stackLowToHigh)
     {
@@ -233,10 +233,11 @@ void TestReadQSettingsBasedFile()
 
   qDebug() << "Current Path: " << QDir::currentPath();
   // Read in the first Pipeline that converts the Small IN100 files to an .h5ebsd file
-  //importSmallIN100();
+  // importSmallIN100();
   QDir cwd = QDir::current();
   cwd.cdUp();
   cwd.cd("Bin");
+  qDebug() << "Changing working directory to " << cwd.absolutePath();
   QDir::setCurrent(cwd.absolutePath());
 
 
@@ -257,16 +258,16 @@ void TestReadQSettingsBasedFile()
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   int err = EXIT_SUCCESS;
 
 
   DREAM3D_REGISTER_TEST( TestWriteQSettingsBasedFile() )
 
-      DREAM3D_REGISTER_TEST( TestReadQSettingsBasedFile() )
+  DREAM3D_REGISTER_TEST( TestReadQSettingsBasedFile() )
 
-      PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
 
   return err;
 }
