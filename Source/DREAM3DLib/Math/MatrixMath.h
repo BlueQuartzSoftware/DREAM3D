@@ -148,6 +148,18 @@ class DREAM3DLib_EXPORT MatrixMath
     static void Normalize3x1(float g[3]);
 
     /**
+     * @brief Performs an "in place" sort of the 3x1 vector in ascending order. Single Precision Variant
+     * @param g
+     */
+    static void Sort3x1Ascending(float g[3]);
+
+    /**
+     * @brief returns index of maximum value. Single Precision Variant
+     * @param g
+     */
+    static int FindIndexOfMaxVal3x1(float g[3]);
+
+    /**
     * @brief Performs an "in place" normalization of the 3x1 vector. Double Precision Variant
     * @param g
     */
@@ -176,6 +188,7 @@ class DREAM3DLib_EXPORT MatrixMath
      */
     static void CrossProduct(double a[3], double b[3], double c[3]);
 
+    static void CrossProduct(float a[3], float b[3], float c[3]);
 
 
   protected:

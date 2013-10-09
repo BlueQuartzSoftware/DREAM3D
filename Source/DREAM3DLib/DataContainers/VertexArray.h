@@ -76,25 +76,25 @@ class DREAM3DLib_EXPORT VertexArray
      * @param name
      * @return
      */
-    static Pointer CreateArray(size_t numElements, const QString &name);
+    static Pointer CreateArray(int32_t numElements, const QString &name);
 
     /**
      * @brief resizeArray
      * @param newSize
      */
-    void resizeArray(size_t newSize);
+    void resizeArray(int32_t newSize);
 
     /**
      * @brief getNumberOfTuples
      * @return
      */
-    int64_t getNumberOfTuples();
+    int32_t getNumberOfTuples();
 
     /**
      * @brief count
      * @return
      */
-    int64_t count();
+    int32_t count();
 
     /**
      * @brief initializeWithZeros
@@ -106,35 +106,35 @@ class DREAM3DLib_EXPORT VertexArray
      * @param vertId
      * @param coords
      */
-    void getCoords(size_t vertId, float* coords);
+    void getCoords(int32_t vertId, float* coords);
 
     /**
      * @brief setCoords
      * @param vertId
      * @param coords
      */
-    void setCoords(size_t vertId, float* coords);
+    void setCoords(int32_t vertId, float* coords);
 
     /**
      * @brief getPointer
      * @param i
      * @return
      */
-    Vert_t* getPointer(size_t i);
+    Vert_t* getPointer(int32_t i);
 
      /**
      * @brief Returns reference to the Face_t at the index i
      * @param i
      * @return
      */
-    Vert_t& operator[](size_t i);
+    Vert_t& operator[](int32_t i);
 
      /**
      * @brief Returns reference to the Face_t at the index i
      * @param i
      * @return
      */
-    Vert_t& getVert(size_t i);
+    Vert_t& getVert(int32_t i);
 
 
   protected:

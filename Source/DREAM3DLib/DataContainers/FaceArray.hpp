@@ -83,19 +83,19 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void resizeArray(size_t newSize) { m_Array->Resize(newSize); }
+    void resizeArray(int32_t newSize) { m_Array->Resize(newSize); }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
-    int64_t count() { return m_Array->getNumberOfTuples(); }
+    int32_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
+    int32_t count() { return m_Array->getNumberOfTuples(); }
 
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    static Pointer CreateArray(size_t numElements, const QString &name, VertexArray* verts)
+    static Pointer CreateArray(int32_t numElements, const QString &name, VertexArray* verts)
     {
       if (name.isEmpty() == true)
       {
@@ -111,9 +111,9 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void getVerts(size_t edgeId, size_t* verts)
+    void getVerts(int32_t faceId, int32_t* verts)
     {
-      Face_t& Face = *(m_Array->getPointer(edgeId));
+      Face_t& Face = *(m_Array->getPointer(faceId));
       verts[0] = Face.verts[0];
       verts[1] = Face.verts[1];
       verts[2] = Face.verts[2];
@@ -122,9 +122,20 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setVerts(size_t edgeId, float* verts)
+    void getVertObjects(int32_t faceId, VertexArray::Vert_t& vert1, VertexArray::Vert_t& vert2, VertexArray::Vert_t& vert3)
     {
-      Face_t& Face = *(m_Array->getPointer(edgeId));
+      Face_t& Face = *(m_Array->getPointer(faceId));
+      vert1 = m_Verts->getVert(Face.verts[0]);
+      vert2 = m_Verts->getVert(Face.verts[1]);
+      vert3 = m_Verts->getVert(Face.verts[2]);
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void setVerts(int32_t faceId, int32_t* verts)
+    {
+      Face_t& Face = *(m_Array->getPointer(faceId));
       Face.verts[0] = verts[0];
       Face.verts[1] = verts[1];
       Face.verts[2] = verts[2];
@@ -144,8 +155,8 @@ class FaceArray
     void findFacesContainingVert()
     {
 
-      size_t numPts = m_Verts->getNumberOfTuples();
-      size_t numCells = m_Array->getNumberOfTuples();
+      int32_t numPts = m_Verts->getNumberOfTuples();
+      int32_t numCells = m_Array->getNumberOfTuples();
 
       m_FacesContainingVert = Int32DynamicListArray::New();
 
@@ -163,14 +174,14 @@ class FaceArray
       ::memset(linkLoc, 0, numPts*sizeof(unsigned short));
 
 
-      size_t pts[3];
+      int32_t pts[3];
 
       //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
       // traverse data to determine number of uses of each point
       for (cellId=0; cellId < numCells; cellId++)
       {
         getVerts(cellId, pts);
-        for (size_t j=0; j < 3; j++)
+        for (int32_t j=0; j < 3; j++)
         {
          // m_FacesContainingVert->incrementLinkCount(pts[j]);
          linkCount[pts[j]]++;
@@ -183,7 +194,7 @@ class FaceArray
       for (cellId=0; cellId < numCells; cellId++)
       {
         getVerts(cellId, pts);
-        for (size_t j=0; j < 3; j++)
+        for (int32_t j=0; j < 3; j++)
         {
           m_FacesContainingVert->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
         }
@@ -205,7 +216,7 @@ class FaceArray
     void findFaceNeighbors()
     {
 
-      size_t nFaces = m_Array->getNumberOfTuples();
+      int32_t nFaces = m_Array->getNumberOfTuples();
 
       m_FaceNeighbors = Int32DynamicListArray::New();
 
@@ -220,11 +231,11 @@ class FaceArray
       QVector<int> loop_neighbors(32, 0);
 
       // Build up the Face Adjacency list now that we have the cell links
-      for(size_t t = 0; t < nFaces; ++t)
+      for(int32_t t = 0; t < nFaces; ++t)
       {
         //   qDebug() << "Analyzing Face " << t << "\n";
         Face_t& seedFace = *(m_Array->getPointer(t));
-        for(size_t v = 0; v < 3; ++v)
+        for(int32_t v = 0; v < 3; ++v)
         {
           //   qDebug() << " vert " << v << "\n";
           int nFs = m_FacesContainingVert->getNumberOfElements(seedFace.verts[v]);
@@ -282,7 +293,7 @@ class FaceArray
         }
         BOOST_ASSERT(linkCount[t] > 2);
         // Reset all the visited triangle indexs back to false (zero)
-        for(size_t k = 0;k < linkCount[t]; ++k)
+        for(int32_t k = 0;k < linkCount[t]; ++k)
         {
           visited[loop_neighbors[k]] = false;
         }
@@ -294,7 +305,7 @@ class FaceArray
     /*
      * @brief
      */
-    Face_t* getPointer(size_t i)
+    Face_t* getPointer(int32_t i)
     {
       return m_Array->getPointer(i);
     }
@@ -304,7 +315,7 @@ class FaceArray
      * @param i
      * @return
      */
-    inline Face_t& operator[](size_t i)
+    inline Face_t& operator[](int32_t i)
     {
       return (*m_Array)[i];
     }
@@ -313,7 +324,7 @@ class FaceArray
      * @param i
      * @return
      */
-    inline Face_t& getFace(size_t i)
+    inline Face_t& getFace(int32_t i)
     {
       return (*m_Array)[i];
     }

@@ -37,6 +37,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/VertexArray.h"
+#include "DREAM3DLib/DataContainers/FaceArray.hpp"
 
 
 /*
@@ -73,7 +74,28 @@ class DREAM3DLib_EXPORT GeometryMath
     static float AngleBetweenVectors(float a[3], float b[3]);
 
     /**
-     * @brief Computes the normal vector to a plane containing 3 points.
+     * @brief Computes the area of a triangle defined by 3 points.
+     * @param a 1x3 Vector
+     * @param b 1x3 Vector
+     * @param c 1x3 Vector
+     * @param area
+     * @return
+     */
+    static void FindTriangleArea(float a[3], float b[3], float c[3], float& area);
+
+    /**
+     * @brief Computes the volume of a tetrahedron defined by 4 points.
+     * @param a 1x3 Vector
+     * @param b 1x3 Vector
+     * @param c 1x3 Vector
+     * @param d 1x3 Vector
+     * @param volume
+     * @return
+     */
+    static void FindTetrahedronVolume(float a[3], float b[3], float c[3], float d[3], float& volume);
+
+    /**
+     * @brief Computes the normal vector to a plane containing 3 points (AB X AC).
      * @param a
      * @param b
      * @param c
@@ -83,6 +105,17 @@ class DREAM3DLib_EXPORT GeometryMath
     static void FindPlaneNormalVector(float a[3], float b[3], float c[3], float n[3]);
 
     /**
+     * @brief Computes the coefficients of a plane containing 3 points (AB X AC).
+     * @param a 1x3 Vector
+     * @param b 1x3 Vector
+     * @param c 1x3 Vector
+     * @param n 1x3 Vector
+     * @param d float
+     * @return
+     */
+    static void FindPlaneCoefficients(float a[3], float b[3], float c[3], float n[3], float& d);
+
+    /**
      * @brief Determines if a point is inside of a box defined by the lower left and upper right corners
      * @param p 1x3 Vector
      * @param lowerLeft 1x3 Vector
@@ -90,6 +123,36 @@ class DREAM3DLib_EXPORT GeometryMath
      * @return
      */
     static bool PointInBox(float p[3], float lowerLeft[3], float upperRight[3]);
+
+    /**
+     * @brief Determines if a point is inside of a box defined by the lower left and upper right corners
+     * @param p 1x3 Vector
+     * @param lowerLeft 1x3 Vector
+     * @param upperRight 1x3 Vector
+     * @return
+     */
+    static char PointInPolyhedron(FaceArray::Pointer faces, float p[3], float lowerLeft[3], float upperRight[3], float radius);
+
+    /**
+     * @brief Determines if a point is inside of a triangle defined by 3 points
+     * @param a 1x3 Vector (corner of triangle)
+     * @param b 1x3 Vector (corner of triangle)
+     * @param c 1x3 Vector (corner of triangle)
+     * @param m int
+     * @param p 1x3 Vector
+     * @return
+     */
+    static char PointInTriangle3D(float a[3], float b[3], float c[3], int m, float p[3]);
+
+    /**
+     * @brief Determines if a point is inside of a triangle defined by 3 points
+     * @param a 1x3 Vector (corner of triangle)
+     * @param b 1x3 Vector (corner of triangle)
+     * @param c 1x3 Vector (corner of triangle)
+     * @param p 1x3 Vector
+     * @return
+     */
+    static char PointInTriangle2D(float a[3], float b[3], float c[3], float p[3]);
 
     /**
      * @brief Determines if a segment between two points intersects a box defined by the lower left and upper right corners
@@ -102,13 +165,12 @@ class DREAM3DLib_EXPORT GeometryMath
     static bool RayIntersectsBox(float p[3], float q[3], float lowerLeft[3], float upperRight[3]);
 
     /**
-     * @brief Creates a randomly oriented ray from point of given length
-     * @param p 1x3 Vector 
+     * @brief Creates a randomly oriented ray of given length
      * @param length float
      * @param ray 1x3 Vector
      * @return
      */
-    static void GenerateRandomRay(float p[3], float length, float ray[3]);
+    static void GenerateRandomRay(float length, float ray[3]);
     /**
      * @brief Determines the bounding box defined by the lower left and upper right corners of a set of vertices
      * @param verts pointer to vertex array
@@ -117,6 +179,41 @@ class DREAM3DLib_EXPORT GeometryMath
      * @return
      */
     static void FindBoundingBoxOfVertices(VertexArray::Pointer verts, float lowerLeft[3], float upperRight[3]);
+
+    /**
+     * @brief Determines if a segment between two points intersects a triangle defined by 3 points
+     * @param q 1x3 Vector (head of segment)
+     * @param r 1x3 Vector (tail of segment)
+     * @param a 1x3 Vector (corner of triangle)
+     * @param b 1x3 Vector (corner of triangle)
+     * @param c 1x3 Vector (corner of triangle)
+     * @param p 1x3 Vector
+     * @return
+     */
+    static char RayIntersectsTriangle(float a[3], float b[3], float c[3], float q[3], float r[3], float p[3]);
+
+    /**
+     * @brief Determines if a segment between two points crosses a triangle defined by 3 points
+     * @param q 1x3 Vector (head of segment)
+     * @param r 1x3 Vector (tail of segment)
+     * @param a 1x3 Vector (corner of triangle)
+     * @param b 1x3 Vector (corner of triangle)
+     * @param c 1x3 Vector (corner of triangle)
+     * @return
+     */
+    static char RayCrossesTriangle(float a[3], float b[3], float c[3], float q[3], float r[3]);
+
+    /**
+     * @brief Determines if a segment between two points intersects a plane defined by 3 points
+     * @param q 1x3 Vector (head of segment)
+     * @param r 1x3 Vector (tail of segment)
+     * @param a 1x3 Vector (corner of triangle)
+     * @param b 1x3 Vector (corner of triangle)
+     * @param c 1x3 Vector (corner of triangle)
+     * @param p 1x3 Vector
+     * @return
+     */
+    static char RayIntersectsPlane(float a[3], float b[3], float c[3], float q[3], float r[3], float p[3], int& m);
 
   protected:
     GeometryMath();

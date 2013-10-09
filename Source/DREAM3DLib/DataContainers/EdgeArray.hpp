@@ -77,18 +77,18 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void resizeArray(size_t newSize) { m_Array->Resize(newSize); }
+    void resizeArray(int32_t newSize) { m_Array->Resize(newSize); }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
-    int64_t count() { return m_Array->getNumberOfTuples(); }
+    int32_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
+    int32_t count() { return m_Array->getNumberOfTuples(); }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    static Pointer CreateArray(size_t numElements, const QString &name, VertexArray* verts)
+    static Pointer CreateArray(int32_t numElements, const QString &name, VertexArray* verts)
     {
       if (name.isEmpty() == true)
       {
@@ -104,7 +104,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void getVerts(size_t edgeId, size_t* verts)
+    void getVerts(int32_t edgeId, int32_t* verts)
     {
       Edge_t& Edge = *(m_Array->getPointer(edgeId));
       verts[0] = Edge.verts[0];
@@ -114,7 +114,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setVerts(size_t edgeId, float* verts)
+    void setVerts(int32_t edgeId, int32_t* verts)
     {
       Edge_t& Edge = *(m_Array->getPointer(edgeId));
       Edge.verts[0] = verts[0];
@@ -137,8 +137,8 @@ class EdgeArray
     void findEdgesContainingVert()
     {
 
-      size_t numPts = m_Verts->getNumberOfTuples();
-      size_t numCells = m_Array->getNumberOfTuples();
+      int32_t numPts = m_Verts->getNumberOfTuples();
+      int32_t numCells = m_Array->getNumberOfTuples();
 
       m_EdgesContainingVert = Int32DynamicListArray::New();
 
@@ -155,7 +155,7 @@ class EdgeArray
       ::memset(linkLoc, 0, numPts*sizeof(unsigned short));
 
 
-      size_t pts[2];
+      int32_t pts[2];
 
       //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
       // traverse data to determine number of uses of each point
@@ -174,7 +174,7 @@ class EdgeArray
       for (cellId=0; cellId < numCells; cellId++)
       {
         getVerts(cellId, pts);
-        for (size_t j=0; j < 2; j++)
+        for (int32_t j=0; j < 2; j++)
         {
           m_EdgesContainingVert->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
         }
@@ -196,7 +196,7 @@ class EdgeArray
     void findEdgeNeighbors()
     {
 
-      size_t nEdges = m_Array->getNumberOfTuples();
+      int32_t nEdges = m_Array->getNumberOfTuples();
 
       m_EdgeNeighbors = Int32DynamicListArray::New();
 
@@ -211,11 +211,11 @@ class EdgeArray
       QVector<int> loop_neighbors(32, 0);
 
       // Build up the Face Adjacency list now that we have the cell links
-      for(size_t t = 0; t < nEdges; ++t)
+      for(int32_t t = 0; t < nEdges; ++t)
       {
         //   qDebug() << "Analyzing Face " << t << "\n";
         Edge_t& seedEdge = *(m_Array->getPointer(t));
-        for(size_t v = 0; v < 2; ++v)
+        for(int32_t v = 0; v < 2; ++v)
         {
           //   qDebug() << " vert " << v << "\n";
           int nEs = m_EdgesContainingVert->getNumberOfElements(seedEdge.verts[v]);
@@ -267,7 +267,7 @@ class EdgeArray
         }
         BOOST_ASSERT(linkCount[t] > 1);
         // Reset all the visited triangle indexs back to false (zero)
-        for(size_t k = 0;k < linkCount[t]; ++k)
+        for(int32_t k = 0;k < linkCount[t]; ++k)
         {
           visited[loop_neighbors[k]] = false;
         }
@@ -279,7 +279,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    Edge_t* getPointer(size_t i)
+    Edge_t* getPointer(int32_t i)
     {
       return m_Array->getPointer(i);
     }
@@ -289,7 +289,7 @@ class EdgeArray
      * @param i
      * @return
      */
-    inline Edge_t& operator[](size_t i)
+    inline Edge_t& operator[](int32_t i)
     {
       return (*m_Array)[i];
     }
@@ -298,7 +298,7 @@ class EdgeArray
      * @param i
      * @return
      */
-    inline Edge_t& getEdge(size_t i)
+    inline Edge_t& getEdge(int32_t i)
     {
       return (*m_Array)[i];
     }

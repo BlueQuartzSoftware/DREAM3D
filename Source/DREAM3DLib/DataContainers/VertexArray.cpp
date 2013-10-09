@@ -55,14 +55,14 @@ VertexArray::~VertexArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexArray::resizeArray(size_t newSize) {
+void VertexArray::resizeArray(int32_t newSize) {
   m_Array->Resize(newSize);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t VertexArray::getNumberOfTuples()
+int32_t VertexArray::getNumberOfTuples()
 {
   return m_Array->getNumberOfTuples();
 }
@@ -70,7 +70,7 @@ int64_t VertexArray::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t VertexArray::count()
+int32_t VertexArray::count()
 {
   return m_Array->getNumberOfTuples();
 }
@@ -78,7 +78,7 @@ int64_t VertexArray::count()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::Pointer VertexArray::CreateArray(size_t numElements, const QString &name)
+VertexArray::Pointer VertexArray::CreateArray(int32_t numElements, const QString &name)
 {
   if (name.isEmpty() == true)
   {
@@ -101,7 +101,7 @@ void VertexArray::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexArray::getCoords(size_t vertId, float* coords)
+void VertexArray::getCoords(int32_t vertId, float* coords)
 {
   Vert_t& Vert = *(m_Array->getPointer(vertId));
   coords[0] = Vert.pos[0];
@@ -112,7 +112,7 @@ void VertexArray::getCoords(size_t vertId, float* coords)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexArray::setCoords(size_t vertId, float* coords)
+void VertexArray::setCoords(int32_t vertId, float* coords)
 {
   Vert_t& Vert = *(m_Array->getPointer(vertId));
   Vert.pos[0] = coords[0];
@@ -123,7 +123,7 @@ void VertexArray::setCoords(size_t vertId, float* coords)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::Vert_t* VertexArray::getPointer(size_t i)
+VertexArray::Vert_t* VertexArray::getPointer(int32_t i)
 {
   return m_Array->getPointer(i);
 }
@@ -131,7 +131,7 @@ VertexArray::Vert_t* VertexArray::getPointer(size_t i)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::Vert_t& VertexArray::operator[](size_t i)
+VertexArray::Vert_t& VertexArray::operator[](int32_t i)
 {
   return (*m_Array)[i];
 }
@@ -139,7 +139,7 @@ VertexArray::Vert_t& VertexArray::operator[](size_t i)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::Vert_t& VertexArray::getVert(size_t i)
+VertexArray::Vert_t& VertexArray::getVert(int32_t i)
 {
   return (*m_Array)[i];
 }
