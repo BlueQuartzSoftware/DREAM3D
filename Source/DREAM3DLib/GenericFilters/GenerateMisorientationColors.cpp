@@ -230,7 +230,10 @@ void GenerateMisorientationColors::execute()
 
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  QuatF refQuat = {m_ReferenceAxis.x * sin(m_ReferenceAngle), m_ReferenceAxis.y * sin(m_ReferenceAngle), m_ReferenceAxis.z * sin(m_ReferenceAngle), cos(m_ReferenceAngle)};
+  QuatF refQuat = {m_ReferenceAxis.x * sin(m_ReferenceAngle),
+                   m_ReferenceAxis.y * sin(m_ReferenceAngle),
+                   m_ReferenceAxis.z * sin(m_ReferenceAngle),
+                   cos(m_ReferenceAngle) };
   QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 

@@ -188,7 +188,7 @@ void FindSurfaceGrains::find_surfacegrains2D()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int xPoints = 0, yPoints = 0;
-  float xRes = 0.0f, yRes = 0.0f;
+  //float xRes = 0.0f, yRes = 0.0f;
 
   if(m->getXPoints() == 1)
   {

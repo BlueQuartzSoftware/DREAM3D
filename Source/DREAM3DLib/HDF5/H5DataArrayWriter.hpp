@@ -70,8 +70,7 @@ class H5DataArrayWriter
         rank = 2;
       }
 
-      hsize_t dims[2] =
-      { numTuples, numComp };
+      hsize_t dims[2] = { static_cast<hsize_t>(numTuples), static_cast<hsize_t>(numComp) };
       int err = 0;
       if (QH5Lite::datasetExists(gid, name) == false)
       {

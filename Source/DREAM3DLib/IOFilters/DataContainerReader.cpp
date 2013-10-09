@@ -338,7 +338,7 @@ void DataContainerReader::readData(bool preflight)
     err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, dcNames);
     DataContainerArray::Pointer dca = getDataContainerArray();
 
-    int32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+    uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
     for(int iter = 0; iter < dcNames.size(); iter++)
     {
       if (dca->containsDataContainer(dcNames[iter]) == true )

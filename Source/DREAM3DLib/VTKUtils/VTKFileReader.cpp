@@ -229,7 +229,7 @@ int VTKFileReader::readHeader()
     return err;
   }
 
-  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+  size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
   getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setDimensions(dcDims);
 
 
