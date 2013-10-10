@@ -75,24 +75,24 @@ class DREAM3DLib_EXPORT GeometryMath
 
     /**
      * @brief Computes the area of a triangle defined by 3 points.
-     * @param a 1x3 Vector
-     * @param b 1x3 Vector
-     * @param c 1x3 Vector
+     * @param a
+     * @param b
+     * @param c
      * @param area
      * @return
      */
-    static void FindTriangleArea(float a[3], float b[3], float c[3], float& area);
+    static void FindTriangleArea(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, float& area);
 
     /**
      * @brief Computes the volume of a tetrahedron defined by 4 points.
-     * @param a 1x3 Vector
-     * @param b 1x3 Vector
-     * @param c 1x3 Vector
-     * @param d 1x3 Vector
+     * @param a
+     * @param b
+     * @param c
+     * @param d
      * @param volume
      * @return
      */
-    static void FindTetrahedronVolume(float a[3], float b[3], float c[3], float d[3], float& volume);
+    static void FindTetrahedronVolume(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t d, float& volume);
 
     /**
      * @brief Computes the normal vector to a plane containing 3 points (AB X AC).
@@ -102,67 +102,67 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param n
      * @return
      */
-    static void FindPlaneNormalVector(float a[3], float b[3], float c[3], float n[3]);
+    static void FindPlaneNormalVector(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, float n[3]);
 
     /**
      * @brief Computes the coefficients of a plane containing 3 points (AB X AC).
-     * @param a 1x3 Vector
-     * @param b 1x3 Vector
-     * @param c 1x3 Vector
+     * @param a
+     * @param b
+     * @param c
      * @param n 1x3 Vector
      * @param d float
      * @return
      */
-    static void FindPlaneCoefficients(float a[3], float b[3], float c[3], float n[3], float& d);
+    static void FindPlaneCoefficients(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, float n[3], float& d);
 
     /**
      * @brief Determines if a point is inside of a box defined by the lower left and upper right corners
-     * @param p 1x3 Vector
-     * @param lowerLeft 1x3 Vector
-     * @param upperRight 1x3 Vector
+     * @param p
+     * @param lowerLeft
+     * @param upperRight
      * @return
      */
-    static bool PointInBox(float p[3], float lowerLeft[3], float upperRight[3]);
+    static bool PointInBox(VertexArray::Vert_t p, VertexArray::Vert_t lowerLeft, VertexArray::Vert_t upperRight);
 
     /**
-     * @brief Determines if a point is inside of a box defined by the lower left and upper right corners
-     * @param p 1x3 Vector
-     * @param lowerLeft 1x3 Vector
-     * @param upperRight 1x3 Vector
+     * @brief Determines if a point is inside of a polyhedron defined by a set of faces
+     * @param p
+     * @param lowerLeft
+     * @param upperRight
      * @return
      */
-    static char PointInPolyhedron(FaceArray::Pointer faces, float p[3], float lowerLeft[3], float upperRight[3], float radius);
+    static char PointInPolyhedron(FaceArray::Pointer faces, VertexArray::Vert_t p, VertexArray::Vert_t lowerLeft, VertexArray::Vert_t upperRight, float radius);
 
     /**
      * @brief Determines if a point is inside of a triangle defined by 3 points
-     * @param a 1x3 Vector (corner of triangle)
-     * @param b 1x3 Vector (corner of triangle)
-     * @param c 1x3 Vector (corner of triangle)
+     * @param a
+     * @param b
+     * @param c
      * @param m int
-     * @param p 1x3 Vector
+     * @param p
      * @return
      */
-    static char PointInTriangle3D(float a[3], float b[3], float c[3], int m, float p[3]);
+    static char PointInTriangle3D(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, int m, VertexArray::Vert_t p);
 
     /**
      * @brief Determines if a point is inside of a triangle defined by 3 points
-     * @param a 1x3 Vector (corner of triangle)
-     * @param b 1x3 Vector (corner of triangle)
-     * @param c 1x3 Vector (corner of triangle)
-     * @param p 1x3 Vector
+     * @param a
+     * @param b
+     * @param c
+     * @param p
      * @return
      */
-    static char PointInTriangle2D(float a[3], float b[3], float c[3], float p[3]);
+    static char PointInTriangle2D(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t p);
 
     /**
      * @brief Determines if a segment between two points intersects a box defined by the lower left and upper right corners
-     * @param p 1x3 Vector (head of segment)
-     * @param q 1x3 Vector (tail of segment)
-     * @param lowerLeft 1x3 Vector
-     * @param upperRight 1x3 Vector
+     * @param p
+     * @param q
+     * @param lowerLeft
+     * @param upperRight
      * @return
      */
-    static bool RayIntersectsBox(float p[3], float q[3], float lowerLeft[3], float upperRight[3]);
+    static bool RayIntersectsBox(VertexArray::Vert_t p, VertexArray::Vert_t q, VertexArray::Vert_t lowerLeft, VertexArray::Vert_t upperRight);
 
     /**
      * @brief Creates a randomly oriented ray of given length
@@ -174,46 +174,46 @@ class DREAM3DLib_EXPORT GeometryMath
     /**
      * @brief Determines the bounding box defined by the lower left and upper right corners of a set of vertices
      * @param verts pointer to vertex array
-     * @param lowerLeft 1x3 Vector
-     * @param upperRight 1x3 Vector
+     * @param lowerLeft
+     * @param upperRight
      * @return
      */
-    static void FindBoundingBoxOfVertices(VertexArray::Pointer verts, float lowerLeft[3], float upperRight[3]);
+    static void FindBoundingBoxOfVertices(VertexArray::Pointer verts, VertexArray::Vert_t lowerLeft, VertexArray::Vert_t upperRight);
 
     /**
      * @brief Determines if a segment between two points intersects a triangle defined by 3 points
-     * @param q 1x3 Vector (head of segment)
-     * @param r 1x3 Vector (tail of segment)
-     * @param a 1x3 Vector (corner of triangle)
-     * @param b 1x3 Vector (corner of triangle)
-     * @param c 1x3 Vector (corner of triangle)
-     * @param p 1x3 Vector
+     * @param q
+     * @param r
+     * @param a
+     * @param b
+     * @param c
+     * @param p
      * @return
      */
-    static char RayIntersectsTriangle(float a[3], float b[3], float c[3], float q[3], float r[3], float p[3]);
+    static char RayIntersectsTriangle(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t q, VertexArray::Vert_t r, VertexArray::Vert_t p);
 
     /**
      * @brief Determines if a segment between two points crosses a triangle defined by 3 points
-     * @param q 1x3 Vector (head of segment)
-     * @param r 1x3 Vector (tail of segment)
-     * @param a 1x3 Vector (corner of triangle)
-     * @param b 1x3 Vector (corner of triangle)
-     * @param c 1x3 Vector (corner of triangle)
+     * @param q
+     * @param r
+     * @param a
+     * @param b
+     * @param c
      * @return
      */
-    static char RayCrossesTriangle(float a[3], float b[3], float c[3], float q[3], float r[3]);
+    static char RayCrossesTriangle(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t q, VertexArray::Vert_t r);
 
     /**
      * @brief Determines if a segment between two points intersects a plane defined by 3 points
-     * @param q 1x3 Vector (head of segment)
-     * @param r 1x3 Vector (tail of segment)
-     * @param a 1x3 Vector (corner of triangle)
-     * @param b 1x3 Vector (corner of triangle)
-     * @param c 1x3 Vector (corner of triangle)
-     * @param p 1x3 Vector
+     * @param q
+     * @param r
+     * @param a
+     * @param b
+     * @param c
+     * @param p
      * @return
      */
-    static char RayIntersectsPlane(float a[3], float b[3], float c[3], float q[3], float r[3], float p[3], int& m);
+    static char RayIntersectsPlane(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t q, VertexArray::Vert_t r, VertexArray::Vert_t p, int& m);
 
   protected:
     GeometryMath();
