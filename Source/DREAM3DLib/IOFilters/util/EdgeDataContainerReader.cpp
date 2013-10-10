@@ -298,7 +298,7 @@ int EdgeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
     if (err >= 0)
     {
       // Allocate the Edge_t structures
-      EdgeArray::Pointer edgesPtr = EdgeArray::CreateArray(dims[0], DREAM3D::EdgeData::SurfaceMeshEdges, NULL);
+      EdgeArray::Pointer edgesPtr = EdgeArray::CreateArray(dims[0], DREAM3D::EdgeData::SurfaceMeshEdges, dc->getVertices().get());
       // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
       int32_t* data = reinterpret_cast<int32_t*>(edgesPtr->getPointer(0));
       // Read the data from the file

@@ -256,9 +256,12 @@ void MatrixMath::Normalize3x1(float g[3])
 // -----------------------------------------------------------------------------
 int MatrixMath::FindIndexOfMaxVal3x1(float g[3])
 {
-  if(g[0] >= g[1] && g[0] >= g[2]) return 0;
-  else if(g[1] >= g[0] && g[1] >= g[2]) return 1;
-  else if(g[2] >= g[0] && g[2] >= g[1]) return 2;
+  float a = fabs(g[0]);
+  float b = fabs(g[1]);
+  float c = fabs(g[2]);
+  if(a >= b && a >= c) return 0;
+  else if(b >= a && b >= c) return 1;
+  else if(c >= a && c >= b) return 2;
 }
 
 // -----------------------------------------------------------------------------

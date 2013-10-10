@@ -19,6 +19,7 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Samplin
 
 set(_PublicFilters
   ChangeResolution
+  SampleSurfaceMesh
   RegularizeZSpacing
   RotateSampleRefFrame
   CropVolume

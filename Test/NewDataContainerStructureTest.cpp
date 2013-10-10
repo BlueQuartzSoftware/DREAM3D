@@ -70,6 +70,8 @@
 
 #include "DREAM3DLib/IOFilters/ParaDisReader.h"
 
+#include"DREAM3DLib/SamplingFilters/SampleSurfaceMesh.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "TestFileLocations.h"
@@ -768,6 +770,43 @@ void RunPipeline6()
   pipeline->run();
 }
 
+void RunPipeline7()
+{
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  DataContainerReader::Pointer dcr = DataContainerReader::New();
+  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut2.dream3d");
+  dcr->setReadVertexData(false);
+  dcr->setReadEdgeData(false);
+  dcr->setReadSurfaceData(true);
+  dcr->setReadAllVertexArrays(true);
+  dcr->setReadAllFaceArrays(true);
+  dcr->setReadVolumeData(false);
+  dcr->setReadAllCellArrays(false);
+  dcr->setReadAllCellFieldArrays(false);
+  dcr->setReadAllCellEnsembleArrays(false);
+  pipeline->pushBack(dcr);
+
+  SampleSurfaceMesh::Pointer ssm = SampleSurfaceMesh::New();
+  pipeline->pushBack(ssm);
+
+  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut3.dream3d");
+  dcw->setWriteVolumeData(true);
+  dcw->setWriteSurfaceData(true);
+  dcw->setWriteEdgeData(false);
+  dcw->setWriteVertexData(false);
+  dcw->setWriteXdmfFile(true);
+  pipeline->pushBack(dcw);
+
+  int err = pipeline->preflightPipeline();
+  if(err < 0)
+  {
+    std::cout << "Failed Preflight" << std::endl;
+  }
+  pipeline->run();
+}
+
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
@@ -779,12 +818,13 @@ int main(int argc, char** argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-  RunPipeline1();
-  RunPipeline2();
+//  RunPipeline1();
+//  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();
 //  RunPipeline5();
 //  RunPipeline6();
+  RunPipeline7();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )

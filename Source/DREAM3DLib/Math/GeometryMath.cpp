@@ -111,7 +111,7 @@ void GeometryMath::GenerateRandomRay(float length, float ray[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindBoundingBoxOfVertices(VertexArray::Pointer verts, VertexArray::Vert_t ll, VertexArray::Vert_t ur)
+void GeometryMath::FindBoundingBoxOfVertices(VertexArray::Pointer verts, VertexArray::Vert_t& ll, VertexArray::Vert_t& ur)
 {
   ll.pos[0] = 100000000.0;
   ll.pos[1] = 100000000.0;
@@ -129,6 +129,44 @@ void GeometryMath::FindBoundingBoxOfVertices(VertexArray::Pointer verts, VertexA
     if(v[i].pos[1] > ur.pos[1]) ur.pos[1] = v[i].pos[1];
     if(v[i].pos[2] < ll.pos[2]) ll.pos[2] = v[i].pos[2];
     if(v[i].pos[2] > ur.pos[2]) ur.pos[2] = v[i].pos[2];
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeometryMath::FindBoundingBoxOfFaces(FaceArray::Pointer faces, QVector<int> faceIds, VertexArray::Vert_t& ll, VertexArray::Vert_t& ur)
+{
+  ll.pos[0] = 100000000.0;
+  ll.pos[1] = 100000000.0;
+  ll.pos[2] = 100000000.0;
+  ur.pos[0] = 0.0;
+  ur.pos[1] = 0.0;
+  ur.pos[2] = 0.0;
+
+  VertexArray::Vert_t a, b, c;
+
+  for(int i=0;i<faceIds.size();i++)
+  {
+    faces->getVertObjects(faceIds[i], a, b, c);
+    if(a.pos[0] < ll.pos[0]) ll.pos[0] = a.pos[0];
+    if(a.pos[0] > ur.pos[0]) ur.pos[0] = a.pos[0];
+    if(a.pos[1] < ll.pos[1]) ll.pos[1] = a.pos[1];
+    if(a.pos[1] > ur.pos[1]) ur.pos[1] = a.pos[1];
+    if(a.pos[2] < ll.pos[2]) ll.pos[2] = a.pos[2];
+    if(a.pos[2] > ur.pos[2]) ur.pos[2] = a.pos[2];
+    if(b.pos[0] < ll.pos[0]) ll.pos[0] = b.pos[0];
+    if(b.pos[0] > ur.pos[0]) ur.pos[0] = b.pos[0];
+    if(b.pos[1] < ll.pos[1]) ll.pos[1] = b.pos[1];
+    if(b.pos[1] > ur.pos[1]) ur.pos[1] = b.pos[1];
+    if(b.pos[2] < ll.pos[2]) ll.pos[2] = b.pos[2];
+    if(b.pos[2] > ur.pos[2]) ur.pos[2] = b.pos[2];
+    if(c.pos[0] < ll.pos[0]) ll.pos[0] = c.pos[0];
+    if(c.pos[0] > ur.pos[0]) ur.pos[0] = c.pos[0];
+    if(c.pos[1] < ll.pos[1]) ll.pos[1] = c.pos[1];
+    if(c.pos[1] > ur.pos[1]) ur.pos[1] = c.pos[1];
+    if(c.pos[2] < ll.pos[2]) ll.pos[2] = c.pos[2];
+    if(c.pos[2] > ur.pos[2]) ur.pos[2] = c.pos[2];
   }
 }
 
@@ -167,6 +205,17 @@ void GeometryMath::FindPlaneCoefficients(VertexArray::Vert_t a, VertexArray::Ver
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GeometryMath::FindDistanceBetweenPoints(VertexArray::Vert_t a, VertexArray::Vert_t b, float& distance)
+{
+  float dx = b.pos[0]-a.pos[0];
+  float dy = b.pos[1]-a.pos[1];
+  float dz = b.pos[2]-a.pos[2];
+  distance = sqrt((dx*dx) + (dy*dy) + (dz*dz));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GeometryMath::FindTriangleArea(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, float& area)
 {
   area = ((b.pos[0]-a.pos[0])*(c.pos[1]-a.pos[1])) - ((c.pos[0]-a.pos[0])*(b.pos[1]-a.pos[1]));
@@ -197,7 +246,7 @@ void GeometryMath::FindTetrahedronVolume(VertexArray::Vert_t a, VertexArray::Ver
 // -----------------------------------------------------------------------------
 char GeometryMath::RayIntersectsTriangle(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t q, VertexArray::Vert_t r, VertexArray::Vert_t p)
 {
-  int code = -1;
+  char code = '?';
   int m = -1;
 
   code = RayIntersectsPlane(a, b, c, q, r, p, m);
@@ -314,25 +363,37 @@ char GeometryMath::RayCrossesTriangle(VertexArray::Vert_t a, VertexArray::Vert_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, VertexArray::Vert_t q, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius)
+char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> faceIds, QVector<bool> faceNormList, VertexArray::Vert_t q, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius)
 {
    float qq[3];
    float ray[3];  /* Ray */
    float rr[3];
    VertexArray::Vert_t r;  /* Ray endpoint. */
    VertexArray::Vert_t p;  /* Intersection point; not used. */
+   VertexArray::Vert_t facell, faceur;
    int f, k = 0, crossings = 0;
    char code = '?';
    VertexArray::Vert_t a, b, c;
+   QVector<int> curFace;
  
+   for(int i=0;i<3;i++)
+   {
+     r.pos[i] = 0.0;
+     p.pos[i] = 0.0;
+     facell.pos[i] = 0.0;
+     faceur.pos[i] = 0.0;
+     a.pos[i] = 0.0;
+     b.pos[i] = 0.0;
+     c.pos[i] = 0.0;
+   }
+
    /* If query point is outside bounding box, finished. */
-   if ( PointInBox(q, ll, ur) == false)
+   if(PointInBox(q, ll, ur) == false)
    {
       return 'o';
    }
   
-   int numFaces = faces->count();
-   FaceArray::Face_t* face = faces->getPointer(0);
+   int numFaces = faceIds.size();
 
    qq[0] = q.pos[0];
    qq[1] = q.pos[1];
@@ -351,13 +412,17 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, VertexArray::Vert
   
       for ( f = 0; f < numFaces; f++ )
       {  /* Begin check each face */
-         if( RayIntersectsBox(q, p, ll, ur) == false )
+         curFace.push_back(faceIds[f]);
+         FindBoundingBoxOfFaces(faces, curFace, facell, faceur);
+         curFace.clear();
+         if( RayIntersectsBox(q, p, facell, faceur) == false )
          {
            code = '0';
          }
          else
          {
-           faces->getVertObjects(f, a, b, c);
+           if(faceNormList[f] == true) faces->getVertObjects(faceIds[f], a, b, c);
+           else faces->getVertObjects(faceIds[f], a, c, b);
            code = RayIntersectsTriangle(a, b, c, q, r, p);
          }
 
@@ -382,7 +447,10 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, VertexArray::Vert
 
          }
 
-         else exit(1);
+         else
+         {
+
+         }
 
       } /* End check each face */
 
@@ -394,4 +462,119 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, VertexArray::Vert
    /* q strictly interior to polyhedron if an odd number of crossings. */
    if( ( crossings % 2 ) == 1 )return 'i';
    else return 'o';
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeometryMath::PointsInPolyhedron(FaceArray::Pointer faces, QVector<int> faceIds, QVector<bool> faceNormList, VertexArray::Pointer verts, QVector<char> results)
+{
+   float qq[3];
+   float ray[3];  /* Ray */
+   float rr[3];
+   VertexArray::Vert_t r;  /* Ray endpoint. */
+   VertexArray::Vert_t p;  /* Intersection point; not used. */
+   VertexArray::Vert_t ll, ur;
+   VertexArray::Vert_t facell, faceur;
+   int f, k = 0, crossings = 0;
+   char code = '?';
+   VertexArray::Vert_t a, b, c;
+   float radius;
+   QVector<int> curFace;
+
+   for(int i=0;i<3;i++)
+   {
+     r.pos[i] = 0.0;
+     p.pos[i] = 0.0;
+     ll.pos[i] = 0.0;
+     ur.pos[i] = 0.0;
+     facell.pos[i] = 0.0;
+     faceur.pos[i] = 0.0;
+     a.pos[i] = 0.0;
+     b.pos[i] = 0.0;
+     c.pos[i] = 0.0;
+   }
+
+   FindBoundingBoxOfFaces(faces, faceIds, ll, ur);
+   FindDistanceBetweenPoints(ll, ur, radius);
+
+   int numPoints = verts->count();
+
+   for(int iter=0;iter<numPoints;iter++)
+   {
+     /* If query point is outside bounding box, finished. */
+     if(PointInBox(verts->getVert(iter), ll, ur) == false)
+     {
+        results[iter] = 'o';
+     }
+  
+     int numFaces = faceIds.size();
+
+     qq[0] = verts->getVert(iter).pos[0];
+     qq[1] = verts->getVert(iter).pos[1];
+     qq[2] = verts->getVert(iter).pos[2];
+
+     LOOP:
+     while( k++ < numFaces )
+     {
+        crossings = 0;
+  
+        GenerateRandomRay(radius, ray); 
+        MatrixMath::Add3x1s(qq, ray, rr);
+        r.pos[0] = rr[0];
+        r.pos[1] = rr[1];
+        r.pos[2] = rr[2];
+  
+        for ( f = 0; f < numFaces; f++ )
+        {  /* Begin check each face */
+           curFace.push_back(faceIds[f]);
+           FindBoundingBoxOfFaces(faces, curFace, facell, faceur);
+           curFace.clear();
+           if( RayIntersectsBox(verts->getVert(iter), p, facell, faceur) == false )
+           {
+             code = '0';
+           }
+           else
+           {
+              if(faceNormList[f] == true) faces->getVertObjects(faceIds[f], a, b, c);
+              else faces->getVertObjects(faceIds[f], a, c, b);
+             code = RayIntersectsTriangle(a, b, c, verts->getVert(iter), r, p);
+           }
+
+           /* If ray is degenerate, then goto outer while to generate another. */
+           if ( code == 'p' || code == 'v' || code == 'e' )
+           {
+              goto LOOP;
+           }
+   
+           /* If ray hits face at interior point, increment crossings. */
+           else if ( code == 'f' )
+           {
+              crossings++;
+           }
+
+           /* If query endpoint q sits on a V/E/F, return that code. */
+           else if ( code == 'V' || code == 'E' || code == 'F' ) results[iter] = code;
+
+           /* If ray misses triangle, do nothing. */
+           else if ( code == '0' )
+           {
+
+           }
+
+           else
+           {
+
+           }
+        } /* End check each face */
+
+        /* No degeneracies encountered: ray is generic, so finished. */
+        break;
+
+     } /* End while loop */
+ 
+     /* q strictly interior to polyhedron if an odd number of crossings. */
+     if( ( crossings % 2 ) == 1 ) results[iter] = 'i';
+     else results[iter] = 'o';
+   }
 }

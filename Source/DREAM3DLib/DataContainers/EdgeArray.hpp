@@ -114,6 +114,16 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
+    void getVertObjects(int32_t edgeId, VertexArray::Vert_t& vert1, VertexArray::Vert_t& vert2)
+    {
+      Edge_t& Edge = *(m_Array->getPointer(edgeId));
+      vert1 = m_Verts->getVert(Edge.verts[0]);
+      vert2 = m_Verts->getVert(Edge.verts[1]);
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
     void setVerts(int32_t edgeId, int32_t* verts)
     {
       Edge_t& Edge = *(m_Array->getPointer(edgeId));

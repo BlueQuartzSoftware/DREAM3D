@@ -77,6 +77,15 @@ class DREAM3DLib_EXPORT GeometryMath
      * @brief Computes the area of a triangle defined by 3 points.
      * @param a
      * @param b
+     * @param distance
+     * @return
+     */
+    static void FindDistanceBetweenPoints(VertexArray::Vert_t a, VertexArray::Vert_t b, float& distance);
+
+    /**
+     * @brief Computes the area of a triangle defined by 3 points.
+     * @param a
+     * @param b
      * @param c
      * @param area
      * @return
@@ -131,7 +140,16 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static char PointInPolyhedron(FaceArray::Pointer faces, VertexArray::Vert_t p, VertexArray::Vert_t lowerLeft, VertexArray::Vert_t upperRight, float radius);
+    static char PointInPolyhedron(FaceArray::Pointer faces, QVector<int> faceIds, QVector<bool> faceNormList, VertexArray::Vert_t point, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius);
+
+    /**
+     * @brief Determines if a point is inside of a polyhedron defined by a set of faces
+     * @param p
+     * @param lowerLeft
+     * @param upperRight
+     * @return
+     */
+    static void PointsInPolyhedron(FaceArray::Pointer faces, QVector<int> faceIds, QVector<bool> faceNormList, VertexArray::Pointer verts, QVector<char> results);
 
     /**
      * @brief Determines if a point is inside of a triangle defined by 3 points
@@ -171,6 +189,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @return
      */
     static void GenerateRandomRay(float length, float ray[3]);
+
     /**
      * @brief Determines the bounding box defined by the lower left and upper right corners of a set of vertices
      * @param verts pointer to vertex array
@@ -178,7 +197,16 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static void FindBoundingBoxOfVertices(VertexArray::Pointer verts, VertexArray::Vert_t lowerLeft, VertexArray::Vert_t upperRight);
+    static void FindBoundingBoxOfVertices(VertexArray::Pointer verts, VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
+
+    /**
+     * @brief Determines the bounding box defined by the lower left and upper right corners of a set of vertices
+     * @param verts pointer to vertex array
+     * @param lowerLeft
+     * @param upperRight
+     * @return
+     */
+    static void FindBoundingBoxOfFaces(FaceArray::Pointer faces, QVector<int> faceIds, VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
 
     /**
      * @brief Determines if a segment between two points intersects a triangle defined by 3 points

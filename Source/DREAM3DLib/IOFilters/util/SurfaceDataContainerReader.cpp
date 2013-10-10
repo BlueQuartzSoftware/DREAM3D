@@ -293,7 +293,7 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
     if (err >= 0)
     {
       // Allocate the Face_t structures
-      FaceArray::Pointer facesPtr = FaceArray::CreateArray(dims[0], DREAM3D::FaceData::SurfaceMeshFaces, NULL);
+      FaceArray::Pointer facesPtr = FaceArray::CreateArray(dims[0], DREAM3D::FaceData::SurfaceMeshFaces, dc->getVertices().get());
       // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
       int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
       // Read the data from the file
