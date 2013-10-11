@@ -188,7 +188,13 @@ void SampleSurfaceMesh::execute()
 
   dataCheck(true, 0, numFaces, 0); 
 
+  QVector<int> curFace(1);
   QVector<QVector<int> > faceLists(1);
+
+
+  VertexArray::Vert_t ll, ur;
+  VertexArray::Vert_t point;
+  VertexArray::Pointer faceBBs = VertexArray::CreateArray(2*numFaces, "faceBBs");
 
   int g1, g2;
   for(int i=0;i<numFaces;i++)
@@ -199,13 +205,14 @@ void SampleSurfaceMesh::execute()
     if((g2+1) > faceLists.size()) faceLists.resize(g2+1);
     if(g1 > 0) faceLists[g1].push_back(i);
     if(g2 > 0) faceLists[g2].push_back(i);
+    curFace[0] = i;
+    GeometryMath::FindBoundingBoxOfFaces(faces, curFace, ll, ur);
+    faceBBs->setCoords(2*i, ll.pos);
+    faceBBs->setCoords(2*i+1, ur.pos);
   }
 
   char code;
   float radius;
-
-  VertexArray::Vert_t ll, ur;
-  VertexArray::Vert_t point;
 
   for(int i=0;i<3;i++)
   {
@@ -242,7 +249,7 @@ void SampleSurfaceMesh::execute()
           point.pos[0] = k*0.1+0.05;
           point.pos[1] = j*0.1+0.05;
           point.pos[2] = i*0.1+0.05;
-          code = GeometryMath::PointInPolyhedron(faces, faceLists[iter], point, ll, ur, radius);
+          code = GeometryMath::PointInPolyhedron(faces, faceLists[iter], faceBBs, point, ll, ur, radius);
           if(code == 'i') grainIds[zStride+yStride+k] = iter;
         }
       }
