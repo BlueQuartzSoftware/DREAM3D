@@ -175,7 +175,7 @@ class DynamicListArray
     void allocateLists(QVector<uint16_t> &linkCounts)
     {
       allocate(linkCounts.size());
-      for (size_t i=0; i < linkCounts.size(); i++)
+      for (int i=0; i < linkCounts.size(); i++)
       {
         this->m_Array[i].cells = new int[this->m_Array[i].ncells];
         this->m_Array[i].ncells = linkCounts[i];

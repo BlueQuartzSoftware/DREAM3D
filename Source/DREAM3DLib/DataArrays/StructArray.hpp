@@ -269,7 +269,8 @@ class StructArray : public IDataArray
         return 0;
       }
 
-      if (idxs.size() >= getNumberOfTuples() )
+      size_t idxs_size = static_cast<size_t>(idxs.size());
+      if (idxs_size >= getNumberOfTuples() )
       {
         Resize(0);
         return 0;
@@ -294,7 +295,7 @@ class StructArray : public IDataArray
       // Keep the current Destination Pointer
       T* currentDest = newArray;
       size_t j = 0;
-      size_t k = 0;
+      int k = 0;
       // Find the first chunk to copy by walking the idxs array until we get an
       // index that is NOT a continuous increment from the start
       for (k = 0; k < idxs.size(); ++k)
@@ -328,7 +329,7 @@ class StructArray : public IDataArray
       destIdx[0] = 0;
       copyElements[0] = (idxs[0] - 0);
 
-      for (size_t i = 1; i < srcIdx.size(); ++i)
+      for (int i = 1; i < srcIdx.size(); ++i)
       {
         srcIdx[i] = (idxs[i - 1] + 1);
 
@@ -344,7 +345,7 @@ class StructArray : public IDataArray
       }
 
       // Copy the data
-      for (size_t i = 0; i < srcIdx.size(); ++i)
+      for (int i = 0; i < srcIdx.size(); ++i)
       {
         currentDest = newArray + destIdx[i];
         currentSrc = Array + srcIdx[i];

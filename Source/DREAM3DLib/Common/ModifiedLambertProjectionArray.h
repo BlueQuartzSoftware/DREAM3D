@@ -109,7 +109,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
         size_t old = m_ModifiedLambertProjectionArray.size();
         m_ModifiedLambertProjectionArray.resize(index + 1);
         // Initialize with zero length Vectors
-        for (size_t i = old; i < m_ModifiedLambertProjectionArray.size(); ++i)
+        for (int i = old; i < m_ModifiedLambertProjectionArray.size(); ++i)
         {
           m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
         }
@@ -138,7 +138,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     ModifiedLambertProjection::Pointer getModifiedLambertProjection(int idx)
     {
 #ifndef NDEBUG
-      if(m_ModifiedLambertProjectionArray.size() > 0u)
+      if(m_ModifiedLambertProjectionArray.size() > 0)
       {
         BOOST_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
       }
@@ -149,7 +149,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     ModifiedLambertProjection::Pointer operator[](int idx)
     {
 #ifndef NDEBUG
-      if(m_ModifiedLambertProjectionArray.size() > 0u)
+      if(m_ModifiedLambertProjectionArray.size() > 0)
       {
         BOOST_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
       }

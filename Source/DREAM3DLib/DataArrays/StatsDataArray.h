@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
         size_t old = m_StatsDataArray.size();
         m_StatsDataArray.resize(index + 1);
         // Initialize with zero length Vectors
-        for (size_t i = old; i < m_StatsDataArray.size(); ++i)
+        for (int i = old; i < m_StatsDataArray.size(); ++i)
         {
           m_StatsDataArray[i] = StatsData::New();
         }
@@ -148,7 +148,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     StatsData::Pointer getStatsData(int idx)
     {
 #ifndef NDEBUG
-      if(m_StatsDataArray.size() > 0u)
+      if(m_StatsDataArray.size() > 0)
       {
         BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
       }
@@ -159,7 +159,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     StatsData::Pointer operator[](int idx)
     {
 #ifndef NDEBUG
-      if(m_StatsDataArray.size() > 0u)
+      if(m_StatsDataArray.size() > 0)
       {
         BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
       }

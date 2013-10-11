@@ -216,8 +216,8 @@ class StringDataArray : public IDataArray
       {
         return 0;
       }
-
-      if (idxs.size() >= getNumberOfTuples() )
+      size_t idxs_size = static_cast<size_t>(idxs.size());
+      if (idxs_size >= getNumberOfTuples() )
       {
         Resize(0);
         return 0;
@@ -227,7 +227,7 @@ class StringDataArray : public IDataArray
       // off the end of the array and return an error code.
       for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
-        if (idxs[i] >= m_Array.size()) { return -100; }
+        if (idxs[i] >= static_cast<size_t>(m_Array.size())) { return -100; }
       }
 
 
@@ -239,7 +239,7 @@ class StringDataArray : public IDataArray
         bool keep = true;
         for(QVector<size_t>::size_type j = start; j < idxs.size(); ++j)
         {
-          if (i == idxs[j]) { keep = false; break;}
+          if (static_cast<size_t>(i) == idxs[j]) { keep = false; break;}
         }
         if (keep)
         {
@@ -342,7 +342,7 @@ class StringDataArray : public IDataArray
     virtual int writeH5Data(hid_t parentId)
     {
       size_t totalSize = 0;
-      for(size_t i = 0; i < m_Array.size(); ++i)
+      for(int i = 0; i < m_Array.size(); ++i)
       {
         totalSize += 1 + m_Array[i].size();
       }
@@ -350,7 +350,7 @@ class StringDataArray : public IDataArray
       strPtr->initializeWithZeros();
       int8_t* str = strPtr->getPointer(0);
 
-      for(size_t i = 0; i < m_Array.size(); ++i)
+      for(int i = 0; i < m_Array.size(); ++i)
       {
         ::memcpy(str, m_Array[i].toLatin1().data(), m_Array[i].size());
         str = str + m_Array[i].size() + 1;
