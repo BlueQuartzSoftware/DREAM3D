@@ -357,7 +357,7 @@ char GeometryMath::RayCrossesTriangle(VertexArray::Vert_t a, VertexArray::Vert_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> faceIds, VertexArray::Vert_t q, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius)
+char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> faceIds, VertexArray::Pointer faceBBs, VertexArray::Vert_t q, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius)
 {
    float ray[3];  /* Ray */
    VertexArray::Vert_t r;  /* Ray endpoint. */
@@ -366,7 +366,6 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> face
    int f, k = 0, crossings = 0;
    char code = '?';
    VertexArray::Vert_t a, b, c;
-   QVector<int> curFace;
  
    //* If query point is outside bounding box, finished. */
    if(PointInBox(q, ll, ur) == false)
@@ -389,10 +388,7 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> face
   
       for ( f = 0; f < numFaces; f++ )
       {  /* Begin check each face */
-         curFace.push_back(faceIds[f]);
-         FindBoundingBoxOfFaces(faces, curFace, facell, faceur);
-         curFace.clear();
-         if( RayIntersectsBox(q, r, facell, faceur) == false )
+         if( RayIntersectsBox(q, r, faceBBs->getVert(2*faceIds[f]), faceBBs->getVert(2*faceIds[f]+1)) == false )
          {
            code = '0';
          }
