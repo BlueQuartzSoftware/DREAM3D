@@ -174,6 +174,23 @@ namespace UnitTest
     const QString Prebuilt17("@DREAM3D_SUPPORT_DIR_NATIVE@/PrebuiltPipelines/Workshop/Reconstruction/(17) Small IN100 Full Reconstruction.txt");
   }
 
+  namespace NewDataContainerStructureTest
+  {
+
+      const QString VASPInputFile("@DREAM3D_SUPPORT_DIR_NATIVE@/TestData/Atomistics/pos_swf2_vrst");
+      const QString VASPOutputFile("@TEST_TEMP_DIR@/pos_swf2_vrst.dream3d");
+
+      const QString ParaDisInputFile("@DREAM3D_SUPPORT_DIR_NATIVE@/TestData/Dislocation/rs57226.data");
+      const QString ParaDisOutputFile("@TEST_TEMP_DIR@/rs57226.dream3d");
+
+      const QString ParaDisInputFile2("@DREAM3D_SUPPORT_DIR_NATIVE@/TestData/Dislocation/simulation1.dream3d");
+      const QString ParaDisOutputFile2("@TEST_TEMP_DIR@/simulation1_BackOut.dream3d");
+
+      const QString SyntheticInputFile("@DREAM3D_SUPPORT_DIR_NATIVE@/TestData/SynthTest.dream3d");
+      const QString SyntheticOutputFile("@TEST_TEMP_DIR@/SynthTestOut.dream3d");
+      const QString SyntheticOutputFile2("@TEST_TEMP_DIR@/SynthTestOut2.dream3d");
+      const QString SyntheticOutputFile3("@TEST_TEMP_DIR@/SynthTestOut3.dream3d");
+  }
 }
 
 #endif

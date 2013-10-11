@@ -561,7 +561,7 @@ void RunPipeline1()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   InitializeSyntheticVolume::Pointer isv = InitializeSyntheticVolume::New();
-  isv->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTest.dream3d");
+  isv->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
   isv->setXVoxels(128);
   isv->setYVoxels(128);
   isv->setZVoxels(128);
@@ -593,7 +593,7 @@ void RunPipeline1()
   pipeline->pushBack(gipfc);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut.dream3d");
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
   dcw->setWriteVolumeData(true);
   dcw->setWriteSurfaceData(false);
   dcw->setWriteEdgeData(false);
@@ -614,7 +614,7 @@ void RunPipeline2()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut.dream3d");
+  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
   dcr->setReadVertexData(false);
   dcr->setReadEdgeData(false);
   dcr->setReadSurfaceData(false);
@@ -629,7 +629,7 @@ void RunPipeline2()
   pipeline->pushBack(qsm);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut2.dream3d");
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile2);
   dcw->setWriteVolumeData(true);
   dcw->setWriteSurfaceData(true);
   dcw->setWriteEdgeData(false);
@@ -650,7 +650,7 @@ void RunPipeline3()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut2.dream3d");
+  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile2);
   dcr->setReadVertexData(false);
   dcr->setReadEdgeData(false);
   dcr->setReadSurfaceData(true);
@@ -673,7 +673,7 @@ void RunPipeline3()
   pipeline->pushBack(ls);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut3.dream3d");
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile3);
   dcw->setWriteVolumeData(true);
   dcw->setWriteSurfaceData(true);
   dcw->setWriteEdgeData(false);
@@ -694,11 +694,11 @@ void RunPipeline4()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   VASPReader::Pointer vr = VASPReader::New();
-  vr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\atomistics\\pos_swf2_vrst");
+  vr->setInputFile(UnitTest::NewDataContainerStructureTest::VASPInputFile);
   pipeline->pushBack(vr);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\atomistics\\pos_swf2_vrst.dream3d");
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::VASPOutputFile);
   dcw->setWriteVolumeData(false);
   dcw->setWriteSurfaceData(false);
   dcw->setWriteEdgeData(false);
@@ -719,11 +719,11 @@ void RunPipeline5()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   ParaDisReader::Pointer pr = ParaDisReader::New();
-  pr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\rs57226.data");
+  pr->setInputFile(UnitTest::NewDataContainerStructureTest::ParaDisInputFile);
   pipeline->pushBack(pr);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\rs57226.dream3d");
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::ParaDisOutputFile);
   dcw->setWriteVolumeData(false);
   dcw->setWriteSurfaceData(false);
   dcw->setWriteEdgeData(true);
@@ -744,7 +744,7 @@ void RunPipeline6()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\simulation1.dream3d");
+  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::ParaDisInputFile2);
   dcr->setReadVertexData(false);
   dcr->setReadEdgeData(true);
   dcr->setReadSurfaceData(false);
@@ -754,7 +754,7 @@ void RunPipeline6()
   pipeline->pushBack(dcr);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\simulation1_BackOut.dream3d");
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::ParaDisOutputFile2);
   dcw->setWriteVolumeData(false);
   dcw->setWriteSurfaceData(false);
   dcw->setWriteEdgeData(true);
@@ -770,12 +770,18 @@ void RunPipeline6()
   pipeline->run();
 }
 
+//#define PIPELINE7_INPUT_FILE "C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut2.dream3d"
+//#define PIPELINE7_INPUT_FILE "/tmp/SynthTestOut2.dream3d"
+
+//#define PIPLELINE_OUTPUT_FILE "C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut3.dream3d"
+//#define PIPELINE7_OUTPUT_FILE "/tmp/SynthTestOut3.dream3d"
+
 void RunPipeline7()
 {
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut2.dream3d");
+  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile2);
   dcr->setReadVertexData(false);
   dcr->setReadEdgeData(false);
   dcr->setReadSurfaceData(true);
@@ -791,7 +797,7 @@ void RunPipeline7()
   pipeline->pushBack(ssm);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut3.dream3d");
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile3);
   dcw->setWriteVolumeData(true);
   dcw->setWriteSurfaceData(true);
   dcw->setWriteEdgeData(false);
@@ -818,8 +824,8 @@ int main(int argc, char** argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-//  RunPipeline1();
-//  RunPipeline2();
+  RunPipeline1();
+  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();
 //  RunPipeline5();
