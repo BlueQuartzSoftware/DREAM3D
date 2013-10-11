@@ -106,6 +106,9 @@ void GeometryMath::GenerateRandomRay(float length, float ray[3])
   w = sqrt(1.0 - (ray[2]*ray[2]));
   ray[0] = w * cos(t);
   ray[1] = w * sin(t);
+  ray[0] *= length;
+  ray[1] *= length;
+  ray[2] *= length;
 }
 
 // -----------------------------------------------------------------------------
@@ -195,11 +198,7 @@ void GeometryMath::FindPlaneCoefficients(VertexArray::Vert_t a, VertexArray::Ver
 {
   FindPlaneNormalVector(a, b, c, n);
 
-  float p[3];
-  p[0] = a.pos[0];
-  p[1] = a.pos[1];
-  p[2] = a.pos[2];
-  d = MatrixMath::DotProduct3x1(p, n);
+  d = (a.pos[0]*n[0])+(a.pos[1]*n[1])+(a.pos[2]*n[2]);
 }
 
 // -----------------------------------------------------------------------------
@@ -268,17 +267,12 @@ char GeometryMath::RayIntersectsPlane(VertexArray::Vert_t a, VertexArray::Vert_t
   float d, num, denom, t;
 
   FindPlaneCoefficients(a, b, c, n, d);
-  float qq[3];
-  qq[0] = q.pos[0];
-  qq[1] = q.pos[1];
-  qq[2] = q.pos[2];
-  float rr[3];
-  rr[0] = r.pos[0];
-  rr[1] = r.pos[1];
-  rr[2] = r.pos[2];
-  num = d - MatrixMath::DotProduct3x1(qq, n);
-  MatrixMath::Subtract3x1s(rr, qq, rq);
-  denom = MatrixMath::DotProduct3x1(rq, n);
+
+  num = d - ((q.pos[0]*n[0])+(q.pos[1]*n[1])+(q.pos[2]*n[2]));
+  rq[0] =  r.pos[0]-q.pos[0];
+  rq[1] =  r.pos[1]-q.pos[1];
+  rq[2] =  r.pos[2]-q.pos[2];
+  denom = (rq[0]*n[0])+(rq[1]*n[1])+(rq[2]*n[2]);
   m = MatrixMath::FindIndexOfMaxVal3x1(n);
 
   if(denom == 0.0)
@@ -334,10 +328,10 @@ char GeometryMath::PointInTriangle2D(VertexArray::Vert_t a, VertexArray::Vert_t 
   FindTriangleArea(p, c, a, area2);
 
   if((area0 == 0 && area1 > 0 && area2 > 0) || (area1 == 0 && area0 > 0 && area2 > 0) || (area2 == 0 && area0 > 0 && area1 > 0)) return 'E';
-  if((area0 == 0 && area1 < 0 && area2 < 0) || (area1 == 0 && area0 < 0 && area2 < 0) || (area2 == 0 && area0 < 0 && area1 < 0)) return 'E';
-  if((area0 > 0 && area1 > 0 && area2 > 0) || (area0 < 0 && area1 < 0 && area2 < 0)) return 'F';
-  if((area0 == 0 && area1 == 0 && area2 == 0)) return '?';
-  if((area0 == 0 && area1 == 0) || (area0 == 0 && area2 == 0) || (area1 == 0 && area2 == 0)) return 'V';
+  else if((area0 == 0 && area1 < 0 && area2 < 0) || (area1 == 0 && area0 < 0 && area2 < 0) || (area2 == 0 && area0 < 0 && area1 < 0)) return 'E';
+  else if((area0 > 0 && area1 > 0 && area2 > 0) || (area0 < 0 && area1 < 0 && area2 < 0)) return 'F';
+  else if((area0 == 0 && area1 == 0 && area2 == 0)) return '?';
+  else if((area0 == 0 && area1 == 0) || (area0 == 0 && area2 == 0) || (area1 == 0 && area2 == 0)) return 'V';
   else return '0';
 }
 
@@ -353,21 +347,19 @@ char GeometryMath::RayCrossesTriangle(VertexArray::Vert_t a, VertexArray::Vert_t
   FindTetrahedronVolume(q, c, a, r, vol2);
 
   if((vol0 > 0 && vol1 > 0 && vol2 > 0) || (vol0 < 0 && vol1 < 0 && vol2 < 0)) return 'f';
-  if((vol0 > 0 || vol1 > 0 || vol2 > 0) && (vol0 < 0 || vol1 < 0 || vol2 < 0)) return '0';
-  if((vol0 == 0 && vol1 == 0 && vol2 == 0)) return '?';
-  if((vol0 == 0 && vol1 == 0) || (vol0 == 0 && vol2 == 0) || (vol1 == 0 && vol2 == 0)) return 'v';
-  if(vol0 == 0 || vol1 == 0 || vol2 == 0) return 'e';
+  else if((vol0 > 0 || vol1 > 0 || vol2 > 0) && (vol0 < 0 || vol1 < 0 || vol2 < 0)) return '0';
+  else if((vol0 == 0 && vol1 == 0 && vol2 == 0)) return '?';
+  else if((vol0 == 0 && vol1 == 0) || (vol0 == 0 && vol2 == 0) || (vol1 == 0 && vol2 == 0)) return 'v';
+  else if(vol0 == 0 || vol1 == 0 || vol2 == 0) return 'e';
   else return '?';
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> faceIds, QVector<bool> faceNormList, VertexArray::Vert_t q, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius)
+char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> faceIds, VertexArray::Vert_t q, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius)
 {
-   float qq[3];
    float ray[3];  /* Ray */
-   float rr[3];
    VertexArray::Vert_t r;  /* Ray endpoint. */
    VertexArray::Vert_t p;  /* Intersection point; not used. */
    VertexArray::Vert_t facell, faceur;
@@ -376,18 +368,7 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> face
    VertexArray::Vert_t a, b, c;
    QVector<int> curFace;
  
-   for(int i=0;i<3;i++)
-   {
-     r.pos[i] = 0.0;
-     p.pos[i] = 0.0;
-     facell.pos[i] = 0.0;
-     faceur.pos[i] = 0.0;
-     a.pos[i] = 0.0;
-     b.pos[i] = 0.0;
-     c.pos[i] = 0.0;
-   }
-
-   /* If query point is outside bounding box, finished. */
+   //* If query point is outside bounding box, finished. */
    if(PointInBox(q, ll, ur) == false)
    {
       return 'o';
@@ -395,34 +376,29 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> face
   
    int numFaces = faceIds.size();
 
-   qq[0] = q.pos[0];
-   qq[1] = q.pos[1];
-   qq[2] = q.pos[2];
-
    LOOP:
    while( k++ < numFaces )
    {
       crossings = 0;
-  
+
+      //Generate and add ray to point to find other end
       GenerateRandomRay(radius, ray); 
-      MatrixMath::Add3x1s(qq, ray, rr);
-      r.pos[0] = rr[0];
-      r.pos[1] = rr[1];
-      r.pos[2] = rr[2];
+      r.pos[0] = q.pos[0] + ray[0];
+      r.pos[1] = q.pos[1] + ray[1];
+      r.pos[2] = q.pos[2] + ray[2];
   
       for ( f = 0; f < numFaces; f++ )
       {  /* Begin check each face */
          curFace.push_back(faceIds[f]);
          FindBoundingBoxOfFaces(faces, curFace, facell, faceur);
          curFace.clear();
-         if( RayIntersectsBox(q, p, facell, faceur) == false )
+         if( RayIntersectsBox(q, r, facell, faceur) == false )
          {
            code = '0';
          }
          else
          {
-           if(faceNormList[f] == true) faces->getVertObjects(faceIds[f], a, b, c);
-           else faces->getVertObjects(faceIds[f], a, c, b);
+           faces->getVertObjects(faceIds[f], a, b, c);
            code = RayIntersectsTriangle(a, b, c, q, r, p);
          }
 
@@ -441,17 +417,6 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> face
          /* If query endpoint q sits on a V/E/F, return that code. */
          else if ( code == 'V' || code == 'E' || code == 'F' ) return(code);
 
-         /* If ray misses triangle, do nothing. */
-         else if ( code == '0' )
-         {
-
-         }
-
-         else
-         {
-
-         }
-
       } /* End check each face */
 
       /* No degeneracies encountered: ray is generic, so finished. */
@@ -462,119 +427,4 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, QVector<int> face
    /* q strictly interior to polyhedron if an odd number of crossings. */
    if( ( crossings % 2 ) == 1 )return 'i';
    else return 'o';
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GeometryMath::PointsInPolyhedron(FaceArray::Pointer faces, QVector<int> faceIds, QVector<bool> faceNormList, VertexArray::Pointer verts, QVector<char> results)
-{
-   float qq[3];
-   float ray[3];  /* Ray */
-   float rr[3];
-   VertexArray::Vert_t r;  /* Ray endpoint. */
-   VertexArray::Vert_t p;  /* Intersection point; not used. */
-   VertexArray::Vert_t ll, ur;
-   VertexArray::Vert_t facell, faceur;
-   int f, k = 0, crossings = 0;
-   char code = '?';
-   VertexArray::Vert_t a, b, c;
-   float radius;
-   QVector<int> curFace;
-
-   for(int i=0;i<3;i++)
-   {
-     r.pos[i] = 0.0;
-     p.pos[i] = 0.0;
-     ll.pos[i] = 0.0;
-     ur.pos[i] = 0.0;
-     facell.pos[i] = 0.0;
-     faceur.pos[i] = 0.0;
-     a.pos[i] = 0.0;
-     b.pos[i] = 0.0;
-     c.pos[i] = 0.0;
-   }
-
-   FindBoundingBoxOfFaces(faces, faceIds, ll, ur);
-   FindDistanceBetweenPoints(ll, ur, radius);
-
-   int numPoints = verts->count();
-
-   for(int iter=0;iter<numPoints;iter++)
-   {
-     /* If query point is outside bounding box, finished. */
-     if(PointInBox(verts->getVert(iter), ll, ur) == false)
-     {
-        results[iter] = 'o';
-     }
-  
-     int numFaces = faceIds.size();
-
-     qq[0] = verts->getVert(iter).pos[0];
-     qq[1] = verts->getVert(iter).pos[1];
-     qq[2] = verts->getVert(iter).pos[2];
-
-     LOOP:
-     while( k++ < numFaces )
-     {
-        crossings = 0;
-  
-        GenerateRandomRay(radius, ray); 
-        MatrixMath::Add3x1s(qq, ray, rr);
-        r.pos[0] = rr[0];
-        r.pos[1] = rr[1];
-        r.pos[2] = rr[2];
-  
-        for ( f = 0; f < numFaces; f++ )
-        {  /* Begin check each face */
-           curFace.push_back(faceIds[f]);
-           FindBoundingBoxOfFaces(faces, curFace, facell, faceur);
-           curFace.clear();
-           if( RayIntersectsBox(verts->getVert(iter), p, facell, faceur) == false )
-           {
-             code = '0';
-           }
-           else
-           {
-              if(faceNormList[f] == true) faces->getVertObjects(faceIds[f], a, b, c);
-              else faces->getVertObjects(faceIds[f], a, c, b);
-             code = RayIntersectsTriangle(a, b, c, verts->getVert(iter), r, p);
-           }
-
-           /* If ray is degenerate, then goto outer while to generate another. */
-           if ( code == 'p' || code == 'v' || code == 'e' )
-           {
-              goto LOOP;
-           }
-   
-           /* If ray hits face at interior point, increment crossings. */
-           else if ( code == 'f' )
-           {
-              crossings++;
-           }
-
-           /* If query endpoint q sits on a V/E/F, return that code. */
-           else if ( code == 'V' || code == 'E' || code == 'F' ) results[iter] = code;
-
-           /* If ray misses triangle, do nothing. */
-           else if ( code == '0' )
-           {
-
-           }
-
-           else
-           {
-
-           }
-        } /* End check each face */
-
-        /* No degeneracies encountered: ray is generic, so finished. */
-        break;
-
-     } /* End while loop */
- 
-     /* q strictly interior to polyhedron if an odd number of crossings. */
-     if( ( crossings % 2 ) == 1 ) results[iter] = 'i';
-     else results[iter] = 'o';
-   }
 }

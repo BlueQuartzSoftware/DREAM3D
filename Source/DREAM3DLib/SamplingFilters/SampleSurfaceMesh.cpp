@@ -174,24 +174,6 @@ void SampleSurfaceMesh::execute()
 
   setErrorCondition(0);
 
-  VertexArray::Pointer verts = VertexArray::CreateArray(128*128*128, "pointsToCheck");
-  int count = 0;
-  float coords[3];
-  for(int i=0;i<128;i++)
-  {
-    for(int j=0;j<128;j++)
-    {
-      for(int k=0;k<128;k++)
-      {
-        coords[0] = k*0.1;
-        coords[1] = j*0.1;
-        coords[2] = i*0.1;
-        verts->setCoords(count,coords);
-        count++;
-      }
-    }
-  }
-
   m->setDimensions(128, 128, 128);
   m->setOrigin(0.0, 0.0, 0.0);
   m->setResolution(0.1, 0.1, 0.1);
@@ -207,25 +189,23 @@ void SampleSurfaceMesh::execute()
   dataCheck(true, 0, numFaces, 0); 
 
   QVector<QVector<int> > faceLists(1);
-  QVector<QVector<bool> > faceNormLists(1);
 
   int g1, g2;
   for(int i=0;i<numFaces;i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2*i];
     g2 = m_SurfaceMeshFaceLabels[2*i+1];
-    if((g1+1) > faceLists.size()) faceLists.resize(g1+1), faceNormLists.resize(g1+1);
-    if((g2+1) > faceLists.size()) faceLists.resize(g2+1), faceNormLists.resize(g2+1);
-    if(g1 > 0) faceLists[g1].push_back(i), faceNormLists[g1].push_back(false);
-    if(g2 > 0) faceLists[g2].push_back(i), faceNormLists[g2].push_back(true);
+    if((g1+1) > faceLists.size()) faceLists.resize(g1+1);
+    if((g2+1) > faceLists.size()) faceLists.resize(g2+1);
+    if(g1 > 0) faceLists[g1].push_back(i);
+    if(g2 > 0) faceLists[g2].push_back(i);
   }
 
-  QVector<char> results(verts->count());
   char code;
-  int zStride, yStride;
+  float radius;
 
   VertexArray::Vert_t ll, ur;
-  float radius;
+  VertexArray::Vert_t point;
 
   for(int i=0;i<3;i++)
   {
@@ -234,7 +214,10 @@ void SampleSurfaceMesh::execute()
   }
 
   int minx, miny, minz, maxx, maxy, maxz;
+  int zStride, yStride;
 
+  int count = 0;
+  float coords[3];
   for(int iter=1;iter<2;iter++)
   {
     GeometryMath::FindBoundingBoxOfFaces(faces, faceLists[iter], ll, ur);
@@ -247,6 +230,7 @@ void SampleSurfaceMesh::execute()
     maxy = int(ur.pos[1]/0.1);
     maxz = int(ur.pos[2]/0.1);
 
+    count = 0;
     for(int i=minz;i<maxz+1;i++)
     {
       zStride = i*128*128;
@@ -255,18 +239,14 @@ void SampleSurfaceMesh::execute()
         yStride = j*128;
         for(int k=minx;k<maxx+1;k++)
         {
-          if(i == 92 && j == 85 && k == 115)
-          {
-            int stop = 0;
-          }
-          VertexArray::Vert_t& vert = verts->getVert((zStride+yStride+k));
-          code = GeometryMath::PointInPolyhedron(faces, faceLists[iter], faceNormLists[iter], vert, ll, ur, radius);
-          if(code == 'i') grainIds[(zStride+yStride+k)] = iter;
+          point.pos[0] = k*0.1+0.05;
+          point.pos[1] = j*0.1+0.05;
+          point.pos[2] = i*0.1+0.05;
+          code = GeometryMath::PointInPolyhedron(faces, faceLists[iter], point, ll, ur, radius);
+          if(code == 'i') grainIds[zStride+yStride+k] = iter;
         }
       }
     }
-    QString ss = QObject::tr("Grain #%1").arg(iter);
-    notifyStatusMessage(ss);
   }
 
   m->addCellData(DREAM3D::CellData::GrainIds, iArray);
