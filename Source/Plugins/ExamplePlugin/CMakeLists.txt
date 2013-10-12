@@ -262,4 +262,4 @@ if(NOT MSVC)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 
-add_subdirectory(${${PLUGIN_NAME}_SOURCE_DIR}/Test ${${PLUGIN_NAME}_BINARY_DIR}/Test )
+#add_subdirectory(${${PLUGIN_NAME}_SOURCE_DIR}/Test ${${PLUGIN_NAME}_BINARY_DIR}/Test )
