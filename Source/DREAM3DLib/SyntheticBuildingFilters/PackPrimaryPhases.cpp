@@ -395,6 +395,14 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::preflight()
 {
+
+  if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
+  {
+    QString ss = QObject::tr("%1 needs the Csv Output File Set and it was not.").arg(ClassName());
+    addErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-387);
+  }
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
@@ -404,14 +412,6 @@ void PackPrimaryPhases::preflight()
   }
 
   dataCheck(true, 1, 1, 1);
-
-  if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
-  {
-    QString ss = QObject::tr("%1 needs the Csv Output File Set and it was not.").arg(ClassName());
-    addErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-387);
-  }
-
 
 }
 
