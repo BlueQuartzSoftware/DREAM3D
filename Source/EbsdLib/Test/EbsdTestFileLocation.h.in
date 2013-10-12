@@ -1,0 +1,57 @@
+#ifndef _EbsdTestFileLocation_h_
+#define _EbsdTestFileLocation_h_
+
+#include <QtCore/QString>
+
+#define REMOVE_TEST_FILES 1
+
+
+namespace UnitTest
+{
+
+
+  namespace EbsdImportTest {
+    const QString FileDir("@DREAM3D_DATA_DIR@/EbsdTestFiles/");
+    const QString TestFile1("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_1.ang");
+    const QString TestFile2("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_2.ang");
+    const QString TestFile3("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_3.ang");
+    const QString H5EbsdOutputFile("@EbsdLibTest_BINARY_DIR@/FromAng.h5ebsd");
+    const QString MissingHeader1("@DREAM3D_DATA_DIR@/EbsdTestFiles/MissingHeader_1.ang");
+    const QString GridMissing("@DREAM3D_DATA_DIR@/EbsdTestFiles/GridMissing.ang");
+    const QString MissingHeader3("@DREAM3D_DATA_DIR@/EbsdTestFiles/MissingHeader_3.ang");
+    const QString HexHeader("@DREAM3D_DATA_DIR@/EbsdTestFiles/HexHeader.ang");
+    const QString ShortFile("@DREAM3D_DATA_DIR@/EbsdTestFiles/ShortFile.ang");
+  }
+
+  namespace CtfReaderTest
+  {
+    const QString FileDir("@DREAM3D_DATA_DIR@/EbsdTestFiles/");
+    const QString EuropeanInputFile1("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_European_1.ctf");
+    const QString USInputFile1("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_US_1.ctf");
+    const QString EuropeanInputFile2("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_European_2.ctf");
+    const QString USInputFile2("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_US_2.ctf");
+    const QString Corrupted_XCells("@DREAM3D_DATA_DIR@/EbsdTestFiles/Corrupted_XCells.ctf");
+    const QString ShortFile("@DREAM3D_DATA_DIR@/EbsdTestFiles/ShortFile.ctf");
+    const QString ZeroXYCells("@DREAM3D_DATA_DIR@/EbsdTestFiles/ZeroXYCells.ctf");
+
+    const QString H5EbsdOutputFile("@EbsdLibTest_BINARY_DIR@/FromCtf.h5ebsd");
+  }
+
+}
+
+namespace UnitTest
+{
+
+  namespace HedmReaderTest
+  {
+    const QString FileDir("@DREAM3D_DATA_DIR@/HEDMTestFiles");
+    const QString ConfigFile("@DREAM3D_DATA_DIR@/HEDMTestFiles/HedmTest.config");
+    const QString DatFile("@DREAM3D_DATA_DIR@/HEDMTestFiles/HedmTest.dat");
+    const QString MicFile("@DREAM3D_DATA_DIR@/HEDMTestFiles/HedmTest.mic");
+  }
+
+}
+
+
+
+#endif

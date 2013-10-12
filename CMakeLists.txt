@@ -238,17 +238,6 @@ INCLUDE( ${QT_USE_FILE} )
 # Append the locations of the Qt libraries to our Library Search Paths
 list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
 
-
-# -----------------------------------------------------------------------
-# -- Add in the Necessary HDF5 Support Sources into a library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/H5Support ${PROJECT_BINARY_DIR}/H5Support)
-
-
-# -----------------------------------------------------------------------
-# -- Add in the Necessary EBSD Sources into a library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
-
-
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
 if(DREAM3D_BUILD_TESTING)
@@ -257,7 +246,19 @@ endif()
 
 
 
-#--- This needs to be set here as we are going to look for files in this directory
+# -----------------------------------------------------------------------
+# Add in the Necessary HDF5 Support Sources into a library
+# -----------------------------------------------------------------------
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/H5Support ${PROJECT_BINARY_DIR}/H5Support)
+
+# -----------------------------------------------------------------------
+# Add in the Necessary EBSD Sources into a library
+# -----------------------------------------------------------------------
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
+
+# -----------------------------------------------------------------------
+# This needs to be set here as we are going to look for files in this directory
+# -----------------------------------------------------------------------
 set(FilterWidgetsLib_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
 set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgets)
 

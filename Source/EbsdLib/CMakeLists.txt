@@ -152,4 +152,5 @@ if(DEFINED DREAM3DProj_BINARY_DIR)
         )
     endif()
 
+    add_subdirectory(${EbsdLib_SOURCE_DIR}/Test ${EbsdLib_BINARY_DIR}/Test)
 endif(DEFINED DREAM3DProj_BINARY_DIR)

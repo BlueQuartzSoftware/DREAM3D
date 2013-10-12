@@ -41,7 +41,7 @@
 
 
 #include "UnitTestSupport.hpp"
-#include "HedmTestFileLocation.h"
+#include "EbsdTestFileLocation.h"
 
 // -----------------------------------------------------------------------------
 //
