@@ -40,7 +40,7 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Test)
 # --------------------------------------------------------------------------
 # ANG Data File Testing
 # --------------------------------------------------------------------------
-add_executable(AngImportTest ${EbsdLibTest_SOURCE_DIR}/AngImportTest.cpp)
+add_executable(AngImportTest ${EbsdLibTest_SOURCE_DIR}/AngImportTest.cpp ${EbsdLibTest_BINARY_DIR}/EbsdTestFileLocation.h )
 target_link_libraries(AngImportTest ${QT_QTCORE_LIBRARY} EbsdLib)
 set_target_properties(AngImportTest PROPERTIES FOLDER Test)
 add_test(AngImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/AngImportTest)
@@ -48,7 +48,7 @@ add_test(AngImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/AngImportTest)
 # --------------------------------------------------------------------------
 # CTF Data File Testing
 # --------------------------------------------------------------------------
-add_executable(CtfReaderTest ${EbsdLibTest_SOURCE_DIR}/CtfReaderTest.cpp)
+add_executable(CtfReaderTest ${EbsdLibTest_SOURCE_DIR}/CtfReaderTest.cpp ${EbsdLibTest_BINARY_DIR}/EbsdTestFileLocation.h )
 target_link_libraries(CtfReaderTest EbsdLib)
 set_target_properties(CtfReaderTest PROPERTIES FOLDER Test)
 add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
@@ -57,7 +57,7 @@ add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
 # --------------------------------------------------------------------------
 # HEDM Tests
 # --------------------------------------------------------------------------
-add_executable(HedmReaderTest HedmReaderTest.cpp )
+add_executable(HedmReaderTest HedmReaderTest.cpp ${EbsdLibTest_BINARY_DIR}/EbsdTestFileLocation.h )
 target_link_libraries(HedmReaderTest EbsdLib)
 set_target_properties(HedmReaderTest PROPERTIES FOLDER Test)
 add_test(HedmReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/HedmReaderTest)
