@@ -41,6 +41,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
@@ -174,39 +175,74 @@ void SampleSurfaceMesh::execute()
 
   setErrorCondition(0);
 
+  // set volume datacontainer details
   m->setDimensions(128, 128, 128);
   m->setOrigin(0.0, 0.0, 0.0);
   m->setResolution(0.1, 0.1, 0.1);
 
+  //create array for grainIds in volume data container
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   iArray = Int32ArrayType::CreateArray((128*128*128), 1, DREAM3D::CellData::GrainIds);
   iArray->initializeWithZeros();
   int32_t* grainIds = iArray->getPointer(0);
 
+  //pull down faces
   FaceArray::Pointer faces = sm->getFaces();
   int numFaces = faces->count();
 
   dataCheck(true, 0, numFaces, 0); 
 
-  QVector<int> curFace(1);
-  QVector<QVector<int> > faceLists(1);
-
-
+  //create array to hold bounding vertices for each face
   VertexArray::Vert_t ll, ur;
   VertexArray::Vert_t point;
   VertexArray::Pointer faceBBs = VertexArray::CreateArray(2*numFaces, "faceBBs");
 
+  //walk through faces to see how many grains there are
   int g1, g2;
+  int maxGrainId = 0;
   for(int i=0;i<numFaces;i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2*i];
     g2 = m_SurfaceMeshFaceLabels[2*i+1];
-    if((g1+1) > faceLists.size()) faceLists.resize(g1+1);
-    if((g2+1) > faceLists.size()) faceLists.resize(g2+1);
-    if(g1 > 0) faceLists[g1].push_back(i);
-    if(g2 > 0) faceLists[g2].push_back(i);
-    curFace[0] = i;
-    GeometryMath::FindBoundingBoxOfFaces(faces, curFace, ll, ur);
+    if(g1 > maxGrainId) maxGrainId = g1;
+    if(g2 > maxGrainId) maxGrainId = g2;
+  }
+  //add one to account for grain 0
+  int numGrains = maxGrainId+1;
+
+  //create a dynamic list array to hold face lists
+  Int32DynamicListArray::Pointer faceLists = Int32DynamicListArray::New();
+  QVector<uint16_t> linkCount(numGrains, 0);
+  unsigned short* linkLoc;
+
+  // fill out lists with number of references to cells
+  typedef boost::shared_array<unsigned short> SharedShortArray_t;
+  SharedShortArray_t linkLocPtr(new unsigned short[numFaces]);
+  linkLoc = linkLocPtr.get();
+
+  ::memset(linkLoc, 0, numFaces*sizeof(unsigned short));
+
+  // traverse data to determine number of faces belonging to each grain
+  for (int i=0; i < numFaces; i++)
+  {
+    g1 = m_SurfaceMeshFaceLabels[2*i];
+    g2 = m_SurfaceMeshFaceLabels[2*i+1];
+    if(g1 > 0) linkCount[g1]++;
+    if(g2 > 0) linkCount[g2]++;
+  }
+
+  // now allocate storage for the faces
+  faceLists->allocateLists(linkCount);
+
+  // traverse data again to get the faces belonging to each grain
+  for (int i=0; i < numFaces; i++)
+  {
+    g1 = m_SurfaceMeshFaceLabels[2*i];
+    g2 = m_SurfaceMeshFaceLabels[2*i+1];
+    if(g1 > 0) faceLists->insertCellReference(g1, (linkLoc[g1])++, i);
+    if(g2 > 0) faceLists->insertCellReference(g2, (linkLoc[g2])++, i);
+    //find bounding box for each face
+    GeometryMath::FindBoundingBoxOfFace(faces, i, ll, ur);
     faceBBs->setCoords(2*i, ll.pos);
     faceBBs->setCoords(2*i+1, ur.pos);
   }
@@ -214,22 +250,16 @@ void SampleSurfaceMesh::execute()
   char code;
   float radius;
 
-  for(int i=0;i<3;i++)
-  {
-     ll.pos[i] = 0.0;
-     ur.pos[i] = 0.0;
-  }
-
   int minx, miny, minz, maxx, maxy, maxz;
   int zStride, yStride;
 
   int count = 0;
   float coords[3];
-  for(int iter=1;iter<2;iter++)
+  for(int iter=1;iter<numGrains;iter++)
   {
-    GeometryMath::FindBoundingBoxOfFaces(faces, faceLists[iter], ll, ur);
+    //find bounding box for current grain
+    GeometryMath::FindBoundingBoxOfFaces(faces, faceLists->getElementList(iter), ll, ur);
     GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
-
     minx = int(ll.pos[0]/0.1);
     miny = int(ll.pos[1]/0.1);
     minz = int(ll.pos[2]/0.1);
@@ -237,6 +267,7 @@ void SampleSurfaceMesh::execute()
     maxy = int(ur.pos[1]/0.1);
     maxz = int(ur.pos[2]/0.1);
 
+    //generate a vertex array to hold all the points within the bounding box of the current grain
     count = 0;
     for(int i=minz;i<maxz+1;i++)
     {
@@ -249,13 +280,14 @@ void SampleSurfaceMesh::execute()
           point.pos[0] = k*0.1+0.05;
           point.pos[1] = j*0.1+0.05;
           point.pos[2] = i*0.1+0.05;
-          code = GeometryMath::PointInPolyhedron(faces, faceLists[iter], faceBBs, point, ll, ur, radius);
+          code = GeometryMath::PointInPolyhedron(faces, faceLists->getElementList(iter), faceBBs, point, ll, ur, radius);
           if(code == 'i') grainIds[zStride+yStride+k] = iter;
         }
       }
     }
   }
 
+  //add the grain ids to the volume data container
   m->addCellData(DREAM3D::CellData::GrainIds, iArray);
 
   notifyStatusMessage("Complete");

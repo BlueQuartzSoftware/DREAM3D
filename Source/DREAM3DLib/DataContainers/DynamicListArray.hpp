@@ -177,8 +177,8 @@ class DynamicListArray
       allocate(linkCounts.size());
       for (int i=0; i < linkCounts.size(); i++)
       {
-        this->m_Array[i].cells = new int[this->m_Array[i].ncells];
         this->m_Array[i].ncells = linkCounts[i];
+        this->m_Array[i].cells = new int[this->m_Array[i].ncells];
       }
     }
 

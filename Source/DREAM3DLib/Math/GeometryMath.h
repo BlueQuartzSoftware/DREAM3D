@@ -38,6 +38,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/VertexArray.h"
 #include "DREAM3DLib/DataContainers/FaceArray.hpp"
+#include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
 
 
 /*
@@ -140,7 +141,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static char PointInPolyhedron(FaceArray::Pointer faces, QVector<int> faceIds, VertexArray::Pointer faceBBs, VertexArray::Vert_t point, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius);
+    static char PointInPolyhedron(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, VertexArray::Pointer faceBBs, VertexArray::Vert_t point, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius);
 
     /**
      * @brief Determines if a point is inside of a triangle defined by 3 points
@@ -197,7 +198,17 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static void FindBoundingBoxOfFaces(FaceArray::Pointer faces, QVector<int> faceIds, VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
+    static void FindBoundingBoxOfFace(FaceArray::Pointer faces, int faceId, VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
+
+
+    /**
+     * @brief Determines the bounding box defined by the lower left and upper right corners of a set of vertices
+     * @param verts pointer to vertex array
+     * @param lowerLeft
+     * @param upperRight
+     * @return
+     */
+    static void FindBoundingBoxOfFaces(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
 
     /**
      * @brief Determines if a segment between two points intersects a triangle defined by 3 points
