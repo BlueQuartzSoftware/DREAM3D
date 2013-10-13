@@ -156,9 +156,9 @@ void GeometryMath::FindBoundingBoxOfFaces(FaceArray::Pointer faces, Int32Dynamic
     if(facell.pos[0] < ll.pos[0]) ll.pos[0] = facell.pos[0];
     if(facell.pos[1] < ll.pos[1]) ll.pos[1] = facell.pos[1];
     if(facell.pos[2] < ll.pos[2]) ll.pos[2] = facell.pos[2];
-    if(faceur.pos[0] < ur.pos[0]) ur.pos[0] = faceur.pos[0];
-    if(faceur.pos[1] < ur.pos[1]) ur.pos[1] = faceur.pos[1];
-    if(faceur.pos[2] < ur.pos[2]) ur.pos[2] = faceur.pos[2];
+    if(faceur.pos[0] > ur.pos[0]) ur.pos[0] = faceur.pos[0];
+    if(faceur.pos[1] > ur.pos[1]) ur.pos[1] = faceur.pos[1];
+    if(faceur.pos[2] > ur.pos[2]) ur.pos[2] = faceur.pos[2];
   }
 }
 
