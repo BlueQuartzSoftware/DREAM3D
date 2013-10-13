@@ -240,16 +240,16 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   case DREAM3D::DistributionType::Beta:
     v0 = m_TableModel->getData(SGBetaTableModel::Alpha);
     v1 = m_TableModel->getData(SGBetaTableModel::Beta);
-    col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Alpha);
-    col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::Beta);
+    col0 = FloatArrayType::FromQVector(v0, DREAM3D::HDF5::Alpha);
+    col1 = FloatArrayType::FromQVector(v1, DREAM3D::HDF5::Beta);
     data.push_back(col0);
     data.push_back(col1);
     break;
   case DREAM3D::DistributionType::LogNormal:
     v0 = m_TableModel->getData(SGLogNormalTableModel::Average);
     v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev);
-    col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Average);
-    col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::StandardDeviation);
+    col0 = FloatArrayType::FromQVector(v0, DREAM3D::HDF5::Average);
+    col1 = FloatArrayType::FromQVector(v1, DREAM3D::HDF5::StandardDeviation);
     data.push_back(col0);
     data.push_back(col1);
     break;
@@ -257,9 +257,9 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
     v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha);
     v1 = m_TableModel->getData(SGPowerLawTableModel::K);
     v2 = m_TableModel->getData(SGPowerLawTableModel::Beta);
-    col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Alpha);
-    col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::Exp_k);
-    col2 = FloatArrayType::FromStdVector(v2, DREAM3D::HDF5::Beta);
+    col0 = FloatArrayType::FromQVector(v0, DREAM3D::HDF5::Alpha);
+    col1 = FloatArrayType::FromQVector(v1, DREAM3D::HDF5::Exp_k);
+    col2 = FloatArrayType::FromQVector(v2, DREAM3D::HDF5::Beta);
     data.push_back(col0);
     data.push_back(col1);
     data.push_back(col2);
@@ -492,7 +492,7 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, float &xMax, float &yMax)
   int size = 256;
   QwtArray<float > x;
   QwtArray<float > y;
-  
+
   err = StatsGen::GenBetaPlotData<QwtArray<float > > (alpha, beta, x, y, size);
   if (err == 1)
   {
@@ -539,7 +539,7 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float &xMax, float &
   int size = 256;
   QwtArray<float > x;
   QwtArray<float > y;
-  
+
   err = StatsGen::GenLogNormalPlotData<QwtArray<float > > (avg, stdDev, x, y, size);
   if (err == 1)
   {
@@ -586,7 +586,7 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, float &xMax, float &yMax
   int size = 256;
   QwtArray<float> x;
   QwtArray<float> y;
-  
+
   err = StatsGen::GenPowerLawPlotData<QwtArray<float > > (alpha, k, beta, x, y, size);
   if (err == 1)
   {

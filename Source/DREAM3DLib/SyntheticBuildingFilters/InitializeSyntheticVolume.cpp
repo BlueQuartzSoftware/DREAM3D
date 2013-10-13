@@ -191,6 +191,8 @@ void InitializeSyntheticVolume::preflight()
 
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
 
+  scopedFileSentinel.addGroupId(&dcGid);
+
   VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
   read_data->setHdfFileId(fileId);
   read_data->setHdfGroupId(dcGid);

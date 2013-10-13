@@ -126,20 +126,20 @@ void StatsGenODFWidget::extractStatsData(VolumeDataContainer::Pointer m, int ind
   }
   if (arrays.size() > 0)
   {
-    QVector<float> e1(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-    ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
+    QVector<float> e1(static_cast<int>(arrays[0]->getNumberOfTuples()));
+    ::memcpy( e1.data(), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
 
-    QVector<float> e2(static_cast<int>(arrays[1]->GetNumberOfTuples()));
-    ::memcpy( &(e2.front()), arrays[1]->GetVoidPointer(0), sizeof(float)*e2.size() );
+    QVector<float> e2(static_cast<int>(arrays[1]->getNumberOfTuples()));
+    ::memcpy( e2.data(), arrays[1]->GetVoidPointer(0), sizeof(float)*e2.size() );
 
-    QVector<float> e3(static_cast<int>(arrays[2]->GetNumberOfTuples()));
-    ::memcpy( &(e3.front()), arrays[2]->GetVoidPointer(0), sizeof(float)*e3.size() );
+    QVector<float> e3(static_cast<int>(arrays[2]->getNumberOfTuples()));
+    ::memcpy( e3.data(), arrays[2]->GetVoidPointer(0), sizeof(float)*e3.size() );
 
-    QVector<float> weights(static_cast<int>(arrays[3]->GetNumberOfTuples()));
-    ::memcpy( &(weights.front()), arrays[3]->GetVoidPointer(0), sizeof(float)*weights.size() );
+    QVector<float> weights(static_cast<int>(arrays[3]->getNumberOfTuples()));
+    ::memcpy( weights.data(), arrays[3]->GetVoidPointer(0), sizeof(float)*weights.size() );
 
-    QVector<float> sigmas(static_cast<int>(arrays[4]->GetNumberOfTuples()));
-    ::memcpy( &(sigmas.front()), arrays[4]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
+    QVector<float> sigmas(static_cast<int>(arrays[4]->getNumberOfTuples()));
+    ::memcpy( sigmas.data(), arrays[4]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
 
     // Convert from Radians to Degrees for the Euler Angles
     for(int i = 0; i < e1.size(); ++i)
@@ -170,21 +170,21 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
 {
   int retErr = 0;
 
-  std::vector<float> e1s;
-  std::vector<float> e2s;
-  std::vector<float> e3s;
-  std::vector<float> weights;
-  std::vector<float> sigmas;
-  std::vector<float> odf;
+  QVector<float> e1s;
+  QVector<float> e2s;
+  QVector<float> e3s;
+  QVector<float> weights;
+  QVector<float> sigmas;
+  QVector<float> odf;
 
   // Initialize xMax and yMax....
-  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1).toStdVector();
-  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2).toStdVector();
-  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3).toStdVector();
-  weights = m_ODFTableModel->getData(SGODFTableModel::Weight).toStdVector();
-  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma).toStdVector();
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  for (std::vector<float>::size_type i = 0; i < e1s.size(); i++)
+  for (QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * M_PI / 180.0;
     e2s[i] = e2s[i] * M_PI / 180.0;
@@ -195,20 +195,20 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     odf.resize(CubicOps::k_OdfSize);
-    Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
-                                   &(weights.front()), &(sigmas.front()), true,
-                                   &(odf.front()), numEntries);
+    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
+                                   weights.data(), sigmas.data(), true,
+                                   odf.data(), numEntries);
   }
   else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     odf.resize(HexagonalOps::k_OdfSize);
-    Texture::CalculateHexODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
-                                 &(weights.front()), &(sigmas.front()), true,
-                                 &(odf.front()), numEntries);
+    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
+                                 weights.data(), sigmas.data(), true,
+                                 odf.data(), numEntries);
   }
   if (odf.size() > 0)
   {
-    FloatArrayType::Pointer p = FloatArrayType::FromStdVector(odf, DREAM3D::HDF5::ODF);
+    FloatArrayType::Pointer p = FloatArrayType::FromQVector(odf, DREAM3D::HDF5::ODF);
     if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
@@ -226,11 +226,11 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
     }
     if (e1s.size() > 0)
     {
-      FloatArrayType::Pointer euler1 = FloatArrayType::FromStdVector(e1s, DREAM3D::HDF5::Euler1);
-      FloatArrayType::Pointer euler2 = FloatArrayType::FromStdVector(e2s, DREAM3D::HDF5::Euler2);
-      FloatArrayType::Pointer euler3 = FloatArrayType::FromStdVector(e3s, DREAM3D::HDF5::Euler3);
-      FloatArrayType::Pointer sigma = FloatArrayType::FromStdVector(sigmas, DREAM3D::HDF5::Sigma);
-      FloatArrayType::Pointer weight = FloatArrayType::FromStdVector(weights, DREAM3D::HDF5::Weight);
+      FloatArrayType::Pointer euler1 = FloatArrayType::FromQVector(e1s, DREAM3D::HDF5::Euler1);
+      FloatArrayType::Pointer euler2 = FloatArrayType::FromQVector(e2s, DREAM3D::HDF5::Euler2);
+      FloatArrayType::Pointer euler3 = FloatArrayType::FromQVector(e3s, DREAM3D::HDF5::Euler3);
+      FloatArrayType::Pointer sigma = FloatArrayType::FromQVector(sigmas, DREAM3D::HDF5::Sigma);
+      FloatArrayType::Pointer weight = FloatArrayType::FromQVector(weights, DREAM3D::HDF5::Weight);
 
       VectorOfFloatArray odfWeights;
       odfWeights.push_back(euler1);
@@ -585,7 +585,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
                                    weights.data(), sigmas.data(), true,
                                    odf.data(), numEntries);
 
-    err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+    err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     CubicOps ops;
     PoleFigureConfiguration_t config;
@@ -594,7 +594,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     config.lambertDim = lamberSize;
     config.numColors = numColors;
 
-    std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+    QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
     {
       // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
       QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
@@ -620,7 +620,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
                                  weights.data(), sigmas.data(), true,
                                  odf.data(), numEntries);
 
-    err = StatsGen::GenHexODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+    err = StatsGen::GenHexODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     HexagonalOps ops;
     PoleFigureConfiguration_t config;
@@ -629,7 +629,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     config.lambertDim = lamberSize;
     config.numColors = numColors;
 
-    std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+    QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
     {
       // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
       QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
@@ -654,7 +654,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
                                  weights.data(), sigmas.data(), true,
                                  odf.data(), numEntries);
 
-    err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+    err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     OrthoRhombicOps ops;
     PoleFigureConfiguration_t config;
@@ -663,7 +663,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     config.lambertDim = lamberSize;
     config.numColors = numColors;
 
-    std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+    QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
     {
       // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
       QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
@@ -775,11 +775,11 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   else
   {
     AngleFileLoader::Pointer loader = AngleFileLoader::New();
-    loader->setInputFile(angleFilePath->text().toStdString());
+    loader->setInputFile(angleFilePath->text());
     loader->setAngleRepresentation(angleRepresentation->currentIndex());
     loader->setFileAnglesInDegrees(anglesInDegrees->isChecked());
     loader->setOutputAnglesInDegrees(true);
-    std::string delim;
+    QString delim;
     int index = delimiter->currentIndex();
     switch(index)
     {
@@ -804,7 +804,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     FloatArrayType::Pointer data = loader->loadData();
     if (loader->getErrorCode() < 0)
     {
-      QMessageBox::critical(this, "Error Loading Angle data", QString::fromStdString(loader->getErrorMessage()), QMessageBox::Ok);
+      QMessageBox::critical(this, "Error Loading Angle data", loader->getErrorMessage(), QMessageBox::Ok);
       return;
     }
 
@@ -812,7 +812,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     m_ODFTableModel->removeRows(0, m_ODFTableModel->rowCount());
 
 
-    size_t count = data->GetNumberOfTuples();
+    size_t count = data->getNumberOfTuples();
     QVector<float> e1s(count);
     QVector<float> e2s(count);
     QVector<float> e3s(count);

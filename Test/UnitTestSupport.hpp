@@ -39,6 +39,8 @@
 
 #define NUM_COLS 70
 
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 namespace DREAM3D
 {

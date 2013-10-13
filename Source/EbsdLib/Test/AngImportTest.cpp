@@ -56,7 +56,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(EbsdImportTest::H5EbsdOutputFile);
+  QFile::remove(UnitTest::EbsdImportTest::H5EbsdOutputFile);
 #endif
 }
 
@@ -67,7 +67,7 @@ void TestMissingHeaders()
 {
 
   AngReader reader;
-  reader.setFileName(EbsdImportTest::MissingHeader1);
+  reader.setFileName(UnitTest::EbsdImportTest::MissingHeader1);
   int err = reader.readHeaderOnly();
   // It should read through this header just fine
   DREAM3D_REQUIRE(err > 0)
@@ -100,7 +100,7 @@ void TestMissingGrid()
 {
 
   AngReader reader;
-  reader.setFileName(EbsdImportTest::GridMissing);
+  reader.setFileName(UnitTest::EbsdImportTest::GridMissing);
   int err = reader.readHeaderOnly();
   // It should read through this header just fine
   DREAM3D_REQUIRE(err > 0)
@@ -119,7 +119,7 @@ void TestHexGrid()
 {
 
   AngReader reader;
-  reader.setFileName(EbsdImportTest::HexHeader);
+  reader.setFileName(UnitTest::EbsdImportTest::HexHeader);
   int err = reader.readHeaderOnly();
   // It should read through this header just fine
   DREAM3D_REQUIRE(err > 0)
@@ -137,7 +137,7 @@ void TestHexGrid()
 void TestShortFile()
 {
   AngReader reader;
-  reader.setFileName(EbsdImportTest::ShortFile);
+  reader.setFileName(UnitTest::EbsdImportTest::ShortFile);
   int err = reader.readFile();
   // It should read through this header just fine but die when reading the file because there is not enough data being read
   qDebug() << reader.getErrorMessage();
@@ -151,7 +151,7 @@ void TestNormalFile()
 {
   // This is just a normal Ang file, well formed and should read without error
   AngReader reader;
-  reader.setFileName(EbsdImportTest::TestFile1);
+  reader.setFileName(UnitTest::EbsdImportTest::TestFile1);
   int err = reader.readFile();
   qDebug() << reader.getErrorMessage();
   DREAM3D_REQUIRED(err, == , 0)

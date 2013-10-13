@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +12,9 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Michael A. Jackson nor the names of its contributors may
+ * be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -28,28 +26,13 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-10-D-5210
- *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <stdlib.h>
 
+#include <stdlib.h>
 #include <stdio.h>
 
-#include <iostream>
-#include <string>
-
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Utilities/IO/AngleFileLoader.h"
-
-
 #include "UnitTestSupport.hpp"
-
 #include "TestFileLocations.h"
 
 
@@ -59,132 +42,38 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::AngleFileLoaderTest::OutputFile);
+ // QFile::remove(UnitTest::XXXX::OutputFile);
 #endif
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void makeTestFile(const QString delim, const QString& outputFile)
+void MyTest()
 {
-  int count = 1000;
-  float e0, e1, e2;
+  int i = 0;
+  int j = 1;
 
-  FILE* f = fopen(outputFile.toAscii().data(), "wb");
+  // This will pass because i < j
+  DREAM3D_REQUIRED(i, < , j)
 
-  fprintf(f, "%d\n", count);
-
-  for(int i = 0; i < count; ++i)
-  {
-    e0 = static_cast<float>(i) * 0.1;
-    e1 = static_cast<float>(i) * 0.25;
-    e2 = static_cast<float>(i) * 0.58;
-    fprintf(f, "%0.6f%s%0.6f%s%0.6f\n", e0, delim.toAscii().data(), e1, delim.toAscii().data(), e2);
-  }
-  fclose(f);
-}
-
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestLoadingSpaceDelimited()
-{
-  // Create a Teset File
-  makeTestFile(" ", UnitTest::AngleFileLoaderTest::OutputFile);
-
-  AngleFileLoader::Pointer reader = AngleFileLoader::New();
-  reader->setInputFile(UnitTest::AngleFileLoaderTest::OutputFile);
-  reader->setDelimiter(" ");
-  reader->setAngleRepresentation(AngleFileLoader::EulerAngles);
-  reader->loadData();
-  int err = reader->getErrorCode();
-  DREAM3D_REQUIRE_EQUAL(err, 0)
-
+  // This will FAIL because i != j
+  DREAM3D_REQUIRE_EQUAL(i, j)
 
 
 }
 
 // -----------------------------------------------------------------------------
-//
+//  Use unit test framework
 // -----------------------------------------------------------------------------
-void TestLoadingCommaDelimited()
+int main(int argc, char** argv)
 {
-  // Create a Teset File
-  makeTestFile(", ", UnitTest::AngleFileLoaderTest::OutputFile);
-
-  AngleFileLoader::Pointer reader = AngleFileLoader::New();
-  reader->setInputFile(UnitTest::AngleFileLoaderTest::OutputFile);
-  reader->setDelimiter(",");
-  reader->setAngleRepresentation(AngleFileLoader::EulerAngles);
-  reader->loadData();
-  int err = reader->getErrorCode();
-  DREAM3D_REQUIRE_EQUAL(err, 0)
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestLoadingSemiColonDelimited()
-{
-  // Create a Teset File
-  makeTestFile(";", UnitTest::AngleFileLoaderTest::OutputFile);
-
-  AngleFileLoader::Pointer reader = AngleFileLoader::New();
-  reader->setInputFile(UnitTest::AngleFileLoaderTest::OutputFile);
-  reader->setDelimiter(";");
-  reader->setAngleRepresentation(AngleFileLoader::EulerAngles);
-  reader->loadData();
-  int err = reader->getErrorCode();
-  DREAM3D_REQUIRE_EQUAL(err, 0)
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestLoadingTabDelimited()
-{
-  // Create a Teset File
-  makeTestFile("\t", UnitTest::AngleFileLoaderTest::OutputFile);
-
-  AngleFileLoader::Pointer reader = AngleFileLoader::New();
-  reader->setInputFile(UnitTest::AngleFileLoaderTest::OutputFile);
-  reader->setDelimiter("\t");
-  reader->setAngleRepresentation(AngleFileLoader::EulerAngles);
-  reader->loadData();
-  int err = reader->getErrorCode();
-  DREAM3D_REQUIRE_EQUAL(err, 0)
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int main(int argc, char* argv[])
-{
-
   int err = EXIT_SUCCESS;
-  QDir dir(UnitTest::AngleFileLoaderTest::TestDir);
-  dir.mkpath(".");
-
-
-#if !REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-#endif
-
-  DREAM3D_REGISTER_TEST( TestLoadingSpaceDelimited() )
-  DREAM3D_REGISTER_TEST( TestLoadingCommaDelimited() )
-  DREAM3D_REGISTER_TEST( TestLoadingSemiColonDelimited() )
-  DREAM3D_REGISTER_TEST( TestLoadingTabDelimited() )
-
-#if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-#endif
+  DREAM3D_REGISTER_TEST( MyTest() )
 
 
   PRINT_TEST_SUMMARY();
   return err;
 }
+
+

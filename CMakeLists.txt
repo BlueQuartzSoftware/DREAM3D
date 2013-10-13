@@ -238,17 +238,6 @@ INCLUDE( ${QT_USE_FILE} )
 # Append the locations of the Qt libraries to our Library Search Paths
 list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
 
-
-# -----------------------------------------------------------------------
-# -- Add in the Necessary HDF5 Support Sources into a library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/H5Support ${PROJECT_BINARY_DIR}/H5Support)
-
-
-# -----------------------------------------------------------------------
-# -- Add in the Necessary EBSD Sources into a library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
-
-
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
 if(DREAM3D_BUILD_TESTING)
@@ -257,7 +246,19 @@ endif()
 
 
 
-#--- This needs to be set here as we are going to look for files in this directory
+# -----------------------------------------------------------------------
+# Add in the Necessary HDF5 Support Sources into a library
+# -----------------------------------------------------------------------
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/H5Support ${PROJECT_BINARY_DIR}/H5Support)
+
+# -----------------------------------------------------------------------
+# Add in the Necessary EBSD Sources into a library
+# -----------------------------------------------------------------------
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
+
+# -----------------------------------------------------------------------
+# This needs to be set here as we are going to look for files in this directory
+# -----------------------------------------------------------------------
 set(FilterWidgetsLib_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
 set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgets)
 
@@ -309,33 +310,31 @@ foreach(p ${DREAM3D_PLUGIN_LIST})
 endforeach()
 
 
-# --------------------------------------------------------------------
-# Build the FilterWidgets Static Library which is ONLY needed by this plugin
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
-
-if(DREAM3D_BUILD_DREAM3D)
 # Build the static QtSupport library - which MUST be a static library or the linking
 # will not work due to signals/slots mechanism.
 add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
 
-add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
 
-# --------------------------------------------------------------------
-# Build the FilterWidgets Static Library which is ONLY needed by this plugin
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
 
-    #- Add in the Main DREAM.3D Application
-    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
-    #- Now set up the dependency between the main application and each of the plugins so that
-    #- things like Visual Studio are forced to rebuild the plugins when launching
-    #- the DREAM3D application
-    foreach(p ${DREAM3D_PLUGIN_LIST})
-        if(DREAM3D_BUILD_PLUGIN_${p})
-            add_dependencies(${p} DREAM3D)
-        endif()
-    endforeach()
+if(DREAM3D_BUILD_DREAM3D)
+  add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
 
-    set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
+  # --------------------------------------------------------------------
+  # Build the FilterWidgets Static Library which is ONLY needed by this plugin
+  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
+
+  #- Add in the Main DREAM.3D Application
+  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
+  #- Now set up the dependency between the main application and each of the plugins so that
+  #- things like Visual Studio are forced to rebuild the plugins when launching
+  #- the DREAM3D application
+  foreach(p ${DREAM3D_PLUGIN_LIST})
+      if(DREAM3D_BUILD_PLUGIN_${p})
+          add_dependencies(${p} DREAM3D)
+      endif()
+  endforeach()
+
+  set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 endif()
 
 #- Add in the Main DREAM.3D Application
