@@ -127,6 +127,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
 
   bool ok = false;
   buf = reader.readLine();
+  buf = buf.trimmed();
   numOrients = buf.toInt(&ok, 10);
 
   // Allocate enough for the angles

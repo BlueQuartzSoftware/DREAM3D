@@ -416,7 +416,6 @@ void MatchCrystallography::assign_eulers(int ensem)
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int numbins = 0;
-  float totaldensity = 0;
   float synea1 = 0, synea2 = 0, synea3 = 0;
   QuatF q;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -425,26 +424,17 @@ void MatchCrystallography::assign_eulers(int ensem)
 
   int totalFields = m->getNumCellFieldTuples();
 
-
   for (int i = 1; i < totalFields; i++)
   {
     phase = m_FieldPhases[i];
     if(phase == ensem)
     {
       random = static_cast<float>( rg.genrand_res53() );
-      choose = 0;
-      totaldensity = 0;
 
       if( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[phase] ) { numbins = CubicOps::k_OdfSize; };
       if( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase] ) { numbins = HexagonalOps::k_OdfSize; }
 
-      for (int j = 0; j < numbins; j++)
-      {
-        float density = actualodf->GetValue(j);
-        float td1 = totaldensity;
-        totaldensity = totaldensity + density;
-        if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
-      }
+      choose = pick_euler(random, numbins);
 
       m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose, synea1, synea2, synea3);
       m_FieldEulerAngles[3 * i] = synea1;
@@ -452,17 +442,30 @@ void MatchCrystallography::assign_eulers(int ensem)
       m_FieldEulerAngles[3 * i + 2] = synea3;
       OrientationMath::EulertoQuat(q, synea1, synea2, synea3);
       QuaternionMathF::Copy(q, avgQuats[i]);
-      //    m_AvgQuats[4 * i] = q[0];
-      //    m_AvgQuats[4 * i + 1] = q[1];
-      //    m_AvgQuats[4 * i + 2] = q[2];
-      //    m_AvgQuats[4 * i + 3] = q[3];
-      //    m_AvgQuats[4 * i + 4] = q[4];
       if(m_SurfaceFields[i] == false)
       {
         simodf->SetValue(choose, (simodf->GetValue(choose) + m_Volumes[i] / unbiasedvol[ensem]));
       }
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int MatchCrystallography::pick_euler(float random, int numbins)
+{
+  int choose = 0;
+  float totaldensity = 0;
+
+  for (int j = 0; j < numbins; j++)
+  {
+    float density = actualodf->GetValue(j);
+    float td1 = totaldensity;
+    totaldensity = totaldensity + density;
+    if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
+  }
+  return choose;
 }
 
 // -----------------------------------------------------------------------------
@@ -535,10 +538,6 @@ void MatchCrystallography::matchCrystallography(int ensem)
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumCellFieldTuples();
 
-  //  float xRes = m->getXRes();
-  //  float yRes = m->getYRes();
-  //  float zRes = m->getZRes();
-  //  float volResConst = xRes * yRes * zRes;
   DREAM3D_RANDOMNG_NEW()
   int numbins = 0;
   int iterations = 0, badtrycount = 0;
@@ -548,7 +547,6 @@ void MatchCrystallography::matchCrystallography(int ensem)
   QuatF q1;
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-
 
   float ea1 = 0, ea2 = 0, ea3 = 0;
   float r1 = 0, r2 = 0, r3 = 0;
@@ -604,13 +602,8 @@ void MatchCrystallography::matchCrystallography(int ensem)
         g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
         random = static_cast<float>( rg.genrand_res53() );
         int choose = 0;
-        totaldensity = 0;
-        for (int i = 0; i < numbins; i++)
-        {
-          float density = actualodf->GetValue(i);
-          totaldensity = totaldensity + density;
-          if(random >= totaldensity) { choose = i; }
-        }
+
+        choose = pick_euler(random, numbins);
 
         m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
         OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);

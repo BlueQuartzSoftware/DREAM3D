@@ -823,14 +823,14 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
       e1s[i] = data->GetComponent(i, 0);
       e2s[i] = data->GetComponent(i, 1);
       e3s[i] = data->GetComponent(i, 2);
-      weights[i] = 1.0;
-      sigmas[i] = 1.0;
+      weights[i] = 99.0;
+      sigmas[i] = 0.0;
     }
 
     m_ODFTableModel->blockSignals(true);
     m_ODFTableModel->setColumnData(SGODFTableModel::Euler1, e1s);
-    m_ODFTableModel->setColumnData(SGODFTableModel::Euler2, e3s);
-    m_ODFTableModel->setColumnData(SGODFTableModel::Euler3, e2s);
+    m_ODFTableModel->setColumnData(SGODFTableModel::Euler2, e2s);
+    m_ODFTableModel->setColumnData(SGODFTableModel::Euler3, e3s);
     m_ODFTableModel->setColumnData(SGODFTableModel::Weight, weights);
     m_ODFTableModel->blockSignals(false);
     m_ODFTableModel->setColumnData(SGODFTableModel::Sigma, sigmas);

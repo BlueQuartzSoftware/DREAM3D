@@ -59,6 +59,7 @@
 #include "DREAM3DLib/StatisticsFilters/FindNumFields.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/MatchCrystallography.h"
 #include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
+#include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
@@ -592,6 +593,10 @@ void RunPipeline1()
   GenerateIPFColors::Pointer gipfc = GenerateIPFColors::New();
   pipeline->pushBack(gipfc);
 
+  FieldDataCSVWriter::Pointer fdcsv = FieldDataCSVWriter::New();
+  fdcsv->setFieldDataFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputCSVFile);
+  pipeline->pushBack(fdcsv);
+
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
   dcw->setWriteVolumeData(true);
@@ -770,18 +775,12 @@ void RunPipeline6()
   pipeline->run();
 }
 
-//#define PIPELINE7_INPUT_FILE "C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut2.dream3d"
-//#define PIPELINE7_INPUT_FILE "/tmp/SynthTestOut2.dream3d"
-
-//#define PIPLELINE_OUTPUT_FILE "C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut3.dream3d"
-//#define PIPELINE7_OUTPUT_FILE "/tmp/SynthTestOut3.dream3d"
-
 void RunPipeline7()
 {
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile2);
+  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile3);
   dcr->setReadVertexData(false);
   dcr->setReadEdgeData(false);
   dcr->setReadSurfaceData(true);
@@ -797,7 +796,7 @@ void RunPipeline7()
   pipeline->pushBack(ssm);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile3);
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile4);
   dcw->setWriteVolumeData(true);
   dcw->setWriteSurfaceData(true);
   dcw->setWriteEdgeData(false);
@@ -824,9 +823,9 @@ int main(int argc, char** argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-  RunPipeline1();
-  RunPipeline2();
-//  RunPipeline3();
+//  RunPipeline1();
+//  RunPipeline2();
+  RunPipeline3();
 //  RunPipeline4();
 //  RunPipeline5();
 //  RunPipeline6();
