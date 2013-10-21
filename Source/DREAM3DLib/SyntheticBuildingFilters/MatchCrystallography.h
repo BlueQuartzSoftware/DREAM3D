@@ -129,6 +129,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     void determine_volumes();
     void determine_boundary_areas();
     void assign_eulers(int ensem);
+    int pick_euler(float random, int numbins);
     void MC_LoopBody1(int grain, int ensem, int j, float neighsurfarea, unsigned int sym, QuatF &q1, QuatF &q2);
     void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, QuatF &q1, QuatF &q2);
     void matchCrystallography(int ensem);
