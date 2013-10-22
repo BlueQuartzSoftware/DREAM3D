@@ -240,9 +240,9 @@ void PrecipitatePhaseWidget::setupGui()
    connect(m_COverAPlot, SIGNAL(userEditedData()),
            this, SLOT(dataWasEdited()));
 
-   w = m_NeighborPlot;
-   w->setPlotTitle(QString("Neighbors Distributions"));
-   w->setXAxisName(QString("Number of Grains (within 1 diameter)"));
+   w = m_ClusteringPlot;
+   w->setPlotTitle(QString("Clustering Distributions"));
+   w->setXAxisName(QString("Distance between Centroids"));
    w->setYAxisName(QString("Frequency"));
    w->setDistributionType(DREAM3D::DistributionType::LogNormal);
    w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVNeighbors);
@@ -253,7 +253,7 @@ void PrecipitatePhaseWidget::setupGui()
    w->setMinCutOff(minCutOff);
    w->setMaxCutOff(maxCutOff);
    w->setBinStep(binStepSize);
-   connect(m_NeighborPlot, SIGNAL(userEditedData()),
+   connect(m_ClusteringPlot, SIGNAL(userEditedData()),
            this, SLOT(dataWasEdited()));
 
 
@@ -288,7 +288,7 @@ void PrecipitatePhaseWidget::setPhaseIndex(int index)
   m_Omega3Plot->setPhaseIndex(m_PhaseIndex);
   m_BOverAPlot->setPhaseIndex(m_PhaseIndex);
   m_COverAPlot->setPhaseIndex(m_PhaseIndex);
-  m_NeighborPlot->setPhaseIndex(m_PhaseIndex);
+  m_ClusteringPlot->setPhaseIndex(m_PhaseIndex);
   m_ODFWidget->setPhaseIndex(m_PhaseIndex);
   m_AxisODFWidget->setPhaseIndex(m_PhaseIndex);
 }
@@ -310,7 +310,7 @@ void PrecipitatePhaseWidget::setCrystalStructure(unsigned int xtal)
   m_Omega3Plot->setCrystalStructure(xtal);
   m_BOverAPlot->setCrystalStructure(xtal);
   m_COverAPlot->setCrystalStructure(xtal);
-  m_NeighborPlot->setCrystalStructure(xtal);
+  m_ClusteringPlot->setCrystalStructure(xtal);
   m_ODFWidget->setCrystalStructure(xtal);
   /* Note that we do NOT want to set the crystal structure for the AxisODF widget
    * because we need that crystal structure to be OrthoRhombic in order for those
@@ -686,8 +686,8 @@ void PrecipitatePhaseWidget::plotSizeDistribution()
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
   m_MicroPreset->initializeCOverATableModel(m_COverAPlot, binsizes);
 
-  m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeNeighborTableModel(m_NeighborPlot, binsizes);
+  m_ClusteringPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
+  m_MicroPreset->initializeNeighborTableModel(m_ClusteringPlot, binsizes);
 
   // Get any presets for the ODF/AxisODF/MDF also
   m_MicroPreset->initializeODFTableModel(m_ODFWidget);
@@ -815,11 +815,11 @@ int PrecipitatePhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
     precipitateStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
   }
 
- // err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
+ // err = m_ClusteringPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
   {
-    VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
+    VectorOfFloatArray data = m_ClusteringPlot->getStatisticsData();
     precipitateStatsData->setGrainSize_Neighbors(data);
-    precipitateStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
+    precipitateStatsData->setNeighbors_DistType(m_ClusteringPlot->getDistributionType());
   }
 
 
@@ -872,7 +872,7 @@ void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, in
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
   m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);
-  m_NeighborPlot->setCrystalStructure(m_CrystalStructure);
+  m_ClusteringPlot->setCrystalStructure(m_CrystalStructure);
   m_ODFWidget->setCrystalStructure(m_CrystalStructure);
  // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
 
@@ -937,9 +937,9 @@ void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, in
   m_COverAPlot->extractStatsData(m, index, qbins, precipitateStatsData->getGrainSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_NeighborPlot->setDistributionType(precipitateStatsData->getNeighbors_DistType(), false);
-  m_NeighborPlot->extractStatsData(m, index, qbins, precipitateStatsData->getGrainSize_Neighbors());
-  m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
+  m_ClusteringPlot->setDistributionType(precipitateStatsData->getNeighbors_DistType(), false);
+  m_ClusteringPlot->extractStatsData(m, index, qbins, precipitateStatsData->getGrainSize_Neighbors());
+  m_ClusteringPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
 
   // Set the ODF Data

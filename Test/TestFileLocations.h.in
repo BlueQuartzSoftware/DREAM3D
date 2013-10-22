@@ -189,7 +189,10 @@ namespace UnitTest
       const QString SyntheticOutputFile("@TEST_TEMP_DIR@/SynthTestOut.dream3d");
       const QString SyntheticOutputFile2("@TEST_TEMP_DIR@/SynthTestOut2.dream3d");
       const QString SyntheticOutputFile3("@TEST_TEMP_DIR@/SynthTestOut3.dream3d");
-  }
+      
+      const QString SyntheticOutputCSVFile("@TEST_TEMP_DIR@SyntheticOutputCSVFile");
+      const QString SyntheticOutputFile4("@TEST_TEMP_DIR@SyntheticOutputFile4");
+ }
 }
 
 #endif
