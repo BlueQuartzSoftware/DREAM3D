@@ -37,21 +37,12 @@
 #ifndef _DREAM3DLib_DLL_EXPORT_H_
 #define _DREAM3DLib_DLL_EXPORT_H_
 
-#if 1
+
 #if defined (_MSC_VER)
-#pragma warning(disable: 4267)
-#pragma warning(disable: 4800) /*  warning C4800: 'double' : forcing value to bool 'true' or 'false' */
-//  #pragma warning(disable: 4251)
-//  #pragma warning(disable: 4710)
-//  #pragma warning(disable: 4820)
-//  #pragma warning(disable: 4668)
-//  #pragma warning(disable: 4265)
-//  #pragma warning(disable: 4189)
-//  #pragma warning(disable: 4640)
-//  #pragma warning(disable: 4996)
-//  #pragma warning(disable: 4548)
+  #pragma warning(disable: 4267)
+  #pragma warning(disable: 4800) /*  warning C4800: 'double' : forcing value to bool 'true' or 'false' */
 #endif
-#endif
+
 
 /* Cmake will define DREAM3DLib_EXPORTS on Windows when it
 configures to build a shared library. If you are going to use

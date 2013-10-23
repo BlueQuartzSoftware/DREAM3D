@@ -125,7 +125,7 @@ void FitFieldData::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QString selectedFieldArrayName, unsigned int dType)
+void fitData(IDataArray::Pointer inputData, int64_t ensembles, QString selectedFieldArrayName, unsigned int dType)
 {
   StatsData::Pointer sData = StatsData::New();
 
@@ -137,7 +137,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   DataArray<T>* fieldArray = DataArray<T>::SafePointerDownCast(inputData.get());
   if (NULL == fieldArray)
   {
-    return IDataArray::NullPointer();
+    return;
   }
   QString ss;
   QString distType;
@@ -164,7 +164,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   dist.resize(ensembles);
   values.resize(ensembles);
 
-  for(size_t i = 1; i < ensembles; i++)
+  for(int64_t i = 1; i < ensembles; i++)
   {
     dist[i] = sData->CreateCorrelatedDistributionArrays(dType, 1);
     values[i].resize(1);
@@ -178,10 +178,10 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
       values[1][0].push_back(static_cast<float>(fPtr[i]));
     }
   }
-  for (size_t i = 1; i < ensembles; i++)
+  for (int64_t i = 1; i < ensembles; i++)
   {
     m_DistributionAnalysis[dType]->calculateCorrelatedParameters(values[i], dist[i]);
-    for (size_t j = 0; j < numComp; j++)
+    for (int j = 0; j < numComp; j++)
     {
       VectorOfFloatArray data = dist[i];
       ePtr[numComp*i+j] = data[j]->GetValue(0);
@@ -226,47 +226,47 @@ void FitFieldData::execute()
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {
-    p = fitData<int8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<int8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    p = fitData<uint8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<uint8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    p = fitData<int16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<int16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    p = fitData<uint16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<uint16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    p = fitData<int32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<int32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    p = fitData<uint32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+   fitData<uint32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    p = fitData<int64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<int64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    p = fitData<uint64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+   fitData<uint64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("float") == 0)
   {
-    p = fitData<float>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<float>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("double") == 0)
   {
-    p = fitData<double>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<double>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("bool") == 0)
   {
-    p = fitData<bool>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<bool>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
 
   notifyStatusMessage("Complete");
