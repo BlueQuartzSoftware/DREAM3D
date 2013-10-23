@@ -2113,9 +2113,10 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   ///Draw Solid Border
   //pen.setStyle(Qt::SolidLine);
   //painter.setPen(pen);
-  double k = 0;
+
   if(A <= M_PI / 8)
   {
+    double k = 0.0;
     x.clear();
     y.clear();
     z.clear();
@@ -2258,7 +2259,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     for(int i = 0; i < z.size(); i++)
     {
       y.push_back(z[i]);
-      k = r * r - 2 * (z[i] * z[i]);
+      double k = r * r - 2 * (z[i] * z[i]);
       if(k < 0.0) { k = 0.0; }
       x.push_back(sqrt(k));
     }
@@ -2303,7 +2304,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     for(int i = 0; i < theta.size(); i++)
     {
       tempd3.push_back(tan(A)*cos(theta[i]));
-      k = 2 * ((tan(A) * tan(A)) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
+      double k = 2 * ((tan(A) * tan(A)) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
       if(k < 0.0) { k = 0.0; }
       phi.push_back(acos((((1 - tempd3[i]) + (sqrt(k))) / 2) / (tan(A)*sin(theta[i]))));
       z.push_back(r * cos(theta[i]));
@@ -2343,7 +2344,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     for(int i = 0; i < theta.size(); i++)
     {
       tempd3.push_back(tan(A)*cos(theta[i]));
-      k = 2 * (tan(A) * tan(A) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
+      double k = 2 * (tan(A) * tan(A) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
       if(k < 0.0) { k = 0.0; }
       phi.push_back(acos((((1 - tempd3[i]) + (sqrt(k))) / 2) / (tan(A)*sin(theta[i]))));
       x.push_back(r * sin(theta[i])*cos(phi[i]));

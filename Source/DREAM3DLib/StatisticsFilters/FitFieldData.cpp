@@ -164,7 +164,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   dist.resize(ensembles);
   values.resize(ensembles);
 
-  for(size_t i = 1; i < ensembles; i++)
+  for(int64_t i = 1; i < ensembles; i++)
   {
     dist[i] = sData->CreateCorrelatedDistributionArrays(dType, 1);
     values[i].resize(1);
@@ -178,10 +178,10 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
       values[1][0].push_back(static_cast<float>(fPtr[i]));
     }
   }
-  for (size_t i = 1; i < ensembles; i++)
+  for (int64_t i = 1; i < ensembles; i++)
   {
     m_DistributionAnalysis[dType]->calculateCorrelatedParameters(values[i], dist[i]);
-    for (size_t j = 0; j < numComp; j++)
+    for (int j = 0; j < numComp; j++)
     {
       VectorOfFloatArray data = dist[i];
       ePtr[numComp*i+j] = data[j]->GetValue(0);
