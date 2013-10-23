@@ -62,7 +62,6 @@ class DREAM3DLib_EXPORT SampleSurfaceMesh : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SampleSurfaceMesh, AbstractFilter)
 
     virtual ~SampleSurfaceMesh();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
@@ -102,6 +101,9 @@ class DREAM3DLib_EXPORT SampleSurfaceMesh : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    virtual VertexArray::Pointer generate_points();
+    virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
     int32_t* m_SurfaceMeshFaceLabels;

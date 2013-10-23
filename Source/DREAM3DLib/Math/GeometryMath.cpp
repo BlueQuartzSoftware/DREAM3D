@@ -160,6 +160,16 @@ void GeometryMath::FindBoundingBoxOfFaces(FaceArray::Pointer faces, Int32Dynamic
     if(faceur.pos[1] > ur.pos[1]) ur.pos[1] = faceur.pos[1];
     if(faceur.pos[2] > ur.pos[2]) ur.pos[2] = faceur.pos[2];
   }
+
+  if(faceIds.ncells == 0)
+  {
+    ll.pos[0] = 0.0;
+    ll.pos[1] = 0.0;
+    ll.pos[2] = 0.0;
+    ur.pos[0] = 0.0;
+    ur.pos[1] = 0.0;
+    ur.pos[2] = 0.0;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -392,6 +402,10 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, Int32DynamicListA
    }
   
    int numFaces = faceIds.ncells;
+
+   p.pos[0] = 0;
+   p.pos[1] = 0;
+   p.pos[2] = 0;
 
    LOOP:
    while( k++ < numFaces )
