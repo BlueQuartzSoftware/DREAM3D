@@ -64,6 +64,7 @@ void FitFieldData::readFilterParameters(AbstractFilterParametersReader* reader, 
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedFieldArrayName( reader->readString( "SelectedFieldArrayName", getSelectedFieldArrayName() ) );
+  setDistributionType( reader->readValue( "DistributionType", getDistributionType() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

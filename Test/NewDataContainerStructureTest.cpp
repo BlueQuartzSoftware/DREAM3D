@@ -72,6 +72,8 @@
 
 #include"DREAM3DLib/SamplingFilters/RegularGridSampleSurfaceMesh.h"
 
+#include"DREAM3DLib/StatisticsFilters/FitFieldData.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "TestFileLocations.h"
@@ -812,6 +814,43 @@ void RunPipeline7()
   pipeline->run();
 }
 
+void RunPipeline8()
+{
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  DataContainerReader::Pointer dcr = DataContainerReader::New();
+  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SmallIN100InputFile);
+  dcr->setReadVertexData(false);
+  dcr->setReadEdgeData(false);
+  dcr->setReadSurfaceData(false);
+  dcr->setReadVolumeData(true);
+  dcr->setReadAllCellArrays(true);
+  dcr->setReadAllCellFieldArrays(true);
+  dcr->setReadAllCellEnsembleArrays(true);
+  pipeline->pushBack(dcr);
+
+  FitFieldData::Pointer ffd = FitFieldData::New();
+  ffd->setSelectedFieldArrayName(DREAM3D::FieldData::EquivalentDiameters);
+  ffd->setDistributionType(DREAM3D::DistributionType::LogNormal);
+  pipeline->pushBack(ffd);
+
+  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SmallIN100OutputFile);
+  dcw->setWriteVolumeData(true);
+  dcw->setWriteSurfaceData(false);
+  dcw->setWriteEdgeData(false);
+  dcw->setWriteVertexData(false);
+  dcw->setWriteXdmfFile(true);
+  pipeline->pushBack(dcw);
+
+  int err = pipeline->preflightPipeline();
+  if(err < 0)
+  {
+    std::cout << "Failed Preflight" << std::endl;
+  }
+  pipeline->run();
+}
+
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
@@ -823,13 +862,14 @@ int main(int argc, char** argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-  RunPipeline1();
+//  RunPipeline1();
 //  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();
 //  RunPipeline5();
 //  RunPipeline6();
 //  RunPipeline7();
+  RunPipeline8();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )

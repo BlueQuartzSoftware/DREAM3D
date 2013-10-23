@@ -187,6 +187,8 @@ namespace UnitTest
 
       const QString SyntheticInputFile("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTest.dream3d");
       const QString SyntheticOutputFile("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTestOut.dream3d");
+      const QString SmallIN100InputFile("@DREAM3D_DATA_DIR@/SmallIN100/SmallIN100Cleaned.dream3d");
+      const QString SmallIN100OutputFile("@DREAM3D_DATA_DIR@/SmallIN100/SmallIN100Cleaned_Fit.dream3d");
       const QString SyntheticOutputFile2("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTestOut2.dream3d");
       const QString SyntheticOutputFile3("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTestOut3.dream3d");
       const QString SyntheticOutputFile4("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTestOut4.dream3d");
