@@ -802,24 +802,13 @@ void PackPrimaryPhases::execute()
     grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
     while(exclusionZones[grainOwnersIdx] == true && count < m_TotalPackingPoints)
     {
-      column++;
-      if(column >= m_PackingPoints[0])
-      {
-        column = 0;
-        row++;
-        if(row >= m_PackingPoints[1])
-        {
-          row = 0;
-          plane++;
-          if(plane >= m_PackingPoints[2])
-          {
-            plane = 0;
-          }
-        }
-      }
-      grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
+      grainOwnersIdx++;
+      if(grainOwnersIdx >= m_TotalPackingPoints) grainOwnersIdx = 0;
       count++;
     }
+    column = grainOwnersIdx%m_PackingPoints[0];
+    row = int(grainOwnersIdx/m_PackingPoints[0])%m_PackingPoints[1];
+    plane = grainOwnersIdx/(m_PackingPoints[0]*m_PackingPoints[1]);
     xc = static_cast<float>((column * m_PackingRes[0]) + (m_PackingRes[0] * 0.5));
     yc = static_cast<float>((row * m_PackingRes[1]) + (m_PackingRes[1] * 0.5));
     zc = static_cast<float>((plane * m_PackingRes[2]) + (m_PackingRes[2] * 0.5));
@@ -864,7 +853,7 @@ void PackPrimaryPhases::execute()
   }
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(10 * (numgrains - 1));
+  int totalAdjustments = static_cast<int>(100 * (numgrains - 1));
 
   millis = QDateTime::currentMSecsSinceEpoch();
   startMillis = millis;
@@ -1619,6 +1608,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
   fillingerror = fillingerror * float(m_TotalPackingPoints);
   int col, row, plane;
   int k1 = 0, k2 = 0, k3 = 0;
+  float multiplier = 1.0;
   if(gadd > 0)
   {
     k1 = 2;
@@ -1635,6 +1625,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
       col = cl[i];
       row = rl[i];
       plane = pl[i];
+      multiplier = 1.0;
       if(m_PeriodicBoundaries == true)
       {
         if(col < 0) { col = col + m_PackingPoints[0]; }
@@ -1645,9 +1636,10 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         if(plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
         grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
         int currentGrainOwner = grainOwners[grainOwnersIdx];
-        fillingerror = fillingerror + (k1 * currentGrainOwner  + k2);
+        if(exclusionZones[grainOwnersIdx] == true) multiplier = 2.0; 
+        if(efl[i] > 0.1) exclusionZones[grainOwnersIdx] = true; 
+        fillingerror = fillingerror + (multiplier*(k1 * currentGrainOwner  + k2));
         grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-        if(efl[i] > 0.25) { exclusionZones[grainOwnersIdx] = true; }
         packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
       }
       else
@@ -1656,9 +1648,10 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         {
           grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
           int currentGrainOwner = grainOwners[grainOwnersIdx];
-          fillingerror = fillingerror + (k1 * currentGrainOwner + k2);
+          if(exclusionZones[grainOwnersIdx] == true) multiplier = 2.0; 
+          if(efl[i] > 0.1) exclusionZones[grainOwnersIdx] = true; 
+          fillingerror = fillingerror + (multiplier*(k1 * currentGrainOwner  + k2));
           grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-          if(efl[i] > 0.25) { exclusionZones[grainOwnersIdx] = true; }
           packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
         }
       }
@@ -1680,6 +1673,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
       col = cl[i];
       row = rl[i];
       plane = pl[i];
+      multiplier = 1.0;
       if(m_PeriodicBoundaries == true)
       {
         if(col < 0) { col = col + m_PackingPoints[0]; }
@@ -1690,9 +1684,10 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         if(plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
         grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
         int currentGrainOwner = grainOwners[grainOwnersIdx];
-        fillingerror = fillingerror + ( k1 * currentGrainOwner + k2);
+        if(exclusionZones[grainOwnersIdx] == true && currentGrainOwner > 1) multiplier = 2.0; 
+        if(efl[i] > 0.1 && grainOwners[grainOwnersIdx] == 1) exclusionZones[grainOwnersIdx] = false; 
+        fillingerror = fillingerror + (multiplier*(k1 * currentGrainOwner  + k2));
         grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-        if(efl[i] > 0.25 && grainOwners[grainOwnersIdx] == 0) { exclusionZones[grainOwnersIdx] = false; }
       }
       else
       {
@@ -1700,9 +1695,10 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         {
           grainOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
           int currentGrainOwner = grainOwners[grainOwnersIdx];
-          fillingerror = fillingerror + (k1 * currentGrainOwner + k2);
+          if(exclusionZones[grainOwnersIdx] == true && currentGrainOwner > 1) multiplier = 2.0; 
+          if(efl[i] > 0.1 && grainOwners[grainOwnersIdx] == 1) exclusionZones[grainOwnersIdx] = false; 
+          fillingerror = fillingerror + (multiplier*(k1 * currentGrainOwner  + k2));
           grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-          if(efl[i] > 0.25 && grainOwners[grainOwnersIdx] == 0) { exclusionZones[grainOwnersIdx] = false; }
         }
       }
     }

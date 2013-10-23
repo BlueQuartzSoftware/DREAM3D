@@ -19,7 +19,8 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Samplin
 
 set(_PublicFilters
   ChangeResolution
-  SampleSurfaceMesh
+  RegularGridSampleSurfaceMesh
+  UncertainRegularGridSampleSurfaceMesh
   RegularizeZSpacing
   RotateSampleRefFrame
   CropVolume
@@ -41,6 +42,7 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
+  SampleSurfaceMesh
 
 )
 

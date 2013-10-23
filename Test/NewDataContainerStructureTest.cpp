@@ -59,7 +59,6 @@
 #include "DREAM3DLib/StatisticsFilters/FindNumFields.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/MatchCrystallography.h"
 #include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
-#include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
@@ -71,7 +70,7 @@
 
 #include "DREAM3DLib/IOFilters/ParaDisReader.h"
 
-#include"DREAM3DLib/SamplingFilters/SampleSurfaceMesh.h"
+#include"DREAM3DLib/SamplingFilters/RegularGridSampleSurfaceMesh.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -563,9 +562,9 @@ void RunPipeline1()
 
   InitializeSyntheticVolume::Pointer isv = InitializeSyntheticVolume::New();
   isv->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
-  isv->setXVoxels(128);
-  isv->setYVoxels(128);
-  isv->setZVoxels(128);
+  isv->setXVoxels(256);
+  isv->setYVoxels(256);
+  isv->setZVoxels(256);
   isv->setXRes(0.1);
   isv->setYRes(0.1);
   isv->setZRes(0.1);
@@ -592,10 +591,6 @@ void RunPipeline1()
 
   GenerateIPFColors::Pointer gipfc = GenerateIPFColors::New();
   pipeline->pushBack(gipfc);
-
-  FieldDataCSVWriter::Pointer fdcsv = FieldDataCSVWriter::New();
-  fdcsv->setFieldDataFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputCSVFile);
-  pipeline->pushBack(fdcsv);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
@@ -792,8 +787,13 @@ void RunPipeline7()
   dcr->setReadAllCellEnsembleArrays(false);
   pipeline->pushBack(dcr);
 
-  SampleSurfaceMesh::Pointer ssm = SampleSurfaceMesh::New();
-  pipeline->pushBack(ssm);
+  RegularGridSampleSurfaceMesh::Pointer rgssm = RegularGridSampleSurfaceMesh::New();
+  rgssm->setXPoints(256);
+  rgssm->setYPoints(256);
+  rgssm->setZPoints(256);
+  FloatVec3Widget_t res = {0.05,0.05,0.05};
+  rgssm->setResolution(res);
+  pipeline->pushBack(rgssm);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile4);
@@ -823,13 +823,13 @@ int main(int argc, char** argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-//  RunPipeline1();
+  RunPipeline1();
 //  RunPipeline2();
-  RunPipeline3();
+//  RunPipeline3();
 //  RunPipeline4();
 //  RunPipeline5();
 //  RunPipeline6();
-  RunPipeline7();
+//  RunPipeline7();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )
