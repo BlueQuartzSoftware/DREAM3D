@@ -58,3 +58,8 @@ if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
             DESTINATION include/DREAM3D/Common
             COMPONENT Headers   )
 endif()
+
+if(MSVC)
+  set_source_files_properties(${DREAM3DLib_SOURCE_DIR}/Common/FilterManager.cpp PROPERTIES COMPILE_FLAGS /bigobj)
+  set_source_files_properties(${DREAM3DLib_SOURCE_DIR}/Common/FilterManager.h PROPERTIES COMPILE_FLAGS /bigobj)
+endif()
