@@ -11,6 +11,7 @@
 // -----------------------------------------------------------------------------
 FitFieldData::FitFieldData() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SelectedFieldArrayName(""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType)
 {
@@ -126,8 +127,7 @@ void FitFieldData::preflight()
 template<typename T>
 IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QString selectedFieldArrayName, unsigned int dType)
 {
-  StatsDataArray* m_StatsDataArray;
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsData::Pointer sData = StatsData::New();
 
   QVector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
   m_DistributionAnalysis.push_back(BetaOps::New());
@@ -166,7 +166,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
 
   for(size_t i = 1; i < ensembles; i++)
   {
-    dist[i] = statsDataArray[i]->CreateCorrelatedDistributionArrays(dType, 1);
+    dist[i] = sData->CreateCorrelatedDistributionArrays(dType, 1);
     values[i].resize(1);
   }
 
@@ -175,7 +175,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   {
 //    if(m_BiasedFields[i] == false)
     {
-//      values[m_FieldPhases[i]][0].push_back(fPtr[i]);
+      values[1][0].push_back(static_cast<float>(fPtr[i]));
     }
   }
   for (size_t i = 1; i < ensembles; i++)
@@ -184,7 +184,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
     for (size_t j = 0; j < numComp; j++)
     {
       VectorOfFloatArray data = dist[i];
-      ePtr[numComp*i+j] = data[0]->GetValue(j);
+      ePtr[numComp*i+j] = data[j]->GetValue(0);
     }
   }
 }

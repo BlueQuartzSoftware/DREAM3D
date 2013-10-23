@@ -72,6 +72,7 @@
 
 #include"DREAM3DLib/SamplingFilters/RegularGridSampleSurfaceMesh.h"
 
+#include"DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include"DREAM3DLib/StatisticsFilters/FitFieldData.h"
 
 #include "UnitTestSupport.hpp"
@@ -828,6 +829,9 @@ void RunPipeline8()
   dcr->setReadAllCellFieldArrays(true);
   dcr->setReadAllCellEnsembleArrays(true);
   pipeline->pushBack(dcr);
+
+  FindSizes::Pointer fs = FindSizes::New();
+  pipeline->pushBack(fs);
 
   FitFieldData::Pointer ffd = FitFieldData::New();
   ffd->setSelectedFieldArrayName(DREAM3D::FieldData::EquivalentDiameters);
