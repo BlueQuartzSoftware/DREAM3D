@@ -246,7 +246,7 @@ void FitFieldData::execute()
   }
   else if (dType.compare("uint32_t") == 0)
   {
-   fitData<uint32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<uint32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("int64_t") == 0)
   {
@@ -254,7 +254,7 @@ void FitFieldData::execute()
   }
   else if (dType.compare("uint64_t") == 0)
   {
-   fitData<uint64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    fitData<uint64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
   }
   else if (dType.compare("float") == 0)
   {
