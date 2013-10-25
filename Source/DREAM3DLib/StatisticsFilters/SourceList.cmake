@@ -43,8 +43,9 @@ set(_PublicFilters
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
   FindVolFractions
-  GenerateEnsembleStatistics
   FitFieldData
+  FitCorrelatedFieldData
+  GenerateEnsembleStatistics
 )
 
 

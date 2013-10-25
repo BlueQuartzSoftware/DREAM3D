@@ -1,4 +1,4 @@
-#include "FitFieldData.h"
+#include "FitCorrelatedFieldData.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -9,12 +9,14 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FitFieldData::FitFieldData() :
+FitCorrelatedFieldData::FitCorrelatedFieldData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
   m_SelectedFieldArrayName(""),
+  m_CorrelatedFieldArrayName(""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
+  m_NumberOfCorrelatedBins(1),
   m_RemoveBiasedFields(false)
 {
   setupFilterParameters();
@@ -23,14 +25,14 @@ FitFieldData::FitFieldData() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FitFieldData::~FitFieldData()
+FitCorrelatedFieldData::~FitCorrelatedFieldData()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FitFieldData::setupFilterParameters()
+void FitCorrelatedFieldData::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
@@ -57,6 +59,24 @@ void FitFieldData::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Array To Correlate With");
+    option->setPropertyName("CorrelatedFieldArrayName");
+    option->setWidgetType(FilterParameter::VolumeFieldArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Number of Bins for Correlated Array");
+    option->setPropertyName("NumberOfCorrelatedBins");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Remove Biased Fields");
     option->setPropertyName("RemoveBiasedFields");
     option->setWidgetType(FilterParameter::BooleanWidget);
@@ -70,7 +90,7 @@ void FitFieldData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FitFieldData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FitCorrelatedFieldData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -84,7 +104,7 @@ void FitFieldData::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FitFieldData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FitCorrelatedFieldData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
@@ -97,7 +117,7 @@ int FitFieldData::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FitFieldData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FitCorrelatedFieldData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -114,6 +134,11 @@ void FitFieldData::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     setErrorCondition(-11000);
     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
   }
+  if(m_CorrelatedFieldArrayName.isEmpty() == true)
+  {
+    setErrorCondition(-11000);
+    addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
+  }
   if(m_RemoveBiasedFields == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, -302, bool, BoolArrayType, fields, 1)
@@ -123,7 +148,7 @@ void FitFieldData::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FitFieldData::preflight()
+void FitCorrelatedFieldData::preflight()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
@@ -140,7 +165,7 @@ void FitFieldData::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QString selectedFieldArrayName, unsigned int dType, bool removeBiasedFields, bool* biasedFields)
+IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QString selectedFieldArrayName, unsigned int dType, Int32ArrayType::Pointer binArray, int numBins, bool removeBiasedFields, bool* biasedFields)
 {
   StatsData::Pointer sData = StatsData::New();
 
@@ -164,15 +189,16 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   else if (dType == DREAM3D::DistributionType::Power) distType = "PowerLaw", numComp = DREAM3D::HDF5::PowerLawColumnCount;
 
   ss = selectedFieldArrayName + distType + QString("Fit");
-  typename DataArray<float>::Pointer ensembleArray = DataArray<float>::CreateArray(ensembles, numComp, ss);
+  typename DataArray<float>::Pointer ensembleArray = DataArray<float>::CreateArray(ensembles, numComp*numBins, ss);
 
   T* fPtr = fieldArray->getPointer(0);
   float* ePtr = ensembleArray->getPointer(0);
+  int32_t* bPtr = binArray->getPointer(0);
 
   float max;
   float min;
-  QVector<FloatArrayType::Pointer> dist;
-  QVector<QVector<float > > values;
+  QVector<VectorOfFloatArray> dist;
+  QVector<QVector<QVector<float > > > values;
 
   size_t numgrains = fieldArray->getNumberOfTuples();
 
@@ -181,25 +207,27 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
 
   for(int64_t i = 1; i < ensembles; i++)
   {
-    dist[i] = sData->CreateDistributionArrays(dType);
-    values[i].resize(1);
+    dist[i] = sData->CreateCorrelatedDistributionArrays(dType, numBins);
+    values[i].resize(numBins);
   }
 
-  float vol;
   for (size_t i = 1; i < numgrains; i++)
   {
     if(removeBiasedFields == false || biasedFields[i] == false)
     {
-      values[1].push_back(static_cast<float>(fPtr[i]));
+      values[1][bPtr[i]].push_back(static_cast<float>(fPtr[i]));
     }
   }
   for (int64_t i = 1; i < ensembles; i++)
   {
-    m_DistributionAnalysis[dType]->calculateParameters(values[i], dist[i]);
-    for (int j = 0; j < numComp; j++)
+    m_DistributionAnalysis[dType]->calculateCorrelatedParameters(values[i], dist[i]);
+    for (int j = 0; j < numBins; j++)
     {
-      FloatArrayType::Pointer data = dist[i];
-      ePtr[numComp*i+j] = data->GetValue(j);
+      for(int k =0; k < numComp; k++)
+      {
+        VectorOfFloatArray data = dist[i];
+        ePtr[(numComp*numBins*i)+(numComp*j)+k] = data[j]->GetValue(k);
+      }
     }
   }
   return ensembleArray;
@@ -208,7 +236,44 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FitFieldData::execute()
+template<typename T>
+Int32ArrayType::Pointer binData(IDataArray::Pointer correlatedData, int64_t numBins)
+{
+  DataArray<T>* fieldArray = DataArray<T>::SafePointerDownCast(correlatedData.get());
+  if (NULL == fieldArray)
+  {
+    return Int32ArrayType::NullPointer();
+  }
+
+  T* fPtr = fieldArray->getPointer(0);
+  size_t numfields = fieldArray->getNumberOfTuples();
+
+  typename DataArray<int32_t>::Pointer binArray = DataArray<int32_t>::CreateArray(numfields, 1, "binIds");
+  int32_t* bPtr = binArray->getPointer(0);
+
+  float max = -100000000.0;
+  float min = 100000000.0;
+
+  for (size_t i = 1; i < numfields; i++)
+  {
+    if(fPtr[i] < min) min = fPtr[i];
+    if(fPtr[i] > max) max = fPtr[i];
+  }
+  //to make sure the max value field doesn't walk off the end of the array, add a small value to the max
+  max += 0.000001;
+
+  float step = (max-min)/numBins;
+  for (size_t i = 1; i < numfields; i++)
+  {
+    bPtr[i] = (fPtr[i]-min)/step;
+  }
+  return binArray;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FitCorrelatedFieldData::execute()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
@@ -237,52 +302,109 @@ void FitFieldData::execute()
     notifyErrorMessage(ss, getErrorCondition());
     return;
   }
+  IDataArray::Pointer correlatedData = m->getCellFieldData(m_CorrelatedFieldArrayName);
+  if (NULL == correlatedData.get())
+  {
+    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_CorrelatedFieldArrayName);
+    setErrorCondition(-11001);
+    notifyErrorMessage(ss, getErrorCondition());
+    return;
+  }
 
-  QString dType = inputData->getTypeAsString();
-  IDataArray::Pointer p = IDataArray::NullPointer();
+  //determine the bin of the correlated array each value of the array to fit falls in
+  QString dType = correlatedData->getTypeAsString();
+  Int32ArrayType::Pointer binArray = Int32ArrayType::NullPointer();
   if (dType.compare("int8_t") == 0)
   {
-    p = fitData<int8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<int8_t>(correlatedData, m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    p = fitData<uint8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<uint8_t>(correlatedData, m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    p = fitData<int16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<int16_t>(correlatedData, m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    p = fitData<uint16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<uint16_t>(correlatedData, m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    p = fitData<int32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<int32_t>(correlatedData, m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    p = fitData<uint32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<uint32_t>(correlatedData, m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    p = fitData<int64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<int64_t>(correlatedData, m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    p = fitData<uint64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<uint64_t>(correlatedData, m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("float") == 0)
   {
-    p = fitData<float>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<float>(correlatedData, m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("double") == 0)
   {
-    p = fitData<double>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<double>(correlatedData, m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("bool") == 0)
   {
-    p = fitData<bool>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
+    binArray = binData<bool>(correlatedData, m_NumberOfCorrelatedBins);
+  }
+
+  // fit the data
+  inputData->getTypeAsString();
+  IDataArray::Pointer p = IDataArray::NullPointer();
+  if (dType.compare("int8_t") == 0)
+  {
+    p = fitData<int8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
+  }
+  else if (dType.compare("uint8_t") == 0)
+  {
+    p = fitData<uint8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
+  }
+  else if (dType.compare("int16_t") == 0)
+  {
+    p = fitData<int16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
+  }
+  else if (dType.compare("uint16_t") == 0)
+  {
+    p = fitData<uint16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
+  }
+  else if (dType.compare("int32_t") == 0)
+  {
+    p = fitData<int32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
+  }
+  else if (dType.compare("uint32_t") == 0)
+  {
+    p = fitData<uint32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
+  }
+  else if (dType.compare("int64_t") == 0)
+  {
+    p = fitData<int64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
+  }
+  else if (dType.compare("uint64_t") == 0)
+  {
+    p = fitData<uint64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
+  }
+  else if (dType.compare("float") == 0)
+  {
+    p = fitData<float>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
+  }
+  else if (dType.compare("double") == 0)
+  {
+    p = fitData<double>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
+  }
+  else if (dType.compare("bool") == 0)
+  {
+    p = fitData<bool>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFields, m_BiasedFields);
   }
 
   m->addCellEnsembleData(p->GetName(), p);

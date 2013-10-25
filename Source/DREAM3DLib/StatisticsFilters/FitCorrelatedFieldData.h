@@ -1,5 +1,5 @@
-#ifndef FITFIELDDATA_H_
-#define FITFIELDDATA_H_
+#ifndef FitCorrelatedFieldData_H_
+#define FitCorrelatedFieldData_H_
 
 #include <QtCore/QString>
 #include <set>
@@ -15,26 +15,28 @@
 #include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
 /**
- * @class FitFieldData FitFieldData.h /FilterCategoryFilters/FitFieldData.h
+ * @class FitCorrelatedFieldData FitCorrelatedFieldData.h /FilterCategoryFilters/FitCorrelatedFieldData.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FitFieldData : public AbstractFilter
+class DREAM3DLib_EXPORT FitCorrelatedFieldData : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FitFieldData)
-    DREAM3D_STATIC_NEW_MACRO(FitFieldData)
-    DREAM3D_TYPE_MACRO_SUPER(FitFieldData, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FitCorrelatedFieldData)
+    DREAM3D_STATIC_NEW_MACRO(FitCorrelatedFieldData)
+    DREAM3D_TYPE_MACRO_SUPER(FitCorrelatedFieldData, AbstractFilter)
 
-    virtual ~FitFieldData();
+    virtual ~FitCorrelatedFieldData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CorrelatedFieldArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, DistributionType)
+    DREAM3D_INSTANCE_PROPERTY(int, NumberOfCorrelatedBins)
     DREAM3D_INSTANCE_PROPERTY(bool, RemoveBiasedFields)
 
     /**
@@ -81,7 +83,7 @@ class DREAM3DLib_EXPORT FitFieldData : public AbstractFilter
     virtual void preflight();
 
   protected:
-    FitFieldData();
+    FitCorrelatedFieldData();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -96,8 +98,8 @@ class DREAM3DLib_EXPORT FitFieldData : public AbstractFilter
   private:
     bool* m_BiasedFields;
 
-    FitFieldData(const FitFieldData&); // Copy Constructor Not Implemented
-    void operator=(const FitFieldData&); // Operator '=' Not Implemented
+    FitCorrelatedFieldData(const FitCorrelatedFieldData&); // Copy Constructor Not Implemented
+    void operator=(const FitCorrelatedFieldData&); // Operator '=' Not Implemented
 };
 
-#endif /* FITFIELDDATA_H_ */
+#endif /* FitCorrelatedFieldData_H_ */
