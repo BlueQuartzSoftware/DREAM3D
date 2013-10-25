@@ -32,7 +32,10 @@ class DREAM3DLib_EXPORT FitFieldData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
+
     DREAM3D_INSTANCE_PROPERTY(unsigned int, DistributionType)
+    DREAM3D_INSTANCE_PROPERTY(bool, RemoveBiasedFields)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -91,6 +94,7 @@ class DREAM3DLib_EXPORT FitFieldData : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    bool* m_BiasedFields;
 
     FitFieldData(const FitFieldData&); // Copy Constructor Not Implemented
     void operator=(const FitFieldData&); // Operator '=' Not Implemented

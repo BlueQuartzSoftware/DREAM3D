@@ -12,8 +12,10 @@
 FitFieldData::FitFieldData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
   m_SelectedFieldArrayName(""),
-  m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType)
+  m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
+  m_RemoveBiasedFields(false)
 {
   setupFilterParameters();
 }
@@ -53,6 +55,15 @@ void FitFieldData::setupFilterParameters()
     option->setChoices(choices);
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Remove Biased Fields");
+    option->setPropertyName("RemoveBiasedFields");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -78,6 +89,7 @@ int FitFieldData::writeFilterParameters(AbstractFilterParametersWriter* writer, 
   writer->openFilterGroup(this, index);
   writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
   writer->writeValue("DistributionType", getDistributionType() );
+  writer->writeValue("RemovedBiasedFields", getRemoveBiasedFields() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -102,8 +114,11 @@ void FitFieldData::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     setErrorCondition(-11000);
     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
   }
+  if(m_RemoveBiasedFields == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, -302, bool, BoolArrayType, fields, 1)
+  }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -125,7 +140,7 @@ void FitFieldData::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QString selectedFieldArrayName, unsigned int dType)
+IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QString selectedFieldArrayName, unsigned int dType, bool removeBiasedFields, bool* biasedFields)
 {
   StatsData::Pointer sData = StatsData::New();
 
@@ -156,8 +171,8 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
 
   float max;
   float min;
-  QVector<VectorOfFloatArray> dist;
-  QVector<QVector<QVector<float > > > values;
+  QVector<FloatArrayType::Pointer> dist;
+  QVector<QVector<float > > values;
 
   size_t numgrains = fieldArray->getNumberOfTuples();
 
@@ -166,25 +181,25 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
 
   for(int64_t i = 1; i < ensembles; i++)
   {
-    dist[i] = sData->CreateCorrelatedDistributionArrays(dType, 1);
+    dist[i] = sData->CreateDistributionArrays(dType);
     values[i].resize(1);
   }
 
   float vol;
   for (size_t i = 1; i < numgrains; i++)
   {
-//    if(m_BiasedFields[i] == false)
+    if(removeBiasedFields == false || biasedFields[i] == false)
     {
-      values[1][0].push_back(static_cast<float>(fPtr[i]));
+      values[1].push_back(static_cast<float>(fPtr[i]));
     }
   }
   for (int64_t i = 1; i < ensembles; i++)
   {
-    m_DistributionAnalysis[dType]->calculateCorrelatedParameters(values[i], dist[i]);
+    m_DistributionAnalysis[dType]->calculateParameters(values[i], dist[i]);
     for (int j = 0; j < numComp; j++)
     {
-      VectorOfFloatArray data = dist[i];
-      ePtr[numComp*i+j] = data[j]->GetValue(0);
+      FloatArrayType::Pointer data = dist[i];
+      ePtr[numComp*i+j] = data->GetValue(j);
     }
   }
   return ensembleArray;
@@ -227,47 +242,47 @@ void FitFieldData::execute()
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {
-    p = fitData<int8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<int8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    p = fitData<uint8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<uint8_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    p = fitData<int16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<int16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    p = fitData<uint16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<uint16_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    p = fitData<int32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<int32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    p = fitData<uint32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<uint32_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    p = fitData<int64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<int64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    p = fitData<uint64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<uint64_t>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
   else if (dType.compare("float") == 0)
   {
-    p = fitData<float>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<float>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
   else if (dType.compare("double") == 0)
   {
-    p = fitData<double>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<double>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
   else if (dType.compare("bool") == 0)
   {
-    p = fitData<bool>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType);
+    p = fitData<bool>(inputData, ensembles, m_SelectedFieldArrayName, m_DistributionType, m_RemoveBiasedFields, m_BiasedFields);
   }
 
   m->addCellEnsembleData(p->GetName(), p);
