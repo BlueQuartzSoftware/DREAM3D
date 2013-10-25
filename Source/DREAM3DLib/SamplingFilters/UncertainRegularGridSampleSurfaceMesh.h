@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef SampleSurfaceMesh_H_
-#define SampleSurfaceMesh_H_
+#ifndef UncertainRegularGridSampleSurfaceMesh_H_
+#define UncertainRegularGridSampleSurfaceMesh_H_
 
 #include <QtCore/QString>
 
@@ -46,29 +46,36 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/SamplingFilters/SampleSurfaceMesh.h"
 
 /**
- * @class SampleSurfaceMesh SampleSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/SampleSurfaceMesh.h
+ * @class UncertainRegularGridSampleSurfaceMesh UncertainRegularGridSampleSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/UncertainRegularGridSampleSurfaceMesh.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SampleSurfaceMesh : public AbstractFilter
+class DREAM3DLib_EXPORT UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
   public:
-    DREAM3D_SHARED_POINTERS(SampleSurfaceMesh)
-    DREAM3D_STATIC_NEW_MACRO(SampleSurfaceMesh)
-    DREAM3D_TYPE_MACRO_SUPER(SampleSurfaceMesh, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(UncertainRegularGridSampleSurfaceMesh)
+    DREAM3D_STATIC_NEW_MACRO(UncertainRegularGridSampleSurfaceMesh)
+    DREAM3D_TYPE_MACRO_SUPER(UncertainRegularGridSampleSurfaceMesh, AbstractFilter)
 
-    virtual ~SampleSurfaceMesh();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    virtual ~UncertainRegularGridSampleSurfaceMesh();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+
+    DREAM3D_INSTANCE_PROPERTY(int, XPoints)
+    DREAM3D_INSTANCE_PROPERTY(int, YPoints)
+    DREAM3D_INSTANCE_PROPERTY(int, ZPoints)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Uncertainty)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const QString getHumanLabel() { return "Sample Surface Mesh"; }
+    virtual const QString getHumanLabel() { return "Sample Surface Mesh on Regular Grid"; }
 
     virtual void setupFilterParameters();
     /**
@@ -90,7 +97,7 @@ class DREAM3DLib_EXPORT SampleSurfaceMesh : public AbstractFilter
     virtual void preflight();
 
   protected:
-    SampleSurfaceMesh();
+    UncertainRegularGridSampleSurfaceMesh();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -106,10 +113,10 @@ class DREAM3DLib_EXPORT SampleSurfaceMesh : public AbstractFilter
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    int32_t* m_SurfaceMeshFaceLabels;
+    int32_t* m_GrainIds;
 
-    SampleSurfaceMesh(const SampleSurfaceMesh&); // Copy Constructor Not Implemented
-    void operator=(const SampleSurfaceMesh&); // Operator '=' Not Implemented
+    UncertainRegularGridSampleSurfaceMesh(const UncertainRegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
+    void operator=(const UncertainRegularGridSampleSurfaceMesh&); // Operator '=' Not Implemented
 };
 
-#endif /* SampleSurfaceMesh_H_ */
+#endif /* UncertainRegularGridSampleSurfaceMesh_H_ */

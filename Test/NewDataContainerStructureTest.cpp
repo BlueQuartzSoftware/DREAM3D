@@ -70,7 +70,10 @@
 
 #include "DREAM3DLib/IOFilters/ParaDisReader.h"
 
-#include"DREAM3DLib/SamplingFilters/SampleSurfaceMesh.h"
+#include"DREAM3DLib/SamplingFilters/RegularGridSampleSurfaceMesh.h"
+
+#include"DREAM3DLib/StatisticsFilters/FindSizes.h"
+#include"DREAM3DLib/StatisticsFilters/FitFieldData.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -562,9 +565,9 @@ void RunPipeline1()
 
   InitializeSyntheticVolume::Pointer isv = InitializeSyntheticVolume::New();
   isv->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
-  isv->setXVoxels(128);
-  isv->setYVoxels(128);
-  isv->setZVoxels(128);
+  isv->setXVoxels(256);
+  isv->setYVoxels(256);
+  isv->setZVoxels(256);
   isv->setXRes(0.1);
   isv->setYRes(0.1);
   isv->setZRes(0.1);
@@ -770,18 +773,12 @@ void RunPipeline6()
   pipeline->run();
 }
 
-//#define PIPELINE7_INPUT_FILE "C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut2.dream3d"
-//#define PIPELINE7_INPUT_FILE "/tmp/SynthTestOut2.dream3d"
-
-//#define PIPLELINE_OUTPUT_FILE "C:\\Users\\groebema\\Desktop\\Data\\SyntheticTest\\SynthTestOut3.dream3d"
-//#define PIPELINE7_OUTPUT_FILE "/tmp/SynthTestOut3.dream3d"
-
 void RunPipeline7()
 {
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile2);
+  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile3);
   dcr->setReadVertexData(false);
   dcr->setReadEdgeData(false);
   dcr->setReadSurfaceData(true);
@@ -793,13 +790,58 @@ void RunPipeline7()
   dcr->setReadAllCellEnsembleArrays(false);
   pipeline->pushBack(dcr);
 
-  SampleSurfaceMesh::Pointer ssm = SampleSurfaceMesh::New();
-  pipeline->pushBack(ssm);
+  RegularGridSampleSurfaceMesh::Pointer rgssm = RegularGridSampleSurfaceMesh::New();
+  rgssm->setXPoints(256);
+  rgssm->setYPoints(256);
+  rgssm->setZPoints(256);
+  FloatVec3Widget_t res = {0.05,0.05,0.05};
+  rgssm->setResolution(res);
+  pipeline->pushBack(rgssm);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile3);
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile4);
   dcw->setWriteVolumeData(true);
   dcw->setWriteSurfaceData(true);
+  dcw->setWriteEdgeData(false);
+  dcw->setWriteVertexData(false);
+  dcw->setWriteXdmfFile(true);
+  pipeline->pushBack(dcw);
+
+  int err = pipeline->preflightPipeline();
+  if(err < 0)
+  {
+    std::cout << "Failed Preflight" << std::endl;
+  }
+  pipeline->run();
+}
+
+void RunPipeline8()
+{
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  DataContainerReader::Pointer dcr = DataContainerReader::New();
+  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SmallIN100InputFile);
+  dcr->setReadVertexData(false);
+  dcr->setReadEdgeData(false);
+  dcr->setReadSurfaceData(false);
+  dcr->setReadVolumeData(true);
+  dcr->setReadAllCellArrays(true);
+  dcr->setReadAllCellFieldArrays(true);
+  dcr->setReadAllCellEnsembleArrays(true);
+  pipeline->pushBack(dcr);
+
+  FindSizes::Pointer fs = FindSizes::New();
+  pipeline->pushBack(fs);
+
+  FitFieldData::Pointer ffd = FitFieldData::New();
+  ffd->setSelectedFieldArrayName(DREAM3D::FieldData::EquivalentDiameters);
+  ffd->setDistributionType(DREAM3D::DistributionType::LogNormal);
+  pipeline->pushBack(ffd);
+
+  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SmallIN100OutputFile);
+  dcw->setWriteVolumeData(true);
+  dcw->setWriteSurfaceData(false);
   dcw->setWriteEdgeData(false);
   dcw->setWriteVertexData(false);
   dcw->setWriteXdmfFile(true);
@@ -824,13 +866,14 @@ int main(int argc, char** argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-  RunPipeline1();
-  RunPipeline2();
+//  RunPipeline1();
+//  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();
 //  RunPipeline5();
 //  RunPipeline6();
-  RunPipeline7();
+//  RunPipeline7();
+  RunPipeline8();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )

@@ -38,6 +38,12 @@
 
 #include <QtCore/QMap>
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
@@ -45,7 +51,60 @@
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+class SampleSurfaceMeshImpl
+{
+  FaceArray::Pointer m_Faces;
+  Int32DynamicListArray::Pointer m_FaceIds;
+  VertexArray::Pointer m_FaceBBs;
+  VertexArray::Pointer m_Points;
+  int32_t* m_PolyIds;
 
+  public:
+    SampleSurfaceMeshImpl(FaceArray::Pointer faces, Int32DynamicListArray::Pointer faceIds, VertexArray::Pointer faceBBs, VertexArray::Pointer points, int32_t* polyIds) :
+      m_Faces(faces),
+      m_FaceIds(faceIds),
+      m_FaceBBs(faceBBs),
+      m_Points(points),
+      m_PolyIds(polyIds)
+    {}
+    virtual ~SampleSurfaceMeshImpl() {}
+
+    void checkPoints(size_t start, size_t end) const
+    {
+      float radius;
+      int numPoints = m_Points->count();
+      VertexArray::Vert_t ll, ur;
+      VertexArray::Vert_t point;
+      char code;
+
+      for(int iter=start;iter<end;iter++)
+      {
+        //find bounding box for current grain
+        GeometryMath::FindBoundingBoxOfFaces(m_Faces, m_FaceIds->getElementList(iter), ll, ur);
+        GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
+
+        //check points in vertex array to see if they are in the bounding box of the grain
+        for(int i=0;i<numPoints;i++)
+        {
+          point = m_Points->getVert(i);
+          if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur) == true)
+          {
+            code = GeometryMath::PointInPolyhedron(m_Faces, m_FaceIds->getElementList(iter), m_FaceBBs, point, ll, ur, radius);
+            if(code == 'i' || code == 'V' || code == 'E' || code == 'F') m_PolyIds[i] = iter;
+          }
+        }
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t>& r) const
+    {
+      checkPoints(r.begin(), r.end());
+    }
+#endif
+  private:
+
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -53,7 +112,6 @@
 SampleSurfaceMesh::SampleSurfaceMesh() :
   AbstractFilter(),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName)
 {
 
@@ -131,14 +189,6 @@ void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, 
 // -----------------------------------------------------------------------------
 void SampleSurfaceMesh::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  }
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
@@ -158,14 +208,7 @@ void SampleSurfaceMesh::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  }
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
@@ -173,18 +216,12 @@ void SampleSurfaceMesh::execute()
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
+
   setErrorCondition(0);
-
-  // set volume datacontainer details
-  m->setDimensions(128, 128, 128);
-  m->setOrigin(0.0, 0.0, 0.0);
-  m->setResolution(0.1, 0.1, 0.1);
-
-  //create array for grainIds in volume data container
-  Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  iArray = Int32ArrayType::CreateArray((128*128*128), 1, DREAM3D::CellData::GrainIds);
-  iArray->initializeWithZeros();
-  int32_t* grainIds = iArray->getPointer(0);
 
   //pull down faces
   FaceArray::Pointer faces = sm->getFaces();
@@ -247,48 +284,55 @@ void SampleSurfaceMesh::execute()
     faceBBs->setCoords(2*i+1, ur.pos);
   }
 
+  //generate the list of sampling points fom subclass
+  VertexArray::Pointer points = generate_points();
+  int numPoints = points->count();
+
+  //create array to hold which polyhedron (grain) each point falls in
+  Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
+  iArray = Int32ArrayType::CreateArray(numPoints, 1, "polyhedronIds");
+  iArray->initializeWithZeros();
+  int32_t* polyIds = iArray->getPointer(0);
+
   char code;
   float radius;
 
-  int minx, miny, minz, maxx, maxy, maxz;
   int zStride, yStride;
 
   int count = 0;
   float coords[3];
-  for(int iter=1;iter<numGrains;iter++)
-  {
-    //find bounding box for current grain
-    GeometryMath::FindBoundingBoxOfFaces(faces, faceLists->getElementList(iter), ll, ur);
-    GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
-    minx = int(ll.pos[0]/0.1);
-    miny = int(ll.pos[1]/0.1);
-    minz = int(ll.pos[2]/0.1);
-    maxx = int(ur.pos[0]/0.1);
-    maxy = int(ur.pos[1]/0.1);
-    maxz = int(ur.pos[2]/0.1);
 
-    //generate a vertex array to hold all the points within the bounding box of the current grain
-    count = 0;
-    for(int i=minz;i<maxz+1;i++)
-    {
-      zStride = i*128*128;
-      for(int j=miny;j<maxy+1;j++)
-      {
-        yStride = j*128;
-        for(int k=minx;k<maxx+1;k++)
-        {
-          point.pos[0] = k*0.1+0.05;
-          point.pos[1] = j*0.1+0.05;
-          point.pos[2] = i*0.1+0.05;
-          code = GeometryMath::PointInPolyhedron(faces, faceLists->getElementList(iter), faceBBs, point, ll, ur, radius);
-          if(code == 'i') grainIds[zStride+yStride+k] = iter;
-        }
-      }
-    }
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numGrains),
+      SampleSurfaceMeshImpl(faces, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
+
+  }
+  else
+#endif
+  {
+    SampleSurfaceMeshImpl serial(faces, faceLists, faceBBs, points, polyIds);
+    serial.checkPoints(0, numGrains);
   }
 
-  //add the grain ids to the volume data container
-  m->addCellData(DREAM3D::CellData::GrainIds, iArray);
+  assign_points(iArray);
 
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+VertexArray::Pointer SampleSurfaceMesh::generate_points()
+{
+  return VertexArray::CreateArray(0, "error");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
+{
+
 }

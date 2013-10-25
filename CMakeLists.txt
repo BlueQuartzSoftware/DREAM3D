@@ -197,7 +197,10 @@ ENDif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(MSVC)
  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+ option(DREAM3D_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
 endif()
+
+
 
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
 include_directories(${PROJECT_BINARY_DIR})
