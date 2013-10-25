@@ -366,6 +366,13 @@ int H5AngReader::readData(hid_t parId)
   QString sBuf;
   QTextStream ss(&sBuf);
 
+  if(m_ArrayNames.size() == 0 && m_ReadAllArrays == false)
+  {
+    setErrorMessage("H5AngReader Error: ReadAllArrays was FALSE and no other arrays were requested to be read.");
+    setErrorCode(-90013);
+    return -90013;
+  }
+
   ANG_READER_ALLOCATE_AND_READ(Phi1, float);
   ANG_READER_ALLOCATE_AND_READ(Phi, float);
   ANG_READER_ALLOCATE_AND_READ(Phi2, float);

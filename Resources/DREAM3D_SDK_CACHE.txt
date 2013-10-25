@@ -1,10 +1,32 @@
+#-------------------------------------------------------------------------------
+# First setup where all the libraries are by filling out this path properly
+# For windows it can be something like
+#  set(DREAM3D_SDK_DIR "C:/DREAM3D_SDK_x64/")
+# and on Linux or Unix or OS X Systems something like this
+set(DREAM3D_SDK_DIR "/Users/Shared/Toolkits/")
+
+#-------------------------------------------------------------------------------
+# Now setup where the actual 3rd party libraries are located within the DREAM3D_SDK
+set(HDF5_INSTALL ${DREAM3D_SDK_DIR}hdf5-1.8.11 CACHE PATH "")
+set(BOOST_ROOT ${DREAM3D_SDK_DIR}boost-1.51.0 CACHE PATH "")
+set(EIGEN_INSTALL ${DREAM3D_SDK_DIR}Eigen-3.1.2 CACHE PATH "")
+set(QT_QMAKE_EXECUTABLE ${DREAM3D_SDK_DIR}Qt-4.8.4-Cocoa/bin/qmake CACHE FILEPATH "")
+set(QWT_INSTALL ${DREAM3D_SDK_DIR}Qwt-5.2.2 CACHE PATH "")
+set(TBB_INSTALL_DIR ${DREAM3D_SDK_DIR}tbb41_20130116oss CACHE PATH "")
+
+#-------------------------------------------------------------------------------
+# Lastly turn on some options
 set(BUILD_SHARED_LIBS ON CACHE BOOL "")
-set(HDF5_INSTALL /Users/Shared/Toolkits/hdf5-1.8.11 CACHE PATH "")
-set(BOOST_ROOT /Users/Shared/Toolkits/boost-1.51 CACHE PATH "")
-set(EIGEN_INSTALL /Users/Shared/Toolkits/Eigen-3.1.2 CACHE PATH "")
-set(QT_QMAKE_EXECUTABLE /Users/Shared/Toolkits/Qt-4.8.4-Cocoa/bin/qmake CACHE FILEPATH "")
-set(QWT_INSTALL /Users/Shared/Toolkits/Qwt-5.2.2 CACHE PATH "")
-set(TBB_INSTALL_DIR /Users/Shared/Toolkits/tbb41_20130116oss CACHE PATH "")
 set(DREAM3D_USE_MULTITHREADED_ALGOS ON CACHE BOOL "")
+
+#-------------------------------------------------------------------------------
+# Set this directory to where all the test data is located.
 set(DREAM3D_DATA_DIR /Users/mjackson/Workspace/DREAM3D_Data CACHE PATH "")
 
+#-------------------------------------------------------------------------------
+# you can run cmake from the command line with an invocation like this:
+#  mkdir Build
+#  cd Build
+#  cmake -C ../Resources/DREAM3D_SDK_CACHE.txt ../
+#
+# and that will get cmake up and configured with all the proper locations.
