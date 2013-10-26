@@ -262,12 +262,12 @@ void FindTwinBoundaries::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
-
+  QVector<int> dims(1, 4);
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
+  dims[0] = 1;
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, dims)
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
 }
 
 // -----------------------------------------------------------------------------
@@ -279,10 +279,13 @@ void FindTwinBoundaries::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
-  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundary, bool, BoolArrayType, false, fields, 1)
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundaryIncoherence, float, FloatArrayType, 180.0, fields, 1)
+  QVector<int> dims(1, 2);
+  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, dims)
+  dims[0] = 3;
+  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, dims)
+  dims[0] = 1;
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundary, bool, BoolArrayType, false, fields, dims)
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundaryIncoherence, float, FloatArrayType, 180.0, fields, dims)
 }
 
 // -----------------------------------------------------------------------------

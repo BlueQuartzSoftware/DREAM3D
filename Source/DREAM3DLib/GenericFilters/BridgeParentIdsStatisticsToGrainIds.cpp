@@ -87,14 +87,16 @@ void BridgeParentIdsStatisticsToGrainIds::dataCheck(bool preflight, size_t voxel
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, -304, int32_t, Int32ArrayType, voxels, 1)
+  
+  QVector<int> dims(1 ,1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, -304, int32_t, Int32ArrayType, voxels, dims)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldParentIds, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldParentIds, -302, int32_t, Int32ArrayType, fields, dims)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
 }
 
 // -----------------------------------------------------------------------------

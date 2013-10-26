@@ -197,15 +197,18 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
     }
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, 0, voxels, 4)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, float, FloatArrayType, 0, fields, 4)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 1, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, bool, BoolArrayType, false, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
+  QVector<int> dims(1, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dims)
+  dims[0] = 4;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, 0, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, float, FloatArrayType, 0, fields, dims)
+  dims[0] = 1;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 1, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, bool, BoolArrayType, false, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, dims)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, dims)
 }
 
 void YSChoiAbaqusReader::preflight()

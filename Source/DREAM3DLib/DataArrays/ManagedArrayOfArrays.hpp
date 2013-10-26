@@ -85,7 +85,19 @@ class ManagedArrayOfArrays : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+    {
+      IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    {
+      IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
     {
       IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
       return p;

@@ -36,15 +36,20 @@
 #ifndef _DATACONTAINERMACROS_H_
 #define _DATACONTAINERMACROS_H_
 
+#include <QtCore/QVector>
 
-#define TEST_PREREQ_DATA( dc, NameSpace, DType, Name, errVariable, errCode, ptrType, ArrayType, size, NumComp)\
+#define TEST_PREREQ_DATA( dc, NameSpace, DType, Name, errVariable, errCode, ptrType, ArrayType, Size, dims)\
   {if (m_##Name##ArrayName.isEmpty() == true){ \
     setErrorCondition(errCode##000);\
     QString _##Name##_ss;\
     _##Name##_ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" ;\
     addErrorMessage(getHumanLabel(), _##Name##_ss, errCode##000);\
   }\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
+  int NumComp = dims[0];\
+  for(int i=1;i<dims.size();i++){\
+  NumComp *= dims[i];\
+  }\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, Size, NumComp, NULL);\
   if (NULL == m_##Name ) {\
     errVariable = errCode;\
   }}
@@ -64,7 +69,7 @@
  * @param size The number of tuples in the array
  * @param NumComp The number of components of the DataArray
  */
-#define GET_PREREQ_DATA( dc, NameSpace, DType, Name, err, ptrType, ArrayType, size, NumComp)\
+#define GET_PREREQ_DATA( dc, NameSpace, DType, Name, err, ptrType, ArrayType, Size, dims)\
   { QString ss; \
   if (m_##Name##ArrayName.isEmpty() == true){ \
     setErrorCondition(err##000);\
@@ -79,7 +84,11 @@
   else { \
   /* QString _s(#Name); \
   addRequired##DType(_s);*/\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
+  int NumComp = dims[0];\
+  for(int i=1;i<dims.size();i++){\
+  NumComp *= dims[i];\
+  }\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, Size, NumComp, this);\
   if (NULL == m_##Name ) {\
     ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named 'm_%2' for this filter."\
     "The preflight failed for one or more reasons. Check additional error messages for more details.").arg(m_##Name##ArrayName).arg(#Name);\
@@ -99,7 +108,7 @@
  * @param size The number of tuples in the array
  * @param NumComp The number of components of the DataArray
  */
-#define GET_PREREQ_DATA_2( dc, DType, Name, err, ptrType, ArrayType, size, NumComp)\
+#define GET_PREREQ_DATA_2( dc, DType, Name, err, ptrType, ArrayType, Size, dims)\
   {QString ss;\
   if (m_##Name##ArrayName.isEmpty() == true){ \
     setErrorCondition(err##000);\
@@ -114,7 +123,11 @@
   else { \
   /* QString _s(#Name); \
   addRequired##DType(_s);*/\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
+  int NumComp = dims[0];\
+  for(int i=1;i<dims.size();i++){\
+  NumComp *= dims[i];\
+  }\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, Size, NumComp, this);\
   if (NULL == m_##Name ) {\
     ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named '%2::%3' for this filter."\
      "The preflight failed for one or more reasons. Check additional error messages for more details.").arg(m_##Name##ArrayName).arg(#DType).arg(#Name);\
@@ -123,7 +136,7 @@
   }}}
 
 
-#define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ptrType, ArrayType, initValue, size, NumComp)\
+#define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ptrType, ArrayType, initValue, Size, dims)\
   {\
   if (m_##Name##ArrayName.isEmpty() == true)\
   {\
@@ -132,10 +145,14 @@
     addErrorMessage(getHumanLabel(), ss, -10000);\
   }\
   /* QString _s(#Name);*/\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
+  int NumComp = dims[0];\
+  for(int i=1;i<dims.size();i++){\
+  NumComp *= dims[i];\
+  }\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, Size, NumComp, NULL);\
   if (NULL ==  m_##Name ) \
   {\
-    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
+    ArrayType::Pointer p = ArrayType::CreateArray(Size, dims, m_##Name##ArrayName);\
     if (NULL == p.get()) \
     {\
       QString ss;\
@@ -233,14 +250,13 @@ return gi;\
 
 #define METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)\
 template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
-PtrType* create##Field##Data(const QString &arrayName, size_t size, int numComp, AbstractFilter* obv)\
+PtrType* create##Field##Data(const QString &arrayName, size_t size, QVector<int> dims, AbstractFilter* obv)\
 {\
   PtrType* valuePtr = NULL;\
   IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
   if (iDataArray.get() == NULL) { \
-    iDataArray = DataArrayType::CreateArray(size * numComp, arrayName);\
+    iDataArray = DataArrayType::CreateArray(size, dims, arrayName);\
     iDataArray->initializeWithZeros();\
-    iDataArray->SetNumberOfComponents(numComp);\
     if (NULL == iDataArray.get()) { \
       QString s = QObject::tr(": Array '%1' could not allocate %2 elements.").arg(arrayName).arg(size);\
       if (NULL != obv) {obv->setErrorCondition(-25);\

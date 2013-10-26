@@ -163,47 +163,54 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
-
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, dims)
 
   if(m_SizeDistribution == true || m_Omega3Distribution == true
       || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, -302, bool, BoolArrayType, fields, 1)
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, -302, bool, BoolArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, dims)
   }
   if(m_NeighborhoodDistribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, -304, int32_t, Int32ArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, -304, int32_t, Int32ArrayType, fields, dims)
   }
   if(m_AspectRatioDistribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, -307, float, FloatArrayType, fields, 2)
+    dims[0] = 2;
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, -307, float, FloatArrayType, fields, dims)
   }
   if(m_Omega3Distribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, -306, float, FloatArrayType, fields, 1)
+    dims[0] = 1;
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, -306, float, FloatArrayType, fields, dims)
   }
   if(m_CalculateAxisODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, -305, float, FloatArrayType, fields, 3)
+    dims[0] = 3;
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, -305, float, FloatArrayType, fields, dims)
   }
 
 
   if(m_CalculateODF == true || m_CalculateMDF == true)
   {
+    dims[0] = 1;
     typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, dims)
   }
   if(m_CalculateODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, -304, float, FloatArrayType, fields, 1)
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -302, float, FloatArrayType, fields, 3)
+    dims[0] = 1;
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, -304, float, FloatArrayType, fields, dims)
+    dims[0] = 3;
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -302, float, FloatArrayType, fields, dims)
   }
   if(m_CalculateMDF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+    dims[0] = 4;
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getCellFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {
@@ -230,8 +237,9 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   }
   else
   {
+    dims[0] = 1;
     typedef DataArray<unsigned int> PhaseTypeArrayType;
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, dims)
   }
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)

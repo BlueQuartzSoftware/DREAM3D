@@ -87,14 +87,16 @@ void FindBasalLoadingFactor::dataCheck(bool preflight, size_t voxels, size_t fie
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+  QVector<int> dims(1, 4);
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, BasalLoadingFactor, float, FloatArrayType, 0, fields, 1)
+  dims[0] = 1;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, BasalLoadingFactor, float, FloatArrayType, 0, fields, dims)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, dims)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
 }
 
 

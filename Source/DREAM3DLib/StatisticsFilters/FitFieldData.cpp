@@ -116,7 +116,8 @@ void FitFieldData::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   }
   if(m_RemoveBiasedFields == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, -302, bool, BoolArrayType, fields, 1)
+    QVector<int> dims(1, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, -302, bool, BoolArrayType, fields, dims)
   }
 }
 
@@ -164,7 +165,8 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   else if (dType == DREAM3D::DistributionType::Power) distType = "PowerLaw", numComp = DREAM3D::HDF5::PowerLawColumnCount;
 
   ss = selectedFieldArrayName + distType + QString("Fit");
-  typename DataArray<float>::Pointer ensembleArray = DataArray<float>::CreateArray(ensembles, numComp, ss);
+  QVector<int> dims(1, numComp);
+  typename DataArray<float>::Pointer ensembleArray = DataArray<float>::CreateArray(ensembles, dims, ss);
 
   T* fPtr = fieldArray->getPointer(0);
   float* ePtr = ensembleArray->getPointer(0);

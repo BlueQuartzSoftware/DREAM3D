@@ -91,7 +91,8 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -301, float, FloatArrayType, fields, 3)
+  QVector<int> dims(1, 3);
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -301, float, FloatArrayType, fields, dims)
   if(getErrorCondition() == -301)
   {
     setErrorCondition(0);
@@ -100,9 +101,10 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
     find_graincentroids->setDataContainerArray(getDataContainerArray());
     if(preflight == true) { find_graincentroids->preflight(); }
     if(preflight == false) { find_graincentroids->execute(); }
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -301, float, FloatArrayType, fields, 3)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -301, float, FloatArrayType, fields, dims)
   }
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
+  dims[0] = 1;
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, dims)
   if(getErrorCondition() == -302)
   {
     setErrorCondition(0);
@@ -111,10 +113,10 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
     find_surfacegrains->setDataContainerArray(getDataContainerArray());
     if(preflight == true) { find_surfacegrains->preflight(); }
     if(preflight == false) { find_surfacegrains->execute(); }
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, dims)
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, bool, BoolArrayType, false, fields, dims)
 }
 
 

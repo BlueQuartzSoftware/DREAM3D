@@ -119,13 +119,14 @@ void GenerateRodriguesColors::dataCheck(bool preflight, size_t voxels, size_t fi
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, 3)
-
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, dims)
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, dims)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellRodriguesColors, uint8_t, UInt8ArrayType, 0, voxels, 3)
+  dims[0] = 3;
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellRodriguesColors, uint8_t, UInt8ArrayType, 0, voxels, dims)
 }
 
 

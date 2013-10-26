@@ -1157,11 +1157,12 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalLow::symSize0, 3, label0 + QString("xyzCoords"));
+  QVector<int> dims(1, 3);
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalLow::symSize0, dims, label0 + QString("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalLow::symSize1, 3, label1 + QString("xyzCoords"));
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalLow::symSize1, dims, label1 + QString("xyzCoords"));
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalLow::symSize2, 3, label2 + QString("xyzCoords"));
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalLow::symSize2, dims, label2 + QString("xyzCoords"));
 
   config.sphereRadius = 1.0f;
 
@@ -1171,9 +1172,9 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
 
   // These arrays hold the "intensity" images which eventually get converted to an actual Color RGB image
   // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
-  DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, 1, label0 + "_Intensity_Image");
-  DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, 1, label1 + "_Intensity_Image");
-  DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, 1, label2 + "_Intensity_Image");
+  DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
+  DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
+  DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
@@ -1231,9 +1232,10 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   config.minScale = min;
   config.maxScale = max;
 
-  UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label0);
-  UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label1);
-  UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label2);
+  dims[0] = 4;
+  UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label0);
+  UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1);
+  UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 
   poleFigures.push_back(image001);

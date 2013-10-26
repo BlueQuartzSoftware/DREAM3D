@@ -130,7 +130,8 @@ void AvizoUniformCoordinateWriter::dataCheck(bool preflight, size_t voxels, size
   }
   if(m_WriteGrainIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+    QVector<int> dims(1 ,1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
   }
 }
 

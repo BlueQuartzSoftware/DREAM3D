@@ -179,7 +179,8 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t field
   }
   else
   {
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleNormals, double, DoubleArrayType, 0, voxels, 3)
+    QVector<int> dims(1, 3);
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleNormals, double, DoubleArrayType, 0, voxels, dims)
   }
 }
 

@@ -401,7 +401,8 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1);
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
@@ -409,9 +410,10 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
   FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
 
   int8_t* m_SurfaceMeshNodeType;
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, int8_t, Int8ArrayType, 0, 1, 1)
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, int8_t, Int8ArrayType, 0, 1, dims)
 
-  DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  dims[0] = 2;
+  DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   sm->addFaceData(labels->GetName(), labels);
   sm->setVertices(vertices);
   sm->setFaces(triangles);
@@ -530,7 +532,7 @@ void M3CSliceBySlice::execute()
   int NS = wrappedDims[0] * wrappedDims[1] * wrappedDims[2];
   int NSP = wrappedDims[0] * wrappedDims[1];
 
-  DataArray<int32_t>::Pointer voxelsPtr = DataArray<int32_t>::CreateArray( 2 * NSP + 1, 1, "M3CSliceBySlice_Working_Voxels");
+  DataArray<int32_t>::Pointer voxelsPtr = DataArray<int32_t>::CreateArray( 2 * NSP + 1, "M3CSliceBySlice_Working_Voxels");
   voxelsPtr->initializeWithValues(-3);
   int32_t* voxels = voxelsPtr->getPointer(0);
 

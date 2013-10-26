@@ -131,7 +131,8 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   numOrients = buf.toInt(&ok, 10);
 
   // Allocate enough for the angles
-  angles = FloatArrayType::CreateArray(numOrients, 3, "EulerAngles_From_File");
+  QVector<int> dims(1, 3);
+  angles = FloatArrayType::CreateArray(numOrients, dims, "EulerAngles_From_File");
 
   float e1, e2, e3;
   float r1, r2, r3;

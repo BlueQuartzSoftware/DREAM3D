@@ -69,9 +69,10 @@ namespace Detail
     size_t size = ptr->GetSize();
 
 
+    QVector<int> dims(1, numberOfComponents);
     if (scalarType == Detail::Int8)
     {
-      Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, numberOfComponents, name);
+      Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, dims, name);
       m->addCellData(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
@@ -80,7 +81,7 @@ namespace Detail
     }
     else if (scalarType == Detail::UInt8)
     {
-      UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, numberOfComponents, name);
+      UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, dims, name);
       m->addCellData(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
@@ -89,7 +90,7 @@ namespace Detail
     }
     else if (scalarType == Detail::Int16)
     {
-      Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, numberOfComponents, name);
+      Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, dims, name);
       m->addCellData(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
@@ -98,7 +99,7 @@ namespace Detail
     }
     else if (scalarType == Detail::UInt16)
     {
-      UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, numberOfComponents, name);
+      UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, dims, name);
       m->addCellData(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
@@ -107,7 +108,7 @@ namespace Detail
     }
     else if (scalarType == Detail::Int32)
     {
-      Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, numberOfComponents, name);
+      Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, dims, name);
       m->addCellData(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
@@ -116,7 +117,7 @@ namespace Detail
     }
     else if (scalarType == Detail::UInt32)
     {
-      UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, numberOfComponents, name);
+      UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, dims, name);
       m->addCellData(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
@@ -125,7 +126,7 @@ namespace Detail
     }
     else if (scalarType == Detail::Int64)
     {
-      Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, numberOfComponents, name);
+      Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, dims, name);
       m->addCellData(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
@@ -134,7 +135,7 @@ namespace Detail
     }
     else if (scalarType == Detail::UInt64)
     {
-      UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, numberOfComponents, name);
+      UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, dims, name);
       m->addCellData(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
@@ -143,12 +144,12 @@ namespace Detail
     }
     else if (scalarType == Detail::Float)
     {
-      FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, numberOfComponents, name);
+      FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, dims, name);
       m->addCellData(p->GetName(), p);
     }
     else if (scalarType == Detail::Double)
     {
-      DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, numberOfComponents, name);
+      DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, dims, name);
       m->addCellData(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
@@ -304,45 +305,46 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   if (true == preflight)
   {
     IDataArray::Pointer p = IDataArray::NullPointer();
+    QVector<int> dims(1, numberOfComponents);
     if (m_ScalarType == Detail::Int8)
     {
-      p = Int8ArrayType::CreateArray(voxels, numberOfComponents, m_OutputArrayName);
+      p = Int8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
     else if (m_ScalarType == Detail::UInt8)
     {
-      p = UInt8ArrayType::CreateArray(voxels, numberOfComponents, m_OutputArrayName);
+      p = UInt8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
     else if (m_ScalarType == Detail::Int16)
     {
-      p = Int16ArrayType::CreateArray(voxels, numberOfComponents, m_OutputArrayName);
+      p = Int16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
     else if (m_ScalarType == Detail::UInt16)
     {
-      p = UInt16ArrayType::CreateArray(voxels, numberOfComponents, m_OutputArrayName);
+      p = UInt16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
     else if (m_ScalarType == Detail::Int32)
     {
-      p = Int32ArrayType::CreateArray(voxels, numberOfComponents, m_OutputArrayName);
+      p = Int32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
     else if (m_ScalarType == Detail::UInt32)
     {
-      p = UInt32ArrayType::CreateArray(voxels, numberOfComponents, m_OutputArrayName);
+      p = UInt32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
     else if (m_ScalarType == Detail::Int64)
     {
-      p = Int64ArrayType::CreateArray(voxels, numberOfComponents, m_OutputArrayName);
+      p = Int64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
     else if (m_ScalarType == Detail::UInt64)
     {
-      p = UInt64ArrayType::CreateArray(voxels, numberOfComponents, m_OutputArrayName);
+      p = UInt64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
     else if (m_ScalarType == Detail::Float)
     {
-      p = FloatArrayType::CreateArray(voxels, numberOfComponents, m_OutputArrayName);
+      p = FloatArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
     else if (m_ScalarType == Detail::Double)
     {
-      p = DoubleArrayType::CreateArray(voxels, numberOfComponents, m_OutputArrayName);
+      p = DoubleArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
     m->addCellData(p->GetName(), p);
   }

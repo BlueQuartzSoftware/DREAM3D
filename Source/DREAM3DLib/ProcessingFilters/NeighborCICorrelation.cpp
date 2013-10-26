@@ -131,7 +131,8 @@ void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t fiel
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -301, float, FloatArrayType, voxels, 1)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -301, float, FloatArrayType, voxels, dims)
 }
 
 

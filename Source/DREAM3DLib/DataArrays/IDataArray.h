@@ -69,7 +69,9 @@ class DREAM3DLib_EXPORT IDataArray
     virtual void SetName(const QString& name) = 0;
     virtual QString GetName() = 0;
 
-    virtual Pointer createNewArray(size_t numElements, int numComponents, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name) = 0;
 
     /**
      * @brief Has all the memory needed for this class been allocated?

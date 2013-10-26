@@ -155,10 +155,12 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     addCreatedArrayHelpIndexEntry(e);
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, int32_t, Int32ArrayType, 0, fields, 1)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, int32_t, Int32ArrayType, 0, fields, dims)
+  dims[0] = 3;
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, dims)
 }
 
 

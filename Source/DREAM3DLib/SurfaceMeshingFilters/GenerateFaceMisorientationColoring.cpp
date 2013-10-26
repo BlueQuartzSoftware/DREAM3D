@@ -235,8 +235,10 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, si
   }
   else
   {
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceMisorientationColors, float, FloatArrayType, 0, fields, 3)
+    QVector<int> dims(1, 2);
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, dims)
+    dims[0] = 3;
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceMisorientationColors, float, FloatArrayType, 0, fields, dims)
   }
 }
 
@@ -249,10 +251,12 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel(bool preflight, size_t v
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
+  QVector<int> dims(1, 4);
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
+  dims[0] = 1;
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, dims)
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, dims)
 }
 
 // -----------------------------------------------------------------------------

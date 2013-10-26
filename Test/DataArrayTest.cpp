@@ -282,7 +282,8 @@ void __TestEraseElements()
 
   // Test Dropping of indices larger than the number of tuples
   {
-    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_TUPLES_2, NUM_COMPONENTS_2, "Test6");
+    QVector<int> dims(1, NUM_COMPONENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_TUPLES_2, dims, "Test6");
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {

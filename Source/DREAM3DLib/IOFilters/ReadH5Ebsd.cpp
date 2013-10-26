@@ -361,13 +361,15 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     }
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, 1)
-
+  QVector<int> dim(1, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dim)
+  dim[0] = 1;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, dim)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, float, FloatArrayType, 0.0, ensembles, 6)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, dim)
+  dim[0] = 6;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, float, FloatArrayType, 0.0, ensembles, dim)
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
   m->addCellEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
@@ -515,9 +517,11 @@ void ReadH5Ebsd::execute()
   }
 
 
+  QVector<int> dim(1, 1);
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, m->getNumCellEnsembleTuples(), 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, -305, float, FloatArrayType, m->getNumCellEnsembleTuples(), 6)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, m->getNumCellEnsembleTuples(), dim)
+  dim[0] = 6;
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, -305, float, FloatArrayType, m->getNumCellEnsembleTuples(), dim)
 
   // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
@@ -772,7 +776,8 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi1));
     f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi2));
-    fArray = FloatArrayType::CreateArray(totalPoints, 3, DREAM3D::CellData::EulerAngles);
+    QVector<int> dims(1, 3);
+    fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
     for (int64_t i = 0; i < totalPoints; i++)

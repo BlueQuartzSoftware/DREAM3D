@@ -458,7 +458,7 @@ void RotateSampleRefFrame::execute()
   size_t newNumCellTuples = params.xpNew * params.ypNew * params.zpNew;
 
 
-  DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, 1, "RotateSampleRef_NewIndicies");
+  DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, "RotateSampleRef_NewIndicies");
   newIndiciesPtr->initializeWithValues(-1);
   int64_t* newindicies = newIndiciesPtr->getPointer(0);
 
@@ -492,7 +492,8 @@ void RotateSampleRefFrame::execute()
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name.
-    IDataArray::Pointer data = p->createNewArray(newNumCellTuples, p->GetNumberOfComponents(), p->GetName());
+    QVector<int> dims(1, p->GetNumberOfComponents());
+    IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), dims, p->GetName());
     void* source = NULL;
     void* destination = NULL;
     int64_t newIndicies_I = 0;

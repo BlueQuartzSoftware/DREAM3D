@@ -90,9 +90,9 @@ void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -301, int32_t, Int32ArrayType, fields, 1)
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFields, int32_t, Int32ArrayType, 0, ensembles, 1)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -301, int32_t, Int32ArrayType, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFields, int32_t, Int32ArrayType, 0, ensembles, dims)
 }
 
 

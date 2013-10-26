@@ -139,9 +139,20 @@ class GbcdDataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
     {
-      IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, numComponents, 1, 1, 1, name);
+      IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, 1, 1, 1, 1, name);
+      return p;
+    }
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    {
+      IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, 1, 1, 1, 1, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
+    {
+      IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, 1, 1, 1, 1, name);
       return p;
     }
 

@@ -73,7 +73,17 @@ class NeighborList : public IDataArray
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
-    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+    {
+      return NeighborList<T>::New();
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    {
+      return NeighborList<T>::New();
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
     {
       return NeighborList<T>::New();
     }

@@ -128,10 +128,12 @@ void ParaDisReader::dataCheck(bool preflight, size_t voxels, size_t fields, size
     setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NumberOfArms, int32_t, Int32ArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NodeConstraints, int32_t, Int32ArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, BurgersVectors, float, FloatArrayType, 0.0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, SlipPlaneNormals, float, FloatArrayType, 0.0, fields, 3)
+  QVector<int> dims(1, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NumberOfArms, int32_t, Int32ArrayType, 0, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NodeConstraints, int32_t, Int32ArrayType, 0, voxels, dims)
+  dims[0] = 3;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, BurgersVectors, float, FloatArrayType, 0.0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, SlipPlaneNormals, float, FloatArrayType, 0.0, fields, dims)
 
   if (m_InStream.isOpen() == true)
   {
@@ -354,8 +356,9 @@ int ParaDisReader::readFile()
   m->removeEdgeData(m_SlipPlaneNormalsArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
   //  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NumberOfArms, int32_t, Int32ArrayType, 0, numVerts, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NodeConstraints, int32_t, Int32ArrayType, 0, numVerts, 1)
+  QVector<int> dims(1, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NumberOfArms, int32_t, Int32ArrayType, 0, numVerts, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NodeConstraints, int32_t, Int32ArrayType, 0, numVerts, dims)
 
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
@@ -467,8 +470,9 @@ int ParaDisReader::readFile()
   m->setEdges(edges);
   EdgeArray::Edge_t* edge = edges.get()->getPointer(0);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, BurgersVectors, float, FloatArrayType, 0.0, numEdges, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, SlipPlaneNormals, float, FloatArrayType, 0.0, numEdges, 3)
+  dims[0] = 3;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, BurgersVectors, float, FloatArrayType, 0.0, numEdges, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, SlipPlaneNormals, float, FloatArrayType, 0.0, numEdges, dims)
 
   for(int i = 0; i < numEdges; i++)
   {

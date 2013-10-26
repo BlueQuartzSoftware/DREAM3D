@@ -360,26 +360,29 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
+  QVector<int> dims(1, 1);
   //Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, dims)
 
   //Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, int32_t, Int32ArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, int32_t, Int32ArrayType, 0, fields, dims)
+  dims[0] = 3;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, float, FloatArrayType, 0, fields, dims)
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, -302, unsigned int, PhaseTypeArrayType, ensembles, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, ShapeTypes, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
+  dims[0] = 1;
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, -302, unsigned int, PhaseTypeArrayType, ensembles, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, ShapeTypes, -305, unsigned int, ShapeTypeArrayType, ensembles, dims)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
@@ -536,9 +539,10 @@ void PackPrimaryPhases::execute()
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
   initialize_packinggrid();
 
-  Int32ArrayType::Pointer grainOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, 1, "PackPrimaryGrains::grain_owners");
+  QVector<int> dim(1, 1);
+  Int32ArrayType::Pointer grainOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, dim, "PackPrimaryGrains::grain_owners");
   grainOwnersPtr->initializeWithZeros();
-  BoolArrayType::Pointer exclusionZonesPtr = BoolArrayType::CreateArray(m_TotalPackingPoints, 1, "PackPrimaryGrains::exclusions_zones");
+  BoolArrayType::Pointer exclusionZonesPtr = BoolArrayType::CreateArray(m_TotalPackingPoints, dim, "PackPrimaryGrains::exclusions_zones");
   exclusionZonesPtr->initializeWithValues(false);
 
   // Get a pointer to the Grain Owners that was just initialized in the initialize_packinggrid() method

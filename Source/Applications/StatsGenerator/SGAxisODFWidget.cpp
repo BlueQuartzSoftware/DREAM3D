@@ -510,7 +510,8 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   int lamberSize = 22;
   int numColors = 16;
   int npoints = 5000;
-  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, 3, "Eulers");
+  QVector<int> dims(1, 3);
+  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
 
   odf.resize(OrthoRhombicOps::k_OdfSize);
 

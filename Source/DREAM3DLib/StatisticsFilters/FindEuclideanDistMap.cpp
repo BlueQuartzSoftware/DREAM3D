@@ -274,12 +274,15 @@ void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t field
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, int32_t, Int32ArrayType, 0, voxels, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, float, FloatArrayType, -1, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, float, FloatArrayType, -1, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, float, FloatArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, float, FloatArrayType, -1, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, float, FloatArrayType, -1, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, float, FloatArrayType, -1, voxels, dims)
+  dims[0] = 3;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, int32_t, Int32ArrayType, 0, voxels, dims)
+
 }
 
 // -----------------------------------------------------------------------------

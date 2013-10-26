@@ -185,7 +185,8 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 
       DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, m_CrystalStructuresArrayName);
       StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, m_MaterialNameArrayName);
-      FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, 6, m_LatticeConstantsArrayName);
+      QVector<int> dims(1, 6);
+      FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, m_LatticeConstantsArrayName);
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file

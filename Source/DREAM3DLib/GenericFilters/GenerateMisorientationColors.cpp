@@ -237,7 +237,7 @@ void GenerateMisorientationColors::execute()
   QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 
-  UInt8ArrayType::Pointer notSupported = UInt8ArrayType::CreateArray(13, 1, "NotSupportedArray");
+  UInt8ArrayType::Pointer notSupported = UInt8ArrayType::CreateArray(13, "NotSupportedArray");
   notSupported->initializeWithZeros();
 
   // Write the Misorientation Coloring Cell Data

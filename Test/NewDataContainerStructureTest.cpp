@@ -73,7 +73,9 @@
 #include"DREAM3DLib/SamplingFilters/RegularGridSampleSurfaceMesh.h"
 
 #include"DREAM3DLib/StatisticsFilters/FindSizes.h"
+#include"DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include"DREAM3DLib/StatisticsFilters/FitFieldData.h"
+#include"DREAM3DLib/StatisticsFilters/FitCorrelatedFieldData.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -316,7 +318,8 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 {
   AbstractFilter::Pointer absFilt = AbstractFilter::New();
 
-  T* ptr = m->createCellData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  QVector<int> dims(1, 2);
+  T* ptr = m->createCellData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_REQUIRE_NE(ptr, NULL);
   absFilt->setErrorCondition(0);
@@ -352,7 +355,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   DREAM3D_REQUIRE_NE(t.get(), NULL);
 
   /********************************* Field Data Tests *********************************************/
-  ptr = m->createCellFieldData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->createCellFieldData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_REQUIRE_NE(ptr, NULL);
   absFilt->setErrorCondition(0);
@@ -389,7 +392,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 
 
   /********************************* Ensemble Data Tests *********************************************/
-  ptr = m->createCellEnsembleData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->createCellEnsembleData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_REQUIRE_NE(ptr, NULL);
   absFilt->setErrorCondition(0);
@@ -833,10 +836,16 @@ void RunPipeline8()
   FindSizes::Pointer fs = FindSizes::New();
   pipeline->pushBack(fs);
 
-  FitFieldData::Pointer ffd = FitFieldData::New();
-  ffd->setSelectedFieldArrayName(DREAM3D::FieldData::EquivalentDiameters);
-  ffd->setDistributionType(DREAM3D::DistributionType::LogNormal);
-  pipeline->pushBack(ffd);
+  FindNeighbors::Pointer fn = FindNeighbors::New();
+  pipeline->pushBack(fn);
+
+  FitCorrelatedFieldData::Pointer fcfd = FitCorrelatedFieldData::New();
+  fcfd->setSelectedFieldArrayName(DREAM3D::FieldData::NumNeighbors);
+  fcfd->setCorrelatedFieldArrayName(DREAM3D::FieldData::EquivalentDiameters);
+  fcfd->setDistributionType(DREAM3D::DistributionType::LogNormal);
+  fcfd->setNumberOfCorrelatedBins(10);
+  fcfd->setRemoveBiasedFields(true);
+  pipeline->pushBack(fcfd);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SmallIN100OutputFile);

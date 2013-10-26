@@ -307,7 +307,8 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 {
   AbstractFilter::Pointer absFilt = AbstractFilter::New();
 
-  T* ptr = m->createCellData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  QVector<int> dims(1, 2);
+  T* ptr = m->createCellData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_TEST_POINTER(ptr, !=,NULL);
   absFilt->setErrorCondition(0);
@@ -343,7 +344,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   DREAM3D_TEST_POINTER(ptr, !=, NULL);
 
   /********************************* Field Data Tests *********************************************/
-  ptr = m->createCellFieldData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->createCellFieldData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_TEST_POINTER(ptr, !=, NULL);
   absFilt->setErrorCondition(0);
@@ -380,7 +381,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 
 
   /********************************* Ensemble Data Tests *********************************************/
-  ptr = m->createCellEnsembleData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->createCellEnsembleData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_TEST_POINTER(ptr, !=, NULL);
   absFilt->setErrorCondition(0);

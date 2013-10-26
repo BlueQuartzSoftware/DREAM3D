@@ -150,7 +150,8 @@ void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t field
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, bool, BoolArrayType, true, voxels, 1)
+  QVector<int> dims(1, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, bool, BoolArrayType, true, voxels, dims)
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {

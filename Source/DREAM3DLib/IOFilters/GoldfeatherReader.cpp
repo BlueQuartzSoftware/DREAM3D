@@ -153,32 +153,34 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   sm->setVertices(vertices);
   sm->setFaces(triangles);
 
-  DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(1, 3, DREAM3D::VertexData::SurfaceMeshNodeNormals);
+  QVector<int> dims(1, 3);
+  DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(1, dims, DREAM3D::VertexData::SurfaceMeshNodeNormals);
   //addCreatedCellData( normalsPtr->GetName());
   sm->addVertexData(normalsPtr->GetName(), normalsPtr);
 
-  DoubleArrayType::Pointer pcurv1Ptr = DoubleArrayType::CreateArray(1, 1, "Principal_Curvature_1");
+  DoubleArrayType::Pointer pcurv1Ptr = DoubleArrayType::CreateArray(1, "Principal_Curvature_1");
   //addCreatedCellData( pcurv1Ptr->GetName());
   sm->addVertexData(pcurv1Ptr->GetName(), pcurv1Ptr);
 
-  DoubleArrayType::Pointer pcurv2Ptr = DoubleArrayType::CreateArray(1, 1, "Principal_Curvature_2");
+  DoubleArrayType::Pointer pcurv2Ptr = DoubleArrayType::CreateArray(1, "Principal_Curvature_2");
 // addCreatedCellData( pcurv2Ptr->GetName());
   sm->addVertexData(pcurv2Ptr->GetName(), pcurv2Ptr);
 
-  DoubleArrayType::Pointer pDirection1Ptr = DoubleArrayType::CreateArray(1, 3, "Principal_Direction_1");
+  DoubleArrayType::Pointer pDirection1Ptr = DoubleArrayType::CreateArray(1, dims, "Principal_Direction_1");
 // addCreatedCellData( pDirection1Ptr->GetName());
   sm->addVertexData(pDirection1Ptr->GetName(), pDirection1Ptr);
 
-  DoubleArrayType::Pointer pDirection2Ptr = DoubleArrayType::CreateArray(1, 3, "Principal_Direction_2");
+  DoubleArrayType::Pointer pDirection2Ptr = DoubleArrayType::CreateArray(1, dims, "Principal_Direction_2");
 //  addCreatedCellData( pDirection2Ptr->GetName());
   sm->addVertexData(pDirection2Ptr->GetName(), pDirection2Ptr);
 
-
-  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  dims[0] = 2;
+  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
 //  addCreatedFieldData( faceLabelPtr->GetName());
   sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
 
-  DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(1, 3, DREAM3D::FaceData::SurfaceMeshFaceNormals);
+  dims[0] = 3;
+  DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceNormals);
 //  addCreatedFieldData( triNormalsPtr->GetName());
   sm->addFaceData(triNormalsPtr->GetName(), triNormalsPtr);
 
@@ -241,19 +243,20 @@ void GoldfeatherReader::execute()
   VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
 
 
-  DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(nNodes, 3, DREAM3D::VertexData::SurfaceMeshNodeNormals);
+  QVector<int> dims(1, 3);
+  DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(nNodes, dims, DREAM3D::VertexData::SurfaceMeshNodeNormals);
   double* normals = normalsPtr->getPointer(0);
 
-  DoubleArrayType::Pointer pcurv1Ptr = DoubleArrayType::CreateArray(nNodes, 1, "Principal_Curvature_1");
+  DoubleArrayType::Pointer pcurv1Ptr = DoubleArrayType::CreateArray(nNodes, "Principal_Curvature_1");
   double* pcurv1 = pcurv1Ptr->getPointer(0);
 
-  DoubleArrayType::Pointer pcurv2Ptr = DoubleArrayType::CreateArray(nNodes, 1, "Principal_Curvature_2");
+  DoubleArrayType::Pointer pcurv2Ptr = DoubleArrayType::CreateArray(nNodes, "Principal_Curvature_2");
   double* pcurv2 = pcurv2Ptr->getPointer(0);
 
-  DoubleArrayType::Pointer pDirection1Ptr = DoubleArrayType::CreateArray(nNodes, 3, "Principal_Direction_1");
+  DoubleArrayType::Pointer pDirection1Ptr = DoubleArrayType::CreateArray(nNodes, dims, "Principal_Direction_1");
   double* pDirection1 = pDirection1Ptr->getPointer(0);
 
-  DoubleArrayType::Pointer pDirection2Ptr = DoubleArrayType::CreateArray(nNodes, 3, "Principal_Direction_2");
+  DoubleArrayType::Pointer pDirection2Ptr = DoubleArrayType::CreateArray(nNodes, dims, "Principal_Direction_2");
   double* pDirection2 = pDirection2Ptr->getPointer(0);
 
   float x, y, z, n0, n1, n2, p1, p2;
@@ -302,11 +305,13 @@ void GoldfeatherReader::execute()
   FaceArray::Pointer trianglesPtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces, nodesPtr.get());
   FaceArray& triangles = *(trianglesPtr);
 
-  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  dims[0] = 2;
+  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   faceLabelPtr->initializeWithZeros();
   int32_t* faceLabels = faceLabelPtr->getPointer(0);
 
-  DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(nTriangles, 3, DREAM3D::FaceData::SurfaceMeshFaceNormals);
+  dims[0] = 3;
+  DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(nTriangles, dims, DREAM3D::FaceData::SurfaceMeshFaceNormals);
   double* triNormals = triNormalsPtr->getPointer(0);
 
   for(int t = 0; t < nTriangles; ++t)

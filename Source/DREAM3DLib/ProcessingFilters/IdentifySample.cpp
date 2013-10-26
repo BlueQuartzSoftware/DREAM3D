@@ -110,7 +110,8 @@ void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t fields, siz
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -301, bool, BoolArrayType, voxels, 1)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -301, bool, BoolArrayType, voxels, dims)
 }
 
 
