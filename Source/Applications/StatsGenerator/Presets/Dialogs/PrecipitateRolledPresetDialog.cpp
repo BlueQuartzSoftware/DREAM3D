@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "RecrystallizedPresetDialog.h"
+#include "PrecipitateRolledPresetDialog.h"
 #include <QtGui/QFormLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -44,7 +44,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RecrystallizedPresetDialog::RecrystallizedPresetDialog(QWidget* parent) :
+PrecipitateRolledPresetDialog::PrecipitateRolledPresetDialog(QWidget* parent) :
 QDialog(parent)
 {
   setupGui();
@@ -53,14 +53,14 @@ QDialog(parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RecrystallizedPresetDialog::~RecrystallizedPresetDialog()
+PrecipitateRolledPresetDialog::~PrecipitateRolledPresetDialog()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RecrystallizedPresetDialog::setupGui()
+void PrecipitateRolledPresetDialog::setupGui()
 {
 
   QVBoxLayout* verticalLayout_2 = new QVBoxLayout(this);
@@ -68,17 +68,38 @@ void RecrystallizedPresetDialog::setupGui()
   QFormLayout*         formLayout = new QFormLayout();
   formLayout->setObjectName(QString::fromUtf8("eulerLayout"));
 
-  QLabel* percentRecystallizedLabel = new QLabel(this);
-  percentRecystallizedLabel->setObjectName(QString::fromUtf8("Percent Recrystallized Label"));
-  formLayout->setWidget(0, QFormLayout::LabelRole, percentRecystallizedLabel);
+  QLabel* ALabel = new QLabel(this);
+  ALabel->setObjectName(QString::fromUtf8("A Label"));
+  formLayout->setWidget(0, QFormLayout::LabelRole, ALabel);
 
-  percentRecystallized = new QLineEdit(this);
-  percentRecystallized->setText(QString("1.0"));
-  percentRecystallized->setObjectName(QString::fromUtf8("percentRecystallized"));
-  formLayout->setWidget(0, QFormLayout::FieldRole, percentRecystallized);
-  QDoubleValidator* aspectRatioValidator = new QDoubleValidator(percentRecystallized);
-  aspectRatioValidator->setDecimals(4);
+  A = new QLineEdit(this);
+  A->setText(QString("1.0"));
+  A->setObjectName(QString::fromUtf8("A"));
+  formLayout->setWidget(0, QFormLayout::FieldRole, A);
+  QDoubleValidator* AValidator = new QDoubleValidator(A);
+  AValidator->setDecimals(4);
 
+  QLabel* BLabel = new QLabel(this);
+  BLabel->setObjectName(QString::fromUtf8("B Label"));
+  formLayout->setWidget(1, QFormLayout::LabelRole, BLabel);
+
+  B = new QLineEdit(this);
+  B->setText(QString("1.0"));
+  B->setObjectName(QString::fromUtf8("B"));
+  formLayout->setWidget(1, QFormLayout::FieldRole, B);
+  QDoubleValidator* BValidator = new QDoubleValidator(B);
+  BValidator->setDecimals(4);
+
+  QLabel* CLabel = new QLabel(this);
+  CLabel->setObjectName(QString::fromUtf8("C Label"));
+  formLayout->setWidget(2, QFormLayout::LabelRole, CLabel);
+
+  C = new QLineEdit(this);
+  C->setText(QString("1.0"));
+  C->setObjectName(QString::fromUtf8("B"));
+  formLayout->setWidget(2, QFormLayout::FieldRole, C);
+  QDoubleValidator* CValidator = new QDoubleValidator(C);
+  CValidator->setDecimals(4);
 
   verticalLayout_2->addLayout(formLayout);
 
@@ -88,7 +109,9 @@ void RecrystallizedPresetDialog::setupGui()
   buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
   verticalLayout_2->addWidget(buttonBox);
 
-  percentRecystallizedLabel->setText(QApplication::translate("Percent Recrystallized Preset Dialog", "Percent Recrystallized:", 0, QApplication::UnicodeUTF8));
+  ALabel->setText(QApplication::translate("Rolled Preset Dialog", "A Axis Length:", 0, QApplication::UnicodeUTF8));
+  BLabel->setText(QApplication::translate("Rolled Preset Dialog", "B Axis Length:", 0, QApplication::UnicodeUTF8));
+  CLabel->setText(QApplication::translate("Rolled Preset Dialog", "C Axis Length:", 0, QApplication::UnicodeUTF8));
 
 
   QObject::connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
@@ -96,8 +119,10 @@ void RecrystallizedPresetDialog::setupGui()
 
   QMetaObject::connectSlotsByName(this);
 
-  setWindowTitle("Recrystallized Preset Options");
+  setWindowTitle("Rolled Preset Options");
   setSizeGripEnabled(false);
+
+//  TextureDialog->resize(690, 406);
   QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   sizePolicy.setHorizontalStretch(0);
   sizePolicy.setVerticalStretch(0);
@@ -108,12 +133,32 @@ void RecrystallizedPresetDialog::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float RecrystallizedPresetDialog::getPercentRecrystallized()
+float PrecipitateRolledPresetDialog::getA()
 {
   bool ok = false;
-  double d = percentRecystallized->text().toFloat(&ok);
+  double d = A->text().toFloat(&ok);
   //FIXME: Should check the 'ok' variable here
   return d;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float PrecipitateRolledPresetDialog::getB()
+{
+  bool ok = false;
+  double d = B->text().toFloat(&ok);
+  //FIXME: Should check the 'ok' variable here
+  return d;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float PrecipitateRolledPresetDialog::getC()
+{
+  bool ok = false;
+  double d = C->text().toFloat(&ok);
+  //FIXME: Should check the 'ok' variable here
+  return d;
+}

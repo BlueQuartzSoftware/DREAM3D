@@ -99,6 +99,13 @@ class AbstractMicrostructurePreset
      * @param tableModel The TableModel that will receive the preset values
      * @param binNumbers The array of Bin values which are needed for the table model
      */
+    virtual void initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+
+    /**
+     * @brief Initializes the Clustering preset table values
+     * @param tableModel The TableModel that will receive the preset values
+     * @param binNumbers The array of Bin values which are needed for the table model
+     */
     virtual void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
     /**

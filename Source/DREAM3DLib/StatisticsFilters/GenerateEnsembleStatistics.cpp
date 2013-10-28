@@ -692,7 +692,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
-      pp->setGrainSize_Neighbors(neighborhoods[i]);
+      pp->setGrainSize_Clustering(neighborhoods[i]);
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
     {

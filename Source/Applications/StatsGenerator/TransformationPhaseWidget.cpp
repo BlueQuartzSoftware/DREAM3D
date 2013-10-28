@@ -73,10 +73,9 @@
 #include "DREAM3DLib/StatsData/StatsData.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
-#include "StatsGenerator/Presets/DefaultStatsPreset.h"
-#include "StatsGenerator/Presets/EquiaxedPreset.h"
-#include "StatsGenerator/Presets/RolledPreset.h"
-#include "StatsGenerator/Presets/RecrystallizedPreset.h"
+#include "StatsGenerator/Presets/PrimaryEquiaxedPreset.h"
+#include "StatsGenerator/Presets/PrimaryRolledPreset.h"
+#include "StatsGenerator/Presets/PrimaryRecrystallizedPreset.h"
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
@@ -171,13 +170,13 @@ void TransformationPhaseWidget::setupGui()
   AbstractMicrostructurePresetFactory::Pointer presetFactory = AbstractMicrostructurePresetFactory::NullPointer();
 
   //Register the Equiaxed Preset
-  presetFactory = RegisterPresetFactory<EquiaxedPresetFactory>(microstructurePresetCombo);
+  presetFactory = RegisterPresetFactory<PrimaryEquiaxedPresetFactory>(microstructurePresetCombo);
   QString presetName = presetFactory->displayName();
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
   m_MicroPreset = manager->createNewPreset(presetName);
 
   // Register the Rolled Preset
-  presetFactory = RegisterPresetFactory<RolledPresetFactory>(microstructurePresetCombo);
+  presetFactory = RegisterPresetFactory<PrimaryRolledPresetFactory>(microstructurePresetCombo);
 
   // Select the first Preset in the list
   microstructurePresetCombo->setCurrentIndex(0);

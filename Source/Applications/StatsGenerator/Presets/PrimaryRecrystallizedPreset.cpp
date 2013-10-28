@@ -33,14 +33,13 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "PrimaryRecrystallizedPreset.h"
 
-#include "DefaultStatsPreset.h"
 
-#include "StatsGenerator/Presets/Dialogs/RolledPresetDialog.h"
+#include "StatsGenerator/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
 #include "StatsGenerator/StatsGenODFWidget.h"
 #include "StatsGenerator/SGAxisODFWidget.h"
-#include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
@@ -51,22 +50,39 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DefaultStatsPreset::DefaultStatsPreset()
+PrimaryRecrystallizedPreset::PrimaryRecrystallizedPreset()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DefaultStatsPreset::~DefaultStatsPreset()
+PrimaryRecrystallizedPreset::~PrimaryRecrystallizedPreset()
 {
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DefaultStatsPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryRecrystallizedPreset::displayUserInputDialog()
+{
+  PrimaryRecrystallizedPresetDialog d(NULL);
+  int ret = d.exec();
+  if (ret == QDialog::Accepted)
+  {
+    // The user clicked the OK button so transfer the values from the dialog into this class
+    m_PercentRecrystallized = d.getPercentRecrystallized();
+  }
+  else
+  {
+    // Perform any cancellation actions if the user canceled the dialog box
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryRecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
@@ -81,68 +97,21 @@ void DefaultStatsPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QV
   // Remove all the current rows in the table model
   //  model->removeRows(0, model->rowCount());
 
-  float alpha = 5.0;
-  float beta = 1.0;
-  float betaStep = 10.0 / count;
+  float alpha, beta;
+  DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> alphas;
+      QVector<float> alphas;
   QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
+    alpha = (0*i) + 10.0 + rg.genrand_res53();
+    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-    if (colorOffset >= colorNames.size())
-    {
-      colorOffset = 0;
-    }
-    alpha += 0.1f;
-    beta += betaStep;
-  }
-
-  QVector<QVector<float> > data;
-  data.push_back(alphas);
-  data.push_back(betas);
-  model->setTableData(binNumbers, data, colors);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DefaultStatsPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
-{
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (NULL == model)
-  {
-    return;
-  }
-  qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
-
-  float alpha = 5.0;
-  float beta = 1.0;
-  float betaStep = 10.0 / count;
-
-  QVector<float> alphas;
-  QVector<float> betas;
-  QVector<QString> colors;
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-  for (qint32 i = 0; i < count; ++i)
-  {
-    alphas.push_back(alpha);
-    betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-    alpha += 0.1f;
-    beta += betaStep;
     if (colorOffset == colorNames.size()) {
       colorOffset = 21;
     }
@@ -157,7 +126,7 @@ void DefaultStatsPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QV
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DefaultStatsPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryRecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
@@ -172,22 +141,65 @@ void DefaultStatsPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QV
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  float alpha = 5.0;
-  float beta = 1.0;
-  float betaStep = 10.0 / count;
+  float alpha, beta;
+  DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> alphas;
+      QVector<float> alphas;
   QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
+    alpha = (0*i) + 10.0 + rg.genrand_res53();
+    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-    alpha += 0.1f;
-    beta += betaStep;
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
+  }
+
+  QVector<QVector<float> > data;
+  data.push_back(alphas);
+  data.push_back(betas);
+  model->setTableData(binNumbers, data, colors);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryRecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+{
+  // Make sure the distribution is set correctly
+  plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
+  // This line basically makes sure we have the distribution type we are looking for
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
+  if (NULL == model)
+  {
+    return;
+  }
+  qint32 count = binNumbers.count();
+
+  // Remove all the current rows in the table model
+  model->removeRows(0, model->rowCount());
+
+  float alpha, beta;
+  DREAM3D_RANDOMNG_NEW()
+
+      QVector<float> alphas;
+  QVector<float> betas;
+  QVector<QString> colors;
+  QStringList colorNames = QColor::colorNames();
+  qint32 colorOffset = 21;
+  for (qint32 i = 0; i < count; ++i)
+  {
+    alpha = (0*i) + 10.0 + rg.genrand_res53();
+    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
+    alphas.push_back(alpha);
+    betas.push_back(beta);
+    colors.push_back(colorNames[colorOffset++]);
     if (colorOffset == colorNames.size()) {
       colorOffset = 21;
     }
@@ -203,7 +215,7 @@ void DefaultStatsPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QV
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DefaultStatsPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryRecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
@@ -245,4 +257,12 @@ void DefaultStatsPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, 
   data.push_back(sigmas);
   model->setTableData(binNumbers, data, colors);
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryRecrystallizedPreset::initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+{
+  BOOST_ASSERT(false);
 }

@@ -33,10 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef EQUIAXEDPRESETFACTORY_H_
-#define EQUIAXEDPRESETFACTORY_H_
-
+#ifndef PrimaryRolledPreset_H_
+#define PrimaryRolledPreset_H_
 
 //-- C++ includes
 #include <string>
@@ -48,36 +46,45 @@
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
 
+
 /**
- * @class EquiaxedPreset EquiaxedPreset.h StatsGenerator/Presets/EquiaxedPreset.h
+ * @class PrimaryRolledPreset PrimaryRolledPreset.h StatsGenerator/Presets/PrimaryRolledPreset.h
  * @brief This class will populate the various tables with the necessary values
- * to create an Equiaxed Microstructure.
+ * to create a Rolled Microstructure.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date May 23, 2011
  * @version 1.0
  */
-class EquiaxedPreset : public AbstractMicrostructurePreset
+class PrimaryRolledPreset : public AbstractMicrostructurePreset
 {
   public:
-    DREAM3D_SHARED_POINTERS(EquiaxedPreset)
-    DREAM3D_STATIC_NEW_MACRO(EquiaxedPreset)
-    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset)
-    virtual ~EquiaxedPreset();
+    DREAM3D_SHARED_POINTERS(PrimaryRolledPreset)
+    DREAM3D_STATIC_NEW_MACRO(PrimaryRolledPreset)
+    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrimaryRolledPreset)
+    virtual ~PrimaryRolledPreset();
 
+    void displayUserInputDialog();
     void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
     void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
     void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
     void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
 
+    void initializeAxisODFTableModel(SGAxisODFWidget* widget);
+
+
+    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio1)
+    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio2)
 
   protected:
-    EquiaxedPreset();
+    PrimaryRolledPreset();
 
   private:
-    EquiaxedPreset(const EquiaxedPreset&); // Copy Constructor Not Implemented
-    void operator=(const EquiaxedPreset&); // Operator '=' Not Implemented
+    PrimaryRolledPreset(const PrimaryRolledPreset&); // Copy Constructor Not Implemented
+    void operator=(const PrimaryRolledPreset&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(EquiaxedPresetFactory, EquiaxedPreset, "Equiaxed" )
+DECLARE_FACTORY_CLASS(PrimaryRolledPresetFactory, PrimaryRolledPreset, "Primary Rolled")
 
-#endif /* EQUIAXEDPRESETFACTORY_H_ */
+
+#endif /* PrimaryRolledPreset_H_ */

@@ -17,12 +17,10 @@ FindFieldClustering::FindFieldClustering() :
   m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
   m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_ClustersArrayName(DREAM3D::FieldData::Clusters),
   m_ClusteringListArrayName(DREAM3D::FieldData::ClusteringList),
   m_FieldPhases(NULL),
   m_Centroids(NULL),
   m_EquivalentDiameters(NULL),
-  m_Clusters(NULL),
   m_ClusteringList(NULL)
 {
   setupFilterParameters();
@@ -107,8 +105,6 @@ void FindFieldClustering::dataCheck(bool preflight, size_t voxels, size_t fields
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, 3)
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Clusters, int32_t, Int32ArrayType, 0, fields, 1)
 }
 
 
@@ -162,11 +158,6 @@ void FindFieldClustering::find_clustering()
 
   for (size_t i = 1; i < totalFields; i++)
   {
-    m_Clusters[i] = 0;
-  }
-
-  for (size_t i = 1; i < totalFields; i++)
-  {
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
@@ -188,9 +179,7 @@ void FindFieldClustering::find_clustering()
       yn = m_Centroids[3 * j + 1];
       zn = m_Centroids[3 * j + 2];
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
-      m_Clusters[i]++;
       clusteringlist[i].push_back(r);
-      m_Clusters[j]++;
       clusteringlist[j].push_back(r);
 
     }

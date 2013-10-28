@@ -158,13 +158,13 @@ int H5PrecipitateStatsDataDelegate::readPrecipitateStatsData(PrecipitateStatsDat
                              DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
                              data->getGrainSize_COverA());
 
-  // Read the Neighbors
-  dType = readDistributionType(groupId, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
-  data->setNeighbors_DistType(dType);
-  data->setGrainSize_Neighbors( createDistributionVector(data->getNeighbors_DistType()));
+  // Read the Clustering
+  dType = readDistributionType(groupId, DREAM3D::HDF5::Grain_SizeVClustering_Distributions);
+  data->setClustering_DistType(dType);
+  data->setGrainSize_Clustering( createDistributionVector(data->getClustering_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions,
-                             data->getGrainSize_Neighbors());
+                             DREAM3D::HDF5::Grain_SizeVClustering_Distributions,
+                             data->getGrainSize_Clustering());
 
   // Read the Omegas
   dType = readDistributionType(groupId, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
@@ -260,11 +260,11 @@ int H5PrecipitateStatsDataDelegate::writePrecipitateStatsData(PrecipitateStatsDa
                               DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
                               data->getGrainSize_COverA());
 
-  // Write the Neighbors
+  // Write the Clustering
   err = writeDistributionData(groupId,
-                              data->getNeighbors_DistType(),
-                              DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions,
-                              data->getGrainSize_Neighbors());
+                              data->getClustering_DistType(),
+                              DREAM3D::HDF5::Grain_SizeVClustering_Distributions,
+                              data->getGrainSize_Clustering());
 
   // Write the Omegas
   err = writeDistributionData(groupId,

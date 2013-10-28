@@ -73,10 +73,8 @@
 #include "DREAM3DLib/StatsData/StatsData.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
-#include "StatsGenerator/Presets/DefaultStatsPreset.h"
-#include "StatsGenerator/Presets/EquiaxedPreset.h"
-#include "StatsGenerator/Presets/RolledPreset.h"
-#include "StatsGenerator/Presets/RecrystallizedPreset.h"
+#include "StatsGenerator/Presets/PrecipitateEquiaxedPreset.h"
+#include "StatsGenerator/Presets/PrecipitateRolledPreset.h"
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
@@ -171,13 +169,13 @@ void PrecipitatePhaseWidget::setupGui()
   AbstractMicrostructurePresetFactory::Pointer presetFactory = AbstractMicrostructurePresetFactory::NullPointer();
 
   //Register the Equiaxed Preset
-  presetFactory = RegisterPresetFactory<EquiaxedPresetFactory>(microstructurePresetCombo);
+  presetFactory = RegisterPresetFactory<PrecipitateEquiaxedPresetFactory>(microstructurePresetCombo);
   QString presetName = (presetFactory->displayName());
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
   m_MicroPreset = manager->createNewPreset(presetName);
 
   // Register the Rolled Preset
-  presetFactory = RegisterPresetFactory<RolledPresetFactory>(microstructurePresetCombo);
+  presetFactory = RegisterPresetFactory<PrecipitateRolledPresetFactory>(microstructurePresetCombo);
 
   // Select the first Preset in the list
   microstructurePresetCombo->setCurrentIndex(0);
@@ -245,7 +243,7 @@ void PrecipitatePhaseWidget::setupGui()
    w->setXAxisName(QString("Distance between Centroids"));
    w->setYAxisName(QString("Frequency"));
    w->setDistributionType(DREAM3D::DistributionType::LogNormal);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVNeighbors);
+   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVClustering);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -687,7 +685,7 @@ void PrecipitatePhaseWidget::plotSizeDistribution()
   m_MicroPreset->initializeCOverATableModel(m_COverAPlot, binsizes);
 
   m_ClusteringPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeNeighborTableModel(m_ClusteringPlot, binsizes);
+  m_MicroPreset->initializeClusteringTableModel(m_ClusteringPlot, binsizes);
 
   // Get any presets for the ODF/AxisODF/MDF also
   m_MicroPreset->initializeODFTableModel(m_ODFWidget);
@@ -815,11 +813,11 @@ int PrecipitatePhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
     precipitateStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
   }
 
- // err = m_ClusteringPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
+ // err = m_ClusteringPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVClustering_Distributions);
   {
     VectorOfFloatArray data = m_ClusteringPlot->getStatisticsData();
-    precipitateStatsData->setGrainSize_Neighbors(data);
-    precipitateStatsData->setNeighbors_DistType(m_ClusteringPlot->getDistributionType());
+    precipitateStatsData->setGrainSize_Clustering(data);
+    precipitateStatsData->setClustering_DistType(m_ClusteringPlot->getDistributionType());
   }
 
 
@@ -937,8 +935,8 @@ void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, in
   m_COverAPlot->extractStatsData(m, index, qbins, precipitateStatsData->getGrainSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_ClusteringPlot->setDistributionType(precipitateStatsData->getNeighbors_DistType(), false);
-  m_ClusteringPlot->extractStatsData(m, index, qbins, precipitateStatsData->getGrainSize_Neighbors());
+  m_ClusteringPlot->setDistributionType(precipitateStatsData->getClustering_DistType(), false);
+  m_ClusteringPlot->extractStatsData(m, index, qbins, precipitateStatsData->getGrainSize_Clustering());
   m_ClusteringPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
 

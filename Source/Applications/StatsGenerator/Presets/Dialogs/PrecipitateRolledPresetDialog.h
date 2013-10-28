@@ -33,52 +33,43 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef PrecipitateRolledPresetDialog_H_
+#define PrecipitateRolledPresetDialog_H_
 
-#ifndef DEFAULTSTATSPRESET_H_
-#define DEFAULTSTATSPRESET_H_
+#include <QtGui/QDialog>
 
-//-- C++ includes
-#include <string>
-
-//-- MXA Includes
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
-//-- StatsGen Includes
-#include "AbstractMicrostructurePresetFactory.h"
-#include "AbstractMicrostructurePreset.h"
-
+class QLineEdit;
 
 /**
- * @class DefaultStatsPreset DefaultStatsPreset.h StatsGenerator/Presets/DefaultStatsPreset.h
- * @brief This class will populate the various tables with the necessary values
- * to create a Generic Microstructure.
+ * @class PrecipitateRolledPresetDialog PrecipitateRolledPresetDialog.h StatsGenerator/Presets/Dialogs/PrecipitateRolledPresetDialog.h
+ * @brief This class is a QDialog subclass that allows the user to input values
+ * that effect the generation of a default set of statistics.
  * @author Michael A. Jackson for BlueQuartz Software
- * @date May 23, 2011
+ * @date May 12, 2011
  * @version 1.0
  */
-class DefaultStatsPreset : public AbstractMicrostructurePreset
+class PrecipitateRolledPresetDialog : public QDialog
 {
+    Q_OBJECT
   public:
-    DREAM3D_SHARED_POINTERS(DefaultStatsPreset)
-    DREAM3D_STATIC_NEW_MACRO(DefaultStatsPreset)
-    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset)
-    virtual ~DefaultStatsPreset();
+    PrecipitateRolledPresetDialog(QWidget* parent = NULL);
+    virtual ~PrecipitateRolledPresetDialog();
 
-
-    void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    float getA();
+    float getB();
+    float getC();
 
   protected:
-    DefaultStatsPreset();
+    void setupGui();
 
   private:
-    DefaultStatsPreset(const DefaultStatsPreset&); // Copy Constructor Not Implemented
-    void operator=(const DefaultStatsPreset&); // Operator '=' Not Implemented
+    QLineEdit* A;
+    QLineEdit* B;
+    QLineEdit* C;
+
+
+    PrecipitateRolledPresetDialog(const PrecipitateRolledPresetDialog&); // Copy Constructor Not Implemented
+    void operator=(const PrecipitateRolledPresetDialog&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(DefaultStatsPresetFactory, DefaultStatsPreset, "Default" )
-
-
-#endif /* DEFAULTSTATSPRESET_H_ */
+#endif /* PrecipitateRolledPresetDialog_H_ */
