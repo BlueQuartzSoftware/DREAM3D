@@ -237,7 +237,12 @@ int H5CtfReader::readData(hid_t parId)
   size_t xCells = getXCells();
   size_t totalDataRows = yCells * xCells;
 
-
+  if(m_ArrayNames.size() == 0 && m_ReadAllArrays == false)
+  {
+    setErrorMessage("H5CtfReader Error: ReadAllArrays was FALSE and no other arrays were requested to be read.");
+    setErrorCode(-90013);
+    return -90013;
+  }
 
   hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toAscii().data(), H5P_DEFAULT);
   if (gid < 0)

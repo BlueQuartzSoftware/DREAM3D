@@ -349,6 +349,13 @@ void DataContainerReader::readData(bool preflight)
         return;
       }
       err = QH5Lite::readScalarAttribute(dcGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
+      if (err < 0)
+      {
+        setErrorCondition(-109283);
+        QString ss = QObject::tr("The DataContainer is missing the 'DataContainerType' attribute on the '%1' Data Container").arg(dcNames[iter]);
+        notifyErrorMessage(ss, getErrorCondition());
+        return;
+      }
       if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_ReadVolumeData == true) ||
           (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_ReadSurfaceData == true) ||
           (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_ReadEdgeData == true) ||

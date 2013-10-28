@@ -126,6 +126,15 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
   setRefFrameZDir( static_cast<Ebsd::RefFrameZDir>( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
 
 
+  // we need to support H5Ebsd Files from previous versions of DREAM3D where there was a "Voxel" data container so
+  // try reading these values. If they are there then it is an older file and it will set the appropriate values
+  setSelectedVolumeCellArrays( reader->readArraySelections("VoxelCell", getSelectedVolumeCellArrays() ) );
+  setSelectedVolumeCellFieldArrays( reader->readArraySelections("VoxelField", getSelectedVolumeCellFieldArrays() ) );
+  setSelectedVolumeCellEnsembleArrays( reader->readArraySelections("VoxelEnsemble", getSelectedVolumeCellEnsembleArrays() ) );
+
+  // If we are reading a Version 4.3 file and above then the data container names have changed and the last set of
+  // reads would have failed to read anything so those arrays are still empty. These functions will now read those
+  // arrays from the file.
   READ_ARRAY_SELECTION_PARAMETER(VolumeVertex)
   READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
   READ_ARRAY_SELECTION_PARAMETER(VolumeFace)

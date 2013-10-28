@@ -1,7 +1,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 #--
-#--  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-#--  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+#--  Copyright (c) 2013, Michael A. Jackson. BlueQuartz Software
+#--  Copyright (c) 2013, Michael Groeber, US Air Force Research Laboratory
 #--  All rights reserved.
 #--  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #--
