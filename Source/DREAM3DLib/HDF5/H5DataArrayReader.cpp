@@ -216,24 +216,35 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
     {
       return ptr;
     }
+    int version = 0;
     int numComp = 1;
-    int arrayRank = 1;
-    QVector<int> arrayDims;
+    err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::DataArrayVersion, version);
+    if(err < 0)
+    {
+      version = 1;
+    }
+
+    int numTuples =dims[0];
+    if(version >= 2)
+    {
+      dims.pop_front();
+    }
+    else
+    {
+      dims.pop_front();
+      if(dims.size() == 0) dims.push_back(1);
+    }
+
+    QVector<int> arrayDims(dims.size());
+    for(int i=0;i<dims.size();i++)
+    {
+      arrayDims[i] = dims[i];
+    }
+
     err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
     if (err < 0)
     {
       numComp = 1;
-    }
-    err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::Rank, arrayRank);
-    if (err < 0)
-    {
-      arrayRank = 1;
-    }
-    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::Dims, arrayDims);
-    if (err < 0)
-    {
-      arrayDims.resize(1);
-      arrayDims[0] = numComp;
     }
     // Check to see if we are reading a bool array and if so read it and return
     if (classType.compare("DataArray<bool>") == 0)
