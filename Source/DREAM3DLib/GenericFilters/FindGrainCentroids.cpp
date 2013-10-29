@@ -96,8 +96,66 @@ void FindGrainCentroids::dataCheck(bool preflight, size_t voxels, size_t fields,
   QVector<int> dims(1, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, float, FloatArrayType, 0, fields, dims)
 
+#if 1
+  {\
+    if (m_CentroidsArrayName.isEmpty() == true)\
+    {\
+      setErrorCondition(-10000);\
+      QString ss = QObject::tr("The name of the array for the "  "DREAM3D"    "CellFieldData"    "Centroids" " was empty. Please provide a name for this array.");\
+      addErrorMessage(getHumanLabel(), ss, -10000);\
+    }\
+    /* QString _s(#Name);*/\
+    int NumComp = dims[0];\
+    for(int i=1;i<dims.size();i++){\
+    NumComp *= dims[i];\
+    }\
+    m_Centroids = m->getCellFieldDataSizeCheck<float, FloatArrayType, AbstractFilter>(m_CentroidsArrayName, fields, NumComp, 0);\
+    if (0 ==  m_Centroids ) \
+    {\
+      FloatArrayType::Pointer p = FloatArrayType::CreateArray(fields, dims, m_CentroidsArrayName);\
+      if (0 == p.get()) \
+      {\
+        QString ss;\
+        if (m_CentroidsArrayName.isEmpty() == true) \
+        {\
+          ss = QObject::tr("Filter %1 attempted to create array with an empty name and that is not allowed.").arg(getNameOfClass());\
+          setErrorCondition(-501);\
+        } else {\
+           ss = QObject::tr("Filter %1 attempted to create array' %2' but was unsuccessful. This is most likely due to not enough contiguous memory.").arg(getNameOfClass()).arg(m_CentroidsArrayName);\
+          setErrorCondition(-500);\
+        }\
+        addErrorMessage(getHumanLabel(), ss, -50001);\
+      } \
+      else if (p->getPointer(0) == 0)\
+      {\
+        setErrorCondition(-11000);\
+        QString ss = QObject::tr("'%1' was sized to Zero which may cause the program to crash in filters that use this array, including the current filter."\
+          " Please add a filter before this filter that will result in a properly sized array.").arg(m_CentroidsArrayName);\
+        addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
+      }\
+      else {\
+        p->initializeWithValues(0);\
+        p->SetNumberOfComponents(NumComp);\
+        p->SetName(m_CentroidsArrayName);\
+        m->addCellFieldData(m_CentroidsArrayName, p);\
+        m_Centroids = p->getPointer(0);\
+        CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();\
+        e->setFilterName(this->getNameOfClass());\
+        e->setFilterHumanLabel(this->getHumanLabel());\
+        e->setFilterGroup(this->getGroupName());\
+        e->setFilterSubGroup(this->getSubGroupName());\
+        e->setArrayDefaultName(m_CentroidsArrayName);\
+        e->setArrayGroup("CellFieldData");\
+        e->setArrayNumComponents(NumComp);\
+        e->setArrayType("FloatArrayType");\
+        addCreatedArrayHelpIndexEntry(e);\
+      }\
+    }\
+  }
+#else
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, float, FloatArrayType, 0, fields, dims)
+#endif
 }
 
 
