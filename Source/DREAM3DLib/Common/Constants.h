@@ -301,6 +301,7 @@ namespace DREAM3D
     const DREAM3D_STRING CrystalStructure("CrystalStructure");
     const DREAM3D_STRING DataContainerName("DataContainers");
     const DREAM3D_STRING DataContainerType("DataContainerType");
+    const DREAM3D_STRING DataArrayVersion("DataArrayVersion");
     const DREAM3D_STRING Dims("Dims");
     const DREAM3D_STRING DistributionType("Distribution Type");
     const DREAM3D_STRING EdgeDataContainerName("EdgeDataContainer");

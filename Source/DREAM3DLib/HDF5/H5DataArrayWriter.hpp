@@ -58,23 +58,18 @@ class H5DataArrayWriter
   public:
     virtual ~H5DataArrayWriter() {}
 
-    static int writeArray(hid_t gid, const QString& name, size_t numTuples, int numComp, int arrayRank, QVector<int> arrayDims, T* data, const QString& className)
+    static int writeArray(hid_t gid, const QString& name, size_t numTuples, int numComp, int arrayRank, QVector<int> arrayDims, int dataArrayVersion, T* data, const QString& className)
     {
-      int32_t rank = 0;
-      if(numComp == 1)
+      QVector<hsize_t> dims(arrayRank+1,0);
+      dims[0] = numTuples;
+      for(int i=1;i<dims.size();i++)
       {
-        rank = 1;
+        dims[i] = arrayDims[i-1];
       }
-      else
-      {
-        rank = 2;
-      }
-
-      hsize_t dims[2] = { static_cast<hsize_t>(numTuples), static_cast<hsize_t>(numComp) };
       int err = 0;
       if (QH5Lite::datasetExists(gid, name) == false)
       {
-        err = QH5Lite::writePointerDataset(gid, name, rank, dims, data);
+        err = QH5Lite::writePointerDataset(gid, name, dims.size(), dims.data(), data);
         if(err < 0)
         {
           return err;
@@ -85,18 +80,11 @@ class H5DataArrayWriter
       {
         return err;
       }
-      err = QH5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::Rank, arrayRank);
+      err = QH5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::DataArrayVersion, dataArrayVersion);
       if(err < 0)
       {
         return err;
       }
-      QVector<hsize_t> d(rank, 1);
-      err = QH5Lite::writeVectorAttribute(gid, name, DREAM3D::HDF5::Dims, d, arrayDims);
-      if(err < 0)
-      {
-        return err;
-      }
-
       err = QH5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
       if(err < 0)
       {

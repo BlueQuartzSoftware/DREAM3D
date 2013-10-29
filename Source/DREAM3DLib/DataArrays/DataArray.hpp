@@ -873,7 +873,7 @@ class DataArray : public IDataArray
     virtual int writeH5Data(hid_t parentId)
     {
       if (Array == NULL) { return -85648; }
-      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), GetRank(), GetDims(), Array, getFullNameOfClass());
+      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), GetRank(), GetDims(), getClassVersion(), Array, getFullNameOfClass());
     }
 
     /**

@@ -404,7 +404,7 @@ class StringDataArray : public IDataArray
       }
 
       QVector<int> dim(1, 1);
-      return H5DataArrayWriter<int8_t>::writeArray(parentId, GetName(), totalSize, 1, 1, dim, strPtr->getPointer(0), getFullNameOfClass());
+      return H5DataArrayWriter<int8_t>::writeArray(parentId, GetName(), totalSize, 1, 1, dim, getClassVersion(), strPtr->getPointer(0), getFullNameOfClass());
     }
 
     /**
