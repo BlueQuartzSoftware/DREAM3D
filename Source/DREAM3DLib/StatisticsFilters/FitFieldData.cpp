@@ -171,8 +171,8 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   T* fPtr = fieldArray->getPointer(0);
   float* ePtr = ensembleArray->getPointer(0);
 
-  float max;
-  float min;
+  //float max;
+  //float min;
   QVector<FloatArrayType::Pointer> dist;
   QVector<QVector<float > > values;
 
@@ -187,7 +187,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
     values[i].resize(1);
   }
 
-  float vol;
+  //float vol;
   for (size_t i = 1; i < numgrains; i++)
   {
     if(removeBiasedFields == false || biasedFields[i] == false)

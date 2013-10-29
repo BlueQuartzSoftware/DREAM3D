@@ -82,7 +82,7 @@ QMap<QString, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
 // -----------------------------------------------------------------------------
 void copyFile(const QString &src, const QString &dest)
 {
-  if (src.isEmpty() == true | dest.isEmpty() == true)
+  if (src.isEmpty() == true || dest.isEmpty() == true)
   {
     BOOST_ASSERT(false);
   }
@@ -126,7 +126,7 @@ QString Md5OfFile(QString filePath)
 void extractHelpIndexEntries(AbstractFilter* filter)
 {
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  
+
   VolumeDataContainer::Pointer vol = VolumeDataContainer::New();
   SurfaceDataContainer::Pointer surf = SurfaceDataContainer::New();
   EdgeDataContainer::Pointer edg = EdgeDataContainer::New();

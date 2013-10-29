@@ -41,11 +41,12 @@
 #include <QtCore/QString>
 
 #include "H5Support/QH5Lite.h"
-//#include "DREAM3DLib/HDF5/VTKH5Constants.h"
+
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
-
-
+#if 0
 template<typename T>
 class H5ArrayWriter
 {
@@ -79,7 +80,12 @@ class H5ArrayWriter
       {
         return err;
       }
-      return err;;
+      err = QH5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, dataArray->getFullNameOfClass());
+      if(err < 0)
+      {
+        return err;
+      }
+      return err;
     }
 
 
@@ -92,7 +98,7 @@ class H5ArrayWriter
     void operator=(const H5ArrayWriter&); // Operator '=' Not Implemented
 
 };
-
+#endif
 
 
 /**
@@ -102,12 +108,50 @@ class H5ArrayWriter
  * @date Jan 22, 2012
  * @version 1.0
  */
-template<typename T>
+
 class H5DataArrayWriter
 {
   public:
     virtual ~H5DataArrayWriter() {}
 
+    template<class T>
+    static int writeDataArray(hid_t gid, T* dataArray)
+    {
+      int err = 0;
+      hsize_t localRank = dataArray->GetRank() + 1;
+      QVector<hsize_t> dims(localRank, 0 );
+
+      if (QH5Lite::datasetExists(gid, dataArray->GetName()) == false)
+      {
+        err = QH5Lite::writePointerDataset(gid, dataArray->GetName(), localRank, dims.data(), dataArray->getPointer(0));
+        if(err < 0)
+        {
+          return err;
+        }
+      }
+
+      err = QH5Lite::writeScalarAttribute(gid, dataArray->GetName(), DREAM3D::HDF5::NumComponents, dataArray->GetNumberOfComponents());
+      if(err < 0)
+      {
+        return err;
+      }
+
+      err = QH5Lite::writeScalarAttribute(gid, dataArray->GetName(), DREAM3D::HDF5::DataArrayVersion, dataArray->getClassVersion());
+      if(err < 0)
+      {
+        return err;
+      }
+      err = QH5Lite::writeStringAttribute(gid, dataArray->GetName(), DREAM3D::HDF5::ObjectType, dataArray->getFullNameOfClass());
+      if(err < 0)
+      {
+        return err;
+      }
+
+      return err;
+    }
+
+
+    template<typename T>
     static int writeArray(hid_t gid, const QString& name, size_t numTuples, int numComp, int arrayRank, QVector<int> arrayDims, int dataArrayVersion, T* data, const QString& className)
     {
       QVector<hsize_t> dims(arrayRank+1,0);
