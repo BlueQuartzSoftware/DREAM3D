@@ -224,22 +224,20 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
       version = 1;
     }
 
-    int numTuples =dims[0];
-    if(version >= 2)
+    int numTuples = dims[0];
+
+    QVector<int> arrayDims(dims.size()-1);
+    if(version < 2 && arrayDims.size() == 0)
     {
-      dims.pop_front();
+      arrayDims.resize(1);
+      arrayDims[0] = 1;
     }
-    else
+    for(int i=1;i<dims.size();i++)
     {
-      dims.pop_front();
-      if(dims.size() == 0) dims.push_back(1);
+      arrayDims[i-1] = dims[i];
     }
 
-    QVector<int> arrayDims(dims.size());
-    for(int i=0;i<dims.size();i++)
-    {
-      arrayDims[i] = dims[i];
-    }
+
 
     err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
     if (err < 0)

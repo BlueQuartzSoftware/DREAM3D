@@ -120,6 +120,12 @@ class H5DataArrayWriter
       int err = 0;
       hsize_t localRank = dataArray->GetRank() + 1;
       QVector<hsize_t> dims(localRank, 0 );
+      dims[0] = dataArray->getNumberOfTuples();
+      QVector<int> arrayDims = dataArray->GetDims();
+      for(int i=1;i<dims.size();i++)
+      {
+        dims[i] = arrayDims[i-1];
+      }
 
       if (QH5Lite::datasetExists(gid, dataArray->GetName()) == false)
       {
