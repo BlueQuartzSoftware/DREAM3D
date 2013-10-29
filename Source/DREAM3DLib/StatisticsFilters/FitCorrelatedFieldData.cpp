@@ -199,8 +199,8 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   float* ePtr = ensembleArray->getPointer(0);
   int32_t* bPtr = binArray->getPointer(0);
 
-  float max;
-  float min;
+  //float max;
+  //float min;
   QVector<VectorOfFloatArray> dist;
   QVector<QVector<QVector<float > > > values;
 

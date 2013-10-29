@@ -876,7 +876,7 @@ class DataArray : public IDataArray
       #if 0
   return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), GetRank(), GetDims(), getClassVersion(), Array, getFullNameOfClass());
       #else
-        return H5ArrayWriter<Self>::writeArray(parentId, this);
+        return H5DataArrayWriter::writeDataArray<Self>(parentId, this);
       #endif
     }
 
