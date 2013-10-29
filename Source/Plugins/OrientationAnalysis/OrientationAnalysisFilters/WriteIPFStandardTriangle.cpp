@@ -146,7 +146,7 @@ void WriteIPFStandardTriangle::readFilterParameters(AbstractFilterParametersRead
 {
   reader->openFilterGroup(this, index);
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setOutputFile( reader->readValue("OutputFile", getOutputFile()));
+  setOutputFile( reader->readString("OutputFile", getOutputFile()));
   setImageFormat( reader->readValue("ImageFormat", getImageFormat()));
   setImageSize( reader->readValue("ImageSize", getImageSize()));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/

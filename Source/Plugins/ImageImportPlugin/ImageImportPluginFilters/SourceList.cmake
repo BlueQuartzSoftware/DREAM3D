@@ -37,7 +37,7 @@ set(_PrivateFilters
 #-----------------
 # Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.
 foreach(f ${_PrivateFilters} )
-  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+  ADD_DREAM3D_FILTER(  "ImageImportPlugin" "ImageImportPlugin"
                         ${_filterGroupName} ${f}
                         ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
 endforeach()
