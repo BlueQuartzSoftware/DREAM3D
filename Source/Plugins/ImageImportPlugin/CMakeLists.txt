@@ -142,6 +142,8 @@ target_link_libraries(${PLUGIN_NAME}FilterLib
                     ${QT_QTGUI_LIBRARY}
                     DREAM3DLib
                     )
+SET_TARGET_PROPERTIES(${PLUGIN_NAME}FilterLib
+                      PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
 # --------------------------------------------------------------------
 # Add the FilterWidgetCodeGen program for this plugin. The program generates
 # all the GUI widgets for each filter
@@ -156,7 +158,8 @@ target_link_libraries(${PLUGIN_NAME}WidgetCodeGen
                                   QtSupport
                                   ${PLUGIN_NAME}FilterLib
                                   )
-
+SET_TARGET_PROPERTIES(${PLUGIN_NAME}WidgetCodeGen
+                      PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
 
 # Now run the code to generate the header files which will over write the place
 # holder files that were generated from above
@@ -266,7 +269,8 @@ if(TARGET PipelineBuilderLib)
                       QtSupport
                       PipelineBuilderLib
                       )
-
+  SET_TARGET_PROPERTIES(${PLUGIN_NAME}
+                      PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
 
   # --------------------------------------------------------------------
   # This is a special section for this plugin which requires the Qt based
