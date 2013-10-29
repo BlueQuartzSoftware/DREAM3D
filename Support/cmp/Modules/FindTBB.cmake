@@ -25,7 +25,7 @@
 # TBB_DEBUG_LIBRARIES, the libraries to link against to use TBB with debug symbols.
 # TBB_FOUND, If false, don't try to use TBB.
 
-set(TBB_DEBUG 1)
+set(TBB_DEBUG 0)
 
 
 # $ENV{TBB_ARCH_PLATFORM} is set by the build script tbbvars[.bat|.sh|.csh]
