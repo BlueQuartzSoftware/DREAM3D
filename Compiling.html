@@ -16,27 +16,27 @@ from the United Stated Air Force Research Laboratories.
 Michael A. Jackson
 BlueQuartz Software
 http://www.bluequartz.net
-mike.jackson@bluequartz.net
+dream3d@bluequartz.net
 </pre>
 
 The software contained in this project requires the following third party libraries:
 <ul>
-<li>CMake (www.cmake.org) Version 2.8.6 or greater</li>
+<li>CMake (www.cmake.org) Version 2.8.12 or greater</li>
 <li>Boost (www.boost.org) Version 1.44 or greater</li>
-<li>Qt (www.qtsoftware.com) Version 4.7.x or greater</li>
-<li>Qwt (qwt.sourceforge.net) Version 5.2.2 ONLY</li>
-<li>HDF5 (www.hdfgroup.org) Version 1.8.x ONLY</li>
+<li>Qt (www.qtsoftware.com) Version 4.8.4 ONLY. NOT Qt Version 5</li>
+<li>Qwt (qwt.sourceforge.net) Version 5.2.2 or Greater</li>
+<li>HDF5 (www.hdfgroup.org) Version 1.8.11 or Greater</li>
 </ul>
 
 <h3>CMake</h3>
    You will need to install CMake from <a href="http://www.cmake.org">www.cmake.org</a> in 
 order to configure the source codes for your operating system and compiler tools. Simply 
 download CMake from the website and use the installer to install CMake onto your system.
-The minimum version of CMake that is needed is <b>Version 2.8.6</b>.
+The minimum version of CMake that is needed is <b>Version 2.8.12</b>.
 
 
 <h3>HDF5</h3>
-The minimal version needed is HDF5 Version 1.8. <p>
+The minimal version needed is HDF5 Version 1.8.11 <p>
   Download and compile HDF5 and install on your system somewhere.
 
 
@@ -55,11 +55,11 @@ the boost source distribution.
 <h4>Windows Command Prompt invocation to compile Boost</h4>
  Note that in the following command, the <tt>"toolset=xxxxx"</tt> should match the version of Visual Studio that you have installed on your system.
 <ul>
-<li>  Visual Studio 2003.Net ==> msvc-7.1</li>
-<li>  Visual Studio 2005     ==> msvc-8.0</li>
 <li>  Visual Studio 2008     ==> msvc-9.0</li>
 <li>  Visual Studio 2010     ==> msvc-10.0</li>
-  </ul>
+<li>  Visual Studio 2012     ==> msvc-11.0</li>
+<li>  Visual Studio 2013     ==> msvc-12.0</li>
+</ul>
 Also pay attention to the "prefix" option as that is where the final boost headers
 and libraries will be installed into.
 <p>
@@ -87,12 +87,12 @@ configure itself.
 
 <h3>Qt</h3>
 Typically the latest version of Qt is compatible with the code although for reference the
-development code was written using Qt version 4.6.3 where Qt Version 4.7.1 is current
+development code was written using Qt version 4.8.4 where Qt Version 4.8.4 is current
 as of this writing.
 <p>
-Download the source code for Qt from <a href="http://www.qtsoftware.com">Nokia</a>. For versions starting with 4.6 the file
-is in a single archive file "qt-everywhere-opensource-src-4.6.0.tar". You may have
-to download the source from ftp.nokia.com/qt/source in order to get a specific 
+Download the source code for Qt from <a href="http://www.qtsoftware.com">Nokia</a>. For versions starting with 4.8.4 the file
+is in a single archive file "qt-everywhere-opensource-src-4.8.4.tar.gz". You may have
+to download the source from pt-project.org in order to get a specific
 version of the sources.
 <p>
 Uncompress the source codes and open either <b>Terminal.app</b> on OS X, an <b>XTerm</b> on Linux 
@@ -103,7 +103,7 @@ operating system.
 <h5>WINDOWS SPECIAL NOTE</h5> You should locate the Qt source code directory in its FINAL
 location on your file system including any naming of the top level directory. For
 instance on the development system the Qt libraries are compiled into
-C:\Developer\i386\Qt-4.6.1 for the 32 bit version and C:\Developer\x64\Qt-4.6.1
+C:\Developer\i386\Qt-4.8.4 for the 32 bit version and C:\Developer\x64\Qt-4.8.4
 for the 64 bit version.
 <h5>WINDOWS SPECIAL NOTE II</h5> In order to compile a 64 bit version of Qt you MUST be
 running a 64 bit version of Windows. This is because during the compilation, the
@@ -136,8 +136,8 @@ build Qwt.
 
 <h3>Compiling DREAM3D Sources</h3>
 When the sources become public it is expected that you will be able to download the sources
-from the following web site: <a href="http://dream3d.bluequartz.net/">
-http://dream3d.bluequartz.net</a>.
+from the following web site: <a href="http://www.github.com/dream3d/DREAM3D">
+http://www.github.com/dream3d/DREAM3D</a>.
 <p>
 <p>
 Once the source codes are downloaded onto your system launch "CMake-Gui.exe" (Windows) or 
@@ -155,10 +155,10 @@ Trust me on that.<p>
 more easily find all the dependent libraries. Each of the variables points to the top
 most directory of that particular installation or to a particular executable.
 <ul>
-<li><b>HDF5_INSTALL</b>:<i>/Users/Shared/Toolkits/hdf5-187</i></li>
+<li><b>HDF5_INSTALL</b>:<i>/Users/Shared/Toolkits/hdf5-1.8.11</i></li>
 <li><b>BOOST_ROOT</b>:<i>/Users/Shared/Toolkits/MXABoost-1.44</i></li>
 <li><b>QWT_INSTALL</b>:<i>/Users/Shared/Toolkits/Qwt-5.2.2</i></li>
-<li><b>QT_QMAKE_EXECUTABLE</b>:<i>/Users/Shared/Toolkits/Qt-4.7.3-Cocoa/bin/qmake</i></li>
+<li><b>QT_QMAKE_EXECUTABLE</b>:<i>/Users/Shared/Toolkits/Qt-4.8.4/bin/qmake</i></li>
 </ul>  
   
   After those are filled out click the "Configure" button. A new window will appear
