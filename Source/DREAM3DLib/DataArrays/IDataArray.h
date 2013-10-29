@@ -73,6 +73,8 @@ class DREAM3DLib_EXPORT IDataArray
     virtual Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name) = 0;
     virtual Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name) = 0;
 
+    virtual int getClassVersion() = 0;
+
     /**
      * @brief Has all the memory needed for this class been allocated?
      */

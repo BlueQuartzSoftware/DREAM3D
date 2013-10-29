@@ -86,6 +86,7 @@ class DataArray : public IDataArray
 
     DREAM3D_SHARED_POINTERS(DataArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(DataArray<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     typedef QVector<Pointer>   ContainterType;
 
@@ -1013,8 +1014,8 @@ class DataArray : public IDataArray
     /**
      * @brief Protected Constructor
      * @param numTuples The number of elements in the internal array.
-     * @param rank The number of dimensions the attribute on each Tuple has. 
-     * @param dims The actual dimensions the attribute on each Tuple has. 
+     * @param rank The number of dimensions the attribute on each Tuple has.
+     * @param dims The actual dimensions the attribute on each Tuple has.
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     DataArray(size_t numTuples, int rank, int* dims, bool ownsData = true) :
@@ -1039,8 +1040,8 @@ class DataArray : public IDataArray
     /**
      * @brief Protected Constructor
      * @param numTuples The number of elements in the internal array.
-     * @param rank The number of dimensions the attribute on each Tuple has. 
-     * @param dims The actual dimensions the attribute on each Tuple has. 
+     * @param rank The number of dimensions the attribute on each Tuple has.
+     * @param dims The actual dimensions the attribute on each Tuple has.
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     DataArray(size_t numTuples, int rank, std::vector<int> dims, bool ownsData = true) :
@@ -1065,8 +1066,8 @@ class DataArray : public IDataArray
     /**
      * @brief Protected Constructor
      * @param numTuples The number of elements in the internal array.
-     * @param rank The number of dimensions the attribute on each Tuple has. 
-     * @param dims The actual dimensions the attribute on each Tuple has. 
+     * @param rank The number of dimensions the attribute on each Tuple has.
+     * @param dims The actual dimensions the attribute on each Tuple has.
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     DataArray(size_t numTuples, int rank, QVector<int> dims, bool ownsData = true) :

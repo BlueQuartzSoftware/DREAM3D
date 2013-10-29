@@ -47,6 +47,7 @@ class ManagedArrayOfArrays : public IDataArray
   public:
     DREAM3D_SHARED_POINTERS(ManagedArrayOfArrays<T> )
     DREAM3D_TYPE_MACRO_SUPER(ManagedArrayOfArrays<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     typedef struct
     {
@@ -239,7 +240,7 @@ class ManagedArrayOfArrays : public IDataArray
     void initializeWithValues(T value)
     {
       BOOST_ASSERT(false);
-      
+
       //      for (size_t i = 0; i < this->Size; i++)
 //      {
 //        // Free each Pointer in each of the structures first

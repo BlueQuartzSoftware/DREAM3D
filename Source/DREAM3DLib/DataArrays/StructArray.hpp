@@ -50,6 +50,7 @@ class StructArray : public IDataArray
   public:
     DREAM3D_SHARED_POINTERS(StructArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(StructArray<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     /**
      * @brief Static constructor

@@ -58,6 +58,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     DREAM3D_SHARED_POINTERS(StatsDataArray)
     DREAM3D_STATIC_NEW_MACRO(StatsDataArray)
     DREAM3D_TYPE_MACRO_SUPER(StatsDataArray, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     virtual ~StatsDataArray();
 

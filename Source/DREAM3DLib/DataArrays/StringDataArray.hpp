@@ -60,6 +60,7 @@ class StringDataArray : public IDataArray
   public:
     DREAM3D_SHARED_POINTERS(StringDataArray )
     DREAM3D_TYPE_MACRO_SUPER(StringDataArray, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     static Pointer CreateArray(size_t numElements, const QString& name)
     {

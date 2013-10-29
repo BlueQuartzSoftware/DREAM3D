@@ -67,6 +67,7 @@ class GbcdDataArray : public IDataArray
 
     DREAM3D_SHARED_POINTERS(GbcdDataArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(GbcdDataArray<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     typedef QVector<Pointer>   ContainterType;
 
