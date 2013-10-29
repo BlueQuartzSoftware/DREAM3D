@@ -874,7 +874,7 @@ class DataArray : public IDataArray
     {
       if (Array == NULL) { return -85648; }
       #if 0
-      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), GetRank(), GetDims(), Array, getFullNameOfClass());
+  return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), GetRank(), GetDims(), getClassVersion(), Array, getFullNameOfClass());
       #else
         return H5ArrayWriter<Self>::writeArray(parentId, this);
       #endif

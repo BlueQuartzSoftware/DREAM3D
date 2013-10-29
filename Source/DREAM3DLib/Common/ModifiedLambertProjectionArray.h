@@ -54,6 +54,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     DREAM3D_SHARED_POINTERS(ModifiedLambertProjectionArray)
     DREAM3D_STATIC_NEW_MACRO(ModifiedLambertProjectionArray)
     DREAM3D_TYPE_MACRO_SUPER(ModifiedLambertProjectionArray, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     virtual ~ModifiedLambertProjectionArray();
 

@@ -230,7 +230,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
       for(int k =0; k < numComp; k++)
       {
         VectorOfFloatArray data = dist[i];
-        ePtr[(numComp*numBins*i)+(numComp*j)+k] = data[j]->GetValue(k);
+        ePtr[(numComp*numBins*i)+(numComp*j)+k] = data[k]->GetValue(j);
       }
     }
   }
@@ -364,7 +364,7 @@ void FitCorrelatedFieldData::execute()
   }
 
   // fit the data
-  inputData->getTypeAsString();
+  dType = inputData->getTypeAsString();
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {

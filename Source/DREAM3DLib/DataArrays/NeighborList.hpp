@@ -70,6 +70,7 @@ class NeighborList : public IDataArray
     DREAM3D_SHARED_POINTERS(NeighborList<T> )
     DREAM3D_STATIC_NEW_MACRO(NeighborList<T> )
     DREAM3D_TYPE_MACRO_SUPER(NeighborList<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
