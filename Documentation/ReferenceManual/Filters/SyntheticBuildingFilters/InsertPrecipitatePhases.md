@@ -17,7 +17,7 @@ If there are precipitate phases in the Statistics file, then this filter will pl
 
 
 ## Required DataContainers ##
-Voxel
+Volume
 
 ## Required Arrays ##
 ## Required Arrays ##
@@ -29,7 +29,8 @@ Voxel
 | Cell | SurfaceVoxels |  |  | Find Boundary Cells (Generic) |
 | Ensemble | PhaseTypes | Enumeration (int) specifying the type of phase of each Ensemble/phase (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4) |  | Intialize Synthetic Volume (SyntheticBuilding), Generate Ensemble Statistics (Statistics) |
 | Ensemble | ShapeTypes |  |  | Initialize Synthetic Volume (SyntheticBuilding) |
-| Ensemble | Statistics |  |  | Generate Ensemble Statistics (Statistics), StatsGenerator Application |
+| Ensemble | Statistics |  |  | Generate Ensemble Statistics (Statistics), StatsGenerator Application |  
+| Field | ClusteringList | The centroid to centroid distances of all the phase of interest field to all of its other fields. | This field is a NeighborList. | Find Field Clustering (Statistics), StatsGenerator Application |
 
 ## Created Arrays ##
 
