@@ -25,7 +25,7 @@
 # TBB_DEBUG_LIBRARIES, the libraries to link against to use TBB with debug symbols.
 # TBB_FOUND, If false, don't try to use TBB.
 
-set(TBB_DEBUG 0)
+set(TBB_DEBUG 1)
 
 
 # $ENV{TBB_ARCH_PLATFORM} is set by the build script tbbvars[.bat|.sh|.csh]
@@ -40,7 +40,7 @@ if(NOT "$ENV{TBB_ARCH_TYPE}" STREQUAL "" AND "${TBB_ARCH_TYPE}" STREQUAL "")
 endif()
 
 if(TBB_DEBUG)
-	message(STATUS "TBB Environment Variables")
+	message(STATUS "**** TBB Environment Variables")
 	message(STATUS "TBB_INSTALL_DIR: ${TBB_INSTALL_DIR}")
 	message(STATUS "TBB_ARCH_TYPE: ${TBB_ARCH_TYPE}")
 	message(STATUS "TBB_ARCH_PLATFORM: ${TBB_ARCH_PLATFORM}")
@@ -49,19 +49,6 @@ endif()
 # Figure out the TBB_ARCH_PLATFORM on Windows. Note that we only support
 # visual studio 9, 10, 11
 if(WIN32 AND "${TBB_ARCH_PLATFORM}" STREQUAL "" )
-	
-	set(TBB_ARCH_TYPE "ia32")
-	if( "${CMAKE_SIZEOF_VOID_P}" EQUAL "8" )
-		set(TBB_ARCH_TYPE "intel64")
-	endif()
-    # has intel64/vc8   intel64/vc9
-    # has ia32/vc7.1  ia32/vc8   ia32/vc9
-    set(_TBB_DEFAULT_INSTALL_DIR "C:/Program Files/Intel/TBB" "C:/Program Files (x86)/Intel/TBB")
-    set(_TBB_LIB_NAME "tbb")
-    set(_TBB_LIB_MALLOC_NAME "${_TBB_LIB_NAME}malloc")
-    set(_TBB_LIB_DEBUG_NAME "${_TBB_LIB_NAME}_debug")
-    set(_TBB_LIB_MALLOC_DEBUG_NAME "${_TBB_LIB_MALLOC_NAME}_debug")
-
     if(MSVC90)
          set(TBB_ARCH_PLATFORM "${TBB_ARCH_TYPE}/vc9")
     endif(MSVC90)
@@ -74,6 +61,20 @@ if(WIN32 AND "${TBB_ARCH_PLATFORM}" STREQUAL "" )
     if(NOT TBB_ARCH_PLATFORM)
         message("ERROR: TBB supports only VC  9, 10 and 11 compilers on Windows platforms.")
     endif(NOT TBB_ARCH_PLATFORM)
+endif()
+
+if(WIN32 AND NOT "${TBB_ARCH_PLATFORM}" STREQUAL "")
+	set(TBB_ARCH_TYPE "ia32")
+	if( "${CMAKE_SIZEOF_VOID_P}" EQUAL "8" )
+		set(TBB_ARCH_TYPE "intel64")
+	endif()
+    # has intel64/vc8   intel64/vc9
+    # has ia32/vc7.1  ia32/vc8   ia32/vc9
+    set(_TBB_DEFAULT_INSTALL_DIR "C:/Program Files/Intel/TBB" "C:/Program Files (x86)/Intel/TBB")
+    set(_TBB_LIB_NAME "tbb")
+    set(_TBB_LIB_MALLOC_NAME "${_TBB_LIB_NAME}malloc")
+    set(_TBB_LIB_DEBUG_NAME "${_TBB_LIB_NAME}_debug")
+    set(_TBB_LIB_MALLOC_DEBUG_NAME "${_TBB_LIB_MALLOC_NAME}_debug")
 endif()
 
 if(UNIX)
@@ -155,7 +156,7 @@ if(NOT TBB_INSTALL_DIR)
 endif(NOT TBB_INSTALL_DIR)
 
 if(TBB_DEBUG)
-	message(STATUS "TBB Variables Calculated")
+	message(STATUS "*** TBB Variables Calculated")
 	message(STATUS "TBB_INSTALL_DIR: ${TBB_INSTALL_DIR}")
 	message(STATUS "TBB_ARCH_PLATFORM: ${TBB_ARCH_PLATFORM}")
 	message(STATUS "TBB_ARCH_TYPE: ${TBB_ARCH_TYPE}")
@@ -226,7 +227,7 @@ set(TBB_MALLOC_INCLUDE_DIR ${TBB_INCLUDE_DIR})
 cmp_ADJUST_LIB_VARS(TBB_MALLOC)
 
 if(TBB_DEBUG)
-	message(STATUS "TBB Internal Variables ")
+	message(STATUS "*** TBB Internal Variables ")
     message(STATUS "_TBB_LIB_NAME: ${_TBB_LIB_NAME}")
     message(STATUS "_TBB_LIB_DEBUG_NAME: ${_TBB_LIB_DEBUG_NAME}")
 	message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
