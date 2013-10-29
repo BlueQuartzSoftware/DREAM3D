@@ -217,10 +217,23 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
       return ptr;
     }
     int numComp = 1;
+    int arrayRank = 1;
+    QVector<int> arrayDims;
     err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
     if (err < 0)
     {
       numComp = 1;
+    }
+    err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::Rank, arrayRank);
+    if (err < 0)
+    {
+      arrayRank = 1;
+    }
+    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::Dims, arrayDims);
+    if (err < 0)
+    {
+      arrayDims.resize(1);
+      arrayDims[0] = 1;
     }
     // Check to see if we are reading a bool array and if so read it and return
     QVector<int> dim(1, numComp);

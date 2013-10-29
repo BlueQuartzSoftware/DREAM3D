@@ -198,6 +198,40 @@ class StringDataArray : public IDataArray
       return 1;
     }
 
+    // Description:
+    // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
+    // this is set before allocation.
+    void SetRank(int rnk)
+    {
+
+    }
+
+    /**
+     * @brief GetRank
+     * @return
+     */
+    int GetRank()
+    {
+      return 1;
+    }
+
+    // Description:
+    // Set/Get the dimensions of the array.
+    void SetDims(QVector<int> dims)
+    {
+
+    }
+
+    /**
+     * @brief GetDims
+     * @return
+     */
+    QVector<int> GetDims()
+    {
+      QVector<int> dims(1, 1);
+      return dims;
+    }
+
     /**
      * @brief Returns the number of bytes that make up the data type.
      * 1 = char
@@ -368,7 +402,8 @@ class StringDataArray : public IDataArray
         str = str + m_Array[i].size() + 1;
       }
 
-      return H5DataArrayWriter<int8_t>::writeArray(parentId, GetName(), totalSize, 1, strPtr->getPointer(0), getFullNameOfClass());
+      QVector<int> dim(1, 1);
+      return H5DataArrayWriter<int8_t>::writeArray(parentId, GetName(), totalSize, 1, 1, dim, strPtr->getPointer(0), getFullNameOfClass());
     }
 
     /**

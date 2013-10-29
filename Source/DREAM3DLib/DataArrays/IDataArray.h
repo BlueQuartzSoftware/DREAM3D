@@ -111,8 +111,14 @@ class DREAM3DLib_EXPORT IDataArray
      */
     virtual size_t GetSize() = 0;
 
-    virtual void SetNumberOfComponents(int nc)  = 0;
-    virtual int GetNumberOfComponents()  = 0;
+    virtual void SetNumberOfComponents(int nc) = 0;
+    virtual int GetNumberOfComponents() = 0;
+
+    virtual void SetRank(int rnk) = 0;
+    virtual int GetRank() = 0;
+
+    virtual void SetDims(QVector<int> rnk) = 0;
+    virtual QVector<int> GetDims() = 0;
 
     /**
      * @brief Returns the number of bytes that make up the data type.

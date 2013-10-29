@@ -301,6 +301,7 @@ namespace DREAM3D
     const DREAM3D_STRING CrystalStructure("CrystalStructure");
     const DREAM3D_STRING DataContainerName("DataContainers");
     const DREAM3D_STRING DataContainerType("DataContainerType");
+    const DREAM3D_STRING Dims("Dims");
     const DREAM3D_STRING DistributionType("Distribution Type");
     const DREAM3D_STRING EdgeDataContainerName("EdgeDataContainer");
     const DREAM3D_STRING EdgeNeighbors("EdgeNeighbors");
@@ -345,6 +346,7 @@ namespace DREAM3D
     const DREAM3D_STRING PrecipitateBoundaryFraction("Precipitate Boundary Fraction");
     const DREAM3D_STRING PrecipitateStatsData("PrecipitateStatsData");
     const DREAM3D_STRING PrimaryStatsData("PrimaryStatsData");
+    const DREAM3D_STRING Rank("Rank");
     const DREAM3D_STRING Sigma("Sigma");
     const DREAM3D_STRING StandardDeviation("Standard Deviation");
     const DREAM3D_STRING Statistics("Statistics");

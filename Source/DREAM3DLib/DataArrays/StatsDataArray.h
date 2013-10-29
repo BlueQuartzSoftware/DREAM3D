@@ -218,6 +218,12 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     virtual void SetNumberOfComponents(int nc);
     virtual int GetNumberOfComponents();
 
+    virtual void SetRank(int rank);
+    virtual int GetRank();
+
+    virtual void SetDims(QVector<int> dims);
+    virtual QVector<int> GetDims();
+
     /**
      * @brief Returns the number of bytes that make up the data type.
      * 1 = char

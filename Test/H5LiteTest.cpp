@@ -375,12 +375,12 @@ herr_t testReadVectorAttribute(hid_t file_id, QString dsetName )
   int32_t numElements = DIM0;
   QVector<hsize_t> dims (1, DIM0);
 
-  std::vector<T> data (DIM0, 0);
+  QVector<T> data (DIM0, 0);
   for (int i = 0; i < numElements; ++i)
   {
     data[i] = (T)(i);
   }
-  std::vector<T> rData(numElements, 0); //allocate and zero out the memory
+  QVector<T> rData(numElements, 0); //allocate and zero out the memory
   err = QH5Lite::readVectorAttribute(file_id, dsetName, attributeKey, rData);
   DREAM3D_REQUIRE(err >= 0);
   DREAM3D_REQUIRE( data == rData );

@@ -568,9 +568,9 @@ void RunPipeline1()
 
   InitializeSyntheticVolume::Pointer isv = InitializeSyntheticVolume::New();
   isv->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
-  isv->setXVoxels(256);
-  isv->setYVoxels(256);
-  isv->setZVoxels(256);
+  isv->setXVoxels(128);
+  isv->setYVoxels(128);
+  isv->setZVoxels(128);
   isv->setXRes(0.1);
   isv->setYRes(0.1);
   isv->setZRes(0.1);
@@ -875,14 +875,14 @@ int main(int argc, char** argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-//  RunPipeline1();
+  RunPipeline1();
 //  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();
 //  RunPipeline5();
 //  RunPipeline6();
 //  RunPipeline7();
-  RunPipeline8();
+//  RunPipeline8();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )

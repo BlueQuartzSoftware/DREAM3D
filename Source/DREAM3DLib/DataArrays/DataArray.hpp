@@ -625,6 +625,31 @@ class DataArray : public IDataArray
       return this->NumberOfComponents;
     }
 
+    // Description:
+    // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
+    // this is set before allocation.
+    virtual void SetRank(int rnk)
+    {
+      if(rnk > 0) { this->Rank = rnk; }
+    }
+
+    virtual int GetRank()
+    {
+      return this->Rank;
+    }
+
+    // Description:
+    // Set/Get the dimensions of the array.
+    virtual void SetDims(QVector<int> dims)
+    {
+      this->Dims = dims;
+    }
+
+    virtual QVector<int> GetDims()
+    {
+      return this->Dims;
+    }
+
     /**
      * @brief Returns a void pointer pointing to the index of the array. NULL
      * pointers are entirely possible. No checks are performed to make sure
@@ -847,7 +872,7 @@ class DataArray : public IDataArray
     virtual int writeH5Data(hid_t parentId)
     {
       if (Array == NULL) { return -85648; }
-      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
+      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), GetRank(), GetDims(), Array, getFullNameOfClass());
     }
 
     /**

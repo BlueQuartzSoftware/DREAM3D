@@ -430,6 +430,40 @@ class ManagedArrayOfArrays : public IDataArray
       return 1;
     }
 
+    // Description:
+    // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
+    // this is set before allocation.
+    void SetRank(int rnk)
+    {
+
+    }
+
+    /**
+     * @brief GetRank
+     * @return
+     */
+    int GetRank()
+    {
+      return 1;
+    }
+
+    // Description:
+    // Set/Get the dimensions of the array.
+    void SetDims(QVector<int> dims)
+    {
+
+    }
+
+    /**
+     * @brief GetDims
+     * @return
+     */
+    QVector<int> GetDims()
+    {
+      QVector<int> dims(1, 1);
+      return dims;
+    }
+
     /**
      * @brief Returns a void pointer pointing to the index of the array. NULL
      * pointers are entirely possible. No checks are performed to make sure

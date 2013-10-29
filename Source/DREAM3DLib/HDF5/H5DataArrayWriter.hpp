@@ -58,7 +58,7 @@ class H5DataArrayWriter
   public:
     virtual ~H5DataArrayWriter() {}
 
-    static int writeArray(hid_t gid, const QString& name, size_t numTuples, int numComp, T* data, const QString& className)
+    static int writeArray(hid_t gid, const QString& name, size_t numTuples, int numComp, int arrayRank, QVector<int> arrayDims, T* data, const QString& className)
     {
       int32_t rank = 0;
       if(numComp == 1)
@@ -81,6 +81,17 @@ class H5DataArrayWriter
         }
       }
       err = QH5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
+      if(err < 0)
+      {
+        return err;
+      }
+      err = QH5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::Rank, arrayRank);
+      if(err < 0)
+      {
+        return err;
+      }
+      QVector<hsize_t> d(rank, 1);
+      err = QH5Lite::writeVectorAttribute(gid, name, DREAM3D::HDF5::Dims, d, arrayDims);
       if(err < 0)
       {
         return err;
