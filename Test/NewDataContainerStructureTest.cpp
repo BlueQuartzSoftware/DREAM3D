@@ -72,6 +72,9 @@
 
 #include"DREAM3DLib/SamplingFilters/RegularGridSampleSurfaceMesh.h"
 
+#include"DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
+#include"DREAM3DLib/GenericFilters/FindBoundingBoxGrains.h"
+#include"DREAM3DLib/GenericFilters/FindGrainCentroids.h"
 #include"DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include"DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include"DREAM3DLib/StatisticsFilters/FitFieldData.h"
@@ -833,6 +836,15 @@ void RunPipeline8()
   dcr->setReadAllCellEnsembleArrays(true);
   pipeline->pushBack(dcr);
 
+  FindSurfaceGrains::Pointer fsg = FindSurfaceGrains::New();
+  pipeline->pushBack(fsg);
+
+  FindGrainCentroids::Pointer fgc = FindGrainCentroids::New();
+  pipeline->pushBack(fgc);
+
+  FindBoundingBoxGrains::Pointer fbbg = FindBoundingBoxGrains::New();
+  pipeline->pushBack(fbbg);
+
   FindSizes::Pointer fs = FindSizes::New();
   pipeline->pushBack(fs);
 
@@ -875,14 +887,14 @@ int main(int argc, char** argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-  RunPipeline1();
+//  RunPipeline1();
 //  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();
 //  RunPipeline5();
 //  RunPipeline6();
 //  RunPipeline7();
-//  RunPipeline8();
+  RunPipeline8();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )
