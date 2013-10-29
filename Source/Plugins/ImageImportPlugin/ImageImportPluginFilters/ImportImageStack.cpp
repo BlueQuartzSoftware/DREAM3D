@@ -49,6 +49,7 @@
 // -----------------------------------------------------------------------------
 ImportImageStack::ImportImageStack() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
@@ -93,11 +94,11 @@ void ImportImageStack::setupFilterParameters()
 void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setImageDataArrayName( reader->readValue("ImageDataArrayName", getImageDataArrayName()) );
+  setImageDataArrayName( reader->readString("ImageDataArrayName", getImageDataArrayName()) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
-  setOrigin( reader->readValue("Origin", getOrigin()) );
-  setResolution( reader->readValue("Resolution", getResolution()) );
+  setOrigin( reader->readFloatVec3("Origin", getOrigin()) );
+  setResolution( reader->readFloatVec3("Resolution", getResolution()) );
   Ebsd::RefFrameZDir zdir = static_cast<Ebsd::RefFrameZDir>(reader->readValue("RefFrameZDir", getRefFrameZDir()));
   setRefFrameZDir(zdir);
   reader->closeFilterGroup();
@@ -127,7 +128,7 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if (m_ImageFileList.size() == 0)
   {
@@ -137,8 +138,9 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
   }
   else
   {
+    QVector<int> arraydims(1, 1);
     // This would be for a gray scale image
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, uint8_t, UInt8ArrayType, 0, voxels, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, uint8_t, UInt8ArrayType, 0, voxels, arraydims)
     // If we have RGB or RGBA Images then we are going to have to change things a bit.
     // We should read the file and see what we have? Of course Qt is going to read it up into
     // an RGB array by default
@@ -199,7 +201,7 @@ void ImportImageStack::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -254,7 +256,12 @@ void ImportImageStack::execute()
       {
         pixelBytes = 4;
       }
-      data = UInt8ArrayType::CreateArray(totalPixels * m_ImageFileList.size(), pixelBytes, m_ImageDataArrayName);
+      QVector<int> compDims(3, 0);
+      compDims[0] = height;
+      compDims[1] = width;
+      compDims[2] = pixelBytes;
+
+      data = UInt8ArrayType::CreateArray(m_ImageFileList.size(), compDims, m_ImageDataArrayName);
 
     }
 

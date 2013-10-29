@@ -60,6 +60,8 @@ class ImportImageStack : public AbstractFilter
 
     virtual ~ImportImageStack();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)

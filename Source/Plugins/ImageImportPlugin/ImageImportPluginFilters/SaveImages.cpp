@@ -47,6 +47,7 @@
 // -----------------------------------------------------------------------------
 SaveImages::SaveImages() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
@@ -123,9 +124,9 @@ void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setImagePrefix( reader->readValue("ImagePrefix", getImagePrefix()) );
-  setOutputPath( reader->readValue("OutputPath", getOutputPath()) );
-  setColorsArrayName( reader->readValue("ColorsArrayName", getColorsArrayName()) );
+  setImagePrefix( reader->readString("ImagePrefix", getImagePrefix()) );
+  setOutputPath( reader->readString("OutputPath", getOutputPath()) );
+  setColorsArrayName( reader->readString("ColorsArrayName", getColorsArrayName()) );
   setImageFormat( reader->readValue("ImageFormat", getImageFormat()) );
   reader->closeFilterGroup();
 }
@@ -150,8 +151,7 @@ int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QDir dir(getOutputPath());
 
@@ -173,7 +173,8 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   }
   else
   {
-    GET_PREREQ_DATA_2(m, CellData, Colors, -300, uint8_t, UInt8ArrayType, voxels, 3)
+    QVector<int> dims(1, 3);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, Colors, -300, uint8_t, UInt8ArrayType, voxels, dims)
   }
 
 }
@@ -197,7 +198,7 @@ void SaveImages::execute()
   int err = 0;
 
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

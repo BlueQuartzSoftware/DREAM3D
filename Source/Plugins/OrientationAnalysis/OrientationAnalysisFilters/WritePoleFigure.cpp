@@ -89,6 +89,7 @@
 // -----------------------------------------------------------------------------
 WritePoleFigure::WritePoleFigure() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
@@ -198,9 +199,9 @@ void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reade
 {
   reader->openFilterGroup(this, index);
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setImagePrefix( reader->readValue("ImagePrefix", getImagePrefix()));
-  setOutputPath( reader->readValue("OutputPath", getOutputPath()));
-  setCellEulerAnglesArrayName( reader->readValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName()));
+  setImagePrefix( reader->readString("ImagePrefix", getImagePrefix()));
+  setOutputPath( reader->readString("OutputPath", getOutputPath()));
+  setCellEulerAnglesArrayName( reader->readString("CellEulerAnglesArrayName", getCellEulerAnglesArrayName()));
   setImageFormat( reader->readValue("ImageFormat", getImageFormat()));
   setImageSize( reader->readValue("ImageSize", getImageSize()));
   setLambertSize( reader->readValue("LambertSize", getLambertSize()));
@@ -230,7 +231,7 @@ int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* write
 void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
@@ -254,11 +255,13 @@ void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t fields, si
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, 3)
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -301, int32_t, Int32ArrayType, voxels, 1)
+    QVector<int> dims(1, 3);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, dims)
+    dims[0] = 1;
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -301, int32_t, Int32ArrayType, voxels, dims)
 
     typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, dims)
   }
 
 }
@@ -292,7 +295,7 @@ void WritePoleFigure::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -355,8 +358,8 @@ void WritePoleFigure::execute()
         }
       }
     }
-
-    FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, 3, "Eulers_Per_Phase");
+    int eulerCompDim = 3;
+    FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, 1, &eulerCompDim, "Eulers_Per_Phase");
     subEulers->initializeWithValues(-1);
     float* eu = subEulers->getPointer(0);
     //  std::cout << count << std::endl;
