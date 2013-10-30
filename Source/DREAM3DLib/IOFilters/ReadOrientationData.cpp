@@ -613,13 +613,13 @@ void ReadOrientationData::readMicFile()
     m->addCellData(DREAM3D::CellData::Phases, iArray);
   }
 
+  QVector<int> compDims(1, 3); // Initially set this up for the Euler Angle 1x3
   {
     //  radianconversion = M_PI / 180.0;
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler1));
     f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler2));
     f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler3));
-    fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
-    fArray->SetNumberOfComponents(3);
+    fArray = FloatArrayType::CreateArray(totalPoints, compDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     for (int64_t i = 0; i < totalPoints; i++)
     {
@@ -630,18 +630,17 @@ void ReadOrientationData::readMicFile()
     m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
   }
 
+  compDims[0] = 1; // Now reset the size of the first dimension to 1
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Mic::Phase));
-    iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
-    iArray->SetNumberOfComponents(1);
+    iArray = Int32ArrayType::CreateArray(totalPoints, compDims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     m->addCellData(DREAM3D::CellData::Phases, iArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Confidence));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Mic::Confidence);
-    fArray->SetNumberOfComponents(1);
+    fArray = FloatArrayType::CreateArray(totalPoints, compDims, Ebsd::Mic::Confidence);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Mic::Confidence, fArray);
   }
