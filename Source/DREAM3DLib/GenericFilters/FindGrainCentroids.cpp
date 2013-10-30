@@ -141,7 +141,8 @@ void FindGrainCentroids::execute()
   }
 
   QVector<int> dims(1, 5);
-  m_GrainCenters->CreateArray(totalFields, dims, "centers");
+  m_GrainCenters = FloatArrayType::CreateArray(totalFields, dims, "centers");
+  graincenters = m_GrainCenters->getPointer(0);
 
   find_centroids();
 

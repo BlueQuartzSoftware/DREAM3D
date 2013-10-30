@@ -74,10 +74,10 @@ namespace Detail
     herr_t err = -1;
     IDataArray::Pointer ptr;
     size_t numTuples = dims[0];
-    QVector<int> arrayDims(dims.size()-1);
+    QVector<int> arrayDims(1, 1);
     for (size_t i = 1; i < dims.size(); ++i)
     {
-      arrayDims[i-1] = dims[i];
+      arrayDims.push_back(dims[i]);
     }
     ptr = DataArray<T>::CreateArray(numTuples, arrayDims, datasetPath);
 
