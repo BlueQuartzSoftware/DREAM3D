@@ -167,8 +167,8 @@ namespace UnitTest
 
   namespace QFilterParameterIOTest
   {
-    const QString SmallIn100_OutputFile("@DREAM3DProj_BIN_DIR@/Data/Output/SmallIN100.h5ebsd");
-    const QString SmallIN100Folder("@DREAM3D_SUPPORT_DIR@/SmallIN100");
+    const QString SmallIn100_H5EBSD_FILE("@DREAM3D_DATA_DIR@/SmallIN100/SmallIN100.h5ebsd");
+    const QString SmallIN100Folder("@DREAM3D_DATA_DIR@/SmallIN100");
     const QString TestFile("@TEST_TEMP_DIR@/QFilterParameters.txt");
     const QString Prebuilt1("@DREAM3D_SUPPORT_DIR@/PrebuiltPipelines/Workshop/Reconstruction/(01) SmallIN100 Import.txt");
     const QString Prebuilt17("@DREAM3D_SUPPORT_DIR@/PrebuiltPipelines/Workshop/Reconstruction/(17) Small IN100 Full Reconstruction.txt");
