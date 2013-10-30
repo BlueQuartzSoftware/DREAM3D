@@ -84,7 +84,7 @@ void __TestCopyTuples()
 {
   int err = 0;
   QVector<int> dims(1, NUM_COMPONENTS_2);
-  typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, dims, "TestCopyTuples");
+  typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_TUPLES_2, dims, "TestCopyTuples");
   DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
 
   for(size_t i = 0; i < NUM_TUPLES_2; ++i)
@@ -349,7 +349,7 @@ void TestDataArray()
     ptr = int32Array->getPointer(0);
     DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->getNumberOfTuples());
-    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetSize());
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS * NUM_COMPONENTS, int32Array->GetSize());
 
     for (int i = 0; i < NUM_TUPLES; ++i)
     {
@@ -374,7 +374,7 @@ void TestDataArray()
       }
     }
 
-    // Resize Smaller - Which should have still save some of our data
+    // Resize Smaller - Which should have still saved some of our data
     int32Array->Resize(NUM_TUPLES_3);
     DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_3, int32Array->getNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_3, int32Array->GetSize());
@@ -390,7 +390,7 @@ void TestDataArray()
     }
 
     // Change number of components
-    dims[NUM_COMPONENTS_4];
+    dims[0] = NUM_COMPONENTS_4;
     int32Array->SetDims(dims);
     DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4, int32Array->getNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4, int32Array->GetSize());

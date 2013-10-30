@@ -621,10 +621,13 @@ class DataArray : public IDataArray
     // Description:
     // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
     // this is set before allocation.
-    virtual void SetRank(int rnk)
-    {
-      if(rnk > 0) { this->Rank = rnk; }
-    }
+//    virtual void SetRank(int rank)
+//    {
+//      BOOST_ASSERT(rank > 0);
+//      if (Rank == rank) { return; }
+//      Dims.resize(rank);
+//      Rank = rank;
+//    }
 
     virtual int GetRank()
     {
@@ -635,7 +638,14 @@ class DataArray : public IDataArray
     // Set/Get the dimensions of the array.
     virtual void SetDims(QVector<int> dims)
     {
+      BOOST_ASSERT(dims.size() > 0);
       this->Dims = dims;
+      this->NumberOfComponents = dims[0];
+      for(int i = 1; i < dims.size(); i++)
+      {
+        this->NumberOfComponents = this->NumberOfComponents * dims[i];
+      }
+      Rank = Dims.size();
     }
 
     virtual QVector<int> GetDims()

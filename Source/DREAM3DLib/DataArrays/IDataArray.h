@@ -115,7 +115,7 @@ class DREAM3DLib_EXPORT IDataArray
 
     virtual int GetNumberOfComponents() = 0;
 
-    virtual void SetRank(int rnk) = 0;
+   // virtual void SetRank(int rnk) = 0;
     virtual int GetRank() = 0;
 
     virtual void SetDims(QVector<int> rnk) = 0;
