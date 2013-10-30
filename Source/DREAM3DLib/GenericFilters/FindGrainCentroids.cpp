@@ -53,8 +53,6 @@ FindGrainCentroids::FindGrainCentroids() :
   m_Centroids(NULL)
 {
   graincenters = NULL;
-
-  INIT_DataArray(m_GrainCenters, float);
 }
 
 // -----------------------------------------------------------------------------
@@ -142,6 +140,9 @@ void FindGrainCentroids::execute()
     return;
   }
 
+  QVector<int> dims(1, 5);
+  m_GrainCenters->CreateArray(totalFields, dims, "centers");
+
   find_centroids();
 
   notifyStatusMessage("Complete");
@@ -157,8 +158,6 @@ void FindGrainCentroids::find_centroids()
   float x, y, z;
   size_t numgrains = m->getNumCellFieldTuples();
   if (numgrains == 0) { return; }
-  m_GrainCenters->SetNumberOfComponents(5);
-  m_GrainCenters->Resize(numgrains);
 
   graincenters = m_GrainCenters->getPointer(0);
 

@@ -430,14 +430,6 @@ class StructArray : public IDataArray
       return Size;
     }
 
-    // Description:
-    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
-    // this is set before allocation.
-    void SetNumberOfComponents(int nc)
-    {
-
-    }
-
     /**
      * @brief GetNumberOfComponents
      * @return

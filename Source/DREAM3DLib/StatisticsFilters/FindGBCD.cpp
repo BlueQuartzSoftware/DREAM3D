@@ -492,13 +492,10 @@ void FindGBCD::execute()
   Int32ArrayType::Pointer gbcdBinsArray = Int32ArrayType::NullPointer();
   BoolArrayType::Pointer gbcdHemiCheckArray = BoolArrayType::NullPointer();
   gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
-  gbcdDeltasArray->SetNumberOfComponents(1);
   gbcdDeltasArray->initializeWithZeros();
   gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
-  gbcdLimitsArray->SetNumberOfComponents(1);
   gbcdLimitsArray->initializeWithZeros();
   gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
-  gbcdSizesArray->SetNumberOfComponents(1);
   gbcdSizesArray->initializeWithZeros();
   QVector<int> dims(1, numMisoReps);
   gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, dims, "GBCDBins");

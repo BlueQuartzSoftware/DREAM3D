@@ -221,7 +221,6 @@ class GenerateIntensityMapImpl
 //        VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/NorthSquare_" + m_Intensity->GetName() + ".vtk", north.get(), dims, res, "double", true);
       lambert->normalizeSquaresToMRD();
       m_Intensity->Resize(m_Config->imageDim * m_Config->imageDim);
-      m_Intensity->SetNumberOfComponents(1);
       lambert->createStereographicProjection(m_Config->imageDim, m_Intensity);
     }
 

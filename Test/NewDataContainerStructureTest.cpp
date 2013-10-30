@@ -149,8 +149,8 @@ void TestDataContainerWriter()
   }
   m->addCellData(DREAM3D::CellData::SurfaceVoxels, boolArray);
 
-  FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(12, DREAM3D::FieldData::AxisEulerAngles);
-  avgEuler->SetNumberOfComponents(3);
+  QVector<int> dims(1, 3);
+  FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(4, dims, DREAM3D::FieldData::AxisEulerAngles);
   for(size_t i = 0; i < 4; ++i)
   {
     avgEuler->SetComponent(i, 0, i * 0.665f);

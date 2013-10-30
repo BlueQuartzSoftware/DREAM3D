@@ -465,7 +465,6 @@ void AlignSectionsMutualInformation::form_grains_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
-  m_GrainCounts->SetNumberOfComponents(1);
   m_GrainCounts->Resize(dims[2]);
   graincounts = m_GrainCounts->getPointer(0);
 

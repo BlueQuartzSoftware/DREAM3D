@@ -216,7 +216,6 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual size_t GetSize();
 
-    virtual void SetNumberOfComponents(int nc);
     virtual int GetNumberOfComponents();
 
     virtual void SetRank(int rank);

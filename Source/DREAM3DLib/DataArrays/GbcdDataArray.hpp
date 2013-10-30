@@ -425,15 +425,6 @@ class GbcdDataArray : public IDataArray
       return 1;
     }
 
-
-    // Description:
-    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
-    // this is set before allocation.
-    virtual void SetNumberOfComponents(int nc)
-    {
-      BOOST_ASSERT(false);
-    }
-
     virtual int GetNumberOfComponents()
     {
       return this->Size;

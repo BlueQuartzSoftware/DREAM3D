@@ -175,7 +175,6 @@
     }\
     else {\
       p->initializeWithValues(initValue);\
-      p->SetNumberOfComponents(NumComp);\
       p->SetName(m_##Name##ArrayName);\
       dc->add##DType(m_##Name##ArrayName, p);\
       m_##Name = p->getPointer(0);\

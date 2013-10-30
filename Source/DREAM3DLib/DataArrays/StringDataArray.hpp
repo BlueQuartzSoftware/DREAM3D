@@ -189,11 +189,6 @@ class StringDataArray : public IDataArray
       return m_Array.size();
     }
 
-    virtual void SetNumberOfComponents(int nc)
-    {
-      ;
-    }
-
     virtual int GetNumberOfComponents()
     {
       return 1;

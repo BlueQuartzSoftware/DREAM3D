@@ -194,8 +194,7 @@ void FindShapes::find_moments()
   float u101 = 0;
   float xx, yy, zz, xy, xz, yz;
   size_t numgrains = m->getNumCellFieldTuples();
-  m_GrainMoments->SetNumberOfComponents(6);
-  m_GrainMoments->Resize(numgrains);
+  m_GrainMoments->Resize(numgrains*6);
   grainmoments = m_GrainMoments->getPointer(0);
 
   float xPoints = m->getXPoints();
@@ -323,8 +322,7 @@ void FindShapes::find_moments2D()
 
   float xx, yy, xy;
   size_t numgrains = m->getNumCellFieldTuples();
-  m_GrainMoments->SetNumberOfComponents(6);
-  m_GrainMoments->Resize(numgrains);
+  m_GrainMoments->Resize(numgrains*6);
   grainmoments = m_GrainMoments->getPointer(0);
 
   int xPoints = 0, yPoints = 0;
@@ -415,12 +413,10 @@ void FindShapes::find_axes()
 
   size_t numgrains = m->getNumCellFieldTuples();
 
-  m_GrainMoments->SetNumberOfComponents(6);
-  m_GrainMoments->Resize(numgrains);
+  m_GrainMoments->Resize(numgrains*6);
   grainmoments = m_GrainMoments->getPointer(0);
 
-  m_GrainEigenVals->SetNumberOfComponents(3);
-  m_GrainEigenVals->Resize(numgrains);
+  m_GrainEigenVals->Resize(numgrains*3);
   graineigenvals = m_GrainEigenVals->getPointer(0);
 
 
@@ -504,8 +500,7 @@ void FindShapes::find_axes2D()
 
   size_t numgrains = m->getNumCellFieldTuples();
 
-  m_GrainMoments->SetNumberOfComponents(6);
-  m_GrainMoments->Resize(numgrains);
+  m_GrainMoments->Resize(numgrains*6);
   grainmoments = m_GrainMoments->getPointer(0);
 
 

@@ -238,7 +238,6 @@ int  FieldInfoReader::readFile()
   // Initialize arrays to hold the data for the Euler Data
   QVector<int> dims(1, 3);
   FloatArrayType::Pointer fieldEulerData = FloatArrayType::CreateArray(numgrains + 1, dims, DREAM3D::FieldData::EulerAngles);
-  fieldEulerData->SetNumberOfComponents(3);
   fieldEulerData->initializeWithZeros();
 
   // Create and initialize the Field Phase Array with a default value of the "Unkown Phase Type"

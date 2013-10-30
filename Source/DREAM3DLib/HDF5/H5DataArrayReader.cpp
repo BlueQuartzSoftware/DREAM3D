@@ -73,16 +73,13 @@ namespace Detail
   {
     herr_t err = -1;
     IDataArray::Pointer ptr;
-    size_t numElements = 1;
-    for (size_t i = 0; i < dims.size(); ++i)
+    size_t numTuples = dims[0];
+    QVector<int> arrayDims(dims.size()-1);
+    for (size_t i = 1; i < dims.size(); ++i)
     {
-      numElements *= dims[i];
+      arrayDims[i-1] = dims[i];
     }
-    ptr = DataArray<T>::CreateArray(numElements, datasetPath);
-    if(dims.size() > 1)
-    {
-      ptr->SetNumberOfComponents(static_cast<int>(dims[1]));
-    }
+    ptr = DataArray<T>::CreateArray(numTuples, arrayDims, datasetPath);
 
     T* data = (T*)(ptr->GetVoidPointer(0));
     err = QH5Lite::readPointerDataset(locId, datasetPath, data);

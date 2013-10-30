@@ -613,14 +613,6 @@ class DataArray : public IDataArray
       return Size;
     }
 
-    // Description:
-    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
-    // this is set before allocation.
-    virtual void SetNumberOfComponents(int nc)
-    {
-      if(nc > 0) { this->NumberOfComponents = nc; }
-    }
-
     virtual int GetNumberOfComponents()
     {
       return this->NumberOfComponents;

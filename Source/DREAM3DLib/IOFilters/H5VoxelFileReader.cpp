@@ -234,10 +234,11 @@ void H5VoxelFileReader::execute()
 
   size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
   // Create an DataArray to hold the data
-  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::GrainIds);
-  DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::Phases);
-  DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints * 3, DREAM3D::CellData::EulerAngles);
-  eulers->SetNumberOfComponents(3);
+  QVector<int> dims(1, 1);
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints, dims, DREAM3D::CellData::GrainIds);
+  DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, dims, DREAM3D::CellData::Phases);
+  dims[0] = 3;
+  DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints, dims, DREAM3D::CellData::EulerAngles);
 
   QString arrayname = "GrainID";
   err = reader->readScalarData<int>(arrayname, grainIds->getPointer(0));

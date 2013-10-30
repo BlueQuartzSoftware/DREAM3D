@@ -46,60 +46,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
-#if 0
-template<typename T>
-class H5ArrayWriter
-{
-
-  public:
-    virtual ~H5ArrayWriter() {}
-
-    static int writeArray(hid_t gid, T* dataArray)
-    {
-      int err = 0;
-      hsize_t localRank = dataArray->GetRank() + 1;
-      QVector<hsize_t> dims(localRank, 0 );
-
-      if (QH5Lite::datasetExists(gid, dataArray->GetName()) == false)
-      {
-        err = QH5Lite::writePointerDataset(gid, dataArray->GetName(), localRank, dims.data(), dataArray->getPointer(0));
-        if(err < 0)
-        {
-          return err;
-        }
-      }
-
-      err = QH5Lite::writeScalarAttribute(gid, dataArray->GetName(), DREAM3D::HDF5::NumComponents, dataArray->GetNumberOfComponents());
-      if(err < 0)
-      {
-        return err;
-      }
-
-      err = QH5Lite::writeStringAttribute(gid, dataArray->GetName(), DREAM3D::HDF5::ObjectType, dataArray->getNameOfClass());
-      if(err < 0)
-      {
-        return err;
-      }
-      err = QH5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, dataArray->getFullNameOfClass());
-      if(err < 0)
-      {
-        return err;
-      }
-      return err;
-    }
-
-
-
-  protected:
-    H5ArrayWriter() {}
-
-  private:
-    H5ArrayWriter(const H5ArrayWriter&); // Copy Constructor Not Implemented
-    void operator=(const H5ArrayWriter&); // Operator '=' Not Implemented
-
-};
-#endif
-
 
 /**
  * @class H5DataArrayWriter H5DataArrayWriter.h DREAM3DLib/HDF5/H5DataArrayWriter.h
