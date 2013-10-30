@@ -52,6 +52,7 @@ FindGrainCentroids::FindGrainCentroids() :
   m_GrainIds(NULL),
   m_Centroids(NULL)
 {
+  INIT_DataArray(m_GrainCenters, float)
   graincenters = NULL;
 }
 

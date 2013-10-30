@@ -279,6 +279,7 @@ namespace DREAM3D
     const DREAM3D_STRING NumFilters("Number_Filters");
     const DREAM3D_STRING FilterName("Filter_Name");
     const DREAM3D_STRING HumanLabel("Filter_Human_Label");
+    const DREAM3D_STRING Version("Version");
   }
 
 
