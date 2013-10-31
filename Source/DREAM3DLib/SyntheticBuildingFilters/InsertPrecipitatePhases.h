@@ -104,6 +104,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)

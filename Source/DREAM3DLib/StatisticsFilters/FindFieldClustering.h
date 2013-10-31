@@ -38,6 +38,8 @@ class DREAM3DLib_EXPORT FindFieldClustering : public AbstractFilter
     //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Field Clustering"; }
