@@ -68,7 +68,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-//  QFile::remove(UnitTest::QFilterParameterIOTest::TestFile);
+  QFile::remove(UnitTest::QFilterParameterIOTest::TestFile);
 #endif
 }
 // -----------------------------------------------------------------------------
@@ -90,37 +90,10 @@ void writePipeline(FilterPipeline::Pointer pipeline)
 
   for (int i = 0; i < count; ++i)
   {
-    //QString gName = QString::number(i);
     AbstractFilter::Pointer filter = pipeline->getFilterContainer().at(i);
     filter->writeFilterParameters(writer.get(), i);
   }
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void writePipeline(FilterPipeline::Pointer pipeline)
-{
-
-  QFilterParametersWriter::Pointer writer = QFilterParametersWriter::New();
-  writer->openFile(UnitTest::QFilterParameterIOTest::TestFile);
-  writer->setNumberOfFilters(pipeline->getFilterContainer().size());
-  QVariant filterCount = pipeline->getFilterContainer().size();
-  int count = pipeline->getFilterContainer().size();
-  QSettings* prefs = writer->getPrefs();
-  prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-  prefs->setValue(DREAM3D::Settings::NumFilters, filterCount);
-//  prefs->setValue(DREAM3D::Settings::Version, DREAM3DLib::Version::Complete());
-  prefs->endGroup();
-
-  for (int i = 0; i < count; ++i)
-  {
-    //QString gName = QString::number(i);
-    AbstractFilter::Pointer filter = pipeline->getFilterContainer().at(i);
-    filter->writeFilterParameters(writer.get(), i);
-  }
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -354,7 +327,7 @@ int main(int argc, char* argv[])
 //  DREAM3D_REGISTER_TEST( TestReadQSettingsBasedFile() )
 
 #if REMOVE_TEST_FILES
-  //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
   PRINT_TEST_SUMMARY();
