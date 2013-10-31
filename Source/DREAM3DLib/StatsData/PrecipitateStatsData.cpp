@@ -105,7 +105,7 @@ void PrecipitateStatsData::initialize()
   m_GrainSize_DistType = DREAM3D::DistributionType::LogNormal;
   m_BOverA_DistType = DREAM3D::DistributionType::Beta;
   m_COverA_DistType = DREAM3D::DistributionType::Beta;
-  m_Neighbors_DistType = DREAM3D::DistributionType::LogNormal;
+  m_Clustering_DistType = DREAM3D::DistributionType::LogNormal;
   m_Omegas_DistType = DREAM3D::DistributionType::Beta;
 }
 

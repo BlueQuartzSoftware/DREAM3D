@@ -156,7 +156,6 @@ namespace DREAM3D
     const DREAM3D_STRING CAxisMisalignmentList("CAxisMisalignmentList");
     const DREAM3D_STRING Centroids("Centroids");
     const DREAM3D_STRING ClusteringList("ClusteringList");
-    const DREAM3D_STRING Clusters("Clusters");
     const DREAM3D_STRING ElasticStrains("ElasticStrains");
     const DREAM3D_STRING EquivalentDiameters("EquivalentDiameters");
     const DREAM3D_STRING EulerAngles("EulerAngles");
@@ -325,7 +324,7 @@ namespace DREAM3D
     const DREAM3D_STRING Grain_SizeVCoverA_Distributions("GrainSize Vs C Over A Distributions");
     const DREAM3D_STRING Grain_SizeVNeighbors_Distributions("GrainSize Vs Neighbors Distributions");
     const DREAM3D_STRING Grain_SizeVOmega3_Distributions("GrainSize Vs Omega3 Distributions");
-    const DREAM3D_STRING Grain_Clustering_Distributions("GrainSize Vs Clustering Distributions");
+    const DREAM3D_STRING Grain_SizeVClustering_Distributions("GrainSize Vs Clustering Distributions");
     const DREAM3D_STRING Grain_Size_Distribution("GrainSize Distribution");
     const DREAM3D_STRING KernelAvgDisorientation( "KernelAvgDisorientation");
     const DREAM3D_STRING LogNormalDistribution("Log Normal Distribution");
@@ -405,7 +404,7 @@ namespace DREAM3D
     const unsigned int Grain_SizeVCoverA = 1;        //!<
     const unsigned int Grain_SizeVNeighbors = 2;     //!<
     const unsigned int Grain_SizeVOmega3 = 3;        //!<
-    const unsigned int Grain_Clustering = 4;        //!<
+    const unsigned int Grain_SizeVClustering = 4;        //!<
     const unsigned int UnknownStatisticsGroup = 999;    //!<
   }
 

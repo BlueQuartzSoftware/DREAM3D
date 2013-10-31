@@ -104,7 +104,11 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
 // -----------------------------------------------------------------------------
 int main (int argc, char  *argv[])
 {
-
+  if (argc != 2)
+  {
+    std::cout << "PipelineRunner needs a pipeline text file as input." << std::endl;
+    return EXIT_FAILURE;
+  }
   Observer obs;
   int err = 0;
 
@@ -124,6 +128,11 @@ int main (int argc, char  *argv[])
 
   pipeline->execute();
   err = pipeline->getErrorCondition();
-
+  if (err < 0)
+  {
+    std::cout << "Error Condition of Pipeline: " << err << std::endl;
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
 

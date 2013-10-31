@@ -17,12 +17,11 @@ FindFieldClustering::FindFieldClustering() :
   m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
   m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_ClustersArrayName(DREAM3D::FieldData::Clusters),
   m_ClusteringListArrayName(DREAM3D::FieldData::ClusteringList),
+  m_ErrorOutputFile(),
   m_FieldPhases(NULL),
   m_Centroids(NULL),
   m_EquivalentDiameters(NULL),
-  m_Clusters(NULL),
   m_ClusteringList(NULL)
 {
   setupFilterParameters();
@@ -102,13 +101,11 @@ void FindFieldClustering::dataCheck(bool preflight, size_t voxels, size_t fields
     addCreatedArrayHelpIndexEntry(e);
   }
 
-  QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Clusters, int32_t, Int32ArrayType, 0, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
 
-  dims[0] = 3;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
+
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, 3)
 }
 
 
@@ -148,6 +145,14 @@ void FindFieldClustering::execute()
 // -----------------------------------------------------------------------------
 void FindFieldClustering::find_clustering()
 {
+  bool writeErrorFile = true;
+  std::ofstream outFile;
+  if(m_ErrorOutputFile.isEmpty() == false)
+  {
+    outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
+    writeErrorFile = true;
+  }
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   float x, y, z;
@@ -159,11 +164,6 @@ void FindFieldClustering::find_clustering()
   int totalFields = int(m->getNumCellFieldTuples());
 
   clusteringlist.resize(totalFields);
-
-  for (size_t i = 1; i < totalFields; i++)
-  {
-    m_Clusters[i] = 0;
-  }
 
   for (size_t i = 1; i < totalFields; i++)
   {
@@ -184,15 +184,20 @@ void FindFieldClustering::find_clustering()
     z = m_Centroids[3 * i + 2];
     for (size_t j = i + 1; j < totalFields; j++)
     {
-      xn = m_Centroids[3 * j];
-      yn = m_Centroids[3 * j + 1];
-      zn = m_Centroids[3 * j + 2];
-      r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
-      m_Clusters[i]++;
-      clusteringlist[i].push_back(r);
-      m_Clusters[j]++;
-      clusteringlist[j].push_back(r);
+      if (m_FieldPhases[i] == m_FieldPhases[j])
+      {
+        xn = m_Centroids[3 * j];
+        yn = m_Centroids[3 * j + 1];
+        zn = m_Centroids[3 * j + 2];
+        r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
+        clusteringlist[i].push_back(r);
+        clusteringlist[j].push_back(r);
 
+        if(writeErrorFile == true && m_FieldPhases[j] == 2)
+        {
+          outFile << r << "\n";
+        }
+      }
     }
   }
   for (size_t i = 1; i < totalFields; i++)

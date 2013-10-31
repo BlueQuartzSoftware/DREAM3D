@@ -33,13 +33,16 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "RecrystallizedPreset.h"
+
+#include "PrimaryEquiaxedPreset.h"
 
 
-#include "StatsGenerator/Presets/Dialogs/RecrystallizedPresetDialog.h"
+
+#include "StatsGenerator/Presets/Dialogs/PrimaryRolledPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
 #include "StatsGenerator/StatsGenODFWidget.h"
 #include "StatsGenerator/SGAxisODFWidget.h"
+#include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
@@ -47,42 +50,26 @@
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RecrystallizedPreset::RecrystallizedPreset()
+PrimaryEquiaxedPreset::PrimaryEquiaxedPreset()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RecrystallizedPreset::~RecrystallizedPreset()
+PrimaryEquiaxedPreset::~PrimaryEquiaxedPreset()
 {
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RecrystallizedPreset::displayUserInputDialog()
-{
-  RecrystallizedPresetDialog d(NULL);
-  int ret = d.exec();
-  if (ret == QDialog::Accepted)
-  {
-    // The user clicked the OK button so transfer the values from the dialog into this class
-    m_PercentRecrystallized = d.getPercentRecrystallized();
-  }
-  else
-  {
-    // Perform any cancellation actions if the user canceled the dialog box
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
@@ -126,7 +113,7 @@ void RecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
@@ -151,8 +138,8 @@ void RecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, 
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
-    alpha = (0*i) + 10.0 + rg.genrand_res53();
-    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
+    alpha = (0*i) + 15.0 + rg.genrand_res53();
+    beta = (0*i) + 1.25 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -170,7 +157,7 @@ void RecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
@@ -195,8 +182,8 @@ void RecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, 
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
-    alpha = (0*i) + 10.0 + rg.genrand_res53();
-    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
+    alpha = (0*i) + 15.0 + rg.genrand_res53();
+    beta = (0*i) + 1.25 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -215,7 +202,7 @@ void RecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryEquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
@@ -257,4 +244,12 @@ void RecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot
   data.push_back(sigmas);
   model->setTableData(binNumbers, data, colors);
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryEquiaxedPreset::initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+{
+  BOOST_ASSERT(false);
 }

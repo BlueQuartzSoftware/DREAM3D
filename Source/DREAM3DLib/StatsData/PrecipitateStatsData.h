@@ -144,8 +144,8 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_COverA)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, COverA_DistType)
 
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Neighbors)
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, Neighbors_DistType)
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Clustering)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, Clustering_DistType)
 
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Omegas)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, Omegas_DistType)

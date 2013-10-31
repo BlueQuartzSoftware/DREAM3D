@@ -34,39 +34,51 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef RECRYSTALLIZEDPRESETDIALOG_H_
-#define RECRYSTALLIZEDPRESETDIALOG_H_
+#ifndef PrimaryEquiaxedPresetFACTORY_H_
+#define PrimaryEquiaxedPresetFACTORY_H_
 
-#include <QtGui/QDialog>
 
-class QLineEdit;
+//-- C++ includes
+#include <string>
+
+//-- MXA Includes
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+//-- StatsGen Includes
+#include "AbstractMicrostructurePresetFactory.h"
+#include "AbstractMicrostructurePreset.h"
 
 /**
- * @class RecrystallizedPresetDialog RecrystallizedPresetDialog.h StatsGenerator/Presets/Dialogs/RecrystallizedPresetDialog.h
- * @brief This class is a QDialog subclass that allows the user to input values
- * that effect the generation of a default set of statistics.
+ * @class PrimaryEquiaxedPreset PrimaryEquiaxedPreset.h StatsGenerator/Presets/PrimaryEquiaxedPreset.h
+ * @brief This class will populate the various tables with the necessary values
+ * to create an Equiaxed Microstructure.
  * @author Michael A. Jackson for BlueQuartz Software
- * @date May 12, 2011
+ * @date May 23, 2011
  * @version 1.0
  */
-class RecrystallizedPresetDialog : public QDialog
+class PrimaryEquiaxedPreset : public AbstractMicrostructurePreset
 {
-    Q_OBJECT
-
   public:
-    RecrystallizedPresetDialog(QWidget* parent = NULL);
-    virtual ~RecrystallizedPresetDialog();
+    DREAM3D_SHARED_POINTERS(PrimaryEquiaxedPreset)
+    DREAM3D_STATIC_NEW_MACRO(PrimaryEquiaxedPreset)
+    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrimaryEquiaxedPreset)
+    virtual ~PrimaryEquiaxedPreset();
 
-    float getPercentRecrystallized();
+    void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    void initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+
 
   protected:
-    void setupGui();
+    PrimaryEquiaxedPreset();
 
   private:
-    QLineEdit* percentRecystallized;
-
-    RecrystallizedPresetDialog(const RecrystallizedPresetDialog&); // Copy Constructor Not Implemented
-    void operator=(const RecrystallizedPresetDialog&); // Operator '=' Not Implemented
+    PrimaryEquiaxedPreset(const PrimaryEquiaxedPreset&); // Copy Constructor Not Implemented
+    void operator=(const PrimaryEquiaxedPreset&); // Operator '=' Not Implemented
 };
 
-#endif /* RECRYSTALLIZEDPRESETDIALOG_H_ */
+DECLARE_FACTORY_CLASS(PrimaryEquiaxedPresetFactory, PrimaryEquiaxedPreset, "Primary Equiaxed" )
+
+#endif /* PrimaryEquiaxedPresetFACTORY_H_ */

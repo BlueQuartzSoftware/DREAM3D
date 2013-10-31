@@ -123,29 +123,33 @@ cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/TableModels" "${StatsGenerator_TABLEM
 set(StatsGenerator_PRESETS_SRCS
     ${StatsGenerator_SOURCE_DIR}/Presets/MicrostructurePresetManager.cpp
     ${StatsGenerator_SOURCE_DIR}/Presets/AbstractMicrostructurePreset.cpp
-    ${StatsGenerator_SOURCE_DIR}/Presets/EquiaxedPreset.cpp
-    ${StatsGenerator_SOURCE_DIR}/Presets/DefaultStatsPreset.cpp
-    ${StatsGenerator_SOURCE_DIR}/Presets/RecrystallizedPreset.cpp
-    ${StatsGenerator_SOURCE_DIR}/Presets/RolledPreset.cpp
+    ${StatsGenerator_SOURCE_DIR}/Presets/PrimaryEquiaxedPreset.cpp
+    ${StatsGenerator_SOURCE_DIR}/Presets/PrecipitateEquiaxedPreset.cpp
+    ${StatsGenerator_SOURCE_DIR}/Presets/PrimaryRecrystallizedPreset.cpp
+    ${StatsGenerator_SOURCE_DIR}/Presets/PrimaryRolledPreset.cpp
+    ${StatsGenerator_SOURCE_DIR}/Presets/PrecipitateRolledPreset.cpp
 )
 set(StatsGenerator_PRESETS_HDRS
     ${StatsGenerator_SOURCE_DIR}/Presets/AbstractMicrostructurePresetFactory.h
     ${StatsGenerator_SOURCE_DIR}/Presets/AbstractMicrostructurePreset.h
     ${StatsGenerator_SOURCE_DIR}/Presets/MicrostructurePresetManager.h
-    ${StatsGenerator_SOURCE_DIR}/Presets/EquiaxedPreset.h
-    ${StatsGenerator_SOURCE_DIR}/Presets/DefaultStatsPreset.h
-    ${StatsGenerator_SOURCE_DIR}/Presets/RecrystallizedPreset.h
-    ${StatsGenerator_SOURCE_DIR}/Presets/RolledPreset.h
+    ${StatsGenerator_SOURCE_DIR}/Presets/PrimaryEquiaxedPreset.h
+    ${StatsGenerator_SOURCE_DIR}/Presets/PrecipitateEquiaxedPreset.h
+    ${StatsGenerator_SOURCE_DIR}/Presets/PrimaryRecrystallizedPreset.h
+    ${StatsGenerator_SOURCE_DIR}/Presets/PrimaryRolledPreset.h
+    ${StatsGenerator_SOURCE_DIR}/Presets/PrecipitateRolledPreset.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Presets" "${StatsGenerator_PRESETS_HDRS}" "${StatsGenerator_PRESETS_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set(StatsGenerator_DIALOGS_SRCS
-${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/RolledPresetDialog.cpp
-${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/RecrystallizedPresetDialog.cpp
+${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRolledPresetDialog.cpp
+${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrecipitateRolledPresetDialog.cpp
+${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.cpp
 )
 set(StatsGenerator_DIALOGS_HDRS
-${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/RolledPresetDialog.h
-${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/RecrystallizedPresetDialog.h
+${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRolledPresetDialog.h
+${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrecipitateRolledPresetDialog.h
+${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Presets/Dialogs" "${StatsGenerator_DIALOGS_HDRS}" "${StatsGenerator_DIALOGS_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

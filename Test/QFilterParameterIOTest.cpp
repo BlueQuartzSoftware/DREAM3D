@@ -40,10 +40,12 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QSettings>
+#include <QtCore/QSet>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterPipeline.h"
@@ -51,6 +53,7 @@
 #include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 #include "DREAM3DLib/IOFilters/EbsdToH5Ebsd.h"
 
@@ -93,13 +96,61 @@ void writePipeline(FilterPipeline::Pointer pipeline)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writePipeline(FilterPipeline::Pointer pipeline)
+{
+
+  QFilterParametersWriter::Pointer writer = QFilterParametersWriter::New();
+  writer->openFile(UnitTest::QFilterParameterIOTest::TestFile);
+  writer->setNumberOfFilters(pipeline->getFilterContainer().size());
+  QVariant filterCount = pipeline->getFilterContainer().size();
+  int count = pipeline->getFilterContainer().size();
+  QSettings* prefs = writer->getPrefs();
+  prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+  prefs->setValue(DREAM3D::Settings::NumFilters, filterCount);
+//  prefs->setValue(DREAM3D::Settings::Version, DREAM3DLib::Version::Complete());
+  prefs->endGroup();
+
+  for (int i = 0; i < count; ++i)
+  {
+    //QString gName = QString::number(i);
+    AbstractFilter::Pointer filter = pipeline->getFilterContainer().at(i);
+    filter->writeFilterParameters(writer.get(), i);
+  }
+}
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void TestWriteQSettingsBasedFile()
 {
+  DataContainerReader::Pointer dcr = DataContainerReader::New();
+  dcr->setInputFile("foobar.dream3d");
+  dcr->setReadVertexData(false);
+  dcr->setReadEdgeData(false);
+  dcr->setReadSurfaceData(false);
+  dcr->setReadAllVertexArrays(false);
+  dcr->setReadAllFaceArrays(false);
+  dcr->setReadVolumeData(true);
+  dcr->setReadAllCellArrays(true);
+  dcr->setReadAllCellFieldArrays(true);
+  dcr->setReadAllCellEnsembleArrays(true);
 
+  QSet<QString> cellArrays;
+  cellArrays << DREAM3D::CellData::GrainIds;
+  QSet<QString> fieldArrays;
+  fieldArrays << DREAM3D::FieldData::Centroids;
+  QSet<QString> ensembleArrays;
+  ensembleArrays << DREAM3D::EnsembleData::CrystalStructures;
+  QSet<QString> blank;
+  dcr->setVolumeSelectedArrayNames(blank,blank,blank,cellArrays,fieldArrays,ensembleArrays);
+
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  pipeline->pushBack(dcr);
+  writePipeline(pipeline);
 }
 
 // -----------------------------------------------------------------------------
@@ -296,10 +347,15 @@ int main(int argc, char* argv[])
 {
   int err = EXIT_SUCCESS;
 
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 
   DREAM3D_REGISTER_TEST( TestWriteQSettingsBasedFile() )
 
-  DREAM3D_REGISTER_TEST( TestReadQSettingsBasedFile() )
+//  DREAM3D_REGISTER_TEST( TestReadQSettingsBasedFile() )
+
+#if REMOVE_TEST_FILES
+  //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
 
   PRINT_TEST_SUMMARY();
 

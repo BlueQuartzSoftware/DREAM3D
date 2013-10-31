@@ -874,6 +874,14 @@ void RunPipeline8()
     std::cout << "Failed Preflight" << std::endl;
   }
   pipeline->run();
+
+  err = pipeline->getErrorCondition();
+  if(err < 0)
+  {
+    std::cout << "Pipeline Execute Failed" << std::endl;
+  }
+  DREAM3D_REQUIRE(err >= 0)
+
 }
 
 // -----------------------------------------------------------------------------

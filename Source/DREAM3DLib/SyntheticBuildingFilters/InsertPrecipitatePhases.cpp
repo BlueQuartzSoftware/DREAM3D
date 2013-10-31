@@ -73,7 +73,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_AxisLengthsArrayName(DREAM3D::FieldData::AxisLengths),
   m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
   m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-  m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
+  m_ClusteringListArrayName(DREAM3D::FieldData::ClusteringList),
   m_NumCellsArrayName(DREAM3D::FieldData::NumCells),
   m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
@@ -81,6 +81,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
   m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
+  m_ErrorOutputFile("/Users/joetuck/Desktop/Microtexture/StatsGen/error.txt"),
   m_CsvOutputFile(""),
   m_PeriodicBoundaries(false),
   m_WriteGoalAttributes(false),
@@ -96,6 +97,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_Active(NULL),
   m_FieldPhases(NULL),
   m_NumCells(NULL),
+  m_ClusteringList(NULL),
   m_PhaseTypes(NULL),
   m_ShapeTypes(NULL),
   m_NumFields(NULL)
@@ -191,32 +193,30 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, -301, int8_t, Int8ArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, -301, int8_t, Int8ArrayType, voxels, 1)
+
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, int32_t, Int32ArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, float, FloatArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, float, FloatArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, false, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumCells, int32_t, Int32ArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, int32_t, Int32ArrayType, 0, fields, dims)
-  dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, float, FloatArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, float, FloatArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, float, FloatArrayType, 0, fields, dims)
-
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumCells, int32_t, Int32ArrayType, 0, fields, 1)
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, -301, unsigned int, PhaseTypeArrayType, ensembles, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, ShapeTypes, -304, unsigned int, ShapeTypeArrayType, ensembles, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFields, int32_t, Int32ArrayType, 0, ensembles, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, -301, unsigned int, PhaseTypeArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, ShapeTypes, -304, unsigned int, ShapeTypeArrayType, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFields, int32_t, Int32ArrayType, 0, ensembles, 1)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
@@ -341,7 +341,6 @@ void InsertPrecipitatePhases::execute()
   m->removeCellFieldData(m_VolumesArrayName);
   m->removeCellFieldData(m_CentroidsArrayName);
   m->removeCellFieldData(m_NumCellsArrayName);
-  m->removeCellFieldData(m_NeighborhoodsArrayName);
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("InsertPrecipitatePhases Completed");
@@ -352,6 +351,14 @@ void InsertPrecipitatePhases::execute()
 // -----------------------------------------------------------------------------
 void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainOwnersPtr)
 {
+  bool writeErrorFile = true;
+  std::ofstream outFile;
+  if(m_ErrorOutputFile.isEmpty() == false)
+  {
+    outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
+    writeErrorFile = true;
+  }
+
   notifyStatusMessage("Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
@@ -481,54 +488,57 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
     }
   }
 
-  // initialize the sim and goal neighbor distribution for the primary phases
-  neighbordist.resize(precipitatephases.size());
-  simneighbordist.resize(precipitatephases.size());
-  neighbordiststep.resize(precipitatephases.size());
+  // initialize the sim and goal clustering distribution for the primary phases
+  clusteringdist.resize(precipitatephases.size());
+  simclusteringdist.resize(precipitatephases.size());
+  clusteringdiststep.resize(precipitatephases.size());
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
     phase = precipitatephases[i];
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
-    neighbordist[i].resize(pp->getBinNumbers()->GetSize());
-    simneighbordist[i].resize(pp->getBinNumbers()->GetSize());
-    VectorOfFloatArray Neighdist = pp->getGrainSize_Neighbors();
+    clusteringdist[i].resize(pp->getBinNumbers()->GetSize());
+//    int binNumbers = pp->getBinNumbers();
+    simclusteringdist[i].resize(pp->getBinNumbers()->GetSize());
+    VectorOfFloatArray Neighdist = pp->getGrainSize_Clustering();
     float normalizer = 0;
-    for (size_t j = 0; j < neighbordist[i].size(); j++)
+    for (size_t j = 0; j < clusteringdist[i].size(); j++)
     {
-      neighbordist[i][j].resize(40);
+      clusteringdist[i][j].resize(40);
+      simclusteringdist[i][j].resize(40);
       float input = 0;
       float previoustotal = 0;
       float avg = Neighdist[0]->GetValue(j);
       float stdev = Neighdist[1]->GetValue(j);
-      neighbordiststep[i] = 2;
+      clusteringdiststep[i] = 2;
       float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
-      for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+      for (size_t k = 0; k < clusteringdist[i][j].size(); k++)
       {
-        input = (float(k + 1) * neighbordiststep[i]);
+        input = (float(k + 1) * clusteringdiststep[i]);
         float logInput = logf(input);
         if(logInput <= avg)
         {
-          neighbordist[i][j][k] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst)) - previoustotal;
+          clusteringdist[i][j][k] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst)) - previoustotal;
         }
         if(logInput > avg)
         {
-          neighbordist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
+          clusteringdist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
         }
-        previoustotal = previoustotal + neighbordist[i][j][k];
+        previoustotal = previoustotal + clusteringdist[i][j][k];
       }
       normalizer = normalizer + previoustotal;
     }
-    for (size_t j = 0; j < neighbordist[i].size(); j++)
+    for (size_t j = 0; j < clusteringdist[i].size(); j++)
     {
-      for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+      for (size_t k = 0; k < clusteringdist[i][j].size(); k++)
       {
-        neighbordist[i][j][k] = neighbordist[i][j][k] / normalizer;
+        clusteringdist[i][j][k] = clusteringdist[i][j][k] / normalizer;
+        simclusteringdist[i][j][k] = 0;
       }
     }
   }
 
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
-  // is the most beneficial, then the grain is added and its neighbors are determined
+  // is the most beneficial, then the grain is added and its clustering are determined
 
   size_t numgrains = m->getNumCellFieldTuples();
 
@@ -540,7 +550,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   for (size_t i = firstPrecipitateField; i < numgrains; i++)
   {
 
-    QString ss = QObject::tr("Packing Grains - Placing Grain #%1").arg(i);
+    QString ss = QObject::tr("Packing Precipitates - Placing Precipitate #%1").arg(i);
     notifyStatusMessage(ss);
 
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[i]].get());
@@ -571,53 +581,53 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
     insert_precipitate(i);
-    fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
-    for (int iter_fill = 0; iter_fill < 10; iter_fill++)
-    {
-      random = static_cast<float>(rg.genrand_res53());
-      if(random <= precipboundaryfraction)
-      {
-        random2 = int(rg.genrand_res53() * double(totalPoints - 1));
-        while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
-        {
-          random2++;
-          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
-        }
-      }
-      else if(random > precipboundaryfraction)
-      {
-        random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
-        while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
-        {
-          random2++;
-          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
-        }
-      }
-      xc = find_xcoord(random2);
-      yc = find_ycoord(random2);
-      zc = find_zcoord(random2);
-      oldxc = m_Centroids[3 * i];
-      oldyc = m_Centroids[3 * i + 1];
-      oldzc = m_Centroids[3 * i + 2];
-      oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, i, grainOwnersPtr);
-      move_precipitate(i, xc, yc, zc);
-      fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
-      if(fillingerror > oldfillingerror)
-      {
-        fillingerror = check_fillingerror(-1000, i, grainOwnersPtr);
-        move_precipitate(i, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
-      }
-    }
+    oldclusteringerror = check_clusteringerror(i, -1000);
+//    fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
+//    for (int iter_fill = 0; iter_fill < 10; iter_fill++)
+//    {
+//      random = static_cast<float>(rg.genrand_res53());
+//      if(random <= precipboundaryfraction)
+//      {
+//        random2 = int(rg.genrand_res53() * double(totalPoints - 1));
+//        while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
+//        {
+//          random2++;
+//          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
+//        }
+//      }
+//      else if(random > precipboundaryfraction)
+//      {
+//        random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
+//        while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
+//        {
+//          random2++;
+//          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
+//        }
+//      }
+//      xc = find_xcoord(random2);
+//      yc = find_ycoord(random2);
+//      zc = find_zcoord(random2);
+//      oldxc = m_Centroids[3 * i];
+//      oldyc = m_Centroids[3 * i + 1];
+//      oldzc = m_Centroids[3 * i + 2];
+//      oldfillingerror = fillingerror;
+//      fillingerror = check_fillingerror(-1000, i, grainOwnersPtr);
+//      move_precipitate(i, xc, yc, zc);
+//      fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
+//      if(fillingerror > oldfillingerror)
+//      {
+//        fillingerror = check_fillingerror(-1000, i, grainOwnersPtr);
+//        move_precipitate(i, oldxc, oldyc, oldzc);
+//        fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
+//      }
+//    }
   }
 
   notifyStatusMessage("Packing Grains - Initial Grain Placement Complete");
 
-  // determine initial filling and neighbor distribution errors
-  oldneighborhooderror = check_neighborhooderror(-1000, -1000);
+
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(10 * ((numgrains - firstPrecipitateField) - 1));
+  int totalAdjustments = static_cast<int>(100 * ((numgrains - firstPrecipitateField) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
 
@@ -628,6 +638,18 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
     //    change1 = 0;
     //    change2 = 0;
     int option = iteration % 2;
+
+    if(writeErrorFile == true && iteration % 25 == 0)
+    {
+      outFile << iteration << " " << oldclusteringerror << " " << acceptedmoves
+              << "\n";
+
+      for (size_t k = 0; k < clusteringdist[0][0].size(); k++)
+      {
+          outFile << clusteringdist[0][0][k] << " " << simclusteringdist[0][0][k] << "\n";
+      }
+int stop;
+    }
 
     // JUMP - this option moves one grain to a random spot in the volume
     if(option == 0)
@@ -640,12 +662,6 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
       }
       Seed++;
 
-
-      //      int32_t fldPhse = m_FieldPhases[randomgrain];
-      //      StatsData::Pointer  phaseStatsData = statsDataArray[fldPhse];
-      //      int precision = 0;
-      //      QString xdmfType = "";
-      //      phaseStatsData->GetXdmfTypeAndSize(xdmfType, precision);
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[randomgrain]].get());
       if (NULL == pp)
       {
@@ -677,22 +693,27 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
-      oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
+//      oldfillingerror = fillingerror;
+//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
+//      move_precipitate(randomgrain, xc, yc, zc);
+//      fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
+      currentclusteringerror = check_clusteringerror(-1000, randomgrain);
       move_precipitate(randomgrain, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
-      currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
-      //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-      if(fillingerror <= oldfillingerror)
+      currentclusteringerror = check_clusteringerror(randomgrain, -1000);
+      if(currentclusteringerror >= oldclusteringerror)
       {
-        //        oldneighborhooderror = currentneighborhooderror;
+        oldclusteringerror = currentclusteringerror;
         acceptedmoves++;
       }
-      else if(fillingerror > oldfillingerror)
+      else if(currentclusteringerror < oldclusteringerror)
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
+//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
+//      move_precipitate(randomgrain, oldxc, oldyc, oldzc);
+//      fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
+        currentclusteringerror = check_clusteringerror(-1000, randomgrain);
         move_precipitate(randomgrain, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
+        currentclusteringerror = check_clusteringerror(randomgrain, -1000);
+        oldclusteringerror = currentclusteringerror;
       }
     }
     // NUDGE - this option moves one grain to a spot close to its current centroid
@@ -711,22 +732,27 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
       xc = static_cast<float>(oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[0])));
       yc = static_cast<float>(oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[1])));
       zc = static_cast<float>(oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[2])));
-      oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
+//      oldfillingerror = fillingerror;
+//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
+//      move_precipitate(randomgrain, xc, yc, zc);
+//      fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
+      currentclusteringerror = check_clusteringerror(-1000, randomgrain);
       move_precipitate(randomgrain, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
-      currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
-      //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-      if(fillingerror <= oldfillingerror)
+      currentclusteringerror = check_clusteringerror(randomgrain, -1000);
+      if(currentclusteringerror >= oldclusteringerror)
       {
-        //        oldneighborhooderror = currentneighborhooderror;
+        oldclusteringerror = currentclusteringerror;
         acceptedmoves++;
       }
-      else if(fillingerror > oldfillingerror)
+      else if(currentclusteringerror < oldclusteringerror)
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
+//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
+//      move_precipitate(randomgrain, oldxc, oldyc, oldzc);
+//      fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
+        currentclusteringerror = check_clusteringerror(-1000, randomgrain);
         move_precipitate(randomgrain, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
+        currentclusteringerror = check_clusteringerror(randomgrain, -1000);
+        oldclusteringerror = currentclusteringerror;
       }
     }
   }
@@ -813,7 +839,6 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int seed, Precip* 
   precip->m_AxisEulerAngles[2] = phi2;
   precip->m_Omega3s = omega3f;
   precip->m_FieldPhases = phase;
-  precip->m_Neighborhoods = 0;
 }
 
 void InsertPrecipitatePhases::transfer_attributes(int gnum, Precip* precip)
@@ -828,7 +853,6 @@ void InsertPrecipitatePhases::transfer_attributes(int gnum, Precip* precip)
   m_AxisEulerAngles[3 * gnum + 2] = precip->m_AxisEulerAngles[2];
   m_Omega3s[gnum] = precip->m_Omega3s;
   m_FieldPhases[gnum] = precip->m_FieldPhases;
-  m_Neighborhoods[gnum] = precip->m_Neighborhoods;
 }
 
 void InsertPrecipitatePhases::move_precipitate(size_t gnum, float xc, float yc, float zc)
@@ -865,38 +889,57 @@ void InsertPrecipitatePhases::move_precipitate(size_t gnum, float xc, float yc, 
 }
 
 
-void InsertPrecipitatePhases::determine_neighbors(size_t gnum, int add)
+void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   float x, y, z;
   float xn, yn, zn;
+  float r;
   float dia, dia2;
-  float dx, dy, dz;
-  //  int nnum = 0;
-  //  nnum = 0;
+  int iter = 0;
+  int diabin, dia2bin, clusterbin;
+
+  int phase = m_FieldPhases[gnum];
+  while (phase != precipitatephases[iter]) iter++;
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+  typedef QVector<QVector<float> > VectOfVectFloat_t;
+
+  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+//  VectOfVectFloat_t& curSimClusteringDist = simclusteringdist[iter];
+//  size_t curSImClusteringDist_Size = curSimClusteringDist.size();
+  float oneOverClusteringDistStep = 1.0f / clusteringdiststep[iter];
+
+  float maxGrainDia = pp->getMaxGrainDiameter();
+  float minGrainDia = pp->getMinGrainDiameter();
+  float oneOverBinStepSize = 1.0f / pp->getBinStepSize();
+
   x = m_Centroids[3 * gnum];
   y = m_Centroids[3 * gnum + 1];
   z = m_Centroids[3 * gnum + 2];
-  dia = m_EquivalentDiameters[gnum];
-  for (size_t n = firstPrecipitateField; n < m->getNumCellFieldTuples(); n++)
+  size_t numFields = m->getNumCellFieldTuples();
+  for (size_t n = firstPrecipitateField; n < numFields; n++)
   {
-    xn = m_Centroids[3 * n];
-    yn = m_Centroids[3 * n + 1];
-    zn = m_Centroids[3 * n + 2];
-    dia2 = m_EquivalentDiameters[n];
-    dx = fabs(x - xn);
-    dy = fabs(y - yn);
-    dz = fabs(z - zn);
-    if(dx < dia && dy < dia && dz < dia)
+    if (m_FieldPhases[n] == phase)
     {
-      if(add > 0) { m_Neighborhoods[gnum]++; }
-      if(add < 0) { m_Neighborhoods[gnum] = m_Neighborhoods[gnum] - 1; }
-    }
-    if(dx < dia2 && dy < dia2 && dz < dia2)
-    {
-      if(add > 0) { m_Neighborhoods[n]++; }
-      if(add < 0) { m_Neighborhoods[n] = m_Neighborhoods[n] - 1; }
+      xn = m_Centroids[3 * n];
+      yn = m_Centroids[3 * n + 1];
+      zn = m_Centroids[3 * n + 2];
+      r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
+
+      dia = m_EquivalentDiameters[gnum];
+      dia2 = m_EquivalentDiameters[n];
+      if(dia > maxGrainDia) { dia = maxGrainDia; }
+      if(dia < minGrainDia) { dia = minGrainDia; }
+      if(dia2 > maxGrainDia) { dia2 = maxGrainDia; }
+      if(dia2 < minGrainDia) { dia2 = minGrainDia; }
+      diabin = static_cast<size_t>(((dia - minGrainDia) * oneOverBinStepSize) );
+      dia2bin = static_cast<size_t>(((dia2 - minGrainDia) * oneOverBinStepSize) );
+      clusterbin = static_cast<size_t>( r * oneOverClusteringDistStep );
+      if(clusterbin >= 40) { clusterbin = 39; }
+      simclusteringdist[iter][diabin][clusterbin] += add;
+      simclusteringdist[iter][dia2bin][clusterbin] += add;
     }
   }
 }
@@ -904,118 +947,27 @@ void InsertPrecipitatePhases::determine_neighbors(size_t gnum, int add)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
+float InsertPrecipitatePhases::check_clusteringerror(int gadd, int gremove)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+//  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
-
-  float neighborerror;
+  float clusteringerror;
   float bhattdist;
-  float dia;
-  int nnum;
-  size_t diabin = 0;
-  size_t nnumbin = 0;
-  int index = 0;
 
-  int counter = 0;
-  int phase;
-  typedef QVector<QVector<float> > VectOfVectFloat_t;
-  for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
+  for (size_t iter = 0; iter < simclusteringdist.size(); ++iter)
   {
-    phase = precipitatephases[iter];
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
-    VectOfVectFloat_t& curSimNeighborDist = simneighbordist[iter];
-    size_t curSImNeighborDist_Size = curSimNeighborDist.size();
-    float oneOverNeighborDistStep = 1.0f / neighbordiststep[iter];
-
-    QVector<int> count(curSImNeighborDist_Size, 0);
-    for (size_t i = 0; i < curSImNeighborDist_Size; i++)
+    if(gadd > 0)
     {
-      curSimNeighborDist[i].resize(40);
-      for (size_t j = 0; j < 40; j++)
-      {
-        curSimNeighborDist[i][j] = 0;
-      }
+      determine_clustering(gadd, 1);
     }
-    if(gadd > 0 && m_FieldPhases[gadd] == phase)
+    if(gremove > 0)
     {
-      determine_neighbors(gadd, 1);
-    }
-    if(gremove > 0 && m_FieldPhases[gremove] == phase)
-    {
-      determine_neighbors(gremove, -1);
-    }
-
-    float maxGrainDia = pp->getMaxGrainDiameter();
-    float minGrainDia = pp->getMinGrainDiameter();
-    float oneOverBinStepSize = 1.0f / pp->getBinStepSize();
-
-
-    for (size_t i = firstPrecipitateField; i < m->getNumCellFieldTuples(); i++)
-    {
-      nnum = 0;
-      index = i;
-      if(index != gremove && m_FieldPhases[index] == phase)
-      {
-        dia = m_EquivalentDiameters[index];
-        if(dia > maxGrainDia) { dia = maxGrainDia; }
-        if(dia < minGrainDia) { dia = minGrainDia; }
-        diabin = static_cast<size_t>(((dia - minGrainDia) * oneOverBinStepSize) );
-        nnum = m_Neighborhoods[index];
-        nnumbin = static_cast<size_t>( nnum * oneOverNeighborDistStep );
-        if(nnumbin >= 40) { nnumbin = 39; }
-        curSimNeighborDist[diabin][nnumbin]++;
-        count[diabin]++;
-        counter++;
-      }
-    }
-    if(gadd > 0 && m_FieldPhases[gadd] == phase)
-    {
-      dia = m_EquivalentDiameters[gadd];
-      if(dia > maxGrainDia) { dia = maxGrainDia; }
-      if(dia < minGrainDia) { dia = minGrainDia; }
-      diabin = static_cast<size_t>(((dia - minGrainDia) * oneOverBinStepSize) );
-      nnum = m_Neighborhoods[gadd];
-      nnumbin = static_cast<size_t>( nnum * oneOverNeighborDistStep );
-      if(nnumbin >= 40) { nnumbin = 39; }
-      curSimNeighborDist[diabin][nnumbin]++;
-      count[diabin]++;
-      counter++;
-    }
-    float oneOverCounter = 1.0f / static_cast<float>(counter);
-
-    for (size_t i = 0; i < curSImNeighborDist_Size; i++)
-    {
-      if (counter == 0)
-      {
-        for (size_t j = 0; j < 40; j++)
-        {
-          curSimNeighborDist[i][j] = 0.0f;
-        }
-      }
-      else
-      {
-        for (size_t j = 0; j < 40; j++)
-        {
-          curSimNeighborDist[i][j] = curSimNeighborDist[i][j] * oneOverCounter;
-        }
-      }
-    }
-
-    if(gadd > 0 && m_FieldPhases[gadd] == phase)
-    {
-      determine_neighbors(gadd, -1);
-    }
-
-    if(gremove > 0 && m_FieldPhases[gremove] == phase)
-    {
-      determine_neighbors(gremove, 1);
+      determine_clustering(gremove, -1);
     }
   }
-  compare_3Ddistributions(simneighbordist, neighbordist, bhattdist);
-  neighborerror = bhattdist;
-  return neighborerror;
+  compare_3Ddistributions(simclusteringdist, clusteringdist, bhattdist);
+  clusteringerror = bhattdist;
+  return clusteringerror;
 }
 void InsertPrecipitatePhases::compare_1Ddistributions(QVector<float> array1, QVector<float> array2, float& bhattdist)
 {
@@ -1040,13 +992,28 @@ void InsertPrecipitatePhases::compare_2Ddistributions(QVector<QVector<float> > a
 void InsertPrecipitatePhases::compare_3Ddistributions(QVector<QVector<QVector<float> > > array1, QVector<QVector<QVector<float> > > array2, float& bhattdist)
 {
   bhattdist = 0;
+  QVector<QVector<float> > counts1(array1.size());
+  QVector<QVector<float> > counts2(array2.size());
+  for (size_t i = 0; i < array1.size(); i++)
+  {
+    counts1[i].resize(array1[i].size());
+    counts2[i].resize(array2[i].size());
+    for (size_t j = 0; j < array1[i].size(); j++)
+    {
+      for (size_t k = 0; k < array1[i][j].size(); k++)
+      {
+        counts1[i][j] += array1[i][j][k];
+        counts2[i][j] += array2[i][j][k];
+      }
+    }
+  }
   for (size_t i = 0; i < array1.size(); i++)
   {
     for (size_t j = 0; j < array1[i].size(); j++)
     {
       for (size_t k = 0; k < array1[i][j].size(); k++)
       {
-        bhattdist = bhattdist + sqrt((array1[i][j][k] * array2[i][j][k]));
+        bhattdist = bhattdist + sqrt(((array1[i][j][k] / counts1[i][j]) * (array2[i][j][k] / counts2[i][j])));
       }
     }
   }
@@ -1847,8 +1814,7 @@ Int32ArrayType::Pointer  InsertPrecipitatePhases::initialize_packinggrid()
 
   m_TotalPackingPoints = m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2];
 
-  QVector<int> dims(1, 1);
-  Int32ArrayType::Pointer grainOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, dims, "PackPrimaryGrains::grain_owners");
+  Int32ArrayType::Pointer grainOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, 1, "PackPrimaryGrains::grain_owners");
   grainOwnersPtr->initializeWithZeros();
 
   return grainOwnersPtr;
@@ -1917,7 +1883,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   QVector<IDataArray::Pointer> data;
 
   //For checking if an array is a neighborlist
-  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
+  NeighborList<float>::Pointer neighborlistPtr = NeighborList<float>::New();
 
   // Print the GrainIds Header before the rest of the headers
   dStream << DREAM3D::GrainData::GrainID;

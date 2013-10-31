@@ -53,6 +53,7 @@
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 typedef struct
 {
@@ -92,7 +93,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
@@ -103,6 +104,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
@@ -145,8 +147,8 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     void move_precipitate(size_t grainNum, float xc, float yc, float zc);
 
     float check_sizedisterror(Precip* precip);
-    void determine_neighbors(size_t grainNum, int add);
-    float check_neighborhooderror(int gadd, int gremove);
+    void determine_clustering(size_t grainNum, int add);
+    float check_clusteringerror(int gadd, int gremove);
 
     float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr);
     void assign_voxels();
@@ -195,7 +197,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     bool* m_Active;
     int32_t* m_FieldPhases;
     int32_t* m_NumCells;
-    int32_t* m_Neighborhoods;
+    NeighborList<float>* m_ClusteringList;
 
     unsigned int* m_PhaseTypes;
     unsigned int* m_ShapeTypes;
@@ -217,18 +219,18 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
     QVector<QVector<float> > grainsizedist;
     QVector<QVector<float> > simgrainsizedist;
-    QVector<QVector<QVector<float> > > neighbordist;
-    QVector<QVector<QVector<float> > > simneighbordist;
+    QVector<QVector<QVector<float> > > clusteringdist;
+    QVector<QVector<QVector<float> > > simclusteringdist;
 
     QVector<float> grainsizediststep;
-    QVector<float> neighbordiststep;
+    QVector<float> clusteringdiststep;
 
     QVector<int> newnames;
     QVector<int> packqualities;
     QVector<int> gsizes;
 
     float fillingerror, oldfillingerror;
-    float currentneighborhooderror, oldneighborhooderror;
+    float currentclusteringerror, oldclusteringerror;
     float currentsizedisterror, oldsizedisterror;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

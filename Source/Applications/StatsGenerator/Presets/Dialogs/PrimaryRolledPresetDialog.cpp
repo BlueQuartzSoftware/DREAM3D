@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "RolledPresetDialog.h"
+#include "PrimaryRolledPresetDialog.h"
 #include <QtGui/QFormLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -44,7 +44,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RolledPresetDialog::RolledPresetDialog(QWidget* parent) :
+PrimaryRolledPresetDialog::PrimaryRolledPresetDialog(QWidget* parent) :
 QDialog(parent)
 {
   setupGui();
@@ -53,14 +53,14 @@ QDialog(parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RolledPresetDialog::~RolledPresetDialog()
+PrimaryRolledPresetDialog::~PrimaryRolledPresetDialog()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPresetDialog::setupGui()
+void PrimaryRolledPresetDialog::setupGui()
 {
 
   QVBoxLayout* verticalLayout_2 = new QVBoxLayout(this);
@@ -133,7 +133,7 @@ void RolledPresetDialog::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float RolledPresetDialog::getA()
+float PrimaryRolledPresetDialog::getA()
 {
   bool ok = false;
   double d = A->text().toFloat(&ok);
@@ -144,7 +144,7 @@ float RolledPresetDialog::getA()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float RolledPresetDialog::getB()
+float PrimaryRolledPresetDialog::getB()
 {
   bool ok = false;
   double d = B->text().toFloat(&ok);
@@ -155,7 +155,7 @@ float RolledPresetDialog::getB()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float RolledPresetDialog::getC()
+float PrimaryRolledPresetDialog::getC()
 {
   bool ok = false;
   double d = C->text().toFloat(&ok);

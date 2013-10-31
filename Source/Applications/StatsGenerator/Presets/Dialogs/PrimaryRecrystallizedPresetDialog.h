@@ -33,57 +33,40 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ROLLEDPRESET_H_
-#define ROLLEDPRESET_H_
 
-//-- C++ includes
-#include <string>
+#ifndef PrimaryRecrystallizedPresetDialog_H_
+#define PrimaryRecrystallizedPresetDialog_H_
 
-//-- MXA Includes
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include <QtGui/QDialog>
 
-//-- StatsGen Includes
-#include "AbstractMicrostructurePresetFactory.h"
-#include "AbstractMicrostructurePreset.h"
-
+class QLineEdit;
 
 /**
- * @class RolledPreset RolledPreset.h StatsGenerator/Presets/RolledPreset.h
- * @brief This class will populate the various tables with the necessary values
- * to create a Rolled Microstructure.
+ * @class PrimaryRecrystallizedPresetDialog PrimaryRecrystallizedPresetDialog.h StatsGenerator/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h
+ * @brief This class is a QDialog subclass that allows the user to input values
+ * that effect the generation of a default set of statistics.
  * @author Michael A. Jackson for BlueQuartz Software
- * @date May 23, 2011
+ * @date May 12, 2011
  * @version 1.0
  */
-class RolledPreset : public AbstractMicrostructurePreset
+class PrimaryRecrystallizedPresetDialog : public QDialog
 {
+    Q_OBJECT
+
   public:
-    DREAM3D_SHARED_POINTERS(RolledPreset)
-    DREAM3D_STATIC_NEW_MACRO(RolledPreset)
-    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RolledPreset)
-    virtual ~RolledPreset();
+    PrimaryRecrystallizedPresetDialog(QWidget* parent = NULL);
+    virtual ~PrimaryRecrystallizedPresetDialog();
 
-    void displayUserInputDialog();
-    void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-
-    void initializeAxisODFTableModel(SGAxisODFWidget* widget);
-
-
-    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio1)
-    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio2)
+    float getPercentRecrystallized();
 
   protected:
-    RolledPreset();
+    void setupGui();
 
   private:
-    RolledPreset(const RolledPreset&); // Copy Constructor Not Implemented
-    void operator=(const RolledPreset&); // Operator '=' Not Implemented
+    QLineEdit* percentRecystallized;
+
+    PrimaryRecrystallizedPresetDialog(const PrimaryRecrystallizedPresetDialog&); // Copy Constructor Not Implemented
+    void operator=(const PrimaryRecrystallizedPresetDialog&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(RolledPresetFactory, RolledPreset, "Rolled")
-
-
-#endif /* ROLLEDPRESET_H_ */
+#endif /* PrimaryRecrystallizedPresetDialog_H_ */

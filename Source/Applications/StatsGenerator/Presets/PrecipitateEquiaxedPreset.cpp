@@ -34,12 +34,15 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "RolledPreset.h"
+#include "PrecipitateEquiaxedPreset.h"
 
-#include "StatsGenerator/Presets/Dialogs/RolledPresetDialog.h"
+
+
+#include "StatsGenerator/Presets/Dialogs/PrecipitateRolledPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
 #include "StatsGenerator/StatsGenODFWidget.h"
 #include "StatsGenerator/SGAxisODFWidget.h"
+#include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
@@ -47,49 +50,31 @@
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RolledPreset::RolledPreset() :
-  m_AspectRatio1(1.0), m_AspectRatio2(1.0)
+PrecipitateEquiaxedPreset::PrecipitateEquiaxedPreset()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RolledPreset::~RolledPreset()
+PrecipitateEquiaxedPreset::~PrecipitateEquiaxedPreset()
 {
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::displayUserInputDialog()
-{
-  RolledPresetDialog d(NULL);
-  int ret = d.exec();
-  if (ret == QDialog::Accepted)
-  {
-    // The user clicked the OK button so transfer the values from the dialog into this class
-    m_AspectRatio1 = d.getA()/d.getB();
-    m_AspectRatio2 = d.getA()/d.getC();
-  }
-  else
-  {
-    // Perform any cancellation actions if the user canceled the dialog box
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrecipitateEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -109,8 +94,8 @@ void RolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
-    alpha = (0 * i) + 10.0 + rg.genrand_res53();
-    beta = (0 * i) + 1.5 + (0.5 * rg.genrand_res53());
+    alpha = (0*i) + 10.0 + rg.genrand_res53();
+    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -128,12 +113,12 @@ void RolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrecipitateEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -153,8 +138,8 @@ void RolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
-    alpha = (0 * i) + (1.1+(28.9*(1.0/m_AspectRatio1))) + (rg.genrand_res53());
-    beta = (0 * i) + (30-(28.9*(1.0/m_AspectRatio1))) + (rg.genrand_res53());
+    alpha = (0*i) + 15.0 + rg.genrand_res53();
+    beta = (0*i) + 1.25 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -172,12 +157,12 @@ void RolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrecipitateEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -197,8 +182,8 @@ void RolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
-    alpha = (0 * i) + (1.1+(28.9*(1.0/m_AspectRatio2))) + (rg.genrand_res53());
-    beta = (0 * i) + (30-(28.9*(1.0/m_AspectRatio2))) + (rg.genrand_res53());
+    alpha = (0*i) + 15.0 + rg.genrand_res53();
+    beta = (0*i) + 1.25 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -213,10 +198,11 @@ void RolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<
   model->setTableData(binNumbers, data, colors);
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrecipitateEquiaxedPreset::initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
   plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
@@ -243,7 +229,7 @@ void RolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVecto
   int middlebin = count / 2;
   for (qint32 i = 0; i < count; ++i)
   {
-    mu = log(8.0 + (1.0*float(i - middlebin)));
+    mu = log(14.0 + (2.0*float(i - middlebin)));
     sigma = 0.3 + (float(middlebin - i)/float(middlebin*10));
     mus.push_back(mu);
     sigmas.push_back(sigma);
@@ -263,32 +249,7 @@ void RolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVecto
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RolledPreset::initializeAxisODFTableModel(SGAxisODFWidget* widget)
+void PrecipitateEquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
-  // This line basically makes sure we have the distribution type we are looking for
-  SGODFTableModel* model = (widget->tableModel());
-  if (NULL == model)
-  {
-    return;
-  }
-  QVector<float> e1;
-  QVector<float> e2;
-  QVector<float> e3;
-  QVector<float> weights;
-  QVector<float> sigmas;
-
-  e1.push_back(0.0f);
-  e2.push_back(0.0f);
-  e3.push_back(0.0f);
-  int spread = int(1.0+(5*powf((1/m_AspectRatio1),1.0)));
-  float weight = (46656.0*(1-powf((1/m_AspectRatio1),2.0)));
-  if(weight == 0.0) spread = 1;
-  int scaler = (8*(spread-1)*(spread-1)*(spread-1));
-  if(scaler == 0) scaler = 1;
-  weights.push_back(weight/scaler);
-  sigmas.push_back(spread);
-
-
-  model->setTableData(e1, e2, e3, weights, sigmas);
+  BOOST_ASSERT(false);
 }
-

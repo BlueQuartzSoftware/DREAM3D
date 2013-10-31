@@ -24,7 +24,7 @@ This filter will fit "common" statistical distributions (as chosen by the user) 
 | Neighborhoods Distribution Fit Type | Choice | Which distribution to fit the neighborhood distibution with |
 
 ## Required DataContainers ##
-Voxel
+Volume
 
 ## Required Arrays ##
 
