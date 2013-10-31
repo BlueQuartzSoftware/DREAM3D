@@ -887,14 +887,14 @@ int main(int argc, char** argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-//  RunPipeline1();
-//  RunPipeline2();
-//  RunPipeline3();
+  RunPipeline1();
+  RunPipeline2();
+  RunPipeline3();
 //  RunPipeline4();
 //  RunPipeline5();
 //  RunPipeline6();
 //  RunPipeline7();
-  RunPipeline8();
+//  RunPipeline8();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )
