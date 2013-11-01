@@ -17,6 +17,11 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 ## Version 4.2 Bugs Fixed & Features Added ##
 
+### Version 4.2.4635 ###
++ Adding crystal symmetry operations for all crystal symmetries. This allows the IPF Coloring to work for all symmetries
++ Adding the Misorientation Coloring Filter based the Schuh & Patala algorithm and implemented by Will Lenthe at UCSB
++ Low level bug fixes effecting various IO filters
+
 ### Version 4.2.4629 ###
 + Fixing an issue with sampling the ODF properly when matching crystallography
 + Adding checks for resolution values of zero at which point the value is changed to 1.0.

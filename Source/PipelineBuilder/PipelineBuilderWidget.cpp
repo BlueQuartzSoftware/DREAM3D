@@ -498,7 +498,7 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* 
 
   prefs.setValue("Number_Filters", count);
   prefs.setValue("Name", fi.baseName()); // Put a default value in here
-  prefs.setValue("DREAM3D Version", DREAM3DLib::Version::Package());
+  prefs.setValue("DREAM3D Version", QString::fromStdString(DREAM3DLib::Version::Package()));
   prefs.endGroup();
 
   for(qint32 i = 0; i < count; ++i)
