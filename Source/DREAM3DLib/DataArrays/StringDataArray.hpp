@@ -60,6 +60,7 @@ class StringDataArray : public IDataArray
   public:
     DREAM3D_SHARED_POINTERS(StringDataArray )
     DREAM3D_TYPE_MACRO_SUPER(StringDataArray, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     static Pointer CreateArray(size_t numElements, const QString& name)
     {
@@ -80,7 +81,19 @@ class StringDataArray : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+    {
+      IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    {
+      IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
     {
       IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name);
       return p;
@@ -176,14 +189,43 @@ class StringDataArray : public IDataArray
       return m_Array.size();
     }
 
-    virtual void SetNumberOfComponents(int nc)
-    {
-      ;
-    }
-
     virtual int GetNumberOfComponents()
     {
       return 1;
+    }
+
+    // Description:
+    // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
+    // this is set before allocation.
+    void SetRank(int rnk)
+    {
+
+    }
+
+    /**
+     * @brief GetRank
+     * @return
+     */
+    int GetRank()
+    {
+      return 1;
+    }
+
+    // Description:
+    // Set/Get the dimensions of the array.
+    void SetDims(QVector<int> dims)
+    {
+
+    }
+
+    /**
+     * @brief GetDims
+     * @return
+     */
+    QVector<int> GetDims()
+    {
+      QVector<int> dims(1, 1);
+      return dims;
     }
 
     /**
@@ -356,7 +398,8 @@ class StringDataArray : public IDataArray
         str = str + m_Array[i].size() + 1;
       }
 
-      return H5DataArrayWriter<int8_t>::writeArray(parentId, GetName(), totalSize, 1, strPtr->getPointer(0), getFullNameOfClass());
+      QVector<int> dim(1, 1);
+      return H5DataArrayWriter::writeArray<int8_t>(parentId, GetName(), totalSize, 1, 1, dim, getClassVersion(), strPtr->getPointer(0), getFullNameOfClass());
     }
 
     /**

@@ -513,7 +513,8 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   numConnections->initializeWithZeros();
   int* ncon = numConnections->getPointer(0);
 
-  DataArray<double>::Pointer deltaArray = DataArray<double>::CreateArray(nvert, 3, "Laplacian_Smoothing_Delta_Array");
+  QVector<int> dims(1, 3);
+  DataArray<double>::Pointer deltaArray = DataArray<double>::CreateArray(nvert, dims, "Laplacian_Smoothing_Delta_Array");
   deltaArray->initializeWithZeros();
   double* delta = deltaArray->getPointer(0);
 

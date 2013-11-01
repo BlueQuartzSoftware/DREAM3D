@@ -132,12 +132,30 @@ if(UNIX AND NOT APPLE)
   set_source_files_properties(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
 
-add_executable(${PLUGIN_NAME}WidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
+# --------------------------------------------------------------------
+# This is just a library that gets compiled that is just the filter sources for this project
+add_library(${PLUGIN_NAME}FilterLib STATIC ${${PLUGIN_NAME}_Project_SRCS})
+target_link_libraries(${PLUGIN_NAME}FilterLib
+                    ${QT_QTCORE_LIBRARY}
+                    ${QT_QTGUI_LIBRARY}
+                    DREAM3DLib
+                    )
+SET_TARGET_PROPERTIES(${PLUGIN_NAME}FilterLib PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
+# --------------------------------------------------------------------
+# Add the FilterWidgetCodeGen program for this plugin. The program generates
+# all the GUI widgets for each filter
+add_executable(${PLUGIN_NAME}WidgetCodeGen ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
                                             ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetCodeGen.h
-                                            ${${PLUGIN_NAME}_Project_SRCS}
                                             )
-target_link_libraries(${PLUGIN_NAME}WidgetCodeGen EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} QtSupport)
-
+target_link_libraries(${PLUGIN_NAME}WidgetCodeGen
+                                  ${QT_QTCORE_LIBRARY}
+                                  ${QT_QTGUI_LIBRARY}
+                                  EbsdLib
+                                  DREAM3DLib
+                                  QtSupport
+                                  ${PLUGIN_NAME}FilterLib
+                                  )
+SET_TARGET_PROPERTIES(${PLUGIN_NAME}WidgetCodeGen PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
 
 # Now run the code to generate the header files which will over write the place
 # holder files that were generated from above
@@ -233,28 +251,33 @@ if(NOT MSVC)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
 endif()
 
-# --------------------------------------------------------------------
-# Add the plugin as a MODULE
-add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_Project_SRCS})
-# --------------------------------------------------------------------
-# Link the plugin with other DREAM3D Libraries.
-target_link_libraries(${PLUGIN_NAME}
-                    ${QT_QTCORE_LIBRARY}
-                    ${QT_QTGUI_LIBRARY}
-                    DREAM3DLib
-                    QtSupport
-                    PipelineBuilderLib
-                    )
 
 # --------------------------------------------------------------------
-# Add a dependency on the code generation step to make sure the code is
-# generated before we try to compile the plugin
-add_dependencies(${PLUGIN_NAME} ${PLUGIN_NAME}WidgetCodeGen)
+# Add the plugin as a MODULE ONLY if we are building the PipelineBuilder Lib
+if(TARGET PipelineBuilderLib)
+  add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_Project_SRCS})
 
-# --------------------------------------------------------------------
-# Set some additional properties of the plugin like its output name
-PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
-                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
+  # --------------------------------------------------------------------
+  # Link the plugin with other DREAM3D Libraries.
+  target_link_libraries(${PLUGIN_NAME}
+                      ${QT_QTCORE_LIBRARY}
+                      ${QT_QTGUI_LIBRARY}
+                      DREAM3DLib
+                      QtSupport
+                      PipelineBuilderLib
+                      )
+  SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
+  # --------------------------------------------------------------------
+  # Add a dependency on the code generation step to make sure the code is
+  # generated before we try to compile the plugin
+  add_dependencies(${PLUGIN_NAME} ${PLUGIN_NAME}WidgetCodeGen)
+
+  # --------------------------------------------------------------------
+  # Set some additional properties of the plugin like its output name
+  PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
+                  "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
+
+endif()
 
 # --------------------------------------------------------------------
 # Put back the output directory

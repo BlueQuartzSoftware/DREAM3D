@@ -433,8 +433,9 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
     {
       FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), DREAM3D::HDF5::Angle);
 
+      QVector<int> dims(1,3); // Initialize the dimensions to a 1x3 or 3 element vector
       FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), DREAM3D::HDF5::Axis);
-      axisArray->SetNumberOfComponents(3);
+      axisArray->SetDims(dims);
 
       FloatArrayType::Pointer weightArray = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::HDF5::Weight);
 

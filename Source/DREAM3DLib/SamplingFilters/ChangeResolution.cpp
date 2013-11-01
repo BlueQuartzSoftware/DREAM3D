@@ -213,7 +213,8 @@ void ChangeResolution::execute()
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name. At least in theory
-    IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), p->GetNumberOfComponents(), p->GetName());
+    QVector<int> dims(1, p->GetNumberOfComponents());
+    IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), dims, p->GetName());
     data->Resize(totalPoints);
     void* source = NULL;
     void* destination = NULL;

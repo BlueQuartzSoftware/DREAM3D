@@ -70,10 +70,21 @@ class NeighborList : public IDataArray
     DREAM3D_SHARED_POINTERS(NeighborList<T> )
     DREAM3D_STATIC_NEW_MACRO(NeighborList<T> )
     DREAM3D_TYPE_MACRO_SUPER(NeighborList<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
-    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+    {
+      return NeighborList<T>::New();
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    {
+      return NeighborList<T>::New();
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
     {
       return NeighborList<T>::New();
     }
@@ -226,6 +237,17 @@ class NeighborList : public IDataArray
 
     int GetNumberOfComponents() { return 1; }
 
+    void SetRank(int rnk) { }
+
+    int GetRank() { return 1; }
+
+    void SetDims(QVector<int> dims) { }
+
+    QVector<int> GetDims()
+    {
+      QVector<int> dims(1, 1);
+      return dims;
+    }
 
     size_t GetTypeSize()  { return sizeof(SharedVectorType); }
 

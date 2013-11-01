@@ -58,9 +58,9 @@
 class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(AvizoUniformCoordinateWriter);
-    DREAM3D_STATIC_NEW_MACRO(AvizoUniformCoordinateWriter);
-    DREAM3D_TYPE_MACRO_SUPER(AvizoUniformCoordinateWriter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(AvizoUniformCoordinateWriter)
+    DREAM3D_STATIC_NEW_MACRO(AvizoUniformCoordinateWriter)
+    DREAM3D_TYPE_MACRO_SUPER(AvizoUniformCoordinateWriter, AbstractFilter)
 
     virtual ~AvizoUniformCoordinateWriter();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)

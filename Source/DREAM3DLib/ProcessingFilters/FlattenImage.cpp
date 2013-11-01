@@ -174,9 +174,10 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     }
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, -301, unsigned char, UCharArrayType, voxels, numImageComp)
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FlatImageData, int32_t, Int32ArrayType, 0, voxels, 1)
+  QVector<int> dims(1, numImageComp);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, -301, unsigned char, UCharArrayType, voxels, dims)
+  dims[0] = 1;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FlatImageData, int32_t, Int32ArrayType, 0, voxels, dims)
 }
 
 // -----------------------------------------------------------------------------

@@ -114,7 +114,8 @@ void CopyFieldArrayToCellArray::dataCheck(bool preflight, size_t voxels, size_t 
     return;
   }
 
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
 
   if(m_SelectedFieldArrayName.isEmpty() == true)
   {
@@ -156,7 +157,8 @@ IDataArray::Pointer copyData(IDataArray::Pointer inputData, int64_t voxels, int3
   {
     return IDataArray::NullPointer();
   }
-  typename DataArray<T>::Pointer cell = DataArray<T>::CreateArray(voxels, inputData->GetNumberOfComponents(), cellArrayName);
+  QVector<int> dims(1, inputData->GetNumberOfComponents());
+  typename DataArray<T>::Pointer cell = DataArray<T>::CreateArray(voxels, dims, cellArrayName);
 
   T* fPtr = field->getPointer(0);
   T* cPtr = cell->getPointer(0);

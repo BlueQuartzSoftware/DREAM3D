@@ -153,13 +153,15 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -301, float, FloatArrayType, voxels, 4)
+  QVector<int> dims(1 ,4);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -301, float, FloatArrayType, voxels, dims)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302,  int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
+  dims[0] = 1;
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302,  int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, dims)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, dims)
 }
 
 // -----------------------------------------------------------------------------
@@ -463,7 +465,6 @@ void AlignSectionsMutualInformation::form_grains_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
-  m_GrainCounts->SetNumberOfComponents(1);
   m_GrainCounts->Resize(dims[2]);
   graincounts = m_GrainCounts->getPointer(0);
 

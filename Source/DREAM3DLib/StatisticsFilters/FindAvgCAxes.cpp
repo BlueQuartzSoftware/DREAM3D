@@ -93,8 +93,10 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, float, FloatArrayType, 0, fields, 3)
+  QVector<int> dims(1, 4);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, dims)
+  dims[0] = 3;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, float, FloatArrayType, 0, fields, dims)
 }
 
 // -----------------------------------------------------------------------------

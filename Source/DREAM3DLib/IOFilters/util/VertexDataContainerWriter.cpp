@@ -292,7 +292,8 @@ int VertexDataContainerWriter::writeMeshData(hid_t dcGid)
     }
     if(getWriteXdmfFile() == true)
     {
-      DataArray<int32_t>::Pointer vertsPtr = DataArray<int32_t>::CreateArray(verticesPtr->getNumberOfTuples(), 3, DREAM3D::HDF5::VertsName);
+      QVector<int> dim(1, 3);
+      DataArray<int32_t>::Pointer vertsPtr = DataArray<int32_t>::CreateArray(verticesPtr->getNumberOfTuples(), dim, DREAM3D::HDF5::VertsName);
       int32_t* verts = vertsPtr->getPointer(0);
       for(int i = 0; i < verticesPtr->getNumberOfTuples(); i++)
       {

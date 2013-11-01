@@ -119,15 +119,16 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
-
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, 3)
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, float, FloatArrayType, 0, fields, 2)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, dims)
+  dims[0] = 3;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, float, FloatArrayType, 0, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, float, FloatArrayType, 0, fields, dims)
+  dims[0] = 2;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, float, FloatArrayType, 0, fields, dims)
 }
 
 
@@ -193,8 +194,7 @@ void FindShapes::find_moments()
   float u101 = 0;
   float xx, yy, zz, xy, xz, yz;
   size_t numgrains = m->getNumCellFieldTuples();
-  m_GrainMoments->SetNumberOfComponents(6);
-  m_GrainMoments->Resize(numgrains);
+  m_GrainMoments->Resize(numgrains*6);
   grainmoments = m_GrainMoments->getPointer(0);
 
   float xPoints = m->getXPoints();
@@ -322,8 +322,7 @@ void FindShapes::find_moments2D()
 
   float xx, yy, xy;
   size_t numgrains = m->getNumCellFieldTuples();
-  m_GrainMoments->SetNumberOfComponents(6);
-  m_GrainMoments->Resize(numgrains);
+  m_GrainMoments->Resize(numgrains*6);
   grainmoments = m_GrainMoments->getPointer(0);
 
   int xPoints = 0, yPoints = 0;
@@ -414,12 +413,10 @@ void FindShapes::find_axes()
 
   size_t numgrains = m->getNumCellFieldTuples();
 
-  m_GrainMoments->SetNumberOfComponents(6);
-  m_GrainMoments->Resize(numgrains);
+  m_GrainMoments->Resize(numgrains*6);
   grainmoments = m_GrainMoments->getPointer(0);
 
-  m_GrainEigenVals->SetNumberOfComponents(3);
-  m_GrainEigenVals->Resize(numgrains);
+  m_GrainEigenVals->Resize(numgrains*3);
   graineigenvals = m_GrainEigenVals->getPointer(0);
 
 
@@ -503,8 +500,7 @@ void FindShapes::find_axes2D()
 
   size_t numgrains = m->getNumCellFieldTuples();
 
-  m_GrainMoments->SetNumberOfComponents(6);
-  m_GrainMoments->Resize(numgrains);
+  m_GrainMoments->Resize(numgrains*6);
   grainmoments = m_GrainMoments->getPointer(0);
 
 

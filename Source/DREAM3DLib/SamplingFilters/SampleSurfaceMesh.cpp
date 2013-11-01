@@ -180,7 +180,8 @@ void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, 
   }
   else
   {
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
+    QVector<int> dims(1, 2);
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, dims)
   }
 }
 
@@ -290,7 +291,7 @@ void SampleSurfaceMesh::execute()
 
   //create array to hold which polyhedron (grain) each point falls in
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  iArray = Int32ArrayType::CreateArray(numPoints, 1, "polyhedronIds");
+  iArray = Int32ArrayType::CreateArray(numPoints, "polyhedronIds");
   iArray->initializeWithZeros();
   int32_t* polyIds = iArray->getPointer(0);
 

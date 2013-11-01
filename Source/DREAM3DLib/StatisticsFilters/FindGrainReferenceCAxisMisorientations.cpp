@@ -117,16 +117,16 @@ void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t vo
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, float, FloatArrayType, 0, voxels, 1)
-
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, -303, float, FloatArrayType, fields, 3)
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgCAxisMisorientations, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainStdevCAxisMisorientations, float, FloatArrayType, 0, fields, 1)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgCAxisMisorientations, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainStdevCAxisMisorientations, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, float, FloatArrayType, 0, voxels, dims)
+  dims[0] = 3;
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, -303, float, FloatArrayType, fields, dims)
+  dims[0] = 4;
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, dims)
 
 }
 
@@ -173,7 +173,8 @@ void FindGrainReferenceCAxisMisorientations::execute()
 
   size_t numFields = m->getNumCellFieldTuples();
   int avgMisoComps = 3;
-  FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(numFields, avgMisoComps, "AvgMiso_Temp");
+  QVector<int> dims(1, avgMisoComps);
+  FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(numFields, dims, "AvgMiso_Temp");
   avgmisoPtr->initializeWithZeros();
   float* avgmiso = avgmisoPtr->getPointer(0);
 

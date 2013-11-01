@@ -69,7 +69,11 @@ class DREAM3DLib_EXPORT IDataArray
     virtual void SetName(const QString& name) = 0;
     virtual QString GetName() = 0;
 
-    virtual Pointer createNewArray(size_t numElements, int numComponents, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name) = 0;
+
+    virtual int getClassVersion() = 0;
 
     /**
      * @brief Has all the memory needed for this class been allocated?
@@ -109,8 +113,13 @@ class DREAM3DLib_EXPORT IDataArray
      */
     virtual size_t GetSize() = 0;
 
-    virtual void SetNumberOfComponents(int nc)  = 0;
-    virtual int GetNumberOfComponents()  = 0;
+    virtual int GetNumberOfComponents() = 0;
+
+   // virtual void SetRank(int rnk) = 0;
+    virtual int GetRank() = 0;
+
+    virtual void SetDims(QVector<int> rnk) = 0;
+    virtual QVector<int> GetDims() = 0;
 
     /**
      * @brief Returns the number of bytes that make up the data type.

@@ -121,7 +121,8 @@ void SharedGrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fiel
   }
 
   // List any arrays that are created during this filter
-  Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshGrainFaceId);
+  QVector<int> dims(1, 1);
+  Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshGrainFaceId);
   sm->addFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId, grainFaceId);
 }
 

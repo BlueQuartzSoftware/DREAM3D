@@ -253,13 +253,15 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       return;
     }
 
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, 1)
-
+    QVector<int> dim(1, 3);
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dim)
+    dim[0] = 1;
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, dim)
 
     typedef DataArray<unsigned int> XTalStructArrayType;
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, float, FloatArrayType, 0.0, ensembles, 6)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, dim)
+    dim[0] = 6;
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, float, FloatArrayType, 0.0, ensembles, dim)
 
     StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
     m->addCellEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
@@ -378,7 +380,8 @@ void ReadOrientationData::readAngFile()
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi1));
     f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi2));
-    fArray = FloatArrayType::CreateArray(totalPoints, 3, DREAM3D::CellData::EulerAngles);
+    QVector<int> dims(1, 3);
+    fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
     for (int64_t i = 0; i < totalPoints; i++)
@@ -493,7 +496,8 @@ void ReadOrientationData::readCtfFile()
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ctf::Euler1));
     f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ctf::Euler2));
     f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ctf::Euler3));
-    fArray = FloatArrayType::CreateArray(totalPoints, 3, DREAM3D::CellData::EulerAngles);
+    QVector<int> dims(1, 3);
+    fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     int* cellPhases = iArray->getPointer(0);
 
@@ -609,13 +613,13 @@ void ReadOrientationData::readMicFile()
     m->addCellData(DREAM3D::CellData::Phases, iArray);
   }
 
+  QVector<int> compDims(1, 3); // Initially set this up for the Euler Angle 1x3
   {
     //  radianconversion = M_PI / 180.0;
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler1));
     f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler2));
     f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler3));
-    fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
-    fArray->SetNumberOfComponents(3);
+    fArray = FloatArrayType::CreateArray(totalPoints, compDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     for (int64_t i = 0; i < totalPoints; i++)
     {
@@ -626,18 +630,17 @@ void ReadOrientationData::readMicFile()
     m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
   }
 
+  compDims[0] = 1; // Now reset the size of the first dimension to 1
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Mic::Phase));
-    iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
-    iArray->SetNumberOfComponents(1);
+    iArray = Int32ArrayType::CreateArray(totalPoints, compDims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     m->addCellData(DREAM3D::CellData::Phases, iArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Confidence));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Mic::Confidence);
-    fArray->SetNumberOfComponents(1);
+    fArray = FloatArrayType::CreateArray(totalPoints, compDims, Ebsd::Mic::Confidence);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Mic::Confidence, fArray);
   }

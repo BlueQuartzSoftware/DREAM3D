@@ -129,14 +129,16 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 1, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
+  QVector<int> dim(1, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dim)
+  dim[0] = 1;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 1, voxels, dim)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, dim)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, dim)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, dim)
 
   int err = 0;
   H5VoxelReader::Pointer reader = H5VoxelReader::New();
@@ -232,10 +234,11 @@ void H5VoxelFileReader::execute()
 
   size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
   // Create an DataArray to hold the data
-  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::GrainIds);
-  DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::Phases);
-  DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints * 3, DREAM3D::CellData::EulerAngles);
-  eulers->SetNumberOfComponents(3);
+  QVector<int> dims(1, 1);
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints, dims, DREAM3D::CellData::GrainIds);
+  DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, dims, DREAM3D::CellData::Phases);
+  dims[0] = 3;
+  DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints, dims, DREAM3D::CellData::EulerAngles);
 
   QString arrayname = "GrainID";
   err = reader->readScalarData<int>(arrayname, grainIds->getPointer(0));

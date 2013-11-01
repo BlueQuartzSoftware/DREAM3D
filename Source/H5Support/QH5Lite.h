@@ -640,7 +640,7 @@ namespace H5Support_NAMESPACE
       static herr_t readVectorAttribute(hid_t loc_id,
                                         const QString& objName,
                                         const QString& attrName,
-                                        std::vector<T>& data)
+                                        QVector<T>& data)
       {
         /* identifiers */
         hid_t      obj_id;

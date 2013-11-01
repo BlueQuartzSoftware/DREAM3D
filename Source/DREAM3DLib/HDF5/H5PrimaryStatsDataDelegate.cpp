@@ -352,12 +352,11 @@ int H5PrimaryStatsDataDelegate::readVectorOfArrays(hid_t pid, VectorOfFloatArray
 int H5PrimaryStatsDataDelegate::readMDFWeights(hid_t pid, PrimaryStatsData* data)
 {
   int err = 0;
-  FloatArrayType::Pointer angles = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Angle);
-
-  FloatArrayType::Pointer axis = FloatArrayType::CreateArray(3, DREAM3D::HDF5::Axis);
-  axis->SetNumberOfComponents(3);
-
+  QVector<int> dims(1, 1);
+  FloatArrayType::Pointer angles = FloatArrayType::CreateArray(1, dims, DREAM3D::HDF5::Angle);
   FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Weight);
+  dims[0] = 3;
+  FloatArrayType::Pointer axis = FloatArrayType::CreateArray(3, dims, DREAM3D::HDF5::Axis);
 
   VectorOfFloatArray mdfWeights;
   mdfWeights.push_back(angles);

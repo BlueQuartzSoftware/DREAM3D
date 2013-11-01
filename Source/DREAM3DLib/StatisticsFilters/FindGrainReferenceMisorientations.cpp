@@ -136,25 +136,27 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, float, FloatArrayType, 0, voxels, 1)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, float, FloatArrayType, 0, voxels, dims)
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
 
+  dims[0] = 4;
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, dims)
   if(m_ReferenceOrientation == 0)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -303, float, FloatArrayType, fields, 4)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -303, float, FloatArrayType, fields, dims)
   }
   else if(m_ReferenceOrientation == 1)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -301, float, FloatArrayType, voxels, 1)
+    dims[0] = 1;
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -301, float, FloatArrayType, voxels, dims)
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, float, FloatArrayType, 0, fields, 1)
-
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 

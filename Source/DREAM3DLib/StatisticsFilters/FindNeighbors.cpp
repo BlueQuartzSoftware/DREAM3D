@@ -98,9 +98,13 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
+  QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, int8_t, Int8ArrayType, 0, voxels, 1)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, int8_t, Int8ArrayType, 0, voxels, dims)
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, int32_t, Int32ArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, bool, BoolArrayType, false, fields, dims)
 
   // Field Data
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFieldTuples will = 0
@@ -165,9 +169,6 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     e->setArrayType("SurfaceAreaLists");
     addCreatedArrayHelpIndexEntry(e);
   }
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, bool, BoolArrayType, false, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, int32_t, Int32ArrayType, 0, fields, 1)
 }
 
 

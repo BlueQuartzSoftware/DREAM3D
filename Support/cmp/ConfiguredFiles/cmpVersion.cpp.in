@@ -36,7 +36,7 @@ QString @VERSION_GEN_NAMESPACE@::Version::Patch()
 //
 // -----------------------------------------------------------------------------
 QString @VERSION_GEN_NAMESPACE@::Version::Package()
-{ return QString("@PROJECT_PREFIX@");}
+{ return QString("@VERSION_GEN_VER_MAJOR@.@VERSION_GEN_VER_MINOR@");}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

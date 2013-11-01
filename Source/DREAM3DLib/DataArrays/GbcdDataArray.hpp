@@ -67,6 +67,7 @@ class GbcdDataArray : public IDataArray
 
     DREAM3D_SHARED_POINTERS(GbcdDataArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(GbcdDataArray<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     typedef QVector<Pointer>   ContainterType;
 
@@ -139,9 +140,20 @@ class GbcdDataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
     {
-      IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, numComponents, 1, 1, 1, name);
+      IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, 1, 1, 1, 1, name);
+      return p;
+    }
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    {
+      IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, 1, 1, 1, 1, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
+    {
+      IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, 1, 1, 1, 1, name);
       return p;
     }
 
@@ -413,18 +425,43 @@ class GbcdDataArray : public IDataArray
       return 1;
     }
 
-
-    // Description:
-    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
-    // this is set before allocation.
-    virtual void SetNumberOfComponents(int nc)
-    {
-      BOOST_ASSERT(false);
-    }
-
     virtual int GetNumberOfComponents()
     {
       return this->Size;
+    }
+
+    // Description:
+    // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
+    // this is set before allocation.
+    void SetRank(int rnk)
+    {
+
+    }
+
+    /**
+     * @brief GetRank
+     * @return
+     */
+    int GetRank()
+    {
+      return 1;
+    }
+
+    // Description:
+    // Set/Get the dimensions of the array.
+    void SetDims(QVector<int> dims)
+    {
+
+    }
+
+    /**
+     * @brief GetDims
+     * @return
+     */
+    QVector<int> GetDims()
+    {
+      QVector<int> dims(1, 1);
+      return dims;
     }
 
     /**

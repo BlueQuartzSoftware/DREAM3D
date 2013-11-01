@@ -385,12 +385,15 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
   }
   else
   {
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, 1)
-
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, double, DoubleArrayType, 0, ensembles, 1)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, int32_t, Int32ArrayType, 1, ensembles, 5)
+    QVector<int> dims(1, 2);
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, dims)
+    dims[0] = 3;
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, dims)
+    dims[0] = 1;
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, dims)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, double, DoubleArrayType, 0, ensembles, dims)
+    dims[0] = 5;
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, int32_t, Int32ArrayType, 1, ensembles, dims)
   }
 }
 
@@ -402,10 +405,12 @@ void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
+  QVector<int> dims(1, 3);
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, dims)
+  dims[0] = 1;
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, dims)
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, dims)
 
 }
 
@@ -487,17 +492,15 @@ void FindGBCD::execute()
   Int32ArrayType::Pointer gbcdBinsArray = Int32ArrayType::NullPointer();
   BoolArrayType::Pointer gbcdHemiCheckArray = BoolArrayType::NullPointer();
   gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
-  gbcdDeltasArray->SetNumberOfComponents(1);
   gbcdDeltasArray->initializeWithZeros();
   gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
-  gbcdLimitsArray->SetNumberOfComponents(1);
   gbcdLimitsArray->initializeWithZeros();
   gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
-  gbcdSizesArray->SetNumberOfComponents(1);
   gbcdSizesArray->initializeWithZeros();
-  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, numMisoReps, "GBCDBins");
+  QVector<int> dims(1, numMisoReps);
+  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, dims, "GBCDBins");
   gbcdBinsArray->initializeWithZeros();
-  gbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, numMisoReps, "GBCDHemiCheck");
+  gbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, dims, "GBCDHemiCheck");
   gbcdHemiCheckArray->initializeWithValues(false);
   float* m_GBCDdeltas = gbcdDeltasArray->getPointer(0);
   int32_t* m_GBCDsizes = gbcdSizesArray->getPointer(0);
@@ -542,7 +545,14 @@ void FindGBCD::execute()
   m_GBCDdeltas[4] = (m_GBCDlimits[9] - m_GBCDlimits[4]) / float(m_GBCDsizes[4]);
 
 
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, double, DoubleArrayType, 0, m->getNumCellEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4] * 2)
+  dims.resize(6);
+  dims[0] = m_GBCDsizes[0];
+  dims[1] = m_GBCDsizes[1];
+  dims[2] = m_GBCDsizes[2];
+  dims[3] = m_GBCDsizes[3];
+  dims[4] = m_GBCDsizes[4];
+  dims[5] = 2;
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, double, DoubleArrayType, 0, m->getNumCellEnsembleTuples(), dims)
   for(int i = 0; i < m->getNumCellEnsembleTuples(); i++)
   {
     m_GBCDdimensions[5 * i + 0] = m_GBCDsizes[0];

@@ -158,7 +158,9 @@ void ConvertEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fields,
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, 3)
+
+  QVector<int> dims(1, 3);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, dims)
 }
 
 // -----------------------------------------------------------------------------

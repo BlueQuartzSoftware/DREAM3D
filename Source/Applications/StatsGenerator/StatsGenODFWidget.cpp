@@ -575,7 +575,8 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   int lamberSize = pfLambertSize->value();
   int numColors = 16;
   int npoints = pfSamplePoints->value();
-  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, 3, "Eulers");
+  QVector<int> dims(1, 3);
+  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
 
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {

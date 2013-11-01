@@ -124,8 +124,8 @@ void TestDataContainerWriter()
   }
   m->addCellData(DREAM3D::CellData::SurfaceVoxels, boolArray);
 
-  FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(12, DREAM3D::FieldData::AxisEulerAngles);
-  avgEuler->SetNumberOfComponents(3);
+  QVector<int> dims(1, 3);
+  FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(4, dims, DREAM3D::FieldData::AxisEulerAngles);
   for(size_t i = 0; i < 4; ++i)
   {
     avgEuler->SetComponent(i, 0, i * 0.665f);
@@ -307,7 +307,8 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 {
   AbstractFilter::Pointer absFilt = AbstractFilter::New();
 
-  T* ptr = m->createCellData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  QVector<int> dims(1, 2);
+  T* ptr = m->createCellData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_TEST_POINTER(ptr, !=,NULL);
   absFilt->setErrorCondition(0);
@@ -343,7 +344,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   DREAM3D_TEST_POINTER(ptr, !=, NULL);
 
   /********************************* Field Data Tests *********************************************/
-  ptr = m->createCellFieldData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->createCellFieldData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_TEST_POINTER(ptr, !=, NULL);
   absFilt->setErrorCondition(0);
@@ -380,7 +381,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 
 
   /********************************* Ensemble Data Tests *********************************************/
-  ptr = m->createCellEnsembleData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->createCellEnsembleData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_TEST_POINTER(ptr, !=, NULL);
   absFilt->setErrorCondition(0);

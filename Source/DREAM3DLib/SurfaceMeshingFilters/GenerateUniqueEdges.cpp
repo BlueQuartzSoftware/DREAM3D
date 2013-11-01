@@ -132,7 +132,8 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields
 
   // We do not know the size of the array so we can not use the macro so we just manually call
   // the needed methods that will propagate these array additions to the pipeline
-  DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, m_SurfaceMeshUniqueEdgesArrayName);
+  QVector<int> dims(1, 2);
+  DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, dims, m_SurfaceMeshUniqueEdgesArrayName);
   sm->addEdgeData(m_SurfaceMeshUniqueEdgesArrayName, uniqueEdgesArray);
 }
 
@@ -232,7 +233,8 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
 
   notifyStatusMessage("Stage 1 of 2");
 // qDebug() << "uedges_id_set size: " << uedges_id_set.size() << "\n";
-  DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), 2, m_SurfaceMeshUniqueEdgesArrayName);
+  QVector<int> dims(1, 2);
+  DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), dims, m_SurfaceMeshUniqueEdgesArrayName);
   int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->getPointer(0);
   int index = 0;
   for(EdgeSet_t::iterator iter = uedges_id_set.begin(); iter != uedges_id_set.end(); ++iter)
@@ -358,7 +360,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   notifyStatusMessage("Generating edge list for mesh. Stage 2 of 2");
   // Now copy the unique Edges out of the map and into an array at the proper index (which is the "value" that goes with the "key" to the map.
   int index = 0;
-  Int32ArrayType::Pointer uniqueEdgesArrayPtr = Int32ArrayType::CreateArray(uedges_id_map.size(), 2, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
+  QVector<int> dims(1, 2);
+  Int32ArrayType::Pointer uniqueEdgesArrayPtr = Int32ArrayType::CreateArray(uedges_id_map.size(), dims, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
   m_SurfaceMeshUniqueEdges = uniqueEdgesArrayPtr->getPointer(0);
 
   ManagedArrayOfArrays<int>::Pointer edgeTriangleArray = ManagedArrayOfArrays<int>::CreateArray(edgeTriangleSet.size(), DREAM3D::EdgeData::SurfaceMeshEdgeFaces);

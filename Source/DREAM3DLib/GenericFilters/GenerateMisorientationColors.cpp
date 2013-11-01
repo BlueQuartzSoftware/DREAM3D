@@ -151,13 +151,16 @@ void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size
     return;
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, dims)
+  dims[0] = 4;
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, dims)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationColor, uint8_t, UInt8ArrayType, 0, voxels, 3)
+  dims[0] = 1;
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, dims)
+  dims[0] = 3;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationColor, uint8_t, UInt8ArrayType, 0, voxels, dims)
 }
 
 
@@ -237,7 +240,7 @@ void GenerateMisorientationColors::execute()
   QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 
-  UInt8ArrayType::Pointer notSupported = UInt8ArrayType::CreateArray(13, 1, "NotSupportedArray");
+  UInt8ArrayType::Pointer notSupported = UInt8ArrayType::CreateArray(13, "NotSupportedArray");
   notSupported->initializeWithZeros();
 
   // Write the Misorientation Coloring Cell Data

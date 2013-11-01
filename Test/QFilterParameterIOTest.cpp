@@ -43,11 +43,14 @@
 #include <QtCore/QSet>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
@@ -68,7 +71,6 @@ void RemoveTestFiles()
   QFile::remove(UnitTest::QFilterParameterIOTest::TestFile);
 #endif
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -83,17 +85,15 @@ void writePipeline(FilterPipeline::Pointer pipeline)
   QSettings* prefs = writer->getPrefs();
   prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   prefs->setValue(DREAM3D::Settings::NumFilters, filterCount);
-//  prefs->setValue(DREAM3D::Settings::Version, DREAM3DLib::Version::Complete());
+  prefs->setValue(DREAM3D::Settings::Version, DREAM3DLib::Version::Complete());
   prefs->endGroup();
 
   for (int i = 0; i < count; ++i)
   {
-    //QString gName = QString::number(i);
     AbstractFilter::Pointer filter = pipeline->getFilterContainer().at(i);
     filter->writeFilterParameters(writer.get(), i);
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -159,6 +159,7 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
       pipeline->pushBack(filter);
     }
   }
+  writePipeline(pipeline);
 }
 
 
@@ -203,7 +204,7 @@ void importSmallIN100()
 
 
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
-  filter->setOutputFile(UnitTest::QFilterParameterIOTest::SmallIn100_OutputFile);
+  filter->setOutputFile(UnitTest::QFilterParameterIOTest::SmallIn100_H5EBSD_FILE);
   filter->setZStartIndex(1);
   filter->setZEndIndex(118);
   filter->setZResolution(0.25);
@@ -281,7 +282,7 @@ void TestReadQSettingsBasedFile()
   // will NOT however get filters from plugins. We are going to have to figure out how to compile filters
   // into their own plugin and load the plugins from a command line.
   filtManager->RegisterKnownFilters(filtManager.get());
-
+#if 0
   qDebug() << "Current Path: " << QDir::currentPath();
   // Read in the first Pipeline that converts the Small IN100 files to an .h5ebsd file
   // importSmallIN100();
@@ -290,12 +291,18 @@ void TestReadQSettingsBasedFile()
   cwd.cd("Bin");
   qDebug() << "Changing working directory to " << cwd.absolutePath();
   QDir::setCurrent(cwd.absolutePath());
-
+#endif
 
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
   QFilterParametersReader::Pointer paramsReader = QFilterParametersReader::New();
   paramsReader->openFile(UnitTest::QFilterParameterIOTest::Prebuilt17);
   readPipeline(paramsReader, pipeline);
+
+  AbstractFilter::Pointer filter = pipeline->getFilterContainer().at(0);
+  ReadH5Ebsd* readH5Ebsd = ReadH5Ebsd::SafePointerDownCast(filter.get());
+  DREAM3D_REQUIRE(readH5Ebsd != NULL);
+  readH5Ebsd->setInputFile(UnitTest::QFilterParameterIOTest::SmallIn100_H5EBSD_FILE);
+
   err = pipeline->preflightPipeline();
   DREAM3D_REQUIRE(err >= 0)
 
@@ -320,7 +327,7 @@ int main(int argc, char* argv[])
 //  DREAM3D_REGISTER_TEST( TestReadQSettingsBasedFile() )
 
 #if REMOVE_TEST_FILES
-  //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
   PRINT_TEST_SUMMARY();

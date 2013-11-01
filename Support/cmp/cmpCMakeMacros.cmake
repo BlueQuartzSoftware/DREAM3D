@@ -337,9 +337,9 @@ function(BuildToolBundle)
                 DEBUG_OUTPUT_NAME ${QAB_TARGET}${QAB_DEBUG_EXTENSION}
                 RELEASE_OUTPUT_NAME ${QAB_TARGET}
     )
-  if (NOT "${QAB_SOLUTION_FOLDER}" STREQUAL "")
+    if(NOT "${QAB_SOLUTION_FOLDER}" STREQUAL "")
     SET_TARGET_PROPERTIES(${QAB_TARGET}
-                PROPERTIES FOLDER ${QAB_SOLUTION_FOLDER})
+                          PROPERTIES FOLDER ${QAB_SOLUTION_FOLDER})
 
   endif()
 

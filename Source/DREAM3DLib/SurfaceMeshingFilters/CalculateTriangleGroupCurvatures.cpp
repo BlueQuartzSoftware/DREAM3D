@@ -319,8 +319,8 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
     double* data,
     const QString& name) const
 {
-  DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size() * 3, name);
-  extractedData->SetNumberOfComponents(3);
+  QVector<int> dims(1, 3);
+  DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size(), dims, name);
   // This little chunk makes sure the current seed triangles centroid and normal data appear
   // first in the returned arrays which makes the next steps a tad easier.
   int i = 0;

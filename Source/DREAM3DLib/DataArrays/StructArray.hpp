@@ -50,6 +50,7 @@ class StructArray : public IDataArray
   public:
     DREAM3D_SHARED_POINTERS(StructArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(StructArray<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     /**
      * @brief Static constructor
@@ -82,7 +83,19 @@ class StructArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+    {
+      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    {
+      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
     {
       IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name);
       return p;
@@ -417,14 +430,6 @@ class StructArray : public IDataArray
       return Size;
     }
 
-    // Description:
-    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
-    // this is set before allocation.
-    void SetNumberOfComponents(int nc)
-    {
-
-    }
-
     /**
      * @brief GetNumberOfComponents
      * @return
@@ -432,6 +437,40 @@ class StructArray : public IDataArray
     int GetNumberOfComponents()
     {
       return 1;
+    }
+
+    // Description:
+    // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
+    // this is set before allocation.
+    void SetRank(int rnk)
+    {
+
+    }
+
+    /**
+     * @brief GetRank
+     * @return
+     */
+    int GetRank()
+    {
+      return 1;
+    }
+
+    // Description:
+    // Set/Get the dimensions of the array.
+    void SetDims(QVector<int> dims)
+    {
+
+    }
+
+    /**
+     * @brief GetDims
+     * @return
+     */
+    QVector<int> GetDims()
+    {
+      QVector<int> dims(1, 1);
+      return dims;
     }
 
     /**

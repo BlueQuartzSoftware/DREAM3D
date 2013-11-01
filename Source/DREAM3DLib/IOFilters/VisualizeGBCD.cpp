@@ -196,9 +196,11 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     }
     else
     {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, -301, int32_t, Int32ArrayType, ensembles, 5)
+      QVector<int> dims(1, 5);
+      GET_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, -301, int32_t, Int32ArrayType, ensembles, dims)
       int numComp = iDataArray->GetNumberOfComponents();
-      GET_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, -301, double, DoubleArrayType, ensembles, numComp)
+      dims[0] = numComp;
+      GET_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, -301, double, DoubleArrayType, ensembles, dims)
     }
   }
 }
@@ -324,15 +326,16 @@ void VisualizeGBCD::execute()
   float adjust = 1.0;
 
   DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
-  poleFigureArray = DoubleArrayType::CreateArray(xpoints * ypoints, 1, "PoleFigure");
+  poleFigureArray = DoubleArrayType::CreateArray(xpoints * ypoints, "PoleFigure");
   poleFigureArray->initializeWithValues(0);
   double* poleFigure = poleFigureArray->getPointer(0);
   FloatArrayType::Pointer poleFigureCountsArray = FloatArrayType::NullPointer();
-  poleFigureCountsArray = FloatArrayType::CreateArray(xpoints * ypoints, 1, "PoleFigureCounts");
+  poleFigureCountsArray = FloatArrayType::CreateArray(xpoints * ypoints, "PoleFigureCounts");
   poleFigureCountsArray->initializeWithValues(0);
   float* poleFigureCounts = poleFigureCountsArray->getPointer(0);
   FloatArrayType::Pointer vecsArray = FloatArrayType::NullPointer();
-  vecsArray = FloatArrayType::CreateArray(xpoints * ypoints, 3, "Vecs");
+  QVector<int> dims(1, 3);
+  vecsArray = FloatArrayType::CreateArray(xpoints * ypoints, dims, "Vecs");
   vecsArray->initializeWithValues(-1000);
   float* vecs = vecsArray->getPointer(0);
 

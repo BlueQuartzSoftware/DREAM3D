@@ -272,7 +272,8 @@ int BinaryNodesTrianglesReader::read()
   VertexArray::Pointer m_NodeListPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   VertexArray::Vert_t* m_NodeList = m_NodeListPtr->getPointer(0);
 
-  Int8ArrayType::Pointer nodeTypePtr = Int8ArrayType::CreateArray(nNodes, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
+  QVector<int> dims(1, 1);
+  Int8ArrayType::Pointer nodeTypePtr = Int8ArrayType::CreateArray(nNodes, dims, DREAM3D::VertexData::SurfaceMeshNodeType);
   nodeTypePtr->initializeWithZeros();
   int8_t* nodeType = nodeTypePtr->getPointer(0);
 
@@ -309,7 +310,8 @@ int BinaryNodesTrianglesReader::read()
   FaceArray::Face_t* m_TriangleList = m_TriangleListPtr->getPointer(0);
   ::memset(m_TriangleList, 0xAB, sizeof(FaceArray::Face_t) * nTriangles);
 
-  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  QVector<int> dim(1, 2);
+  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, dim, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   int32_t* faceLabels = faceLabelPtr->getPointer(0);
   faceLabelPtr->initializeWithZeros();
 

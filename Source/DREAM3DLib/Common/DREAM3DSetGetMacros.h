@@ -253,6 +253,10 @@
 
 
 
+#define DREAM3D_CLASS_VERSION(vers)\
+virtual int getClassVersion() { return vers; }
+
+
 //------------------------------------------------------------------------------
 // Macros for Properties
 /**
@@ -446,7 +450,7 @@
     updatePipelineProgress(0);\
     pipelineFinished();\
     return;}\
-   
+
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
   if(err < 0) {\

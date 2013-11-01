@@ -136,7 +136,7 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
   }
 
   m->clearCellFieldData();
-  BoolArrayType::Pointer active = BoolArrayType::CreateArray(fields, 1, DREAM3D::FieldData::Active);
+  BoolArrayType::Pointer active = BoolArrayType::CreateArray(fields, DREAM3D::FieldData::Active);
   // bool* mActive = m_Active->getPointer(0);
   m->addCellFieldData(DREAM3D::FieldData::Active, active);
 
@@ -198,7 +198,7 @@ void LinkFieldMapToCellArray::execute()
     }
   }
 
-  BoolArrayType::Pointer m_Active = BoolArrayType::CreateArray(maxIndex, 1, DREAM3D::FieldData::Active);
+  BoolArrayType::Pointer m_Active = BoolArrayType::CreateArray(maxIndex, DREAM3D::FieldData::Active);
   bool* mActive = m_Active->getPointer(0);
   for(int i = 0; i < maxIndex; i++)
   {

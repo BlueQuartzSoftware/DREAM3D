@@ -86,6 +86,7 @@ class DataArray : public IDataArray
 
     DREAM3D_SHARED_POINTERS(DataArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(DataArray<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     typedef QVector<Pointer>   ContainterType;
 
@@ -190,14 +191,59 @@ class DataArray : public IDataArray
     /**
      * @brief Static constructor
      * @param numTuples The number of tuples in the array.
-     * @param numComponents The number of Components in each Tuple
+     * @param rank The number of dimensions of the attribute on each Tuple
+     * @param dims The actual dimensions of the attribute on each Tuple
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numTuples, int numComponents, const QString& name)
+    static Pointer CreateArray(size_t numTuples, int rank, int* dims, const QString& name)
     {
 
-      DataArray<T>* d = new DataArray<T> (numTuples, numComponents, true);
+      DataArray<T>* d = new DataArray<T> (numTuples, rank, dims, true);
+      if (d->Allocate() < 0)
+      {
+        // Could not allocate enough memory, reset the pointer to null and return
+        delete d;
+        return DataArray<T>::NullPointer();
+      }
+      d->SetName(name);
+      Pointer ptr(d);
+      return ptr;
+    }
+
+    /**
+     * @brief Static constructor
+     * @param numTuples The number of tuples in the array.
+     * @param dims The actual dimensions of the attribute on each Tuple
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     */
+    static Pointer CreateArray(size_t numTuples, std::vector<int> dims, const QString& name)
+    {
+
+      DataArray<T>* d = new DataArray<T> (numTuples, dims.size(), dims, true);
+      if (d->Allocate() < 0)
+      {
+        // Could not allocate enough memory, reset the pointer to null and return
+        delete d;
+        return DataArray<T>::NullPointer();
+      }
+      d->SetName(name);
+      Pointer ptr(d);
+      return ptr;
+    }
+
+    /**
+     * @brief Static constructor
+     * @param numTuples The number of tuples in the array.
+     * @param dims The actual dimensions of the attribute on each Tuple
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     */
+    static Pointer CreateArray(size_t numTuples, QVector<int> dims, const QString& name)
+    {
+
+      DataArray<T>* d = new DataArray<T> (numTuples, dims.size(), dims, true);
       if (d->Allocate() < 0)
       {
         // Could not allocate enough memory, reset the pointer to null and return
@@ -258,9 +304,21 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
     {
-      IDataArray::Pointer p = DataArray<T>::CreateArray(numElements, numComponents, name);
+      IDataArray::Pointer p = DataArray<T>::CreateArray(numElements, rank, dims, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    {
+      IDataArray::Pointer p = DataArray<T>::CreateArray(numElements, dims, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
+    {
+      IDataArray::Pointer p = DataArray<T>::CreateArray(numElements, dims, name);
       return p;
     }
 
@@ -555,17 +613,44 @@ class DataArray : public IDataArray
       return Size;
     }
 
-    // Description:
-    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
-    // this is set before allocation.
-    virtual void SetNumberOfComponents(int nc)
-    {
-      if(nc > 0) { this->NumberOfComponents = nc; }
-    }
-
     virtual int GetNumberOfComponents()
     {
       return this->NumberOfComponents;
+    }
+
+    // Description:
+    // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
+    // this is set before allocation.
+//    virtual void SetRank(int rank)
+//    {
+//      BOOST_ASSERT(rank > 0);
+//      if (Rank == rank) { return; }
+//      Dims.resize(rank);
+//      Rank = rank;
+//    }
+
+    virtual int GetRank()
+    {
+      return this->Rank;
+    }
+
+    // Description:
+    // Set/Get the dimensions of the array.
+    virtual void SetDims(QVector<int> dims)
+    {
+      BOOST_ASSERT(dims.size() > 0);
+      this->Dims = dims;
+      this->NumberOfComponents = dims[0];
+      for(int i = 1; i < dims.size(); i++)
+      {
+        this->NumberOfComponents = this->NumberOfComponents * dims[i];
+      }
+      Rank = Dims.size();
+    }
+
+    virtual QVector<int> GetDims()
+    {
+      return this->Dims;
     }
 
     /**
@@ -790,7 +875,11 @@ class DataArray : public IDataArray
     virtual int writeH5Data(hid_t parentId)
     {
       if (Array == NULL) { return -85648; }
-      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
+      #if 0
+  return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), GetRank(), GetDims(), getClassVersion(), Array, getFullNameOfClass());
+      #else
+        return H5DataArrayWriter::writeDataArray<Self>(parentId, this);
+      #endif
     }
 
     /**
@@ -904,6 +993,8 @@ class DataArray : public IDataArray
 
   protected:
 
+    int Rank; // the number of components per tuple
+    QVector<int> Dims; // the number of components per tuple
     int NumberOfComponents; // the number of components per tuple
 
     /**
@@ -918,6 +1009,9 @@ class DataArray : public IDataArray
       m_IsAllocated(false)
     {
       NumberOfComponents = 1;
+      Rank = 1;
+      Dims.resize(1);
+      Dims[0] = 1;
       MaxId = (Size > 0) ? Size - 1 : Size;
 
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
@@ -926,19 +1020,80 @@ class DataArray : public IDataArray
     /**
      * @brief Protected Constructor
      * @param numTuples The number of elements in the internal array.
-     * @param numComponents The number of values each Tuple has. Size = NumTuples * NumComponents
+     * @param rank The number of dimensions the attribute on each Tuple has.
+     * @param dims The actual dimensions the attribute on each Tuple has.
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
-    DataArray(size_t numTuples, int numComponents, bool ownsData = true) :
+    DataArray(size_t numTuples, int rank, int* dims, bool ownsData = true) :
       Array(NULL),
       _ownsData(ownsData),
       m_IsAllocated(false)
     {
-      NumberOfComponents = numComponents;
-      Size = numTuples * numComponents;
+      Rank = rank;
+      Dims.resize(Rank);
+      NumberOfComponents = dims[0];
+      Dims[0] = dims[0];
+      for(int i=1;i<Rank;i++)
+      {
+        NumberOfComponents *= dims[i];
+        Dims[i] = dims[i];
+      }
+      Size = numTuples * NumberOfComponents;
       MaxId = (Size > 0) ? Size - 1 : Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
+
+    /**
+     * @brief Protected Constructor
+     * @param numTuples The number of elements in the internal array.
+     * @param rank The number of dimensions the attribute on each Tuple has.
+     * @param dims The actual dimensions the attribute on each Tuple has.
+     * @param takeOwnership Will the class clean up the memory. Default=true
+     */
+    DataArray(size_t numTuples, int rank, std::vector<int> dims, bool ownsData = true) :
+      Array(NULL),
+      _ownsData(ownsData),
+      m_IsAllocated(false)
+    {
+      Rank = rank;
+      Dims.resize(Rank);
+      NumberOfComponents = dims[0];
+      Dims[0] = dims[0];
+      for(int i=1;i<Rank;i++)
+      {
+        NumberOfComponents *= dims[i];
+        Dims[i] = dims[i];
+      }
+      Size = numTuples * NumberOfComponents;
+      MaxId = (Size > 0) ? Size - 1 : Size;
+      //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
+    }
+
+    /**
+     * @brief Protected Constructor
+     * @param numTuples The number of elements in the internal array.
+     * @param rank The number of dimensions the attribute on each Tuple has.
+     * @param dims The actual dimensions the attribute on each Tuple has.
+     * @param takeOwnership Will the class clean up the memory. Default=true
+     */
+    DataArray(size_t numTuples, int rank, QVector<int> dims, bool ownsData = true) :
+      Array(NULL),
+      _ownsData(ownsData),
+      m_IsAllocated(false)
+    {
+      Rank = rank;
+      Dims.resize(Rank);
+      NumberOfComponents = dims[0];
+      Dims = dims;
+      for(int i=1;i<Rank;i++)
+      {
+        NumberOfComponents *= dims[i];
+      }
+      Size = numTuples * NumberOfComponents;
+      MaxId = (Size > 0) ? Size - 1 : Size;
+      //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
+    }
+
     /**
      * @brief deallocates the memory block
      */

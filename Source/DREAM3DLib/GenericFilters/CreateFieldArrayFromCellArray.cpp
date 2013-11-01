@@ -77,7 +77,8 @@ void CreateFieldArrayFromCellArray::dataCheck(bool preflight, size_t voxels, siz
     addErrorMessage(getHumanLabel(), "Volume Data Container is NULL", getErrorCondition());
     return;
   }
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+  QVector<int> dims(1, 1);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
@@ -115,7 +116,8 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int64_t fields, 
   {
     return IDataArray::NullPointer();
   }
-  typename DataArray<T>::Pointer field = DataArray<T>::CreateArray(fields, inputData->GetNumberOfComponents(), fieldArrayName);
+  QVector<int> dims(1, inputData->GetNumberOfComponents());
+  typename DataArray<T>::Pointer field = DataArray<T>::CreateArray(fields, dims, fieldArrayName);
 
   T* fPtr = field->getPointer(0);
   T* cPtr = cell->getPointer(0);

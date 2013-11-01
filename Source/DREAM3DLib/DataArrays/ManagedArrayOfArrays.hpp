@@ -47,6 +47,7 @@ class ManagedArrayOfArrays : public IDataArray
   public:
     DREAM3D_SHARED_POINTERS(ManagedArrayOfArrays<T> )
     DREAM3D_TYPE_MACRO_SUPER(ManagedArrayOfArrays<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     typedef struct
     {
@@ -85,7 +86,19 @@ class ManagedArrayOfArrays : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+    {
+      IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    {
+      IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
     {
       IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
       return p;
@@ -227,7 +240,7 @@ class ManagedArrayOfArrays : public IDataArray
     void initializeWithValues(T value)
     {
       BOOST_ASSERT(false);
-      
+
       //      for (size_t i = 0; i < this->Size; i++)
 //      {
 //        // Free each Pointer in each of the structures first
@@ -405,17 +418,43 @@ class ManagedArrayOfArrays : public IDataArray
       return Size;
     }
 
+    int GetNumberOfComponents()
+    {
+      return 1;
+    }
+
     // Description:
-    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
+    // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
     // this is set before allocation.
-    void SetNumberOfComponents(int nc)
+    void SetRank(int rnk)
     {
 
     }
 
-    int GetNumberOfComponents()
+    /**
+     * @brief GetRank
+     * @return
+     */
+    int GetRank()
     {
       return 1;
+    }
+
+    // Description:
+    // Set/Get the dimensions of the array.
+    void SetDims(QVector<int> dims)
+    {
+
+    }
+
+    /**
+     * @brief GetDims
+     * @return
+     */
+    QVector<int> GetDims()
+    {
+      QVector<int> dims(1, 1);
+      return dims;
     }
 
     /**
