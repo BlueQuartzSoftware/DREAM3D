@@ -37,7 +37,7 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 /**
  * @class H5GbcdArrayReader H5GbcdArrayReader.h DREAM3DLib/HDF5/H5GbcdArrayReader.h

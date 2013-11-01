@@ -36,8 +36,21 @@
 #include "GenerateIPFColors.h"
 
 
-#include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
+#include "DREAM3DLib/OrientationOps/TriclinicOps.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -73,7 +86,7 @@ GenerateIPFColors::~GenerateIPFColors()
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+    std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 
@@ -91,13 +104,13 @@ void GenerateIPFColors::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* reader)
 {
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
@@ -114,8 +127,8 @@ void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t fields, 
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
-    ss.str("");
-    ss << getHumanLabel() << "The VoxelDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
+    std::stringstream ss;
+    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
@@ -123,10 +136,8 @@ void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
-
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
-
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellIPFColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
 }
 
@@ -180,15 +191,29 @@ void GenerateIPFColors::execute()
     m_GoodVoxels = goodVoxels->GetPointer(0);
   }
 
-
-
   int phase;
   size_t index = 0;
 
   // Make sure we are dealing with a unit 1 vector.
-  MatrixMath::NormalizeVector(m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z);
+  MatrixMath::Normalize3x1(m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z);
+  // Create 1 of every type of Ops class. This condenses the code below
+  std::vector<OrientationOps::Pointer> ops;
+  ops.push_back(HexagonalOps::New());
+  ops.push_back(CubicOps::New());
+  ops.push_back(HexagonalLowOps::New());
+  ops.push_back(CubicLowOps::New());
+  ops.push_back(TriclinicOps::New());
+  ops.push_back(MonoclinicOps::New());
+  ops.push_back(OrthoRhombicOps::New());
+  ops.push_back(TetragonalLowOps::New());
+  ops.push_back(TetragonalOps::New());
+  ops.push_back(TrigonalLowOps::New());
+  ops.push_back(TrigonalOps::New());
 
-  uint8_t hkl[3] = { 0, 0, 0 };
+  double refDir[3] = {m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z};
+  double dEuler[3] = {0.0, 0.0, 0.0};
+  DREAM3D::Rgb argb = 0x00000000;
+
   // Write the IPF Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)
   {
@@ -197,29 +222,18 @@ void GenerateIPFColors::execute()
     m_CellIPFColors[index] = 0;
     m_CellIPFColors[index + 1] = 0;
     m_CellIPFColors[index + 2] = 0;
+    dEuler[0] = m_CellEulerAngles[index];
+    dEuler[1] = m_CellEulerAngles[index + 1];
+    dEuler[2] = m_CellEulerAngles[index + 2];
 
-    if(missingGoodVoxels == true || m_GoodVoxels[i] != false)
+    // Make sure we are using a valid Euler Angles with valid crystal symmetry
+    if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
+        && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
-      if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High)
-      {
-        EbsdColoring::GenerateCubicIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, hkl);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
-      {
-        EbsdColoring::GenerateHexIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
-      {
-        EbsdColoring::GenerateTrigIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
-      }      
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Tetragonal_High)
-      {
-        EbsdColoring::GenerateTetraIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
-      }
+      argb = ops[m_CrystalStructures[phase]]->generateIPFColor(dEuler, refDir, false);
+      m_CellIPFColors[index] = RgbColor::dRed(argb);
+      m_CellIPFColors[index + 1] = RgbColor::dGreen(argb);
+      m_CellIPFColors[index + 2] = RgbColor::dBlue(argb);
     }
   }
 

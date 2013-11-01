@@ -41,10 +41,10 @@
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"

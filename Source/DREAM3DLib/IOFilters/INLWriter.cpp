@@ -41,11 +41,16 @@
 
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
+#include "MXA/Common/LogTime.h"
 
 #include "EbsdLib/TSL/AngConstants.h"
 
-#include "DREAM3DLib/Common/EbsdColoring.hpp"
+
 #include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -319,19 +324,16 @@ int INLWriter::writeFile()
         zPos = origin[2] + (z * res[2]);
         grainId = m_GrainIds[index];
         phaseId = m_CellPhases[index];
-        rgba[0] = 0; rgba[1] = 0; rgba[2] = 0; // Reset the color to black
         symmetry = m_CrystalStructures[phaseId];
         if(phaseId > 0)
         {
           if(symmetry == Ebsd::CrystalStructure::Cubic_High)
           {
-            EbsdColoring::GenerateCubicIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, hkl);
             symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;
 
           }
           else if(symmetry == Ebsd::CrystalStructure::Hexagonal_High)
           {
-            EbsdColoring::GenerateHexIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba);
             symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
           }
           else

@@ -38,9 +38,9 @@
 
 #include <vector>
 
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/NeighborList.hpp"
-#include "DREAM3DLib/Common/StringDataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 // -----------------------------------------------------------------------------
 //

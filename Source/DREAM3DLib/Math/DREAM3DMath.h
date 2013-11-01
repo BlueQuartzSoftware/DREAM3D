@@ -65,12 +65,13 @@ lacking still.
 #endif
 
 #include <math.h>
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
 #ifndef M_E
 #define M_E            2.7182818284590452354   /* e */
- #endif
+#endif
 
 #ifndef M_LOG2E
 #define M_LOG2E        1.4426950408889634074   /* log_2 e */
@@ -116,15 +117,57 @@ lacking still.
 #define M_SQRT1_2      0.70710678118654752440  /* 1/sqrt(2) */
 #endif
 
-#ifndef M_2PI
-#define M_2PI           6.283185307179586232    /* 2*pi  */
-
-
 #ifndef M_PI
 #define M_PI        3.14159265358979323846  /* pi */
 #endif
 
+#ifndef M_2PI
+#define M_2PI           6.283185307179586232    /* 2*pi  */
 #endif
+
+namespace DREAM3D
+{
+  namespace Constants
+  {
+    static const float k_Pi = static_cast<float>(M_PI);
+    static const double k_SqrtPi = sqrt(M_PI);
+    static const double k_2OverSqrtPi = 2.0 / sqrt(M_PI);
+    static const double k_HalfOfSqrtPi = sqrt(M_PI) / 2.0;
+    static const double k_2Pi = 2.0 * M_PI;
+    static const double k_1OverPi = 1.0 / M_PI;
+    static const double k_PiOver180 = M_PI / 180.0;
+    static const double k_360OverPi = 360.0 / M_PI;
+    static const double k_180OverPi = 180.0 / M_PI;
+    static const double k_PiOver4 = M_PI / 4.0;
+    static const double k_PiOver8 = M_PI / 8.0;
+    static const double k_PiOver12 = M_PI / 12.0;
+    static const double k_Sqrt2 = sqrt(2.0);
+    static const double k_Sqrt3 = sqrt(3.0);
+    static const double k_HalfSqrt2 = 0.5 * sqrt(2.0);
+    static const double k_1OverRoot2 = 1.0 / sqrt(2.0);
+    static const double k_1OverRoot3 = 1.0 / sqrt(3.0);
+    static const double k_Root3Over2 = sqrt(3.0) / 2.0;
+    static const double k_DegToRad = M_PI / 180.0;
+    static const double k_RadToDeg = 180.0 / M_PI;
+    static const double k_1Point3 = 1.0 + 1.0 / 3.0;
+    static const double k_1Over3 = 1.0 / 3.0;
+
+    static const double k_ACosNeg1 = acos(-1.0);
+    static const double k_ACos1 = acos(1.0);
+
+    static const double k_Tan_OneEigthPi = tan(k_PiOver8);
+    static const double k_Cos_OneEigthPi = cos(k_PiOver8);
+    static const double k_Cos_ThreeEightPi = cos(3.0 * k_PiOver8);
+    static const double k_Sin_ThreeEightPi = sin(3.0 * k_PiOver8);
+
+
+
+  }
+}
+
+
+
+
 
 class DREAM3DMath
 {
@@ -132,6 +175,9 @@ class DREAM3DMath
     virtual ~DREAM3DMath();
 
     static DREAM3DLib_EXPORT float Gamma(float);
+    static DREAM3DLib_EXPORT void boundF(float& val, float min, float max);
+    static DREAM3DLib_EXPORT void boundI(int& val, int min, int max);
+    static DREAM3DLib_EXPORT void boundD(double& val, double min, double max);
     static DREAM3DLib_EXPORT float erf(float);
     static DREAM3DLib_EXPORT float erfc(float);
     static DREAM3DLib_EXPORT float gammastirf(float);
@@ -140,6 +186,14 @@ class DREAM3DMath
     static DREAM3DLib_EXPORT float incompletebetafe(float, float, float, float, float);
     static DREAM3DLib_EXPORT float incompletebetafe2(float, float, float, float, float);
     static DREAM3DLib_EXPORT float incompletebetaps(float, float, float, float);
+    /**
+     * @brief generates a linearly space array between 2 numbers (inclusive, assumes first number <= second number) [as matlabs linspace]
+     * @param first number
+     * @param second number
+     * @param length of return array
+     * @return
+     */
+    static DREAM3DLib_EXPORT std::vector<double> linspace(double, double, int);
 
   protected:
     DREAM3DMath();

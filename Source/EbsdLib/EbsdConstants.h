@@ -154,7 +154,7 @@ namespace Ebsd
     const unsigned int Hexagonal_High = 0; //!< Hexagonal-High 6/mmm
     const unsigned int Cubic_Low = 3; //!< Cubic Cubic-Low m3 (Tetrahedral)
     const unsigned int Cubic_High = 1; //!< Cubic Cubic-High m3m
-
+    const unsigned int LaueGroupEnd = 11; //!< The end of the Laue groups
     const unsigned int UnknownCrystalStructure = 999; //!< UnknownCrystalStructure
 
    class Check

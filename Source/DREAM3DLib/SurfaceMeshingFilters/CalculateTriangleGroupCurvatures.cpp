@@ -191,9 +191,9 @@ void CalculateTriangleGroupCurvatures::operator()() const
     double vp[3] = {0.0, 0.0, 0.0};
 
     // Cross Product of np and temp
-    MatrixMath::NormalizeVector(np);
+    MatrixMath::Normalize3x1(np);
     MatrixMath::CrossProduct(np, temp, vp);
-    MatrixMath::NormalizeVector(vp);
+    MatrixMath::Normalize3x1(vp);
 
     // get the third orthogonal vector
     double up[3] = {0.0, 0.0, 0.0};

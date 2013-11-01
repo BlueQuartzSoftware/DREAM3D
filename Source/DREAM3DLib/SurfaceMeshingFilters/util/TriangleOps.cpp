@@ -36,7 +36,7 @@
 #include "TriangleOps.h"
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 
@@ -255,7 +255,7 @@ VectorType TriangleOps::computeNormal(DREAM3D::SurfaceMesh::Vert_t& n0, DREAM3D:
   w[2] = vert2[2] - vert0[2];
 
   MatrixMath::CrossProduct(u, w, normal);
-  MatrixMath::NormalizeVector(normal);
+  MatrixMath::Normalize3x1(normal);
 
   return VectorType(normal[0], normal[1], normal[2]);
 }

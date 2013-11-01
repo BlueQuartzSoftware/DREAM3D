@@ -39,7 +39,7 @@
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -92,12 +92,12 @@ void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t fields, size
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
+      typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 4)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 4)
 
 }
 
@@ -142,37 +142,13 @@ void FindCellQuats::execute()
   for (int i = 0; i < totalPoints; i++)
   {
     phase = m_CellPhases[i];
-    OrientationMath::EulertoQuat(qr, m_CellEulerAngles[3*i], m_CellEulerAngles[3*i + 1], m_CellEulerAngles[3*i + 2]);
+    OrientationMath::EulertoQuat(qr, m_CellEulerAngles[3 * i], m_CellEulerAngles[3 * i + 1], m_CellEulerAngles[3 * i + 2]);
     QuaternionMathF::UnitQuaternion(qr);
     if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
       QuaternionMathF::Identity(qr);
     }
-    else
-    {
-      uint32_t xtalStruct = m_CrystalStructures[phase];
-      if (xtalStruct >= m_OrientationOps.size())
-      {
-        setErrorCondition(-55000);
-        ss.str("");
-        ss << "The value for the Crystal Structure is " << xtalStruct << " which is a value that is not understood by DREAM3D. The "
-        << "symmetry operations have not been implemented. Please report this to dream3d@bluequartz.net along with any data that you "
-        << "can provide.";
-        notifyErrorMessage(ss.str(), getErrorCondition());
-        return;
-      }
-      else
-      {
-        m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
-        QuaternionMathF::UnitQuaternion(qr);
-      }
-    }
-
     QuaternionMathF::Copy(qr, quats[i]);
-//    m_Quats[i*4 + 0] = qr[1];
-//    m_Quats[i*4 + 1] = qr[2];
-//    m_Quats[i*4 + 2] = qr[3];
-//    m_Quats[i*4 + 3] = qr[4];
   }
 
   notifyStatusMessage("Complete");

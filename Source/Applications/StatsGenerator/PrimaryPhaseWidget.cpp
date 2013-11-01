@@ -70,10 +70,10 @@
 #include <qwt_plot_marker.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/StatsGen.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/Common/PrimaryStatsData.h"
 

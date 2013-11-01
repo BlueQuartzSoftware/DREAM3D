@@ -40,7 +40,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

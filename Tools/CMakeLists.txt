@@ -110,21 +110,6 @@ COMPILE_TOOL(
 )
 
 
-# Create a Command line tool for the H5VoxelToVtk
-COMPILE_TOOL(
-    TARGET H5VoxelToVtk
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/H5VoxelToVtk.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES DREAM3DLib
-)
-
-
 # Create a Command line tool for the PhToHDF5
 COMPILE_TOOL(
     TARGET PhToHDF5

@@ -42,6 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
@@ -63,36 +64,119 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
     CubicOps();
     virtual ~CubicOps();
 
-    virtual int getODFSize() { return 5832; }
-    virtual int getMDFSize() { return 5832; }
-    virtual int getNumSymOps() { return 24; }
+    static const int k_OdfSize = 5832;
+    static const int k_MdfSize = 5832;
+    static const int k_NumSymQuats = 24;
 
-    virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
-    virtual void getQuatSymOp(int i, QuatF &q);
-    virtual void getRodSymOp(int i, float *r);
+    virtual bool getHasInversion() { return true; }
+    virtual int getODFSize() { return k_OdfSize; }
+    virtual int getMDFSize() { return k_MdfSize; }
+    virtual int getNumSymOps() { return k_NumSymQuats; }
+    std::string getSymmetryName() { return "Cubic-High m3m"; }
+
+    virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3);
+    virtual void getQuatSymOp(int i, QuatF& q);
+    virtual void getRodSymOp(int i, float* r);
     virtual void getMatSymOp(int i, float g[3][3]);
-    virtual void getODFFZRod(float &r1, float &r2, float &r3);
-    virtual void getMDFFZRod(float &r1, float &r2, float &r3);
-    virtual void getNearestQuat(QuatF &q1, QuatF &q2);
-    virtual void getFZQuat(QuatF &qr);
+    virtual void getODFFZRod(float& r1, float& r2, float& r3);
+    virtual void getMDFFZRod(float& r1, float& r2, float& r3);
+    virtual void getNearestQuat(QuatF& q1, QuatF& q2);
+    virtual void getFZQuat(QuatF& qr);
     virtual int getMisoBin(float r1, float r2, float r3);
-    virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
-    virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
+    virtual bool inUnitTriangle(float eta, float chi);
+    virtual void determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3);
+    virtual void determineRodriguesVector(int choose, float& r1, float& r2, float& r3);
     virtual int getOdfBin(float r1, float r2, float r3);
-    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
-    virtual void getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime);
-    virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1);
-    virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
-    virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
+    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys);
+    virtual void getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime);
+    virtual void getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1);
+    virtual void getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt);
+    virtual void getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7);
 
 
+    virtual void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3);
 
 
+    /**
+     * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
+     * @param eulers Pointer to the 3 component Euler Angle
+     * @param refDir Pointer to the 3 Component Reference Direction
+     * @param convertDegrees Are the input angles in Degrees
+     * @return Returns the ARGB Quadruplet DREAM3D::Rgb
+     */
+    virtual DREAM3D::Rgb generateIPFColor(double* eulers, double* refDir, bool convertDegrees);
 
-protected:
+    /**
+     * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
+     * @param e0 First component of the Euler Angle
+     * @param e1 Second component of the Euler Angle
+     * @param e2 Third component of the Euler Angle
+     * @param dir0 First component of the Reference Direction
+     * @param dir1 Second component of the Reference Direction
+     * @param dir2 Third component of the Reference Direction
+     * @param convertDegrees Are the input angles in Degrees
+     * @return Returns the ARGB Quadruplet DREAM3D::Rgb
+     */
+    virtual DREAM3D::Rgb generateIPFColor(double e0, double e1, double phi2, double dir0, double dir1, double dir2, bool convertDegrees);
+
+    /**
+     * @brief generateRodriguesColor Generates an RGB Color from a Rodrigues Vector
+     * @param r1 First component of the Rodrigues Vector
+     * @param r2 Second component of the Rodrigues Vector
+     * @param r3 Third component of the Rodrigues Vector
+     * @return Returns the ARGB Quadruplet DREAM3D::Rgb
+     */
+    virtual DREAM3D::Rgb generateRodriguesColor(float r1, float r2, float r3);
+
+    /**
+     * @brief generateMisorientationColor Generates a color based on the method developed by C. Schuh and S. Patala.
+     * @param q Quaternion representing the direction
+     * @param refDir The sample reference direction
+     * @return Returns the ARGB Quadruplet DREAM3D::Rgb
+     */
+    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF& q, const QuatF& refFrame);
+
+    /**
+     * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler
+     * angles that are passed in.
+     * @param eulers The Euler Angles to generate the pole figure from.
+     * @param imageSize The size in Pixels of the final RGB Image.
+     * @param numColors The number of colors to use in the RGB Image. Less colors can give the effect of contouring.
+     * @return A std::vector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
+     * an image object from other libraries and written out to disk.
+     */
+    virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config);
+
+    /**
+     * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
+     * @return
+     */
+    virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
+
+    /**
+     * @brief generates a misorientation coloring legend
+     * @param angle
+     * @param n1 (~radial mesh points)
+     * @param n2 (~angular mesh points)
+     * @param width of produced image (in pixels)
+     * @return
+     */
+    virtual UInt8ArrayType::Pointer generateMisorientationTriangleLegend(float, int, int, int);
+
+
+  protected:
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,
-                  QuatF &q1, QuatF &q2,
-                  float &n1, float &n2, float &n3);
+                        QuatF& q1, QuatF& q2,
+                        float& n1, float& n2, float& n3);
+    /**
+     * @brief area preserving projection of volume preserving transformation (for C. Shuch and S. Patala coloring legend generation)
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    std::vector< std::pair<double, double> > rodri2pair(std::vector<double>, std::vector<double>, std::vector<double>);
+
   private:
     CubicOps(const CubicOps&); // Copy Constructor Not Implemented
     void operator=(const CubicOps&); // Operator '=' Not Implemented

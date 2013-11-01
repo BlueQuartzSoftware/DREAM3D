@@ -14,18 +14,30 @@
 set(DREAM3DLib_OrientationOps_HDRS
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrientationOps.h
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/CubicOps.h
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/CubicLowOps.h
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/HexagonalOps.h
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/HexagonalLowOps.h
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrthoRhombicOps.h
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TrigonalOps.h
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TrigonalLowOps.h
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TetragonalOps.h
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TetragonalLowOps.h
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TriclinicOps.h
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/MonoclinicOps.h
 )
 set(DREAM3DLib_OrientationOps_SRCS
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrientationOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/CubicOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/CubicLowOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/HexagonalOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/HexagonalLowOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrthoRhombicOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TrigonalOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TrigonalLowOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TetragonalOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TetragonalLowOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TriclinicOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/MonoclinicOps.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/OrientationOps" "${DREAM3DLib_OrientationOps_HDRS}" "${DREAM3DLib_OrientationOps_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

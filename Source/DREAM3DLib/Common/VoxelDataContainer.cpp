@@ -46,9 +46,9 @@
 #include "EbsdLib/EbsdConstants.h"
 
 // DREAM3D Includes
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 
 // -----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ bool VoxelDataContainer::renameVertexData(const std::string &oldname, const std:
   it =  m_VertexData.find(oldname);
   if ( it == m_VertexData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
@@ -234,7 +234,7 @@ bool VoxelDataContainer::renameEdgeData(const std::string &oldname, const std::s
   it =  m_EdgeData.find(oldname);
   if ( it == m_EdgeData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
@@ -327,7 +327,7 @@ bool VoxelDataContainer::renameFaceData(const std::string &oldname, const std::s
   it =  m_FaceData.find(oldname);
   if ( it == m_FaceData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
@@ -420,7 +420,7 @@ bool VoxelDataContainer::renameCellData(const std::string &oldname, const std::s
   it =  m_CellData.find(oldname);
   if ( it == m_CellData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
@@ -515,7 +515,7 @@ bool VoxelDataContainer::renameFieldData(const std::string &oldname, const std::
   it =  m_FieldData.find(oldname);
   if ( it == m_FieldData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);

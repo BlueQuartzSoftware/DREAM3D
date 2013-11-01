@@ -44,7 +44,7 @@
 #endif
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
@@ -156,7 +156,7 @@ class CalculateTwinBoundaryImpl
                   n[1] = n2;
                   n[2] = n3;
                   m_TwinBoundary[i] = true;
-                  incoherence = 180.0*acos(MatrixMath::DotProduct(n, s_xstl_norm))/m_pi;
+                  incoherence = 180.0*acos(MatrixMath::DotProduct3x1(n, s_xstl_norm))/m_pi;
                   if(incoherence < m_TwinBoundaryIncoherence[i]) m_TwinBoundaryIncoherence[i] = incoherence;
                 }
               }

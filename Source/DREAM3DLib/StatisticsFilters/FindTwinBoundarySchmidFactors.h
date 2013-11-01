@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
@@ -50,7 +50,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 /**
  * @class FindTwinBoundarySchmidFactors FindTwinBoundarySchmidFactors.h DREAM3DLib/GenericFilters/FindTwinBoundarySchmidFactors.h

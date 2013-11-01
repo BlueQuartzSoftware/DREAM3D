@@ -28,7 +28,7 @@ set(_PublicFilters
   FindSurfaceCells
   FindSurfaceGrains
   GenerateIPFColors
-
+  GenerateMisorientationColors
   LinkFieldMapToCellArray
   RemoveArrays
   RenameCellArray
