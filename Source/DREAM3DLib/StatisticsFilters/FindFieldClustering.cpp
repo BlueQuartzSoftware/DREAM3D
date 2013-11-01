@@ -195,7 +195,7 @@ void FindFieldClustering::find_clustering()
 
         if(writeErrorFile == true && m_FieldPhases[j] == 2)
         {
-          outFile << r << "\n";
+          outFile << r << "\n" << r << "\n";
         }
       }
     }

@@ -581,7 +581,6 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
     insert_precipitate(i);
-    oldclusteringerror = check_clusteringerror(i, -1000);
 //    fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
 //    for (int iter_fill = 0; iter_fill < 10; iter_fill++)
 //    {
@@ -622,6 +621,16 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
 //      }
 //    }
   }
+  int numFields = m->getNumCellFieldTuples();
+  for (size_t i = firstPrecipitateField; i < numFields; i++)
+  {
+    oldclusteringerror = check_clusteringerror(i, -1000);
+    for (size_t k = 0; k < clusteringdist[0][0].size(); k++)
+    {
+      outFile << clusteringdist[0][0][k] << " " << simclusteringdist[0][0][k] << "\n";
+    }
+    outFile << "\n\n";
+  }
 
   notifyStatusMessage("Packing Grains - Initial Grain Placement Complete");
 
@@ -648,7 +657,6 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
       {
           outFile << clusteringdist[0][0][k] << " " << simclusteringdist[0][0][k] << "\n";
       }
-int stop;
     }
 
     // JUMP - this option moves one grain to a random spot in the volume
@@ -921,7 +929,7 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
   size_t numFields = m->getNumCellFieldTuples();
   for (size_t n = firstPrecipitateField; n < numFields; n++)
   {
-    if (m_FieldPhases[n] == phase)
+    if (m_FieldPhases[n] == phase && n != gnum)
     {
       xn = m_Centroids[3 * n];
       yn = m_Centroids[3 * n + 1];
@@ -929,17 +937,17 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
 
       dia = m_EquivalentDiameters[gnum];
-      dia2 = m_EquivalentDiameters[n];
+//      dia2 = m_EquivalentDiameters[n];
       if(dia > maxGrainDia) { dia = maxGrainDia; }
       if(dia < minGrainDia) { dia = minGrainDia; }
-      if(dia2 > maxGrainDia) { dia2 = maxGrainDia; }
-      if(dia2 < minGrainDia) { dia2 = minGrainDia; }
+//      if(dia2 > maxGrainDia) { dia2 = maxGrainDia; }
+//      if(dia2 < minGrainDia) { dia2 = minGrainDia; }
       diabin = static_cast<size_t>(((dia - minGrainDia) * oneOverBinStepSize) );
-      dia2bin = static_cast<size_t>(((dia2 - minGrainDia) * oneOverBinStepSize) );
+//      dia2bin = static_cast<size_t>(((dia2 - minGrainDia) * oneOverBinStepSize) );
       clusterbin = static_cast<size_t>( r * oneOverClusteringDistStep );
       if(clusterbin >= 40) { clusterbin = 39; }
       simclusteringdist[iter][diabin][clusterbin] += add;
-      simclusteringdist[iter][dia2bin][clusterbin] += add;
+//      simclusteringdist[iter][dia2bin][clusterbin] += add;
     }
   }
 }
