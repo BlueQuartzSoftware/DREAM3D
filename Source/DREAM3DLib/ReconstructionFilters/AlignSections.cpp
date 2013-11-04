@@ -66,7 +66,7 @@ using namespace std;
 AlignSections::AlignSections() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_WriteAlignmentShifts(true),
+  m_WriteAlignmentShifts(false),
   m_AlignmentShiftFileName("")
 {
 
