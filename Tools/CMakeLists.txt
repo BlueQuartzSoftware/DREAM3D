@@ -174,7 +174,7 @@ if(COMPILE_EBSD_TO_TIFF)
         CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
         CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
       endif()
-
+if(0)
     COMPILE_TOOL(
         TARGET EbsdToTiff
         SOURCES ${DREAM3DTools_SOURCE_DIR}/EbsdToTiff.cpp
@@ -187,7 +187,7 @@ if(COMPILE_EBSD_TO_TIFF)
         INSTALL_DEST  "${install_dir}"
         LINK_LIBRARIES  ${TIFF_LIBRARY} EbsdLib MXA DREAM3DLib
     )
-
+endif()
 
     # Create a Command line tool for the AngReaderTest
     COMPILE_TOOL(

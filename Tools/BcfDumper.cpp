@@ -46,9 +46,9 @@
 
 typedef struct
 {
-  int mapWidth;
-  int mapHeight;
-  int totalPoints;
+    int mapWidth;
+    int mapHeight;
+    int totalPoints;
 } MapDescription_t;
 
 
@@ -94,23 +94,23 @@ namespace Bcf
 int parseMapSize(const std::string inputDir, MapDescription_t* mapDesc )
 {
 
-    std::string frameDescPath = inputDir;
-    frameDescPath += MXADir::Separator + Bcf::FrameDescriptionFileName;
+  std::string frameDescPath = inputDir;
+  frameDescPath += MXADir::Separator + Bcf::FrameDescriptionFileName;
 
-    MXAFileReader64 reader(frameDescPath);
-    if (reader.initReader() == false ) {
-        std::cout << "Could not open file " << frameDescPath << std::endl;
-        return -1;
-    }
+  MXAFileReader64 reader(frameDescPath);
+  if (reader.initReader() == false ) {
+    std::cout << "Could not open file " << frameDescPath << std::endl;
+    return -1;
+  }
 
-    bool success = reader.readArray<int>(reinterpret_cast<int*>(mapDesc), 3); // Read the first 3 integers
-    if (false == success)
-    {
-        std::cout << "Could not read the first 3 integers (12 bytes) of the file." << std::endl;
-        return -1;
-    }
+  bool success = reader.readArray<int>(reinterpret_cast<int*>(mapDesc), 3); // Read the first 3 integers
+  if (false == success)
+  {
+    std::cout << "Could not read the first 3 integers (12 bytes) of the file." << std::endl;
+    return -1;
+  }
 
-    return 0;
+  return 0;
 }
 
 
@@ -119,171 +119,176 @@ int parseMapSize(const std::string inputDir, MapDescription_t* mapDesc )
 // -----------------------------------------------------------------------------
 int extractPatterns(const std::string &inputDir, const std::string &outputDir, MapDescription_t* mapDesc)
 {
-    int err = 0;
-    // Generate our file path to read
-    std::string frameDataPath = inputDir;
-    frameDataPath += MXADir::Separator + Bcf::FrameDataFileName;
+  int err = 0;
+  // Generate our file path to read
+  std::string frameDataPath = inputDir;
+  frameDataPath += MXADir::Separator + Bcf::FrameDataFileName;
 
-    // Make sure the output path is available.
-    MXADir::mkdir(outputDir, true);
+  // Make sure the output path is available.
+  MXADir::mkdir(outputDir, true);
 
-    MXAFileReader64 reader(frameDataPath);
-    bool isOpen = reader.initReader();
-    if(isOpen == false)
+  MXAFileReader64 reader(frameDataPath);
+  bool isOpen = reader.initReader();
+  if(isOpen == false)
+  {
+    std::cout << "Could not open file " << frameDataPath << std::endl;
+    return -1;
+  }
+
+  EBSPHeader_t header;
+  std::vector<uint8_t> outImage;
+  size_t ebspPixelCount = 0;
+  TiffUtilities tiffUtil;
+  std::stringstream ss;
+
+  std::stringstream comment;
+  for (int i = 0; i < mapDesc->totalPoints; ++i)
+  {
+    ::memset(reinterpret_cast<uint8_t*>(&header), 0xAB, Bcf::MapDescHeaderByteSize);
+
+    // Read 25 byte header
+    reader.readArray(reinterpret_cast<uint8_t*>(&header), Bcf::MapDescHeaderByteSize);
+
+    ebspPixelCount = header.width * header.height;
+    if (ebspPixelCount != outImage.size())
     {
-        std::cout << "Could not open file " << frameDataPath << std::endl;
-        return -1;
+      outImage.resize(ebspPixelCount);
     }
+    // Read the pattern data into the array
+    reader.readArray<uint8_t>( &(outImage.front()), ebspPixelCount);
+    int index = 131329;
 
-    EBSPHeader_t header;
-    std::vector<uint8_t> outImage;
-    size_t ebspPixelCount = 0;
-    TiffUtilities tiffUtil;
-    std::stringstream ss;
-
-    std::stringstream comment;
-    for (int i = 0; i < mapDesc->totalPoints; ++i)
+   // if ( i >= index && i < index+3)
     {
-        ::memset(reinterpret_cast<uint8_t*>(&header), 0xAB, Bcf::MapDescHeaderByteSize);
-
-        // Read 25 byte header
-        reader.readArray(reinterpret_cast<uint8_t*>(&header), Bcf::MapDescHeaderByteSize);
-
-        ebspPixelCount = header.width * header.height;
-        if (ebspPixelCount != outImage.size())
-        {
-            outImage.resize(ebspPixelCount);
-        }
-        // Read the pattern data into the array
-        reader.readArray<uint8_t>( &(outImage.front()), ebspPixelCount);
-
-        // Write the Tiff File for this X,Y pattern
-        ss.str("");
-        ss << outputDir << MXADir::Separator << header.x_index << "_" << header.y_index << "_pattern.tif";
-        comment.str("");
-        comment << "Kikuchi Pattern at x="<< header.x_index << ", y=" << header.y_index;
-        err = tiffUtil.writeGrayScaleImage(ss.str().c_str(), header.height, header.width, comment.str().c_str(), &(outImage.front()));
-        if (err < 0)
-        {
-            std::cout << "Error Writing Tif file for " << ss.str() << std::endl;
-        }
+      // Write the Tiff File for this X,Y pattern
+      ss.str("");
+      ss << outputDir << MXADir::Separator << header.x_index << "_" << header.y_index << "_pattern.tif";
+      comment.str("");
+      comment << "Kikuchi Pattern at x="<< header.x_index << ", y=" << header.y_index;
+      err = tiffUtil.writeGrayScaleImage(ss.str().c_str(), header.height, header.width, comment.str().c_str(), &(outImage.front()));
+      if (err < 0)
+      {
+        std::cout << "Error Writing Tif file for " << ss.str() << std::endl;
+      }
     }
-    return err;
+  }
+  return err;
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int extractIndexingResults(const std::string &inputDir, const std::string &outputFile, MapDescription_t* mapDesc)
 {
-    int err = 0;
-    // Generate our file path to read
-    std::string indexResults = inputDir;
-    indexResults += MXADir::Separator + Bcf::IndexingResultsFileName;
-    MXAFileReader64 reader(indexResults);
+  int err = 0;
+  // Generate our file path to read
+  std::string indexResults = inputDir;
+  indexResults += MXADir::Separator + Bcf::IndexingResultsFileName;
+  MXAFileReader64 reader(indexResults);
 
-    bool isOpen = reader.initReader();
-    if(isOpen == false)
-    {
-        std::cout << "Could not open file " << indexResults << std::endl;
-        return -1;
-    }
+  bool isOpen = reader.initReader();
+  if(isOpen == false)
+  {
+    std::cout << "Could not open file " << indexResults << std::endl;
+    return -1;
+  }
 
 
-    // We are going to read everything into memory because the file is NOT actually in a consistent order.
+  // We are going to read everything into memory because the file is NOT actually in a consistent order.
   //  IndexResult_t* header = (IndexResult_t*)(malloc(Bcf::IndexResultByteSize * mapDesc->totalPoints));
 
-    uint8_t* ptr = reinterpret_cast<uint8_t*>(malloc(Bcf::IndexResultByteSize * mapDesc->totalPoints));
-    ::memset(ptr, 0xAB, Bcf::IndexResultByteSize * mapDesc->totalPoints);
-    uint8_t curHdr[30];
-    size_t index = 0;
-    uint16_t* y_index = NULL;
-    uint16_t* x_index = NULL;
-    float* e1;
-    float* e2;
-    float* e3;
-    float* mad;
-    uint16_t* bands;
+  uint8_t* ptr = reinterpret_cast<uint8_t*>(malloc(Bcf::IndexResultByteSize * mapDesc->totalPoints));
+  ::memset(ptr, 0xAB, Bcf::IndexResultByteSize * mapDesc->totalPoints);
+  uint8_t curHdr[30];
+  size_t index = 0;
+  uint16_t* y_index = NULL;
+  uint16_t* x_index = NULL;
+  float* e1;
+  float* e2;
+  float* e3;
+  float* mad;
+  uint16_t* bands;
 
-    for (int i = 0; i < mapDesc->totalPoints; ++i)
-    {
-        reader.readArray(reinterpret_cast<uint8_t*>(curHdr), Bcf::IndexResultByteSize);
+  for (int i = 0; i < mapDesc->totalPoints; ++i)
+  {
+    reader.readArray(reinterpret_cast<uint8_t*>(curHdr), Bcf::IndexResultByteSize);
 
-        x_index = reinterpret_cast<uint16_t*>(curHdr);
-        y_index = reinterpret_cast<uint16_t*>(curHdr + 2);
+    x_index = reinterpret_cast<uint16_t*>(curHdr);
+    y_index = reinterpret_cast<uint16_t*>(curHdr + 2);
 
-        e1 = reinterpret_cast<float*>(curHdr + 10);
-        e2 = reinterpret_cast<float*>(curHdr + 14);
-        e3 = reinterpret_cast<float*>(curHdr + 18);
+    e1 = reinterpret_cast<float*>(curHdr + 10);
+    e2 = reinterpret_cast<float*>(curHdr + 14);
+    e3 = reinterpret_cast<float*>(curHdr + 18);
 
-        index = (mapDesc->mapWidth * *y_index) + *x_index;
+    index = (mapDesc->mapWidth * *y_index) + *x_index;
 
-        ::memcpy(ptr+(Bcf::IndexResultByteSize * index), curHdr, Bcf::IndexResultByteSize);
-    }
+    ::memcpy(ptr+(Bcf::IndexResultByteSize * index), curHdr, Bcf::IndexResultByteSize);
+  }
 
 #if 0
-    float radToDeg = 180.0f/M_PI;
+  float radToDeg = 180.0f/M_PI;
 #else
-    float radToDeg = 1.0f;
+  float radToDeg = 1.0f;
 #endif
-    
-    std::string parentPath = MXAFileInfo::parentPath(outputFile);
-    if(!MXADir::mkdir(parentPath, true))
-    {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      std::cout << ss.str() << std::endl;
-      return -1;
-    }
+
+  std::string parentPath = MXAFileInfo::parentPath(outputFile);
+  if(!MXADir::mkdir(parentPath, true))
+  {
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    std::cout << ss.str() << std::endl;
+    return -1;
+  }
 
 
-    FILE* f = fopen(outputFile.c_str(), "w");
-    if (NULL == f)
-    {
-        std::cout << "Could not open file " << outputFile << " To write indexing results." << std::endl;
-        return -1;
-    }
-    fprintf(f, "X\tY\tEuler1f\tEuler2\tEuler3\tMAD\tBands\n");
-    uint8_t* header = NULL;
-    float maxBC = 0.0f;
-    float minBC = 1.0f;
-    float* bc = NULL;
+  FILE* f = fopen(outputFile.c_str(), "w");
+  if (NULL == f)
+  {
+    std::cout << "Could not open file " << outputFile << " To write indexing results." << std::endl;
+    return -1;
+  }
+  fprintf(f, "X\tY\tEuler1f\tEuler2\tEuler3\tMAD\tBands\n");
+  uint8_t* header = NULL;
+  float maxBC = 0.0f;
+  float minBC = 1.0f;
+  float* bc = NULL;
 
 
-    for (int i = 0; i < mapDesc->totalPoints; ++i)
-    {
-        //hdrPtr = reinterpret_cast<IndexResult_t*>(ptr + (i*Bcf::IndexResultByteSize));
-        header = ptr + i*Bcf::IndexResultByteSize;
+  for (int i = 0; i < mapDesc->totalPoints; ++i)
+  {
+    //hdrPtr = reinterpret_cast<IndexResult_t*>(ptr + (i*Bcf::IndexResultByteSize));
+    header = ptr + i*Bcf::IndexResultByteSize;
 
-        IndexResult_t row;
-        void* rowPtr = &row;
-        ::memcpy(rowPtr,header, Bcf::IndexResultByteSize);
+    IndexResult_t row;
+    void* rowPtr = &row;
+    ::memcpy(rowPtr,header, Bcf::IndexResultByteSize);
 
-//        std::cout << row.xIndex << "    " << row.yIndex << "    " << row.euler1*radToDeg << "    "
-//                  << row.euler2*radToDeg << "    " << row.euler3*radToDeg << "    " << row.mad << std::endl;
+    //        std::cout << row.xIndex << "    " << row.yIndex << "    " << row.euler1*radToDeg << "    "
+    //                  << row.euler2*radToDeg << "    " << row.euler3*radToDeg << "    " << row.mad << std::endl;
 
-        x_index = reinterpret_cast<uint16_t*>(header);
-        y_index = reinterpret_cast<uint16_t*>(header + 2);
-        bc = reinterpret_cast<float*>(header + 4);
-        e1 = reinterpret_cast<float*>(header + 10);
-        e2 = reinterpret_cast<float*>(header + 14);
-        e3 = reinterpret_cast<float*>(header + 18);
-        bands = reinterpret_cast<uint16_t*>(header + 24);
-        mad = reinterpret_cast<float*>(header + 26);
+    x_index = reinterpret_cast<uint16_t*>(header);
+    y_index = reinterpret_cast<uint16_t*>(header + 2);
+    bc = reinterpret_cast<float*>(header + 4);
+    e1 = reinterpret_cast<float*>(header + 10);
+    e2 = reinterpret_cast<float*>(header + 14);
+    e3 = reinterpret_cast<float*>(header + 18);
+    bands = reinterpret_cast<uint16_t*>(header + 24);
+    mad = reinterpret_cast<float*>(header + 26);
 
-        if (*bc > maxBC) { maxBC = *bc; }
-        if (*bc < minBC) { minBC = *bc; }
+    if (*bc > maxBC) { maxBC = *bc; }
+    if (*bc < minBC) { minBC = *bc; }
 
-        *e1 = *e1*radToDeg;
-        *e2 = *e2*radToDeg;
-        *e3 = *e3*radToDeg;
-        fprintf(f, "%d\t%d\t%0.8f\t%0.8f\t%0.8f\t%0.8f\t%d\n", *x_index , *y_index, *e1, *e2, *e3, *mad, *bands);
-    }
-    fclose(f);
+    *e1 = *e1*radToDeg;
+    *e2 = *e2*radToDeg;
+    *e3 = *e3*radToDeg;
+    fprintf(f, "%d\t%d\t%0.8f\t%0.8f\t%0.8f\t%0.8f\t%d\n", *x_index , *y_index, *e1, *e2, *e3, *mad, *bands);
+  }
+  fclose(f);
 
-    std::cout << "Max BC: " << maxBC << "   MinBC: " << minBC << std::endl;
+  std::cout << "Max BC: " << maxBC << "   MinBC: " << minBC << std::endl;
 
-    return err;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -291,47 +296,54 @@ int extractIndexingResults(const std::string &inputDir, const std::string &outpu
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-    if (argc != 4)
-    {
-        std::cout << "This program needs 3 arguments:" << std::endl;
-        std::cout << "  1) The input directory where all the Bcf files were extracted." << std::endl;
-        std::cout << "  2) The output directory where you want all the patterns created" << std::endl;
-        std::cout << "  3) The output file to generate the Index Results" << std::endl;
-        return EXIT_FAILURE;
-    }
+  if (argc != 4)
+  {
+    std::cout << "This program needs 3 arguments:" << std::endl;
+    std::cout << "  1) The input directory where all the Bcf files were extracted." << std::endl;
+    std::cout << "  2) The output directory where you want all the patterns created" << std::endl;
+    std::cout << "  3) The output file to generate the Index Results" << std::endl;
+    return EXIT_FAILURE;
+  }
 
 
 
-    std::string inputDir(argv[1]);
-    std::string outputDir(argv[2]);
-    std::string ebsdIndexOutputFile(argv[3]);
+  std::string inputDir(argv[1]);
+  std::string outputDir(argv[2]);
+  std::string ebsdIndexOutputFile(argv[3]);
 
-    // Read the "FrameDescription" header which tells us how many points are in the Map
-    MapDescription_t mapDesc;
-    ::memset(&mapDesc, 0, 12); // Initialize the structure to all zeros
-    int err = parseMapSize( inputDir, &mapDesc);
-    if (err < 0)
-    {
-        return EXIT_FAILURE;
-    }
+  // Read the "FrameDescription" header which tells us how many points are in the Map
+  MapDescription_t mapDesc;
+  ::memset(&mapDesc, 0, 12); // Initialize the structure to all zeros
+  int err = parseMapSize( inputDir, &mapDesc);
+  if (err < 0)
+  {
+    return EXIT_FAILURE;
+  }
+#if 0
+  // Extract the EBSD Scan Data
+  err = extractIndexingResults(inputDir, ebsdIndexOutputFile, &mapDesc);
+  if (err < 0)
+  {
+    return EXIT_FAILURE;
+  }
+#endif
 
-    // Extract the EBSD Scan Data
-    err = extractIndexingResults(inputDir, ebsdIndexOutputFile, &mapDesc);
-    if (err < 0)
-    {
-        return EXIT_FAILURE;
-    }
+#if 0
+  int index = atoi(argv[4]);
+  err = extractPatternByIndex(inputDir, outputDir, &mapDesc, index);
+#else
+  // Extract the EBSD Kikuchi Patterns to individual Tif files
+  err = extractPatterns(inputDir, outputDir, &mapDesc);
+ #endif
 
-    // Extract the EBSD Kikuchi Patterns to individual Tif files
-    err = extractPatterns(inputDir, outputDir, &mapDesc);
-    if (err < 0)
-    {
-        return EXIT_FAILURE;
-    }
-
+  if (err < 0)
+  {
+    return EXIT_FAILURE;
+  }
 
 
-    return EXIT_SUCCESS;
+
+  return EXIT_SUCCESS;
 
 }
 
