@@ -67,16 +67,16 @@ typedef struct
 
 typedef struct
 {
-    int16_t xIndex;
-    int16_t yIndex;
-    float   bc;
-    uint16_t unknown2;
-    float   euler1;
-    float   euler2;
-    float   euler3;
-    uint16_t badPoint;
-    uint16_t bands;
-    float   mad;
+  signed short xIndex; //0
+  signed short yIndex; //2
+  float   Pattern_Quality; //4
+  unsigned short Max_Bands; //8
+  float   euler1; //10
+  float   euler2; //14
+  float   euler3; //18
+  unsigned short Phase; //22   Has byte value of 0xFFFF
+  unsigned short Detected_Bands; // 24
+  float   BMM; //26
 } IndexResult_t;
 
 namespace Bcf
@@ -148,7 +148,10 @@ int extractPatterns(const std::string &inputDir, const std::string &outputDir, M
 
     // Read 25 byte header
     reader.readArray(reinterpret_cast<uint8_t*>(&header), Bcf::MapDescHeaderByteSize);
-
+    // if (header.flag > 0)
+    // {
+    //   std::cout << header.x_index << ", " << header.y_index << " " << header.var2 << " " << header.var5 << " " << (int)(header.flag) << std::endl;
+    // }
     ebspPixelCount = header.width * header.height;
     if (ebspPixelCount != outImage.size())
     {
@@ -158,7 +161,7 @@ int extractPatterns(const std::string &inputDir, const std::string &outputDir, M
     reader.readArray<uint8_t>( &(outImage.front()), ebspPixelCount);
     int index = 131329;
 
-   // if ( i >= index && i < index+3)
+    if ( i < 0)
     {
       // Write the Tiff File for this X,Y pattern
       ss.str("");
@@ -319,7 +322,7 @@ int main(int argc, char **argv)
   {
     return EXIT_FAILURE;
   }
-#if 0
+#if 1
   // Extract the EBSD Scan Data
   err = extractIndexingResults(inputDir, ebsdIndexOutputFile, &mapDesc);
   if (err < 0)
