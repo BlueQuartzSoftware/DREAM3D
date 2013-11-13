@@ -61,13 +61,13 @@
 #include "DREAM3DLib/ReconstructionFilters/EBSDSegmentGrains.h"
 #include "DREAM3DLib/ProcessingFilters/MinSize.h"
 #include "DREAM3DLib/ProcessingFilters/MinNeighbors.h"
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 #include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighborhoods.h"
-#include "DREAM3DLib/StatisticsFilters/FindODF.h"
-#include "DREAM3DLib/StatisticsFilters/FindMDF.h"
+//#include "DREAM3DLib/StatisticsFilters/FindODF.h"
+//#include "DREAM3DLib/StatisticsFilters/FindMDF.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -199,7 +199,7 @@ void TestFindNeighbors()
   typedef DataArray<unsigned int> XTalStructArrayType;
   XTalStructArrayType::Pointer xtal = XTalStructArrayType::CreateArray(2, DREAM3D::EnsembleData::CrystalStructures);
   xtal->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-  xtal->SetValue(1, Ebsd::CrystalStructure::Cubic);
+  xtal->SetValue(1, Ebsd::CrystalStructure::Cubic_High);
 
   std::string m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::FindNeighborTest::TestDir);
   MXADir::mkdir(m_OutputDirectory, true);

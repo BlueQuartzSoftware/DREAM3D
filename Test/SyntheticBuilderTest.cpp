@@ -39,19 +39,19 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractPipeline.h"
+//#include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 //#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/InsertPrecipitatePhases.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/MatchCrystallography.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/InsertPrecipitatePhases.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
+//#include "DREAM3DLib/SyntheticBuildingFilters/AdjustVolume.h"
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
 
 #include "UnitTestSupport.hpp"
@@ -160,7 +160,7 @@ void TestSyntheticBuilder()
     init_volume->setXRes(m_XResolution);
     init_volume->setYRes(m_YResolution);
     init_volume->setZRes(m_ZResolution);
-	pipeline->pushBack(init_volume);
+  pipeline->pushBack(init_volume);
 
     PackPrimaryPhases::Pointer pack_grains = PackPrimaryPhases::New();
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);

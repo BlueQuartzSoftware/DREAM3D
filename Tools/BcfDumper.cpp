@@ -67,16 +67,16 @@ typedef struct
 
 typedef struct
 {
-  signed short xIndex; //0
-  signed short yIndex; //2
-  float   Pattern_Quality; //4
-  unsigned short Max_Bands; //8
-  float   euler1; //10
-  float   euler2; //14
-  float   euler3; //18
-  unsigned short Phase; //22   Has byte value of 0xFFFF
-  unsigned short Detected_Bands; // 24
-  float   BMM; //26
+    signed short xIndex; //0
+    signed short yIndex; //2
+    float   Pattern_Quality; //4
+    unsigned short Max_Bands; //8
+    float   euler1; //10
+    float   euler2; //14
+    float   euler3; //18
+    unsigned short Phase; //22   Has byte value of 0xFFFF
+    unsigned short Detected_Bands; // 24
+    float   BMM; //26
 } IndexResult_t;
 
 namespace Bcf
@@ -142,36 +142,39 @@ int extractPatterns(const std::string &inputDir, const std::string &outputDir, M
   std::stringstream ss;
 
   std::stringstream comment;
-  for (int i = 0; i < mapDesc->totalPoints; ++i)
+  for(int y = 0; y < mapDesc->mapHeight; y++)
   {
-    ::memset(reinterpret_cast<uint8_t*>(&header), 0xAB, Bcf::MapDescHeaderByteSize);
-
-    // Read 25 byte header
-    reader.readArray(reinterpret_cast<uint8_t*>(&header), Bcf::MapDescHeaderByteSize);
-    // if (header.flag > 0)
-    // {
-    //   std::cout << header.x_index << ", " << header.y_index << " " << header.var2 << " " << header.var5 << " " << (int)(header.flag) << std::endl;
-    // }
-    ebspPixelCount = header.width * header.height;
-    if (ebspPixelCount != outImage.size())
+    for (int x = 0; x < mapDesc->mapWidth; ++x)
     {
-      outImage.resize(ebspPixelCount);
-    }
-    // Read the pattern data into the array
-    reader.readArray<uint8_t>( &(outImage.front()), ebspPixelCount);
-    int index = 131329;
+      ::memset(reinterpret_cast<uint8_t*>(&header), 0xAB, Bcf::MapDescHeaderByteSize);
 
-    if ( i < 0)
-    {
-      // Write the Tiff File for this X,Y pattern
-      ss.str("");
-      ss << outputDir << MXADir::Separator << header.x_index << "_" << header.y_index << "_pattern.tif";
-      comment.str("");
-      comment << "Kikuchi Pattern at x="<< header.x_index << ", y=" << header.y_index;
-      err = tiffUtil.writeGrayScaleImage(ss.str().c_str(), header.height, header.width, comment.str().c_str(), &(outImage.front()));
-      if (err < 0)
+      // Read 25 byte header
+      reader.readArray(reinterpret_cast<uint8_t*>(&header), Bcf::MapDescHeaderByteSize);
+      // if (header.flag > 0)
+      // {
+      //   std::cout << header.x_index << ", " << header.y_index << " " << header.var2 << " " << header.var5 << " " << (int)(header.flag) << std::endl;
+      // }
+      ebspPixelCount = header.width * header.height;
+      if (ebspPixelCount != outImage.size())
       {
-        std::cout << "Error Writing Tif file for " << ss.str() << std::endl;
+        outImage.resize(ebspPixelCount);
+      }
+      // Read the pattern data into the array
+      reader.readArray<uint8_t>( &(outImage.front()), ebspPixelCount);
+      int index = 131329;
+
+      if(x == 207 && y == 538)
+      {
+        // Write the Tiff File for this X,Y pattern
+        ss.str("");
+        ss << outputDir << MXADir::Separator << header.x_index << "_" << header.y_index << "_pattern.tif";
+        comment.str("");
+        comment << "Kikuchi Pattern at x="<< header.x_index << ", y=" << header.y_index;
+        err = tiffUtil.writeGrayScaleImage(ss.str().c_str(), header.height, header.width, comment.str().c_str(), &(outImage.front()));
+        if (err < 0)
+        {
+          std::cout << "Error Writing Tif file for " << ss.str() << std::endl;
+        }
       }
     }
   }
@@ -213,20 +216,23 @@ int extractIndexingResults(const std::string &inputDir, const std::string &outpu
   float* mad;
   uint16_t* bands;
 
-  for (int i = 0; i < mapDesc->totalPoints; ++i)
+  for(int y = 0; y < mapDesc->mapHeight; y++)
   {
-    reader.readArray(reinterpret_cast<uint8_t*>(curHdr), Bcf::IndexResultByteSize);
+    for (int x = 0; x < mapDesc->mapWidth; ++x)
+    {
+      reader.readArray(reinterpret_cast<uint8_t*>(curHdr), Bcf::IndexResultByteSize);
 
-    x_index = reinterpret_cast<uint16_t*>(curHdr);
-    y_index = reinterpret_cast<uint16_t*>(curHdr + 2);
+      x_index = reinterpret_cast<uint16_t*>(curHdr);
+      y_index = reinterpret_cast<uint16_t*>(curHdr + 2);
 
-    e1 = reinterpret_cast<float*>(curHdr + 10);
-    e2 = reinterpret_cast<float*>(curHdr + 14);
-    e3 = reinterpret_cast<float*>(curHdr + 18);
+      e1 = reinterpret_cast<float*>(curHdr + 10);
+      e2 = reinterpret_cast<float*>(curHdr + 14);
+      e3 = reinterpret_cast<float*>(curHdr + 18);
 
-    index = (mapDesc->mapWidth * *y_index) + *x_index;
+      index = (mapDesc->mapWidth * *y_index) + *x_index;
 
-    ::memcpy(ptr+(Bcf::IndexResultByteSize * index), curHdr, Bcf::IndexResultByteSize);
+      ::memcpy(ptr+(Bcf::IndexResultByteSize * index), curHdr, Bcf::IndexResultByteSize);
+    }
   }
 
 #if 0
@@ -324,7 +330,7 @@ int main(int argc, char **argv)
   }
 #if 1
   // Extract the EBSD Scan Data
-  err = extractIndexingResults(inputDir, ebsdIndexOutputFile, &mapDesc);
+//  err = extractIndexingResults(inputDir, ebsdIndexOutputFile, &mapDesc);
   if (err < 0)
   {
     return EXIT_FAILURE;
@@ -337,7 +343,7 @@ int main(int argc, char **argv)
 #else
   // Extract the EBSD Kikuchi Patterns to individual Tif files
   err = extractPatterns(inputDir, outputDir, &mapDesc);
- #endif
+#endif
 
   if (err < 0)
   {

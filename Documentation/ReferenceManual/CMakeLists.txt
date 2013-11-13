@@ -166,6 +166,7 @@ endif()
 #-------------------------------------------------------------------------------
 # Make Sure this target is built so that the DREAM3D Application has access to
 # the HTML help files
+if(TARGET DREAM3D)
 add_dependencies(DREAM3D DREAM3DReferenceManual_HTML)
 add_dependencies(DREAM3DReferenceManual_HTML FilterWidgetsLib)
 
@@ -175,4 +176,4 @@ add_dependencies(DREAM3DReferenceManual_HTML FilterWidgetsLib)
 install(DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D
         DESTINATION Help/
         COMPONENT Applications )
-
+endif()

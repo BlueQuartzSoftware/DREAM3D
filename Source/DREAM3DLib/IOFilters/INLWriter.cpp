@@ -303,9 +303,9 @@ int INLWriter::writeFile()
   int32_t grainId;
   int32_t phaseId;
 
-  unsigned char rgba[4] = {0,0,0,255};
-  unsigned char hkl[3] = { 0, 0, 0 };
-  float refDir[3] = {0.0f, 0.0f, 1.0f};
+//  unsigned char rgba[4] = {0,0,0,255};
+//  unsigned char hkl[3] = { 0, 0, 0 };
+//  float refDir[3] = {0.0f, 0.0f, 1.0f};
 
 
   size_t index = 0;
