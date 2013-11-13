@@ -297,7 +297,9 @@ endfunction()
 #-----------------
 # These are the core plugins
 set(DREAM3D_PLUGIN_LIST
-    ExamplePlugin;ImageImportPlugin;OrientationAnalysis
+    #ExamplePlugin
+    ImageImportPlugin
+    OrientationAnalysis
 )
 
 # Clear this file out before we go any further
@@ -318,16 +320,19 @@ endforeach()
 add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
 
 
-
 if(DREAM3D_BUILD_DREAM3D)
+
+   # --------------------------------------------------------------------
+  # Build the PipelineBuilderLib
   add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
 
   # --------------------------------------------------------------------
-  # Build the FilterWidgets Static Library which is ONLY needed by this plugin
+  # Build the FilterWidgets Static Library
   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
 
   #- Add in the Main DREAM.3D Application
   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
+
   #- Now set up the dependency between the main application and each of the plugins so that
   #- things like Visual Studio are forced to rebuild the plugins when launching
   #- the DREAM3D application

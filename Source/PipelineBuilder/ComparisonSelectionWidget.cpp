@@ -154,22 +154,24 @@ void ComparisonSelectionWidget::on_removeComparison_clicked()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateArrayNames(DataContainerArray::Pointer dca)
 {
-
+#if __APPLE__
+#warning This needs to be fixed
+#endif
   if (m_ArrayListType >= CellListType && m_ArrayListType <= FaceListType )
   {
-    populateVolumeArrayNames(vldc);
+//    populateVolumeArrayNames(vldc);
   }
   else if (m_ArrayListType >= FieldListType && m_ArrayListType <= FaceListType)
-  { 
-    populateSurfaceArrayNames(sdc);
+  {
+//    populateSurfaceArrayNames(sdc);
   }
   else if (m_ArrayListType >= FieldListType && m_ArrayListType <= EdgeListType)
-  { 
-    populateEdgeArrayNames(edc);
+  {
+//    populateEdgeArrayNames(edc);
   }
   else if (m_ArrayListType >= FieldListType && m_ArrayListType <= VertexListType)
-  { 
-    populateVertexArrayNames(vdc);
+  {
+//    populateVertexArrayNames(vdc);
   }
 
 

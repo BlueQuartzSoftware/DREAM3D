@@ -116,10 +116,13 @@ void ArraySelectionWidget::arrayListUpdated(QListWidgetItem *item)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateArrayNames(DataContainerArray::Pointer dca)
 {
-  populateVolumeArrayNames(vldc);
-  populateSurfaceArrayNames(sdc);
-  populateEdgeArrayNames(edc);
-  populateVertexArrayNames(vdc);
+#if __APPLE__
+#warning This needs to be fixed
+#endif
+//  populateVolumeArrayNames(vldc);
+//  populateSurfaceArrayNames(sdc);
+//  populateEdgeArrayNames(edc);
+//  populateVertexArrayNames(vdc);
 }
 
 

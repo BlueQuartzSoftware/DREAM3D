@@ -199,7 +199,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     /**
      * @brief Reads the pipeline stored inside a dream3d file using the file's ID
      */
-    int readPipelineFromFile(hid_t fileId);
+    int readPipelineFromFile(const QString &filePath);
 
   public slots:
     void openPipelineFile(const QString& filePath);

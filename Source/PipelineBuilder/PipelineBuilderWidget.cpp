@@ -73,7 +73,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
-#include "DREAM3DLib/HDF5/H5FilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 
@@ -273,16 +273,8 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
 {
-  hid_t fid = QH5Utilities::openFile( filePath );
-  if (fid <= 0)
-  {
-    //Present a error dialog
-    QMessageBox::critical(this, "Error Opening DREAM3D File", QString("Error opening file ") + filePath, QMessageBox::Ok, QMessageBox::Ok);
-    return;
-  }
-  HDF5ScopedFileSentinel sentinel(&fid, true);
-  fid = *(sentinel.getFileId());
-  int err = readPipelineFromFile(fid);
+
+  int err = readPipelineFromFile(filePath);
   if (err < 0)
   {
     QMessageBox::critical(this, "Error Extracting Pipeline from DREAM3D file.",
@@ -346,53 +338,17 @@ void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
+int PipelineBuilderWidget::readPipelineFromFile(const QString &filePath)
 {
   int err = 0;
   m_PipelineFromFile->clear();
-
-  H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
-
-  // HDF5: Open the "Pipeline" Group
-  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
-  reader->setGroupId(pipelineGroupId);
-
-  // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
-  QList<QString> groupList;
-  err = QH5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
-
-  // Loop over the items getting the "ClassName" attribute from each group
-  QString classNameStr = "";
-  for (int i=0; i<groupList.size(); i++)
+  m_PipelineFromFile = H5FilterParametersReader::ReadPipelineFromFile(filePath);
+  if (m_PipelineFromFile.get() == NULL)
   {
-
-    QString iStr = QString::number(i);
-    err = QH5Lite::readStringAttribute(pipelineGroupId, iStr, "ClassName", classNameStr);
-
-    // Instantiate a new filter using the FilterFactory based on the value of the className attribute
-    IFilterFactory::Pointer ff = m_FilterManager->getFactoryForFilter(classNameStr);
-    if (NULL != ff)
-    {
-      AbstractFilter::Pointer filter = ff->create();
-      if(NULL != ff)
-      {
-        // Read the parameters
-        filter->readFilterParameters( reader.get(), i );
-
-        // Add filter to m_PipelineFromFile
-        m_PipelineFromFile->pushBack(filter);
-      }
-    }
-    else
-    {
-      QMessageBox::critical(this, "Error Adding Filter to Pipeline",
-                            QString("The filter was not known to DREAM3D:") + (classNameStr),
+        QMessageBox::critical(this, "Error reading pipeline from DREAM3D File.",
+                            QString("There was an unknown error trying to read the pipeline from a DREAM3D file"),
                             QMessageBox::Ok, QMessageBox::Ok);
-    }
-
   }
-
-  H5Gclose(pipelineGroupId);
   return err;
 }
 
@@ -401,7 +357,7 @@ int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::readSettings(QSettings &prefs, bool shouldClear)
 {
-  prefs.beginGroup(Detail::PipelineBuilderGroup);
+  prefs.beginGroup(DREAM3D::HDF5::PipelineGroupName);
 
   //  bool ok = false;
   splitter_1->restoreState(prefs.value("splitter_1").toByteArray());
@@ -422,7 +378,7 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
     m_PipelineViewWidget->clearWidgets();
   }
 
-  prefs.beginGroup(Detail::PipelineBuilderGroup);
+  prefs.beginGroup(DREAM3D::HDF5::PipelineGroupName);
 
   bool ok = false;
   int filterCount = prefs.value("Number_Filters").toInt(&ok);
@@ -482,13 +438,13 @@ void PipelineBuilderWidget::readFavoritePipelines()
     QSettings favPref(favFilePath, QSettings::IniFormat);
     QString favName;
     {
-      favPref.beginGroup(Detail::FavoriteConfig);
+      favPref.beginGroup(DREAM3D::Settings::FavoriteConfig);
       favName = favPref.value("Name").toString();
       favPref.endGroup();
-      // This next code section is here to move from the old "favorite_config" to the newer Detail::PipelineBuilderGroup ini group
+      // This next code section is here to move from the old "favorite_config" to the newer DREAM3D::Settings::PipelineBuilderGroup ini group
       if (favName.isEmpty() == false)
       {
-        favPref.beginGroup(Detail::PipelineBuilderGroup);
+        favPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
         favPref.setValue("Name", favName);
         favPref.endGroup();
         favPref.remove("favorite_config"); // Now that we transfered the value, remove the old value
@@ -496,7 +452,7 @@ void PipelineBuilderWidget::readFavoritePipelines()
     }
 
     {
-      favPref.beginGroup(Detail::PipelineBuilderGroup);
+      favPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
       favName = favPref.value("Name").toString();
       favPref.endGroup();
     }
@@ -578,7 +534,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
   {
     QString pbFilePath = pbinfo.absoluteFilePath();
     QSettings pbPref(pbFilePath, QSettings::IniFormat);
-    pbPref.beginGroup(Detail::PipelineBuilderGroup);
+    pbPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
     QString pbName = pbPref.value("Name").toString();
     pbPref.endGroup();
     //qDebug() << pbinfo.absoluteFilePath() << "\n";
@@ -630,7 +586,7 @@ void PipelineBuilderWidget::savePipeline(QSettings &prefs) {
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
 {
-  prefs.beginGroup(Detail::PipelineBuilderGroup);
+  prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   qint32 count = m_PipelineViewWidget->filterCount();
   QFileInfo fi(prefs.fileName());
 
@@ -684,17 +640,17 @@ void PipelineBuilderWidget::setupGui()
   QSet<QString> groupNames = fm->getGroupNames();
 
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
-  library->setText(0, Detail::Library);
+  library->setText(0, DREAM3D::Settings::Library);
   library->setIcon(0, QIcon(":/cubes.png"));
 
   m_prebuilts = new QTreeWidgetItem(filterLibraryTree, PipelineTreeWidget::Prebuilt_Category_Item_Type);
-  m_prebuilts->setText(0, Detail::PrebuiltPipelines);
+  m_prebuilts->setText(0, DREAM3D::Settings::PrebuiltPipelines);
   m_prebuilts->setIcon(0, QIcon(":/flag_blue_scroll.png"));
   m_prebuilts->setExpanded(true);
 
   blockSignals(true);
   m_favorites = new QTreeWidgetItem(filterLibraryTree, PipelineTreeWidget::Favorite_Category_Item_Type);
-  m_favorites->setText(0, Detail::FavoritePipelines);
+  m_favorites->setText(0, DREAM3D::Settings::FavoritePipelines);
   m_favorites->setIcon(0, QIcon(":/flash.png"));
   blockSignals(false);
 
@@ -814,14 +770,14 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   }
 #endif
 
-  if (itemText.compare(Detail::PrebuiltPipelines) == 0)
+  if (itemText.compare(DREAM3D::Settings::PrebuiltPipelines) == 0)
   {
     //QString prebuiltName = item->text(0);
     QString prebuiltPath = item->data(0, Qt::UserRole).toString();
     QStringList filterList = generateFilterListFromPipelineFile(prebuiltPath);
     populateFilterList(filterList);
   }
-  else if(itemText.compare(Detail::FavoritePipelines) == 0)
+  else if(itemText.compare(DREAM3D::Settings::FavoritePipelines) == 0)
   {
     //QString favoriteName = item->text(0);
     QString favoritePath = item->data(0, Qt::UserRole).toString();
@@ -835,7 +791,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column )
 {
-  if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
+  if (NULL != item->parent() && item->parent()->text(0).compare(DREAM3D::Settings::FavoritePipelines) == 0)
   {
     QString favoritePath = item->data(0, Qt::UserRole).toString();
     QString newFavoriteTitle = item->text(0);
@@ -851,7 +807,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* i
 
     // Set Name in preferences group
     QSettings newFavoritePrefs(newPath, QSettings::IniFormat);
-    newFavoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+    newFavoritePrefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
     newFavoritePrefs.setValue("Name", item->text(0) );
     newFavoritePrefs.endGroup();
   }
@@ -893,7 +849,7 @@ bool PipelineBuilderWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favori
   for (int i=0; i<favoritesList.size(); i++)
   {
     QSettings currentItemPrefs(favoritesList[i]->data(0, Qt::UserRole).toString(), QSettings::IniFormat);
-    currentItemPrefs.beginGroup(Detail::PipelineBuilderGroup);
+    currentItemPrefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
 
     // If the new title matches one of the other favorite titles
     if (currentItemPrefs.value("Name").toString() == newFavoriteTitle)
@@ -901,7 +857,7 @@ bool PipelineBuilderWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favori
       displayText = "A favorite that has this title already exists in the Favorites list.\n\n";
 
       // Change the GUI back to the old name
-      favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+      favoritePrefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
       filterLibraryTree->blockSignals(true);
       item->setText(0, favoritePrefs.value("Name").toString() );
       filterLibraryTree->blockSignals(false);
@@ -932,7 +888,7 @@ bool PipelineBuilderWidget::hasIllegalFavoriteName(QString favoritePath, QString
     displayText = displayText + "\n\nNo spaces allowed";
 
     // Change the GUI back to the old name
-    favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+    favoritePrefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
     filterLibraryTree->blockSignals(true);
     item->setText(0, favoritePrefs.value("Name").toString() );
     filterLibraryTree->blockSignals(false);
@@ -984,17 +940,17 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   FilterWidgetManager::Collection factories;
 
   //If the user clicks on Detail::Library, display all
-  if ( item->text(0).compare(Detail::Library) == 0)
+  if ( item->text(0).compare(DREAM3D::Settings::Library) == 0)
   {
     factories = fm->getFactories();
     updateFilterGroupList(factories);
   }
-  else if (NULL != item->parent() && item->parent()->text(0).compare(Detail::Library) == 0)
+  else if (NULL != item->parent() && item->parent()->text(0).compare(DREAM3D::Settings::Library) == 0)
   {
     factories = fm->getFactories(item->text(0));
     updateFilterGroupList(factories);
   }
-  else if (NULL != item->parent() && NULL != item->parent()->parent() && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
+  else if (NULL != item->parent() && NULL != item->parent()->parent() && item->parent()->parent()->text(0).compare(DREAM3D::Settings::Library) == 0)
   {
     factories = fm->getFactories(item->parent()->text(0), item->text(0));
     updateFilterGroupList(factories);
@@ -1027,8 +983,8 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
 
   QString itemText = parent->text(0);
   if (m_PipelineViewWidget->isEnabled() == false) { return; }
-  if (itemText.compare(Detail::PrebuiltPipelines) == 0
-      || itemText.compare(Detail::FavoritePipelines) == 0 )
+  if (itemText.compare(DREAM3D::Settings::PrebuiltPipelines) == 0
+      || itemText.compare(DREAM3D::Settings::FavoritePipelines) == 0 )
   {
     QString pipelinePath = item->data(0, Qt::UserRole).toString();
     if (pipelinePath.isEmpty() == false)
@@ -1096,15 +1052,15 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories = fm->getFactories(); // Get all the Factories
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  if (item->parent() == NULL && item->text(0).compare(Detail::Library) == 0)
+  if (item->parent() == NULL && item->text(0).compare(DREAM3D::Settings::Library) == 0)
   {
     factories = fm->getFactories();
   }
-  else if (item->parent() != NULL && item->parent()->text(0).compare(Detail::Library) == 0)
+  else if (item->parent() != NULL && item->parent()->text(0).compare(DREAM3D::Settings::Library) == 0)
   {
     factories = fm->getFactories(item->text(0));
   }
-  else if (item->parent()->parent() != NULL && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
+  else if (item->parent()->parent() != NULL && item->parent()->parent()->text(0).compare(DREAM3D::Settings::Library) == 0)
   {
     factories = fm->getFactories(item->parent()->text(0), item->text(0));
   }
@@ -1521,7 +1477,7 @@ void PipelineBuilderWidget::addFavorite(QString favoriteTitle)
     if(newParentPrefPathDir.mkpath(newParentPrefPath))
     {
       QSettings newPrefs(newPrefPath, QSettings::IniFormat);
-      newPrefs.beginGroup(Detail::PipelineBuilderGroup);
+      newPrefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
       newPrefs.setValue("Name", favoriteTitle);
       newPrefs.endGroup();
       writeSettings(newPrefs, m_PipelineViewWidget);
@@ -1572,7 +1528,7 @@ void PipelineBuilderWidget::actionUpdateFavorite_triggered()
   QString fileName = filePathInfo.baseName();
 
 
-  if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0 )
+  if (NULL != parent && parent->text(0).compare(DREAM3D::Settings::FavoritePipelines) == 0 )
   {
     removeFavorite(item);
     item = NULL;
@@ -1617,7 +1573,7 @@ void PipelineBuilderWidget::actionRemoveFavorite_triggered()
   msgBox.setDefaultButton(QMessageBox::Yes);
   int ret = msgBox.exec();
 
-  if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0 && ret == QMessageBox::Yes)
+  if (NULL != parent && parent->text(0).compare(DREAM3D::Settings::FavoritePipelines) == 0 && ret == QMessageBox::Yes)
   {
     removeFavorite(item);
   }
@@ -1631,7 +1587,7 @@ void PipelineBuilderWidget::actionRenameFavorite_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
 
-  if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
+  if (NULL != item->parent() && item->parent()->text(0).compare(DREAM3D::Settings::FavoritePipelines) == 0)
   {
     filterLibraryTree->editItem(item, 0);
   }
@@ -1698,7 +1654,7 @@ QStringList PipelineBuilderWidget::generateFilterListFromPipelineFile(QString pa
   QStringList filterNames;
   QSettings prefs(path, QSettings::IniFormat);
 
-  prefs.beginGroup(Detail::PipelineBuilderGroup);
+  prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   bool ok = false;
   int filterCount = prefs.value("Number_Filters").toInt(&ok);
   prefs.endGroup();

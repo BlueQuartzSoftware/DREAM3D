@@ -68,6 +68,19 @@ QFilterParametersReader::~QFilterParametersReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString filePath)
+{
+  #if __APPLE__
+  #warning THIS NEEDS TO BE IMPLEMENTED
+  #endif
+   BOOST_ASSERT(true);
+   return FilterPipeline::NullPointer();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QSettings* QFilterParametersReader::getPrefs()
 {
   return m_Prefs;

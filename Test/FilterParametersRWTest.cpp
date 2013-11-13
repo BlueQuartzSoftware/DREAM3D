@@ -894,6 +894,9 @@ void VerifyThresholdExampleQSettingsFilterParameters()
 
   // Compare the filter to what was read from the file
   ValidateThresholdExampleFilter(filt);
+
+  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(UnitTest::FilterParametersRWTest::ThresholdFile);
+  DREAM3D_REQUIRE(pipeline.get() != NULL)
 }
 
 
@@ -920,6 +923,9 @@ void VerifyThresholdExampleHDF5FilterParameters()
   // Close up the HDF5 file
   H5Gclose(reader->getPipelineGroupId()); // Closes the "Pipeline" group
   H5Fclose(fid); // Closes the file
+
+  FilterPipeline::Pointer pipeline = H5FilterParametersReader::ReadPipelineFromFile(UnitTest::FilterParametersRWTest::ThresholdFile);
+  DREAM3D_REQUIRE(pipeline.get() != NULL)
 }
 
 
