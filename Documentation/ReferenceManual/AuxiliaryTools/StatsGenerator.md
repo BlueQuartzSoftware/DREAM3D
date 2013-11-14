@@ -30,7 +30,7 @@ The main features are:
   + **Mu** This is the average value of the lognormal grain size distribution.
   + **Sigma** This is the standard deviation of the lognormal grain size distribution.
   + **Sigma Cut Off Value** This allows the user to truncate the distribution to remove very large grains.
-  + **Bin Step Size**  This is the size of bin to use in segregating the grains into size classes for correlating other statistics to grain size. Note that the Bins to be Created valueis displayed in the bottom left corner.
+  + **Bin Step Size**  This is the size of bin to use in segregating the grains into size classes for correlating other statistics to grain size. Note that the Bins to be Created value is displayed in the bottom left corner.
   + **Preset Statistic Models** This allows the user to select a _morphological-type_ of microstructure to populate the default data.
     - Default: This populates the statistic tabs with generic random data that may not create a _buildable_ microstructure. This option should only be used if the user is going to enter the values on all the  statistics tabs themselves.
     - Equiaxed: this populates the statistic tabs with data that is  designed to generate a random equiaxed microstructure.
