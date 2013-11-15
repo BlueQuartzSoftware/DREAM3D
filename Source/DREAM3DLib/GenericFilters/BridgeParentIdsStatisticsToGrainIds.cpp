@@ -87,7 +87,7 @@ void BridgeParentIdsStatisticsToGrainIds::dataCheck(bool preflight, size_t voxel
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
-  
+
   QVector<int> dims(1 ,1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, -304, int32_t, Int32ArrayType, voxels, dims)
@@ -104,15 +104,15 @@ void BridgeParentIdsStatisticsToGrainIds::dataCheck(bool preflight, size_t voxel
 // -----------------------------------------------------------------------------
 void BridgeParentIdsStatisticsToGrainIds::preflight()
 {
-  dataCheck(true, 1, 1, 1, false);
-
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
+
+  dataCheck(true, 1, 1, 1, false);
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
   rename_cell_array->setObservers(this->getObservers());

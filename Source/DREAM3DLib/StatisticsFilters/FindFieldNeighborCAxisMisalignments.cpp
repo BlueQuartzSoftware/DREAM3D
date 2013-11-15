@@ -73,16 +73,16 @@ void FindFieldNeighborCAxisMisalignments::dataCheck(bool preflight, size_t voxel
   QVector<int> dims(1, 4);
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
-  dims[0] = 1;
+      dims[0] = 1;
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, dims)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxisMisalignments, float, FloatArrayType, 0, fields, dims)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxisMisalignments, float, FloatArrayType, 0, fields, dims)
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
+      typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
 
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  IDataArray::Pointer neighborListPtr = m->getCellFieldData(m_NeighborListArrayName);
+      // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+      IDataArray::Pointer neighborListPtr = m->getCellFieldData(m_NeighborListArrayName);
   if (NULL == neighborListPtr.get())
   {
     ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
@@ -121,6 +121,13 @@ void FindFieldNeighborCAxisMisalignments::dataCheck(bool preflight, size_t voxel
 // -----------------------------------------------------------------------------
 void FindFieldNeighborCAxisMisalignments::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
+    return;
+  }
   dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------

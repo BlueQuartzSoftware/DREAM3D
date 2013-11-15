@@ -37,18 +37,21 @@
 #ifndef _PipelineViewWidget_H
 #define _PipelineViewWidget_H
 
+#include <vector>
+
+#include <QtCore/QTimer>
 #include <QtGui/QFrame>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QTextEdit>
 #include <QtGui/QTableWidget>
 
-#include <QtCore/QTimer>
+
+#include "DREAM3DLib/Common/PipelineMessage.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
+
 
 #include "PipelineBuilder/QFilterWidget.h"
-#include "DREAM3DLib/Common/PipelineMessage.h"
-
-#include <vector>
 
 class QScrollArea;
 
@@ -67,6 +70,9 @@ class PipelineViewWidget : public QFrame
     QFilterWidget* filterWidgetAt(int index);
     void clearWidgets();
     QFilterWidget* addFilter(QString filterName, int index =-1);
+
+    void loadPipeline(FilterPipeline::Pointer pipeline, bool append = false);
+    void savePipeline(const QString &filePath, const QString name, QSettings::Format = QSettings::IniFormat);
 
     QStringList getPipelineErrorList() {return m_PipelineErrorList;}
     QTableWidget* getTableWidget() {return errorTableWidget;}
@@ -122,14 +128,14 @@ class PipelineViewWidget : public QFrame
     void addPlaceHolderFilter(QPoint p);
     void removePlaceHolderFilter();
     void pipelineFileDropped(const QString& file);
-	void pipelineHasErrorsSignal();
-	void pipelineHasNoErrors();
+    void pipelineHasErrorsSignal();
+    void pipelineHasNoErrors();
     void preflightHasMessage(PipelineMessage msg);
 
   protected:
     void setupGui();
     void dragEnterEvent(QDragEnterEvent *event);
-  //  void dragLeaveEvent(QDragLeaveEvent* event);
+    //  void dragLeaveEvent(QDragLeaveEvent* event);
     void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent *event);
 

@@ -228,7 +228,7 @@ void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields
   if(m_ScalarArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
 
   QVector<int> dims(1, 1);
@@ -245,7 +245,7 @@ void ScalarSegmentGrains::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 

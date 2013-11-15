@@ -148,10 +148,11 @@ void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size
 void SurfaceMeshToNonconformalVtk::preflight()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
+  if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-384);
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getSurfaceDataContainerName() + " was not available.", getErrorCondition());
+    return;
   }
 
   dataCheck(true, 1, 1, 1);

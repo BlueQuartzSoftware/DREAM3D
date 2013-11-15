@@ -208,8 +208,8 @@ void AdjustVolumeOrigin::preflight()
     m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
     if(NULL == m)
     {
-      setErrorCondition(-383);
-      addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", getErrorCondition());
+      setErrorCondition(-999);
+      addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     }
   }
   if (m_ApplyToSurfaceMesh == true)
@@ -217,8 +217,8 @@ void AdjustVolumeOrigin::preflight()
     sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
     if(NULL == sm)
     {
-      setErrorCondition(-383);
-      addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+      setErrorCondition(-999);
+      addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     }
   }
   if(NULL != sm && NULL != m) {
@@ -241,7 +241,7 @@ void AdjustVolumeOrigin::execute()
     if(NULL == m)
     {
       setErrorCondition(-999);
-      notifyErrorMessage("The DataContainer Object was NULL", -999);
+      addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
       return;
     }
     m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
@@ -253,7 +253,7 @@ void AdjustVolumeOrigin::execute()
     if(NULL == m)
     {
       setErrorCondition(-999);
-      notifyErrorMessage("The DataContainer Object was NULL", -999);
+      addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getSurfaceDataContainerName() + " was not available.", getErrorCondition());
       return;
     }
     updateSurfaceMesh();
@@ -270,7 +270,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   int err = 0;
 
   setErrorCondition(err);
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+ // SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   setErrorCondition(0);
   notifyStatusMessage("Starting");

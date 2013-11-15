@@ -332,7 +332,7 @@ int WritePipelineToQSettings(FilterPipeline::Pointer pipeline, QString filePath)
 {
   int err = -1;
   QFilterParametersWriter::Pointer parametersWriter = QFilterParametersWriter::New();
-  parametersWriter->openFile(filePath);
+  parametersWriter->openFile(filePath, QSettings::IniFormat);
 
   // Get the list of filters that are in the pipeline
   FilterPipeline::FilterContainerType filters = pipeline->getFilterContainer();
@@ -506,7 +506,7 @@ void VerifyArraySelectionExampleQSettingsFilterParameters()
 {
   ArraySelectionExample::Pointer filt = ArraySelectionExample::New();
   QFilterParametersReader::Pointer reader = QFilterParametersReader::New();
-  reader->openFile(UnitTest::FilterParametersRWTest::ArraySelectionFileQSettings);
+  reader->openFile(UnitTest::FilterParametersRWTest::ArraySelectionFileQSettings, QSettings::IniFormat);
   int index = 1;
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index);
@@ -732,7 +732,7 @@ void VerifyGenericExampleQSettingsFilterParameters()
 {
   GenericExample::Pointer filt = GenericExample::New();
   QFilterParametersReader::Pointer reader = QFilterParametersReader::New();
-  reader->openFile(UnitTest::FilterParametersRWTest::GenericExampleFileQSettings);
+  reader->openFile(UnitTest::FilterParametersRWTest::GenericExampleFileQSettings, QSettings::IniFormat);
   int index = 1;
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index);
@@ -887,7 +887,7 @@ void VerifyThresholdExampleQSettingsFilterParameters()
 {
   ThresholdExample::Pointer filt = ThresholdExample::New();
   QFilterParametersReader::Pointer reader = QFilterParametersReader::New();
-  reader->openFile(UnitTest::FilterParametersRWTest::ThresholdFileQSettings);
+  reader->openFile(UnitTest::FilterParametersRWTest::ThresholdFileQSettings, QSettings::IniFormat);
   int index = 1;
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index);
@@ -895,7 +895,7 @@ void VerifyThresholdExampleQSettingsFilterParameters()
   // Compare the filter to what was read from the file
   ValidateThresholdExampleFilter(filt);
 
-  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(UnitTest::FilterParametersRWTest::ThresholdFile);
+  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(UnitTest::FilterParametersRWTest::ThresholdFile, QSettings::IniFormat);
   DREAM3D_REQUIRE(pipeline.get() != NULL)
 }
 

@@ -72,7 +72,7 @@ class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGen
 
 
     virtual void preflightAboutToExecute(DataContainerArray::Pointer dca);
-    virtual void preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);
+    virtual void preflightDoneExecuting(DataContainerArray::Pointer dca);
 
     virtual void openHtmlHelpFile();
     virtual void getGuiParametersFromFilter(AbstractFilter* filt);

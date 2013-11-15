@@ -74,6 +74,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 
@@ -271,38 +272,70 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
+PipelineViewWidget* PipelineBuilderWidget::getPipelineViewWidget()
 {
+  return m_PipelineViewWidget;
+}
 
-  int err = readPipelineFromFile(filePath);
-  if (err < 0)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::openPipelineFile(const QString &filePath, QSettings::Format format)
+{
+  //m_PipelineFromFile->clear();
+
+  QFileInfo fi (filePath);
+  QString extension = fi.suffix();
+  if ( format == QSettings::NativeFormat || format == QSettings::IniFormat)
   {
-    QMessageBox::critical(this, "Error Extracting Pipeline from DREAM3D file.",
-                          "An error occured with extracting the pipeline from the DREAM3D file.",QMessageBox::Ok, QMessageBox::Ok);
-    return;
+    m_PipelineFromFile = QFilterParametersReader::ReadPipelineFromFile(filePath, format);
   }
-  FilterPipeline::FilterContainerType filters = m_PipelineFromFile->getFilterContainer();
-
-  FilterPipeline::FilterContainerType::iterator iter = filters.begin();
-
-  for (; iter != filters.end(); iter++)
+  else if (extension == "dream3d")
   {
-
-    QString filterName = (*iter)->getNameOfClass();
-  //  qDebug() << QTime::currentTime() << " Creating Filter: " << (filterName);
-    QFilterWidget* w = m_PipelineViewWidget->addFilter( (filterName) );
-   // qDebug() << QTime::currentTime() << " Loading GUI Values: " << (filterName);
-    if(w) {
-      QTime qtime = QTime::currentTime();
-      m_PipelineViewWidget->preflightPipeline();
-    //  qDebug() << "ms: " << qtime.msecsTo(QTime::currentTime());
-      qtime = QTime::currentTime();
-      w->getGuiParametersFromFilter( (*iter).get() );
-     // qDebug() << "ms: " << qtime.msecsTo(QTime::currentTime());
+    m_PipelineFromFile = H5FilterParametersReader::ReadPipelineFromFile(filePath);
+    if (m_PipelineFromFile.get() == NULL)
+    {
+      QMessageBox::critical(this, "Error reading pipeline from DREAM3D File.",
+                            QString("There was an unknown error trying to read the pipeline from a DREAM3D file"),
+                            QMessageBox::Ok, QMessageBox::Ok);
     }
   }
-  // One last preflight to get the changes introduced by the last filter
- // m_PipelineViewWidget->preflightPipeline();
+  else
+  {
+        QMessageBox::critical(this, "Unrecognized Pipeline File",
+                            QString("The pipeline file is of an unrecognized format or file extension (.ini, .txt or .dream3d"),
+                            QMessageBox::Ok, QMessageBox::Ok);
+  }
+
+  // Load the pipeline into the View widget, clearing out any existing pipeline
+  m_PipelineViewWidget->loadPipeline(m_PipelineFromFile, false);
+}
+
+
+// -----------------------------------------------------------------------------
+// The user dropped a file onto the Pipeline View Widget. We now have to figure
+// out how to load the pipeline, or even if we can.
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::acceptPipelineFileDrop(const QString &filePath)
+{
+  QFileInfo fi (filePath);
+  QString extension = fi.suffix();
+  if ( extension == "ini" || extension == "txt")
+  {
+    openPipelineFile(filePath); // This is most likely a QSettings based Text/INI file
+  }
+  else if (extension == "dream3d")
+  {
+    // The user could actually want to start with this dream3d file instead of loading a pipeline from it
+    // so setup that Message Box to get from the user what they want to do.
+    DREAM3DFileDragMessageBox* msgBox = new DREAM3DFileDragMessageBox(this);
+    msgBox->setFilePath(filePath);
+    connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString &)), this, SLOT(extractPipelineFromDREAM3DFile(const QString &)));
+    connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString &)), this, SLOT(openPipelineFile(const QString &)));
+    // We could figure out how to get the return code from the button that was clicked instead of using Signals/Slots
+    msgBox->exec();
+
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -316,95 +349,12 @@ void PipelineBuilderWidget::addDREAM3DReaderFilter(const QString &filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
+void PipelineBuilderWidget::readGeometrySettings(QSettings &prefs)
 {
-  QFileInfo fi (filePath);
-  QString extension = fi.suffix();
-  if ( extension == "ini" || extension == "txt")
-  {
-    QSettings prefs(filePath, QSettings::IniFormat, this);
-    readSettings(prefs, true);
-  }
-  else if (extension == "dream3d")
-  {
-    DREAM3DFileDragMessageBox* msgBox = new DREAM3DFileDragMessageBox(this);
-    msgBox->setFilePath(filePath);
-    connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString &)), this, SLOT(extractPipelineFromFile(const QString &)));
-    connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString &)), this, SLOT(addDREAM3DReaderFilter(const QString &)));
-    msgBox->exec();
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int PipelineBuilderWidget::readPipelineFromFile(const QString &filePath)
-{
-  int err = 0;
-  m_PipelineFromFile->clear();
-  m_PipelineFromFile = H5FilterParametersReader::ReadPipelineFromFile(filePath);
-  if (m_PipelineFromFile.get() == NULL)
-  {
-        QMessageBox::critical(this, "Error reading pipeline from DREAM3D File.",
-                            QString("There was an unknown error trying to read the pipeline from a DREAM3D file"),
-                            QMessageBox::Ok, QMessageBox::Ok);
-  }
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readSettings(QSettings &prefs, bool shouldClear)
-{
-  prefs.beginGroup(DREAM3D::HDF5::PipelineGroupName);
-
-  //  bool ok = false;
+  prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGeomertry);
   splitter_1->restoreState(prefs.value("splitter_1").toByteArray());
   splitter_2->restoreState(prefs.value("splitter_2").toByteArray());
   prefs.endGroup();
-
-  readSettings(prefs, m_PipelineViewWidget, shouldClear);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* viewWidget, bool shouldClear)
-{
-  // Clear Any Existing Pipeline
-  if (shouldClear)
-  {
-    m_PipelineViewWidget->clearWidgets();
-  }
-
-  prefs.beginGroup(DREAM3D::HDF5::PipelineGroupName);
-
-  bool ok = false;
-  int filterCount = prefs.value("Number_Filters").toInt(&ok);
-  prefs.endGroup();
-
-  if (false == ok) {filterCount = 0;}
-  for (int i = 0; i < filterCount; ++i)
-  {
-    QString gName = QString::number(i);
-
-    prefs.beginGroup(gName);
-
-    QString filterName = prefs.value("Filter_Name", "").toString();
-
-    QFilterWidget* w = viewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
-
-    if(w) {
-      m_PipelineViewWidget->preflightPipeline();
-      w->blockSignals(true);
-      w->readOptions(prefs);
-      w->blockSignals(false);
-    }
-    prefs.endGroup();
-  }
-  // One last preflight to get the changes introduced by the last filter
-  m_PipelineViewWidget->preflightPipeline();
 }
 
 // -----------------------------------------------------------------------------
@@ -549,64 +499,12 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::writeSettings(QSettings &prefs)
+void PipelineBuilderWidget::writeGeometrySettings(QSettings &prefs)
 {
-
+  prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGeomertry);
   prefs.setValue("splitter_1", splitter_1->saveState());
   prefs.setValue("splitter_2", splitter_2->saveState());
-
-  /*
-  prefs.beginGroup(Detail::FavoritePipelines);
-  prefs.clear();
-  prefs.setValue( "count", m_favoritesMap.size() );
-
-  int index = 0;
-  QMapIterator<QString, QString> i(m_favoritesMap);
-  while (i.hasNext()) {
-    i.next();
-    prefs.setValue( QString::number(index) + "_Favorite_Name", i.key() );
-    prefs.setValue( QString::number(index) + "_Favorite_File", i.value() );
-    index++;
-  }
   prefs.endGroup();
-*/
-  writeSettings(prefs, m_PipelineViewWidget);
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::savePipeline(QSettings &prefs) {
-  writeSettings(prefs, m_PipelineViewWidget);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
-{
-  prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-  qint32 count = m_PipelineViewWidget->filterCount();
-  QFileInfo fi(prefs.fileName());
-
-  prefs.setValue("Number_Filters", count);
-  prefs.setValue("Name", fi.baseName()); // Put a default value in here
-  prefs.endGroup();
-
-  for(qint32 i = 0; i < count; ++i)
-  {
-    QFilterWidget* fw = viewWidget->filterWidgetAt(i);
-    if (fw)
-    {
-      QString groupName = QString::number(i);
-      prefs.beginGroup(groupName);
-      fw->writeOptions(prefs);
-      prefs.endGroup();
-    }
-  }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -693,7 +591,7 @@ void PipelineBuilderWidget::setupGui()
 
   // Connect the PipelineViewWidget Signals to slots
   connect(m_PipelineViewWidget, SIGNAL(pipelineFileDropped(const QString&)),
-          this, SLOT(openPipelineFile(const QString& )) );
+          this, SLOT(acceptPipelineFileDrop(const QString& )) );
 
 
   m_DocErrorTabsIsOpen = false;
@@ -989,7 +887,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
     QString pipelinePath = item->data(0, Qt::UserRole).toString();
     if (pipelinePath.isEmpty() == false)
     {
-      loadPipelineFileIntoPipelineView(pipelinePath);
+      openPipelineFile(pipelinePath);
     }
   }
 
@@ -1476,11 +1374,7 @@ void PipelineBuilderWidget::addFavorite(QString favoriteTitle)
 
     if(newParentPrefPathDir.mkpath(newParentPrefPath))
     {
-      QSettings newPrefs(newPrefPath, QSettings::IniFormat);
-      newPrefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-      newPrefs.setValue("Name", favoriteTitle);
-      newPrefs.endGroup();
-      writeSettings(newPrefs, m_PipelineViewWidget);
+      m_PipelineViewWidget->savePipeline(newPrefPath, favoriteTitle);
     }
   }
 
@@ -1605,8 +1499,8 @@ void PipelineBuilderWidget::actionAppendFavorite_triggered()
   {
     QFileInfo fi(pipelinePath);
     if (fi.exists() == false) { return; }
-    QSettings prefs(pipelinePath, QSettings::IniFormat);
-    readSettings(prefs, m_PipelineViewWidget, false);
+    FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(pipelinePath, QSettings::IniFormat);
+    m_PipelineViewWidget->loadPipeline(pipeline, true);
   }
 }
 
@@ -1632,17 +1526,6 @@ void PipelineBuilderWidget::actionShowInFileSystem_triggered()
 #endif
   s = s + pipelinePathDir;
   QDesktopServices::openUrl(s);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::loadPipelineFileIntoPipelineView(QString path)
-{
-  QFileInfo fi(path);
-  if (fi.exists() == false) { return; }
-  QSettings prefs(path, QSettings::IniFormat);
-  readSettings(prefs, m_PipelineViewWidget, true);
 }
 
 // -----------------------------------------------------------------------------

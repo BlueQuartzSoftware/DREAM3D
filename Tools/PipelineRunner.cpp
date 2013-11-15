@@ -120,10 +120,8 @@ int main (int argc, char  *argv[])
 
   qDebug() << "Current Path: " << QDir::currentPath();
 
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-  QFilterParametersReader::Pointer paramsReader = QFilterParametersReader::New();
-  paramsReader->openFile(argv[1]);
-  readPipeline(paramsReader, pipeline);
+  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(argv[1], QSettings::IniFormat);
+
   err = pipeline->preflightPipeline();
 
   pipeline->execute();

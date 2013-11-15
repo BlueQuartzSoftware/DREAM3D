@@ -154,7 +154,7 @@ void SingleThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fiel
   if(m_SelectedFieldArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    notifyErrorMessage("An array from the Voxel Data Container must be selected.", getErrorCondition());
+    notifyErrorMessage("An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
 }
 
@@ -167,7 +167,7 @@ void SingleThresholdFields::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 

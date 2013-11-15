@@ -146,15 +146,16 @@ void PerPhaseMinSize::dataCheck(bool preflight, size_t voxels, size_t fields, si
 // -----------------------------------------------------------------------------
 void PerPhaseMinSize::preflight()
 {
-  dataCheck(true, 1, 1, 1);
-
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
+
+  dataCheck(true, 1, 1, 1);
+
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());

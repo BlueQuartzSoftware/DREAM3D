@@ -46,8 +46,8 @@
 //
 // -----------------------------------------------------------------------------
 DREAM3DPluginFrame::DREAM3DPluginFrame(QWidget *parent) :
-QFrame(parent),
-m_StatusBar(NULL)
+  QFrame(parent),
+  m_StatusBar(NULL)
 {
 }
 
@@ -65,14 +65,14 @@ bool DREAM3DPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLine
 {
   QFileInfo fileinfo(outFilePath);
   QDir parent (fileinfo.dir() );
-//  if (false == parent.exists() )
-//  {
-//    lineEdit->setStyleSheet("border: 1px solid red;");
-//  }
-//  else
-//  {
-//    lineEdit->setStyleSheet("");
-//  }
+  //  if (false == parent.exists() )
+  //  {
+  //    lineEdit->setStyleSheet("border: 1px solid red;");
+  //  }
+  //  else
+  //  {
+  //    lineEdit->setStyleSheet("");
+  //  }
   return parent.exists();
 }
 
@@ -82,7 +82,7 @@ bool DREAM3DPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLine
 // -----------------------------------------------------------------------------
 bool DREAM3DPluginFrame::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-//  qDebug() << "outFilePath: " << outFilePath() << "\n";
+  //  qDebug() << "outFilePath: " << outFilePath() << "\n";
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -180,3 +180,12 @@ void DREAM3DPluginFrame::displayDialogBox(QString title, QString text, QMessageB
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DPluginFrame::writeSettings(QSettings &prefs){}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DPluginFrame::readSettings(QSettings &prefs, bool shouldClear){}

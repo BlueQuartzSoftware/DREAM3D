@@ -58,6 +58,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
 
 #include "FilterWidgetManager.h"
@@ -70,15 +71,15 @@
 //
 // -----------------------------------------------------------------------------
 PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
-QFrame(parent),
-m_SelectedFilterWidget(NULL),
-m_FilterWidgetLayout(NULL),
-m_FilterBeingDragged(NULL),
-m_DropIndex(-1),
-m_EmptyPipelineLabel(NULL),
-errorTableWidget(NULL),
-m_AutoScroll(false),
-m_AutoScrollMargin(10)
+  QFrame(parent),
+  m_SelectedFilterWidget(NULL),
+  m_FilterWidgetLayout(NULL),
+  m_FilterBeingDragged(NULL),
+  m_DropIndex(-1),
+  m_EmptyPipelineLabel(NULL),
+  errorTableWidget(NULL),
+  m_AutoScroll(false),
+  m_AutoScrollMargin(10)
 {
   setupGui();
   m_LastDragPoint = QPoint(-1, -1);
@@ -233,6 +234,61 @@ void PipelineViewWidget::clearWidgets()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::loadPipeline(FilterPipeline::Pointer pipeline, bool append)
+{
+  // Clear the Pipeline First
+  if (false == append) { clearWidgets(); }
+  // get a reference to the filters which are in some type of container object.
+  FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
+  int filterCount = filters.size();
+  // Start looping on each filter
+  for(int i = 0; i < filterCount; i++)
+  {
+    AbstractFilter::Pointer filter = filters.at(i);
+    QString filterName = filter->getNameOfClass();
+    // Insert the filter into the GUI
+    QFilterWidget* w = addFilter(filterName);
+    // Use the actual filter instance to populate the values from the filter into the FilterWidget
+    w->getGuiParametersFromFilter(filter.get());
+    // Now preflight the pipeline for this filter.
+    preflightPipeline();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::savePipeline(const QString &filePath, const QString name, QSettings::Format format)
+{
+  qint32 count = filterCount();
+
+  QFilterParametersWriter::Pointer writer = QFilterParametersWriter::New();
+  writer->openFile(filePath, format);
+  // Write the top part of the pipeline file
+  QSettings* prefs = writer->getPrefs();
+  prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+  prefs->setValue(DREAM3D::Settings::NumFilters, count);
+  prefs->setValue("Name", name);
+  prefs->endGroup();
+
+  // Loop over each filter and write it's input parameters to the file
+  for(qint32 i = 0; i < count; ++i)
+  {
+    QFilterWidget* fw = filterWidgetAt(i);
+    if (fw)
+    {
+//      QString groupName = QString::number(i);
+//      prefs->beginGroup(groupName);
+      AbstractFilter::Pointer filter = fw->getFilter(false);
+      filter->writeFilterParameters(writer.get(), i);
+//      prefs->endGroup();
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 {
 
@@ -290,11 +346,11 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
   QList<QString> theList = dataContainer->get##type##ArrayNameList();\
   QList<QString> list;\
   for(QList<QString>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
-    list << (*iter);\
+  list << (*iter);\
   }\
   PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
   if (NULL != ptr) { ptr->setPossible##type##ArrayNames(list); }\
-}\
+  }\
 
 // -----------------------------------------------------------------------------
 //
@@ -313,7 +369,7 @@ void PipelineViewWidget::preflightPipeline()
   // Create the DataContainerArray object
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
-  
+
 
 
   // Build up the pipeline
@@ -378,13 +434,13 @@ void PipelineViewWidget::preflightErrorMessage(QVector<PipelineMessage> errorStr
   if(NULL != errorTableWidget)
   {
 
-   // int rc = errorTableWidget->rowCount();
+    // int rc = errorTableWidget->rowCount();
 
     for (QVector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
     {
       emit preflightHasMessage(errorStream.at(i));
 
-    #if 0
+#if 0
       errorTableWidget->insertRow(rc);
 
       QString filterName = (errorStream.at(i).getFilterName());
@@ -413,7 +469,7 @@ void PipelineViewWidget::preflightErrorMessage(QVector<PipelineMessage> errorStr
       errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
       errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
-      #endif
+#endif
     }
   }
 }
@@ -474,7 +530,7 @@ void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
 void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 {
   event->acceptProposedAction();
- #if 0
+#if 0
 
   QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
   if (w != NULL)
@@ -658,10 +714,10 @@ void PipelineViewWidget::doAutoScroll()
     m_ScrollArea->verticalScrollBar()->setValue(verticalValue - m_autoScrollCount);
   else if (area.bottom() - pos.y() < margin)
     m_ScrollArea-> verticalScrollBar()->setValue(verticalValue + m_autoScrollCount);
-//  if (pos.x() - area.left() < margin)
-//    m_ScrollArea->horizontalScrollBar()->setValue(horizontalValue - d->m_autoScrollCount);
-//  else if (area.right() - pos.x() < margin)
-//    m_ScrollArea->horizontalScrollBar()->setValue(horizontalValue + d->m_autoScrollCount);
+  //  if (pos.x() - area.left() < margin)
+  //    m_ScrollArea->horizontalScrollBar()->setValue(horizontalValue - d->m_autoScrollCount);
+  //  else if (area.right() - pos.x() < margin)
+  //    m_ScrollArea->horizontalScrollBar()->setValue(horizontalValue + d->m_autoScrollCount);
   // if nothing changed, stop scrolling
   bool verticalUnchanged = (verticalValue == m_ScrollArea->verticalScrollBar()->value());
   bool horizontalUnchanged = (horizontalValue == m_ScrollArea->horizontalScrollBar()->value());

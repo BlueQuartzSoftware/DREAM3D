@@ -156,7 +156,7 @@ void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t field
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    QString ss = QObject::tr("An array from the Voxel Data Container must be selected.");
+    QString ss = QObject::tr("An array from the Volume DataContainer must be selected.");
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
@@ -170,7 +170,7 @@ void SingleThresholdCells::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 

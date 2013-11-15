@@ -422,18 +422,19 @@ void FindGBCD::preflight()
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-383);
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
+    return;
   }
 
   dataCheckSurfaceMesh(true, 1, 1, 1);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
   if(NULL == m)
   {
-    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
-    setErrorCondition(-383);
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
+    return;
   }
 
   dataCheckVoxel(true, 1, 1, 1);

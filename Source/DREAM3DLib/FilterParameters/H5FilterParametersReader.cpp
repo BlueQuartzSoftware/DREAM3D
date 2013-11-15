@@ -42,7 +42,6 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 
-
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 

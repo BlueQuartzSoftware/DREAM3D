@@ -61,12 +61,12 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
 
     virtual ~QFilterParametersReader();
 
-    static FilterPipeline::Pointer ReadPipelineFromFile(QString filePath);
+    static FilterPipeline::Pointer ReadPipelineFromFile(QString filePath, QSettings::Format format);
 
 
     QSettings* getPrefs();
 
-    void openFile(QString filename);
+    void openFile(QString filename, QSettings::Format format);
     void closeFile();
 
     virtual int openFilterGroup(AbstractFilter* unused, int index);

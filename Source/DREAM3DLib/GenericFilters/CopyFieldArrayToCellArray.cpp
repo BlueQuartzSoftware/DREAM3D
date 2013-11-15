@@ -107,12 +107,6 @@ void CopyFieldArrayToCellArray::dataCheck(bool preflight, size_t voxels, size_t 
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-10000);
-    addErrorMessage(getHumanLabel(), "Volume Data Container is NULL", getErrorCondition());
-    return;
-  }
 
   QVector<int> dims(1, 1);
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
@@ -120,7 +114,7 @@ void CopyFieldArrayToCellArray::dataCheck(bool preflight, size_t voxels, size_t 
   if(m_SelectedFieldArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
 
 }
@@ -135,7 +129,7 @@ void CopyFieldArrayToCellArray::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 

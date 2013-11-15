@@ -70,27 +70,36 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     /**
       * @brief Reads the Preferences from the users pref file
       */
-    virtual void readSettings(QSettings &prefs, bool shouldClear);
-
-    /**
-      * @brief Reads the Preferences from the users pref file
-      */
-    virtual void readSettings(QSettings &prefs, PipelineViewWidget* viewWidget, bool shouldClear);
+    virtual void readGeometrySettings(QSettings &prefs);
 
     /**
       * @brief Writes the preferences to the users pref file
       */
-    virtual void writeSettings(QSettings &prefs);
+    virtual void writeGeometrySettings(QSettings &prefs);
+
+
+    /**
+     * @brief savePipeline
+     * @param filePath
+     */
+   // virtual void savePipeline(const QString &filePath);
+
+    /**
+      * @brief Reads the Preferences from the users pref file
+      */
+    // virtual void readPipelineFile(QSettings &prefs, PipelineViewWidget* viewWidget, bool shouldClear);
 
     /**
      * @brief Writes the preferences to the users pref file
      */
-    virtual void writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
+    // virtual void writePipelineFile(QSettings &prefs, PipelineViewWidget* viewWidget);
 
     /**
-     * @brief Writes the pipeline order to a text file
+     * @brief loadPipelineFileIntoPipelineView
+     * @param path
      */
-    virtual void savePipeline(QSettings &prefs);
+    // void loadPipelineFileIntoPipelineView(QString path);
+
 
     /**
      * @brief Enables or Disables all the widgets in a list
@@ -144,8 +153,6 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      */
     PipelineTreeWidget* getPipelineTreeWidget() {return filterLibraryTree;}
 
-    void loadPipelineFileIntoPipelineView(QString path);
-
     QStringList generateFilterListFromPipelineFile(QString path);
     void populateFilterList(QStringList filterNames);
 
@@ -192,17 +199,27 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     /**
      * @brief Creates and returns a QLabel hyperlink to the documentation of the filter that sent the PipelineMessage.
-   * Returns NULL if either the filter class name or human label are empty.
+     * Returns NULL if either the filter class name or human label are empty.
      */
     QLabel* createHyperlinkLabel(PipelineMessage msg);
 
     /**
-     * @brief Reads the pipeline stored inside a dream3d file using the file's ID
+     * @brief getPipelineViewWidget
+     * @return
      */
-    int readPipelineFromFile(const QString &filePath);
+    PipelineViewWidget* getPipelineViewWidget();
+
 
   public slots:
-    void openPipelineFile(const QString& filePath);
+
+    void acceptPipelineFileDrop(const QString &filePath);
+
+
+    /**
+     * @brief Reads the pipeline stored inside a dream3d file using the file's ID
+     */
+    void openPipelineFile(const QString& filePath, QSettings::Format format = QSettings::IniFormat);
+
 
   protected slots:
     void actionClearPipeline_triggered();
@@ -237,7 +254,6 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void clearMessagesTable();
 
-    void extractPipelineFromFile(const QString &filePath);
     void addDREAM3DReaderFilter(const QString &filePath);
 
     virtual void addMessage(PipelineMessage msg);

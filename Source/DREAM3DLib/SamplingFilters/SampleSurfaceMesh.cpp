@@ -193,8 +193,9 @@ void SampleSurfaceMesh::preflight()
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getSurfaceDataContainerName() + " was not available.", getErrorCondition());
+    return;
   }
 
   dataCheck(false, 1, 1, 1);
@@ -228,7 +229,7 @@ void SampleSurfaceMesh::execute()
   FaceArray::Pointer faces = sm->getFaces();
   int numFaces = faces->count();
 
-  dataCheck(true, 0, numFaces, 0); 
+  dataCheck(true, 0, numFaces, 0);
 
   //create array to hold bounding vertices for each face
   VertexArray::Vert_t ll, ur;

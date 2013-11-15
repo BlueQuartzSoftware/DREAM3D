@@ -192,6 +192,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
 // -----------------------------------------------------------------------------
 void DataContainerReader::preflight()
 {
+
   dataCheck(true, 1, 1, 1);
 
   readData(true);

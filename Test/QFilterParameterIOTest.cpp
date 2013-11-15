@@ -78,7 +78,7 @@ void writePipeline(FilterPipeline::Pointer pipeline)
 {
 
   QFilterParametersWriter::Pointer writer = QFilterParametersWriter::New();
-  writer->openFile(UnitTest::QFilterParameterIOTest::TestFile);
+  writer->openFile(UnitTest::QFilterParameterIOTest::TestFile, QSettings::IniFormat);
   writer->setNumberOfFilters(pipeline->getFilterContainer().size());
   QVariant filterCount = pipeline->getFilterContainer().size();
   int count = pipeline->getFilterContainer().size();
@@ -295,7 +295,7 @@ void TestReadQSettingsBasedFile()
 
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
   QFilterParametersReader::Pointer paramsReader = QFilterParametersReader::New();
-  paramsReader->openFile(UnitTest::QFilterParameterIOTest::Prebuilt17);
+  paramsReader->openFile(UnitTest::QFilterParameterIOTest::Prebuilt17, QSettings::IniFormat);
   readPipeline(paramsReader, pipeline);
 
   AbstractFilter::Pointer filter = pipeline->getFilterContainer().at(0);

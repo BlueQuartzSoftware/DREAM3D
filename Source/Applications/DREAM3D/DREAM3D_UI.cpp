@@ -128,11 +128,11 @@ DREAM3D_UI::~DREAM3D_UI()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::resizeEvent ( QResizeEvent * event )
 {
- // qDebug() << "DREAM3D_UI::resizeEvent" << "\n";
- // qDebug() << "   oldSize: " << event->oldSize().width() << " x " << event->oldSize().height() << "\n";
- // qDebug() << "   newSize: " << event->size().width() << " x " << event->size().height() << "\n";
+  // qDebug() << "DREAM3D_UI::resizeEvent" << "\n";
+  // qDebug() << "   oldSize: " << event->oldSize().width() << " x " << event->oldSize().height() << "\n";
+  // qDebug() << "   newSize: " << event->size().width() << " x " << event->size().height() << "\n";
   emit parentResized();
- // qDebug() << "DREAM3D_UI::resizeEvent --- Done" << "\n";
+  // qDebug() << "DREAM3D_UI::resizeEvent --- Done" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -148,8 +148,8 @@ void DREAM3D_UI::on_actionExit_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionOpen_Pipeline_2_triggered() {
   QString file = QFileDialog::getOpenFileName(m_PipelineBuilderWidget, tr("Select Pipeline File"),
-    m_PipelineBuilderWidget->getLastDirectory(),
-    tr("Pipeline File (*.txt *.ini)") );
+                                              m_PipelineBuilderWidget->getLastDirectory(),
+                                              tr("Pipeline File (*.txt *.ini)") );
   if ( true == file.isEmpty() ) { return; }
   m_PipelineBuilderWidget->openPipelineFile(file);
 }
@@ -160,8 +160,8 @@ void DREAM3D_UI::on_actionOpen_Pipeline_2_triggered() {
 void DREAM3D_UI::on_actionSave_Pipeline_2_triggered() {
   QString proposedFile = m_PipelineBuilderWidget->getLastDirectory() + QDir::separator() + "Untitled.txt";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
-    proposedFile,
-    tr("Pipeline File (*.txt *.ini)") );
+                                                  proposedFile,
+                                                  tr("Pipeline File (*.txt *.ini)") );
   if ( true == filePath.isEmpty() ) { return; }
 
   //If the filePath already exists - delete it so that we get a clean write to the file
@@ -172,12 +172,12 @@ void DREAM3D_UI::on_actionSave_Pipeline_2_triggered() {
     if (f.remove() == false)
     {
       QMessageBox::warning ( this, QString::fromAscii("File Save Error"),
-      QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
+                             QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
       return;
     }
   }
-  QSettings prefs(filePath, QSettings::IniFormat, this);
-  m_PipelineBuilderWidget->savePipeline(prefs);
+
+  m_PipelineBuilderWidget->getPipelineViewWidget()->savePipeline(filePath, fi.baseName());
 }
 
 // -----------------------------------------------------------------------------
@@ -204,17 +204,22 @@ void DREAM3D_UI::closeEvent(QCloseEvent *event)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readSettings()
 {
-  // qDebug() << "Read Settings" << "\n";
+  QString filePath;
+  {
 #if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
-  // Have the PipelineBuilder Widget read its settings
-  m_PipelineBuilderWidget->readSettings(prefs, true);
-  readWindowSettings(prefs);
+    filePath = prefs.fileName();
+    // Have the PipelineBuilder Widget read its settings
+    m_PipelineBuilderWidget->readGeometrySettings(prefs);
+    readWindowSettings(prefs);
 
-  readVersionCheckSettings(prefs);
+    readVersionCheckSettings(prefs);
+
+  }
+  m_PipelineBuilderWidget->openPipelineFile(filePath, QSettings::NativeFormat);
 }
 
 // -----------------------------------------------------------------------------
@@ -222,11 +227,11 @@ void DREAM3D_UI::readSettings()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readVersionCheckSettings(QSettings &prefs)
 {
-   // So the idea here may be to read the values, figure out if we should check the version
-   // against the server, if we DO need to check the version then Reuse the DREAM3DUpdateCheckDialog code
-   // to do the check and if the check comes back that we need to update then pop open the dialog box?
-   // We could also separate out the codes that do the actual checking from the  DREAM3DUpdateCheckDialog
-   // class so we can reuse those codes here?
+  // So the idea here may be to read the values, figure out if we should check the version
+  // against the server, if we DO need to check the version then Reuse the DREAM3DUpdateCheckDialog code
+  // to do the check and if the check comes back that we need to update then pop open the dialog box?
+  // We could also separate out the codes that do the actual checking from the  DREAM3DUpdateCheckDialog
+  // class so we can reuse those codes here?
 
 }
 
@@ -260,20 +265,23 @@ void DREAM3D_UI::readWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::writeSettings()
 {
-  // qDebug() << "writeSettings" << "\n";
+  QString filePath;
+  {
 #if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
+    filePath = prefs.fileName();
+    // Have the pipeline builder write its settings to the prefs file
+    m_PipelineBuilderWidget->writeGeometrySettings(prefs);
 
-  // Have the pipeline builder write its settings to the prefs file
-  m_PipelineBuilderWidget->writeSettings(prefs);
+    writeWindowSettings(prefs);
 
-  writeWindowSettings(prefs);
-
-  writeVersionCheckSettings(prefs);
-
+    writeVersionCheckSettings(prefs);
+  }
+  QFileInfo fi(filePath);
+  m_PipelineBuilderWidget->getPipelineViewWidget()->savePipeline(filePath, fi.baseName(), QSettings::NativeFormat);
 }
 
 // -----------------------------------------------------------------------------
@@ -281,11 +289,11 @@ void DREAM3D_UI::writeSettings()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::writeVersionCheckSettings(QSettings &prefs)
 {
-   // In this function we are going to have to first see if the settings are even in the
-   // file (this would occur on the very first launch of DREAM3D). If they are not then
-   // set Manual as the default.
-   // If the settings are already in the file then we don't write anything because we don't
-   // want to over write anything.
+  // In this function we are going to have to first see if the settings are even in the
+  // file (this would occur on the very first launch of DREAM3D). If they are not then
+  // set Manual as the default.
+  // If the settings are already in the file then we don't write anything because we don't
+  // want to over write anything.
 
 }
 
@@ -318,7 +326,7 @@ void DREAM3D_UI::checkForUpdatesAtStartup()
   m_UpdateCheck = new UpdateCheck(this);
 
   connect( m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ),
-    this, SLOT( versionCheckReply(UpdateCheckData*) ) );
+           this, SLOT( versionCheckReply(UpdateCheckData*) ) );
 
   m_UpdateCheck->checkVersion(Detail::UpdateWebSite);
 }
@@ -332,11 +340,11 @@ void DREAM3D_UI::setupGui()
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
   if ( d->getAutomaticallyBtn()->isChecked() )
   {
-    #if defined (Q_OS_MAC)
-      QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-    #else
-      QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-    #endif
+#if defined (Q_OS_MAC)
+    QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+    QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
 
     updatePrefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
     QDate lastUpdateCheckDate = updatePrefs.value(DREAM3DUpdateCheckDialog::getUpdateCheckKey()).toDate();
@@ -350,9 +358,9 @@ void DREAM3D_UI::setupGui()
     QDate monthlyThreshold = lastUpdateCheckDate.addMonths(1);
 
     if ( (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily
-      && currentDateToday >= dailyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly
-      && currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
-      && currentDateToday >= monthlyThreshold))
+          && currentDateToday >= dailyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly
+                                                     && currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
+                                                                                                 && currentDateToday >= monthlyThreshold))
     {
       checkForUpdatesAtStartup();
     }
@@ -454,7 +462,7 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
   d->setApplicationName("DREAM3D");
 
   // Read from the QSettings Pref file the information that we need
-  #if defined (Q_OS_MAC)
+#if defined (Q_OS_MAC)
   QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #else
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
@@ -519,10 +527,10 @@ qint32 DREAM3D_UI::checkDirtyDocument()
   if (this->isWindowModified() == true)
   {
     int r = QMessageBox::warning(this, tr("DREAM.3D"),
-                            tr("The Data has been modified.\nDo you want to save your changes?"),
-                            QMessageBox::Save | QMessageBox::Default,
-                            QMessageBox::Discard,
-                            QMessageBox::Cancel | QMessageBox::Escape);
+                                 tr("The Data has been modified.\nDo you want to save your changes?"),
+                                 QMessageBox::Save | QMessageBox::Default,
+                                 QMessageBox::Discard,
+                                 QMessageBox::Cancel | QMessageBox::Escape);
     if (r == QMessageBox::Save)
     {
       //TODO: Save the current document or otherwise save the state.
@@ -549,7 +557,7 @@ qint32 DREAM3D_UI::checkDirtyDocument()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::updateRecentFileList(const QString &file)
 {
- // qDebug() << "DREAM3D_UI::updateRecentFileList" << "\n";
+  // qDebug() << "DREAM3D_UI::updateRecentFileList" << "\n";
 
   // Clear the Recent Items Menu
   this->menu_RecentFiles->clear();
@@ -557,14 +565,14 @@ void DREAM3D_UI::updateRecentFileList(const QString &file)
   // Get the list from the static object
   QStringList files = QRecentFileList::instance()->fileList();
   foreach (QString file, files)
-    {
-      QAction* action = new QAction(this->menu_RecentFiles);
-      action->setText(QRecentFileList::instance()->parentAndFileName(file));
-      action->setData(file);
-      action->setVisible(true);
-      this->menu_RecentFiles->addAction(action);
-      connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    }
+  {
+    QAction* action = new QAction(this->menu_RecentFiles);
+    action->setText(QRecentFileList::instance()->parentAndFileName(file));
+    action->setData(file);
+    action->setVisible(true);
+    this->menu_RecentFiles->addAction(action);
+    connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+  }
 
 }
 
@@ -599,7 +607,7 @@ void DREAM3D_UI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::loadPlugins(FilterManager *fm)
 {
-//  qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
+  //  qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
 
   foreach (QObject *plugin, QPluginLoader::staticInstances())
     populateMenus(plugin);
@@ -608,7 +616,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
   m_PluginDirs << qApp->applicationDirPath();
 
   QDir aPluginDir = QDir(qApp->applicationDirPath());
- // qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
+  // qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
   QString thePath;
 
 #if defined(Q_OS_WIN)
@@ -630,11 +638,11 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
   thePath = aPluginDir.absolutePath() + "/Plugins";
   m_PluginDirs << thePath;
 
-   // This is here for Xcode compatibility
+  // This is here for Xcode compatibility
 #ifdef CMAKE_INTDIR
-   aPluginDir.cdUp();
-   thePath = aPluginDir.absolutePath() + "/Plugins/" + CMAKE_INTDIR;
-   m_PluginDirs << thePath;
+  aPluginDir.cdUp();
+  thePath = aPluginDir.absolutePath() + "/Plugins/" + CMAKE_INTDIR;
+  m_PluginDirs << thePath;
 #endif
 #else
   // We are on Linux - I think
@@ -675,9 +683,9 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
   {
-    qDebug() << "Plugin Being Loaded:" << "\n";
-    qDebug() << "    File Extension: .plugin" << "\n";
-    qDebug() << "    Path: " << path << "\n";
+    qDebug() << "Plugin Being Loaded:";
+    qDebug() << "    File Extension: .plugin";
+    qDebug() << "    Path: " << path;
     QPluginLoader loader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
@@ -701,8 +709,8 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
       QString message("The plugin did not load with the following error\n");
       message.append(loader.errorString());
       QMessageBox::critical(this, "DREAM.3D Plugin Load Error",
-                                message,
-                                QMessageBox::Ok | QMessageBox::Default);
+                            message,
+                            QMessageBox::Ok | QMessageBox::Default);
       //qDebug() << "The plugin did not load with the following error\n   " << loader.errorString() << "\n";
     }
   }
@@ -722,7 +730,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
 //
 // -----------------------------------------------------------------------------
 
- void DREAM3D_UI::populateMenus(QObject *plugin)
+void DREAM3D_UI::populateMenus(QObject *plugin)
 {
 #if 0
 #ifdef QT_DEBUG
@@ -764,8 +772,8 @@ void DREAM3D_UI::displayHelp(QString file)
 //
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::addToPluginMenu(QObject *plugin, const QString &text,
-                                     QMenu *menu, const char *member,
-                                     QActionGroup *actionGroup, QIcon icon)
+                                 QMenu *menu, const char *member,
+                                 QActionGroup *actionGroup, QIcon icon)
 {
   QAction *action = new QAction(icon, text, plugin);
   connect(action, SIGNAL(triggered()), this, member);

@@ -75,13 +75,13 @@ QSettings* QFilterParametersWriter::getPrefs()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterParametersWriter::openFile(QString filename)
+void QFilterParametersWriter::openFile(QString filename, QSettings::Format format)
 {
   if(NULL != m_Prefs)
   {
     closeFile();
   }
-  m_Prefs = new QSettings(filename, QSettings::IniFormat);
+  m_Prefs = new QSettings(filename, format);
   m_Prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   m_Prefs->setValue("Name", "Unnamed Pipeline");
   m_Prefs->setValue(DREAM3D::Settings::NumFilters, 0);

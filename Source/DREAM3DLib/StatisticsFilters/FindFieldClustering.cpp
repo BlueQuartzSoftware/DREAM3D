@@ -115,6 +115,14 @@ void FindFieldClustering::dataCheck(bool preflight, size_t voxels, size_t fields
 // -----------------------------------------------------------------------------
 void FindFieldClustering::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
