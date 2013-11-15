@@ -14,7 +14,7 @@ This filter writes an Abaqus file that is a surface mesh using S3 Elements
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Field Array Name | String |
+| Feature Array Name | String |
 
 ## Required Arrays ##
 

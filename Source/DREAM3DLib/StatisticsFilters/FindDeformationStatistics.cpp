@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -49,33 +49,33 @@
 FindDeformationStatistics::FindDeformationStatistics() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_F1ArrayName(DREAM3D::FieldData::F1),
-  m_F1sptArrayName(DREAM3D::FieldData::F1spt),
-  m_F7ArrayName(DREAM3D::FieldData::F7),
-  m_mPrimeArrayName(DREAM3D::FieldData::mPrime),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
+  m_F1ArrayName(DREAM3D::FeatureData::F1),
+  m_F1sptArrayName(DREAM3D::FeatureData::F1spt),
+  m_F7ArrayName(DREAM3D::FeatureData::F7),
+  m_mPrimeArrayName(DREAM3D::FeatureData::mPrime),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureReferenceMisorientationsArrayName(DREAM3D::CellData::FeatureReferenceMisorientations),
   m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
   m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
   m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_GrainAvgMisorientationsArrayName(DREAM3D::FieldData::GrainAvgMisorientations),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_PolesArrayName(DREAM3D::FieldData::Poles),
-  m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
-  m_GrainIds(NULL),
-  m_FieldPhases(NULL),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_FeatureAvgMisorientationsArrayName(DREAM3D::FeatureData::FeatureAvgMisorientations),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_PolesArrayName(DREAM3D::FeatureData::Poles),
+  m_SchmidsArrayName(DREAM3D::FeatureData::Schmids),
+  m_FeatureIds(NULL),
+  m_FeaturePhases(NULL),
   m_NearestNeighbors(NULL),
-  m_GrainReferenceMisorientations(NULL),
+  m_FeatureReferenceMisorientations(NULL),
   m_KernelAverageMisorientations(NULL),
   m_AvgQuats(NULL),
   m_F1(NULL),
   m_F1spt(NULL),
   m_F7(NULL),
   m_mPrime(NULL),
-  m_GrainAvgMisorientations(NULL),
+  m_FeatureAvgMisorientations(NULL),
   m_Poles(NULL),
   m_Schmids(NULL),
   m_GBEuclideanDistances(NULL),
@@ -142,39 +142,39 @@ int FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -300, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, -300, float, FloatArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureReferenceMisorientations, -300, float, FloatArrayType, voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -300, float, FloatArrayType, voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, -300, float, FloatArrayType, voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, -300, float, FloatArrayType, voxels, dims)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, -305, float, FloatArrayType, fields, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Schmids, -305, float, FloatArrayType, features, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -302, int32_t, Int32ArrayType, features, dims)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, -306, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureAvgMisorientations, -306, float, FloatArrayType, features, dims)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1, -307, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1spt, -308, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F7, -309, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, mPrime, -310, float, FloatArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, F1, -307, float, FloatArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, F1spt, -308, float, FloatArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, F7, -309, float, FloatArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, mPrime, -310, float, FloatArrayType, voxels, dims)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
 
   dims[0] = 3;
   GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, -300, int32_t, Int32ArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Poles, -306, int32_t, Int32ArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Poles, -306, int32_t, Int32ArrayType, features, dims)
 
   dims[0] = 4;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -301, float, FloatArrayType, features, dims)
 }
 
 // -----------------------------------------------------------------------------
@@ -208,7 +208,7 @@ void FindDeformationStatistics::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -298,11 +298,11 @@ void FindDeformationStatistics::execute()
   LD[2] = 1;
   for (int i = 0; i < totalPoints; i++)
   {
-    gname = m_GrainIds[i];
+    gname = m_FeatureIds[i];
     if(gname > 0)
     {
       avgKAM = avgKAM + m_KernelAverageMisorientations[i];
-      avgGRM = avgGRM + m_GrainReferenceMisorientations[i];
+      avgGRM = avgGRM + m_FeatureReferenceMisorientations[i];
       avgGBdist = avgGBdist + m_GBEuclideanDistances[i];
       avgTJdist = avgTJdist + m_TJEuclideanDistances[i];
       avgQPdist = avgQPdist + m_QPEuclideanDistances[i];
@@ -321,9 +321,9 @@ void FindDeformationStatistics::execute()
 //        q1[j] = m_AvgQuats[5 * gname + j];
 //        q2[j] = m_AvgQuats[5 * gname2 + j];
 //      }
-      if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
+      if(m_CrystalStructures[m_FeaturePhases[gname]] == m_CrystalStructures[m_FeaturePhases[gname2]] && m_FeaturePhases[gname] > 0)
       {
-        w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
+        w = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w * (180.0f / DREAM3D::Constants::k_Pi);
       }
       else
@@ -347,11 +347,11 @@ void FindDeformationStatistics::execute()
   avgDIS = avgDIS / counter;
   for (int i = 0; i < totalPoints; i++)
   {
-    gname = m_GrainIds[i];
+    gname = m_FeatureIds[i];
     if(gname > 0)
     {
       kam = m_KernelAverageMisorientations[i];
-      grm = m_GrainReferenceMisorientations[i];
+      grm = m_FeatureReferenceMisorientations[i];
       gbdist = m_GBEuclideanDistances[i];
       tjdist = m_TJEuclideanDistances[i];
       qpdist = m_QPEuclideanDistances[i];
@@ -368,9 +368,9 @@ void FindDeformationStatistics::execute()
 //        q1[j] = m_AvgQuats[5 * gname + j];
 //        q2[j] = m_AvgQuats[5 * gname2 + j];
 //      }
-      if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
+      if(m_CrystalStructures[m_FeaturePhases[gname]] == m_CrystalStructures[m_FeaturePhases[gname2]] && m_FeaturePhases[gname] > 0)
       {
-        w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
+        w = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w * (180.0f / DREAM3D::Constants::k_Pi);
       }
       else
@@ -491,7 +491,7 @@ void FindDeformationStatistics::execute()
   }
   outFile << "\n";
   outFile << "\n";
-  outFile << "Grain Average Misorientation Data" << "\n";
+  outFile << "Feature Average Misorientation Data" << "\n";
   outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" << "\n";
   outFile << avgGBdist << "		" << avgTJdist << "		" << avgQPdist << "		" << avgSF << "		" << avgF1 << "		" << avgF1spt << "		" << avgF7 << "		" << avgmprime << "		" << avgDIS << std::endl;
   for (int i = 0; i < 20; i++)
@@ -536,10 +536,10 @@ void FindDeformationStatistics::execute()
   fprintf(vtkFile,  "DREAM3D Generated Data Set: Deformation Statistics\n");
   fprintf(vtkFile,  "ASCII\n");
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
-  fprintf(vtkFile,  "POINTS %ld float\n", m->getNumCellFieldTuples() - 1);
+  fprintf(vtkFile,  "POINTS %ld float\n", m->getNumCellFeatureTuples() - 1);
 
 
-  size_t size = m->getNumCellFieldTuples();
+  size_t size = m->getNumCellFeatureTuples();
 
   float x, y, z;
   float xtemp, ytemp, ztemp;
@@ -576,8 +576,8 @@ void FindDeformationStatistics::execute()
     fprintf(vtkFile, "%f %f %f\n", xFZ, yFZ, zFZ);
   }
 
-  fprintf(vtkFile, "CELLS %ld %ld\n", m->getNumCellFieldTuples() - 1, ((m->getNumCellFieldTuples() - 1) * 2));
-  //  Store the Grain Ids so we don't have to re-read the triangles file again
+  fprintf(vtkFile, "CELLS %ld %ld\n", m->getNumCellFeatureTuples() - 1, ((m->getNumCellFeatureTuples() - 1) * 2));
+  //  Store the Feature Ids so we don't have to re-read the triangles file again
   for(size_t i = 1; i < size; i++)
   {
     fprintf(vtkFile, "1 %ld\n", (i - 1));
@@ -585,21 +585,21 @@ void FindDeformationStatistics::execute()
 
   // Write the CELL_TYPES into the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getNumCellFieldTuples() - 1);
+  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getNumCellFeatureTuples() - 1);
   for(size_t i = 1; i < size; i++)
   {
     fprintf(vtkFile, "1\n");
   }
 
 
-  // Write the GrainId Data to teh file
+  // Write the FeatureId Data to teh file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %ld\n", m->getNumCellFieldTuples() - 1);
+  fprintf(vtkFile, "CELL_DATA %ld\n", m->getNumCellFeatureTuples() - 1);
   fprintf(vtkFile, "SCALARS Misorientation float\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (size_t i = 1; i < size; i++)
   {
-    float miso = m_GrainAvgMisorientations[i];
+    float miso = m_FeatureAvgMisorientations[i];
     fprintf(vtkFile, "%f\n", miso);
   }
   fclose(vtkFile);

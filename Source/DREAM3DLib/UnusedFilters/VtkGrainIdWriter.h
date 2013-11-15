@@ -83,7 +83,7 @@ class DREAM3DLib_EXPORT VtkGrainIdWriter : public FileWriter
   private:
     int32_t* m_GrainIds;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     VtkGrainIdWriter(const VtkGrainIdWriter&); // Copy Constructor Not Implemented

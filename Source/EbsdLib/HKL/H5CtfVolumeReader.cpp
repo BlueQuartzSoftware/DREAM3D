@@ -132,38 +132,38 @@ void H5CtfVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5CtfVolumeReader::getPointerByName(const QString &fieldName)
+void* H5CtfVolumeReader::getPointerByName(const QString &featureName)
 {
-  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return static_cast<void*>(m_Phase);}
-  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return static_cast<void*>(m_X);}
-  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return static_cast<void*>(m_Y);}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return static_cast<void*>(m_Bands);}
-  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return static_cast<void*>(m_Error);}
-  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
-  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
-  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return static_cast<void*>(m_Euler3);}
-  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return static_cast<void*>(m_MAD);}
-  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return static_cast<void*>(m_BC);}
-  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return static_cast<void*>(m_BS);}
+  if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return static_cast<void*>(m_Phase);}
+  if (featureName.compare(Ebsd::Ctf::X) == 0) { return static_cast<void*>(m_X);}
+  if (featureName.compare(Ebsd::Ctf::Y) == 0) { return static_cast<void*>(m_Y);}
+  if (featureName.compare(Ebsd::Ctf::Bands) == 0) { return static_cast<void*>(m_Bands);}
+  if (featureName.compare(Ebsd::Ctf::Error) == 0) { return static_cast<void*>(m_Error);}
+  if (featureName.compare(Ebsd::Ctf::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
+  if (featureName.compare(Ebsd::Ctf::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
+  if (featureName.compare(Ebsd::Ctf::Euler3) == 0) { return static_cast<void*>(m_Euler3);}
+  if (featureName.compare(Ebsd::Ctf::MAD) == 0) { return static_cast<void*>(m_MAD);}
+  if (featureName.compare(Ebsd::Ctf::BC) == 0) { return static_cast<void*>(m_BC);}
+  if (featureName.compare(Ebsd::Ctf::BS) == 0) { return static_cast<void*>(m_BS);}
   return NULL;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5CtfVolumeReader::getPointerType(const QString &fieldName)
+Ebsd::NumType H5CtfVolumeReader::getPointerType(const QString &featureName)
   {
-  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Bands) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Euler3) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::MAD) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::BC) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::BS) == 0) { return Ebsd::Int32;}
   return Ebsd::UnknownNumType;
 }
 

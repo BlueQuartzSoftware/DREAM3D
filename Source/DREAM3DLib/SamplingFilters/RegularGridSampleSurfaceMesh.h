@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     virtual ~RegularGridSampleSurfaceMesh();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, XPoints)
     DREAM3D_INSTANCE_PROPERTY(int, YPoints)
@@ -103,16 +103,16 @@ class DREAM3DLib_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     virtual VertexArray::Pointer generate_points();
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
 
     RegularGridSampleSurfaceMesh(const RegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const RegularGridSampleSurfaceMesh&); // Operator '=' Not Implemented

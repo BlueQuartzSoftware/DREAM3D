@@ -79,8 +79,8 @@ class DREAM3DLib_EXPORT H5TransformationStatsDataDelegate : public H5StatsDataDe
     int writeParentPhase(TransformationStatsData* data, hid_t groupId);
     int readParentPhase(TransformationStatsData* data, hid_t groupId);
 
-    int writeGrainDiameterInfo(TransformationStatsData* data, hid_t groupId);
-    int readGrainDiameterInfo(TransformationStatsData* data, hid_t groupId);
+    int writeFeatureDiameterInfo(TransformationStatsData* data, hid_t groupId);
+    int readFeatureDiameterInfo(TransformationStatsData* data, hid_t groupId);
 
     int writeBinNumbers(TransformationStatsData* data, hid_t groupId);
     int readBinNumbers(TransformationStatsData* data, hid_t groupId);

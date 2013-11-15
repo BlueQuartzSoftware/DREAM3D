@@ -68,12 +68,12 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     virtual ~FindSchmids();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    //------ Required Field Data
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SlipSystemsArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
@@ -111,13 +111,13 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 
     float* m_Schmids;
     int32_t* m_Poles;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     float* m_AvgQuats;
     int32_t* m_SlipSystems;
 
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindSchmids(const FindSchmids&); // Copy Constructor Not Implemented
     void operator=(const FindSchmids&); // Operator '=' Not Implemented

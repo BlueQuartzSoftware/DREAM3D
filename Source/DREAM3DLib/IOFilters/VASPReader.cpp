@@ -107,7 +107,7 @@ int VASPReader::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VASPReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VASPReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
@@ -295,11 +295,11 @@ int VASPReader::readFile()
 
   // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
   // method which is performed before this function. This will cause an error -501 because the array with the name
-  // m_GrainIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
+  // m_FeatureIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
   m->removeVertexData(m_AtomVelocitiesArrayName);
   m->removeVertexData(m_AtomTypesArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
-  //  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  //  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   QVector<int> dims(1, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, AtomVelocities, float, FloatArrayType, 0, totalAtoms, dims)
   dims[0] = 1;

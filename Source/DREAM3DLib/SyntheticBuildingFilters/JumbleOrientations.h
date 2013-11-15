@@ -71,14 +71,14 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Created Field Data
+    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
@@ -105,15 +105,15 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
 
   private:
     // Cell Data
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     float*   m_CellEulerAngles;
 
-    // Field Data
-    int32_t* m_FieldPhases;
-    float* m_FieldEulerAngles;
+    // Feature Data
+    int32_t* m_FeaturePhases;
+    float* m_FeatureEulerAngles;
     float* m_AvgQuats;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     JumbleOrientations(const JumbleOrientations&); // Copy Constructor Not Implemented
     void operator=(const JumbleOrientations&); // Operator '=' Not Implemented

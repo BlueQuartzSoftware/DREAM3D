@@ -53,7 +53,7 @@
 #include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
-#include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
+#include "DREAM3DLib/IOFilters/FeatureDataCSVWriter.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -187,9 +187,9 @@ void TestSyntheticBuilder()
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
 //  pipeline->pushBack(match_crystallography);
 
-  FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
-  write_fielddata->setFieldDataFile(UnitTest::SyntheticBuilderTest::CsvFile);
-  pipeline->pushBack(write_fielddata);
+  FeatureDataCSVWriter::Pointer write_featuredata = FeatureDataCSVWriter::New();
+  write_featuredata->setFeatureDataFile(UnitTest::SyntheticBuilderTest::CsvFile);
+  pipeline->pushBack(write_featuredata);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::SyntheticBuilderTest::OutputFile);

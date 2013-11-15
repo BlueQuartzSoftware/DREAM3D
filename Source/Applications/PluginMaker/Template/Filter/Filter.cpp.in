@@ -131,7 +131,7 @@ int @ClassName@::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void @ClassName@::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void @ClassName@::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 

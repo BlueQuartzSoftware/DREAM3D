@@ -173,7 +173,7 @@ int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleDihedralAngleFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void TriangleDihedralAngleFilter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 

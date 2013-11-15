@@ -67,12 +67,12 @@ typedef QVector<FloatArrayType::Pointer> VectorOfFloatArray;
  *    @li K
  *    @li Beta
  *
- * The Grain Diameter Info is an array of 3 floats where the values are encoded as:@n
+ * The Feature Diameter Info is an array of 3 floats where the values are encoded as:@n
  * @li [0] = Average
  * @li [1] = Max
  * @li [2] = Min
  *
- * The Grain Size Distribution is an array of 2 floats where the values are encoded as:@n
+ * The Feature Size Distribution is an array of 2 floats where the values are encoded as:@n
  * @li [0] = Average
  * @li [1] = Standard Deviation
  *
@@ -114,21 +114,21 @@ class DREAM3DLib_EXPORT TransformationStatsData : public StatsData
     /**
      * @brief The values are encoded into 3 floats: Average, Max, Min
      */
-    DREAM3D_INSTANCE_VEC3_PROPERTY(float, GrainDiameterInfo)
-    void setBinStepSize(float v) { m_GrainDiameterInfo[0] = v;}
-    float getBinStepSize() { return m_GrainDiameterInfo[0]; }
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, FeatureDiameterInfo)
+    void setBinStepSize(float v) { m_FeatureDiameterInfo[0] = v;}
+    float getBinStepSize() { return m_FeatureDiameterInfo[0]; }
 
-    void setMaxGrainDiameter(float v) { m_GrainDiameterInfo[1] = v;}
-    float getMaxGrainDiameter() { return m_GrainDiameterInfo[1]; }
+    void setMaxFeatureDiameter(float v) { m_FeatureDiameterInfo[1] = v;}
+    float getMaxFeatureDiameter() { return m_FeatureDiameterInfo[1]; }
 
-    void setMinGrainDiameter(float v) { m_GrainDiameterInfo[2] = v;}
-    float getMinGrainDiameter() { return m_GrainDiameterInfo[2]; }
+    void setMinFeatureDiameter(float v) { m_FeatureDiameterInfo[2] = v;}
+    float getMinFeatureDiameter() { return m_FeatureDiameterInfo[2]; }
 
     /**
       * @brief The values are encoded into float arrays
       */
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSizeDistribution)
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, GrainSize_DistType)
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, FeatureSizeDistribution)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, FeatureSize_DistType)
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers)
 
@@ -138,16 +138,16 @@ class DREAM3DLib_EXPORT TransformationStatsData : public StatsData
     }
 
 
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_BOverA)
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, FeatureSize_BOverA)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, BOverA_DistType)
 
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_COverA)
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, FeatureSize_COverA)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, COverA_DistType)
 
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Neighbors)
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, FeatureSize_Neighbors)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, Neighbors_DistType)
 
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Omegas)
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, FeatureSize_Omegas)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, Omegas_DistType)
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, MisorientationBins)

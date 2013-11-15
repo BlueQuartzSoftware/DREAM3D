@@ -69,10 +69,10 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
 
     virtual ~FindAxisODF();
 
-    //------ Required Field Data
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
@@ -98,8 +98,8 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     FindAxisODF();
 
   private:
-    bool* m_SurfaceFields;
-    int32_t* m_FieldPhases;
+    bool* m_SurfaceFeatures;
+    int32_t* m_FeaturePhases;
     float* m_AxisEulerAngles;
     unsigned int* m_PhaseTypes;
 
@@ -110,7 +110,7 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     FindAxisODF(const FindAxisODF&); // Copy Constructor Not Implemented

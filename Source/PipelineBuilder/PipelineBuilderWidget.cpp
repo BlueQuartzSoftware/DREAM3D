@@ -963,7 +963,7 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
     factories = fm->getFactories(item->parent()->text(0), item->text(0));
   }
 
-  // Nothing was in the search Field so just reset to what was listed before
+  // Nothing was in the search Feature so just reset to what was listed before
   if (text.isEmpty() == true)
   {
     updateFilterGroupList(factories);

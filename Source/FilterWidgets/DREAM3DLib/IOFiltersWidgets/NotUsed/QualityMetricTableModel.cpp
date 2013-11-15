@@ -81,11 +81,11 @@ Qt::ItemFlags QualityMetricTableModel::flags(const QModelIndex &index) const
     // theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
     int col = index.column();
-    if (col == FieldName || col == FieldValue || col == FieldOperator)
+    if (col == FeatureName || col == FeatureValue || col == FeatureOperator)
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
-    else if ( col == FieldPhaseValue)
+    else if ( col == FeaturePhaseValue)
     {
       if (m_NumberOfPhases > 1) {
         theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
@@ -112,38 +112,38 @@ QVariant QualityMetricTableModel::data(const QModelIndex &index, qint32 role) co
 
     switch(index.column())
     {
-      case FieldName:
+      case FeatureName:
       {
         comboBox.currentText = QString("Confidence Index");
-        const QString header = headerData(FieldName, Qt::Horizontal, Qt::DisplayRole).toString();
+        const QString header = headerData(FeatureName, Qt::Horizontal, Qt::DisplayRole).toString();
         if (header.length() > comboBox.currentText.length())
         {
           comboBox.currentText = header;
         }
         break;
       }
-      case FieldValue:
+      case FeatureValue:
       {
         comboBox.currentText = QString("0.005");
-        const QString header = headerData(FieldName, Qt::Horizontal, Qt::DisplayRole).toString();
+        const QString header = headerData(FeatureName, Qt::Horizontal, Qt::DisplayRole).toString();
         if (header.length() > comboBox.currentText.length())
           {comboBox.currentText = header;}
         break;
       }
-      case FieldOperator:
+      case FeatureOperator:
       {
         comboBox.currentText = QString(" > ");
-        const QString header = headerData(FieldOperator, Qt::Horizontal, Qt::DisplayRole).toString();
+        const QString header = headerData(FeatureOperator, Qt::Horizontal, Qt::DisplayRole).toString();
         if (header.length() > comboBox.currentText.length())
         {
           comboBox.currentText = header;
         }
         break;
       }
-      case FieldPhaseValue:
+      case FeaturePhaseValue:
       {
         comboBox.currentText = QString("1");
-        const QString header = headerData(FieldPhaseValue, Qt::Horizontal, Qt::DisplayRole).toString();
+        const QString header = headerData(FeaturePhaseValue, Qt::Horizontal, Qt::DisplayRole).toString();
         if (header.length() > comboBox.currentText.length())
         {
           comboBox.currentText = header;
@@ -165,21 +165,21 @@ QVariant QualityMetricTableModel::data(const QModelIndex &index, qint32 role) co
   else if (role == Qt::DisplayRole || role == Qt::EditRole)
   {
     int col = index.column();
-    if (col == FieldName)
+    if (col == FeatureName)
     {
-      return QVariant(m_FieldNames[index.row()]);
+      return QVariant(m_FeatureNames[index.row()]);
     }
-    else if (col == FieldValue)
+    else if (col == FeatureValue)
     {
-      return QVariant(m_FieldValues[index.row()]);
+      return QVariant(m_FeatureValues[index.row()]);
     }
-    else if (col == FieldOperator)
+    else if (col == FeatureOperator)
     {
-      return QVariant(m_FieldOperators[index.row()]);
+      return QVariant(m_FeatureOperators[index.row()]);
     }
-    else if (col == FieldPhaseValue)
+    else if (col == FeaturePhaseValue)
     {
-      return QVariant(m_FieldPhaseValues[index.row()]);
+      return QVariant(m_FeaturePhaseValues[index.row()]);
     }
   }
 
@@ -195,16 +195,16 @@ QVariant QualityMetricTableModel::headerData(int section, Qt::Orientation orient
   {
     switch(section)
     {
-      case FieldName:
-        return QVariant(QString("Field"));
+      case FeatureName:
+        return QVariant(QString("Feature"));
         break;
-      case FieldValue:
+      case FeatureValue:
         return QVariant(QString("Value"));
         break;
-      case FieldOperator:
+      case FeatureOperator:
         return QVariant(QString("Filter"));
         break;
-      case FieldPhaseValue:
+      case FeaturePhaseValue:
         return QVariant(QString("Phase"));
         break;
       default:
@@ -246,7 +246,7 @@ bool QualityMetricTableModel::setHeaderData(int col, Qt::Orientation o, const QV
 bool QualityMetricTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
   // qDebug() << "QualityMetricTableModel::setData " << value.toString().toStdString() << "\n";
-  if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_FieldNames.count() || index.column() < 0 || index.column()
+  if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_FeatureNames.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {
     return false;
@@ -256,17 +256,17 @@ bool QualityMetricTableModel::setData(const QModelIndex & index, const QVariant 
   qint32 col = index.column();
   switch(col)
   {
-    case FieldName:
-      m_FieldNames[row] = value.toString();
+    case FeatureName:
+      m_FeatureNames[row] = value.toString();
       break;
-    case FieldValue:
-      m_FieldValues[row] = value.toFloat(&ok);
+    case FeatureValue:
+      m_FeatureValues[row] = value.toFloat(&ok);
       break;
-    case FieldOperator:
-      m_FieldOperators[row] =  value.toString();
+    case FeatureOperator:
+      m_FeatureOperators[row] =  value.toString();
       break;
-    case FieldPhaseValue:
-      m_FieldPhaseValues[row] =  value.toInt(&ok);
+    case FeaturePhaseValue:
+      m_FeaturePhaseValues[row] =  value.toInt(&ok);
       break;
     default:
       Q_ASSERT(false);
@@ -283,20 +283,20 @@ bool QualityMetricTableModel::setData(const QModelIndex & index, const QVariant 
 // -----------------------------------------------------------------------------
 bool QualityMetricTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
-  if (m_PossibleFields.size() < 1) { return false;}
-  QString fieldName = m_PossibleFields.at(0);
-  float fieldValue = 0.0f;
-  QString fieldOperator = ">";
-  int fieldPhaseValue = 1;
+  if (m_PossibleFeatures.size() < 1) { return false;}
+  QString featureName = m_PossibleFeatures.at(0);
+  float featureValue = 0.0f;
+  QString featureOperator = ">";
+  int featurePhaseValue = 1;
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
   for (int i = 0; i < count; ++i)
   {
-    m_FieldNames.append(fieldName);
-    m_FieldValues.append(fieldValue);
-    m_FieldOperators.append(fieldOperator);
-    m_FieldPhaseValues.append(fieldPhaseValue);
-    m_RowCount = m_FieldNames.count();
+    m_FeatureNames.append(featureName);
+    m_FeatureValues.append(featureValue);
+    m_FeatureOperators.append(featureOperator);
+    m_FeaturePhaseValues.append(featurePhaseValue);
+    m_RowCount = m_FeatureNames.count();
   }
   endInsertRows();
   emit
@@ -316,11 +316,11 @@ bool QualityMetricTableModel::removeRows(int row, int count, const QModelIndex& 
   beginRemoveRows(QModelIndex(), row, row + count - 1);
   for (int i = 0; i < count; ++i)
   {
-    m_FieldNames.remove(row);
-    m_FieldValues.remove(row);
-    m_FieldOperators.remove(row);
-    m_FieldPhaseValues.remove(row);
-    m_RowCount = m_FieldNames.count();
+    m_FeatureNames.remove(row);
+    m_FeatureValues.remove(row);
+    m_FeatureOperators.remove(row);
+    m_FeaturePhaseValues.remove(row);
+    m_RowCount = m_FeatureNames.count();
   }
   endRemoveRows();
   emit
@@ -337,11 +337,11 @@ QVector<float > QualityMetricTableModel::getData(int col)
 
   switch(col)
   {
-    case FieldName:
-      return m_FieldValues;break;
-    case FieldValue:
+    case FeatureName:
+      return m_FeatureValues;break;
+    case FeatureValue:
       return m_K;break;
-    case FieldOperator:
+    case FeatureOperator:
       return m_Beta;break;
     default:
       Q_ASSERT(false);
@@ -357,11 +357,11 @@ float QualityMetricTableModel::getDataValue(int col, int row)
 {
   switch(col)
   {
-    case FieldName:
-      return m_FieldValues[row];break;
-    case FieldValue:
+    case FeatureName:
+      return m_FeatureValues[row];break;
+    case FeatureValue:
       return m_K[row];break;
-    case FieldOperator:
+    case FeatureOperator:
       return m_Beta[row];break;
     default:
       Q_ASSERT(false);
@@ -376,11 +376,11 @@ void QualityMetricTableModel::setColumnData(int col, QVector<float> &data)
 {
   switch(col)
   {
-    case FieldName:
-      m_FieldValues = data;break;
-    case FieldValue:
+    case FeatureName:
+      m_FeatureValues = data;break;
+    case FeatureValue:
       m_K = data;break;
-    case FieldOperator:
+    case FeatureOperator:
       m_Beta = data;break;
     default:
       Q_ASSERT(false);
@@ -391,9 +391,9 @@ void QualityMetricTableModel::setColumnData(int col, QVector<float> &data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QualityMetricTableModel::setTableData( QVector<QString> fieldNames, QVector<float> fieldValues,  QVector<QString> fieldOperators, QVector<int> fieldPhaseValues)
+void QualityMetricTableModel::setTableData( QVector<QString> featureNames, QVector<float> featureValues,  QVector<QString> featureOperators, QVector<int> featurePhaseValues)
 {
-  qint32 count = fieldNames.count();
+  qint32 count = featureNames.count();
   qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
@@ -401,10 +401,10 @@ void QualityMetricTableModel::setTableData( QVector<QString> fieldNames, QVector
   if (count == 0) { return; }
   // Now mass insert the data to the table then emit that the data has changed
   beginInsertRows(QModelIndex(), row, row + count - 1);
-  m_FieldNames = fieldNames;
-  m_FieldValues = fieldValues;
-  m_FieldOperators = fieldOperators;
-  m_FieldPhaseValues = fieldPhaseValues;
+  m_FeatureNames = featureNames;
+  m_FeatureValues = featureValues;
+  m_FeatureOperators = featureOperators;
+  m_FeaturePhaseValues = featurePhaseValues;
   m_RowCount = count;
   endInsertRows();
   QModelIndex topLeft = createIndex(0, 0);
@@ -415,12 +415,12 @@ void QualityMetricTableModel::setTableData( QVector<QString> fieldNames, QVector
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QualityMetricTableModel::getTableData( QVector<QString> &fieldNames, QVector<float> &fieldValues,  QVector<QString> &fieldOperators, QVector<int> &fieldPhaseValues)
+void QualityMetricTableModel::getTableData( QVector<QString> &featureNames, QVector<float> &featureValues,  QVector<QString> &featureOperators, QVector<int> &featurePhaseValues)
 {
-  fieldNames = m_FieldNames;
-  fieldValues = m_FieldValues;
-  fieldOperators = m_FieldOperators;
-  fieldPhaseValues = m_FieldPhaseValues;
+  featureNames = m_FeatureNames;
+  featureValues = m_FeatureValues;
+  featureOperators = m_FeatureOperators;
+  featurePhaseValues = m_FeaturePhaseValues;
 }
 
 // -----------------------------------------------------------------------------
@@ -442,26 +442,26 @@ void QualityMetricTableModel::setNumberOfPhases(int n)
 // -----------------------------------------------------------------------------
 QAbstractItemDelegate* QualityMetricTableModel::getItemDelegate()
 {
-  return new QualityMetricItemDelegate(m_PossibleFields, m_NumberOfPhases);
+  return new QualityMetricItemDelegate(m_PossibleFeatures, m_NumberOfPhases);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QualityMetricTableModel::setPossibleFields(QStringList fields)
+void QualityMetricTableModel::setPossibleFeatures(QStringList features)
 {
-  m_PossibleFields = fields;
+  m_PossibleFeatures = features;
   QualityMetricItemDelegate* dlg = qobject_cast<QualityMetricItemDelegate*>(getItemDelegate());
   if (dlg)
   {
-    dlg->setFieldList(m_PossibleFields);
+    dlg->setFeatureList(m_PossibleFeatures);
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList QualityMetricTableModel::getPossibleFields()
+QStringList QualityMetricTableModel::getPossibleFeatures()
 {
-  return m_PossibleFields;
+  return m_PossibleFeatures;
 }

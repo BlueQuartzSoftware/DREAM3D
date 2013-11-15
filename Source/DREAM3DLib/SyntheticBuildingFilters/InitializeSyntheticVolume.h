@@ -61,7 +61,7 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
     //------ Required Ensemble Data
@@ -107,11 +107,11 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 
   private:
     // Cell Data - make sure these are all initialized to NULL in the constructor
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellPhases;
     bool* m_GoodVoxels;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     InitializeSyntheticVolume(const InitializeSyntheticVolume&); // Copy Constructor Not Implemented
     void operator=(const InitializeSyntheticVolume&); // Operator '=' Not Implemented

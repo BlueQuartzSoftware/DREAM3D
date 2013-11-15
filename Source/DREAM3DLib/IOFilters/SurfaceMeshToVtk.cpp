@@ -129,7 +129,7 @@ int SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -537,7 +537,7 @@ template<typename DataContainer, typename T>
 void writeCellScalarData(DataContainer* dc, const QString& dataName, const QString& dataType,
                          bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
-  // Write the Grain Face ID Data to the file
+  // Write the Feature Face ID Data to the file
   IDataArray::Pointer data = dc->getFaceData(dataName);
   QString buf;
   QTextStream ss(&buf);
@@ -724,8 +724,8 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
 
-  // Write the GrainId Data to the file
-  fprintf(vtkFile, "SCALARS GrainID int 1\n");
+  // Write the FeatureId Data to the file
+  fprintf(vtkFile, "SCALARS FeatureID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for(int i = 0; i < nT; ++i)
   {
@@ -784,7 +784,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   }
 #endif
 
-  writeCellScalarData<SurfaceDataContainer, int32_t>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getDataContainerName()), DREAM3D::FaceData::SurfaceMeshGrainFaceId,
+  writeCellScalarData<SurfaceDataContainer, int32_t>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getDataContainerName()), DREAM3D::FaceData::SurfaceMeshFeatureFaceId,
                                                      "int", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   writeCellScalarData<SurfaceDataContainer, double>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getDataContainerName()), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1,

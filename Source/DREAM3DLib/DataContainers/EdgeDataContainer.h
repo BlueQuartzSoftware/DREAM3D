@@ -81,17 +81,17 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
     virtual ~EdgeDataContainer();
 
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Edge)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (EdgeField)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (EdgeFeature)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (EdgeEnsemble)
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeFeatureData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(EdgeArray::Pointer, Edges)
 
     DOES_DATASET_EXIST_DECL(EdgeData)
-    DOES_DATASET_EXIST_DECL(EdgeFieldData)
+    DOES_DATASET_EXIST_DECL(EdgeFeatureData)
     DOES_DATASET_EXIST_DECL(EdgeEnsembleData)
 
 /* ************ THESE ARE GOING TO GO AWAY I THINK. THEY ARE HERE TO GET THINGS TO COMPILE ******* */
@@ -137,14 +137,14 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEdgeFieldData(const QString &name, IDataArray::Pointer data);
+    void addEdgeFeatureData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEdgeFieldData(const QString &name);
+    IDataArray::Pointer getEdgeFeatureData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -152,38 +152,38 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEdgeFieldData(const QString &name);
+    IDataArray::Pointer removeEdgeFeatureData(const QString &name);
 
     /**
-     * @brief Removes all the Field Arrays
+     * @brief Removes all the Feature Arrays
      */
-    void clearEdgeFieldData();
+    void clearEdgeFeatureData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Field (Formerly Grain) group
+     * Feature (Formerly Feature) group
      * @return
      */
-    QList<QString> getEdgeFieldArrayNameList();
+    QList<QString> getEdgeFeatureArrayNameList();
 
     /**
-     * @brief Returns the total number of arrays that are stored in the Field group
+     * @brief Returns the total number of arrays that are stored in the Feature group
      * @return
      */
-    int getNumEdgeFieldArrays();
+    int getNumEdgeFeatureArrays();
 
     /**
-     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeFieldTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeFeatureTuples)
 
     /**
-     * @brief Resizes all of the Field Arrays to have 'size' tuples
+     * @brief Resizes all of the Feature Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeEdgeFieldDataArrays(size_t size);
+    void resizeEdgeFeatureDataArrays(size_t size);
 
     /**
      * @brief Adds/overwrites the data for a named array
@@ -214,7 +214,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Ensemble (Formerly Grain) group
+     * Ensemble (Formerly Feature) group
      * @return
      */
     QList<QString> getEdgeEnsembleArrayNameList();
@@ -226,7 +226,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
     int getNumEdgeEnsembleArrays();
 
     /**
-     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
@@ -246,7 +246,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
    private:
 
      QMap<QString, IDataArray::Pointer> m_EdgeData;
-     QMap<QString, IDataArray::Pointer> m_EdgeFieldData;
+     QMap<QString, IDataArray::Pointer> m_EdgeFeatureData;
      QMap<QString, IDataArray::Pointer> m_EdgeEnsembleData;
 
      EdgeDataContainer(const EdgeDataContainer&);

@@ -70,11 +70,11 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const QString getHumanLabel() { return "Read Ph File (Grain Ids)"; }
+    virtual const QString getHumanLabel() { return "Read Ph File (Feature Ids)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -98,10 +98,10 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     virtual int readHeader();
     virtual int readFile();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     size_t m_Dims[3];
     FILE* m_InStream;
 

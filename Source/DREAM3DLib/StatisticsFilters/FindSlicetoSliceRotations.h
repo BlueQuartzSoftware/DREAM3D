@@ -115,7 +115,7 @@ class DREAM3DLib_EXPORT FindSlicetoSliceRotations : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindSlicetoSliceRotations(const FindSlicetoSliceRotations&); // Copy Constructor Not Implemented
     void operator=(const FindSlicetoSliceRotations&); // Operator '=' Not Implemented

@@ -14,7 +14,7 @@ The user is able to select which arrays from the DREAM3D data file to read. Ther
 |------|------|
 | Input File | File Path |
 | Read Cell Data | Boolean (On or Off) |
-| Read Field Data | Boolean (On or Off) |
+| Read Feature Data | Boolean (On or Off) |
 | Read Ensemble Data | Boolean (On or Off) |
 
 ## Required DataContainers ##
@@ -26,7 +26,7 @@ None
 ## Created Arrays ##
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell/Field/Ensemble | *User Chosen* |  | Array(s) will always be present in file, since the user may only chose from arrays found by the reader |
+| Cell/Feature/Ensemble | *User Chosen* |  | Array(s) will always be present in file, since the user may only chose from arrays found by the reader |
 
 
 ## Authors ##

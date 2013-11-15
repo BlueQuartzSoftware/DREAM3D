@@ -6,7 +6,7 @@ I/O Filters
 
 
 ## Description ##
-This Filter reads the **Field** and phase ids together with image parameters required by Vtk to an output file named by the user. The file is used to generate the image of the **Fields** and phases of the **Fields**.
+This Filter reads the **Feature** and phase ids together with image parameters required by Vtk to an output file named by the user. The file is used to generate the image of the **Features** and phases of the **Features**.
 
 
 ## Parameters ##
@@ -14,7 +14,7 @@ This Filter reads the **Field** and phase ids together with image parameters req
 | Name | Type |
 |------|------|
 | Output File | Output File |
-| Write **Field** Ids | Boolean (On or Off) |
+| Write **Feature** Ids | Boolean (On or Off) |
 | Write Phase Ids | Boolean (On or Off) |
 | Write Band Contrasts | Boolean (On or Off) |
 | Write KAM Value | Boolean (On or Off) |
@@ -31,7 +31,7 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Fields (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
+| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
 
 ## Created Arrays ##
 None

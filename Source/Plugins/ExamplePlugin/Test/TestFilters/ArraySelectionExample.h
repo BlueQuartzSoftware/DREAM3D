@@ -74,24 +74,24 @@ class ArraySelectionExample : public AbstractFilter
     typedef QSet<QString> ArrayList_t;
 
     virtual void setVoxelSelectedArrayNames(QSet<QString> selectedCellArrays,
-                                            QSet<QString> selectedFieldArrays,
+                                            QSet<QString> selectedFeatureArrays,
                                             QSet<QString> selectedEnsembleArrays);
     virtual void setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                   QSet<QString> selectedFaceArrays,
                                                   QSet<QString> selectedEdgeArrays,
-                                                  QSet<QString> selectedFieldArrays,
+                                                  QSet<QString> selectedFeatureArrays,
                                                   QSet<QString> selectedEnsembleArrays);
     virtual void setSolidMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                 QSet<QString> selectedFaceArrays,
                                                 QSet<QString> selectedEdgeArrays);
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelFeatureArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelEnsembleArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFeatureArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEnsembleArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshFaceArrays)
@@ -102,7 +102,7 @@ class ArraySelectionExample : public AbstractFilter
     // -----------------------------------------------------------------------------
     /* Each Filter can ONLY have ONE of these types of widgets */
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, CellComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, FieldComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, FeatureComparisonInputs)
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, EnsembleComparisonInputs)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, PointComparisonInputs)
@@ -175,10 +175,10 @@ class ArraySelectionExample : public AbstractFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
 

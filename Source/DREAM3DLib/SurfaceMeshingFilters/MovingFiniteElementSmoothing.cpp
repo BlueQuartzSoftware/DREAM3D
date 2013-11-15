@@ -233,7 +233,7 @@ int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 

@@ -45,7 +45,7 @@
 /**
  * @class MovingFiniteElementSmoothing MovingFiniteElementSmoothing.h /Code/Filters/MovingFiniteElementSmoothing.h
  * @brief The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient Weighted Moving
- * Finite Element method [SIAM].  A conformal triangular surface mesh represents the grain
+ * Finite Element method [SIAM].  A conformal triangular surface mesh represents the feature
  *  boundary network.  The curvature at each node is computed and used as the driving
  *  force for nodal motion. Additional forces are computed based on element
  *  quality. The user can choose a balance between the curvature and element quality
@@ -127,10 +127,10 @@ class DREAM3DLib_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
     int8_t*  m_SurfaceMeshNodeType;

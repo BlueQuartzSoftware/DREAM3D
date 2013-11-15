@@ -44,8 +44,8 @@
 #include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindSurfaceFeatures.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -55,17 +55,17 @@
 GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
-  m_VolumesArrayName(DREAM3D::FieldData::Volumes),
-  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
-  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-  m_AspectRatiosArrayName(DREAM3D::FieldData::AspectRatios),
-  m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
-  m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
-  m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
+  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
+  m_AspectRatiosArrayName(DREAM3D::FeatureData::AspectRatios),
+  m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
+  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
+  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
@@ -82,11 +82,11 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_CalculateMDF(false),
   m_CalculateAxisODF(false),
   m_AvgQuats(NULL),
-  m_FieldEulerAngles(NULL),
+  m_FeatureEulerAngles(NULL),
   m_Volumes(NULL),
-  m_BiasedFields(NULL),
-  m_SurfaceFields(NULL),
-  m_FieldPhases(NULL),
+  m_BiasedFeatures(NULL),
+  m_SurfaceFeatures(NULL),
+  m_FeaturePhases(NULL),
   m_AxisEulerAngles(NULL),
   m_Omega3s(NULL),
   m_AspectRatios(NULL),
@@ -157,39 +157,39 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, dims)
 
   if(m_SizeDistribution == true || m_Omega3Distribution == true
       || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, -302, bool, BoolArrayType, fields, dims)
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, BiasedFeatures, -302, bool, BoolArrayType, features, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, -302, float, FloatArrayType, features, dims)
   }
   if(m_NeighborhoodDistribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, -304, int32_t, Int32ArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Neighborhoods, -304, int32_t, Int32ArrayType, features, dims)
   }
   if(m_AspectRatioDistribution == true)
   {
     dims[0] = 2;
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, -307, float, FloatArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AspectRatios, -307, float, FloatArrayType, features, dims)
   }
   if(m_Omega3Distribution == true)
   {
     dims[0] = 1;
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, -306, float, FloatArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Omega3s, -306, float, FloatArrayType, features, dims)
   }
   if(m_CalculateAxisODF == true)
   {
     dims[0] = 3;
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, -305, float, FloatArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisEulerAngles, -305, float, FloatArrayType, features, dims)
   }
 
 
@@ -198,20 +198,20 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
     dims[0] = 1;
     typedef DataArray<unsigned int> XTalStructArrayType;
     GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, -302, bool, BoolArrayType, features, dims)
   }
   if(m_CalculateODF == true)
   {
     dims[0] = 1;
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, -304, float, FloatArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, -304, float, FloatArrayType, features, dims)
     dims[0] = 3;
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -302, float, FloatArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, -302, float, FloatArrayType, features, dims)
   }
   if(m_CalculateMDF == true)
   {
     dims[0] = 4;
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
-    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getCellFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -301, float, FloatArrayType, features, dims)
+    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getCellFeatureData(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {
 
@@ -220,7 +220,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
       addErrorMessage(getHumanLabel(), ss, -306);
     }
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFeatureData(DREAM3D::FeatureData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
 
@@ -300,9 +300,9 @@ void GenerateEnsembleStatistics::execute()
 
 
   //  int totalPoints = m->getTotalPoints();
-  //  int totalFields = m->getNumCellFieldTuples();
+  //  int totalFeatures = m->getNumCellFeatureTuples();
   int totalEnsembles = m->getNumCellEnsembleTuples();
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -339,7 +339,7 @@ void GenerateEnsembleStatistics::execute()
   m_StatsDataArray->fillArrayWithNewStatsData(totalEnsembles, m_PhaseTypes);
   m->addCellEnsembleData(DREAM3D::EnsembleData::Statistics, p);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
 
   if(m_SizeDistribution == true)
   {
@@ -389,7 +389,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   QVector<QVector<QVector<float > > > values;
 
   FloatArrayType::Pointer binnumbers;
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
 
   QVector<float> fractions(numensembles, 0.0);
@@ -403,13 +403,13 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   }
 
   float vol;
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    if(m_BiasedFields[i] == false)
+    if(m_BiasedFeatures[i] == false)
     {
-      values[m_FieldPhases[i]][0].push_back(m_EquivalentDiameters[i]);
+      values[m_FeaturePhases[i]][0].push_back(m_EquivalentDiameters[i]);
       vol = (1.0 / 6.0) * DREAM3D::Constants::k_Pi * m_EquivalentDiameters[i] * m_EquivalentDiameters[i] * m_EquivalentDiameters[i];
-      fractions[m_FieldPhases[i]] = fractions[m_FieldPhases[i]] + vol;
+      fractions[m_FeaturePhases[i]] = fractions[m_FeaturePhases[i]] + vol;
       totalUnbiasedVolume = totalUnbiasedVolume + vol;
     }
   }
@@ -420,10 +420,10 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
-      pp->setGrainSizeDistribution(sizedist[i]);
+      pp->setFeatureSizeDistribution(sizedist[i]);
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
-      pp->setGrainDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
+      pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
       DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
       pp->setBinNumbers(binnumbers);
@@ -433,10 +433,10 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
-      pp->setGrainSizeDistribution(sizedist[i]);
+      pp->setFeatureSizeDistribution(sizedist[i]);
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
-      pp->setGrainDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
+      pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
       DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
 
@@ -447,10 +447,10 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       tp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
-      tp->setGrainSizeDistribution(sizedist[i]);
+      tp->setFeatureSizeDistribution(sizedist[i]);
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
-      tp->setGrainDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
+      tp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
       DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
 
@@ -474,7 +474,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   QVector<QVector<QVector<float> > > cvalues;
   QVector<float> mindiams;
   QVector<float> binsteps;
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
 
   boveras.resize(numensembles);
@@ -492,7 +492,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
       coveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->GetSize());
       bvalues[i].resize(pp->getBinNumbers()->GetSize());
       cvalues[i].resize(pp->getBinNumbers()->GetSize());
-      mindiams[i] = pp->getMinGrainDiameter();
+      mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -502,7 +502,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
       coveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->GetSize());
       bvalues[i].resize(pp->getBinNumbers()->GetSize());
       cvalues[i].resize(pp->getBinNumbers()->GetSize());
-      mindiams[i] = pp->getMinGrainDiameter();
+      mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
@@ -512,17 +512,17 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
       coveras[i] = tp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, tp->getBinNumbers()->GetSize());
       bvalues[i].resize(tp->getBinNumbers()->GetSize());
       cvalues[i].resize(tp->getBinNumbers()->GetSize());
-      mindiams[i] = tp->getMinGrainDiameter();
+      mindiams[i] = tp->getMinFeatureDiameter();
       binsteps[i] = tp->getBinStepSize();
     }
   }
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    if(m_BiasedFields[i] == false)
+    if(m_BiasedFeatures[i] == false)
     {
-      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FieldPhases[i]]) / binsteps[m_FieldPhases[i]]);
-      bvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2 * i]);
-      cvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2 * i + 1]);
+      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FeaturePhases[i]]) / binsteps[m_FeaturePhases[i]]);
+      bvalues[m_FeaturePhases[i]][bin].push_back(m_AspectRatios[2 * i]);
+      cvalues[m_FeaturePhases[i]][bin].push_back(m_AspectRatios[2 * i + 1]);
     }
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -532,24 +532,24 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
-      pp->setGrainSize_BOverA(boveras[i]);
-      pp->setGrainSize_COverA(coveras[i]);
+      pp->setFeatureSize_BOverA(boveras[i]);
+      pp->setFeatureSize_COverA(coveras[i]);
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
-      pp->setGrainSize_BOverA(boveras[i]);
-      pp->setGrainSize_COverA(coveras[i]);
+      pp->setFeatureSize_BOverA(boveras[i]);
+      pp->setFeatureSize_COverA(coveras[i]);
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
-      tp->setGrainSize_BOverA(boveras[i]);
-      tp->setGrainSize_COverA(coveras[i]);
+      tp->setFeatureSize_BOverA(boveras[i]);
+      tp->setFeatureSize_COverA(coveras[i]);
     }
   }
 }
@@ -570,7 +570,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   QVector<QVector<QVector<float> > > values;
   QVector<float> mindiams;
   QVector<float> binsteps;
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
 
   omega3s.resize(numensembles);
@@ -584,7 +584,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       omega3s[i] = pp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, pp->getBinNumbers()->GetSize());
       values[i].resize(pp->getBinNumbers()->GetSize());
-      mindiams[i] = pp->getMinGrainDiameter();
+      mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -592,7 +592,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       omega3s[i] = pp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, pp->getBinNumbers()->GetSize());
       values[i].resize(pp->getBinNumbers()->GetSize());
-      mindiams[i] = pp->getMinGrainDiameter();
+      mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
@@ -600,16 +600,16 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       omega3s[i] = tp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, tp->getBinNumbers()->GetSize());
       values[i].resize(tp->getBinNumbers()->GetSize());
-      mindiams[i] = tp->getMinGrainDiameter();
+      mindiams[i] = tp->getMinFeatureDiameter();
       binsteps[i] = tp->getBinStepSize();
     }
   }
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    if(m_BiasedFields[i] == false)
+    if(m_BiasedFeatures[i] == false)
     {
-      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FieldPhases[i]]) / binsteps[m_FieldPhases[i]]);
-      values[m_FieldPhases[i]][bin].push_back(m_Omega3s[i]);
+      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FeaturePhases[i]]) / binsteps[m_FeaturePhases[i]]);
+      values[m_FeaturePhases[i]][bin].push_back(m_Omega3s[i]);
     }
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -618,19 +618,19 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
-      pp->setGrainSize_Omegas(omega3s[i]);
+      pp->setFeatureSize_Omegas(omega3s[i]);
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
-      pp->setGrainSize_Omegas(omega3s[i]);
+      pp->setFeatureSize_Omegas(omega3s[i]);
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
-      tp->setGrainSize_Omegas(omega3s[i]);
+      tp->setFeatureSize_Omegas(omega3s[i]);
     }
   }
 }
@@ -645,7 +645,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
   QVector<QVector<QVector<float > > > values;
   QVector<float> mindiams;
   QVector<float> binsteps;
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
 
   neighborhoods.resize(numensembles);
@@ -659,7 +659,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       neighborhoods[i] = pp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, pp->getBinNumbers()->GetSize());
       values[i].resize(pp->getBinNumbers()->GetSize());
-      mindiams[i] = pp->getMinGrainDiameter();
+      mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -667,7 +667,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       neighborhoods[i] = pp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, pp->getBinNumbers()->GetSize());
       values[i].resize(pp->getBinNumbers()->GetSize());
-      mindiams[i] = pp->getMinGrainDiameter();
+      mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
@@ -675,17 +675,17 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       neighborhoods[i] = tp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, tp->getBinNumbers()->GetSize());
       values[i].resize(tp->getBinNumbers()->GetSize());
-      mindiams[i] = tp->getMinGrainDiameter();
+      mindiams[i] = tp->getMinFeatureDiameter();
       binsteps[i] = tp->getBinStepSize();
     }
   }
 
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    if(m_BiasedFields[i] == false)
+    if(m_BiasedFeatures[i] == false)
     {
-      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FieldPhases[i]]) / binsteps[m_FieldPhases[i]]);
-      values[m_FieldPhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
+      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FeaturePhases[i]]) / binsteps[m_FeaturePhases[i]]);
+      values[m_FeaturePhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
     }
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -694,19 +694,19 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
-      pp->setGrainSize_Neighbors(neighborhoods[i]);
+      pp->setFeatureSize_Neighbors(neighborhoods[i]);
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
-      pp->setGrainSize_Clustering(neighborhoods[i]);
+      pp->setFeatureSize_Clustering(neighborhoods[i]);
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
-      tp->setGrainSize_Neighbors(neighborhoods[i]);
+      tp->setFeatureSize_Neighbors(neighborhoods[i]);
     }
   }
 
@@ -720,7 +720,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   size_t bin;
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   int phase;
   QVector<float> totalvol;
   QVector<FloatArrayType::Pointer> eulerodf;
@@ -754,24 +754,24 @@ void GenerateEnsembleStatistics::gatherODFStats()
   }
   float ea1, ea2, ea3;
   float r1, r2, r3;
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    if (m_SurfaceFields[i] == false)
+    if (m_SurfaceFeatures[i] == false)
     {
-      totalvol[m_FieldPhases[i]] = totalvol[m_FieldPhases[i]] + m_Volumes[i];
+      totalvol[m_FeaturePhases[i]] = totalvol[m_FeaturePhases[i]] + m_Volumes[i];
     }
   }
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    if (m_SurfaceFields[i] == false)
+    if (m_SurfaceFeatures[i] == false)
     {
-      ea1 = m_FieldEulerAngles[3 * i];
-      ea2 = m_FieldEulerAngles[3 * i + 1];
-      ea3 = m_FieldEulerAngles[3 * i + 2];
-      phase = m_CrystalStructures[m_FieldPhases[i]];
+      ea1 = m_FeatureEulerAngles[3 * i];
+      ea2 = m_FeatureEulerAngles[3 * i + 1];
+      ea3 = m_FeatureEulerAngles[3 * i + 2];
+      phase = m_CrystalStructures[m_FeaturePhases[i]];
       OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
-      eulerodf[m_FieldPhases[i]]->SetValue(bin, (eulerodf[m_FieldPhases[i]]->GetValue(bin) + (m_Volumes[i] / totalvol[m_FieldPhases[i]])));
+      eulerodf[m_FeaturePhases[i]]->SetValue(bin, (eulerodf[m_FeaturePhases[i]]->GetValue(bin) + (m_Volumes[i] / totalvol[m_FeaturePhases[i]])));
     }
   }
 
@@ -818,7 +818,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   unsigned int phase1, phase2;
   QVector<float> totalSurfaceArea;
   QVector<FloatArrayType::Pointer> misobin;
@@ -849,26 +849,26 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   }
   size_t nname;
   float nsa;
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
-    phase1 = m_CrystalStructures[m_FieldPhases[i]];
+    phase1 = m_CrystalStructures[m_FeaturePhases[i]];
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = 10000.0;
       nname = neighborlist[i][j];
       QuaternionMathF::Copy(avgQuats[nname], q2);
-      phase2 = m_CrystalStructures[m_FieldPhases[nname]];
+      phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
       if (phase1 == phase2) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
       if (phase1 == phase2)
       {
         OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-        if ((nname > i || m_SurfaceFields[nname] == true))
+        if ((nname > i || m_SurfaceFeatures[nname] == true))
         {
           mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);
           nsa = neighborsurfacearealist[i][j];
-          misobin[m_FieldPhases[i]]->SetValue(mbin, (misobin[m_FieldPhases[i]]->GetValue(mbin) + nsa));
-          totalSurfaceArea[m_FieldPhases[i]] = totalSurfaceArea[m_FieldPhases[i]] + nsa;
+          misobin[m_FeaturePhases[i]]->SetValue(mbin, (misobin[m_FeaturePhases[i]]->GetValue(mbin) + nsa));
+          totalSurfaceArea[m_FeaturePhases[i]] = totalSurfaceArea[m_FeaturePhases[i]] + nsa;
         }
       }
     }
@@ -929,25 +929,25 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
       axisodf[i]->SetValue(j, 0.0);
     }
   }
-  size_t numgrains = m->getNumCellFieldTuples();
-  for (size_t i = 1; i < numgrains; i++)
+  size_t numfeatures = m->getNumCellFeatureTuples();
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    if(m_SurfaceFields[i] == false)
+    if(m_SurfaceFeatures[i] == false)
     {
-      totalaxes[m_FieldPhases[i]]++;
+      totalaxes[m_FeaturePhases[i]]++;
     }
   }
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
     float ea1 = m_AxisEulerAngles[3 * i];
     float ea2 = m_AxisEulerAngles[3 * i + 1];
     float ea3 = m_AxisEulerAngles[3 * i + 2];
-    if(m_SurfaceFields[i] == 0)
+    if(m_SurfaceFeatures[i] == 0)
     {
       OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
-      axisodf[m_FieldPhases[i]]->SetValue(bin, (axisodf[m_FieldPhases[i]]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FieldPhases[i]]))));
+      axisodf[m_FeaturePhases[i]]->SetValue(bin, (axisodf[m_FeaturePhases[i]]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FeaturePhases[i]]))));
     }
   }
   // int err;

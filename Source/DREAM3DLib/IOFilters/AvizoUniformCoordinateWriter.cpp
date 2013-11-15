@@ -48,10 +48,10 @@
 AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_WriteGrainIds(true),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_WriteFeatureIds(true),
   m_WriteBinaryFile(false),
-  m_GrainIds(NULL)
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -117,7 +117,7 @@ int AvizoUniformCoordinateWriter::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AvizoUniformCoordinateWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AvizoUniformCoordinateWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -128,10 +128,10 @@ void AvizoUniformCoordinateWriter::dataCheck(bool preflight, size_t voxels, size
     addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
-  if(m_WriteGrainIds == true)
+  if(m_WriteFeatureIds == true)
   {
     QVector<int> dims(1 ,1);
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
   }
 }
 
@@ -181,10 +181,10 @@ void AvizoUniformCoordinateWriter::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalFeatures = m->getNumCellFeatureTuples();
   size_t totalEnsembleTuples = m->getNumCellEnsembleTuples();
 
-  dataCheck(false, totalPoints, totalFields, totalEnsembleTuples);
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembleTuples);
 
 
   QFile writer(getOutputFile());
@@ -250,7 +250,7 @@ void AvizoUniformCoordinateWriter::generateHeader(QDataStream& ss)
   ss << "     CoordType \"uniform\"\n";
   ss << "}\n\n";
 
-  ss << "Lattice { int GrainIds } = @1\n\n";
+  ss << "Lattice { int FeatureIds } = @1\n\n";
 
   ss << "# Data section follows\n";
 
@@ -265,7 +265,7 @@ int AvizoUniformCoordinateWriter::writeData(QDataStream& out)
   out << start;
   if(true == m_WriteBinaryFile)
   {
-    out.writeRawData(reinterpret_cast<char*>(m_GrainIds), getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints() * sizeof(int32_t));
+    out.writeRawData(reinterpret_cast<char*>(m_FeatureIds), getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints() * sizeof(int32_t));
   }
   else
   {
@@ -274,7 +274,7 @@ int AvizoUniformCoordinateWriter::writeData(QDataStream& out)
     int count = 0;
     for (int64_t i = 0; i < totalPoints; ++i)
     {
-      out << m_GrainIds[i];
+      out << m_FeatureIds[i];
       if(count < 20)
       {
         out << " ";

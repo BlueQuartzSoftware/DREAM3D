@@ -263,7 +263,7 @@ int VerifyTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -291,7 +291,7 @@ void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fiel
   if (sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels).get() == NULL)
   {
     setErrorCondition(-386);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Face Grain Id Labels", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Face Feature Id Labels", getErrorCondition());
   }
 
   if (sm->getEdgeData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
@@ -404,7 +404,7 @@ void VerifyTriangleWinding::execute()
 }
 
 // -----------------------------------------------------------------------------
-// Groups the triangles according to which Grain they are a part of
+// Groups the triangles according to which Feature they are a part of
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t& trianglesToLabelMap)
 {
@@ -423,7 +423,7 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t& trianglesToLabel
   int ntri = masterFaceList->getNumberOfTuples();
   //FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
 
-  // Loop over all the triangles and group them according to which grain/region they are a part of
+  // Loop over all the triangles and group them according to which feature/region they are a part of
   for(int t = 0; t < ntri; ++t)
   {
     int32_t* label = faceLabels + t * 2;
@@ -570,18 +570,18 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   mesh->setMaxLabel(max);
   mesh->setMinLabel(min);
 
-  // Get a grouping of triangles by grain ID
+  // Get a grouping of triangles by feature ID
   LabelFaceMap_t trianglesToLabelMap;
   getLabelTriangelMap(trianglesToLabelMap);
   //  for(LabelFaceMap_t::iterator iter = trianglesToLabelMap.begin(); iter != trianglesToLabelMap.end(); ++iter)
   //  {
-  //    qDebug() << "Grain: " << iter.key() << "   Face Count: " << iter.value().size() << "\n";
+  //    qDebug() << "Feature: " << iter.key() << "   Face Count: " << iter.value().size() << "\n";
   //  }
 
 
   int32_t currentLabel = 0;
 
-  // Find the first Non Zero Grain Id (Label). This is going to be our starting grain.
+  // Find the first Non Zero Feature Id (Label). This is going to be our starting feature.
   for(LabelFaceMap_t::iterator iter = trianglesToLabelMap.begin(); iter != trianglesToLabelMap.end(); ++iter)
   {
     if ( iter.key() > 0)
@@ -606,7 +606,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   // FaceArray::Face_t& triangle = triangles[triIndex];
 
 
-  // Now that we have the starting Grain, lets try and get a seed triangle that is oriented in the proper direction.
+  // Now that we have the starting Feature, lets try and get a seed triangle that is oriented in the proper direction.
   /* Make sure the winding is correct on the first triangle of the first label that will be checked. */
   triIndex = getSeedTriangle(currentLabel, trianglesToLabelMap[currentLabel]);
   if (getErrorCondition() < 0 || triIndex < 0)
@@ -624,7 +624,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   int progressIndex = 0;
 
 
-  // Start looping on all the Face Labels (Grain Ids) values
+  // Start looping on all the Face Labels (Feature Ids) values
   while (labelObjectsToVisit.empty() == false)
   {
     if (getCancel() == true) { return -1; }
@@ -690,7 +690,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
           //    qDebug() << "   * Checking Winding: " << *adjTri << "\n";
           if (TriangleOps::verifyWinding(triangle, triangles[*adjTri], faceLabel, faceLabels + (*adjTri * 2), currentLabel) == true)
           {
-            //   qDebug() << "Face winding flipped for triangle id = " << *adjTri << " Grain Id: " << currentLabel << "\n";
+            //   qDebug() << "Face winding flipped for triangle id = " << *adjTri << " Feature Id: " << currentLabel << "\n";
           }
         }
 

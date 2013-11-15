@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT FindTwinBoundarySchmidFactors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -116,15 +116,15 @@ class DREAM3DLib_EXPORT FindTwinBoundarySchmidFactors : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_AvgQuats;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     unsigned int* m_CrystalStructures;
     int32_t* m_SurfaceMeshFaceLabels;
     double* m_SurfaceMeshFaceNormals;
     bool* m_SurfaceMeshTwinBoundary;
     float* m_SurfaceMeshTwinBoundarySchmidFactors;
 
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindTwinBoundarySchmidFactors(const FindTwinBoundarySchmidFactors&); // Copy Constructor Not Implemented
     void operator=(const FindTwinBoundarySchmidFactors&); // Operator '=' Not Implemented

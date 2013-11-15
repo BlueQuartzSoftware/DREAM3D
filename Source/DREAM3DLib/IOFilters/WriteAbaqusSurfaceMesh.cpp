@@ -109,7 +109,7 @@ int WriteAbaqusSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   if (m_OutputFile.isEmpty() == true)
@@ -185,7 +185,7 @@ void WriteAbaqusSurfaceMesh::execute()
   VertexArray::Pointer nodesPtr = sm->getVertices();
   FaceArray::Pointer trianglePtr = sm->getFaces();
 
-  // Get the Labels(GrainIds or Region Ids) for the triangles
+  // Get the Labels(FeatureIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
@@ -204,7 +204,7 @@ void WriteAbaqusSurfaceMesh::execute()
   err = writeHeader(f, nodesPtr->getNumberOfTuples(), trianglePtr->getNumberOfTuples(), uniqueSpins.size() - 1);
   err = writeNodes(f);
   err = writeTriangles(f);
-  err = writeGrains(f);
+  err = writeFeatures(f);
 
   setErrorCondition(0);
   notifyStatusMessage("Complete");
@@ -215,7 +215,7 @@ void WriteAbaqusSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, int grainCount)
+int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, int featureCount)
 {
   if (NULL == f)
   {
@@ -223,7 +223,7 @@ int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, in
   }
   fprintf(f, "*HEADING\n");
   fprintf(f, "** File Created with DREAM3D Version %s.%s\n", DREAM3DLib::Version::Major().toLatin1().data(), DREAM3DLib::Version::Minor().toLatin1().data());
-  fprintf(f, "**Number of Nodes: %d     Number of Triangles: %d   Number of Grains: %d\n", nodeCount, triCount, grainCount);
+  fprintf(f, "**Number of Nodes: %d     Number of Triangles: %d   Number of Features: %d\n", nodeCount, triCount, featureCount);
   fprintf(f, "*PREPRINT,ECHO=NO,HISTORY=NO,MODEL=NO\n");
   return 0;
 }
@@ -275,17 +275,17 @@ int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
+int WriteAbaqusSurfaceMesh::writeFeatures(FILE* f)
 {
 
-//*Elset, elset=Grain1
+//*Elset, elset=Feature1
 //1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
 
   int err = 0;
 
   VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
   FaceArray::Pointer trianglePtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
-  // Get the Labels(GrainIds or Region Ids) for the triangles
+  // Get the Labels(FeatureIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
@@ -308,10 +308,10 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
     spin = *spinIter;
     if(spin < 0) { continue; }
 
-    fprintf(f, "*ELSET, ELSET=Grain%d\n", spin);
+    fprintf(f, "*ELSET, ELSET=Feature%d\n", spin);
 
     {
-      QString ss = QObject::tr("Writing ELSET for Grain Id %1").arg(spin);
+      QString ss = QObject::tr("Writing ELSET for Feature Id %1").arg(spin);
       notifyStatusMessage(ss);
     }
 

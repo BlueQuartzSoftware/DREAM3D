@@ -97,7 +97,7 @@ void PMFilterGenerator::generateOutput()
     return;
   }
 
-  //Get text field values from widget
+  //Get text feature values from widget
   QString pluginName = getPluginName();
   QString pluginDir = getOutputDir();
 

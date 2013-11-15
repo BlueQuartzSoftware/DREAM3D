@@ -48,7 +48,7 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 FindAxisODF::FindAxisODF() :
-  AbstractFilter(), m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles), m_FieldPhasesArrayName(DREAM3D::FieldData::Phases), m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields), m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes), m_SurfaceFields(NULL), m_FieldPhases(NULL), m_AxisEulerAngles(NULL), m_PhaseTypes(NULL)
+  AbstractFilter(), m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles), m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases), m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures), m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes), m_SurfaceFeatures(NULL), m_FeaturePhases(NULL), m_AxisEulerAngles(NULL), m_PhaseTypes(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
@@ -88,29 +88,29 @@ int FindAxisODF::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, -301, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FeatureData, AxisEulerAngles, -301, float, FloatArrayType, features, 3)
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
+  TEST_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, err, -302, bool, BoolArrayType, features, 1)
   if(err == -302)
   {
     setErrorCondition(0);
-    FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-    find_surfacefields->setObservers(this->getObservers());
-    find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) { find_surfacefields->preflight(); }
-    if(preflight == false) { find_surfacefields->execute(); }
+    FindSurfaceGrains::Pointer find_surfacefeatures = FindSurfaceGrains::New();
+    find_surfacefeatures->setObservers(this->getObservers());
+    find_surfacefeatures->setVoxelDataContainer(getVoxelDataContainer());
+    if(preflight == true) { find_surfacefeatures->preflight(); }
+    if(preflight == false) { find_surfacefeatures->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, -302, bool, BoolArrayType, features, 1)
 
   err = 0;
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303, int32_t, Int32ArrayType, fields, 1)
+  TEST_PREREQ_DATA(m, DREAM3D, FeatureData, FeaturePhases, err, -303, int32_t, Int32ArrayType, features, 1)
   if(err == -303)
   {
     setErrorCondition(0);
@@ -120,7 +120,7 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     if(preflight == true) { find_grainphases->preflight(); }
     if(preflight == false) { find_grainphases->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, 1)
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
@@ -156,7 +156,7 @@ void FindAxisODF::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFeatureTuples(), m->getNumEnsembleTuples());
   if(getErrorCondition() < 0)
   {
     return;
@@ -183,12 +183,12 @@ void FindAxisODF::execute()
       axisodf[i]->SetValue(j, 0.0);
     }
   }
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumFeatureTuples();
   for (size_t i = 0; i < numgrains; i++)
   {
-    if(m_SurfaceFields[i] == false)
+    if(m_SurfaceFeatures[i] == false)
     {
-      totalaxes[m_FieldPhases[i]]++;
+      totalaxes[m_FeaturePhases[i]]++;
     }
   }
   for (size_t i = 1; i < numgrains; i++)
@@ -196,12 +196,12 @@ void FindAxisODF::execute()
     float ea1 = m_AxisEulerAngles[3 * i];
     float ea2 = m_AxisEulerAngles[3 * i + 1];
     float ea3 = m_AxisEulerAngles[3 * i + 2];
-    if(m_SurfaceFields[i] == 0)
+    if(m_SurfaceFeatures[i] == 0)
     {
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
-      axisodf[m_FieldPhases[i]]->SetValue(bin, (axisodf[m_FieldPhases[i]]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FieldPhases[i]]))));
+      axisodf[m_FeaturePhases[i]]->SetValue(bin, (axisodf[m_FeaturePhases[i]]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FeaturePhases[i]]))));
     }
   }
   // int err;

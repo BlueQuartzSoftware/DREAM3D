@@ -63,13 +63,13 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-    virtual const QString getHumanLabel() { return "Write Dx File (Grain Ids)"; }
+    virtual const QString getHumanLabel() { return "Write Dx File (Feature Ids)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -93,9 +93,9 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     virtual int writeFile();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     DxWriter(const DxWriter&); // Copy Constructor Not Implemented
     void operator=(const DxWriter&); // Operator '=' Not Implemented

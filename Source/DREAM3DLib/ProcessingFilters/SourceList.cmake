@@ -34,8 +34,8 @@ set(_PublicFilters
   IdentifySample
   SingleThresholdCells
   MultiThresholdCells
-  SingleThresholdFields
-  MultiThresholdFields
+  SingleThresholdFeatures
+  MultiThresholdFeatures
 )
 
 

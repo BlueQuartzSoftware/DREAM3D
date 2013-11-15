@@ -81,9 +81,9 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-    //------ Required Field Data
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const QString getHumanLabel() { return "Find Grain Boundary Strength Metrics"; }
+    virtual const QString getHumanLabel() { return "Find Feature Boundary Strength Metrics"; }
 
     virtual void setupFilterParameters();
     /**
@@ -128,7 +128,7 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     float* m_AvgQuats;
     unsigned int* m_CrystalStructures;
 
@@ -138,8 +138,8 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     float* m_SurfaceMeshF7s;
     float* m_SurfaceMeshmPrimes;
 
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindBoundaryStrengths(const FindBoundaryStrengths&); // Copy Constructor Not Implemented
     void operator=(const FindBoundaryStrengths&); // Operator '=' Not Implemented

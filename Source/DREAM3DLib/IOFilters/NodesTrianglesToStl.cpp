@@ -136,7 +136,7 @@ int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -344,12 +344,12 @@ void NodesTrianglesToStl::execute()
     ScopedFileMonitor fPtr(f);
 
     {
-      QString ss = QObject::tr("Writing STL for Grain Id %1").arg(spin);
+      QString ss = QObject::tr("Writing STL for Feature Id %1").arg(spin);
       notifyStatusMessage(ss);
     }
 
     {
-      QString ss = "DREAM3D Generated For Grain ID " + QString::number(spin);
+      QString ss = "DREAM3D Generated For Feature ID " + QString::number(spin);
       err = writeHeader(f, ss, 0);
     }
     triCount = 0; // Reset this to Zero. Increment for every triangle written
@@ -415,7 +415,7 @@ void NodesTrianglesToStl::execute()
       if (totalWritten != 50)
       {
 
-        QString ss = QObject::tr("Error Writing STL File. Not enough elements written for grain id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
+        QString ss = QObject::tr("Error Writing STL File. Not enough elements written for feature id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
         notifyErrorMessage(ss, -1201);
       }
       triCount++;

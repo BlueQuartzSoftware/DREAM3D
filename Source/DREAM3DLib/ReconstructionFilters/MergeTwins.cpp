@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 #include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
 
 
@@ -66,22 +66,22 @@
 MergeTwins::MergeTwins() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_ActiveArrayName(DREAM3D::FieldData::Active),
-  m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_AxisTolerance(1.0f),
   m_AngleTolerance(1.0f),
   m_RandomizeParentIds(true),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_CellParentIds(NULL),
-  m_FieldParentIds(NULL),
+  m_FeatureParentIds(NULL),
   m_AvgQuats(NULL),
   m_Active(NULL),
-  m_FieldPhases(NULL),
+  m_FeaturePhases(NULL),
   m_NeighborList(NULL),
   m_CrystalStructures(NULL)
 {
@@ -156,24 +156,24 @@ int MergeTwins::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, int32_t, Int32ArrayType, -1, voxels, dims)
 
-  // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldParentIds, int32_t, Int32ArrayType, 0, fields, dims)
+  // Feature Data
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, true, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureParentIds, int32_t, Int32ArrayType, 0, features, dims)
   dims[0] = 4;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -301, float, FloatArrayType, features, dims)
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFeatureData(DREAM3D::FeatureData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
     QString ss = QObject::tr("NeighborLists Array Not Initialized Correctly");
@@ -218,7 +218,7 @@ void MergeTwins::execute()
 
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -275,11 +275,11 @@ void MergeTwins::execute()
       pid[r] = temp;
     }
 
-    // Now adjust all the Grain Id values for each Voxel
+    // Now adjust all the Feature Id values for each Voxel
     for(int64_t i = 0; i < totalPoints; ++i)
     {
       m_CellParentIds[i] = pid[ m_CellParentIds[i] ];
-      m_FieldParentIds[m_GrainIds[i]] = m_CellParentIds[i];
+      m_FeatureParentIds[m_FeatureIds[i]] = m_CellParentIds[i];
     }
   }
 
@@ -296,7 +296,7 @@ void MergeTwins::merge_twins()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getCellFeatureData(DREAM3D::FeatureData::NeighborList).get());
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
@@ -311,16 +311,16 @@ void MergeTwins::merge_twins()
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   unsigned int phase1, phase2;
   int parentcount = 0;
   m_ParentNumbers.clear();
-  m_ParentNumbers.fill(-1, numgrains);
+  m_ParentNumbers.fill(-1, numfeatures);
 
   m_ParentNumbers[0] = 0;
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    if (m_ParentNumbers[i] == -1 && m_FieldPhases[i] > 0)
+    if (m_ParentNumbers[i] == -1 && m_FeaturePhases[i] > 0)
     {
       parentcount++;
       m_ParentNumbers[i] = parentcount;
@@ -328,19 +328,19 @@ void MergeTwins::merge_twins()
       twinlist.push_back(i);
       for (size_t j = 0; j < twinlist.size(); j++)
       {
-        int firstgrain = twinlist[j];
-        int size = int(neighborlist[firstgrain].size());
+        int firstfeature = twinlist[j];
+        int size = int(neighborlist[firstfeature].size());
         for (int l = 0; l < size; l++)
         {
           int twin = 0;
-          size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && m_ParentNumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
+          size_t neigh = neighborlist[firstfeature][l];
+          if (neigh != i && m_ParentNumbers[neigh] == -1 && m_FeaturePhases[neigh] > 0)
           {
             //w = 10000.0f;
-            QuaternionMathF::Copy(avgQuats[firstgrain], q1);
-            phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
+            QuaternionMathF::Copy(avgQuats[firstfeature], q1);
+            phase1 = m_CrystalStructures[m_FeaturePhases[firstfeature]];
             QuaternionMathF::Copy(avgQuats[neigh], q2);
-            phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
+            phase2 = m_CrystalStructures[m_FeaturePhases[neigh]];
             if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Cubic_High))
             {
               w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
@@ -363,8 +363,8 @@ void MergeTwins::merge_twins()
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
   for (size_t k = 0; k < totalPoints; k++)
   {
-    int grainname = m_GrainIds[k];
-    m_CellParentIds[k] = m_ParentNumbers[grainname];
+    int featurename = m_FeatureIds[k];
+    m_CellParentIds[k] = m_ParentNumbers[featurename];
   }
   numParents = parentcount + 1;
 }
@@ -373,8 +373,8 @@ void MergeTwins::characterize_twins()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t numgrains = m->getNumCellFieldTuples();
-  for (size_t i = 0; i < numgrains; i++)
+  size_t numfeatures = m->getNumCellFeatureTuples();
+  for (size_t i = 0; i < numfeatures; i++)
   {
 
   }

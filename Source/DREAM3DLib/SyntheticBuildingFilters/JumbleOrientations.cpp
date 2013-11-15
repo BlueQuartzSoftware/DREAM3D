@@ -46,7 +46,7 @@
 #include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -55,15 +55,15 @@
 JumbleOrientations::JumbleOrientations() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
-  m_GrainIds(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
+  m_FeatureIds(NULL),
   m_CellEulerAngles(NULL),
-  m_FieldPhases(NULL),
-  m_FieldEulerAngles(NULL),
+  m_FeaturePhases(NULL),
+  m_FeatureEulerAngles(NULL),
   m_AvgQuats(NULL)
 {
   setupFilterParameters();
@@ -107,7 +107,7 @@ int JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -115,17 +115,17 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
   dims[0] = 3;
   CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dims)
 
-  // Field Data
+  // Feature Data
   dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, dims)
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, float, FloatArrayType, 0, features, dims)
   dims[0] = 4;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, float, FloatArrayType, 0, features, dims)
 }
 
 // -----------------------------------------------------------------------------
@@ -160,9 +160,9 @@ void JumbleOrientations::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumCellFieldTuples();
+  int totalFeatures = m->getNumCellFeatureTuples();
   int numEnsembleTuples = m->getNumCellEnsembleTuples();
-  dataCheck(false, totalPoints, totalFields, numEnsembleTuples);
+  dataCheck(false, totalPoints, totalFeatures, numEnsembleTuples);
   if (getErrorCondition() < 0)
   {
     return;
@@ -170,7 +170,7 @@ void JumbleOrientations::execute()
 
   // Generate all the numbers up front
   const int rangeMin = 1;
-  const int rangeMax = totalFields - 1;
+  const int rangeMax = totalFeatures - 1;
   typedef boost::uniform_int<int> NumberDistribution;
   typedef boost::mt19937 RandomNumberGenerator;
   typedef boost::variate_generator < RandomNumberGenerator&,
@@ -185,39 +185,39 @@ void JumbleOrientations::execute()
   int r;
   float temp1, temp2, temp3;
   //--- Shuffle elements by randomly exchanging each with one other.
-  for (int i = 1; i < totalFields; i++)
+  for (int i = 1; i < totalFeatures; i++)
   {
     bool good = false;
     while(good == false)
     {
       good = true;
       r = numberGenerator(); // Random remaining position.
-      if (r >= totalFields) { good = false; }
-      if (m_FieldPhases[i] != m_FieldPhases[r]) { good = false; }
+      if (r >= totalFeatures) { good = false; }
+      if (m_FeaturePhases[i] != m_FeaturePhases[r]) { good = false; }
     }
-    temp1 = m_FieldEulerAngles[3 * i];
-    temp2 = m_FieldEulerAngles[3 * i + 1];
-    temp3 = m_FieldEulerAngles[3 * i + 2];
-    m_FieldEulerAngles[3 * i] = m_FieldEulerAngles[3 * r];
-    m_FieldEulerAngles[3 * i + 1] = m_FieldEulerAngles[3 * r + 1];
-    m_FieldEulerAngles[3 * i + 2] = m_FieldEulerAngles[3 * r + 2];
-    m_FieldEulerAngles[3 * r] = temp1;
-    m_FieldEulerAngles[3 * r + 1] = temp2;
-    m_FieldEulerAngles[3 * r + 2] = temp3;
+    temp1 = m_FeatureEulerAngles[3 * i];
+    temp2 = m_FeatureEulerAngles[3 * i + 1];
+    temp3 = m_FeatureEulerAngles[3 * i + 2];
+    m_FeatureEulerAngles[3 * i] = m_FeatureEulerAngles[3 * r];
+    m_FeatureEulerAngles[3 * i + 1] = m_FeatureEulerAngles[3 * r + 1];
+    m_FeatureEulerAngles[3 * i + 2] = m_FeatureEulerAngles[3 * r + 2];
+    m_FeatureEulerAngles[3 * r] = temp1;
+    m_FeatureEulerAngles[3 * r + 1] = temp2;
+    m_FeatureEulerAngles[3 * r + 2] = temp3;
   }
 
   // Now adjust all the Euler angle values for each Voxel
   for(int64_t i = 0; i < totalPoints; ++i)
   {
-    m_CellEulerAngles[3 * i] = m_FieldEulerAngles[3 * (m_GrainIds[i])];
-    m_CellEulerAngles[3 * i + 1] = m_FieldEulerAngles[3 * (m_GrainIds[i]) + 1];
-    m_CellEulerAngles[3 * i + 2] = m_FieldEulerAngles[3 * (m_GrainIds[i]) + 2];
+    m_CellEulerAngles[3 * i] = m_FeatureEulerAngles[3 * (m_FeatureIds[i])];
+    m_CellEulerAngles[3 * i + 1] = m_FeatureEulerAngles[3 * (m_FeatureIds[i]) + 1];
+    m_CellEulerAngles[3 * i + 2] = m_FeatureEulerAngles[3 * (m_FeatureIds[i]) + 2];
   }
   QuatF q;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-  for (int i = 1; i < totalFields; i++)
+  for (int i = 1; i < totalFeatures; i++)
   {
-    OrientationMath::EulertoQuat(q, m_FieldEulerAngles[3 * i], m_FieldEulerAngles[3 * i + 1], m_FieldEulerAngles[3 * i + 2]);
+    OrientationMath::EulertoQuat(q, m_FeatureEulerAngles[3 * i], m_FeatureEulerAngles[3 * i + 1], m_FeatureEulerAngles[3 * i + 2]);
     QuaternionMathF::Copy(q, avgQuats[i]);
   }
 

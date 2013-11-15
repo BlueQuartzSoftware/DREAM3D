@@ -127,8 +127,8 @@
      </property>
      <item row="1" column="1">
       <layout class="QFormLayout" name="formLayout_3">
-       <property name="fieldGrowthPolicy">
-        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       <property name="featureGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFeaturesGrow</enum>
        </property>
        <property name="leftMargin">
         <number>5</number>
@@ -420,8 +420,8 @@ font-size: 10px;
      </item>
      <item row="1" column="3">
       <layout class="QFormLayout" name="formLayout">
-       <property name="fieldGrowthPolicy">
-        <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+       <property name="featureGrowthPolicy">
+        <enum>QFormLayout::FeaturesStayAtSizeHint</enum>
        </property>
        <property name="labelAlignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

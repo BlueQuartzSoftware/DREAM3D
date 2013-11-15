@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -54,15 +54,15 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshF1sArrayName(DREAM3D::FaceData::SurfaceMeshF1s),
   m_SurfaceMeshF1sptsArrayName(DREAM3D::FaceData::SurfaceMeshF1spts),
   m_SurfaceMeshF7sArrayName(DREAM3D::FaceData::SurfaceMeshF7s),
   m_SurfaceMeshmPrimesArrayName(DREAM3D::FaceData::SurfaceMeshmPrimes),
-  m_FieldPhases(NULL),
+  m_FeaturePhases(NULL),
   m_AvgQuats(NULL),
   m_CrystalStructures(NULL),
   m_SurfaceMeshFaceLabels(NULL),
@@ -129,7 +129,7 @@ int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -151,28 +151,28 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, 
   else
   {
     QVector<int> dims(1, 2);
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, dims)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1s, float, FloatArrayType, 0, fields, dims)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1spts, float, FloatArrayType, 0, fields, dims)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF7s, float, FloatArrayType, 0, fields, dims)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshmPrimes, float, FloatArrayType, 0, fields, dims)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1s, float, FloatArrayType, 0, features, dims)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1spts, float, FloatArrayType, 0, features, dims)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF7s, float, FloatArrayType, 0, features, dims)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshmPrimes, float, FloatArrayType, 0, features, dims)
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 4);
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -301, float, FloatArrayType, features, dims)
 
   dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -302, int32_t, Int32ArrayType, features, dims)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
@@ -227,7 +227,7 @@ void FindBoundaryStrengths::execute()
   setErrorCondition(0);
 
   dataCheckSurfaceMesh(false, 0, sm->getNumFaceTuples(), 0);
-  dataCheckVoxel(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheckVoxel(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -265,17 +265,17 @@ void FindBoundaryStrengths::execute()
 //        q1[j] = m_AvgQuats[5 * gname1 + j];
 //        q2[j] = m_AvgQuats[5 * gname2 + j];
 //      }
-      if(m_CrystalStructures[m_FieldPhases[gname1]] == m_CrystalStructures[m_FieldPhases[gname2]]
-          && m_FieldPhases[gname1] > 0)
+      if(m_CrystalStructures[m_FeaturePhases[gname1]] == m_CrystalStructures[m_FeaturePhases[gname2]]
+          && m_FeaturePhases[gname1] > 0)
       {
-        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname1]]]->getmPrime(q1, q2, LD, mPrime_1);
-        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname1]]]->getmPrime(q2, q1, LD, mPrime_2);
-        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname1]]]->getF1(q1, q2, LD, true, F1_1);
-        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname1]]]->getF1(q2, q1, LD, true, F1_2);
-        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname1]]]->getF1spt(q1, q2, LD, true, F1spt_1);
-        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname1]]]->getF1spt(q2, q1, LD, true, F1spt_2);
-        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname1]]]->getF7(q1, q2, LD, true, F7_1);
-        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname1]]]->getF7(q2, q1, LD, true, F7_2);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getmPrime(q1, q2, LD, mPrime_1);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getmPrime(q2, q1, LD, mPrime_2);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1(q1, q2, LD, true, F1_1);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1(q2, q1, LD, true, F1_2);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1spt(q1, q2, LD, true, F1spt_1);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1spt(q2, q1, LD, true, F1spt_2);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF7(q1, q2, LD, true, F7_1);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF7(q2, q1, LD, true, F7_2);
       }
       else
       {

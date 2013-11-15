@@ -475,7 +475,7 @@ void QFilterWidget::setupGui()
       le->setObjectName((option->getPropertyName()));
 
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
-      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
+      frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditStringValue(const QString &)));
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setText(v.toString());
@@ -487,7 +487,7 @@ void QFilterWidget::setupGui()
       QIntValidator* ival = new QIntValidator(this);
       le->setValidator(ival);
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
-      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
+      frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditIntValue()));
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setText(v.toString());
@@ -500,7 +500,7 @@ void QFilterWidget::setupGui()
       ival->setDecimals(8);
       le->setValidator(ival);
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
-      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
+      frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditDoubleValue()));
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setText(v.toString());
@@ -624,7 +624,7 @@ void QFilterWidget::setupGui()
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QCheckBox* le = new QCheckBox(this);
       le->setObjectName((option->getPropertyName()));
-      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
+      frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, le);
       connect(le, SIGNAL(stateChanged(int)), this, SLOT(updateQCheckBoxValue(int)));
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setChecked(v.toBool());
@@ -641,7 +641,7 @@ void QFilterWidget::setupGui()
         le->setRange(filtOpt->getMinimum(), filtOpt->getMaximum());
         le->setValue(0);
       }
-      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
+      frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, le);
       connect(le, SIGNAL(valueChanged(int)), this, SLOT(updateQSpinBoxValue(int)));
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setValue(v.toInt());
@@ -657,7 +657,7 @@ void QFilterWidget::setupGui()
         le->setRange(filtOpt->getMinimum(), filtOpt->getMaximum());
         le->setValue(0);
       }
-      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
+      frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, le);
       connect(le, SIGNAL(valueChanged(double)), this, SLOT(updateQDoubleSpinBoxValue(double)));
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setValue(v.toDouble());
@@ -686,7 +686,7 @@ void QFilterWidget::setupGui()
         }
       }
       if (selectedIndex < 0) { selectedIndex = 0; }
-      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+      frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, cb);
 
       if (choiceFilterParameter->getValueType().compare("string") == 0
           && choiceFilterParameter->getEditable() == true)
@@ -732,9 +732,9 @@ void QFilterWidget::setupGui()
     {
       setupCellArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VolumeFieldArrayNameSelectionWidget)
+    else if (wType == FilterParameter::VolumeFeatureArrayNameSelectionWidget)
     {
-      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+      setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::VolumeEnsembleArrayNameSelectionWidget)
     {
@@ -752,9 +752,9 @@ void QFilterWidget::setupGui()
     {
       setupFaceArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::SurfaceFieldArrayNameSelectionWidget)
+    else if (wType == FilterParameter::SurfaceFeatureArrayNameSelectionWidget)
     {
-      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+      setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::SurfaceEnsembleArrayNameSelectionWidget)
     {
@@ -768,9 +768,9 @@ void QFilterWidget::setupGui()
     {
       setupEdgeArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::EdgeFieldArrayNameSelectionWidget)
+    else if (wType == FilterParameter::EdgeFeatureArrayNameSelectionWidget)
     {
-      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+      setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::EdgeEnsembleArrayNameSelectionWidget)
     {
@@ -780,9 +780,9 @@ void QFilterWidget::setupGui()
     {
       setupVertexArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VertexFieldArrayNameSelectionWidget)
+    else if (wType == FilterParameter::VertexFeatureArrayNameSelectionWidget)
     {
-      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+      setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::VertexEnsembleArrayNameSelectionWidget)
     {
@@ -849,7 +849,7 @@ void QFilterWidget::setupIntVec3Widget(QFormLayout* frmLayout, int optIndex,
   Dimensions_2->setText(QString::number(v3.z));
   horizontalLayout->addWidget(Dimensions_2);
 
-  frmLayout->setLayout(optIndex, QFormLayout::FieldRole, horizontalLayout);
+  frmLayout->setLayout(optIndex, QFormLayout::FeatureRole, horizontalLayout);
   connect(Dimensions_0, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
   connect(Dimensions_1, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
   connect(Dimensions_2, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
@@ -894,7 +894,7 @@ void QFilterWidget::setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex,
   Dimensions_2->setText(QString::number(v3.z));
   horizontalLayout->addWidget(Dimensions_2);
 
-  frmLayout->setLayout(optIndex, QFormLayout::FieldRole, horizontalLayout);
+  frmLayout->setLayout(optIndex, QFormLayout::FeatureRole, horizontalLayout);
   connect(Dimensions_0, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
   connect(Dimensions_1, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
   connect(Dimensions_2, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
@@ -923,7 +923,7 @@ void QFilterWidget::setupVertexArrayNameChoiceWidget(QFormLayout* frmLayout, int
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
   cb->setObjectName((option->getPropertyName()));
-  frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+  frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 
 }
@@ -937,7 +937,7 @@ void QFilterWidget::setupEdgeArrayNameChoiceWidget(QFormLayout* frmLayout, int o
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
   cb->setObjectName((option->getPropertyName()));
-  frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+  frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 
 }
@@ -951,7 +951,7 @@ void QFilterWidget::setupFaceArrayNameChoiceWidget(QFormLayout* frmLayout, int o
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
   cb->setObjectName((option->getPropertyName()));
-  frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+  frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 
 }
@@ -965,7 +965,7 @@ void QFilterWidget::setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int o
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
   cb->setObjectName((option->getPropertyName()));
-  frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+  frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 
 }
@@ -973,13 +973,13 @@ void QFilterWidget::setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int o
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex,
+void QFilterWidget::setupFeatureArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex,
                                                     FilterParameter* option, QLabel* label )
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
   cb->setObjectName((option->getPropertyName()));
-  frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+  frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 }
 
@@ -992,7 +992,7 @@ void QFilterWidget::setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, i
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
   cb->setObjectName((option->getPropertyName()));
-  frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+  frmLayout->setWidget(optIndex, QFormLayout::FeatureRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 }
 
@@ -1026,8 +1026,8 @@ void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optI
     case FilterParameter::CellArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::CellListType);
       break;
-    case FilterParameter::FieldArrayComparisonSelectionWidget:
-      w->setArrayListType(ComparisonSelectionWidget::FieldListType);
+    case FilterParameter::FeatureArrayComparisonSelectionWidget:
+      w->setArrayListType(ComparisonSelectionWidget::FeatureListType);
       break;
     case FilterParameter::EnsembleArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::EnsembleListType);
@@ -1742,6 +1742,7 @@ void QFilterWidget::preflightAboutToExecute(DataContainerArray::Pointer dca)
 
     switch(wType)
     {
+      #if 0
       case FilterParameter::VolumeVertexArrayNameSelectionWidget:
         updateArrayNameComboBox(vldc->getVertexArrayNameList(), propertyName);
         break;
@@ -1799,6 +1800,7 @@ void QFilterWidget::preflightAboutToExecute(DataContainerArray::Pointer dca)
       case FilterParameter::ArraySelectionWidget:
         //     updateArraySelectionWidget(vdc, smdc, sdc, propertyName);
         break;
+        #endif
       default:
         break;
     }

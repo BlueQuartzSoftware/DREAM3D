@@ -76,7 +76,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
-    DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts)
+    DREAM3D_DECLARE_ARRAY(int, featurecounts, FeatureCounts)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
@@ -105,10 +105,10 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     AlignSectionsMutualInformation();
 
     virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
-    void form_grains_sections();
+    void form_features_sections();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     float* m_Quats;
     int32_t* m_CellPhases;
     bool* m_GoodVoxels;
@@ -119,7 +119,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
 
     unsigned long long int Seed;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     AlignSectionsMutualInformation(const AlignSectionsMutualInformation&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsMutualInformation&); // Operator '=' Not Implemented

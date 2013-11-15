@@ -54,15 +54,15 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputGrainInfoFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFeatureInfoFile)
 
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
@@ -88,16 +88,16 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellPhases;
-    bool* m_SurfaceFields;
+    bool* m_SurfaceFeatures;
     float* m_Quats;
     float* m_AvgQuats;
     float* m_CellEulerAngles;
 
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     YSChoiAbaqusReader(const YSChoiAbaqusReader&); // Copy Constructor Not Implemented
     void operator=(const YSChoiAbaqusReader&); // Operator '=' Not Implemented

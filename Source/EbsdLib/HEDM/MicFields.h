@@ -63,13 +63,13 @@ class EbsdLib_EXPORT MicFields : public AbstractEbsdFields
     virtual QVector<QString> getFieldNames();
 
     template<typename T>
-    T getFilterFields()
+    T getFilterFeatures()
     {
-      T fields;
+      T features;
 
-      fields.push_back(Ebsd::Mic::Confidence);
+      features.push_back(Ebsd::Mic::Confidence);
 
-      return fields;
+      return features;
     }
 
   private:

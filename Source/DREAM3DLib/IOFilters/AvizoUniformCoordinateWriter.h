@@ -66,10 +66,10 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainIds)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
 
     /**
@@ -123,10 +123,10 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     /**
      * @brief Generates the Avizo Header for this file
@@ -142,7 +142,7 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     int writeData(QDataStream& out);
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
 
     AvizoUniformCoordinateWriter(const AvizoUniformCoordinateWriter&); // Copy Constructor Not Implemented
     void operator=(const AvizoUniformCoordinateWriter&); // Operator '=' Not Implemented

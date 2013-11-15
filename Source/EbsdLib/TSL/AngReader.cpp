@@ -66,7 +66,7 @@ AngReader::AngReader() :
   m_SEMSignal = NULL;
   m_Fit = NULL;
 
-  setNumFields(10);
+  setNumFeatures(10);
 
   m_ReadHexGrid = false;
 
@@ -157,36 +157,36 @@ void AngReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* AngReader::getPointerByName(const QString &fieldName)
+void* AngReader::getPointerByName(const QString &featureName)
 {
-  if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
-  if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
-  if (fieldName.compare(Ebsd::Ang::Phi2) == 0) { return static_cast<void*>(m_Phi2);}
-  if (fieldName.compare(Ebsd::Ang::ImageQuality) == 0) { return static_cast<void*>(m_Iq);}
-  if (fieldName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return static_cast<void*>(m_Ci);}
-  if (fieldName.compare(Ebsd::Ang::PhaseData) == 0) { return static_cast<void*>(m_PhaseData);}
-  if (fieldName.compare(Ebsd::Ang::XPosition) == 0) { return static_cast<void*>(m_X);}
-  if (fieldName.compare(Ebsd::Ang::YPosition) == 0) { return static_cast<void*>(m_Y);}
-  if (fieldName.compare(Ebsd::Ang::SEMSignal) == 0) { return static_cast<void*>(m_SEMSignal);}
-  if (fieldName.compare(Ebsd::Ang::Fit) == 0) { return static_cast<void*>(m_Fit);}
+  if (featureName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
+  if (featureName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
+  if (featureName.compare(Ebsd::Ang::Phi2) == 0) { return static_cast<void*>(m_Phi2);}
+  if (featureName.compare(Ebsd::Ang::ImageQuality) == 0) { return static_cast<void*>(m_Iq);}
+  if (featureName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return static_cast<void*>(m_Ci);}
+  if (featureName.compare(Ebsd::Ang::PhaseData) == 0) { return static_cast<void*>(m_PhaseData);}
+  if (featureName.compare(Ebsd::Ang::XPosition) == 0) { return static_cast<void*>(m_X);}
+  if (featureName.compare(Ebsd::Ang::YPosition) == 0) { return static_cast<void*>(m_Y);}
+  if (featureName.compare(Ebsd::Ang::SEMSignal) == 0) { return static_cast<void*>(m_SEMSignal);}
+  if (featureName.compare(Ebsd::Ang::Fit) == 0) { return static_cast<void*>(m_Fit);}
   return NULL;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType AngReader::getPointerType(const QString &fieldName)
+Ebsd::NumType AngReader::getPointerType(const QString &featureName)
 {
-  if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::Phi2) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::ImageQuality) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::PhaseData) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ang::XPosition) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::YPosition) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::SEMSignal) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::Fit) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Phi2) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::ImageQuality) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::PhaseData) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ang::XPosition) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::YPosition) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::SEMSignal) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Fit) == 0) { return Ebsd::Float;}
   return Ebsd::UnknownNumType;
 }
 
@@ -360,11 +360,11 @@ void AngReader::readData(QFile &in, QByteArray &buf)
     if (in.atEnd() == true) break;
   }
 
-  if (getNumFields() < 10)
+  if (getNumFeatures() < 10)
   {
     this->deallocateArrayData<float > (m_Fit);
   }
-  if (getNumFields() < 9)
+  if (getNumFeatures() < 9)
   {
     this->deallocateArrayData<float > (m_SEMSignal);
   }
@@ -503,8 +503,8 @@ void AngReader::parseDataLine(QByteArray &line, size_t i)
   float p1 = 0.0f, p=0.0f, p2=0.0f, x=-1.0f, y=-1.0f, iqual=-1.0f, conf=-1.0f, semSignal=-1.0f, fit=-1.0f;
   int ph = -1;
   size_t offset = 0;
-  size_t fieldsRead = 0;
-  fieldsRead = sscanf(line.data(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
+  size_t featuresRead = 0;
+  featuresRead = sscanf(line.data(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
 
   offset = i;
 
@@ -516,10 +516,10 @@ void AngReader::parseDataLine(QByteArray &line, size_t i)
   m_PhaseData[offset] = ph;
   m_X[offset] = x;
   m_Y[offset] = y;
-  if (fieldsRead > 8) {
+  if (featuresRead > 8) {
     m_SEMSignal[offset] = semSignal;
   }
-  if (fieldsRead > 9)
+  if (featuresRead > 9)
   {
     m_Fit[offset] = fit;
   }

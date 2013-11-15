@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
 
@@ -217,7 +217,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
                       StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr);
 
     /**
-     * @brief arrange_grainnames
+     * @brief arrange_featurenames
      * @param numT
      * @param zID
      * @param NSP
@@ -228,7 +228,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeIdPtr
      * @param neighborsPtr
      */
-    void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, float* res,
+    void arrange_featurenames(int numT, int zID, int NSP, int* wrappedDims, float* res,
                             StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
                             VertexArray::Pointer cVertexPtr,
                             DataArray<int32_t>::Pointer voxelsPtr,
@@ -285,16 +285,16 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     void get_nodes(int cst, int ord, int nidx[2], int* nid, int NSP, int* wrappedDims);
 
     /**
-     * @brief get_grainnames
+     * @brief get_featurenames
      * @param cst
      * @param ord
      * @param pID
-     * @param pgrainname
+     * @param pfeaturename
      * @param NSP
      * @param wrappedDims
      * @param voxelsPtr
      */
-    void get_grainnames(int cst, int ord, int pID[2], int* pgrainname, int NSP,
+    void get_featurenames(int cst, int ord, int pID[2], int* pfeaturename, int NSP,
                         int* wrappedDims,
                         DataArray<int32_t>::Pointer voxelsPtr);
 
@@ -377,7 +377,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
                            const QString& trianglesFile, int nt,
                            StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
                            DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                           int32_t grainIdZeroMappingValue);
+                           int32_t featureIdZeroMappingValue);
 
 
     /**
@@ -392,20 +392,20 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
                                StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr);
 
 
-    int32_t volumeHasGrainValuesOfZero();
-    void renumberVoxelGrainIds(int32_t gid);
+    int32_t volumeHasFeatureValuesOfZero();
+    void renumberVoxelFeatureIds(int32_t gid);
 
     // The next two methods are for analyzing the winding
     // void analyzeWinding();
     // QVector<int> findAdjacentTriangles(Triangle *triangle, int label);
 
   private:
-    int32_t* m_GrainIds;
-    int numgrains;
+    int32_t* m_FeatureIds;
+    int numfeatures;
 
     float m_OriginX, m_OriginY, m_OriginZ;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     M3CSliceBySlice(const M3CSliceBySlice&); // Copy Constructor Not Implemented
     void operator=(const M3CSliceBySlice&); // Operator '=' Not Implemented

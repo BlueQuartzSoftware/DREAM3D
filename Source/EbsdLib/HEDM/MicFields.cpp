@@ -56,14 +56,14 @@ MicFields::~MicFields()
 // -----------------------------------------------------------------------------
 QVector<QString> MicFields::getFieldNames()
 {
-  QVector<QString> fields;
-  fields.push_back(Ebsd::Mic::Euler1);
-  fields.push_back(Ebsd::Mic::Euler2);
-  fields.push_back(Ebsd::Mic::Euler3);
-  fields.push_back(Ebsd::Mic::Confidence);
-  fields.push_back(Ebsd::Mic::Phase);
-  fields.push_back(Ebsd::Mic::X);
-  fields.push_back(Ebsd::Mic::Y);
+  QVector<QString> features;
+  features.push_back(Ebsd::Mic::Euler1);
+  features.push_back(Ebsd::Mic::Euler2);
+  features.push_back(Ebsd::Mic::Euler3);
+  features.push_back(Ebsd::Mic::Confidence);
+  features.push_back(Ebsd::Mic::Phase);
+  features.push_back(Ebsd::Mic::X);
+  features.push_back(Ebsd::Mic::Y);
 
-  return fields;
+  return features;
 }

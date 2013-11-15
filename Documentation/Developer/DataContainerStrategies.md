@@ -6,7 +6,7 @@ The DataContainer class within the DREAM3D development framework is designed to 
 such it is built in a way to hold generic high level C++ classes. For this the
 DataContainer is broken into a few categories:
 - Voxel Data
-- Field Data
+- Feature Data
 - Ensemble Data
  _Note; Need explanations here_
 

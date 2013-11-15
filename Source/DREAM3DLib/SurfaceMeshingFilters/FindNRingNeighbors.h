@@ -63,12 +63,12 @@ class FindNRingNeighbors
     DREAM3D_INSTANCE_PROPERTY(int, TriangleId)
 
     /**
-     * @brief This sets the region id (Grain Id) that we are interested in.
+     * @brief This sets the region id (Feature Id) that we are interested in.
      */
     DREAM3D_INSTANCE_PROPERTY(int, RegionId0)
 
     /**
-     * @brief This sets the region id (Grain Id) that we are interested in.
+     * @brief This sets the region id (Feature Id) that we are interested in.
      */
     DREAM3D_INSTANCE_PROPERTY(int, RegionId1)
 

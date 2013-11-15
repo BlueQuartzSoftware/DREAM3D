@@ -66,11 +66,11 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     //------ Required Cell Data
 
-    //------ Required Field Data
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Field Neighborhoods"; }
+    virtual const QString getHumanLabel() { return "Find Feature Neighborhoods"; }
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -107,13 +107,13 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     void find_neighborhoods();
 
   private:
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     float* m_Centroids;
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
     NeighborList<int>* m_NeighborhoodList;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
     void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented

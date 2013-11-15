@@ -18,12 +18,12 @@ The nodes file format is as follows:
 
 **Node Types**
 
-- 2 = on the **Field** boundary
+- 2 = on the **Feature** boundary
 - 3 = on the triple line,
 - 4 = quadruple point or on quadruple line if 10 is added, eg 12, 13, and 14, then they are on the surface of microstructure.
-For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring **Fields**.
-- 12 = on the **Field** boundary trace area at the surface of microstructure
-- 13 = on the **Field** boundary trace line
+For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring **Features**.
+- 12 = on the **Feature** boundary trace area at the surface of microstructure
+- 13 = on the **Feature** boundary trace line
 - 14 = on the triple point, and so on
 
 **Triangles File**
@@ -62,7 +62,7 @@ SurfaceMesh
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | NodeArray Attribute | SurfaceMeshNodeType | The node types values |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| FaceArray Attribute | SurfaceMeshTriangleLabels | The **Field** Id Labels for each Face(Triangle) |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| FaceArray Attribute | SurfaceMeshTriangleLabels | The **Feature** Id Labels for each Face(Triangle) |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 | NodeArray | | The shared node (vertex) list |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 | FaceArray | | The list of all triangles (faces) in the mesh |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 | EdgeArray | | The list of unique edges in the mesh |   | Generate Surface Mesh Connectivity (SurfaceMeshing) | 

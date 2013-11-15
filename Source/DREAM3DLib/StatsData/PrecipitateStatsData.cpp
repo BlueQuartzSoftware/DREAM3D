@@ -81,15 +81,15 @@ unsigned int PrecipitateStatsData::getPhaseType()
 // -----------------------------------------------------------------------------
 FloatArrayType::Pointer PrecipitateStatsData::generateBinNumbers()
 {
-  float grainDiameterInfo[3];
-  getGrainDiameterInfo(grainDiameterInfo);
+  float featureDiameterInfo[3];
+  getFeatureDiameterInfo(featureDiameterInfo);
   QVector<float> bins;
-  float d = grainDiameterInfo[2];
-  while (d <= grainDiameterInfo[1])
+  float d = featureDiameterInfo[2];
+  while (d <= featureDiameterInfo[1])
   {
     //  qDebug() << d << "\n";
     bins.push_back(d);
-    d = d + grainDiameterInfo[0];
+    d = d + featureDiameterInfo[0];
   }
   // Copy this into the DataArray<float>
   m_BinNumbers = FloatArrayType::CreateArray(bins.size(), DREAM3D::HDF5::BinNumber );
@@ -102,7 +102,7 @@ FloatArrayType::Pointer PrecipitateStatsData::generateBinNumbers()
 // -----------------------------------------------------------------------------
 void PrecipitateStatsData::initialize()
 {
-  m_GrainSize_DistType = DREAM3D::DistributionType::LogNormal;
+  m_FeatureSize_DistType = DREAM3D::DistributionType::LogNormal;
   m_BOverA_DistType = DREAM3D::DistributionType::Beta;
   m_COverA_DistType = DREAM3D::DistributionType::Beta;
   m_Clustering_DistType = DREAM3D::DistributionType::LogNormal;

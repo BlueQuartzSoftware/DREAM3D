@@ -66,15 +66,15 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     typedef QList<QString> NameListType;
 
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeFeatureData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeFeatureArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeFeatureArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeEnsembleArraysToRead)
 
 
@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
   protected:
     EdgeDataContainerReader();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     int gatherData(bool preflight);
 

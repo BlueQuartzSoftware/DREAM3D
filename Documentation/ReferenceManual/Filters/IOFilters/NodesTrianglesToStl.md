@@ -5,21 +5,21 @@ Nodes & Triangles To Stl File {#nodestrianglestostl}
 IO Filters
 
 ## Description ##
-This filter will convert a pair of triangle and nodes files commonly used by CMU in their GBCD studies and output an STL File in Binary format for each unique **Field** Id.
+This filter will convert a pair of triangle and nodes files commonly used by CMU in their GBCD studies and output an STL File in Binary format for each unique **Feature** Id.
 
 The nodes file format is as follows:
 
 +  first line = number of nodes
 +  column 1 = node id, starts from zero.
 +  column 2 = node type,
-  + 2 = on the **Field** boundary
+  + 2 = on the **Feature** boundary
   + 3 = on the triple line,
   + 4 = quadruple point or on quadruple line if 10 is added, eg + 12, 13, and 14, then they are on the surface of microstructure.
 
-For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring **Fields**.
+For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring **Features**.
 
-+ 12 = on the **Field** boundary trace area at the surface of microstructure
-+ 13 = on the **Field** boundary trace line
++ 12 = on the **Feature** boundary trace area at the surface of microstructure
++ 13 = on the **Feature** boundary trace line
 + 14 = on the triple point, and so on
   - column 3 to 5 = coordinates of nodes, x, y, and z
 

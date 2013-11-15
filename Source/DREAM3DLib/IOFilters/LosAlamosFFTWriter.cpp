@@ -56,10 +56,10 @@
 LosAlamosFFTWriter::LosAlamosFFTWriter() :
   FileWriter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL)
 
@@ -121,7 +121,7 @@ int LosAlamosFFTWriter::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LosAlamosFFTWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void LosAlamosFFTWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -134,7 +134,7 @@ void LosAlamosFFTWriter::dataCheck(bool preflight, size_t voxels, size_t fields,
   }
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, dims)
   dims[0] = 3;
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -305, float, FloatArrayType, voxels, dims)
@@ -172,9 +172,9 @@ int LosAlamosFFTWriter::writeFile()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
-  dataCheck(false, totalPoints, numgrains, numensembles);
+  dataCheck(false, totalPoints, numfeatures, numensembles);
   if(getErrorCondition() < 0)
   {
     return -40;
@@ -214,7 +214,7 @@ int LosAlamosFFTWriter::writeFile()
   }
 
   float phi1, phi, phi2;
-  int32_t grainId;
+  int32_t featureId;
   int32_t phaseId;
 
   size_t index = 0;
@@ -229,10 +229,10 @@ int LosAlamosFFTWriter::writeFile()
         phi = m_CellEulerAngles[index * 3 + 1] * 180.0 * DREAM3D::Constants::k_1OverPi;
         phi2 = m_CellEulerAngles[index * 3 + 2] * 180.0 * DREAM3D::Constants::k_1OverPi;
 
-        grainId = m_GrainIds[index];
+        featureId = m_FeatureIds[index];
         phaseId = m_CellPhases[index];
 
-        fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n", phi1, phi, phi2, x + 1, y + 1, z + 1, grainId, phaseId);
+        fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n", phi1, phi, phi2, x + 1, y + 1, z + 1, featureId, phaseId);
       }
     }
   }

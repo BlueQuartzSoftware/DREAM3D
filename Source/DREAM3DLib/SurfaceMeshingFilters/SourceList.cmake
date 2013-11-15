@@ -19,7 +19,7 @@ set(_PublicFilters
   MovingFiniteElementSmoothing
   QuickSurfaceMesh
   ReverseTriangleWinding
-  SharedGrainFaceFilter
+  SharedFeatureFaceFilter
   TriangleAreaFilter
   TriangleCentroidFilter
   TriangleDihedralAngleFilter
@@ -28,7 +28,7 @@ set(_PublicFilters
 )
 
 if(EIGEN_FOUND)
-  set(_PublicFilters ${_PublicFilters} GrainFaceCurvatureFilter)
+  set(_PublicFilters ${_PublicFilters} FeatureFaceCurvatureFilter)
 
   ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} CalculateTriangleGroupCurvatures.h)
   ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} CalculateTriangleGroupCurvatures.cpp)

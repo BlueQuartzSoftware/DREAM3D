@@ -87,7 +87,7 @@ class DREAM3DLib_EXPORT DecimateSolidMesh : public AbstractFilter
 
     int updateNodesandTets(int currentTet, int killedNode, int newNode);
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     DecimateSolidMesh(const DecimateSolidMesh&); // Copy Constructor Not Implemented
     void operator=(const DecimateSolidMesh&); // Operator '=' Not Implemented

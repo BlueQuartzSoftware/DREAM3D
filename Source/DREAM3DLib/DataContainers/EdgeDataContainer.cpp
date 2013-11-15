@@ -69,7 +69,7 @@ EdgeDataContainer::~EdgeDataContainer()
 //
 // -----------------------------------------------------------------------------
 DOES_DATASET_EXIST_DEFN(EdgeDataContainer, EdgeData)
-DOES_DATASET_EXIST_DEFN(EdgeDataContainer, EdgeFieldData)
+DOES_DATASET_EXIST_DEFN(EdgeDataContainer, EdgeFeatureData)
 DOES_DATASET_EXIST_DEFN(EdgeDataContainer, EdgeEnsembleData)
 
 // -----------------------------------------------------------------------------
@@ -152,11 +152,11 @@ int EdgeDataContainer::getNumEdgeArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::getEdgeFieldData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::getEdgeFeatureData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_EdgeFieldData.find(name);
-  if ( it == m_EdgeFieldData.end() )
+  it =  m_EdgeFeatureData.find(name);
+  if ( it == m_EdgeFeatureData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -166,50 +166,50 @@ IDataArray::Pointer EdgeDataContainer::getEdgeFieldData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::addEdgeFieldData(const QString &name, IDataArray::Pointer data)
+void EdgeDataContainer::addEdgeFeatureData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    qDebug() << "Adding Field array with different array name than key name" << "\n";
+    qDebug() << "Adding Feature array with different array name than key name" << "\n";
     qDebug() << "Key name: " << name << "\n";
     qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
-  m_EdgeFieldData[name] = data;
-  m_NumEdgeFieldTuples = data->getNumberOfTuples();
+  m_EdgeFeatureData[name] = data;
+  m_NumEdgeFeatureTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer EdgeDataContainer::removeEdgeFieldData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::removeEdgeFeatureData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_EdgeFieldData.find(name);
-  if ( it == m_EdgeFieldData.end() )
+  it =  m_EdgeFeatureData.find(name);
+  if ( it == m_EdgeFeatureData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = it.value();
-  m_EdgeFieldData.erase(it);
+  m_EdgeFeatureData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::clearEdgeFieldData()
+void EdgeDataContainer::clearEdgeFeatureData()
 {
-  m_EdgeFieldData.clear();
+  m_EdgeFeatureData.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> EdgeDataContainer::getEdgeFieldArrayNameList()
+QList<QString> EdgeDataContainer::getEdgeFeatureArrayNameList()
 {
   QList<QString> keys;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeFieldData.begin(); iter != m_EdgeFieldData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeFeatureData.begin(); iter != m_EdgeFeatureData.end(); ++iter)
   {
     keys.push_back( iter.key());
   }
@@ -219,24 +219,24 @@ QList<QString> EdgeDataContainer::getEdgeFieldArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainer::getNumEdgeFieldArrays()
+int EdgeDataContainer::getNumEdgeFeatureArrays()
 {
-  return static_cast<int>(m_EdgeFieldData.size());
+  return static_cast<int>(m_EdgeFeatureData.size());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::resizeEdgeFieldDataArrays(size_t size)
+void EdgeDataContainer::resizeEdgeFeatureDataArrays(size_t size)
 {
  // int success = 0;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeFieldData.begin(); iter != m_EdgeFieldData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeFeatureData.begin(); iter != m_EdgeFeatureData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
     IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
-  m_NumEdgeFieldTuples = size;
+  m_NumEdgeFeatureTuples = size;
 }
 
 // -----------------------------------------------------------------------------

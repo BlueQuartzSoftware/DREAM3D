@@ -47,7 +47,7 @@ HDF5 Voxel File (.h5voxel) {#h5voxelvolume}
 
 | Group Name | Attribute Name:Value |
 |--------------|-------------|
-| FIELD_DATA | "NAME":"FieldData" |
+| FIELD_DATA | "NAME":"FeatureData" |
 | SCALARS | none |
 
 - Datasets in the **SCALARS** Group include:

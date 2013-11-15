@@ -38,9 +38,9 @@
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
-#include "EbsdLib/TSL/AngFields.h"
+#include "EbsdLib/TSL/AngFeatures.h"
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
-#include "EbsdLib/HKL/CtfFields.h"
+#include "EbsdLib/HKL/CtfFeatures.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 

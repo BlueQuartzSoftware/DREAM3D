@@ -72,13 +72,13 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     virtual ~GenerateEnsembleStatistics();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    //------ (Possible) Required Field Data
+    //------ (Possible) Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFeaturesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
@@ -143,11 +143,11 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_AvgQuats;
-    float* m_FieldEulerAngles;
+    float* m_FeatureEulerAngles;
     float* m_Volumes;
-    bool* m_BiasedFields;
-    bool* m_SurfaceFields;
-    int32_t* m_FieldPhases;
+    bool* m_BiasedFeatures;
+    bool* m_SurfaceFeatures;
+    int32_t* m_FeaturePhases;
     float* m_AxisEulerAngles;
     float* m_Omega3s;
     float* m_AspectRatios;
@@ -163,7 +163,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 
     QVector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     GenerateEnsembleStatistics(const GenerateEnsembleStatistics&); // Copy Constructor Not Implemented
     void operator=(const GenerateEnsembleStatistics&); // Operator '=' Not Implemented

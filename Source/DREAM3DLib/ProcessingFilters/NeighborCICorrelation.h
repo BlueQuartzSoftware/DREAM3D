@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT NeighborCICorrelation : public AbstractFilter
 
     float* m_ConfidenceIndex;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     NeighborCICorrelation(const NeighborCICorrelation&); // Copy Constructor Not Implemented

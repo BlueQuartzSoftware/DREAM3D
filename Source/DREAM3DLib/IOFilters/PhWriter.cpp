@@ -52,8 +52,8 @@
 PhWriter::PhWriter() :
   FileWriter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_GrainIds(NULL)
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -78,7 +78,7 @@ void PhWriter::setupFilterParameters()
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setFileExtension("*.ph");
-    option->setFileType("CMU Grain Growth");
+    option->setFileType("CMU Feature Growth");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -109,7 +109,7 @@ int PhWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void PhWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -123,7 +123,7 @@ void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   }
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
 }
 
 // -----------------------------------------------------------------------------
@@ -159,18 +159,18 @@ int PhWriter::writeFile()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-//  int32_t* grain_indicies = 0;
+//  int32_t* feature_indicies = 0;
 //  {
-//    IDataArray::Pointer iDataArray = m->getCellData(DREAM3D::CellData::GrainIds);
+//    IDataArray::Pointer iDataArray = m->getCellData(DREAM3D::CellData::FeatureIds);
 //    if (iDataArray.get() == 0) {
 //      return -10;
 //    }
 //    if (static_cast<size_t>(m->getTotalPoints()) != iDataArray->getNumberOfTuples()) {
 //      return -20;
 //    }
-//    grain_indicies =
-//    IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t* >(m->getCellData(DREAM3D::CellData::GrainIds).get());
-//    if (0 == grain_indicies) {
+//    feature_indicies =
+//    IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t* >(m->getCellData(DREAM3D::CellData::FeatureIds).get());
+//    if (0 == feature_indicies) {
 //      return -30;
 //    }
 //  }
@@ -219,35 +219,35 @@ int PhWriter::writeFile()
   }
 
 
-  // Find the unique number of grains
+  // Find the unique number of features
   QMap<int, bool> used;
   for (int i = 0; i < totalpoints; ++i)
   {
-    used[m_GrainIds[i]] = true;
+    used[m_FeatureIds[i]] = true;
   }
 
-  int grains = 0;
+  int features = 0;
   typedef QMap<int, bool>::iterator iterator;
   for (iterator i = used.begin(); i != used.end(); i++)
   {
     if(i.value() == true)
     {
-      grains++;
+      features++;
     }
   }
-  //qDebug()<<grains<< " " << used.size() ;
+  //qDebug()<<features<< " " << used.size() ;
   // Buffer the output with 4096 Bytes which is typically the size of a "Block" on a
   // modern Hard Drive. This should speed up the writes considerably
   char buffer[4096];
   outfile.rdbuf()->pubsetbuf(buffer, 4096);
 
   outfile << "     " << dims[0] << "     " << dims[1] << "     " << dims[2] << "\n";
-  outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << "\n";
-  outfile << " 0.000 0.000 0.000          0        \n"; // << grains << endl;
+  outfile << "\'DREAM3\'              52.00  1.000  1.0       " << features << "\n";
+  outfile << " 0.000 0.000 0.000          0        \n"; // << features << endl;
 
   for (int k = 0; k < totalpoints; k++)
   {
-    outfile << m_GrainIds[k] << '\n';
+    outfile << m_FeatureIds[k] << '\n';
   }
   outfile.close();
 

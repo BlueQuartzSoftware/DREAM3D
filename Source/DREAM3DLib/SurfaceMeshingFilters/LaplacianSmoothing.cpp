@@ -295,7 +295,7 @@ int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -777,11 +777,11 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
   FaceArray& triangles = *(m->getFaces());
   int triangleCount = 0;
   int end = triangles.getNumberOfTuples();
-  int grainInterest = 9;
+  int featureInterest = 9;
   for(int i = 0; i < end; ++i)
   {
     //FaceArray::Face_t* tri = triangles.getPointer(i);
-    if (faceLabels[i * 2] == grainInterest || faceLabels[i * 2 + 1] == grainInterest)
+    if (faceLabels[i * 2] == featureInterest || faceLabels[i * 2 + 1] == featureInterest)
     {
       ++triangleCount;
     }
@@ -799,7 +799,7 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
   for (int tid = 0; tid < end; ++tid)
   {
     //FaceArray::Face_t* tri = triangles.getPointer(tid);
-    if (faceLabels[tid * 2] == grainInterest || faceLabels[tid * 2 + 1] == grainInterest)
+    if (faceLabels[tid * 2] == featureInterest || faceLabels[tid * 2 + 1] == featureInterest)
     {
       tData[1] = triangles[tid].verts[0];
       tData[2] = triangles[tid].verts[1];

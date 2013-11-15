@@ -19,23 +19,23 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic
 
 set(_PublicFilters
   AdjustVolumeOrigin
-  BridgeParentIdsStatisticsToGrainIds
+  BridgeParentIdsStatisticsToFeatureIds
   ConvertData
-  CopyFieldArrayToCellArray
-  CreateFieldArrayFromCellArray
-  FindBoundingBoxGrains
+  CopyFeatureArrayToCellArray
+  CreateFeatureArrayFromCellArray
+  FindBoundingBoxFeatures
   FindCellQuats
-  FindGrainCentroids
-  FindGrainPhases
+  FindFeatureCentroids
+  FindFeaturePhases
   FindSurfaceCells
-  FindSurfaceGrains
+  FindSurfaceFeatures
   GenerateIPFColors
   GenerateMisorientationColors
   GenerateRodriguesColors
-  LinkFieldMapToCellArray
+  LinkFeatureMapToCellArray
   RemoveArrays
   RenameCellArray
-  RenameFieldArray
+  RenameFeatureArray
   ScaleVolume
   UpdateCellQuats
 )
@@ -55,7 +55,7 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-  RenumberGrains
+  RenumberFeatures
   GenerateEulerColors
 )
 

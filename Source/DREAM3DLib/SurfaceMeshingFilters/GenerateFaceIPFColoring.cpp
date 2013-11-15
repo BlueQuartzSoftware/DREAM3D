@@ -111,15 +111,15 @@ class CalculateFaceIPFColorsImpl
       double dEuler[3] = {0.0, 0.0, 0.0};
       DREAM3D::Rgb argb = 0x00000000;
 
-      int grain1, grain2, phase1, phase2;
+      int feature1, feature2, phase1, phase2;
       for (size_t i = start; i < end; i++)
       {
-        grain1 = m_Labels[2 * i];
-        grain2 = m_Labels[2 * i + 1];
-        if(grain1 > 0) { phase1 = m_Phases[grain1]; }
+        feature1 = m_Labels[2 * i];
+        feature2 = m_Labels[2 * i + 1];
+        if(feature1 > 0) { phase1 = m_Phases[feature1]; }
         else { phase1 = 0; }
 
-        if(grain2 > 0) { phase2 = m_Phases[grain2]; }
+        if(feature2 > 0) { phase2 = m_Phases[feature2]; }
         else { phase2 = 0; }
 
         if(phase1 > 0 )
@@ -127,9 +127,9 @@ class CalculateFaceIPFColorsImpl
           // Make sure we are using a valid Euler Angles with valid crystal symmetry
           if( m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd )
           {
-            dEuler[0] = m_Eulers[3 * grain1 + 0];
-            dEuler[1] = m_Eulers[3 * grain1 + 1];
-            dEuler[2] = m_Eulers[3 * grain1 + 2];
+            dEuler[0] = m_Eulers[3 * feature1 + 0];
+            dEuler[1] = m_Eulers[3 * feature1 + 1];
+            dEuler[2] = m_Eulers[3 * feature1 + 2];
             refDir[0] = m_Normals[3 * i + 0];
             refDir[1] = m_Normals[3 * i + 1];
             refDir[2] = m_Normals[3 * i + 2];
@@ -154,9 +154,9 @@ class CalculateFaceIPFColorsImpl
           // Make sure we are using a valid Euler Angles with valid crystal symmetry
           if( m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd )
           {
-            dEuler[0] = m_Eulers[3 * grain2 + 0];
-            dEuler[1] = m_Eulers[3 * grain2 + 1];
-            dEuler[2] = m_Eulers[3 * grain2 + 2];
+            dEuler[0] = m_Eulers[3 * feature2 + 0];
+            dEuler[1] = m_Eulers[3 * feature2 + 1];
+            dEuler[2] = m_Eulers[3 * feature2 + 2];
             refDir[0] = -m_Normals[3 * i + 0];
             refDir[1] = -m_Normals[3 * i + 1];
             refDir[2] = -m_Normals[3 * i + 2];
@@ -201,14 +201,14 @@ GenerateFaceIPFColoring::GenerateFaceIPFColoring() :
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceIPFColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceIPFColors),
-  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
   m_SurfaceMeshFaceIPFColors(NULL),
-  m_FieldEulerAngles(NULL),
-  m_FieldPhases(NULL),
+  m_FeatureEulerAngles(NULL),
+  m_FeaturePhases(NULL),
   m_CrystalStructures(NULL)
 {
   setupFilterParameters();
@@ -255,7 +255,7 @@ int GenerateFaceIPFColoring::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -277,27 +277,27 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels
   else
   {
     QVector<int> dims(1, 2);
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, dims)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
     dims[0] = 3;
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, dims)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, features, dims)
     dims[0] = 6;
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceIPFColors, uint8_t, UInt8ArrayType, 0, fields, dims)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceIPFColors, uint8_t, UInt8ArrayType, 0, features, dims)
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateFaceIPFColoring::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GenerateFaceIPFColoring::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 3);
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, -301, float, FloatArrayType, features, dims)
   dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -302, int32_t, Int32ArrayType,  features, dims)
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, dims)
 }
@@ -358,7 +358,7 @@ void GenerateFaceIPFColoring::execute()
 
   // Run the data check to allocate the memory for the centroid array
   dataCheckSurfaceMesh(false, 0, sm->getNumFaceTuples(), 0);
-  dataCheckVoxel(false, m->getNumCellTuples(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheckVoxel(false, m->getNumCellTuples(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
@@ -369,12 +369,12 @@ void GenerateFaceIPFColoring::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, sm->getNumFaceTuples()),
-                      CalculateFaceIPFColorsImpl(m_SurfaceMeshFaceLabels, m_FieldPhases, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_SurfaceMeshFaceIPFColors, m_CrystalStructures), tbb::auto_partitioner());
+                      CalculateFaceIPFColorsImpl(m_SurfaceMeshFaceLabels, m_FeaturePhases, m_SurfaceMeshFaceNormals, m_FeatureEulerAngles, m_SurfaceMeshFaceIPFColors, m_CrystalStructures), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    CalculateFaceIPFColorsImpl serial(m_SurfaceMeshFaceLabels, m_FieldPhases, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_SurfaceMeshFaceIPFColors, m_CrystalStructures);
+    CalculateFaceIPFColorsImpl serial(m_SurfaceMeshFaceLabels, m_FeaturePhases, m_SurfaceMeshFaceNormals, m_FeatureEulerAngles, m_SurfaceMeshFaceIPFColors, m_CrystalStructures);
     serial.generate(0, sm->getNumFaceTuples());
   }
 

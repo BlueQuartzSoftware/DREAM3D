@@ -140,10 +140,10 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     /**
      * @brief This method generates the Lambda array that will be use during the smoothing

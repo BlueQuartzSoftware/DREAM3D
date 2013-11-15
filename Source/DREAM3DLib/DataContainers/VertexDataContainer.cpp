@@ -69,7 +69,7 @@ VertexDataContainer::~VertexDataContainer()
 //
 // -----------------------------------------------------------------------------
 DOES_DATASET_EXIST_DEFN(VertexDataContainer, VertexData)
-DOES_DATASET_EXIST_DEFN(VertexDataContainer, VertexFieldData)
+DOES_DATASET_EXIST_DEFN(VertexDataContainer, VertexFeatureData)
 DOES_DATASET_EXIST_DEFN(VertexDataContainer, VertexEnsembleData)
 
 // -----------------------------------------------------------------------------
@@ -151,11 +151,11 @@ int VertexDataContainer::getNumVertexArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::getVertexFieldData(const QString &name)
+IDataArray::Pointer VertexDataContainer::getVertexFeatureData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_VertexFieldData.find(name);
-  if ( it == m_VertexFieldData.end() )
+  it =  m_VertexFeatureData.find(name);
+  if ( it == m_VertexFeatureData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -165,50 +165,50 @@ IDataArray::Pointer VertexDataContainer::getVertexFieldData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::addVertexFieldData(const QString &name, IDataArray::Pointer data)
+void VertexDataContainer::addVertexFeatureData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    qDebug() << "Adding Field array with different array name than key name" << "\n";
+    qDebug() << "Adding Feature array with different array name than key name" << "\n";
     qDebug() << "Key name: " << name << "\n";
     qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
-  m_VertexFieldData[name] = data;
-  m_NumVertexFieldTuples = data->getNumberOfTuples();
+  m_VertexFeatureData[name] = data;
+  m_NumVertexFeatureTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::removeVertexFieldData(const QString &name)
+IDataArray::Pointer VertexDataContainer::removeVertexFeatureData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_VertexFieldData.find(name);
-  if ( it == m_VertexFieldData.end() )
+  it =  m_VertexFeatureData.find(name);
+  if ( it == m_VertexFeatureData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = it.value();
-  m_VertexFieldData.erase(it);
+  m_VertexFeatureData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::clearVertexFieldData()
+void VertexDataContainer::clearVertexFeatureData()
 {
-  m_VertexFieldData.clear();
+  m_VertexFeatureData.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> VertexDataContainer::getVertexFieldArrayNameList()
+QList<QString> VertexDataContainer::getVertexFeatureArrayNameList()
 {
   QList<QString> keys;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexFieldData.begin(); iter != m_VertexFieldData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexFeatureData.begin(); iter != m_VertexFeatureData.end(); ++iter)
   {
     keys.push_back( iter.key());
   }
@@ -218,24 +218,24 @@ QList<QString> VertexDataContainer::getVertexFieldArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainer::getNumVertexFieldArrays()
+int VertexDataContainer::getNumVertexFeatureArrays()
 {
-  return static_cast<int>(m_VertexFieldData.size());
+  return static_cast<int>(m_VertexFeatureData.size());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::resizeVertexFieldDataArrays(size_t size)
+void VertexDataContainer::resizeVertexFeatureDataArrays(size_t size)
 {
  // int success = 0;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexFieldData.begin(); iter != m_VertexFieldData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexFeatureData.begin(); iter != m_VertexFeatureData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
     IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
-  m_NumVertexFieldTuples = size;
+  m_NumVertexFeatureTuples = size;
 }
 
 // -----------------------------------------------------------------------------

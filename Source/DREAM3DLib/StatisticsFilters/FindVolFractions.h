@@ -59,7 +59,7 @@ class DREAM3DLib_EXPORT FindVolFractions : public AbstractFilter
     virtual ~FindVolFractions();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    //------ Required Field Data
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(VolFractionsArrayName)
@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT FindVolFractions : public AbstractFilter
 
     float* m_VolFractions;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindVolFractions(const FindVolFractions&); // Copy Constructor Not Implemented
     void operator=(const FindVolFractions&); // Operator '=' Not Implemented

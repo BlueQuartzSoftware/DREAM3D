@@ -109,7 +109,7 @@ int ParaDisReader::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ParaDisReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ParaDisReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   EdgeDataContainer* m = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
@@ -132,8 +132,8 @@ void ParaDisReader::dataCheck(bool preflight, size_t voxels, size_t fields, size
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NumberOfArms, int32_t, Int32ArrayType, 0, voxels, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NodeConstraints, int32_t, Int32ArrayType, 0, voxels, dims)
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, BurgersVectors, float, FloatArrayType, 0.0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, SlipPlaneNormals, float, FloatArrayType, 0.0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, BurgersVectors, float, FloatArrayType, 0.0, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, SlipPlaneNormals, float, FloatArrayType, 0.0, features, dims)
 
   if (m_InStream.isOpen() == true)
   {
@@ -349,13 +349,13 @@ int ParaDisReader::readFile()
 
   // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
   // method which is performed before this function. This will cause an error -501 because the array with the name
-  // m_GrainIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
+  // m_FeatureIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
   m->removeVertexData(m_NumberOfArmsArrayName);
   m->removeVertexData(m_NodeConstraintsArrayName);
   m->removeEdgeData(m_BurgersVectorsArrayName);
   m->removeEdgeData(m_SlipPlaneNormalsArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
-  //  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  //  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   QVector<int> dims(1, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NumberOfArms, int32_t, Int32ArrayType, 0, numVerts, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NodeConstraints, int32_t, Int32ArrayType, 0, numVerts, dims)

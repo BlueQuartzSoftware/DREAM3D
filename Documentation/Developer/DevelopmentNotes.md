@@ -14,7 +14,7 @@ Be able to automatically generate a cross referenced Help/Filter index. The inde
         FIlter Group
         Filter SubGroup
         Array Default Name
-        Array Group (Cell | Field | Ensemble )
+        Array Group (Cell | Feature | Ensemble )
         Array Type (int | float | double | ...)
         Num. Components
         Description

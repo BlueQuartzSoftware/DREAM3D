@@ -98,7 +98,7 @@ If the programmer wishes they can create a QDialog based class to display option
 This code instantiates a **RolledPresetDialog** class and presents it to the user. If the user clicks the _OK_ button then the code extracts the values from the dialog and stores it in the class. The programmer can then use these values when the default set of data is being generated.
 
 ### User Interface Implementation Methods for Preset Dialogs
-The programmer is welcome to use any technique to develop their dialog. They can use the QDesigner program to graphically layout their dialog then use the Multiple Inheritance model for the actual implementation details. For simply dialog the programmer may find it just as fast to implement a class deriving from **QDialog** and layout the input fields by hand. Both the Rolled Preset and the Recrystallized Preset dialog boxes are done this way. During construction of these codes do not forget to update the CMake files with the necessary entries for the source files and optionally the _uic_ calls.
+The programmer is welcome to use any technique to develop their dialog. They can use the QDesigner program to graphically layout their dialog then use the Multiple Inheritance model for the actual implementation details. For simply dialog the programmer may find it just as fast to implement a class deriving from **QDialog** and layout the input features by hand. Both the Rolled Preset and the Recrystallized Preset dialog boxes are done this way. During construction of these codes do not forget to update the CMake files with the necessary entries for the source files and optionally the _uic_ calls.
 
  
 

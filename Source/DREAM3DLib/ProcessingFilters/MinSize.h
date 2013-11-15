@@ -53,7 +53,7 @@
 
 /**
  * @class MinSize MinSize.h DREAM3DLib/ProcessingFilters/MinSize.h
- * @brief This filter ensures each Grain or Region has a minimum number of voxels.
+ * @brief This filter ensures each Feature or Region has a minimum number of voxels.
  * @author
  * @date Nov 19, 2011
  * @version 1.0
@@ -69,11 +69,11 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
+    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedFeatureSize)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
@@ -96,20 +96,20 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    virtual void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    virtual void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   protected:
     MinSize();
 
     int32_t* m_Neighbors;
 
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     bool* m_Active;
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;
 
-    virtual void remove_smallgrains();
+    virtual void remove_smallfeatures();
     virtual void assign_badpoints();
 
   private:

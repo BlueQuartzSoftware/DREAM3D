@@ -59,9 +59,9 @@ typedef struct
   float m_AxisLengths[3];
   float m_AxisEulerAngles[3];
   float m_Omega3s;
-  int m_FieldPhases;
+  int m_FeaturePhases;
   int m_Neighborhoods;
-} Field;
+} Feature;
 
 /**
  * @class PackPrimaryPhases PackPrimaryPhases.h DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h
@@ -81,9 +81,9 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
@@ -137,42 +137,42 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     void initialize_packinggrid();
 
-    void generate_grain(int phase, int Seed, Field* grain, unsigned int shapeclass);
+    void generate_feature(int phase, int Seed, Feature* feature, unsigned int shapeclass);
 
-    void transfer_attributes(int gnum, Field* field);
-    void insert_grain(size_t grainNum);
+    void transfer_attributes(int gnum, Feature* feature);
+    void insert_feature(size_t featureNum);
 
-    void move_grain(size_t grainNum, float xc, float yc, float zc);
+    void move_feature(size_t featureNum, float xc, float yc, float zc);
 
-    float check_sizedisterror(Field* field);
-    void determine_neighbors(size_t grainNum, int add);
+    float check_sizedisterror(Feature* feature);
+    void determine_neighbors(size_t featureNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
 
-    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr);
+    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr);
     void assign_voxels();
     void assign_gaps_only();
-    void cleanup_grains();
+    void cleanup_features();
     void write_goal_attributes();
 
     void compare_1Ddistributions(QVector<float>, QVector<float>, float& sqrerror);
     void compare_2Ddistributions(QVector<QVector<float> >, QVector<QVector<float> >, float& sqrerror);
     void compare_3Ddistributions(QVector<QVector<QVector<float> > >, QVector<QVector<QVector<float> > >, float& sqrerror);
 
-    int writeVtkFile(int32_t* grainOwners, bool* exclusionZonesPtr);
-    int estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres);
+    int writeVtkFile(int32_t* featureOwners, bool* exclusionZonesPtr);
+    int estimate_numfeatures(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres);
 
 
   private:
     int32_t* m_Neighbors;
 
     // Cell Data - make sure these are all initialized to NULL in the constructor
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellPhases;
     int8_t*  m_SurfaceVoxels;
 
-    // Field Data - make sure these are all initialized to NULL in the constructor
+    // Feature Data - make sure these are all initialized to NULL in the constructor
     bool* m_Active;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     int32_t* m_Neighborhoods;
     float* m_Centroids;
     float* m_Volumes;
@@ -203,7 +203,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     unsigned long long int m_Seed;
 
-    int firstPrimaryField;
+    int firstPrimaryFeature;
 
     float sizex;
     float sizey;
@@ -218,12 +218,12 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     int m_PackingPoints[3];
     int m_TotalPackingPoints;
 
-    QVector<QVector<float> > grainsizedist;
-    QVector<QVector<float> > simgrainsizedist;
+    QVector<QVector<float> > featuresizedist;
+    QVector<QVector<float> > simfeaturesizedist;
     QVector<QVector<QVector<float> > > neighbordist;
     QVector<QVector<QVector<float> > > simneighbordist;
 
-    QVector<float> grainsizediststep;
+    QVector<float> featuresizediststep;
     QVector<float> neighbordiststep;
 
     QVector<int> newnames;
@@ -237,7 +237,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     PackPrimaryPhases(const PackPrimaryPhases&); // Copy Constructor Not Implemented

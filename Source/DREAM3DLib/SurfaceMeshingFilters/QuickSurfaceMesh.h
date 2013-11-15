@@ -60,7 +60,7 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
@@ -81,10 +81,10 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
     QuickSurfaceMesh();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
 
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     QuickSurfaceMesh(const QuickSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const QuickSurfaceMesh&); // Operator '=' Not Implemented

@@ -90,12 +90,12 @@ class VtkScalarWriter : public AbstractFilter
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-class VoxelGrainIdScalarWriter : public VtkScalarWriter
+class VoxelFeatureIdScalarWriter : public VtkScalarWriter
 {
   public:
-    VoxelGrainIdScalarWriter(T* rPtr) : VtkScalarWriter(), r(rPtr) {}
-    DREAM3D_TYPE_MACRO_SUPER(VoxelGrainIdScalarWriter<T>, VtkScalarWriter)
-    virtual ~VoxelGrainIdScalarWriter() {}
+    VoxelFeatureIdScalarWriter(T* rPtr) : VtkScalarWriter(), r(rPtr) {}
+    DREAM3D_TYPE_MACRO_SUPER(VoxelFeatureIdScalarWriter<T>, VtkScalarWriter)
+    virtual ~VoxelFeatureIdScalarWriter() {}
 
 
     int writeScalars(FILE* f)
@@ -103,23 +103,23 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
       int err = 0;
       QString file;
       int64_t totalPoints = r->getTotalPoints();
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::FeatureIds, Int32ArrayType, int32_t, (totalPoints), feature_indicies);
 
       if (m_WriteBinaryFiles == true)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::CellData::GrainIds);
+        WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::CellData::FeatureIds);
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::CellData::GrainIds, grain_indicies)
+        WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::CellData::FeatureIds, feature_indicies)
       }
       return err;
     }
 
   private:
     T* r;
-    VoxelGrainIdScalarWriter(const VoxelGrainIdScalarWriter&); // Copy Constructor Not Implemented
-    void operator=(const VoxelGrainIdScalarWriter&); // Operator '=' Not Implemented
+    VoxelFeatureIdScalarWriter(const VoxelFeatureIdScalarWriter&); // Copy Constructor Not Implemented
+    void operator=(const VoxelFeatureIdScalarWriter&); // Operator '=' Not Implemented
 };
 
 /**
@@ -127,7 +127,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
  * to the VTK file. This class is specifically setup for writing voxel based
  * properties to the VTK file
  */
-#define VtkSCALARWRITER_CLASS_DEF(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
+#define VtkSCALARWRITER_CLASS_DEF(name, r, feature, arrayName, scalarName, arrayType, m_msgType, format)\
   template<typename T>\
   class name : public VtkScalarWriter\
   {\
@@ -139,7 +139,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
         int err = 0;\
         QString file;\
         int64_t totalPoints = r->getTotalPoints();\
-        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, feature, arrayName, arrayType, m_msgType, totalPoints, var);\
         if (m_WriteBinaryFiles == true) {\
           WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, m_msgType, var)\
         }    else    {\
@@ -153,7 +153,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
       void operator=(const name&);\
   };
 
-#define VtkSCALARWRITER_CLASS_DEF_FIELD(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
+#define VtkSCALARWRITER_CLASS_DEF_FIELD(name, r, feature, arrayName, scalarName, arrayType, m_msgType, format)\
   template<typename T>\
   class name : public VtkScalarWriter\
   {\
@@ -164,14 +164,14 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
       int writeScalars(FILE* f)  {\
         int err = 0;\
         QString file;\
-        int64_t totalFields = r->getNumCellFieldTuples();\
-        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell##field, arrayName, arrayType, m_msgType, totalFields, var);\
+        int64_t totalFeatures = r->getNumCellFeatureTuples();\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell##feature, arrayName, arrayType, m_msgType, totalFeatures, var);\
         int64_t totalPoints = r->getTotalPoints();\
-        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::FeatureIds, Int32ArrayType, int32_t, (totalPoints), feature_indicies);\
         if (m_WriteBinaryFiles == true) {\
-          WRITE_VTK_SCALARS_FROM_FIELD_BINARY(r, scalarName, m_msgType, var, grain_indicies)\
+          WRITE_VTK_SCALARS_FROM_FIELD_BINARY(r, scalarName, m_msgType, var, feature_indicies)\
         }    else    {\
-          WRITE_VTK_SCALARS_FROM_FIELD_ASCII(r, scalarName, m_msgType, var, grain_indicies, format)\
+          WRITE_VTK_SCALARS_FROM_FIELD_ASCII(r, scalarName, m_msgType, var, feature_indicies, format)\
         }\
         return err;\
       }\
@@ -181,7 +181,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
       void operator=(const name&);\
   };
 
-#define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
+#define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, feature, arrayName, scalarName, arrayType, m_msgType, format)\
   template<typename T>\
   class name : public VtkScalarWriter\
   {\
@@ -193,7 +193,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
         int err = 0;\
         QString file;\
         int64_t totalPoints = r->getTotalPoints();\
-        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
+        GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, feature, arrayName, arrayType, m_msgType, totalPoints, var);\
         if (m_WriteBinaryFiles == true) {\
           WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, m_msgType, var)\
         }    else    {\
@@ -216,14 +216,14 @@ VtkSCALARWRITER_CLASS_DEF(VoxelCIScalarWriter, r, Cell, DREAM3D::CellData::Confi
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelGoodVoxelScalarWriter, r, Cell, DREAM3D::CellData::GoodVoxels, DREAM3D::CellData::GoodVoxels, BoolArrayType, char, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelGlobAlphaScalarWriter, r, Cell, DREAM3D::CellData::GlobAlpha, DREAM3D::CellData::GlobAlpha, Int32ArrayType, int, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelKernelAverageMisorientationScalarWriter, r, Cell, DREAM3D::CellData::KernelAverageMisorientations, DREAM3D::CellData::KernelAverageMisorientations, FloatArrayType, float, "%f ")
-VtkSCALARWRITER_CLASS_DEF(VoxelGrainReferenceMisorientationScalarWriter, r, Cell, DREAM3D::CellData::GrainReferenceMisorientations, DREAM3D::CellData::GrainReferenceMisorientations, FloatArrayType, float, "%f ")
-VtkSCALARWRITER_CLASS_DEF(VoxelGrainReferenceCAxisMisorientationScalarWriter, r, Cell, DREAM3D::CellData::GrainReferenceCAxisMisorientations, DREAM3D::CellData::GrainReferenceCAxisMisorientations, FloatArrayType, float, "%f ")
+VtkSCALARWRITER_CLASS_DEF(VoxelFeatureReferenceMisorientationScalarWriter, r, Cell, DREAM3D::CellData::FeatureReferenceMisorientations, DREAM3D::CellData::FeatureReferenceMisorientations, FloatArrayType, float, "%f ")
+VtkSCALARWRITER_CLASS_DEF(VoxelFeatureReferenceCAxisMisorientationScalarWriter, r, Cell, DREAM3D::CellData::FeatureReferenceCAxisMisorientations, DREAM3D::CellData::FeatureReferenceCAxisMisorientations, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelGBEDMScalarWriter, r, Cell, DREAM3D::CellData::GBEuclideanDistances, DREAM3D::CellData::GBEuclideanDistances, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelTJEDMScalarWriter, r, Cell, DREAM3D::CellData::TJEuclideanDistances, DREAM3D::CellData::TJEuclideanDistances, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelQPEDMScalarWriter, r, Cell, DREAM3D::CellData::QPEuclideanDistances, DREAM3D::CellData::QPEuclideanDistances, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelSurfaceVoxelScalarWriter, r, Cell, DREAM3D::CellData::SurfaceVoxels, DREAM3D::CellData::SurfaceVoxels, Int8ArrayType, char, "%d ")
-VtkSCALARWRITER_CLASS_DEF_FIELD(FieldSizeScalarWriter, r, Field, DREAM3D::FieldData::EquivalentDiameters, DREAM3D::FieldData::EquivalentDiameters, FloatArrayType, float, "%f ")
-VtkSCALARWRITER_CLASS_DEF_FIELD(SchmidFactorScalarWriter, r, Field, DREAM3D::FieldData::Schmids, DREAM3D::FieldData::Schmids, FloatArrayType, float, "%f ")
+VtkSCALARWRITER_CLASS_DEF_FIELD(FeatureSizeScalarWriter, r, Feature, DREAM3D::FeatureData::EquivalentDiameters, DREAM3D::FeatureData::EquivalentDiameters, FloatArrayType, float, "%f ")
+VtkSCALARWRITER_CLASS_DEF_FIELD(SchmidFactorScalarWriter, r, Feature, DREAM3D::FeatureData::Schmids, DREAM3D::FeatureData::Schmids, FloatArrayType, float, "%f ")
 
 template<typename T>
 class VoxelEulerAngleScalarWriter : public VtkScalarWriter
@@ -522,7 +522,7 @@ class VtkMiscFileWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
     /**
-     * @brief Writes a VTK visualization file with vector arrays for the disorientation colors and grain ID.
+     * @brief Writes a VTK visualization file with vector arrays for the disorientation colors and feature ID.
      * @param Output file name
      * @return 0 on Success
      */
@@ -546,25 +546,25 @@ class VtkMiscFileWriter : public AbstractFilter
         WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
       }
       int64_t totalPoints = m->totalPoints();
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::FeatureIds, Int32ArrayType, int32_t, (totalPoints), feature_indicies);
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::KernelAverageMisorientations, FloatArrayType, float, (totalPoints), kernelmisorientation);
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::GrainReferenceMisorientations, FloatArrayType, float, (totalPoints), grainmisorientation);
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::FeatureReferenceMisorientations, FloatArrayType, float, (totalPoints), featuremisorientation);
 //      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::MisorientationGradients, FloatArrayType, float, (totalPoints), misorientationgradient);
 
       //size_t total = m->getXPoints() * m->getYPoints() * m->getZPoints();
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::CellData::GrainIds);
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::KernelAvgMisorientations, float, kernelmisorientation)
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::GrainAvgMisorientations, float, grainmisorientation)
-        //     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::LMG, float, misorientationgradient)
+        WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::CellData::FeatureIds);
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FeatureData::KernelAvgMisorientations, float, kernelmisorientation)
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FeatureData::FeatureAvgMisorientations, float, featuremisorientation)
+        //     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FeatureData::LMG, float, misorientationgradient)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds, grain_indicies)
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::KernelAvgMisorientations, float, kernelmisorientation, "%f ")
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::GrainAvgMisorientations, float, grainmisorientation, "%f ")
-//       WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::LMG, float, misorientationgradient, "%f ")
+        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::FeatureIds, feature_indicies)
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FeatureData::KernelAvgMisorientations, float, kernelmisorientation, "%f ")
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FeatureData::FeatureAvgMisorientations, float, featuremisorientation, "%f ")
+//       WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FeatureData::LMG, float, misorientationgradient, "%f ")
       }
       fclose(f);
       return 0;
@@ -573,7 +573,7 @@ class VtkMiscFileWriter : public AbstractFilter
 
 #if 0
     /**
-     * @brief Writes a VTK visualization file with vector arrays for the Schmid Factor and grain ID.
+     * @brief Writes a VTK visualization file with vector arrays for the Schmid Factor and feature ID.
      * @param Output file name
      * @return 0 on Success
      */
@@ -596,17 +596,17 @@ class VtkMiscFileWriter : public AbstractFilter
         WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
       }
       size_t totalPoints = m->totalPoints();
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (m->totalPoints()), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::FeatureIds, Int32ArrayType, int32_t, (m->totalPoints()), feature_indicies);
 
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::CellData::GrainIds);
-        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(m, DREAM3D::FieldData::Schmids, float, schmidfactor)
+        WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::CellData::FeatureIds);
+        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(m, DREAM3D::FeatureData::Schmids, float, schmidfactor)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds, grain_indicies)
-        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(m, DREAM3D::FieldData::Schmids, float, schmidfactor, "%f ")
+        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::FeatureIds, feature_indicies)
+        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(m, DREAM3D::FeatureData::Schmids, float, schmidfactor, "%f ")
       }
       fclose(f);
       return 0;

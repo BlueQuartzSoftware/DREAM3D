@@ -129,7 +129,7 @@ int SurfaceMeshToNodesTrianglesEdges::writeFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 

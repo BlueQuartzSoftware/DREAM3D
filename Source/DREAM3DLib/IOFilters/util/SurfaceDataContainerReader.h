@@ -66,15 +66,15 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     typedef QList<QString> NameListType;
 
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceFeatureData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceFeatureArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceFeatureArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceEnsembleArraysToRead)
 
 
@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
   protected:
     SurfaceDataContainerReader();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     int gatherData(bool preflight);
 

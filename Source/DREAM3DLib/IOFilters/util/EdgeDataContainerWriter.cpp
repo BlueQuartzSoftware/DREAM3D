@@ -64,7 +64,7 @@ EdgeDataContainerWriter::~EdgeDataContainerWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void EdgeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -140,7 +140,7 @@ void EdgeDataContainerWriter::execute()
     return;
   }
 
-  err = writeEdgeFieldData(dcGid, H5_EDGE_FIELD_DATA_GROUP_NAME);
+  err = writeEdgeFeatureData(dcGid, H5_EDGE_FIELD_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -234,12 +234,12 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
   else
   {
     //First Slab
-    out << "    <Attribute Name=\"" << array->GetName() << " (Field 0)\" ";
+    out << "    <Attribute Name=\"" << array->GetName() << " (Feature 0)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2) <<  "\" ";
-    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 0)\" >" << "\n";
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Feature 0)\" >" << "\n";
     out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
     out << "          0        0" << "\n";
     out << "          1        1" << "\n";
@@ -252,12 +252,12 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     out << "    </Attribute>" << "\n" << "\n";
 
     //Second Slab
-    out << "    <Attribute Name=\"" << array->GetName() << " (Field 1)\" ";
+    out << "    <Attribute Name=\"" << array->GetName() << " (Feature 1)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2) <<  "\" ";
-    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 1)\" >" << "\n";
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Feature 1)\" >" << "\n";
     out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
     out << "          0        " << (array->GetNumberOfComponents() / 2) << "\n";
     out << "          1        1" << "\n";
@@ -281,7 +281,7 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const QString& groupName, I
 #if 0
   < Attribute Name = "Node Type" Center = "Node" >
                                           < DataItem Format = "HDF" DataType = "char" Precision = "1" Dimensions = "43029 1" >
-                                                            MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:
+                                                            MC_IsoGG_50cubed_55features_Bounded_Multi.dream3d:
                                                               / EdgeDataContainer / POINT_DATA / SurfaceMeshNodeType
                                                               < / DataItem >
                                                               < / Attribute >
@@ -478,7 +478,7 @@ int EdgeDataContainerWriter::writeEdgeData(hid_t dcGid, QString groupName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
+int EdgeDataContainerWriter::writeEdgeFeatureData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
@@ -501,7 +501,7 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
   int64_t volDims[3] = { 0, 0, 0 };
 
 
-  // Write the Field Data
+  // Write the Feature Data
   err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
@@ -514,10 +514,10 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
     return err;
   }
 
-  hid_t fieldGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t featureGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
-    QString ss = QObject::tr("Error opening field Group ").arg(groupName);
+    QString ss = QObject::tr("Error opening feature Group ").arg(groupName);
     setErrorCondition(-65);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -528,42 +528,42 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
   typedef QVector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
-  NameListType names = dc->getEdgeFieldArrayNameList();
+  NameListType names = dc->getEdgeFeatureArrayNameList();
   if (names.size() > 0)
   {
-    IDataArray::Pointer array = dc->getEdgeFieldData(names.front());
+    IDataArray::Pointer array = dc->getEdgeFeatureData(names.front());
     total = array->GetSize();
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
 #if WRITE_FIELD_XDMF
     ss.str("");
-    ss << "Field Data (" << total << ")";
-    writeFieldXdmfGridHeader(total, ss);
+    ss << "Feature Data (" << total << ")";
+    writeFeatureXdmfGridHeader(total, ss);
 #endif
   }
-  // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
+  // Now loop over all the feature data and write it out, possibly wrapping it with XDMF code also.
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = dc->getEdgeFieldData(*iter);
+    IDataArray::Pointer array = dc->getEdgeFeatureData(*iter);
     if (array->getTypeAsString().compare(NeighborList<int>::ClassName()) == 0)
     {
       neighborListArrays.push_back(array.get());
     }
     else if (NULL != array.get())
     {
-      err = array->writeH5Data(fieldGroupId);
+      err = array->writeH5Data(featureGroupId);
       if(err < 0)
       {
-        QString ss = QObject::tr("Error writing field array '%1' to the HDF5 File").arg(*iter);
+        QString ss = QObject::tr("Error writing feature array '%1' to the HDF5 File").arg(*iter);
         addErrorMessage(getHumanLabel(), ss, err);
         setErrorCondition(err);
-        H5Gclose(fieldGroupId); // Close the Cell Group
+        H5Gclose(featureGroupId); // Close the Cell Group
         H5Gclose(dcGid); // Close the Data Container Group
         return err;
       }
 #if WRITE_FIELD_XDMF
-      array->writeXdmfAttribute( *getXdmfOStream(), volDims, hdfFileName, xdmfGroupPath, " (Field)");
+      array->writeXdmfAttribute( *getXdmfOStream(), volDims, hdfFileName, xdmfGroupPath, " (Feature)");
 #endif
     }
   }
@@ -572,7 +572,7 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
 #if WRITE_FIELD_XDMF
   if (names.size() > 0)
   {
-    writeXdmfGridFooter("Field Data");
+    writeXdmfGridFooter("Feature Data");
   }
 #endif
 
@@ -599,17 +599,17 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
 #if WRITE_FIELD_XDMF
     ss.str("");
     ss << "Neighbor Data (" << total << ")";
-    writeFieldXdmfGridHeader(total, ss);
+    writeFeatureXdmfGridHeader(total, ss);
 #endif
     for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
     {
-      err = (*iter)->writeH5Data(fieldGroupId);
+      err = (*iter)->writeH5Data(featureGroupId);
       if(err < 0)
       {
-        QString ss = QObject::tr("Error writing field array '%1' to the HDF5 File").arg( (*iter)->GetName() );
+        QString ss = QObject::tr("Error writing feature array '%1' to the HDF5 File").arg( (*iter)->GetName() );
         addErrorMessage(getHumanLabel(), ss, err);
         setErrorCondition(err);
-        H5Gclose(fieldGroupId); // Close the Cell Group
+        H5Gclose(featureGroupId); // Close the Cell Group
         H5Gclose(dcGid); // Close the Data Container Group
         return err;
       }
@@ -623,7 +623,7 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
 
   }
 
-  H5Gclose(fieldGroupId);
+  H5Gclose(featureGroupId);
   return err;
 }
 

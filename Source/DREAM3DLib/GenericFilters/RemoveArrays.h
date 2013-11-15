@@ -65,22 +65,22 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEdgeArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellFeatureArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceEdgeArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceFeatureArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeFeatureArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexFeatureArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexEnsembleArrays)
 
     virtual ~RemoveArrays();
@@ -95,16 +95,16 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
                                              QSet<QString> selectedEdgeArrays,
                                              QSet<QString> selectedFaceArrays,
                                              QSet<QString> selectedCellArrays,
-                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedFeatureArrays,
                                              QSet<QString> selectedEnsembleArrays);
     virtual void setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                               QSet<QString> selectedEdgeArrays,
                                               QSet<QString> selectedFaceArrays,
-                                              QSet<QString> selectedFieldArrays,
+                                              QSet<QString> selectedFeatureArrays,
                                               QSet<QString> selectedEnsembleArrays);
     virtual void setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                            QSet<QString> selectedEdgeArrays,
-                                           QSet<QString> selectedFieldArrays,
+                                           QSet<QString> selectedFeatureArrays,
                                            QSet<QString> selectedEnsembleArrays);
     virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                              QSet<QString> selectedFaceArrays,
@@ -161,10 +161,10 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     RemoveArrays(const RemoveArrays&); // Copy Constructor Not Implemented

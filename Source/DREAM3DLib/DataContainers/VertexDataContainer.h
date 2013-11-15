@@ -78,17 +78,17 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
     virtual ~VertexDataContainer();
 
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Vertex)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (VertexField)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (VertexFeature)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (VertexEnsemble)
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexFeatureData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(VertexArray::Pointer, Vertices)
 
     DOES_DATASET_EXIST_DECL(VertexData)
-    DOES_DATASET_EXIST_DECL(VertexFieldData)
+    DOES_DATASET_EXIST_DECL(VertexFeatureData)
     DOES_DATASET_EXIST_DECL(VertexEnsembleData)
 
     /**
@@ -132,7 +132,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
     int getNumVertexArrays();
 
     /**
-     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
@@ -144,14 +144,14 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addVertexFieldData(const QString &name, IDataArray::Pointer data);
+    void addVertexFeatureData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVertexFieldData(const QString &name);
+    IDataArray::Pointer getVertexFeatureData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -159,38 +159,38 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeVertexFieldData(const QString &name);
+    IDataArray::Pointer removeVertexFeatureData(const QString &name);
 
     /**
-     * @brief Removes all the Field Arrays
+     * @brief Removes all the Feature Arrays
      */
-    void clearVertexFieldData();
+    void clearVertexFeatureData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Field (Formerly Grain) group
+     * Feature (Formerly Feature) group
      * @return
      */
-    QList<QString> getVertexFieldArrayNameList();
+    QList<QString> getVertexFeatureArrayNameList();
 
     /**
-     * @brief Returns the total number of arrays that are stored in the Field group
+     * @brief Returns the total number of arrays that are stored in the Feature group
      * @return
      */
-    int getNumVertexFieldArrays();
+    int getNumVertexFeatureArrays();
 
     /**
-     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumVertexFieldTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumVertexFeatureTuples)
 
     /**
-     * @brief Resizes all of the Field Arrays to have 'size' tuples
+     * @brief Resizes all of the Feature Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeVertexFieldDataArrays(size_t size);
+    void resizeVertexFeatureDataArrays(size_t size);
 
     /**
      * @brief Adds/overwrites the data for a named array
@@ -221,7 +221,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Ensemble (Formerly Grain) group
+     * Ensemble (Formerly Feature) group
      * @return
      */
     QList<QString> getVertexEnsembleArrayNameList();
@@ -233,7 +233,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
     int getNumVertexEnsembleArrays();
 
     /**
-     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
@@ -253,7 +253,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
    private:
 
      QMap<QString, IDataArray::Pointer> m_VertexData;
-     QMap<QString, IDataArray::Pointer> m_VertexFieldData;
+     QMap<QString, IDataArray::Pointer> m_VertexFeatureData;
      QMap<QString, IDataArray::Pointer> m_VertexEnsembleData;
 
      VertexDataContainer(const VertexDataContainer&);

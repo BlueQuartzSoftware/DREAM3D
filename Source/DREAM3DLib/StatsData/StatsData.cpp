@@ -116,17 +116,17 @@ FloatArrayType::Pointer StatsData::CreateDistributionArrays(uint32_t distributio
   FloatArrayType::Pointer v;
   if(distributionType == DREAM3D::DistributionType::Beta)
   {
-    v = FloatArrayType::CreateArray(DREAM3D::HDF5::BetaColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
+    v = FloatArrayType::CreateArray(DREAM3D::HDF5::BetaColumnCount, DREAM3D::HDF5::Feature_Size_Distribution);
     v->initializeWithZeros();
   }
   else if(distributionType == DREAM3D::DistributionType::LogNormal)
   {
-    v = FloatArrayType::CreateArray(DREAM3D::HDF5::LogNormalColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
+    v = FloatArrayType::CreateArray(DREAM3D::HDF5::LogNormalColumnCount, DREAM3D::HDF5::Feature_Size_Distribution);
     v->initializeWithZeros();
   }
   else if(distributionType == DREAM3D::DistributionType::Power)
   {
-    v = FloatArrayType::CreateArray(DREAM3D::HDF5::PowerLawColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
+    v = FloatArrayType::CreateArray(DREAM3D::HDF5::PowerLawColumnCount, DREAM3D::HDF5::Feature_Size_Distribution);
     v->initializeWithZeros();
   }
   return v;

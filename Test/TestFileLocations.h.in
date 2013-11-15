@@ -45,7 +45,7 @@ namespace UnitTest
     const QString TestFile("@TEST_TEMP_DIR@/DataArrayTest/DataArrayTest.h5");
   }
 
-  namespace GrainIdsTest
+  namespace FeatureIdsTest
   {
     static const size_t XSize = 3;
     static const size_t YSize = 4;

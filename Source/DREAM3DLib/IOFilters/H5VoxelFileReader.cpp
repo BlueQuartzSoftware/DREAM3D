@@ -47,12 +47,12 @@ H5VoxelFileReader::H5VoxelFileReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_InputFile(""),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
   m_CrystalStructures(NULL),
@@ -110,7 +110,7 @@ int H5VoxelFileReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -133,7 +133,7 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dim)
   dim[0] = 1;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 1, voxels, dim)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, dim)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, 0, voxels, dim)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PTypeArrayType;
@@ -235,19 +235,19 @@ void H5VoxelFileReader::execute()
   size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
   // Create an DataArray to hold the data
   QVector<int> dims(1, 1);
-  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints, dims, DREAM3D::CellData::GrainIds);
+  DataArray<int>::Pointer featureIds = DataArray<int>::CreateArray(totalpoints, dims, DREAM3D::CellData::FeatureIds);
   DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, dims, DREAM3D::CellData::Phases);
   dims[0] = 3;
   DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints, dims, DREAM3D::CellData::EulerAngles);
 
-  QString arrayname = "GrainID";
-  err = reader->readScalarData<int>(arrayname, grainIds->getPointer(0));
+  QString arrayname = "FeatureID";
+  err = reader->readScalarData<int>(arrayname, featureIds->getPointer(0));
   if(err < 0)
   {
     setErrorCondition(err);
-    PipelineMessage em (getHumanLabel(), "Error Reading the GrainIDs from the .h5voxel file.", err);
+    PipelineMessage em (getHumanLabel(), "Error Reading the FeatureIDs from the .h5voxel file.", err);
     addErrorMessage(em);
-    grainIds = DataArray<int>::NullPointer();
+    featureIds = DataArray<int>::NullPointer();
   }
   arrayname = "PhaseID";
   err = reader->readScalarData<int>(arrayname, phases->getPointer(0));
@@ -256,7 +256,7 @@ void H5VoxelFileReader::execute()
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Reading the Phases from the .h5voxel file.", err);
     addErrorMessage(em);
-    grainIds = DataArray<int>::NullPointer();
+    featureIds = DataArray<int>::NullPointer();
   }
   arrayname = "Euler Angles";
   err = reader->readScalarData<float>(arrayname, eulers->getPointer(0));
@@ -265,10 +265,10 @@ void H5VoxelFileReader::execute()
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Reading the Euler Angles from the .h5voxel file.", err);
     addErrorMessage(em);
-    grainIds = DataArray<int>::NullPointer();
+    featureIds = DataArray<int>::NullPointer();
   }
 
-  m->addCellData(DREAM3D::CellData::GrainIds, grainIds);
+  m->addCellData(DREAM3D::CellData::FeatureIds, featureIds);
   m->addCellData(DREAM3D::CellData::Phases, phases);
   m->addCellData(DREAM3D::CellData::EulerAngles, eulers);
 
@@ -276,23 +276,23 @@ void H5VoxelFileReader::execute()
   size_t maxId = 0;
   for(size_t i = 0; i < totalpoints; i++)
   {
-    gnum = size_t(grainIds->GetValue(i));
+    gnum = size_t(featureIds->GetValue(i));
     if(gnum > maxId) { maxId = gnum; }
   }
-  m->resizeCellFieldDataArrays(maxId + 1);
+  m->resizeCellFeatureDataArrays(maxId + 1);
 
   std::vector<unsigned int> crystruct;
   std::vector<unsigned int> phaseType;
 
   arrayname = "CrystalStructure";
-  err = reader->readFieldData<unsigned int, uint32_t>(arrayname, crystruct);
+  err = reader->readFeatureData<unsigned int, uint32_t>(arrayname, crystruct);
   if(err < 0)
   {
-    PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Field Data", err);
+    PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Feature Data", err);
     addErrorMessage(em);
   }
   arrayname = "PhaseType";
-  err = reader->readFieldData<unsigned int, uint32_t>(arrayname, phaseType);
+  err = reader->readFeatureData<unsigned int, uint32_t>(arrayname, phaseType);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Phase Type Data", err);

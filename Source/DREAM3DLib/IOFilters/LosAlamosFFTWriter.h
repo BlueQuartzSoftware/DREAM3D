@@ -64,7 +64,7 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 
@@ -95,13 +95,13 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
     virtual int writeFile();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellPhases;
     float*   m_CellEulerAngles;
     unsigned int* m_CrystalStructures;
     StringDataArray::Pointer m_MaterialNames;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     LosAlamosFFTWriter(const LosAlamosFFTWriter&); // Copy Constructor Not Implemented
     void operator=(const LosAlamosFFTWriter&); // Operator '=' Not Implemented

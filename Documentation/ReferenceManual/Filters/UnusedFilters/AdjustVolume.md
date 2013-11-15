@@ -24,7 +24,7 @@ Voxel
 
 | Type | Default Name | Comment |
 |------|--------------|---------|
-| Field | EquivalentDiameters |  |
+| Feature | EquivalentDiameters |  |
 
 ## Authors ##
 

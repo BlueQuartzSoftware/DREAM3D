@@ -79,7 +79,7 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
     enum ArrayListType
     {
       CellListType,
-      FieldListType,
+      FeatureListType,
       EnsembleListType,
       VertexListType,
       EdgeListType,

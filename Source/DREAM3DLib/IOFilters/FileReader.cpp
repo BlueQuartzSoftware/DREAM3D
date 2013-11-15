@@ -63,7 +63,7 @@ FileReader::~FileReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FileReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
 
 }

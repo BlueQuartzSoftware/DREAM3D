@@ -79,11 +79,11 @@ class SampleSurfaceMeshImpl
 
       for(int iter=start;iter<end;iter++)
       {
-        //find bounding box for current grain
+        //find bounding box for current feature
         GeometryMath::FindBoundingBoxOfFaces(m_Faces, m_FaceIds->getElementList(iter), ll, ur);
         GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
 
-        //check points in vertex array to see if they are in the bounding box of the grain
+        //check points in vertex array to see if they are in the bounding box of the feature
         for(int i=0;i<numPoints;i++)
         {
           point = m_Points->getVert(i);
@@ -159,7 +159,7 @@ int SampleSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -181,7 +181,7 @@ void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, 
   else
   {
     QVector<int> dims(1, 2);
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, dims)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
   }
 }
 
@@ -236,22 +236,22 @@ void SampleSurfaceMesh::execute()
   VertexArray::Vert_t point;
   VertexArray::Pointer faceBBs = VertexArray::CreateArray(2*numFaces, "faceBBs");
 
-  //walk through faces to see how many grains there are
+  //walk through faces to see how many features there are
   int g1, g2;
-  int maxGrainId = 0;
+  int maxFeatureId = 0;
   for(int i=0;i<numFaces;i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2*i];
     g2 = m_SurfaceMeshFaceLabels[2*i+1];
-    if(g1 > maxGrainId) maxGrainId = g1;
-    if(g2 > maxGrainId) maxGrainId = g2;
+    if(g1 > maxFeatureId) maxFeatureId = g1;
+    if(g2 > maxFeatureId) maxFeatureId = g2;
   }
-  //add one to account for grain 0
-  int numGrains = maxGrainId+1;
+  //add one to account for feature 0
+  int numFeatures = maxFeatureId+1;
 
   //create a dynamic list array to hold face lists
   Int32DynamicListArray::Pointer faceLists = Int32DynamicListArray::New();
-  QVector<uint16_t> linkCount(numGrains, 0);
+  QVector<uint16_t> linkCount(numFeatures, 0);
   unsigned short* linkLoc;
 
   // fill out lists with number of references to cells
@@ -261,7 +261,7 @@ void SampleSurfaceMesh::execute()
 
   ::memset(linkLoc, 0, numFaces*sizeof(unsigned short));
 
-  // traverse data to determine number of faces belonging to each grain
+  // traverse data to determine number of faces belonging to each feature
   for (int i=0; i < numFaces; i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2*i];
@@ -273,7 +273,7 @@ void SampleSurfaceMesh::execute()
   // now allocate storage for the faces
   faceLists->allocateLists(linkCount);
 
-  // traverse data again to get the faces belonging to each grain
+  // traverse data again to get the faces belonging to each feature
   for (int i=0; i < numFaces; i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2*i];
@@ -290,7 +290,7 @@ void SampleSurfaceMesh::execute()
   VertexArray::Pointer points = generate_points();
   int numPoints = points->count();
 
-  //create array to hold which polyhedron (grain) each point falls in
+  //create array to hold which polyhedron (feature) each point falls in
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   iArray = Int32ArrayType::CreateArray(numPoints, "polyhedronIds");
   iArray->initializeWithZeros();
@@ -307,7 +307,7 @@ void SampleSurfaceMesh::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, numGrains),
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures),
       SampleSurfaceMeshImpl(faces, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
 
   }
@@ -315,7 +315,7 @@ void SampleSurfaceMesh::execute()
 #endif
   {
     SampleSurfaceMeshImpl serial(faces, faceLists, faceBBs, points, polyIds);
-    serial.checkPoints(0, numGrains);
+    serial.checkPoints(0, numFeatures);
   }
 
   assign_points(iArray);

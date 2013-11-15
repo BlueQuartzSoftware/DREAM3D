@@ -47,7 +47,7 @@ class GenericFilter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, StrVector)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelCellArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelFeatureArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelEnsembleArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshPointArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshFaceArrayName)
@@ -113,10 +113,10 @@ class GenericFilter : public AbstractFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
 

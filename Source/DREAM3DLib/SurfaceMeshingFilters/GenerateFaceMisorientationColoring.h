@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceMisorientationColorsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
@@ -122,17 +122,17 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
     int32_t* m_SurfaceMeshFaceLabels;
     float* m_SurfaceMeshFaceMisorientationColors;
     float* m_AvgQuats;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     unsigned int* m_CrystalStructures;
 
     GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&); // Copy Constructor Not Implemented

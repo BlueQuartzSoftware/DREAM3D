@@ -1,20 +1,20 @@
-Find Field Neighbors {#findneighbors}
+Find Feature Neighbors {#findneighbors}
 ==========
 
 ## Group (Subgroup) ##
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter determines, for each **Field**, the number of other **Fields** that are in contact with it.  The algorithm for determining the number of "contiguous" neighbors of each **Field** is as follows:
+This Filter determines, for each **Feature**, the number of other **Features** that are in contact with it.  The algorithm for determining the number of "contiguous" neighbors of each **Feature** is as follows:
 
-1) Identify the **Field** to which a **Cell** belongs
-2) Identify the **Fields** to which each of the current **Cell**'s six (6) face-face neighboring **Cells** (front, back, left, right, up, down) belong
-3) If a neighboring **Cell** belongs to a different **Field** than the current **Cell**, then that **Field** (owner of the neighboring **Cell**) is added to the list of contiguous neighbors of the **Field** that owns the current **Cell**.
+1) Identify the **Feature** to which a **Cell** belongs
+2) Identify the **Features** to which each of the current **Cell**'s six (6) face-face neighboring **Cells** (front, back, left, right, up, down) belong
+3) If a neighboring **Cell** belongs to a different **Feature** than the current **Cell**, then that **Feature** (owner of the neighboring **Cell**) is added to the list of contiguous neighbors of the **Feature** that owns the current **Cell**.
 4) Repeat 1-3 for all **Cells**
 
-While performing the above steps, the number of neighboring **Cell**(s)/datapoint(s) with different **Field** owner(s) than a given **Cell** is stored, which identifies whether a **Cell** lies on the surface of a **Field** (i.e. the **Field** boundary).
-Additionally, the surface area shared between each set of contiguous **Fields** is calculated by tracking the number of times two neighboring **Cells** correspond to a contiguous **Field** pair.
-The filter also notes which **Fields** touch the outer surface of the sample (this is obtianed for "free" while performing the above algorithm).
+While performing the above steps, the number of neighboring **Cell**(s)/datapoint(s) with different **Feature** owner(s) than a given **Cell** is stored, which identifies whether a **Cell** lies on the surface of a **Feature** (i.e. the **Feature** boundary).
+Additionally, the surface area shared between each set of contiguous **Features** is calculated by tracking the number of times two neighboring **Cells** correspond to a contiguous **Feature** pair.
+The filter also notes which **Features** touch the outer surface of the sample (this is obtianed for "free" while performing the above algorithm).
 
 ## Parameters ##
 None
@@ -26,18 +26,18 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Fields (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field**| | Find Field Phases (Generic), Read Field Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | Surface**Cells** | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Field** than itself. Values will range from *0* to *6* |  |
-| Field | NumNeighbors | Value (int) equal to the number of contiguous neighboring **Fields** for a given **Field** |  |
-| Field | NeighborLists | List of the contiguous neighboring **Fields** for a given **Field** |  |
-| Field | SharedSurfaceAreaLists | List of the area shared between contiguous neighboring **Fields** for a given **Field** |  |
-| Field | SurfaceFields | Boolean flag equal to 1 if the **Field** touches an outer surface of the sample and equal to 0 if it does not. |  |
+| Cell | Surface**Cells** | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Feature** than itself. Values will range from *0* to *6* |  |
+| Feature | NumNeighbors | Value (int) equal to the number of contiguous neighboring **Features** for a given **Feature** |  |
+| Feature | NeighborLists | List of the contiguous neighboring **Features** for a given **Feature** |  |
+| Feature | SharedSurfaceAreaLists | List of the area shared between contiguous neighboring **Features** for a given **Feature** |  |
+| Feature | SurfaceFeatures | Boolean flag equal to 1 if the **Feature** touches an outer surface of the sample and equal to 0 if it does not. |  |
 
 ## Authors ##
 
