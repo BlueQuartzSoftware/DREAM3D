@@ -1,4 +1,4 @@
-Shared Feature Face Filter {#sharedgrainfacefilter}
+Shared Feature Face Filter {#sharedfeaturefacefilter}
 ======
 
 ## Group (Subgroup) ##

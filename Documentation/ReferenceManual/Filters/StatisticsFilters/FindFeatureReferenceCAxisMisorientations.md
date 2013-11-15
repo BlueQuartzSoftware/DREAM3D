@@ -1,11 +1,11 @@
-Find Feature Reference C-Axis Misorientations {#findgrainreferencecaxismisorientations}
+Find Feature Reference C-Axis Misorientations {#findfeaturereferencecaxismisorientations}
 ======
 
 ## Group (Subgroup) ##
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This filter is essentially the same as the [Find Feature Reference Misorientations](FindGrainReferenceMisorientations.html "") filter, but with the misalignment between c-axes of interest, rather than full misorientations.  The average c-axis orientation for each **Feature** is compared with the c-axis orientation of each of the **Cells** within the **Feature**. 
+This filter is essentially the same as the [Find Feature Reference Misorientations](FindGrainReferenceMisorientations.html "") filter, but with the misalignment between c-axes of interest, rather than full misorientations.  The average c-axis orientation for each **Feature** is compared with the c-axis orientation of each of the **Cells** within the **Feature**.
 
 ## Parameters ##
 None

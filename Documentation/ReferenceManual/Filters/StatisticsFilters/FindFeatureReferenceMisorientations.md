@@ -1,4 +1,4 @@
-Find Feature Reference Misorientations {#findgrainreferencemisorientations}
+Find Feature Reference Misorientations {#findfeaturereferencemisorientations}
 ======
 
 ## Group (Subgroup) ##

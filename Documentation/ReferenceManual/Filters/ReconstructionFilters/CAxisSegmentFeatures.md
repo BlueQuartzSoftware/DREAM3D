@@ -1,11 +1,11 @@
-Segment Features (C-Axis Misorientation) {#caxissegmentgrains}
+Segment Features (C-Axis Misorientation) {#caxissegmentfeatures}
 ======
 
 ## Group (Subgroup) ##
 Reconstruction Filters (Segmentation)
 
 ## Description ##
-The _c-axis misorientation_ refers to the angle between the <001> directions (c-axis in the hexagonal system) that is present between neighboring __Cells__. This filter searches for and identifies those __Cells__ that satisfy the tolerance angle (in degrees) entered by the user. 
+The _c-axis misorientation_ refers to the angle between the <001> directions (c-axis in the hexagonal system) that is present between neighboring __Cells__. This filter searches for and identifies those __Cells__ that satisfy the tolerance angle (in degrees) entered by the user.
 
 ## Parameters ##
 

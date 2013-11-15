@@ -1,4 +1,4 @@
-Feature Face Curvature Filter {#grainfacecurvaturefilter}
+Feature Face Curvature Filter {#featurefacecurvaturefilter}
 ======
 
 ## Group (Subgroup) ##

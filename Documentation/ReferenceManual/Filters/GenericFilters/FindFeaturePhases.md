@@ -1,10 +1,10 @@
-Find Feature Phases {#findgrainphases}
-==========   
+Find Feature Phases {#findfeaturephases}
+==========
 ## Group (Subgroup) ##
 Generic Filters (Misc)
 
 ## Description ##
-This filter determines the phase of each **Feature** by querying the phase of the **Cells** that belong to the **Feature**. 
+This filter determines the phase of each **Feature** by querying the phase of the **Cells** that belong to the **Feature**.
 Note that it is assumed that all **Cells** belonging to a **Feature** are of the same phase, and thus any **Cell** can be used to determine the phase of the **Feature** that owns that **Cell**.
 
 ## Parameters ##

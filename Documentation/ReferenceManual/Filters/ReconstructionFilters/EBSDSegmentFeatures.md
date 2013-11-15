@@ -1,11 +1,11 @@
-Segment Features (Misorientation) {#ebsdsegmentgrains}
+Segment Features (Misorientation) {#ebsdsegmentfeatures}
 ======
 
 ## Group (Subgroup) ##
 Reconstruction Filters (Segmentation)
 
 ## Description ##
-This Filter segments the **Features** by grouping neighboring **Cells** that satisfy the _misorientation tolerance_, i.e., have _misorientation angle_ less than the value set by the user. The __Cell__  _GrainIds_ established by this filter are used by the other Filters. 
+This Filter segments the **Features** by grouping neighboring **Cells** that satisfy the _misorientation tolerance_, i.e., have _misorientation angle_ less than the value set by the user. The __Cell__  _GrainIds_ established by this filter are used by the other Filters.
 
 
 ## Parameters ##

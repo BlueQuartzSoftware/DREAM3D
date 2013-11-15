@@ -162,16 +162,16 @@ void ComparisonSelectionWidget::populateArrayNames(DataContainerArray::Pointer d
 //    populateVolumeArrayNames(vldc);
   }
   else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= FaceListType)
-  { 
-    populateSurfaceArrayNames(sdc);
+  {
+    //populateSurfaceArrayNames(sdc);
   }
   else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= EdgeListType)
-  { 
-    populateEdgeArrayNames(edc);
+  {
+  //  populateEdgeArrayNames(edc);
   }
   else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= VertexListType)
-  { 
-    populateVertexArrayNames(vdc);
+  {
+  //  populateVertexArrayNames(vdc);
   }
 
 

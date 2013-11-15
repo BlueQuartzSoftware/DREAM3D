@@ -127,8 +127,8 @@
      </property>
      <item row="1" column="1">
       <layout class="QFormLayout" name="formLayout_3">
-       <property name="featureGrowthPolicy">
-        <enum>QFormLayout::AllNonFixedFeaturesGrow</enum>
+       <property name="FieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
        </property>
        <property name="leftMargin">
         <number>5</number>
@@ -169,8 +169,8 @@ font-size: 10px;
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
+  font-size: 11px;
+  font-style: italic;
 }</string>
          </property>
          <property name="text">
@@ -214,8 +214,8 @@ font-size: 10px;
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
+  font-size: 11px;
+  font-style: italic;
 }</string>
          </property>
          <property name="text">
@@ -259,8 +259,8 @@ font-size: 10px;
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
+  font-size: 11px;
+  font-style: italic;
 }</string>
          </property>
          <property name="text">
@@ -317,8 +317,8 @@ font-size: 10px;
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
+  font-size: 11px;
+  font-style: italic;
 }</string>
          </property>
          <property name="text">
@@ -362,8 +362,8 @@ font-size: 10px;
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
+  font-size: 11px;
+  font-style: italic;
 }</string>
          </property>
          <property name="text">
@@ -404,8 +404,8 @@ font-size: 10px;
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
+  font-size: 11px;
+  font-style: italic;
 }</string>
          </property>
          <property name="text">
@@ -420,8 +420,8 @@ font-size: 10px;
      </item>
      <item row="1" column="3">
       <layout class="QFormLayout" name="formLayout">
-       <property name="featureGrowthPolicy">
-        <enum>QFormLayout::FeaturesStayAtSizeHint</enum>
+       <property name="FieldGrowthPolicy">
+        <enum>QFormLayout::FieldsStayAtSizeHint</enum>
        </property>
        <property name="labelAlignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -442,8 +442,8 @@ font-size: 10px;
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
+  font-size: 11px;
+  font-style: italic;
 }</string>
          </property>
          <property name="text">
@@ -487,8 +487,8 @@ font-size: 10px;
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
+  font-size: 11px;
+  font-style: italic;
 }</string>
          </property>
          <property name="text">
@@ -532,8 +532,8 @@ font-size: 10px;
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
+  font-size: 11px;
+  font-style: italic;
 }</string>
          </property>
          <property name="text">
