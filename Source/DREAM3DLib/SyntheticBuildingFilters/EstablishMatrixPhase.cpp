@@ -53,15 +53,15 @@
 EstablishMatrixPhase::EstablishMatrixPhase() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_ActiveArrayName(DREAM3D::FieldData::Active),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_Active(NULL),
-  m_FieldPhases(NULL),
+  m_FeaturePhases(NULL),
   m_PhaseTypes(NULL)
 {
 
@@ -96,7 +96,7 @@ int EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -104,12 +104,12 @@ void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t field
 
   QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -301, int32_t, Int32ArrayType, voxels, dims)
 
-  // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases,  int32_t, Int32ArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, false, fields, dims)
+  // Feature Data
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases,  int32_t, Int32ArrayType, 0, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, false, features, dims)
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
@@ -156,10 +156,10 @@ void EstablishMatrixPhase::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalFeatures = m->getNumCellFeatureTuples();
 
-  if(totalFields == 0) { totalFields = 1; }
-  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
+  if(totalFeatures == 0) { totalFeatures = 1; }
+  dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -205,14 +205,14 @@ void  EstablishMatrixPhase::establish_matrix()
   totalvol = sizex * sizey * sizez;
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t currentnumgrains = m->getNumCellFieldTuples();
-  if(currentnumgrains == 0)
+  size_t currentnumfeatures = m->getNumCellFeatureTuples();
+  if(currentnumfeatures == 0)
   {
-    m->resizeCellFieldDataArrays(1);
+    m->resizeCellFeatureDataArrays(1);
     dataCheck(false, totalPoints, 1, m->getNumCellEnsembleTuples());
-    currentnumgrains = 1;
+    currentnumfeatures = 1;
   }
-  firstMatrixField = currentnumgrains;
+  firstMatrixFeature = currentnumfeatures;
   // size_t index;
 //  int phase;
   float random;
@@ -240,7 +240,7 @@ void  EstablishMatrixPhase::establish_matrix()
   size_t j = 0;
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
-    if(m_GrainIds[i] <= 0)
+    if(m_FeatureIds[i] <= 0)
     {
       random = static_cast<float>( rg.genrand_res53() );
       j = 0;
@@ -248,15 +248,15 @@ void  EstablishMatrixPhase::establish_matrix()
       {
         j++;
       }
-      if(m->getNumCellFieldTuples() <= (firstMatrixField + j))
+      if(m->getNumCellFeatureTuples() <= (firstMatrixFeature + j))
       {
-        m->resizeCellFieldDataArrays((firstMatrixField + j) + 1);
-        dataCheck(false, totalPoints, (firstMatrixField + j) + 1, m->getNumCellEnsembleTuples());
+        m->resizeCellFeatureDataArrays((firstMatrixFeature + j) + 1);
+        dataCheck(false, totalPoints, (firstMatrixFeature + j) + 1, m->getNumCellEnsembleTuples());
       }
-      m_GrainIds[i] = (firstMatrixField + j);
+      m_FeatureIds[i] = (firstMatrixFeature + j);
       m_CellPhases[i] = matrixphases[j];
-      m_Active[(firstMatrixField + j)] = true;
-      m_FieldPhases[(firstMatrixField + j)] = matrixphases[j];
+      m_Active[(firstMatrixFeature + j)] = true;
+      m_FeaturePhases[(firstMatrixFeature + j)] = matrixphases[j];
     }
   }
 }

@@ -123,30 +123,30 @@ void H5MicVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5MicVolumeReader::getPointerByName(const QString &fieldName)
+void* H5MicVolumeReader::getPointerByName(const QString &featureName)
 {
-  if (fieldName.compare(Ebsd::Mic::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
-  if (fieldName.compare(Ebsd::Mic::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
-  if (fieldName.compare(Ebsd::Mic::Euler3) == 0) { return static_cast<void*>(m_Euler3);}
-  if (fieldName.compare(Ebsd::Mic::Confidence) == 0) { return static_cast<void*>(m_Conf);}
-  if (fieldName.compare(Ebsd::Mic::Phase) == 0) { return static_cast<void*>(m_Phase);}
-  if (fieldName.compare(Ebsd::Mic::X) == 0) { return static_cast<void*>(m_X);}
-  if (fieldName.compare(Ebsd::Mic::Y) == 0) { return static_cast<void*>(m_Y);}
+  if (featureName.compare(Ebsd::Mic::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
+  if (featureName.compare(Ebsd::Mic::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
+  if (featureName.compare(Ebsd::Mic::Euler3) == 0) { return static_cast<void*>(m_Euler3);}
+  if (featureName.compare(Ebsd::Mic::Confidence) == 0) { return static_cast<void*>(m_Conf);}
+  if (featureName.compare(Ebsd::Mic::Phase) == 0) { return static_cast<void*>(m_Phase);}
+  if (featureName.compare(Ebsd::Mic::X) == 0) { return static_cast<void*>(m_X);}
+  if (featureName.compare(Ebsd::Mic::Y) == 0) { return static_cast<void*>(m_Y);}
   return NULL;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5MicVolumeReader::getPointerType(const QString &fieldName)
+Ebsd::NumType H5MicVolumeReader::getPointerType(const QString &featureName)
 {
-  if (fieldName.compare(Ebsd::Mic::Euler1) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Mic::Euler2) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Mic::Euler3) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Mic::Confidence) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Mic::Phase) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Mic::X) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Mic::Y) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Euler1) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Euler2) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Euler3) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Confidence) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Phase) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Mic::X) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Y) == 0) { return Ebsd::Float;}
   return Ebsd::UnknownNumType;
 }
 

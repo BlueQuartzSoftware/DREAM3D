@@ -50,19 +50,19 @@ class GenericExample : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeEdgeArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeFaceArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeCellArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeFeatureArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeEnsembleArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceVertexArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceEdgeArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceFaceArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceFeatureArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceEnsembleArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEdgeVertexArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEdgeEdgeArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEdgeFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEdgeFeatureArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEdgeEnsembleArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVertexVertexArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVertexFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVertexFeatureArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVertexEnsembleArrayName)
 
 
@@ -122,10 +122,10 @@ class GenericExample : public AbstractFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
 

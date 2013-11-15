@@ -52,8 +52,8 @@
 // -----------------------------------------------------------------------------
 RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_GrainIds(NULL),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL),
   m_XPoints(0),
   m_YPoints(0),
   m_ZPoints(0)
@@ -140,14 +140,14 @@ int RegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularGridSampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void RegularGridSampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, 0, voxels, dims)
 }
 
 // -----------------------------------------------------------------------------
@@ -236,6 +236,6 @@ void RegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
   int32_t* ids = iArray->getPointer(0);
   for(int i=0;i<(m_XPoints*m_YPoints*m_ZPoints);i++)
   {
-    m_GrainIds[i] = ids[i];
+    m_FeatureIds[i] = ids[i];
   }
 }

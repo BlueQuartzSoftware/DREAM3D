@@ -23,18 +23,18 @@ set(_PublicFilters
   FindAvgOrientations
   FindBoundaryStrengths
   FindEuclideanDistMap
-  FindFieldClustering
-  FindFieldNeighborCAxisMisalignments
+  FindFeatureClustering
+  FindFeatureNeighborCAxisMisalignments
   FindGBCD
-  FindGrainReferenceCAxisMisorientations
-  FindGrainReferenceMisorientations
+  FindFeatureReferenceCAxisMisorientations
+  FindFeatureReferenceMisorientations
   FindKernelAvgMisorientations
   FindLargestCrossSections
   FindMicroTextureRegions
   FindMisorientations
   FindNeighborhoods
   FindNeighbors
-  FindNumFields
+  FindNumFeatures
   FindSchmids
   FindShapes
   FindSizes
@@ -43,8 +43,8 @@ set(_PublicFilters
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
   FindVolFractions
-  FitFieldData
-  FitCorrelatedFieldData
+  FitFeatureData
+  FitCorrelatedFeatureData
   GenerateEnsembleStatistics
 )
 

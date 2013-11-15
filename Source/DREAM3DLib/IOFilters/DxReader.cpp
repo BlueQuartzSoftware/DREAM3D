@@ -47,8 +47,8 @@ DxReader::DxReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_InputFile(""),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_GrainIds(NULL)
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL)
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
@@ -136,7 +136,7 @@ int DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void DxReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -156,7 +156,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QVector<int> dims(1, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, 0, voxels, dims)
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
@@ -363,12 +363,12 @@ int DxReader::readFile()
 
   // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
   // method which is performed before this function. This will cause an error -501 because the array with the name
-  // m_GrainIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
-  m->removeCellData(m_GrainIdsArrayName);
+  // m_FeatureIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
+  m->removeCellData(m_FeatureIdsArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
-  //  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  //  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   QVector<int> dims(1, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, totalPoints, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, 0, totalPoints, dims)
 
 
   if (getErrorCondition() < 0)
@@ -400,7 +400,7 @@ int DxReader::readFile()
       qint32 size = tokens.size();
       for (int32_t in_spins = 0; in_spins < size; in_spins++)
       {
-        m_GrainIds[index] = tokens[in_spins].toInt(&ok, 10);
+        m_FeatureIds[index] = tokens[in_spins].toInt(&ok, 10);
         ++index;
       }
 
@@ -420,15 +420,15 @@ int DxReader::readFile()
   m_InStream.close();
 
 
-  // Find the unique set of grain ids
-  //  QSet<int32_t> grainIdSet;
+  // Find the unique set of feature ids
+  //  QSet<int32_t> featureIdSet;
   //  for (int64_t i = 0; i < totalPoints; ++i)
   //  {
-  //    grainIdSet.insert(m_GrainIds[i]);
+  //    featureIdSet.insert(m_FeatureIds[i]);
   //  }
-  //  for (QSet<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
+  //  for (QSet<int32_t>::iterator iter = featureIdSet.begin(); iter != featureIdSet.end(); ++iter )
   //  {
-  //    qDebug() << "Grain ID: " << (*iter) ;
+  //    qDebug() << "Feature ID: " << (*iter) ;
   //  }
 
   notifyStatusMessage("Complete");

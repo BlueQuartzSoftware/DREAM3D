@@ -123,13 +123,13 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     /**
-     * @brief This method generates a mapping between a "Label" (Grain Id) and the set of triangles that belong to that
+     * @brief This method generates a mapping between a "Label" (Feature Id) and the set of triangles that belong to that
      * lable value.
      * @param trianglesToLabelMap
      */

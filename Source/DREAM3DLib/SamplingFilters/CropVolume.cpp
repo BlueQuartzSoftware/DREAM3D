@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
+#include "DREAM3DLib/GenericFilters/RenumberFeatures.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -50,17 +50,17 @@
 CropVolume::CropVolume() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_XMin(0),
   m_YMin(0),
   m_ZMin(0),
   m_XMax(0),
   m_YMax(0),
   m_ZMax(0),
-  m_RenumberGrains(true),
+  m_RenumberFeatures(true),
   m_UpdateOrigin(true),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_Active(NULL)
 {
   setupFilterParameters();
@@ -135,8 +135,8 @@ void CropVolume::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Renumber Grains");
-    option->setPropertyName("RenumberGrains");
+    option->setHumanLabel("Renumber Features");
+    option->setPropertyName("RenumberFeatures");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -163,7 +163,7 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
   setXMax( reader->readValue("XMax", getXMax()) );
   setYMax( reader->readValue("YMax", getYMax()) );
   setZMax( reader->readValue("ZMax", getZMax()) );
-  setRenumberGrains( reader->readValue("RenumberGrains", false) );
+  setRenumberFeatures( reader->readValue("RenumberFeatures", false) );
   setUpdateOrigin( reader->readValue("UpdateOrigin", false) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -181,7 +181,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->writeValue("XMax", getXMax() );
   writer->writeValue("YMax", getYMax() );
   writer->writeValue("ZMax", getZMax() );
-  writer->writeValue("RenumberGrains", getRenumberGrains() );
+  writer->writeValue("RenumberFeatures", getRenumberFeatures() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -189,7 +189,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void CropVolume::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -200,11 +200,11 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     addErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", -999);
     return;
   }
-  if (m_RenumberGrains == true)
+  if (m_RenumberFeatures == true)
   {
     QVector<int> dims(1, 1);
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, true, features, dims)
   }
 }
 
@@ -307,7 +307,7 @@ void CropVolume::execute()
   }
 
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if(getErrorCondition() < 0)
   {
     return;
@@ -398,32 +398,32 @@ void CropVolume::execute()
     err = p->Resize(totalPoints);
   }
 
-  // Grain Ids MUST already be renumbered.
-  if (m_RenumberGrains == true)
+  // Feature Ids MUST already be renumbered.
+  if (m_RenumberFeatures == true)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFields = m->getNumCellFieldTuples();
-    if (0 == totalFields)
+    size_t totalFeatures = m->getNumCellFeatureTuples();
+    if (0 == totalFeatures)
     {
-      notifyErrorMessage("The number of grains is Zero and should be greater than Zero", -600);
+      notifyErrorMessage("The number of features is Zero and should be greater than Zero", -600);
       notifyStatusMessage("Completed");
       return;
     }
-    dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
+    dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
 
 
 
-    // Find the unique set of grain ids
-    for (size_t i = 1; i < totalFields; ++i)
+    // Find the unique set of feature ids
+    for (size_t i = 1; i < totalFeatures; ++i)
     {
       m_Active[i] = false;
     }
     for (int64_t i = 0; i < totalPoints; ++i)
     {
-      m_Active[m_GrainIds[i]] = true;
+      m_Active[m_FeatureIds[i]] = true;
     }
 
-    RenumberGrains::Pointer renum = RenumberGrains::New();
+    RenumberFeatures::Pointer renum = RenumberFeatures::New();
     renum->setDataContainerArray(getDataContainerArray());
     renum->setObservers(getObservers());
     renum->setMessagePrefix(getMessagePrefix());

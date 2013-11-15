@@ -75,8 +75,8 @@ class CSVGrainDataReader
     void setNumberOfElements(size_t n) { m_NumberOfElements = n;}
     size_t getNumberOfElements() { return m_NumberOfElements;}
 
-    void setNumFields(int n) { m_NumFields = n; }
-    int getNumFields() { return m_NumFields; }
+    void setNumFeatures(int n) { m_NumFeatures = n; }
+    int getNumFeatures() { return m_NumFeatures; }
 
     /**
     * @brief Reads the complete TSL .ang file.
@@ -155,7 +155,7 @@ protected:
 private:
     QString m_FileName;
     size_t m_NumberOfElements;
-    int    m_NumFields;
+    int    m_NumFeatures;
 
     int*   m_GrainId;
     float* m_Phi1;

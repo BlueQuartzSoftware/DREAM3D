@@ -65,15 +65,15 @@ class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(LargestCrossSectionsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, Plane)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Field Largest Cross-Section Areas"; }
+    virtual const QString getHumanLabel() { return "Find Feature Largest Cross-Section Areas"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -110,10 +110,10 @@ class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
 
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     float* m_LargestCrossSections;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindLargestCrossSections(const FindLargestCrossSections&); // Copy Constructor Not Implemented
     void operator=(const FindLargestCrossSections&); // Operator '=' Not Implemented

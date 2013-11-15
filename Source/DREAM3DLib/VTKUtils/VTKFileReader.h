@@ -60,7 +60,7 @@
    7: SPACING 0.665 0.665 1.48
    8: POINT_DATA 258465900
    9:
-   10: SCALARS GrainID int 1
+   10: SCALARS FeatureID int 1
    11: LOOKUP_TABLE default
 
    OR
@@ -74,7 +74,7 @@
    7: SPACING 0.25 0.25 0.25
    8: POINT_DATA 3798900
    9:
-   10: SCALARS GrainID int 1
+   10: SCALARS FeatureID int 1
    11: LOOKUP_TABLE default
  * @endcode
  *

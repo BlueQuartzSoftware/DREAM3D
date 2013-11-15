@@ -114,7 +114,7 @@ int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
 
   setErrorCondition(0);

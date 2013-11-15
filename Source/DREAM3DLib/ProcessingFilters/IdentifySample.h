@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
     QVector<QVector<int> > voxellists;
     QVector<int> nuclei;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     IdentifySample(const IdentifySample&); // Copy Constructor Not Implemented
     void operator=(const IdentifySample&); // Operator '=' Not Implemented

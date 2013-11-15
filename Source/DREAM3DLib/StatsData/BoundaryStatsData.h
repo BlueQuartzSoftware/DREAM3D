@@ -67,12 +67,12 @@ typedef QVector<FloatArrayType::Pointer> VectorOfFloatArray;
  *    @li K
  *    @li Beta
  *
- * The Grain Diameter Info is an array of 3 floats where the values are encoded as:@n
+ * The Feature Diameter Info is an array of 3 floats where the values are encoded as:@n
  * @li [0] = Average
  * @li [1] = Max
  * @li [2] = Min
  *
- * The Grain Size Distribution is an array of 2 floats where the values are encoded as:@n
+ * The Feature Size Distribution is an array of 2 floats where the values are encoded as:@n
  * @li [0] = Average
  * @li [1] = Standard Deviation
  *

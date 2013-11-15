@@ -169,7 +169,7 @@ int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteIPFStandardTriangle::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void WriteIPFStandardTriangle::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 

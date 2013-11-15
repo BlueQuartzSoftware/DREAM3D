@@ -68,19 +68,19 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellParentIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MTRdensityArrayName)
-    //------ Required Field Data
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ContiguousNeighborListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NonContiguousNeighborListArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldParentIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureParentIdsArrayName)
 
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
@@ -114,13 +114,13 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     void characterize_micro_texture_regions();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellParentIds;
-    int32_t* m_FieldParentIds;
+    int32_t* m_FeatureParentIds;
     float* m_MTRdensity;
     float* m_AvgQuats;
     bool* m_Active;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     float* m_Volumes;
     NeighborList<int>* m_ContiguousNeighborList;
     NeighborList<int>* m_NonContiguousNeighborList;
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented

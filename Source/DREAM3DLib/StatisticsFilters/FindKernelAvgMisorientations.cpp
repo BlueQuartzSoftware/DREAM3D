@@ -49,12 +49,12 @@
 FindKernelAvgMisorientations::FindKernelAvgMisorientations() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_KernelAverageMisorientations(NULL),
   m_Quats(NULL),
@@ -120,7 +120,7 @@ int FindKernelAvgMisorientations::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindKernelAvgMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindKernelAvgMisorientations::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -128,7 +128,7 @@ void FindKernelAvgMisorientations::dataCheck(bool preflight, size_t voxels, size
 
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, float, FloatArrayType, 0, voxels, dims)
 
@@ -171,7 +171,7 @@ void FindKernelAvgMisorientations::execute()
     return;
   }
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -181,7 +181,7 @@ void FindKernelAvgMisorientations::execute()
   QuatF q2;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  int numVoxel; // number of voxels in the grain...
+  int numVoxel; // number of voxels in the feature...
   int good = 0;
 
   float w, totalmisorientation;
@@ -210,7 +210,7 @@ void FindKernelAvgMisorientations::execute()
       for (DimType plane = 0; plane < zPoints; plane++)
       {
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
-        if (m_GrainIds[point] > 0 && m_CellPhases[point] > 0)
+        if (m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)
         {
           totalmisorientation = 0.0;
           numVoxel = 0;
@@ -232,7 +232,7 @@ void FindKernelAvgMisorientations::execute()
                 else if(row + k > yPoints - 1) { good = 0; }
                 else if(col + l < 0) { good = 0; }
                 else if(col + l > xPoints - 1) { good = 0; }
-                if(good == 1 && m_GrainIds[point] == m_GrainIds[neighbor])
+                if(good == 1 && m_FeatureIds[point] == m_FeatureIds[neighbor])
                 {
                   w = 10000.0;
                   QuaternionMathF::Copy(quats[neighbor], q2);
@@ -251,7 +251,7 @@ void FindKernelAvgMisorientations::execute()
             m_KernelAverageMisorientations[point] = 0;
           }
         }
-        if (m_GrainIds[point] == 0 || m_CellPhases[point] == 0)
+        if (m_FeatureIds[point] == 0 || m_CellPhases[point] == 0)
         {
           m_KernelAverageMisorientations[point] = 0;
         }

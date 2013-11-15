@@ -66,12 +66,12 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
 
@@ -92,21 +92,21 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Field Neighbors"; }
+    virtual const QString getHumanLabel() { return "Find Feature Neighbors"; }
 
 
   protected:
     FindNeighbors();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int8_t* m_SurfaceVoxels;
-    bool* m_SurfaceFields;
+    bool* m_SurfaceFeatures;
     int32_t* m_NumNeighbors;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindNeighbors(const FindNeighbors&); // Copy Constructor Not Implemented
     void operator=(const FindNeighbors&); // Operator '=' Not Implemented

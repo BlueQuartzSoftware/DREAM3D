@@ -86,22 +86,22 @@ void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, 
   READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
   READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
   READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellField)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
   READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceField)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
   READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeField)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
   READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexField)
+  READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
   READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
   reader->closeFilterGroup();
 }
@@ -116,22 +116,22 @@ int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, 
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellField)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceField)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeField)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexField)
+  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
   writer->closeFilterGroup();
   return ++index;
@@ -140,7 +140,7 @@ int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   typedef QSet<QString> NameList_t;
@@ -158,9 +158,9 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     {
       m->removeCellData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedVolumeCellFieldArrays.begin(); iter != m_SelectedVolumeCellFieldArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedVolumeCellFeatureArrays.begin(); iter != m_SelectedVolumeCellFeatureArrays.end(); ++iter)
     {
-      m->removeCellFieldData(*iter);
+      m->removeCellFeatureData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedVolumeCellEnsembleArrays.begin(); iter != m_SelectedVolumeCellEnsembleArrays.end(); ++iter)
     {
@@ -191,9 +191,9 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     {
       sm->removeEdgeData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceFaceFieldArrays.begin(); iter != m_SelectedSurfaceFaceFieldArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceFaceFeatureArrays.begin(); iter != m_SelectedSurfaceFaceFeatureArrays.end(); ++iter)
     {
-      sm->removeFaceFieldData(*iter);
+      sm->removeFaceFeatureData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedSurfaceFaceEnsembleArrays.begin(); iter != m_SelectedSurfaceFaceEnsembleArrays.end(); ++iter)
     {
@@ -212,9 +212,9 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     {
       e->removeEdgeData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedEdgeEdgeFieldArrays.begin(); iter != m_SelectedEdgeEdgeFieldArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedEdgeEdgeFeatureArrays.begin(); iter != m_SelectedEdgeEdgeFeatureArrays.end(); ++iter)
     {
-      e->removeEdgeFieldData(*iter);
+      e->removeEdgeFeatureData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedEdgeEdgeEnsembleArrays.begin(); iter != m_SelectedEdgeEdgeEnsembleArrays.end(); ++iter)
     {
@@ -229,9 +229,9 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     {
       v->removeVertexData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedVertexVertexFieldArrays.begin(); iter != m_SelectedVertexVertexFieldArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedVertexVertexFeatureArrays.begin(); iter != m_SelectedVertexVertexFeatureArrays.end(); ++iter)
     {
-      v->removeVertexFieldData(*iter);
+      v->removeVertexFeatureData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedVertexVertexEnsembleArrays.begin(); iter != m_SelectedVertexVertexEnsembleArrays.end(); ++iter)
     {
@@ -280,14 +280,14 @@ void RemoveArrays::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArray
                                                QSet<QString> selectedEdgeArrays,
                                                QSet<QString> selectedFaceArrays,
                                                QSet<QString> selectedCellArrays,
-                                               QSet<QString> selectedFieldArrays,
+                                               QSet<QString> selectedFeatureArrays,
                                                QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVolumeCellArrays = selectedVertexArrays;
   m_SelectedVolumeCellArrays = selectedEdgeArrays;
   m_SelectedVolumeCellArrays = selectedFaceArrays;
   m_SelectedVolumeCellArrays = selectedCellArrays;
-  m_SelectedVolumeCellFieldArrays = selectedFieldArrays;
+  m_SelectedVolumeCellFeatureArrays = selectedFeatureArrays;
   m_SelectedVolumeCellEnsembleArrays = selectedEnsembleArrays;
 }
 
@@ -297,13 +297,13 @@ void RemoveArrays::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArray
 void RemoveArrays::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                 QSet<QString> selectedEdgeArrays,
                                                 QSet<QString> selectedFaceArrays,
-                                                QSet<QString> selectedFieldArrays,
+                                                QSet<QString> selectedFeatureArrays,
                                                 QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
   m_SelectedSurfaceFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceFaceFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceFaceFeatureArrays = selectedFeatureArrays;
   m_SelectedSurfaceFaceEnsembleArrays = selectedEnsembleArrays;
 }
 
@@ -312,12 +312,12 @@ void RemoveArrays::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArra
 // -----------------------------------------------------------------------------
 void RemoveArrays::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                              QSet<QString> selectedEdgeArrays,
-                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedFeatureArrays,
                                              QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
-  m_SelectedEdgeEdgeFieldArrays = selectedFieldArrays;
+  m_SelectedEdgeEdgeFeatureArrays = selectedFeatureArrays;
   m_SelectedEdgeEdgeEnsembleArrays = selectedEnsembleArrays;
 }
 
@@ -325,11 +325,11 @@ void RemoveArrays::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
 //
 // -----------------------------------------------------------------------------
 void RemoveArrays::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                               QSet<QString> selectedFieldArrays,
+                                               QSet<QString> selectedFeatureArrays,
                                                QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
-  m_SelectedVertexVertexFieldArrays = selectedFieldArrays;
+  m_SelectedVertexVertexFeatureArrays = selectedFeatureArrays;
   m_SelectedVertexVertexEnsembleArrays = selectedEnsembleArrays;
 }
 

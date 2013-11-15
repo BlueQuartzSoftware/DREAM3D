@@ -58,9 +58,9 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
   Q_OBJECT
 
   public:
-    explicit ComparisonSelectionItemDelegate(QStringList possibleFields, int numPhases, QObject *parent = 0) :
+    explicit ComparisonSelectionItemDelegate(QStringList possibleFeatures, int numPhases, QObject *parent = 0) :
       QStyledItemDelegate(parent),
-      m_FieldList(possibleFields),
+      m_FeatureList(possibleFeatures),
       m_NumberOfPhases(numPhases)
     {
     }
@@ -81,8 +81,8 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setFieldList(QStringList fields) {
-      m_FieldList = fields;
+    void setFeatureList(QStringList features) {
+      m_FeatureList = features;
     }
 
     // -----------------------------------------------------------------------------
@@ -90,8 +90,8 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QLineEdit* fieldValue = NULL;
-      QDoubleValidator* fieldValueValidator = NULL;
+      QLineEdit* featureValue = NULL;
+      QDoubleValidator* featureValueValidator = NULL;
       QComboBox* operatorCombo = NULL;
 
       QStringList operators;
@@ -109,25 +109,25 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
       qint32 col = index.column();
       switch(col)
       {
-        case ComparisonSelectionTableModel::FieldName:
+        case ComparisonSelectionTableModel::FeatureName:
           operatorCombo = new QComboBox(parent);
-          operatorCombo->addItems(m_FieldList);
+          operatorCombo->addItems(m_FeatureList);
           operatorCombo->setAutoFillBackground(true);
           return operatorCombo;
           break;
-        case ComparisonSelectionTableModel::FieldValue:
-          fieldValue = new QLineEdit(parent);
-          fieldValue->setFrame(false);
-          fieldValueValidator = new QDoubleValidator(fieldValue);
-          fieldValueValidator->setDecimals(6);
-          fieldValue->setValidator(fieldValueValidator);
-          return fieldValue;
-        case ComparisonSelectionTableModel::FieldOperator:
+        case ComparisonSelectionTableModel::FeatureValue:
+          featureValue = new QLineEdit(parent);
+          featureValue->setFrame(false);
+          featureValueValidator = new QDoubleValidator(featureValue);
+          featureValueValidator->setDecimals(6);
+          featureValue->setValidator(featureValueValidator);
+          return featureValue;
+        case ComparisonSelectionTableModel::FeatureOperator:
           operatorCombo = new QComboBox(parent);
           operatorCombo->addItems(operators);
           operatorCombo->setAutoFillBackground(true);
           return operatorCombo;
-//        case ComparisonSelectionTableModel::FieldPhaseValue:
+//        case ComparisonSelectionTableModel::FeaturePhaseValue:
 //          phaseCombo = new QComboBox(parent);
 //          phaseCombo->addItems(phases);
 //          phaseCombo->setAutoFillBackground(true);
@@ -147,27 +147,27 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
     {
       qint32 col = index.column();
      // bool ok = false;
-      if (col == ComparisonSelectionTableModel::FieldName)
+      if (col == ComparisonSelectionTableModel::FeatureName)
       {
         QString state = index.model()->data(index).toString();
         QComboBox* comboBox = qobject_cast<QComboBox* > (editor);
         Q_ASSERT(comboBox);
         comboBox->setCurrentIndex(comboBox->findText(state));
       }
-      else if (col == ComparisonSelectionTableModel::FieldValue )
+      else if (col == ComparisonSelectionTableModel::FeatureValue )
       {
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-      else if (col == ComparisonSelectionTableModel::FieldOperator)
+      else if (col == ComparisonSelectionTableModel::FeatureOperator)
       {
         QString state = index.model()->data(index).toString();
         QComboBox* comboBox = qobject_cast<QComboBox* > (editor);
         Q_ASSERT(comboBox);
         comboBox->setCurrentIndex(comboBox->findText(state));
       }
-//      else if (col == ComparisonSelectionTableModel::FieldPhaseValue)
+//      else if (col == ComparisonSelectionTableModel::FeaturePhaseValue)
 //      {
 //        QString state = index.model()->data(index).toString();
 //        QComboBox* comboBox = qobject_cast<QComboBox* > (editor);
@@ -186,13 +186,13 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
       //  qDebug() << "ComparisonSelectionItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
       //  bool ok = false;
-      if (col == ComparisonSelectionTableModel::FieldName)
+      if (col == ComparisonSelectionTableModel::FeatureName)
       {
         QComboBox *comboBox = qobject_cast<QComboBox* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
-      else if (col == ComparisonSelectionTableModel::FieldValue)
+      else if (col == ComparisonSelectionTableModel::FeatureValue)
       {
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
@@ -200,13 +200,13 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
         double v = lineEdit->text().toFloat(&ok);
         model->setData(index, v);
       }
-      else if (col == ComparisonSelectionTableModel::FieldOperator)
+      else if (col == ComparisonSelectionTableModel::FeatureOperator)
       {
         QComboBox *comboBox = qobject_cast<QComboBox* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
-//      else if (col == ComparisonSelectionTableModel::FieldPhaseValue)
+//      else if (col == ComparisonSelectionTableModel::FeaturePhaseValue)
 //      {
 //        QComboBox *comboBox = qobject_cast<QComboBox* > (editor);
 //        Q_ASSERT(comboBox);
@@ -217,7 +217,7 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
 
   private:
     QModelIndex m_Index;
-    QStringList m_FieldList;
+    QStringList m_FeatureList;
     int m_NumberOfPhases;
 
 };

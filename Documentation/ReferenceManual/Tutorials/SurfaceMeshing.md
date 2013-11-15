@@ -2,7 +2,7 @@ Surface Meshing Tutorial {#tutorialsurfacemeshingtutorial}
 ========
 
 ## Surface Mesh Definitions
-Creating a surface mesh in DREAM3D can be accomplished in several ways. There are a pair of filters [Multi-Material Marching Cubes (Slice at a Time)](#m3cslicebyslice) and [Quick Surface Mesh](#quicksurfacemesh) that will generate a triangular based mesh of the primary **Field** for you. The terminology of the underlying data structures is something that the user should understand so that the user can be well informed. We start out by defining a triangle **T**,  which we will call a  **Face**. Each Triangle has three (3) **Vertices** (V0, V1, V2) which are  referred to as a **Point**, **Vertex** and/or **Node** interchangeably within DREAM3D.
+Creating a surface mesh in DREAM3D can be accomplished in several ways. There are a pair of filters [Multi-Material Marching Cubes (Slice at a Time)](#m3cslicebyslice) and [Quick Surface Mesh](#quicksurfacemesh) that will generate a triangular based mesh of the primary **Feature** for you. The terminology of the underlying data structures is something that the user should understand so that the user can be well informed. We start out by defining a triangle **T**,  which we will call a  **Face**. Each Triangle has three (3) **Vertices** (V0, V1, V2) which are  referred to as a **Point**, **Vertex** and/or **Node** interchangeably within DREAM3D.
 
 ![Triangle/Face](Images/TriangleSmall.png)
 @image latex Images/TriangleSmall.png " " width=1.75in
@@ -30,7 +30,7 @@ To support the creation and manipulation of a surface mesh DREAM3D introduced a 
     const std::string SurfaceMeshNodes("SurfaceMeshNodes");
     const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
 
-In order to stay consistent with the VoxelDataContainer and its terminology, DREAM3D refers to _Vertex Attributes_ as **Cell** data and _Triangle Attributes_ as **Field** data. There are also convenience methods that are named ``setPointData(...)``, ``setFaceData(...)`` and ``setEdgeData(...)`` that map loosely to the **Cell**, **Field** and **Ensemble** syntax of the ``VoxelDataContainer``
+In order to stay consistent with the VoxelDataContainer and its terminology, DREAM3D refers to _Vertex Attributes_ as **Cell** data and _Triangle Attributes_ as **Feature** data. There are also convenience methods that are named ``setPointData(...)``, ``setFaceData(...)`` and ``setEdgeData(...)`` that map loosely to the **Cell**, **Feature** and **Ensemble** syntax of the ``VoxelDataContainer``
 
 In the filter documentation the following terminology will be used:
 

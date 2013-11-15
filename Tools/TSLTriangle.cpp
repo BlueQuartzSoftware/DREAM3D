@@ -66,41 +66,41 @@ int writeOutputAsTiff(unsigned char* segData,
 
 
   // set the basic values
-  err = TIFFSetField(image, TIFFTAG_IMAGEWIDTH, (int) imageDims[0]);
-  err = TIFFSetField(image, TIFFTAG_IMAGELENGTH, (int) imageDims[1]);
-  err = TIFFSetField(image, TIFFTAG_BITSPERSAMPLE, 8);
-  err = TIFFSetField(image, TIFFTAG_SAMPLESPERPIXEL, 3);
-  err = TIFFSetField(image, TIFFTAG_ROWSPERSTRIP, (int) imageDims[1]); // 1 strip
+  err = TIFFSetFeature(image, TIFFTAG_IMAGEWIDTH, (int) imageDims[0]);
+  err = TIFFSetFeature(image, TIFFTAG_IMAGELENGTH, (int) imageDims[1]);
+  err = TIFFSetFeature(image, TIFFTAG_BITSPERSAMPLE, 8);
+  err = TIFFSetFeature(image, TIFFTAG_SAMPLESPERPIXEL, 3);
+  err = TIFFSetFeature(image, TIFFTAG_ROWSPERSTRIP, (int) imageDims[1]); // 1 strip
 #if USE_LZW_COMPRESSION
-  err = TIFFSetField(image, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
-  err = TIFFSetField(image, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL);
+  err = TIFFSetFeature(image, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
+  err = TIFFSetFeature(image, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL);
 #else
-  err = TIFFSetField(image, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
+  err = TIFFSetFeature(image, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
 #endif
 //  std::string datetime = tifDateTime();
-//  err = TIFFSetField(image, TIFFTAG_DATETIME, datetime.c_str());
+//  err = TIFFSetFeature(image, TIFFTAG_DATETIME, datetime.c_str());
   // String based tags
   if (fileName.length() > 0)
   {
-    err = TIFFSetField(image, TIFFTAG_DOCUMENTNAME, fileName.c_str());
+    err = TIFFSetFeature(image, TIFFTAG_DOCUMENTNAME, fileName.c_str());
   }
   if (imageDescription.length() > 0)
   {
 
-    err = TIFFSetField(image, TIFFTAG_IMAGEDESCRIPTION, imageDescription.c_str());
+    err = TIFFSetFeature(image, TIFFTAG_IMAGEDESCRIPTION, imageDescription.c_str());
   }
 
-  err = TIFFSetField(image, TIFFTAG_ORIENTATION, ORIENTATION_BOTLEFT);
-  err = TIFFSetField(image, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
-  err = TIFFSetField(image, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+  err = TIFFSetFeature(image, TIFFTAG_ORIENTATION, ORIENTATION_BOTLEFT);
+  err = TIFFSetFeature(image, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
+  err = TIFFSetFeature(image, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
 
   // Insert Resolution Units here if possible
 
   std::string software("LibTiff");
 
-  err = TIFFSetField(image, TIFFTAG_SOFTWARE, software.c_str());
+  err = TIFFSetFeature(image, TIFFTAG_SOFTWARE, software.c_str());
 
- // err = TIFFSetField(image, TIFFTAG_HOSTCOMPUTER, MXADATAMODEL_SYSTEM);
+ // err = TIFFSetFeature(image, TIFFTAG_HOSTCOMPUTER, MXADATAMODEL_SYSTEM);
 
   // Write the information to the file
   tsize_t area = static_cast<tsize_t>(imageDims[0]* imageDims[1] * RGB_NUM_COMP);

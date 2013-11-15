@@ -117,7 +117,7 @@ int SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   QString ss;
@@ -303,24 +303,24 @@ void SurfaceMeshToNonconformalVtk::execute()
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   // Store all the unique Spins
-  QMap<int32_t, int32_t> grainTriangleCount;
+  QMap<int32_t, int32_t> featureTriangleCount;
   for (int i = 0; i < triangleCount; i++)
   {
-    if (grainTriangleCount.find(faceLabels[i * 2]) == grainTriangleCount.end())
+    if (featureTriangleCount.find(faceLabels[i * 2]) == featureTriangleCount.end())
     {
-      grainTriangleCount[faceLabels[i * 2]] = 1;
+      featureTriangleCount[faceLabels[i * 2]] = 1;
     }
     else
     {
-      grainTriangleCount[faceLabels[i * 2]]++;
+      featureTriangleCount[faceLabels[i * 2]]++;
     }
-    if (grainTriangleCount.find(faceLabels[i * 2 + 1]) == grainTriangleCount.end())
+    if (featureTriangleCount.find(faceLabels[i * 2 + 1]) == featureTriangleCount.end())
     {
-      grainTriangleCount[faceLabels[i * 2 + 1]] = 1;
+      featureTriangleCount[faceLabels[i * 2 + 1]] = 1;
     }
     else
     {
-      grainTriangleCount[faceLabels[i * 2 + 1]]++;
+      featureTriangleCount[faceLabels[i * 2 + 1]]++;
     }
   }
 
@@ -329,24 +329,24 @@ void SurfaceMeshToNonconformalVtk::execute()
   fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount * 2, (triangleCount * 2 * 4));
 
   size_t totalCells = 0;
-  // Loop over all the grains
-  for(QMap<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
+  // Loop over all the features
+  for(QMap<int32_t, int32_t>::iterator featureIter = featureTriangleCount.begin(); featureIter != featureTriangleCount.end(); ++featureIter)
   {
-    totalCells += grainIter.value();
+    totalCells += featureIter.value();
   }
   BOOST_ASSERT(totalCells == (size_t)(triangleCount * 2) );
 
 
-  // Loop over all the grains
-  for(QMap<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
+  // Loop over all the features
+  for(QMap<int32_t, int32_t>::iterator featureIter = featureTriangleCount.begin(); featureIter != featureTriangleCount.end(); ++featureIter)
   {
-    int32_t gid = grainIter.key(); // The current Grain Id
-    int32_t numTriToWrite = grainIter.value(); // The number of triangles for this grain
+    int32_t gid = featureIter.key(); // The current Feature Id
+    int32_t numTriToWrite = featureIter.value(); // The number of triangles for this feature
     uint8_t doWrite = 0;
 
-    // Loop over all the triangles looking for the current grain id
-    // this is probably sub-optimal as if we have 1000 grains we are going to loop 1000 times but this will use the
-    // least amount of memory. We could run a filter to group the triangles by grain but then we would need an
+    // Loop over all the triangles looking for the current feature id
+    // this is probably sub-optimal as if we have 1000 features we are going to loop 1000 times but this will use the
+    // least amount of memory. We could run a filter to group the triangles by feature but then we would need an
     // additional amount of memory equal to 3X the memory used for the triangle list because every triangle will be listed
     // twice. We could get some slightly better performance if we buffered 4K worth of data then wrote out that data
     // in one chunk versus what we are doing here.
@@ -356,7 +356,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
       if (faceLabels[j * 2] == gid ) { doWrite = 1; }
       else if (faceLabels[j * 2 + 1] == gid) { doWrite = 2; } // We need to flip the winding of the triangle
-      if (doWrite == 0) { continue; } // Labels in the triangle did match the current grain id.
+      if (doWrite == 0) { continue; } // Labels in the triangle did match the current feature id.
 
       if (doWrite == 1)
       {
@@ -389,7 +389,7 @@ void SurfaceMeshToNonconformalVtk::execute()
     }
     if (numTriToWrite != 0)
     {
-      qDebug() << "Not enough triangles written: " << gid << "::" << numTriToWrite << " Total Triangles to Write " << grainIter.value();
+      qDebug() << "Not enough triangles written: " << gid << "::" << numTriToWrite << " Total Triangles to Write " << featureIter.value();
     }
 
   }
@@ -399,7 +399,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   err = writePointData(vtkFile);
 
   // Write the CELL_DATA section
-  err = writeCellData(vtkFile, grainTriangleCount);
+  err = writeCellData(vtkFile, featureTriangleCount);
 
 
   fprintf(vtkFile, "\n");
@@ -596,7 +596,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 
 template<typename SurfaceDataContainer, typename T>
 void writeCellScalarData(SurfaceDataContainer* dc, const QString& dataName, const QString& dataType,
-                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t>& grainIds)
+                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t>& featureIds)
 {
   FaceArray& triangles = *(dc->getFaces());
 
@@ -616,11 +616,11 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString& dataName, cons
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.toLatin1().data(), dataType.toLatin1().data());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
-    // Loop over all the grains
-    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+    // Loop over all the features
+    for(QMap<int32_t, int32_t>::iterator featureIter = featureIds.begin(); featureIter != featureIds.end(); ++featureIter)
     {
-      int32_t gid = grainIter.key(); // The current Grain Id
-      size_t size = grainIter.value(); // The number of triangles for this grain id
+      int32_t gid = featureIter.key(); // The current Feature Id
+      size_t size = featureIter.value(); // The number of triangles for this feature id
       std::vector<T> buffer(size, 0);
       totalCellsWritten += size;
       size_t index = 0;
@@ -665,7 +665,7 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString& dataName, cons
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
 void writeCellNormalData(DataContainer* dc, const QString& dataName, const QString& dataType,
-                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t>& grainIds)
+                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t>& featureIds)
 {
 
   FaceArray& triangles = *(dc->getFaces());
@@ -685,11 +685,11 @@ void writeCellNormalData(DataContainer* dc, const QString& dataName, const QStri
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "NORMALS %s %s\n", dataName.toLatin1().data(), dataType.toLatin1().data());
-    // Loop over all the grains
-    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+    // Loop over all the features
+    for(QMap<int32_t, int32_t>::iterator featureIter = featureIds.begin(); featureIter != featureIds.end(); ++featureIter)
     {
-      int32_t gid = grainIter.key(); // The current Grain Id
-      size_t size = grainIter.value(); // The number of triangles for this grain id
+      int32_t gid = featureIter.key(); // The current Feature Id
+      size_t size = featureIter.value(); // The number of triangles for this feature id
       std::vector<T> buffer(size * 3, 0);
       totalCellsWritten += size * 3;
       size_t index = 0;
@@ -701,7 +701,7 @@ void writeCellNormalData(DataContainer* dc, const QString& dataName, const QStri
         T s0 = static_cast<T>(m[j * 3 + 0]);
         T s1 = static_cast<T>(m[j * 3 + 1]);
         T s2 = static_cast<T>(m[j * 3 + 2]);
-        // Flip the normal if needed because the current grain id is assigned to the triangle.labels[1]
+        // Flip the normal if needed because the current feature id is assigned to the triangle.labels[1]
         if (faceLabels[j * 2 + 1] == gid )
         {
           s0 *= -1.0;
@@ -750,7 +750,7 @@ void writeCellNormalData(DataContainer* dc, const QString& dataName, const QStri
 template<typename DataContainer, typename T>
 void writeCellVectorData(DataContainer* dc, const QString& dataName, const QString& dataType,
                          bool writeBinaryData, const QString& vtkAttributeType,
-                         FILE* vtkFile, QMap<int32_t, int32_t>& grainIds)
+                         FILE* vtkFile, QMap<int32_t, int32_t>& featureIds)
 {
   StructArray<FaceArray::Face_t>& triangles = *(dc->getFaces());
 
@@ -796,7 +796,7 @@ void writeCellVectorData(DataContainer* dc, const QString& dataName, const QStri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int32_t>& grainIds)
+int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int32_t>& featureIds)
 {
   int err = 0;
   if (NULL == vtkFile)
@@ -820,26 +820,26 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
 
     int32_t totalCellsWritten = 0;
 
-    // Write the GrainId Data to the file
-    fprintf(vtkFile, "SCALARS GrainID int 1\n");
+    // Write the FeatureId Data to the file
+    fprintf(vtkFile, "SCALARS FeatureID int 1\n");
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
-    // Loop over all the grains
-    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+    // Loop over all the features
+    for(QMap<int32_t, int32_t>::iterator featureIter = featureIds.begin(); featureIter != featureIds.end(); ++featureIter)
     {
-      int32_t gid = grainIter.key(); // The current Grain Id
-      size_t size = grainIter.value(); // The number of triangles for this grain id
+      int32_t gid = featureIter.key(); // The current Feature Id
+      size_t size = featureIter.value(); // The number of triangles for this feature id
       std::vector<int32_t> buffer(size, 0);
       totalCellsWritten += size;
 
-      // Endian Swap our current grain Id since we are going to write it a bunch of times.
+      // Endian Swap our current feature Id since we are going to write it a bunch of times.
       swapped = gid;
       DREAM3D::Endian::FromSystemToBig::convert(swapped);
       size_t index = 0;
 
-      // Loop over all the triangles looking for the current grain id
-      // this is probably sub-optimal as if we have 1000 grains we are going to loop 1000 times but this will use the
-      // least amount of memory. We could run a filter to group the triangles by grain but then we would need an
+      // Loop over all the triangles looking for the current feature id
+      // this is probably sub-optimal as if we have 1000 features we are going to loop 1000 times but this will use the
+      // least amount of memory. We could run a filter to group the triangles by feature but then we would need an
       // additional amount of memory equal to 3X the memory used for the triangle list because every triangle will be listed
       // twice. We could get some slightly better performance if we buffered 4K worth of data then wrote out that data
       // in one chunk versus what we are doing here.
@@ -890,26 +890,26 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
 #endif
   notifyStatusMessage("Writing Face Normals...");
   writeCellNormalData<SurfaceDataContainer, double>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), DREAM3D::FaceData::SurfaceMeshFaceNormals,
-                                                    "double", m_WriteBinaryFile, vtkFile, grainIds);
+                                                    "double", m_WriteBinaryFile, vtkFile, featureIds);
 
   notifyStatusMessage("Writing Principal Curvature 1");
   writeCellScalarData<SurfaceDataContainer, double>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1,
-                                                    "double", m_WriteBinaryFile, vtkFile, grainIds);
+                                                    "double", m_WriteBinaryFile, vtkFile, featureIds);
   notifyStatusMessage("Writing Principal Curvature 2");
   writeCellScalarData<SurfaceDataContainer, double>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2,
-                                                    "double", m_WriteBinaryFile, vtkFile, grainIds);
+                                                    "double", m_WriteBinaryFile, vtkFile, featureIds);
 
-  notifyStatusMessage("Writing Grain Face Id");
-  writeCellScalarData<SurfaceDataContainer, int32_t>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), DREAM3D::FaceData::SurfaceMeshGrainFaceId,
-                                                     "int", m_WriteBinaryFile, vtkFile, grainIds);
+  notifyStatusMessage("Writing Feature Face Id");
+  writeCellScalarData<SurfaceDataContainer, int32_t>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), DREAM3D::FaceData::SurfaceMeshFeatureFaceId,
+                                                     "int", m_WriteBinaryFile, vtkFile, featureIds);
 
   notifyStatusMessage("Writing Gaussian Curvature");
   writeCellScalarData<SurfaceDataContainer, double>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), DREAM3D::FaceData::SurfaceMeshGaussianCurvatures,
-                                                    "double", m_WriteBinaryFile, vtkFile, grainIds);
+                                                    "double", m_WriteBinaryFile, vtkFile, featureIds);
 
   notifyStatusMessage("Writing Mean Curvature");
   writeCellScalarData<SurfaceDataContainer, double>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), DREAM3D::FaceData::SurfaceMeshMeanCurvatures,
-                                                    "double", m_WriteBinaryFile, vtkFile, grainIds);
+                                                    "double", m_WriteBinaryFile, vtkFile, featureIds);
 #if 0
   writeCellVectorData<SurfaceDataContainer, double>(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), DREAM3D::CellData::SurfaceMeshPrincipalDirection1,
                                                     "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);

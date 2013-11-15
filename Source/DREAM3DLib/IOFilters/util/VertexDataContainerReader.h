@@ -64,15 +64,15 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexFeatureData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexFeatureArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexFeatureArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexEnsembleArraysToRead)
 
 
@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
   protected:
     VertexDataContainerReader();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     int gatherData(bool preflight);
 

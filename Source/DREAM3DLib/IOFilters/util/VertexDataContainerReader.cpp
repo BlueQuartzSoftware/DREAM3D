@@ -51,10 +51,10 @@
 VertexDataContainerReader::VertexDataContainerReader() :
   IOSupport(),
   m_ReadVertexData(true),
-  m_ReadVertexFieldData(true),
+  m_ReadVertexFeatureData(true),
   m_ReadVertexEnsembleData(true),
   m_ReadAllVertexArrays(false),
-  m_ReadAllVertexFieldArrays(false),
+  m_ReadAllVertexFeatureArrays(false),
   m_ReadAllVertexEnsembleArrays(false)
 {
 }
@@ -69,7 +69,7 @@ VertexDataContainerReader::~VertexDataContainerReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -91,11 +91,11 @@ void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
   else if (preflight == true)
   {
     if(m_VertexArraysToRead.size() == 0 && m_ReadAllVertexArrays != true) { m_ReadVertexData = false; }
-    if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllVertexFieldArrays != true) { m_ReadVertexFieldData = false; }
+    if(m_VertexFeatureArraysToRead.size() == 0 && m_ReadAllVertexFeatureArrays != true) { m_ReadVertexFeatureData = false; }
     if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllVertexEnsembleArrays != true) { m_ReadVertexEnsembleData = false; }
 
     if(m_ReadVertexData == true) { dc->clearVertexData(); }
-    if(m_ReadVertexFieldData == true) { dc->clearVertexFieldData(); }
+    if(m_ReadVertexFeatureData == true) { dc->clearVertexFeatureData(); }
     if(m_ReadVertexEnsembleData == true) { dc->clearVertexEnsembleData(); }
 
     int err = gatherData(preflight);
@@ -137,11 +137,11 @@ void VertexDataContainerReader::execute()
   setErrorCondition(err);
 
   if(m_VertexArraysToRead.size() == 0 && m_ReadAllVertexArrays != true) { m_ReadVertexData = false; }
-  if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllVertexFieldArrays != true) { m_ReadVertexFieldData = false; }
+  if(m_VertexFeatureArraysToRead.size() == 0 && m_ReadAllVertexFeatureArrays != true) { m_ReadVertexFeatureData = false; }
   if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllVertexEnsembleArrays != true) { m_ReadVertexEnsembleData = false; }
 
   if(m_ReadVertexData == true) { dc->clearVertexData(); }
-  if(m_ReadVertexFieldData == true) { dc->clearVertexFieldData(); }
+  if(m_ReadVertexFeatureData == true) { dc->clearVertexFeatureData(); }
   if(m_ReadVertexEnsembleData == true) { dc->clearVertexEnsembleData(); }
 
   err = gatherData(false);
@@ -157,7 +157,7 @@ void VertexDataContainerReader::execute()
 void VertexDataContainerReader::setReadAllArrays()
 {
   m_ReadAllVertexArrays = true;
-  m_ReadAllVertexFieldArrays = true;
+  m_ReadAllVertexFeatureArrays = true;
   m_ReadAllVertexEnsembleArrays = true;
 }
 
@@ -202,11 +202,11 @@ int VertexDataContainerReader::gatherData(bool preflight)
     }
   }
 
-  if(m_ReadVertexFieldData == true)
+  if(m_ReadVertexFeatureData == true)
   {
     QVector<QString> readNames;
-    QSet<QString> vertexFieldArraysToRead = getVertexFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, preflight, readNames, vertexFieldArraysToRead, m_ReadAllVertexFieldArrays);
+    QSet<QString> vertexFeatureArraysToRead = getVertexFeatureArraysToRead();
+    err |= readGroupsData(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, preflight, readNames, vertexFeatureArraysToRead, m_ReadAllVertexFeatureArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -345,7 +345,7 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupN
       }
       else if(groupName.compare(H5_VERTEX_FIELD_DATA_GROUP_NAME) == 0)
       {
-        dc->addVertexFieldData(dPtr->GetName(), dPtr);
+        dc->addVertexFeatureData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {

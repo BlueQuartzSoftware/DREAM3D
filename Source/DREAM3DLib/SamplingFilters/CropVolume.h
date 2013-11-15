@@ -63,8 +63,8 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
     virtual ~CropVolume();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, XMin)
@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, XMax)
     DREAM3D_INSTANCE_PROPERTY(int, YMax)
     DREAM3D_INSTANCE_PROPERTY(int, ZMax)
-    DREAM3D_INSTANCE_PROPERTY(bool, RenumberGrains)
+    DREAM3D_INSTANCE_PROPERTY(bool, RenumberFeatures)
     DREAM3D_INSTANCE_PROPERTY(bool, UpdateOrigin)
 
 
@@ -106,10 +106,10 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
 
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     bool* m_Active;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     CropVolume(const CropVolume&); // Copy Constructor Not Implemented
     void operator=(const CropVolume&); // Operator '=' Not Implemented

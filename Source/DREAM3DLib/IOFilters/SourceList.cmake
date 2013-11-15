@@ -28,8 +28,8 @@ set(_PublicFilters
   DxWriter
   EbsdToH5Ebsd
   EnsembleInfoReader
-  FieldDataCSVWriter
-  FieldInfoReader
+  FeatureDataCSVWriter
+  FeatureInfoReader
   H5VoxelFileReader
   INLWriter
   LosAlamosFFTWriter
@@ -48,7 +48,7 @@ set(_PublicFilters
   SurfaceMeshToVtk
   VASPReader
   VisualizeGBCD
-  VtkGrainIdReader
+  VtkFeatureIdReader
   VtkRectilinearGridWriter
   WriteAbaqusSurfaceMesh
   YSChoiAbaqusReader

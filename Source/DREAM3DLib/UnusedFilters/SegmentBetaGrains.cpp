@@ -138,7 +138,7 @@ SegmentBetaGrains::SegmentBetaGrains() :
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_MisorientationTolerance(5.0f),
   m_RandomizeGrainIds(true),
@@ -243,7 +243,7 @@ int SegmentBetaGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SegmentBetaGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SegmentBetaGrains::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -267,7 +267,7 @@ void SegmentBetaGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FeatureData, Active, bool, BoolArrayType, true, features, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
@@ -297,8 +297,8 @@ void SegmentBetaGrains::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  m->resizeFieldDataArrays(1);
-  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  m->resizeFeatureDataArrays(1);
+  dataCheck(false, totalPoints, m->getNumFeatureTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -317,11 +317,11 @@ void SegmentBetaGrains::execute()
   if (true == m_RandomizeGrainIds)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFields = m->getNumFieldTuples();
+    size_t totalFeatures = m->getNumFeatureTuples();
 
     // Generate all the numbers up front
     const int rangeMin = 1;
-    const int rangeMax = totalFields - 1;
+    const int rangeMax = totalFeatures - 1;
     typedef boost::uniform_int<int> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;
     typedef boost::variate_generator < RandomNumberGenerator&,
@@ -332,12 +332,12 @@ void SegmentBetaGrains::execute()
     Generator numberGenerator(generator, distribution);
     generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
 
-    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
+    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New GrainIds");
     int32_t* gid = rndNumbers->GetPointer(0);
     gid[0] = 0;
     QSet<int32_t> grainIdSet;
     grainIdSet.insert(0);
-    for(size_t i = 1; i < totalFields; ++i)
+    for(size_t i = 1; i < totalFeatures; ++i)
     {
       gid[i] = i; //numberGenerator();
       grainIdSet.insert(gid[i]);
@@ -346,10 +346,10 @@ void SegmentBetaGrains::execute()
     size_t r;
     size_t temp;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (size_t i = 1; i < totalFields; i++)
+    for (size_t i = 1; i < totalFeatures; i++)
     {
       r = numberGenerator(); // Random remaining position.
-      if (r >= totalFields)
+      if (r >= totalFeatures)
       {
         continue;
       }
@@ -407,8 +407,8 @@ int SegmentBetaGrains::getSeed(size_t gnum)
   if (seed >= 0)
   {
     m_GrainIds[seed] = gnum;
-    m->resizeFieldDataArrays(gnum + 1);
-    dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+    m->resizeFeatureDataArrays(gnum + 1);
+    dataCheck(false, totalPoints, m->getNumFeatureTuples(), m->getNumEnsembleTuples());
   }
   return seed;
 }

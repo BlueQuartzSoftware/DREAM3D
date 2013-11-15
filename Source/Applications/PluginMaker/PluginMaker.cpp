@@ -799,7 +799,7 @@ void PluginMaker::writeSettings()
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
 
-  //Save the Plugin Name and Output Directory fields to the QSettings object
+  //Save the Plugin Name and Output Directory features to the QSettings object
   prefs.setValue("Plugin Name", m_PluginName->text());
   prefs.setValue("Output Directory", m_OutputDir->text());
 

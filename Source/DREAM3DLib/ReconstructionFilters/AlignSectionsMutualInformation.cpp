@@ -70,7 +70,7 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_MisorientationTolerance(5.0f),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_Quats(NULL),
   m_CellPhases(NULL),
   m_GoodVoxels(NULL),
@@ -80,8 +80,8 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
 
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
-  graincounts = NULL;
-  INIT_DataArray(m_GrainCounts, int);
+  featurecounts = NULL;
+  INIT_DataArray(m_FeatureCounts, int);
   setupFilterParameters();
 }
 
@@ -141,7 +141,7 @@ int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -195,16 +195,16 @@ void AlignSectionsMutualInformation::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
-  dataCheck(false, totalPoints, numgrains, numensembles);
+  dataCheck(false, totalPoints, numfeatures, numensembles);
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray((totalPoints * 1), "MI GrainIds");
-  m_GrainIds = p->getPointer(0);
+  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray((totalPoints * 1), "MI FeatureIds");
+  m_FeatureIds = p->getPointer(0);
 
   //Converting the user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
@@ -248,7 +248,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
   float** mutualinfo12 = NULL;
   float* mutualinfo1 = NULL;
   float* mutualinfo2 = NULL;
-  int graincount1, graincount2;
+  int featurecount1, featurecount2;
   int newxshift = 0;
   int newyshift = 0;
   int oldxshift = 0;
@@ -267,7 +267,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
 
   //  unsigned int  phase2;
 
-  form_grains_sections();
+  form_features_sections();
 
   QVector<QVector<float> >  misorients;
   misorients.resize(dims[0]);
@@ -281,17 +281,17 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
     //  notifyStatusMessage(ss);
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
-    graincount1 = graincounts[slice];
-    graincount2 = graincounts[slice + 1];
-    mutualinfo12 = new float *[graincount1];
-    mutualinfo1 = new float[graincount1];
-    mutualinfo2 = new float[graincount2];
+    featurecount1 = featurecounts[slice];
+    featurecount2 = featurecounts[slice + 1];
+    mutualinfo12 = new float *[featurecount1];
+    mutualinfo1 = new float[featurecount1];
+    mutualinfo2 = new float[featurecount2];
 
-    for (int a = 0; a < graincount1; a++)
+    for (int a = 0; a < featurecount1; a++)
     {
       mutualinfo1[a] = 0.0f;
-      mutualinfo12[a] = new float[graincount2];
-      for (int b = 0; b < graincount2; b++)
+      mutualinfo12[a] = new float[featurecount2];
+      for (int b = 0; b < featurecount2; b++)
       {
         mutualinfo12[a][b] = 0.0f;
         mutualinfo2[b] = 0.0f;
@@ -329,8 +329,8 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
                 {
                   refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
                   curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
-                  refgnum = m_GrainIds[refposition];
-                  curgnum = m_GrainIds[curposition];
+                  refgnum = m_FeatureIds[refposition];
+                  curgnum = m_FeatureIds[curposition];
                   if(curgnum >= 0 && refgnum >= 0)
                   {
                     mutualinfo12[curgnum][refgnum]++;
@@ -350,19 +350,19 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
             float ha = 0;
             float hb = 0;
             float hab = 0;
-            for (int b = 0; b < graincount1; b++)
+            for (int b = 0; b < featurecount1; b++)
             {
               mutualinfo1[b] = mutualinfo1[b] / float(count);
               if(mutualinfo1[b] != 0) { ha = ha + mutualinfo1[b] * log(mutualinfo1[b]); }
             }
-            for (int c = 0; c < graincount2; c++)
+            for (int c = 0; c < featurecount2; c++)
             {
               mutualinfo2[c] = mutualinfo2[c] / float(count);
               if(mutualinfo2[c] != 0) { hb = hb + mutualinfo2[c] * log(mutualinfo2[c]); }
             }
-            for (int b = 0; b < graincount1; b++)
+            for (int b = 0; b < featurecount1; b++)
             {
-              for (int c = 0; c < graincount2; c++)
+              for (int c = 0; c < featurecount2; c++)
               {
                 mutualinfo12[b][c] = mutualinfo12[b][c] / float(count);
                 if(mutualinfo12[b][c] != 0) { hab = hab + mutualinfo12[b][c] * log(mutualinfo12[b][c]); }
@@ -371,9 +371,9 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
                 if(value != 0) { disorientation = disorientation + (mutualinfo12[b][c] * log(value)); }
               }
             }
-            for (int b = 0; b < graincount1; b++)
+            for (int b = 0; b < featurecount1; b++)
             {
-              for (int c = 0; c < graincount2; c++)
+              for (int c = 0; c < featurecount2; c++)
               {
                 mutualinfo12[b][c] = 0;
                 mutualinfo1[b] = 0;
@@ -400,7 +400,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
     }
     delete[] mutualinfo1;
     delete[] mutualinfo2;
-    for (int i = 0; i < graincount1; i++)
+    for (int i = 0; i < featurecount1; i++)
     {
       delete mutualinfo12[i];
     }
@@ -410,7 +410,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
     mutualinfo12 = NULL;
   }
 
-  m->removeCellData(DREAM3D::CellData::GrainIds);
+  m->removeCellData(DREAM3D::CellData::FeatureIds);
 
   if(getWriteAlignmentShifts() == true)
   {
@@ -421,7 +421,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::form_grains_sections()
+void AlignSectionsMutualInformation::form_features_sections()
 {
   DREAM3D_RANDOMNG_NEW()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -446,7 +446,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
   int point = 0;
   int seed = 0;
   int noseeds = 0;
-  int graincount = 1;
+  int featurecount = 1;
   int neighbor;
   // int currentpoint;
   QuatF q1;
@@ -465,8 +465,8 @@ void AlignSectionsMutualInformation::form_grains_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
-  m_GrainCounts->Resize(dims[2]);
-  graincounts = m_GrainCounts->getPointer(0);
+  m_FeatureCounts->Resize(dims[2]);
+  featurecounts = m_FeatureCounts->getPointer(0);
 
   QVector<int> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[4];
@@ -479,8 +479,8 @@ void AlignSectionsMutualInformation::form_grains_sections()
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
 
-    QString ss = QObject::tr("Aligning Sections - Identifying Grains on Sections - %1 Percent Complete").arg(((float)slice / dims[2]) * 100);
-    graincount = 1;
+    QString ss = QObject::tr("Aligning Sections - Identifying Features on Sections - %1 Percent Complete").arg(((float)slice / dims[2]) * 100);
+    featurecount = 1;
     noseeds = 0;
     while (noseeds == 0)
     {
@@ -497,7 +497,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
           if(x > dims[0] - 1) { x = x - dims[0]; }
           if(y > dims[1] - 1) { y = y - dims[1]; }
           point = static_cast<int>( (z * dims[0] * dims[1]) + (y * dims[0]) + x );
-          if(m_GoodVoxels[point] == true && m_GrainIds[point] == 0 && m_CellPhases[point] > 0)
+          if(m_GoodVoxels[point] == true && m_FeatureIds[point] == 0 && m_CellPhases[point] > 0)
           {
             seed = point;
           }
@@ -509,7 +509,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
       if(seed >= 0)
       {
         size = 0;
-        m_GrainIds[seed] = graincount;
+        m_FeatureIds[seed] = featurecount;
         voxelslist[size] = seed;
         size++;
         for (size_t j = 0; j < size; ++j)
@@ -527,7 +527,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
             if((i == 3) && row == (dims[1] - 1)) { good = 0; }
             if((i == 1) && col == 0) { good = 0; }
             if((i == 2) && col == (dims[0] - 1)) { good = 0; }
-            if(good == 1 && m_GrainIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
+            if(good == 1 && m_FeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
               w = 10000.0;
               QuaternionMathF::Copy(quats[neighbor], q2);
@@ -538,7 +538,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
               }
               if(w < m_MisorientationTolerance)
               {
-                m_GrainIds[neighbor] = graincount;
+                m_FeatureIds[neighbor] = featurecount;
                 voxelslist[size] = neighbor;
                 size++;
                 if(size >= voxelslist.size())
@@ -552,11 +552,11 @@ void AlignSectionsMutualInformation::form_grains_sections()
           }
         }
         voxelslist.erase(std::remove(voxelslist.begin(), voxelslist.end(), -1), voxelslist.end());
-        graincount++;
+        featurecount++;
 
         voxelslist.fill(-1, initialVoxelsListSize);
       }
     }
-    graincounts[slice] = graincount;
+    featurecounts[slice] = featurecount;
   }
 }

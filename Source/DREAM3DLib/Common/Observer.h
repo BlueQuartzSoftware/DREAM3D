@@ -60,7 +60,7 @@ class DREAM3DLib_EXPORT Observer
     /**
      * @brief This function prints a progress integer to the console.  Progress integers are assumed to be
      * between 0 and 100.
-     * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
+     * @param progress The progress of the FeatureGenerator normalized to a value between 0 and 100
      */
     virtual void updatePipelineProgress(int progress);
 
@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT Observer
      * @brief These functions print both a human readable message and a progress integer to the console.
      * Progress integers are assumed to be between 0 and 100.
      * @param msg The message to be printed
-     * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
+     * @param progress The progress of the FeatureGenerator normalized to a value between 0 and 100
      */
     virtual void updatePipelineProgressAndMessage(const char* msg, int progress);
     virtual void updatePipelineProgressAndMessage(const QString& msg, int progress);

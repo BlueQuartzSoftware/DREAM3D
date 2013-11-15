@@ -60,7 +60,7 @@
  * @brief These are used in the filters to run checks on available arrays
  * @param dc The Data Container variable
  * @param NameSpace
- * @param DType The type of data: CellData, FieldData....
+ * @param DType The type of data: CellData, FeatureData....
  * @param Name The name of the variable or constant
  * @param ss A String Stream object
  * @param err The default error code to be returned if something goes wrong
@@ -99,7 +99,7 @@
 /**
  * @brief These are used in the filters to run checks on available arrays
  * @param dc The Data Container variable
- * @param DType The type of data: CellData, FieldData....
+ * @param DType The type of data: CellData, FeatureData....
  * @param Name The name of the variable or constant
  * @param ss A String Stream object
  * @param err The default error code to be returned if something goes wrong
@@ -247,12 +247,12 @@ return gi;\
 
 
 
-#define METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)\
+#define METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Feature)\
 template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
-PtrType* create##Field##Data(const QString &arrayName, size_t size, QVector<int> dims, AbstractFilter* obv)\
+PtrType* create##Feature##Data(const QString &arrayName, size_t size, QVector<int> dims, AbstractFilter* obv)\
 {\
   PtrType* valuePtr = NULL;\
-  IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
+  IDataArray::Pointer iDataArray = get##Feature##Data(arrayName);\
   if (iDataArray.get() == NULL) { \
     iDataArray = DataArrayType::CreateArray(size, dims, arrayName);\
     iDataArray->initializeWithZeros();\
@@ -262,7 +262,7 @@ PtrType* create##Field##Data(const QString &arrayName, size_t size, QVector<int>
       obv->addErrorMessage(getNameOfClass(), s, -25);}\
       return valuePtr;\
     }\
-    add##Field##Data(arrayName, iDataArray);\
+    add##Feature##Data(arrayName, iDataArray);\
   } \
   valuePtr =\
   IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
@@ -276,10 +276,10 @@ PtrType* create##Field##Data(const QString &arrayName, size_t size, QVector<int>
 }
 
 
-#define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
+#define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, feature, name, typeClass, m_msgType, size, valuePtr) \
 m_msgType* valuePtr = NULL;\
 {\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
+  IDataArray::Pointer iDataArray = dataContainer->get##feature##Data(name);\
   if (iDataArray.get() == NULL) { \
     QString s = QObject::tr(": Array %1 from the DataContainer class was not in the DataContainer").arg(name);\
     setErrorCondition(-10);\
@@ -293,7 +293,7 @@ m_msgType* valuePtr = NULL;\
     return -20;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##feature##Data(name).get());\
   if (NULL == valuePtr) {\
     QString s = QObject::tr(": Array %1 from the DataContainer class could not be cast to type ").arg(#m_msgType);\
     setErrorCondition(-30);\
@@ -302,10 +302,10 @@ m_msgType* valuePtr = NULL;\
   }\
 }
 
-#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
+#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, feature, name, typeClass, m_msgType, size, valuePtr) \
 m_msgType* valuePtr = NULL;\
 {\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
+  IDataArray::Pointer iDataArray = dataContainer->get##feature##Data(name);\
   if (iDataArray.get() == NULL) { \
     return;\
   } \
@@ -313,16 +313,16 @@ m_msgType* valuePtr = NULL;\
     return;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##feature##Data(name).get());\
   if (NULL == valuePtr) {\
     return;\
   }\
 }
 
-#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
+#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, feature, name, typeClass, m_msgType, size, valuePtr) \
 m_msgType* valuePtr = NULL;\
 {\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
+  IDataArray::Pointer iDataArray = dataContainer->get##feature##Data(name);\
   if (iDataArray.get() == NULL) { \
     return -10;\
   } \
@@ -331,7 +331,7 @@ m_msgType* valuePtr = NULL;\
     return -20;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##feature##Data(name).get());\
   if (NULL == valuePtr) {\
     return -30;\
   }\
@@ -354,13 +354,13 @@ bool Class::does##DType##Exist(const QString &name) {\
 /*
    // Cell Data
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, -300, bool, BoolArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -300, bool, BoolArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -300, float, FloatArrayType, voxels, 5)
   GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, -301, int8_t, Int8ArrayType, voxels)
   GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -300, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureMisorientations, -300, float, FloatArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, -300, float, FloatArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, -300, int32_t, Int32ArrayType, voxels, 3)
   GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, -300, float, FloatArrayType, voxels, 3)
@@ -369,9 +369,9 @@ bool Class::does##DType##Exist(const QString &name) {\
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType,  voxels, 3)
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, fields, 5)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, features, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, int8_t, Int8ArrayType, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, int32_t, Int32ArrayType, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, bool, BoolArrayType, voxels, 1)
@@ -379,49 +379,49 @@ bool Class::does##DType##Exist(const QString &name) {\
   CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, voxels, 3)
 
 
-  // Field Data
+  // Feature Data
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Phases, F, -303,  int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, -304, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Phases, F, -303,  int32_t, Int32ArrayType, features, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, -304, bool, BoolArrayType, features, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -300, float, FloatArrayType, voxels, 5)
   GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, -304, float, FloatArrayType, voxels, 3)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -304, bool, BoolArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, -306, int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, NumCells, -302, int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -303, bool, BoolArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -305, float, FloatArrayType, fields)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, -306, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, -307, float, FloatArrayType, fields, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, -308, float, FloatArrayType, fields)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, -309, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -310, float, FloatArrayType, fields, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, -305, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SlipSystems, -306, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, NumNeighbors, -306, int32_t, Int32ArrayType, features, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -301, float, FloatArrayType, features, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, NumCells, -302, int32_t, Int32ArrayType, features, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, -303, bool, BoolArrayType, features, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, -305, float, FloatArrayType, features)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Omega3s, -306, float, FloatArrayType, features, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisEulerAngles, -307, float, FloatArrayType, features, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisLengths, -308, float, FloatArrayType, features)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, -309, float, FloatArrayType, features, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, -310, float, FloatArrayType, features, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Schmids, -305, float, FloatArrayType, features, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, SlipSystems, -306, int32_t, Int32ArrayType, features, 1)
 
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, float, FloatArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, bool, BoolArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, float, FloatArrayType, fields, 5)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, int32_t, Int32ArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumCells, int32_t, Int32ArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, float,FloatArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, float,FloatArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Phases, F, int32_t, Int32ArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SlipSystems, int32_t, Int32ArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, float,FloatArrayType, fields, 2)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Schmids, float, FloatArrayType, features, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureAvgMisorientations, float, FloatArrayType, features, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, BiasedFeatures, bool, BoolArrayType, features, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, float, FloatArrayType, features, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, features, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Neighborhoods, int32_t, Int32ArrayType, features, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, NumCells, int32_t, Int32ArrayType, features, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, float, FloatArrayType, features, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, float, FloatArrayType, features, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisLengths, float, FloatArrayType, features, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisEulerAngles, float, FloatArrayType, features, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Omega3s, float,FloatArrayType, features, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, float,FloatArrayType, features, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, float, FloatArrayType, features, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Phases, F, int32_t, Int32ArrayType, features, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, SlipSystems, int32_t, Int32ArrayType, features, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AspectRatios, float,FloatArrayType, features, 2)
 
  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
+                                          (m->getCellFeatureData(DREAM3D::FeatureData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
     ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" ;
@@ -430,7 +430,7 @@ bool Class::does##DType##Exist(const QString &name) {\
 
   // And we do the same for the SharedSurfaceArea list
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                                 (m->getCellFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+                                 (m->getCellFeatureData(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
     ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" ;

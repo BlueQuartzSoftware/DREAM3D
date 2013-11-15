@@ -47,7 +47,7 @@
 
 /**
  * @class SurfaceMeshToStl SurfaceMeshToStl.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToStl.h
- * @brief This filter creates an STL file for each Grain ID, or Region ID that is encountered in
+ * @brief This filter creates an STL file for each Feature ID, or Region ID that is encountered in
  * the volume.
  * @author
  * @date
@@ -118,10 +118,10 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
     int writeHeader(FILE* f, const QString& header, int triCount);

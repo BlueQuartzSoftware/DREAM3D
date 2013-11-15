@@ -32,12 +32,12 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
     virtual ~FindBasalLoadingFactor();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    //------ Required Field Data
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(BasalLoadingFactorArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -73,12 +73,12 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
 //    OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_BasalLoadingFactor;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     float* m_AvgQuats;
 
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindBasalLoadingFactor(const FindBasalLoadingFactor&); // Copy Constructor Not Implemented
     void operator=(const FindBasalLoadingFactor&); // Operator '=' Not Implemented

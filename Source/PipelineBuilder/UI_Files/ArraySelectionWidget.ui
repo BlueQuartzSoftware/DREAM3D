@@ -40,7 +40,7 @@
      <widget class="QListWidget" name="vertexVertexArrayList"/>
     </item>
     <item row="1" column="1">
-     <widget class="QListWidget" name="vertexVertexFieldArrayList"/>
+     <widget class="QListWidget" name="vertexVertexFeatureArrayList"/>
     </item>
     <item row="1" column="2">
      <widget class="QListWidget" name="vertexVertexEnsembleArrayList"/>
@@ -59,7 +59,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QCheckBox" name="vertexVertexFieldCB">
+     <widget class="QCheckBox" name="vertexVertexFeatureCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -67,7 +67,7 @@ font-size: 11pt;
 }</string>
       </property>
       <property name="text">
-       <string>Field Data</string>
+       <string>Feature Data</string>
       </property>
      </widget>
     </item>
@@ -101,7 +101,7 @@ font-size: 11pt;
      <number>0</number>
     </property>
     <item row="1" column="2">
-     <widget class="QListWidget" name="edgeEdgeFieldArrayList"/>
+     <widget class="QListWidget" name="edgeEdgeFeatureArrayList"/>
     </item>
     <item row="1" column="1">
      <widget class="QListWidget" name="edgeEdgeArrayList"/>
@@ -139,7 +139,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QCheckBox" name="edgeEdgeFieldCB">
+     <widget class="QCheckBox" name="edgeEdgeFeatureCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -147,7 +147,7 @@ font-size: 11pt;
 }</string>
       </property>
       <property name="text">
-       <string>Field Data</string>
+       <string>Feature Data</string>
       </property>
      </widget>
     </item>
@@ -235,7 +235,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="5">
-     <widget class="QCheckBox" name="surfaceFaceFieldArraysCB">
+     <widget class="QCheckBox" name="surfaceFaceFeatureArraysCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -243,7 +243,7 @@ font-size: 11pt;
 }</string>
       </property>
       <property name="text">
-       <string>Field Data</string>
+       <string>Feature Data</string>
       </property>
       <property name="tristate">
        <bool>true</bool>
@@ -251,7 +251,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="1" column="5">
-     <widget class="QListWidget" name="surfaceFaceFieldArrayList"/>
+     <widget class="QListWidget" name="surfaceFaceFeatureArrayList"/>
     </item>
     <item row="1" column="0">
      <widget class="QListWidget" name="surfaceVertexArrayList"/>
@@ -308,7 +308,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="4">
-     <widget class="QCheckBox" name="volumeCellFieldCB">
+     <widget class="QCheckBox" name="volumeCellFeatureCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -316,7 +316,7 @@ font-size: 11pt;
 }</string>
       </property>
       <property name="text">
-       <string>Field Data</string>
+       <string>Feature Data</string>
       </property>
       <property name="tristate">
        <bool>true</bool>
@@ -324,7 +324,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="1" column="4">
-     <widget class="QListWidget" name="volumeCellFieldArrayList"/>
+     <widget class="QListWidget" name="volumeCellFeatureArrayList"/>
     </item>
     <item row="1" column="5">
      <widget class="QListWidget" name="volumeCellEnsembleArrayList"/>

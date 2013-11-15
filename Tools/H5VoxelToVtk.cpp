@@ -39,7 +39,7 @@
  * @brief This program is mainly a debugging program to ensure the .h5voxel file
  * has the correct data since at the current time there is no way to visualize
  * the .h5voxel in ParaView or anything else. This will convert the .h5voxel to a
- * VTK structured points data file with Grain IDs and IPS Colors.
+ * VTK structured points data file with Feature IDs and IPS Colors.
  */
 
 #include <iostream>
@@ -61,7 +61,7 @@ typedef struct {
     int ypoints;
     int zpoints;
     float resx; float resy; float resz;
-    int* grain_indicies;
+    int* feature_indicies;
     int* phases;
     float* euler1s;
     float* euler2s;
@@ -118,7 +118,7 @@ std::string getNameOfClass()
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-  std::cout << "Starting Conversion of H5Voxel to VTK with Grain ID and IPF Colors" << std::endl;
+  std::cout << "Starting Conversion of H5Voxel to VTK with Feature ID and IPF Colors" << std::endl;
   if (argc < 3)
   {
     std::cout << "This program takes 2 arguments: Input .h5voxel file and output vtk file." << std::endl;
@@ -202,15 +202,15 @@ int main(int argc, char **argv)
 
 
   int64_t totalPoints = m->getTotalPoints();
-  int32_t* m_GrainIds = NULL;
-  m_GrainIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, 1, NULL);
-    if (0 == m_GrainIds ) {
+  int32_t* m_FeatureIds = NULL;
+  m_FeatureIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::FeatureIds, totalPoints, 1, NULL);
+    if (0 == m_FeatureIds ) {
       ss << "Filter " << getNameOfClass() << " requires the data array '" <<
-      "DREAM3D" << "::" << "CellData" << "::" <<  "GrainIds" << "' to already be created prior to execution." << std::endl;
+      "DREAM3D" << "::" << "CellData" << "::" <<  "FeatureIds" << "' to already be created prior to execution." << std::endl;
       setErrorCondition(-300);
     }
 
-  WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds, m_GrainIds)
+  WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::FeatureIds, m_FeatureIds)
 
   fclose(f);
 

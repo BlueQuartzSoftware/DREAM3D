@@ -60,7 +60,7 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
 
@@ -85,10 +85,10 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
     FindSurfaceCells();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int8_t* m_SurfaceVoxels;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindSurfaceCells(const FindSurfaceCells&); // Copy Constructor Not Implemented
     void operator=(const FindSurfaceCells&); // Operator '=' Not Implemented

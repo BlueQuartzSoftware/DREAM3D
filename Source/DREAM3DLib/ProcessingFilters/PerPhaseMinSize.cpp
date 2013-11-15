@@ -41,8 +41,8 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
+#include "DREAM3DLib/GenericFilters/RenumberFeatures.h"
 
 
 
@@ -55,12 +55,12 @@
 // -----------------------------------------------------------------------------
 PerPhaseMinSize::PerPhaseMinSize() :
   MinSize(),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_CellPhases(NULL),
-  m_FieldPhases(NULL)
+  m_FeaturePhases(NULL)
 {
   setupFilterParameters();
 }
@@ -80,8 +80,8 @@ void PerPhaseMinSize::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Minimum Allowed Grain Size");
-    option->setPropertyName("MinAllowedGrainSize");
+    option->setHumanLabel("Minimum Allowed Feature Size");
+    option->setPropertyName("MinAllowedFeatureSize");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     option->setUnits("Pixels");
@@ -106,7 +106,7 @@ void PerPhaseMinSize::readFilterParameters(AbstractFilterParametersReader* reade
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setMinAllowedGrainSize( reader->readValue("MinAllowedGrainSize", getMinAllowedGrainSize()) );
+  setMinAllowedFeatureSize( reader->readValue("MinAllowedFeatureSize", getMinAllowedFeatureSize()) );
   setPhaseNumber( reader->readValue("PhaseNumber", getPhaseNumber()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -118,7 +118,7 @@ void PerPhaseMinSize::readFilterParameters(AbstractFilterParametersReader* reade
 int PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
+  writer->writeValue("MinAllowedFeatureSize", getMinAllowedFeatureSize() );
   writer->writeValue("PhaseNumber", getPhaseNumber() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -127,17 +127,17 @@ int PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerPhaseMinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void PerPhaseMinSize::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims);
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -301, int32_t, Int32ArrayType, voxels, dims);
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -301, int32_t, Int32ArrayType, fields, dims);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, dims);
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -301, int32_t, Int32ArrayType, features, dims);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, true, features, dims);
 
 }
 
@@ -156,16 +156,16 @@ void PerPhaseMinSize::preflight()
     return;
   }
 
-  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
-  renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainerArray(getDataContainerArray());
-  renumber_grains->setMessagePrefix(getMessagePrefix());
-  renumber_grains->preflight();
-  int err = renumber_grains->getErrorCondition();
+  RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
+  renumber_features->setObservers(this->getObservers());
+  renumber_features->setDataContainerArray(getDataContainerArray());
+  renumber_features->setMessagePrefix(getMessagePrefix());
+  renumber_features->preflight();
+  int err = renumber_features->getErrorCondition();
   if (err < 0)
   {
-    setErrorCondition(renumber_grains->getErrorCondition());
-    addErrorMessages(renumber_grains->getPipelineMessages());
+    setErrorCondition(renumber_features->getErrorCondition());
+    addErrorMessages(renumber_features->getPipelineMessages());
     return;
   }
 }
@@ -173,7 +173,7 @@ void PerPhaseMinSize::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerPhaseMinSize::remove_smallgrains()
+void PerPhaseMinSize::remove_smallfeatures()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getTotalPoints();
@@ -182,32 +182,32 @@ void PerPhaseMinSize::remove_smallgrains()
 
   int gnum;
 
-  int numgrains = m->getNumCellFieldTuples();
+  int numfeatures = m->getNumCellFeatureTuples();
 
   std::vector<int> voxcounts;
-  voxcounts.resize(numgrains, 0);
+  voxcounts.resize(numfeatures, 0);
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    gnum = m_GrainIds[i];
+    gnum = m_FeatureIds[i];
     if(gnum >= 0) { voxcounts[gnum]++; }
   }
-  for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
+  for (size_t i = 1; i <  static_cast<size_t>(numfeatures); i++)
   {
     m_Active[i] = true;
-    if(voxcounts[i] >= getMinAllowedGrainSize() || m_FieldPhases[i] != m_PhaseNumber) { good = true; }
+    if(voxcounts[i] >= getMinAllowedFeatureSize() || m_FeaturePhases[i] != m_PhaseNumber) { good = true; }
   }
   if(good == false)
   {
     setErrorCondition(-1);
-    notifyErrorMessage("The minimum size is larger than the largest Field.  All Fields would be removed.  The filter has quit.", -1);
+    notifyErrorMessage("The minimum size is larger than the largest Feature.  All Features would be removed.  The filter has quit.", -1);
     return;
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    gnum = m_GrainIds[i];
-    if(voxcounts[gnum] < getMinAllowedGrainSize() && m_FieldPhases[i] == m_PhaseNumber && gnum > 0)
+    gnum = m_FeatureIds[i];
+    if(voxcounts[gnum] < getMinAllowedFeatureSize() && m_FeaturePhases[i] == m_PhaseNumber && gnum > 0)
     {
-      m_GrainIds[i] = -1;
+      m_FeatureIds[i] = -1;
       m_Active[gnum] = false;
     }
   }

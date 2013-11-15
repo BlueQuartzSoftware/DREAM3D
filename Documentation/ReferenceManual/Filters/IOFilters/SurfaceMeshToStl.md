@@ -5,7 +5,7 @@ SurfaceMeshToStl Filter {#surfacemeshtostl}
 IO Filters
 
 ## Description ##
-This filter will write a binary STL File for each unique **Field** or Region ID in the surface Mesh. The STL files
+This filter will write a binary STL File for each unique **Feature** or Region ID in the surface Mesh. The STL files
 will be named with the [Grain_id].stl. The user can designate an optional prefix for the files.
 
 

@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -55,11 +55,11 @@
 FillBadData::FillBadData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_MinAllowedDefectSize(1),
   m_AlreadyChecked(NULL),
   m_Neighbors(NULL),
-  m_GrainIds(NULL)
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -114,14 +114,14 @@ int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FillBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FillBadData::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
 }
 
 
@@ -158,7 +158,7 @@ void FillBadData::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -196,7 +196,7 @@ void FillBadData::execute()
   float x, y, z;
   DimType column, row, plane;
   int neighpoint;
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -210,11 +210,11 @@ void FillBadData::execute()
   for (int64_t iter = 0; iter < totalPoints; iter++)
   {
     m_AlreadyChecked[iter] = false;
-    if (m_GrainIds[iter] != 0) { m_AlreadyChecked[iter] = true; }
+    if (m_FeatureIds[iter] != 0) { m_AlreadyChecked[iter] = true; }
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
+    if(m_AlreadyChecked[i] == false && m_FeatureIds[i] == 0)
     {
       currentvlist.push_back( static_cast<int>(i) );
       count = 0;
@@ -234,7 +234,7 @@ void FillBadData::execute()
           if (j == 4 && row == (dims[1] - 1)) { good = 0; }
           if (j == 2 && column == 0) { good = 0; }
           if (j == 3 && column == (dims[0] - 1)) { good = 0; }
-          if (good == 1 && m_GrainIds[neighbor] == 0 && m_AlreadyChecked[neighbor] == false)
+          if (good == 1 && m_FeatureIds[neighbor] == 0 && m_AlreadyChecked[neighbor] == false)
           {
             currentvlist.push_back(neighbor);
             m_AlreadyChecked[neighbor] = true;
@@ -246,32 +246,32 @@ void FillBadData::execute()
       {
         for (size_t k = 0; k < currentvlist.size(); k++)
         {
-          m_GrainIds[currentvlist[k]] = 0;
+          m_FeatureIds[currentvlist[k]] = 0;
         }
       }
       if((int)currentvlist.size() < m_MinAllowedDefectSize)
       {
         for (size_t k = 0; k < currentvlist.size(); k++)
         {
-          m_GrainIds[currentvlist[k]] = -1;
+          m_FeatureIds[currentvlist[k]] = -1;
         }
       }
       currentvlist.clear();
     }
   }
 
-  int grainname, grain;
+  int featurename, feature;
   int current = 0;
   int most = 0;
 
-  QVector<int > n(numgrains + 1, 0);
+  QVector<int > n(numfeatures + 1, 0);
   while (count != 0)
   {
     count = 0;
     for (int i = 0; i < totalPoints; i++)
     {
-      grainname = m_GrainIds[i];
-      if (grainname < 0)
+      featurename = m_FeatureIds[i];
+      if (featurename < 0)
       {
         count++;
         current = 0;
@@ -291,11 +291,11 @@ void FillBadData::execute()
           if (j == 3 && x == (dims[0] - 1)) { good = 0; }
           if (good == 1)
           {
-            grain = m_GrainIds[neighpoint];
-            if (grain > 0)
+            feature = m_FeatureIds[neighpoint];
+            if (feature > 0)
             {
-              n[grain]++;
-              current = n[grain];
+              n[feature]++;
+              current = n[feature];
               if (current > most)
               {
                 most = current;
@@ -316,8 +316,8 @@ void FillBadData::execute()
           if (l == 3 && x == (dims[0] - 1)) { good = 0; }
           if (good == 1)
           {
-            grain = m_GrainIds[neighpoint];
-            if(grain > 0) { n[grain] = 0; }
+            feature = m_FeatureIds[neighpoint];
+            if(feature > 0) { n[feature] = 0; }
           }
         }
       }
@@ -325,9 +325,9 @@ void FillBadData::execute()
     QList<QString> voxelArrayNames = m->getCellArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
-      grainname = m_GrainIds[j];
+      featurename = m_FeatureIds[j];
       neighbor = m_Neighbors[j];
-      if (grainname < 0 && neighbor != -1 && m_GrainIds[neighbor] > 0)
+      if (featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
       {
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {

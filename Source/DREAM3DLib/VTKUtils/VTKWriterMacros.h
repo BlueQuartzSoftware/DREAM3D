@@ -89,12 +89,12 @@
 
 
 
-#define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName, grain_indicies)\
+#define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName, feature_indicies)\
   fprintf(f, "SCALARS %s int 1\n", ScalarName.toLatin1().data());\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
-    fprintf(f, "%d ", grain_indicies[i]);\
+    fprintf(f, "%d ", feature_indicies[i]);\
   }\
   fprintf(f, "\n");\
    
@@ -106,7 +106,7 @@
     int* gn = new int[totalPoints];\
     int t;\
     for (int64_t i = 0; i < totalPoints; i++) {\
-      t = grain_indicies[i];\
+      t = feature_indicies[i];\
       DREAM3D::Endian::FromSystemToBig::convert(t);\
       gn[i] = t; \
     }\
@@ -167,22 +167,22 @@
   }
 
 
-#define WRITE_VTK_SCALARS_FROM_FIELD_ASCII(ptr, name, m_msgType, var, grain_indicies, FORMAT)\
+#define WRITE_VTK_SCALARS_FROM_FIELD_ASCII(ptr, name, m_msgType, var, feature_indicies, FORMAT)\
   fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, FORMAT, var[grain_indicies[i]]);\
+    fprintf(f, FORMAT, var[feature_indicies[i]]);\
   } fprintf(f,"\n");
 
-#define WRITE_VTK_SCALARS_FROM_FIELD_BINARY(ptr, name, m_msgType, var, grain_indicies)\
+#define WRITE_VTK_SCALARS_FROM_FIELD_BINARY(ptr, name, m_msgType, var, feature_indicies)\
   fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
     m_msgType* gn = new m_msgType[totalPoints];\
     m_msgType t;\
     for (int64_t i = 0; i < totalPoints; i++) {\
-      t = var[grain_indicies[i]];\
+      t = var[feature_indicies[i]];\
       DREAM3D::Endian::FromSystemToBig::convert(t); \
       gn[i] = t; \
     }\

@@ -39,8 +39,8 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-#include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeatureCentroids.h"
 
 
 
@@ -52,14 +52,14 @@
 FindShapes::FindShapes()  :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
-  m_VolumesArrayName(DREAM3D::FieldData::Volumes),
-  m_AspectRatiosArrayName(DREAM3D::FieldData::AspectRatios),
-  m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
-  m_AxisLengthsArrayName(DREAM3D::FieldData::AxisLengths),
-  m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
-  m_GrainIds(NULL),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
+  m_AspectRatiosArrayName(DREAM3D::FeatureData::AspectRatios),
+  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
+  m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),
+  m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
+  m_FeatureIds(NULL),
   m_AxisEulerAngles(NULL),
   m_Centroids(NULL),
   m_AxisLengths(NULL),
@@ -67,11 +67,11 @@ FindShapes::FindShapes()  :
   m_Volumes(NULL),
   m_AspectRatios(NULL)
 {
-  grainmoments = NULL;
-  graineigenvals = NULL;
+  featuremoments = NULL;
+  featureeigenvals = NULL;
 
-  INIT_DataArray(m_GrainMoments, double);
-  INIT_DataArray(m_GrainEigenVals, double);
+  INIT_DataArray(m_FeatureMoments, double);
+  INIT_DataArray(m_FeatureEigenVals, double);
 
   setupFilterParameters();
 }
@@ -113,22 +113,22 @@ int FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindShapes::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, float, FloatArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Omega3s, float, FloatArrayType, 0, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, float, FloatArrayType, 0, features, dims)
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, float, FloatArrayType, 0, fields, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisLengths, float, FloatArrayType, 0, features, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, -305, float, FloatArrayType, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisEulerAngles, float, FloatArrayType, 0, features, dims)
   dims[0] = 2;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AspectRatios, float, FloatArrayType, 0, features, dims)
 }
 
 
@@ -161,7 +161,7 @@ void FindShapes::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -193,9 +193,9 @@ void FindShapes::find_moments()
   float u011 = 0;
   float u101 = 0;
   float xx, yy, zz, xy, xz, yz;
-  size_t numgrains = m->getNumCellFieldTuples();
-  m_GrainMoments->Resize(numgrains*6);
-  grainmoments = m_GrainMoments->getPointer(0);
+  size_t numfeatures = m->getNumCellFeatureTuples();
+  m_FeatureMoments->Resize(numfeatures*6);
+  featuremoments = m_FeatureMoments->getPointer(0);
 
   float xPoints = m->getXPoints();
   float yPoints = m->getYPoints();
@@ -204,14 +204,14 @@ void FindShapes::find_moments()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  for (size_t i = 0; i < numgrains; i++)
+  for (size_t i = 0; i < numfeatures; i++)
   {
-    grainmoments[6 * i + 0] = 0.0f;
-    grainmoments[6 * i + 1] = 0.0f;
-    grainmoments[6 * i + 2] = 0.0f;
-    grainmoments[6 * i + 3] = 0.0f;
-    grainmoments[6 * i + 4] = 0.0f;
-    grainmoments[6 * i + 5] = 0.0f;
+    featuremoments[6 * i + 0] = 0.0f;
+    featuremoments[6 * i + 1] = 0.0f;
+    featuremoments[6 * i + 2] = 0.0f;
+    featuremoments[6 * i + 3] = 0.0f;
+    featuremoments[6 * i + 4] = 0.0f;
+    featuremoments[6 * i + 5] = 0.0f;
     m_Volumes[i] = 0.0f;
   }
   float x, y, z, x1, x2, y1, y2, z1, z2;
@@ -227,7 +227,7 @@ void FindShapes::find_moments()
       yStride = j * xPoints;
       for(size_t k = 0; k < xPoints; k++)
       {
-        int gnum = m_GrainIds[zStride + yStride + k];
+        int gnum = m_FeatureIds[zStride + yStride + k];
         x = float(k) * xRes;
         y = float(j) * yRes;
         z = float(i) * zRes;
@@ -277,12 +277,12 @@ void FindShapes::find_moments()
              + ((ydist7) * (zdist7)) + ((ydist8) * (zdist8));
         xz = ((xdist1) * (zdist1)) + ((xdist2) * (zdist2)) + ((xdist3) * (zdist3)) + ((xdist4) * (zdist4)) + ((xdist5) * (zdist5)) + ((xdist6) * (zdist6))
              + ((xdist7) * (zdist7)) + ((xdist8) * (zdist8));
-        grainmoments[gnum * 6 + 0] = grainmoments[gnum * 6 + 0] + xx;
-        grainmoments[gnum * 6 + 1] = grainmoments[gnum * 6 + 1] + yy;
-        grainmoments[gnum * 6 + 2] = grainmoments[gnum * 6 + 2] + zz;
-        grainmoments[gnum * 6 + 3] = grainmoments[gnum * 6 + 3] + xy;
-        grainmoments[gnum * 6 + 4] = grainmoments[gnum * 6 + 4] + yz;
-        grainmoments[gnum * 6 + 5] = grainmoments[gnum * 6 + 5] + xz;
+        featuremoments[gnum * 6 + 0] = featuremoments[gnum * 6 + 0] + xx;
+        featuremoments[gnum * 6 + 1] = featuremoments[gnum * 6 + 1] + yy;
+        featuremoments[gnum * 6 + 2] = featuremoments[gnum * 6 + 2] + zz;
+        featuremoments[gnum * 6 + 3] = featuremoments[gnum * 6 + 3] + xy;
+        featuremoments[gnum * 6 + 4] = featuremoments[gnum * 6 + 4] + yz;
+        featuremoments[gnum * 6 + 5] = featuremoments[gnum * 6 + 5] + xz;
         m_Volumes[gnum] = m_Volumes[gnum] + 1.0;
       }
     }
@@ -292,21 +292,21 @@ void FindShapes::find_moments()
   float konst1 =  (xRes / 2.0f) * (yRes / 2.0f) * (zRes / 2.0f);
   //constant for volumes because voxels are counted as one
   float konst2 =  (xRes) * (yRes) * (zRes);
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
     m_Volumes[i] = m_Volumes[i] * konst2;
-    grainmoments[i * 6 + 0] = grainmoments[i * 6 + 0] * konst1;
-    grainmoments[i * 6 + 1] = grainmoments[i * 6 + 1] * konst1;
-    grainmoments[i * 6 + 2] = grainmoments[i * 6 + 2] * konst1;
-    grainmoments[i * 6 + 3] = -grainmoments[i * 6 + 3] * konst1;
-    grainmoments[i * 6 + 4] = -grainmoments[i * 6 + 4] * konst1;
-    grainmoments[i * 6 + 5] = -grainmoments[i * 6 + 5] * konst1;
-    u200 = (grainmoments[i * 6 + 1] + grainmoments[i * 6 + 2] - grainmoments[i * 6 + 0]) / 2.0f;
-    u020 = (grainmoments[i * 6 + 0] + grainmoments[i * 6 + 2] - grainmoments[i * 6 + 1]) / 2.0f;
-    u002 = (grainmoments[i * 6 + 0] + grainmoments[i * 6 + 1] - grainmoments[i * 6 + 2]) / 2.0f;
-    u110 = -grainmoments[i * 6 + 3];
-    u011 = -grainmoments[i * 6 + 4];
-    u101 = -grainmoments[i * 6 + 5];
+    featuremoments[i * 6 + 0] = featuremoments[i * 6 + 0] * konst1;
+    featuremoments[i * 6 + 1] = featuremoments[i * 6 + 1] * konst1;
+    featuremoments[i * 6 + 2] = featuremoments[i * 6 + 2] * konst1;
+    featuremoments[i * 6 + 3] = -featuremoments[i * 6 + 3] * konst1;
+    featuremoments[i * 6 + 4] = -featuremoments[i * 6 + 4] * konst1;
+    featuremoments[i * 6 + 5] = -featuremoments[i * 6 + 5] * konst1;
+    u200 = (featuremoments[i * 6 + 1] + featuremoments[i * 6 + 2] - featuremoments[i * 6 + 0]) / 2.0f;
+    u020 = (featuremoments[i * 6 + 0] + featuremoments[i * 6 + 2] - featuremoments[i * 6 + 1]) / 2.0f;
+    u002 = (featuremoments[i * 6 + 0] + featuremoments[i * 6 + 1] - featuremoments[i * 6 + 2]) / 2.0f;
+    u110 = -featuremoments[i * 6 + 3];
+    u011 = -featuremoments[i * 6 + 4];
+    u101 = -featuremoments[i * 6 + 5];
     float o3 = (u200 * u020 * u002) + (2.0f * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
     float vol5 = powf(m_Volumes[i], 5);
     float omega3 = vol5 / o3;
@@ -321,9 +321,9 @@ void FindShapes::find_moments2D()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   float xx, yy, xy;
-  size_t numgrains = m->getNumCellFieldTuples();
-  m_GrainMoments->Resize(numgrains*6);
-  grainmoments = m_GrainMoments->getPointer(0);
+  size_t numfeatures = m->getNumCellFeatureTuples();
+  m_FeatureMoments->Resize(numfeatures*6);
+  featuremoments = m_FeatureMoments->getPointer(0);
 
   int xPoints = 0, yPoints = 0;
   float xRes = 0.0f, yRes = 0.0f;
@@ -350,9 +350,9 @@ void FindShapes::find_moments2D()
     yRes = m->getYRes();
   }
 
-  for (size_t i = 0; i < 6 * numgrains; i++)
+  for (size_t i = 0; i < 6 * numfeatures; i++)
   {
-    grainmoments[i] = 0.0;
+    featuremoments[i] = 0.0;
   }
   float x, y, x1, x2, y1, y2;
   float xdist1, xdist2, xdist3, xdist4;
@@ -363,7 +363,7 @@ void FindShapes::find_moments2D()
     yStride = j * xPoints;
     for(int k = 0; k < xPoints; k++)
     {
-      int gnum = m_GrainIds[yStride + k];
+      int gnum = m_FeatureIds[yStride + k];
       x = float(k) * xRes;
       y = float(j) * yRes;
       x1 = x + (xRes / 2);
@@ -381,17 +381,17 @@ void FindShapes::find_moments2D()
       xx = ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
       yy = ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
       xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
-      grainmoments[gnum * 6 + 0] = grainmoments[gnum * 6 + 0] + xx;
-      grainmoments[gnum * 6 + 1] = grainmoments[gnum * 6 + 1] + yy;
-      grainmoments[gnum * 6 + 2] = grainmoments[gnum * 6 + 2] + xy;
+      featuremoments[gnum * 6 + 0] = featuremoments[gnum * 6 + 0] + xx;
+      featuremoments[gnum * 6 + 1] = featuremoments[gnum * 6 + 1] + yy;
+      featuremoments[gnum * 6 + 2] = featuremoments[gnum * 6 + 2] + xy;
     }
   }
   float konst1 = (xRes / 2.0f) * (yRes / 2.0f);
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    grainmoments[i * 6 + 0] = grainmoments[i * 6 + 0] * konst1;
-    grainmoments[i * 6 + 1] = grainmoments[i * 6 + 1] * konst1;
-    grainmoments[i * 6 + 2] = -grainmoments[i * 6 + 2] * konst1;
+    featuremoments[i * 6 + 0] = featuremoments[i * 6 + 0] * konst1;
+    featuremoments[i * 6 + 1] = featuremoments[i * 6 + 1] * konst1;
+    featuremoments[i * 6 + 2] = -featuremoments[i * 6 + 2] * konst1;
   }
 }
 
@@ -411,24 +411,24 @@ void FindShapes::find_axes()
   float bovera, covera;
   float value;
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
 
-  m_GrainMoments->Resize(numgrains*6);
-  grainmoments = m_GrainMoments->getPointer(0);
+  m_FeatureMoments->Resize(numfeatures*6);
+  featuremoments = m_FeatureMoments->getPointer(0);
 
-  m_GrainEigenVals->Resize(numgrains*3);
-  graineigenvals = m_GrainEigenVals->getPointer(0);
+  m_FeatureEigenVals->Resize(numfeatures*3);
+  featureeigenvals = m_FeatureEigenVals->getPointer(0);
 
 
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    Ixx = grainmoments[i * 6 + 0];
-    Iyy = grainmoments[i * 6 + 1];
-    Izz = grainmoments[i * 6 + 2];
+    Ixx = featuremoments[i * 6 + 0];
+    Iyy = featuremoments[i * 6 + 1];
+    Izz = featuremoments[i * 6 + 2];
 
-    Ixy = grainmoments[i * 6 + 3];
-    Iyz = grainmoments[i * 6 + 4];
-    Ixz = grainmoments[i * 6 + 5];
+    Ixy = featuremoments[i * 6 + 3];
+    Iyz = featuremoments[i * 6 + 4];
+    Ixz = featuremoments[i * 6 + 5];
 
     a = 1;
     b = (-Ixx - Iyy - Izz);
@@ -462,9 +462,9 @@ void FindShapes::find_axes()
     r1 = 2 * const1 * const2 - (const3);
     r2 = -const1 * (const2 - (const4)) - const3;
     r3 = -const1 * (const2 + (const4)) - const3;
-    graineigenvals[3 * i] = r1;
-    graineigenvals[3 * i + 1] = r2;
-    graineigenvals[3 * i + 2] = r3;
+    featureeigenvals[3 * i] = r1;
+    featureeigenvals[3 * i + 1] = r2;
+    featureeigenvals[3 * i + 2] = r3;
 
     I1 = (15 * r1) / (4 * DREAM3D::Constants::k_Pi);
     I2 = (15 * r2) / (4 * DREAM3D::Constants::k_Pi);
@@ -498,17 +498,17 @@ void FindShapes::find_axes2D()
 
   float Ixx, Iyy, Ixy;
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
 
-  m_GrainMoments->Resize(numgrains*6);
-  grainmoments = m_GrainMoments->getPointer(0);
+  m_FeatureMoments->Resize(numfeatures*6);
+  featuremoments = m_FeatureMoments->getPointer(0);
 
 
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    Ixx = grainmoments[i * 6 + 0];
-    Iyy = grainmoments[i * 6 + 1];
-    Ixy = grainmoments[i * 6 + 2];
+    Ixx = featuremoments[i * 6 + 0];
+    Iyy = featuremoments[i * 6 + 1];
+    Ixy = featuremoments[i * 6 + 2];
     float r1 = (Ixx + Iyy) / 2.0f + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f - (Ixx * Iyy - Ixy * Ixy));
     float r2 = (Ixx + Iyy) / 2.0f - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f - (Ixx * Iyy - Ixy * Ixy));
     float preterm = 4.0f / DREAM3D::Constants::k_Pi;
@@ -530,19 +530,19 @@ void FindShapes::find_axiseulers()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   float ea1 = 0, ea2 = 0, ea3 = 0;
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    float Ixx = grainmoments[i * 6 + 0];
-    float Iyy = grainmoments[i * 6 + 1];
-    float Izz = grainmoments[i * 6 + 2];
-    float Ixy = -grainmoments[i * 6 + 3];
-    float Iyz = -grainmoments[i * 6 + 4];
-    float Ixz = -grainmoments[i * 6 + 5];
-    float radius1 = graineigenvals[3 * i];
-    float radius2 = graineigenvals[3 * i + 1];
-    float radius3 = graineigenvals[3 * i + 2];
+    float Ixx = featuremoments[i * 6 + 0];
+    float Iyy = featuremoments[i * 6 + 1];
+    float Izz = featuremoments[i * 6 + 2];
+    float Ixy = -featuremoments[i * 6 + 3];
+    float Iyz = -featuremoments[i * 6 + 4];
+    float Ixz = -featuremoments[i * 6 + 5];
+    float radius1 = featureeigenvals[3 * i];
+    float radius2 = featureeigenvals[3 * i + 1];
+    float radius3 = featureeigenvals[3 * i + 2];
 
 
     float e[3][1];
@@ -685,13 +685,13 @@ void FindShapes::find_axiseulers2D()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
 
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    float Ixx = grainmoments[i * 6 + 0];
-    float Iyy = grainmoments[i * 6 + 1];
-    float Ixy = grainmoments[i * 6 + 2];
+    float Ixx = featuremoments[i * 6 + 0];
+    float Iyy = featuremoments[i * 6 + 1];
+    float Ixy = featuremoments[i * 6 + 2];
     float I1 = (Ixx + Iyy) / 2.0f + sqrtf(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
     float I2 = (Ixx + Iyy) / 2.0f - sqrtf(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
     float n1x = (Ixx - I1) / Ixy;

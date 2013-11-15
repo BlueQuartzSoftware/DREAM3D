@@ -49,9 +49,9 @@
 DxWriter::DxWriter() :
   FileWriter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_AddSurfaceLayer(false),
-  m_GrainIds(NULL)
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -120,7 +120,7 @@ int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void DxWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -145,7 +145,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   }
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
 }
 
 // -----------------------------------------------------------------------------
@@ -187,7 +187,7 @@ int DxWriter::writeFile()
     return -40;
   }
 
-  //GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
+  //GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::FeatureIds, Int32ArrayType, int32_t, totalPoints, feature_indicies);
 
   int err = 0;
   size_t udims[3] =
@@ -200,7 +200,7 @@ int DxWriter::writeFile()
 #endif
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-  // qDebug() << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] ;
+  // qDebug() << "Write Dx Feature File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] ;
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -294,13 +294,13 @@ int DxWriter::writeFile()
       // Write the actual voxel data
       for (DimType x = 0; x < dims[0]; ++x)
       {
-        if(m_GrainIds[index] == 0)
+        if(m_FeatureIds[index] == 0)
         {
           out << "0" << " ";
         }
         else
         {
-          out << m_GrainIds[index] << " ";
+          out << m_FeatureIds[index] << " ";
         }
         ++index;
       }
@@ -340,7 +340,7 @@ int DxWriter::writeFile()
   out << "\n";
   out << "attribute \"dep\" string \"connections\"" << "\n";
   out << "\n";
-  out << "object \"DREAM3D Generated\" class field" << "\n";
+  out << "object \"DREAM3D Generated\" class feature" << "\n";
   out << "component  \"positions\"    value 1" << "\n";
   out << "component  \"connections\"  value 2" << "\n";
   out << "component  \"data\"         value 3" << "\n";
@@ -357,7 +357,7 @@ int DxWriter::writeFile()
   int32_t d = 0;
   for(int index = 0; index < getTotalPoints; ++index)
   {
-    d = grainIds[index];
+    d = featureIds[index];
     if (d == 0)
     { d = -3;}
     out.write((const char*)(&d), sizeof(d));

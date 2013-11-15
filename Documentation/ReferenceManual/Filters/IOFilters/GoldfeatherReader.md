@@ -36,7 +36,7 @@ None
 | Double | Principal Direction 2 | N x 3 Col Double Array |
 | Double | Principal Curvature 2 | N x 1 Col Double Array |
 | Double | Principal Curvature 2 | N x 1 Col Double Array |
-| Int32 | SurfaceMeshTriangleLabels | Triangle Field Labels |
+| Int32 | SurfaceMeshTriangleLabels | Triangle Feature Labels |
 | Double | SurfaceMeshTriangleNormals | Triangle Normals |
 
 

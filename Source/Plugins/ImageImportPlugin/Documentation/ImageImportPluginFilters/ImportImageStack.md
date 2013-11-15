@@ -46,7 +46,7 @@ When importing color images they will be imported as RGBA, or color with Alpha v
 
 | Name             |  Type  |
 |------------------|--------|
-| Field Array Name | String |
+| Feature Array Name | String |
 
 
 ## Required DataContainers ##

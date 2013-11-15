@@ -129,36 +129,36 @@ void H5AngVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5AngVolumeReader::getPointerByName(const QString &fieldName)
+void* H5AngVolumeReader::getPointerByName(const QString &featureName)
 {
-  if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
-  if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
-  if (fieldName.compare(Ebsd::Ang::Phi2) == 0) { return static_cast<void*>(m_Phi2);}
-  if (fieldName.compare(Ebsd::Ang::ImageQuality) == 0) { return static_cast<void*>(m_Iq);}
-  if (fieldName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return static_cast<void*>(m_Ci);}
-  if (fieldName.compare(Ebsd::Ang::PhaseData) == 0) { return static_cast<void*>(m_PhaseData);}
-  if (fieldName.compare(Ebsd::Ang::XPosition) == 0) { return static_cast<void*>(m_X);}
-  if (fieldName.compare(Ebsd::Ang::YPosition) == 0) { return static_cast<void*>(m_Y);}
-  if (fieldName.compare(Ebsd::Ang::SEMSignal) == 0) { return static_cast<void*>(m_SEMSignal);}
-  if (fieldName.compare(Ebsd::Ang::Fit) == 0) { return static_cast<void*>(m_Fit);}
+  if (featureName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
+  if (featureName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
+  if (featureName.compare(Ebsd::Ang::Phi2) == 0) { return static_cast<void*>(m_Phi2);}
+  if (featureName.compare(Ebsd::Ang::ImageQuality) == 0) { return static_cast<void*>(m_Iq);}
+  if (featureName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return static_cast<void*>(m_Ci);}
+  if (featureName.compare(Ebsd::Ang::PhaseData) == 0) { return static_cast<void*>(m_PhaseData);}
+  if (featureName.compare(Ebsd::Ang::XPosition) == 0) { return static_cast<void*>(m_X);}
+  if (featureName.compare(Ebsd::Ang::YPosition) == 0) { return static_cast<void*>(m_Y);}
+  if (featureName.compare(Ebsd::Ang::SEMSignal) == 0) { return static_cast<void*>(m_SEMSignal);}
+  if (featureName.compare(Ebsd::Ang::Fit) == 0) { return static_cast<void*>(m_Fit);}
   return NULL;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5AngVolumeReader::getPointerType(const QString &fieldName)
+Ebsd::NumType H5AngVolumeReader::getPointerType(const QString &featureName)
 {
-  if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::Phi2) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::ImageQuality) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::PhaseData) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ang::XPosition) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::YPosition) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::SEMSignal) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::Fit) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Phi2) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::ImageQuality) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::PhaseData) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ang::XPosition) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::YPosition) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::SEMSignal) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Fit) == 0) { return Ebsd::Float;}
   return Ebsd::UnknownNumType;
 }
 

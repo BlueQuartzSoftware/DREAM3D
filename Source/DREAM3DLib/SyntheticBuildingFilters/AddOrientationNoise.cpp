@@ -112,7 +112,7 @@ int AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -162,9 +162,9 @@ void AddOrientationNoise::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalFeatures = m->getNumCellFeatureTuples();
 
-  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;

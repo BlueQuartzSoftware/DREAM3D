@@ -88,7 +88,7 @@ class DREAM3DLib_EXPORT RotateSampleRefFrame : public AbstractFilter
   protected:
     RotateSampleRefFrame();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
 

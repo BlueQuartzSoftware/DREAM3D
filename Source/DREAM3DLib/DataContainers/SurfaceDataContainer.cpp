@@ -69,7 +69,7 @@ SurfaceDataContainer::~SurfaceDataContainer()
 //
 // -----------------------------------------------------------------------------
 DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, FaceData)
-DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, FaceFieldData)
+DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, FaceFeatureData)
 DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, FaceEnsembleData)
 
 // -----------------------------------------------------------------------------
@@ -93,7 +93,7 @@ void SurfaceDataContainer::addFaceData(const QString &name, IDataArray::Pointer 
 {
   if (data->GetName().compare(name) != 0)
   {
-    qDebug() << "Adding Field array with different array name than key name" << "\n";
+    qDebug() << "Adding Feature array with different array name than key name" << "\n";
     qDebug() << "Key name: " << name << "\n";
     qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
@@ -165,11 +165,11 @@ void SurfaceDataContainer::resizeFaceDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::getFaceFieldData(const QString &name)
+IDataArray::Pointer SurfaceDataContainer::getFaceFeatureData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_FaceFieldData.find(name);
-  if ( it == m_FaceFieldData.end() )
+  it =  m_FaceFeatureData.find(name);
+  if ( it == m_FaceFeatureData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -179,50 +179,50 @@ IDataArray::Pointer SurfaceDataContainer::getFaceFieldData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::addFaceFieldData(const QString &name, IDataArray::Pointer data)
+void SurfaceDataContainer::addFaceFeatureData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    qDebug() << "Adding Field array with different array name than key name" << "\n";
+    qDebug() << "Adding Feature array with different array name than key name" << "\n";
     qDebug() << "Key name: " << name << "\n";
     qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
-  m_FaceFieldData[name] = data;
-  m_NumFaceFieldTuples = data->getNumberOfTuples();
+  m_FaceFeatureData[name] = data;
+  m_NumFaceFeatureTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::removeFaceFieldData(const QString &name)
+IDataArray::Pointer SurfaceDataContainer::removeFaceFeatureData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_FaceFieldData.find(name);
-  if ( it == m_FaceFieldData.end() )
+  it =  m_FaceFeatureData.find(name);
+  if ( it == m_FaceFeatureData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = it.value();
-  m_FaceFieldData.erase(it);
+  m_FaceFeatureData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::clearFaceFieldData()
+void SurfaceDataContainer::clearFaceFeatureData()
 {
-  m_FaceFieldData.clear();
+  m_FaceFeatureData.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> SurfaceDataContainer::getFaceFieldArrayNameList()
+QList<QString> SurfaceDataContainer::getFaceFeatureArrayNameList()
 {
   QList<QString> keys;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceFieldData.begin(); iter != m_FaceFieldData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceFeatureData.begin(); iter != m_FaceFeatureData.end(); ++iter)
   {
     keys.push_back( iter.key());
   }
@@ -232,24 +232,24 @@ QList<QString> SurfaceDataContainer::getFaceFieldArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainer::getNumFaceFieldArrays()
+int SurfaceDataContainer::getNumFaceFeatureArrays()
 {
-  return static_cast<int>(m_FaceFieldData.size());
+  return static_cast<int>(m_FaceFeatureData.size());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::resizeFaceFieldDataArrays(size_t size)
+void SurfaceDataContainer::resizeFaceFeatureDataArrays(size_t size)
 {
  // int success = 0;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceFieldData.begin(); iter != m_FaceFieldData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceFeatureData.begin(); iter != m_FaceFeatureData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
     IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
-  m_NumFaceFieldTuples = size;
+  m_NumFaceFeatureTuples = size;
 }
 
 // -----------------------------------------------------------------------------

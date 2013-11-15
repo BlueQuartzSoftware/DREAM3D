@@ -56,8 +56,8 @@
 SPParksWriter::SPParksWriter() :
   FileWriter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_GrainIds(NULL)
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -113,13 +113,13 @@ int SPParksWriter::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
 }
 
 // -----------------------------------------------------------------------------
@@ -266,7 +266,7 @@ int SPParksWriter::writeFile()
         millis = QDateTime::currentMSecsSinceEpoch();
       }
     }
-    outfile << k + 1 << " " << m_GrainIds[k] << "\n";
+    outfile << k + 1 << " " << m_FeatureIds[k] << "\n";
   }
   outfile.close();
 

@@ -1,20 +1,20 @@
-Find Field Shapes {#findshapes}
+Find Feature Shapes {#findshapes}
 ======
 
 ## Group (Subgroup) ##
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter calculates the second-order moments of each **Field** in order to determine the *principal axis lengths, pricipal axis directions, aspect ratios and moment invariant Omega3*.  The *principal axis lengths* are those of a "best-fit" ellipsoid.  The algorithm for determining the moments and these values is as follows:
+This Filter calculates the second-order moments of each **Feature** in order to determine the *principal axis lengths, pricipal axis directions, aspect ratios and moment invariant Omega3*.  The *principal axis lengths* are those of a "best-fit" ellipsoid.  The algorithm for determining the moments and these values is as follows:
 
-1. Obtain the centroid for each **Field**.
-2. For each **Cell**, determine the x, y and z distance to the centroid of the **Field** that owns the **Cell**.
+1. Obtain the centroid for each **Feature**.
+2. For each **Cell**, determine the x, y and z distance to the centroid of the **Feature** that owns the **Cell**.
 3. For each **Cell**, calculate Ixx, Iyy, Izz, Ixy, Ixz and Iyz using the x, y and z distances determined in step 2.
-4. Sum the individual Ixx, Iyy, Izz, Ixy, Ixz and Iyz values for all **Cells** belonging to the same **Field**.
-5. Find the *eigenvalues* and *eigenvectors* of the *3x3* symmetric matrix defined by the *6* values calculated in step 4 for each **Field**.
+4. Sum the individual Ixx, Iyy, Izz, Ixy, Ixz and Iyz values for all **Cells** belonging to the same **Feature**.
+5. Find the *eigenvalues* and *eigenvectors* of the *3x3* symmetric matrix defined by the *6* values calculated in step 4 for each **Feature**.
 6. Use the relationship of *principal moments* to the *principal axis lengths* for an ellipsoid, which can be found in [4], to determine the *Axis Lengths*
 7. Calculate the *Aspect Ratios* from the *Axis Lengths* found in step 6.
-8. Determine the Euler angles required to represent the *principal axis directions* in the *sample reference frame* and store them as the **Field**'s *Axis Euler Angles*.
+8. Determine the Euler angles required to represent the *principal axis directions* in the *sample reference frame* and store them as the **Feature**'s *Axis Euler Angles*.
 9. Calculate the moment variant Omega3 as definied in [2] and is discussed further in [1] and [3].
 
 
@@ -45,18 +45,18 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Fields (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Field | Centroids | X, Y, Z coordinates (floats) of **Field** center of mass | Filter will calculate **Field** centroids if not previously calculated | Find Field Centroids (Generic) |
-| Field | Volumes | Volume (float) in um^3 of the **Field**. | Filter will calculate volume of each **Field** if not already calculated | Find Field Sizes (Statistics) | 
+| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature | Centroids | X, Y, Z coordinates (floats) of **Feature** center of mass | Filter will calculate **Feature** centroids if not previously calculated | Find Feature Centroids (Generic) |
+| Feature | Volumes | Volume (float) in um^3 of the **Feature**. | Filter will calculate volume of each **Feature** if not already calculated | Find Feature Sizes (Statistics) | 
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | AspectRatios |  |  |
-| Field | AxisEulerAngles |  |  |
-| Field | AxisLengths |  |  |
-| Field | Omega3s |  |  |
+| Feature | AspectRatios |  |  |
+| Feature | AxisEulerAngles |  |  |
+| Feature | AxisLengths |  |  |
+| Feature | Omega3s |  |  |
 
 ## Authors ##
 

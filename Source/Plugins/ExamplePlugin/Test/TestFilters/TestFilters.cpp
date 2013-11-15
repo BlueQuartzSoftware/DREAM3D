@@ -88,7 +88,7 @@ int Filt0::writeFilterParameters(AbstractFilterParametersWriter* writer, int ind
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Filt0::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void Filt0::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 }
@@ -207,7 +207,7 @@ int Filt1::writeFilterParameters(AbstractFilterParametersWriter* writer, int ind
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Filt1::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void Filt1::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 }

@@ -8,7 +8,7 @@ SurfaceMesh
 _Kuprat, A., 2000. Modeling microstructure evolution using gradient-weighted moving
 finite elements. SIAM Journal of Scientific Computing 22, 535-560._
 
-The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient Weighted Moving Finite Element method [SIAM].  A conformal triangular surface mesh represents the **Field** boundary network.  The curvature at each node is computed and used as the driving force for nodal motion. Additional forces are computed based on element quality. The user can choose a balance between the curvature and element quality forces to find a compromise between smoothness and final element quality.  Certain node types can be constrained in their motion.
+The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient Weighted Moving Finite Element method [SIAM].  A conformal triangular surface mesh represents the **Feature** boundary network.  The curvature at each node is computed and used as the driving force for nodal motion. Additional forces are computed based on element quality. The user can choose a balance between the curvature and element quality forces to find a compromise between smoothness and final element quality.  Certain node types can be constrained in their motion.
  
 - Node Contraints .. 
 -  Nodes on an external surface can be constrained to move in the plane of the surface.

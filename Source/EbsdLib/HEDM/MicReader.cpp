@@ -149,7 +149,7 @@ MicReader::MicReader() :
   m_HeaderMap[Ebsd::Mic::XRes] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::XRes);
   m_HeaderMap[Ebsd::Mic::YRes] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::YRes);
 
-  setNumFields(8);
+  setNumFeatures(8);
 }
 
 // -----------------------------------------------------------------------------
@@ -208,34 +208,34 @@ void MicReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* MicReader::getPointerByName(const QString &fieldName)
+void* MicReader::getPointerByName(const QString &featureName)
 {
-  if (fieldName.compare(Ebsd::Mic::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
-  if (fieldName.compare(Ebsd::Mic::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
-  if (fieldName.compare(Ebsd::Mic::Euler3) == 0) { return static_cast<void*>(m_Euler3);}
-  if (fieldName.compare(Ebsd::Mic::Confidence) == 0) { return static_cast<void*>(m_Conf);}
-  if (fieldName.compare(Ebsd::Mic::Phase) == 0) { return static_cast<void*>(m_Phase);}
-  if (fieldName.compare(Ebsd::Mic::Level) == 0) { return static_cast<void*>(m_Level);}
-  if (fieldName.compare(Ebsd::Mic::Up) == 0) { return static_cast<void*>(m_Up);}
-  if (fieldName.compare(Ebsd::Mic::X) == 0) { return static_cast<void*>(m_X);}
-  if (fieldName.compare(Ebsd::Mic::Y) == 0) { return static_cast<void*>(m_Y);}
+  if (featureName.compare(Ebsd::Mic::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
+  if (featureName.compare(Ebsd::Mic::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
+  if (featureName.compare(Ebsd::Mic::Euler3) == 0) { return static_cast<void*>(m_Euler3);}
+  if (featureName.compare(Ebsd::Mic::Confidence) == 0) { return static_cast<void*>(m_Conf);}
+  if (featureName.compare(Ebsd::Mic::Phase) == 0) { return static_cast<void*>(m_Phase);}
+  if (featureName.compare(Ebsd::Mic::Level) == 0) { return static_cast<void*>(m_Level);}
+  if (featureName.compare(Ebsd::Mic::Up) == 0) { return static_cast<void*>(m_Up);}
+  if (featureName.compare(Ebsd::Mic::X) == 0) { return static_cast<void*>(m_X);}
+  if (featureName.compare(Ebsd::Mic::Y) == 0) { return static_cast<void*>(m_Y);}
   return NULL;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType MicReader::getPointerType(const QString &fieldName)
+Ebsd::NumType MicReader::getPointerType(const QString &featureName)
 {
-  if (fieldName.compare(Ebsd::Mic::Euler1) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Mic::Euler2) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Mic::Euler3) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Mic::Confidence) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Mic::Phase) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Mic::Level) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Mic::Up) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Mic::X) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Mic::Y) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Euler1) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Euler2) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Euler3) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Confidence) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Phase) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Mic::Level) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Mic::Up) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Mic::X) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Mic::Y) == 0) { return Ebsd::Float;}
   return Ebsd::UnknownNumType;
 }
 
@@ -376,7 +376,7 @@ int MicReader::readMicFile()
   // Initialize new pointers
   int32_t totalDataRows = 0;
   int32_t totalPossibleDataRows = 0;
-//  size_t fieldsRead = 0;
+//  size_t featuresRead = 0;
   float origEdgeLength;
   float xMax = 0, yMax = 0;
   float xMin = 1000000000, yMin = 1000000000;
@@ -611,8 +611,8 @@ void MicReader::parseDataLine(QByteArray &line, size_t i)
   float p1 = 0.0f, p=0.0f, p2=0.0f, x=-1.0f, y=-1.0f, z=-1.0f, conf=-1.0f, junk1, junk2, junk3;
   int up = 0, level = 0, good = 0, junk4, junk5, junk6, junk7, junk8, junk9;
   size_t offset = 0;
-  size_t fieldsRead = 0;
-  fieldsRead = sscanf(line.data(), "%f %f %f %d %d %d %f %f %f %f %f %f %f %d %d %d %d %d %d", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf, &junk1, &junk2, &junk3, &junk4, &junk5, &junk6, &junk7, &junk8, &junk9);
+  size_t featuresRead = 0;
+  featuresRead = sscanf(line.data(), "%f %f %f %d %d %d %f %f %f %f %f %f %f %d %d %d %d %d %d", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf, &junk1, &junk2, &junk3, &junk4, &junk5, &junk6, &junk7, &junk8, &junk9);
 
   offset = i;
 

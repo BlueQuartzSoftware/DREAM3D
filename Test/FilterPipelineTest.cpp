@@ -43,7 +43,7 @@
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
-#include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
+#include "DREAM3DLib/ReconstructionFilters/SegmentFeatures.h"
 #include "DREAM3DLib/ProcessingFilters/MinSize.h"
 
 #include "UnitTestSupport.hpp"
@@ -74,8 +74,8 @@ void TestFilterPipeline()
   AlignSections::Pointer align_sections = AlignSections::New();
   pipeline->pushBack(align_sections);
 
-  SegmentGrains::Pointer segment_grains = SegmentGrains::New();
-  pipeline->pushBack(segment_grains);
+  SegmentFeatures::Pointer segment_features = SegmentFeatures::New();
+  pipeline->pushBack(segment_features);
 
   MinSize::Pointer min_size = MinSize::New();
   pipeline->pushBack(min_size);

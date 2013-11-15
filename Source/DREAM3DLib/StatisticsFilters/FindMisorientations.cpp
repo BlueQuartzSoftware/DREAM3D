@@ -40,8 +40,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindSurfaceFeatures.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -51,14 +51,14 @@
 FindMisorientations::FindMisorientations()  :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_NeighborListArrayName(DREAM3D::FieldData::NeighborList),
-  m_MisorientationListArrayName(DREAM3D::FieldData::MisorientationList),
-  m_avgMisorientationArrayName(DREAM3D::FieldData::avgMisorientation),
+  m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
+  m_MisorientationListArrayName(DREAM3D::FeatureData::MisorientationList),
+  m_avgMisorientationArrayName(DREAM3D::FeatureData::avgMisorientation),
   m_AvgQuats(NULL),
-  m_FieldPhases(NULL),
+  m_FeaturePhases(NULL),
   m_NeighborList(NULL),
   m_MisorientationList(NULL),
   m_avgMisorientation(NULL),
@@ -96,22 +96,22 @@ int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 4);
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -301, float, FloatArrayType, features, dims)
   dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, avgMisorientation, float, FloatArrayType, 0, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, avgMisorientation, float, FloatArrayType, 0, features, dims)
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  IDataArray::Pointer neighborListPtr = m->getCellFieldData(m_NeighborListArrayName);
+  IDataArray::Pointer neighborListPtr = m->getCellFeatureData(m_NeighborListArrayName);
   if (NULL == neighborListPtr.get())
   {
     QString ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
@@ -123,13 +123,13 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(neighborListPtr.get());
   }
 
-  IDataArray::Pointer misorientationPtr = m->getCellFieldData(m_MisorientationListArrayName);
+  IDataArray::Pointer misorientationPtr = m->getCellFeatureData(m_MisorientationListArrayName);
   if(NULL == misorientationPtr.get())
   {
     NeighborList<float>::Pointer misorientationListPtr = NeighborList<float>::New();
     misorientationListPtr->SetName(m_MisorientationListArrayName);
-    misorientationListPtr->Resize(fields);
-    m->addCellFieldData(m_MisorientationListArrayName, misorientationListPtr);
+    misorientationListPtr->Resize(features);
+    m->addCellFeatureData(m_MisorientationListArrayName, misorientationListPtr);
     m_MisorientationList = misorientationListPtr.get();
     if (misorientationListPtr.get() == NULL)
     {
@@ -141,7 +141,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   else
   {
     m_MisorientationList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(misorientationPtr.get());
-    m_MisorientationList->Resize(fields);
+    m_MisorientationList->Resize(features);
   }
 }
 
@@ -174,7 +174,7 @@ void FindMisorientations::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -197,25 +197,25 @@ void FindMisorientations::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   unsigned int phase1, phase2;
 
   float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
 
   size_t nname;
   // float nsa;
-  misorientationlists.resize(numgrains);
-  for (size_t i = 1; i < numgrains; i++)
+  misorientationlists.resize(numfeatures);
+  for (size_t i = 1; i < numfeatures; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
-    phase1 = m_CrystalStructures[m_FieldPhases[i]];
+    phase1 = m_CrystalStructures[m_FeaturePhases[i]];
     misorientationlists[i].fill(-1.0, neighborlist[i].size() );
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = 10000.0;
       nname = neighborlist[i][j];
       QuaternionMathF::Copy(avgQuats[nname], q2);
-      phase2 = m_CrystalStructures[m_FieldPhases[nname]];
+      phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
       if (phase1 == phase2)
       {
         w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
@@ -232,9 +232,9 @@ void FindMisorientations::execute()
   }
 
   // We do this to create new set of MisorientationList objects
-  dataCheck(false, m->getNumCellTuples(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getNumCellTuples(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
 
-  for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
+  for (size_t i = 1; i < m->getNumCellFeatureTuples(); i++)
   {
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType misoL(new std::vector<float>);

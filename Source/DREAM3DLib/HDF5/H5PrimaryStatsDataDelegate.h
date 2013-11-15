@@ -76,8 +76,8 @@ class DREAM3DLib_EXPORT H5PrimaryStatsDataDelegate : public H5StatsDataDelegate
     int writePhaseFraction(PrimaryStatsData* data, hid_t groupId);
     int readPhaseFraction(PrimaryStatsData* data, hid_t groupId);
 
-    int writeGrainDiameterInfo(PrimaryStatsData* data, hid_t groupId);
-    int readGrainDiameterInfo(PrimaryStatsData* data, hid_t groupId);
+    int writeFeatureDiameterInfo(PrimaryStatsData* data, hid_t groupId);
+    int readFeatureDiameterInfo(PrimaryStatsData* data, hid_t groupId);
 
     int writeBinNumbers(PrimaryStatsData* data, hid_t groupId);
     int readBinNumbers(PrimaryStatsData* data, hid_t groupId);

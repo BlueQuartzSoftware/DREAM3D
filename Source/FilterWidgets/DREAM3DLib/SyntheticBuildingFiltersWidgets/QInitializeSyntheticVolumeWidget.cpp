@@ -325,7 +325,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       formLayout_2 = new QFormLayout(m_ShapeTypeScrollContents);
       formLayout_2->setContentsMargins(4, 4, 4, 4);
       formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
-      formLayout_2->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+      formLayout_2->setFeatureGrowthPolicy(QFormLayout::FeaturesStayAtSizeHint);
       formLayout_2->setHorizontalSpacing(6);
       formLayout_2->setVerticalSpacing(6);
       m_ShapeTypeScrollArea->setWidget(m_ShapeTypeScrollContents);
@@ -352,7 +352,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
           cb->setItemData(static_cast<int>(s), shapeTypeEnums[s], Qt::UserRole);
         }
         m_ShapeTypeCombos << cb;
-        formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
+        formLayout_2->setWidget(i, QFormLayout::FeatureRole, cb);
       }
 
       // Estimate the number of grains

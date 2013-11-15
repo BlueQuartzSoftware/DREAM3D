@@ -47,9 +47,9 @@
 FindSurfaceCells::FindSurfaceCells() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_SurfaceVoxels(NULL)
 {
 
@@ -84,7 +84,7 @@ int FindSurfaceCells::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSurfaceCells::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindSurfaceCells::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
 
   setErrorCondition(0);
@@ -92,7 +92,7 @@ void FindSurfaceCells::dataCheck(bool preflight, size_t voxels, size_t fields, s
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, int8_t, Int8ArrayType, 0, voxels, dims)
 }
 
@@ -130,9 +130,9 @@ void FindSurfaceCells::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalFeatures = m->getNumCellFeatureTuples();
   size_t totalEnsembles = m->getNumCellEnsembleTuples();
-  dataCheck(false, totalPoints, totalFields, totalEnsembles);
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -151,7 +151,7 @@ void FindSurfaceCells::execute()
   neighpoints[5] = xPoints * yPoints;
 
   //float column, row, plane;
-  int grain;
+  int feature;
   int onsurf = 0;
   int good = 0;
   int neighbor = 0;
@@ -166,8 +166,8 @@ void FindSurfaceCells::execute()
       for(int k = 0; k < xPoints; k++)
       {
         onsurf = 0;
-        grain = m_GrainIds[zStride + yStride + k];
-        if(grain > 0)
+        feature = m_FeatureIds[zStride + yStride + k];
+        if(feature > 0)
         {
           for (int l = 0; l < 6; l++)
           {
@@ -179,7 +179,7 @@ void FindSurfaceCells::execute()
             if(l == 4 && j == (yPoints - 1)) { good = 0; }
             if(l == 2 && k == 0) { good = 0; }
             if(l == 3 && k == (xPoints - 1)) { good = 0; }
-            if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
+            if(good == 1 && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
             {
               onsurf++;
             }

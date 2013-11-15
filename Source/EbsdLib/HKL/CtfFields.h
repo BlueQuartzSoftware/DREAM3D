@@ -65,17 +65,17 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
     virtual QVector<QString> getFieldNames();
 
     template<typename T>
-    T getFilterFields()
+    T getFilterFeatures()
     {
-      T fields;
-      fields.push_back(Ebsd::Ctf::Bands);
-      fields.push_back(Ebsd::Ctf::Error);
+      T features;
+      features.push_back(Ebsd::Ctf::Bands);
+      features.push_back(Ebsd::Ctf::Error);
 
-      fields.push_back(Ebsd::Ctf::MAD);
-      fields.push_back(Ebsd::Ctf::BC);
-      fields.push_back(Ebsd::Ctf::BS);
+      features.push_back(Ebsd::Ctf::MAD);
+      features.push_back(Ebsd::Ctf::BC);
+      features.push_back(Ebsd::Ctf::BS);
 
-      return fields;
+      return features;
     }
 
   private:

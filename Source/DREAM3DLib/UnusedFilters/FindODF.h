@@ -69,10 +69,10 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
 
     virtual ~FindODF();
 
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
@@ -106,15 +106,15 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
     unsigned int* m_PhaseTypes;
     float* m_Volumes;
-    float* m_FieldEulerAngles;
-    int32_t* m_FieldPhases;
-    bool* m_SurfaceFields;
+    float* m_FeatureEulerAngles;
+    int32_t* m_FeaturePhases;
+    bool* m_SurfaceFeatures;
 
     unsigned int* m_CrystalStructures;
 
     StatsDataArray* m_StatsDataArray;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindODF(const FindODF&); // Copy Constructor Not Implemented
     void operator=(const FindODF&); // Operator '=' Not Implemented

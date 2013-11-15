@@ -181,12 +181,12 @@ add_test(DataArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataArrayTest)
 # --------------------------------------------------------------------------
 # File Conversion Testing
 # --------------------------------------------------------------------------
-add_executable(PhIOTest ${DREAM3DTest_SOURCE_DIR}/PhIOTest.cpp ${DREAM3DTest_SOURCE_DIR}/GenerateGrainIds.h)
+add_executable(PhIOTest ${DREAM3DTest_SOURCE_DIR}/PhIOTest.cpp ${DREAM3DTest_SOURCE_DIR}/GenerateFeatureIds.h)
 target_link_libraries(PhIOTest DREAM3DLib)
 set_target_properties(PhIOTest PROPERTIES FOLDER Test)
 add_test(PhIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PhIOTest)
 
-add_executable(DxIOTest ${DREAM3DTest_SOURCE_DIR}/DxIOTest.cpp ${DREAM3DTest_SOURCE_DIR}/GenerateGrainIds.h)
+add_executable(DxIOTest ${DREAM3DTest_SOURCE_DIR}/DxIOTest.cpp ${DREAM3DTest_SOURCE_DIR}/GenerateFeatureIds.h)
 target_link_libraries(DxIOTest DREAM3DLib)
 set_target_properties(DxIOTest PROPERTIES FOLDER Test)
 add_test(DxIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DxIOTest)

@@ -5,7 +5,7 @@ Add Orientation Noise {#addorientationnoise}
 Synthetic Builder Filters (Crystallography)
 
 ## Description ##
-This filter adds "noise" to the **Cell** orienations.  This filter is intended to add "realism" to synthetic structures that have single orientations assigned to **Fields** (an in turn, all of the **Cells** they own).  The user can specify a magnitude of the "noise", which refers to the maximum rotation angle that is applied to the existing **Cells**.  The algorithm for applying the orientation "noise" is as follows:
+This filter adds "noise" to the **Cell** orienations.  This filter is intended to add "realism" to synthetic structures that have single orientations assigned to **Features** (an in turn, all of the **Cells** they own).  The user can specify a magnitude of the "noise", which refers to the maximum rotation angle that is applied to the existing **Cells**.  The algorithm for applying the orientation "noise" is as follows:
 
 1. Obtain the orientation of the **Cell**.
 2. Generate a random number between *0* and the user defined magnitude. This value is the rotation angle.

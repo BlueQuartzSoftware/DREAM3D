@@ -95,7 +95,7 @@ class CalculateGBCDImpl
       int m;
       int temp;
       //bool gbcd_indices_good;
-      int grain1, grain2;
+      int feature1, feature2;
       int inversion = 1;
       float g1ea[3], g2ea[3];
       float g1[3][3], g2[3][3];
@@ -115,29 +115,29 @@ class CalculateGBCDImpl
       for (size_t i = start; i < end; i++)
       {
         SYMcounter = 0;
-        grain1 = m_Labels[2 * i];
-        grain2 = m_Labels[2 * i + 1];
+        feature1 = m_Labels[2 * i];
+        feature2 = m_Labels[2 * i + 1];
         normal[0] = m_Normals[3 * i];
         normal[1] = m_Normals[3 * i + 1];
         normal[2] = m_Normals[3 * i + 2];
-        if(m_Phases[grain1] == m_Phases[grain2])
+        if(m_Phases[feature1] == m_Phases[feature2])
         {
           TRIcounterShift = (TRIcounter * numEntriesPerTri);
           for(int q = 0; q < 2; q++)
           {
             if(q == 1)
             {
-              temp = grain1;
-              grain1 = grain2;
-              grain2 = temp;
+              temp = feature1;
+              feature1 = feature2;
+              feature2 = temp;
               normal[0] = -normal[0];
               normal[1] = -normal[1];
               normal[2] = -normal[2];
             }
             for(m = 0; m < 3; m++)
             {
-              g1ea[m] = m_Eulers[3 * grain1 + m];
-              g2ea[m] = m_Eulers[3 * grain2 + m];
+              g1ea[m] = m_Eulers[3 * feature1 + m];
+              g2ea[m] = m_Eulers[3 * feature2 + m];
             }
 
             OrientationMath::EulertoMat(g1ea[0], g1ea[1], g1ea[2], g1);
@@ -145,12 +145,12 @@ class CalculateGBCDImpl
 
             //get the crystal directions along the triangle normals
             MatrixMath::Multiply3x3with3x1(g1, normal, xstl1_norm0);
-            //get the misorientation between grain1 and grain2
-            int nsym = m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getNumSymOps();
+            //get the misorientation between feature1 and feature2
+            int nsym = m_OrientationOps[m_CrystalStructures[m_Phases[feature1]]]->getNumSymOps();
             for (j = 0; j < nsym; j++)
             {
               //rotate g1 by symOp
-              m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getMatSymOp(j, sym1);
+              m_OrientationOps[m_CrystalStructures[m_Phases[feature1]]]->getMatSymOp(j, sym1);
               MatrixMath::Multiply3x3with3x3(sym1, g1, g1s);
               //find symmetric crystal directions
               MatrixMath::Multiply3x3with3x1(sym1, xstl1_norm0, xstl1_norm1);
@@ -174,7 +174,7 @@ class CalculateGBCDImpl
               for (k = 0; k < nsym; k++)
               {
                 //calculate the symmetric misorienation
-                m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getMatSymOp(k, sym2);
+                m_OrientationOps[m_CrystalStructures[m_Phases[feature1]]]->getMatSymOp(k, sym2);
                 //rotate g2 by symOp
                 MatrixMath::Multiply3x3with3x3(sym2, g2, g2s);
                 //transpose rotated g2
@@ -293,8 +293,8 @@ FindGBCD::FindGBCD() :
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
-  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCDdimensionsArrayName(DREAM3D::EnsembleData::GBCDdimensions),
@@ -302,8 +302,8 @@ FindGBCD::FindGBCD() :
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
-  m_FieldEulerAngles(NULL),
-  m_FieldPhases(NULL),
+  m_FeatureEulerAngles(NULL),
+  m_FeaturePhases(NULL),
   m_CrystalStructures(NULL),
   m_GBCD(NULL),
   m_GBCDdimensions(NULL)
@@ -364,7 +364,7 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -386,11 +386,11 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
   else
   {
     QVector<int> dims(1, 2);
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, dims)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
     dims[0] = 3;
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, dims)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, features, dims)
     dims[0] = 1;
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, dims)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, features, dims)
     CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, double, DoubleArrayType, 0, ensembles, dims)
     dims[0] = 5;
     CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, int32_t, Int32ArrayType, 1, ensembles, dims)
@@ -400,15 +400,15 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 3);
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, -301, float, FloatArrayType, features, dims)
   dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -302, int32_t, Int32ArrayType,  features, dims)
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, dims)
 
@@ -477,10 +477,10 @@ void FindGBCD::execute()
   // Note the use of the voxel datacontainer num ensembles to set the gbcd size
   dataCheckSurfaceMesh(false, 0, totalFaces, m->getNumCellEnsembleTuples());
 
-  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalFeatures = m->getNumCellFeatureTuples();
   size_t totalEnsembles = m->getNumCellEnsembleTuples();
 
-  dataCheckVoxel(false, 0, totalFields, totalEnsembles);
+  dataCheckVoxel(false, 0, totalFeatures, totalEnsembles);
 
   size_t faceChunkSize = 50000;
   size_t numMisoReps = 2304;
@@ -588,13 +588,13 @@ void FindGBCD::execute()
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + faceChunkSize),
-                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
+                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FeatureEulerAngles, m_FeaturePhases, m_CrystalStructures, m_Bins, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
 
     }
     else
 #endif
     {
-      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
+      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FeatureEulerAngles, m_FeaturePhases, m_CrystalStructures, m_Bins, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
       serial.generate(i, i + faceChunkSize);
     }
 

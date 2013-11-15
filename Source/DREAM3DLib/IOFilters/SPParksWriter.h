@@ -61,7 +61,7 @@ class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
     virtual ~SPParksWriter();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
 
 
@@ -82,7 +82,7 @@ class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Write SPParks Sites (GrainIds)"; }
+    virtual const QString getHumanLabel() { return "Write SPParks Sites (FeatureIds)"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -116,10 +116,10 @@ class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     /**
      * @brief writeHeader Writes any Header to the file
@@ -134,7 +134,7 @@ class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
     virtual int writeFile();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
 
     SPParksWriter(const SPParksWriter&); // Copy Constructor Not Implemented
     void operator=(const SPParksWriter&); // Operator '=' Not Implemented

@@ -122,34 +122,34 @@ std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters()
   std::vector<QualityMetricFilter::Pointer> filters;
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
-    filter->setFieldName(Ebsd::Ang::ImageQuality);
-    filter->setFieldValue(450);
-    filter->setFieldOperator(">");
-    filter->setFieldPhaseNumber(1);
+    filter->setFeatureName(Ebsd::Ang::ImageQuality);
+    filter->setFeatureValue(450);
+    filter->setFeatureOperator(">");
+    filter->setFeaturePhaseNumber(1);
     filters.push_back(filter);
   }
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
-    filter->setFieldName(Ebsd::Ang::ConfidenceIndex);
-    filter->setFieldValue(0.1f);
-    filter->setFieldOperator(">");
-    filter->setFieldPhaseNumber(1);
+    filter->setFeatureName(Ebsd::Ang::ConfidenceIndex);
+    filter->setFeatureValue(0.1f);
+    filter->setFeatureOperator(">");
+    filter->setFeaturePhaseNumber(1);
     filters.push_back(filter);
   }
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
-    filter->setFieldName(Ebsd::Ang::ImageQuality);
-    filter->setFieldValue(350);
-    filter->setFieldOperator(">");
-    filter->setFieldPhaseNumber(2);
+    filter->setFeatureName(Ebsd::Ang::ImageQuality);
+    filter->setFeatureValue(350);
+    filter->setFeatureOperator(">");
+    filter->setFeaturePhaseNumber(2);
     filters.push_back(filter);
   }
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
-    filter->setFieldName(Ebsd::Ang::ConfidenceIndex);
-    filter->setFieldValue(0.025f);
-    filter->setFieldOperator(">");
-    filter->setFieldPhaseNumber(2);
+    filter->setFeatureName(Ebsd::Ang::ConfidenceIndex);
+    filter->setFeatureValue(0.025f);
+    filter->setFeatureOperator(">");
+    filter->setFeaturePhaseNumber(2);
     filters.push_back(filter);
   }
 
@@ -292,7 +292,7 @@ void TestDataContainerReader()
 
 #if 0
   IDataArray* iDataPtr = NULL;
-  iDataPtr = m->getFieldData(DREAM3D::EnsembleData::CrystalStructures).get();
+  iDataPtr = m->getFeatureData(DREAM3D::EnsembleData::CrystalStructures).get();
   UInt32ArrayType* data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
   m_CrystalStructure = data->GetValue(index);
 #endif
@@ -354,7 +354,7 @@ void OtherTest()
   reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
   reader->setVoxelDataContainer(m.get());
   reader->setReadCellData(true);
-  reader->setReadFieldData(true);
+  reader->setReadFeatureData(true);
   reader->setReadEnsembleData(true);
 
   reader->execute();

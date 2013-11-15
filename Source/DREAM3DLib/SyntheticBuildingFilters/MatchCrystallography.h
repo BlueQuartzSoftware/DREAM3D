@@ -75,20 +75,20 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
-    //------ Created Field Data
+    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NumFeaturesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(StatsDataArrayName)
@@ -131,22 +131,22 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     void determine_boundary_areas();
     void assign_eulers(int ensem);
     int pick_euler(float random, int numbins);
-    void MC_LoopBody1(int grain, int ensem, int j, float neighsurfarea, unsigned int sym, QuatF& q1, QuatF& q2);
-    void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, QuatF& q1, QuatF& q2);
+    void MC_LoopBody1(int feature, int ensem, int j, float neighsurfarea, unsigned int sym, QuatF& q1, QuatF& q2);
+    void MC_LoopBody2(int feature, int phase, int j, float neighsurfarea, unsigned int sym, QuatF& q1, QuatF& q2);
     void matchCrystallography(int ensem);
     void measure_misorientations(int ensem);
 
   private:
 
     // Cell Data
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     float*   m_CellEulerAngles;
 
-    // Field Data
-    bool* m_SurfaceFields;
-    int32_t* m_FieldPhases;
+    // Feature Data
+    bool* m_SurfaceFeatures;
+    int32_t* m_FeaturePhases;
     float* m_Volumes;
-    float* m_FieldEulerAngles;
+    float* m_FeatureEulerAngles;
     float* m_AvgQuats;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
@@ -154,7 +154,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     //Ensemble Data
     unsigned int* m_CrystalStructures;
     unsigned int* m_PhaseTypes;
-    int32_t* m_NumFields;
+    int32_t* m_NumFeatures;
     StatsDataArray* m_StatsDataArray;
 
     // All other private instance variables
@@ -175,7 +175,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
     void operator=(const MatchCrystallography&); // Operator '=' Not Implemented

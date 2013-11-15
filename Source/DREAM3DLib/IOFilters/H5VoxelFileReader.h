@@ -50,7 +50,7 @@
 
 /**
  * @class H5VoxelFileReader H5VoxelFileReader.h DREAM3DLib/HDF5/H5VoxelFileReader.h
- * @brief This class is meant to read the grain ids out of an h5voxel file and nothing
+ * @brief This class is meant to read the feature ids out of an h5voxel file and nothing
  * else.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 21, 2011
@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT H5VoxelFileReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     //------ Created Ensemble Data
@@ -101,14 +101,14 @@ class DREAM3DLib_EXPORT H5VoxelFileReader : public FileReader
     H5VoxelFileReader();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellPhases;
     float* m_CellEulerAngles;
 
     unsigned int* m_CrystalStructures;
     unsigned int* m_PhaseTypes;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     H5VoxelFileReader(const H5VoxelFileReader&); // Copy Constructor Not Implemented
     void operator=(const H5VoxelFileReader&); // Operator '=' Not Implemented

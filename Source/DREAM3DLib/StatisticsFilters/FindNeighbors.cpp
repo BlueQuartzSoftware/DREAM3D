@@ -49,15 +49,15 @@
 FindNeighbors::FindNeighbors() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
-  m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
-  m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
-  m_SharedSurfaceAreaListArrayName(DREAM3D::FieldData::SharedSurfaceAreaList),
-  m_NeighborListArrayName(DREAM3D::FieldData::NeighborList),
-  m_GrainIds(NULL),
+  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
+  m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
+  m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
+  m_FeatureIds(NULL),
   m_SurfaceVoxels(NULL),
-  m_SurfaceFields(NULL),
+  m_SurfaceFeatures(NULL),
   m_NumNeighbors(NULL),
   m_NeighborList(NULL),
   m_SharedSurfaceAreaList(NULL)
@@ -93,39 +93,39 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, int8_t, Int8ArrayType, 0, voxels, dims)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, int32_t, Int32ArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, bool, BoolArrayType, false, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, NumNeighbors, int32_t, Int32ArrayType, 0, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, bool, BoolArrayType, false, features, dims)
 
-  // Field Data
-  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFieldTuples will = 0
+  // Feature Data
+  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                   (m->getCellFieldData(m_NeighborListArrayName).get());
+                   (m->getCellFeatureData(m_NeighborListArrayName).get());
   if(m_NeighborList == NULL)
   {
     NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
     neighborlistPtr->SetName(m_NeighborListArrayName);
-    neighborlistPtr->Resize(fields);
+    neighborlistPtr->Resize(features);
     neighborlistPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
-    m->addCellFieldData(m_NeighborListArrayName, neighborlistPtr);
+    m->addCellFeatureData(m_NeighborListArrayName, neighborlistPtr);
     if (neighborlistPtr.get() == NULL)
     {
       QString ss = QObject::tr("NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter");
       setErrorCondition(-308);
     }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                     (m->getCellFieldData(m_NeighborListArrayName).get());
+                     (m->getCellFeatureData(m_NeighborListArrayName).get());
 
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
@@ -133,7 +133,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     e->setFilterGroup(this->getGroupName());
     e->setFilterSubGroup(this->getSubGroupName());
     e->setArrayDefaultName(m_NeighborListArrayName);
-    e->setArrayGroup("Field");
+    e->setArrayGroup("Feature");
     e->setArrayNumComponents(0);
     e->setArrayType("NeighborList");
     addCreatedArrayHelpIndexEntry(e);
@@ -141,14 +141,14 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   // And we do the same for the SharedSurfaceArea list
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                            (m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get());
+                            (m->getCellFeatureData(m_SharedSurfaceAreaListArrayName).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
     NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
     sharedSurfaceAreaListPtr->SetName(m_SharedSurfaceAreaListArrayName);
-    sharedSurfaceAreaListPtr->Resize(fields);
+    sharedSurfaceAreaListPtr->Resize(features);
     sharedSurfaceAreaListPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
-    m->addCellFieldData(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
+    m->addCellFeatureData(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
     if (sharedSurfaceAreaListPtr.get() == NULL)
     {
 
@@ -157,14 +157,14 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
       addErrorMessage(getHumanLabel(), ss, -308);
     }
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                              (m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get());
+                              (m->getCellFeatureData(m_SharedSurfaceAreaListArrayName).get());
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
     e->setFilterHumanLabel(this->getHumanLabel());
     e->setFilterGroup(this->getGroupName());
     e->setFilterSubGroup(this->getSubGroupName());
     e->setArrayDefaultName(m_SharedSurfaceAreaListArrayName);
-    e->setArrayGroup("Field");
+    e->setArrayGroup("Feature");
     e->setArrayNumComponents(0);
     e->setArrayType("SurfaceAreaLists");
     addCreatedArrayHelpIndexEntry(e);
@@ -203,8 +203,8 @@ void FindNeighbors::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = int(m->getNumCellFieldTuples());
-  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
+  int totalFeatures = int(m->getNumCellFeatureTuples());
+  dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -233,7 +233,7 @@ void FindNeighbors::execute()
   neighpoints[5] = dims[0] * dims[1];
 
   float column, row, plane;
-  int grain;
+  int feature;
   size_t nnum;
   int onsurf = 0;
   int good = 0;
@@ -245,16 +245,16 @@ void FindNeighbors::execute()
   QVector<QVector<float> > neighborsurfacearealist;
 
   int nListSize = 100;
-  neighborlist.resize(totalFields);
-  neighborsurfacearealist.resize(totalFields);
-  for (int i = 1; i < totalFields; i++)
+  neighborlist.resize(totalFeatures);
+  neighborsurfacearealist.resize(totalFeatures);
+  for (int i = 1; i < totalFeatures; i++)
   {
-    QString ss = QObject::tr("Finding Neighbors - Initializing Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(i) / totalFields) * 100);
+    QString ss = QObject::tr("Finding Neighbors - Initializing Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(i) / totalFeatures) * 100);
     //   notifyStatusMessage(ss);
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].fill(-1.0, nListSize);
-    m_SurfaceFields[i] = false;
+    m_SurfaceFeatures[i] = false;
   }
 
   totalPoints = m->getTotalPoints();
@@ -264,19 +264,19 @@ void FindNeighbors::execute()
     QString ss = QObject::tr("Finding Neighbors - Determining Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(j) / totalPoints) * 100);
     //   notifyStatusMessage(ss);
     onsurf = 0;
-    grain = m_GrainIds[j];
-    if(grain > 0)
+    feature = m_FeatureIds[j];
+    if(feature > 0)
     {
       column = static_cast<float>( j % m->getXPoints() );
       row = static_cast<float>( (j / m->getXPoints()) % m->getYPoints() );
       plane = static_cast<float>( j / (m->getXPoints() * m->getYPoints()) );
       if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1) || plane == 0 || plane == (m->getZPoints() - 1)) && m->getZPoints() != 1)
       {
-        m_SurfaceFields[grain] = true;
+        m_SurfaceFeatures[feature] = true;
       }
       if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1)) && m->getZPoints() == 1)
       {
-        m_SurfaceFields[grain] = true;
+        m_SurfaceFeatures[feature] = true;
       }
       for (int k = 0; k < 6; k++)
       {
@@ -288,13 +288,13 @@ void FindNeighbors::execute()
         if(k == 4 && row == (m->getYPoints() - 1)) { good = 0; }
         if(k == 2 && column == 0) { good = 0; }
         if(k == 3 && column == (m->getXPoints() - 1)) { good = 0; }
-        if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
+        if(good == 1 && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
         {
           onsurf++;
-          nnum = m_NumNeighbors[grain];
-          neighborlist[grain].push_back(m_GrainIds[neighbor]);
+          nnum = m_NumNeighbors[feature];
+          neighborlist[feature].push_back(m_FeatureIds[neighbor]);
           nnum++;
-          m_NumNeighbors[grain] = static_cast<int32_t>(nnum);
+          m_NumNeighbors[feature] = static_cast<int32_t>(nnum);
         }
       }
     }
@@ -302,18 +302,18 @@ void FindNeighbors::execute()
   }
 
   // We do this to create new set of NeighborList objects
-  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
 
-  for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
+  for (size_t i = 1; i < m->getNumCellFeatureTuples(); i++)
   {
 
-    QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i / totalFields) * 100);
+    QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i / totalFeatures) * 100);
     //  notifyStatusMessage(ss);
 
     QMap<int, int> neighToCount;
     int numneighs = static_cast<int>( neighborlist[i].size() );
 
-    // this increments the voxel counts for each grain
+    // this increments the voxel counts for each feature
     for (int j = 0; j < numneighs; j++)
     {
       neighToCount[neighborlist[i][j]]++;
@@ -324,17 +324,17 @@ void FindNeighbors::execute()
     neighToCount.erase(neighiter);
     neighiter = neighToCount.find(-1);
     neighToCount.erase(neighiter);
-    //Resize the grains neighbor list to zero
+    //Resize the features neighbor list to zero
     neighborlist[i].resize(0);
     neighborsurfacearealist[i].resize(0);
 
     for (QMap<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
     {
-      int neigh = iter.key(); // get the neighbor grain
+      int neigh = iter.key(); // get the neighbor feature
       int number = iter.value(); // get the number of voxels
       float area = number * m->getXRes() * m->getYRes();
 
-      // Push the neighbor grain id back onto the list so we stay synced up
+      // Push the neighbor feature id back onto the list so we stay synced up
       neighborlist[i].push_back(neigh);
       neighborsurfacearealist[i].push_back(area);
     }

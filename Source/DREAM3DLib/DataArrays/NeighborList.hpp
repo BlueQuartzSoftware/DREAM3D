@@ -664,7 +664,7 @@ class NeighborList : public IDataArray
      * @brief NeighborList
      */
     NeighborList() :
-      m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
+      m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
       m_Name("NeighborList")
     {    }
 

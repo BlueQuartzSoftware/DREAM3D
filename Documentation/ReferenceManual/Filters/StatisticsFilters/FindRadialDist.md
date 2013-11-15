@@ -1,16 +1,16 @@
-Find Field Radial Distribution Function {#findradialdist}
+Find Feature Radial Distribution Function {#findradialdist}
 ======
 
 ## Group (Subgroup) ##
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter determines the number of **Fields** whose *centroids* lie within a distance of one *Equivalent Sphere Diameter* from a each **Field**.  The algorithm for determining the number of **Fields** is given below:
+This Filter determines the number of **Features** whose *centroids* lie within a distance of one *Equivalent Sphere Diameter* from a each **Feature**.  The algorithm for determining the number of **Features** is given below:
 
-1. Find the *centroid* of a **Field**.
-2. Define a sphere centered at the the **Field**'s *centroid*  and with radius equal to the **Field**'s *Equivalent Sphere Diameter*.
-3. Check every other **Field**'s centroid to see if it lies within the sphere and keep count of those that satisfy.
-4. Repeat 1-3 for all **Fields**.
+1. Find the *centroid* of a **Feature**.
+2. Define a sphere centered at the the **Feature**'s *centroid*  and with radius equal to the **Feature**'s *Equivalent Sphere Diameter*.
+3. Check every other **Feature**'s centroid to see if it lies within the sphere and keep count of those that satisfy.
+4. Repeat 1-3 for all **Features**.
 
 
 
@@ -24,7 +24,7 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field**| | Find Field Phases (Generic), Read Field Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 
 ## Created Arrays ##
 None 

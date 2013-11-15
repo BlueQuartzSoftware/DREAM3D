@@ -19,8 +19,8 @@ Launch DREAM3D and open the "Prebuilt Pipelines" area then the "Workshop" area (
   - 128 Voxels in X,Y & Z
   - 0.500 micron resolution in X, Y & Z
 + Pack Primary Phases
-+ Find Field Neighbors
-+ Find Number of Fields
++ Find Feature Neighbors
++ Find Number of Features
 + Match Crystallography
 + Generate IPF Colors (Optional)
     - This filter is Optional

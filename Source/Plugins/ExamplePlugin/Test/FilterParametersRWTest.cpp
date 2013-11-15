@@ -65,7 +65,7 @@
 #define WriteAlignmentShiftsTestValue true
 #define ConversionTypeTestValue 10
 #define SelectedCellArrayNameTestValue "SelectedCellArrayNameTestValue"
-#define SelectedFieldArrayNameTestValue "SelectedFieldArrayNameTestValue"
+#define SelectedFeatureArrayNameTestValue "SelectedFeatureArrayNameTestValue"
 #define SelectedEnsembleArrayNameTestValue "SelectedEnsembleArrayNameTestValue"
 #define SurfaceMeshVertexArrayNameTestValue "SurfaceMeshVertexArrayNameTestValue"
 #define SurfaceMeshFaceArrayNameTestValue "SurfaceMeshFaceArrayNameTestValue"
@@ -79,12 +79,12 @@
 #define CellComparisonInputsArrayName2 "CellComparisonInputsArrayName2"
 #define CellComparisonInputsCompOperator2 1
 #define CellComparisonInputsCompValue2 21.0
-#define FieldComparisonInputsArrayName1 "FieldComparisonInputsArrayName1"
-#define FieldComparisonInputsCompOperator1 2
-#define FieldComparisonInputsCompValue1 13.4
-#define FieldComparisonInputsArrayName2 "FieldComparisonInputsArrayName2"
-#define FieldComparisonInputsCompOperator2 0
-#define FieldComparisonInputsCompValue2 45.6
+#define FeatureComparisonInputsArrayName1 "FeatureComparisonInputsArrayName1"
+#define FeatureComparisonInputsCompOperator1 2
+#define FeatureComparisonInputsCompValue1 13.4
+#define FeatureComparisonInputsArrayName2 "FeatureComparisonInputsArrayName2"
+#define FeatureComparisonInputsCompOperator2 0
+#define FeatureComparisonInputsCompValue2 45.6
 #define EnsembleComparisonInputsArrayName1 "EnsembleComparisonInputsArrayName1"
 #define EnsembleComparisonInputsCompOperator1 1
 #define EnsembleComparisonInputsCompValue1 13.6
@@ -127,10 +127,10 @@
 #define SelectedVolumeCellArraysString2 "SelectedVolumeCellArraysString2"
 #define SelectedVolumeCellArraysString3 "SelectedVolumeCellArraysString3"
 #define SelectedVolumeCellArraysString4 "SelectedVolumeCellArraysString4"
-#define SelectedVolumeCellFieldArraysString1 "SelectedVolumeCellFieldArraysString1"
-#define SelectedVolumeCellFieldArraysString2 "SelectedVolumeCellFieldArraysString2"
-#define SelectedVolumeCellFieldArraysString3 "SelectedVolumeCellFieldArraysString3"
-#define SelectedVolumeCellFieldArraysString4 "SelectedVolumeCellFieldArraysString4"
+#define SelectedVolumeCellFeatureArraysString1 "SelectedVolumeCellFeatureArraysString1"
+#define SelectedVolumeCellFeatureArraysString2 "SelectedVolumeCellFeatureArraysString2"
+#define SelectedVolumeCellFeatureArraysString3 "SelectedVolumeCellFeatureArraysString3"
+#define SelectedVolumeCellFeatureArraysString4 "SelectedVolumeCellFeatureArraysString4"
 #define SelectedVolumeCellEnsembleArraysString1 "SelectedVolumeCellEnsembleArraysString1"
 #define SelectedVolumeCellEnsembleArraysString2 "SelectedVolumeCellEnsembleArraysString2"
 #define SelectedVolumeCellEnsembleArraysString3 "SelectedVolumeCellEnsembleArraysString3"
@@ -147,10 +147,10 @@
 #define SelectedSurfaceEdgeArraysString2 "SelectedSurfaceEdgeArraysString2"
 #define SelectedSurfaceEdgeArraysString3 "SelectedSurfaceEdgeArraysString3"
 #define SelectedSurfaceEdgeArraysString4 "SelectedSurfaceEdgeArraysString4"
-#define SelectedSurfaceFaceFieldArraysString1 "SelectedSurfaceFaceFieldArraysString1"
-#define SelectedSurfaceFaceFieldArraysString2 "SelectedSurfaceFaceFieldArraysString2"
-#define SelectedSurfaceFaceFieldArraysString3 "SelectedSurfaceFaceFieldArraysString3"
-#define SelectedSurfaceFaceFieldArraysString4 "SelectedSurfaceFaceFieldArraysString4"
+#define SelectedSurfaceFaceFeatureArraysString1 "SelectedSurfaceFaceFeatureArraysString1"
+#define SelectedSurfaceFaceFeatureArraysString2 "SelectedSurfaceFaceFeatureArraysString2"
+#define SelectedSurfaceFaceFeatureArraysString3 "SelectedSurfaceFaceFeatureArraysString3"
+#define SelectedSurfaceFaceFeatureArraysString4 "SelectedSurfaceFaceFeatureArraysString4"
 #define SelectedSurfaceFaceEnsembleArraysString1 "SelectedSurfaceFaceEnsembleArraysString1"
 #define SelectedSurfaceFaceEnsembleArraysString2 "SelectedSurfaceFaceEnsembleArraysString2"
 #define SelectedSurfaceFaceEnsembleArraysString3 "SelectedSurfaceFaceEnsembleArraysString3"
@@ -159,10 +159,10 @@
 #define SelectedVertexVertexArraysString2 "SelectedVertexVertexArraysString2"
 #define SelectedVertexVertexArraysString3 "SelectedVertexVertexArraysString3"
 #define SelectedVertexVertexArraysString4 "SelectedVertexVertexArraysString4"
-#define SelectedVertexVertexFieldArraysString1 "SelectedVertexVertexFieldArraysString1"
-#define SelectedVertexVertexFieldArraysString2 "SelectedVertexVertexFieldArraysString2"
-#define SelectedVertexVertexFieldArraysString3 "SelectedVertexVertexFieldArraysString3"
-#define SelectedVertexVertexFieldArraysString4 "SelectedVertexVertexFieldArraysString4"
+#define SelectedVertexVertexFeatureArraysString1 "SelectedVertexVertexFeatureArraysString1"
+#define SelectedVertexVertexFeatureArraysString2 "SelectedVertexVertexFeatureArraysString2"
+#define SelectedVertexVertexFeatureArraysString3 "SelectedVertexVertexFeatureArraysString3"
+#define SelectedVertexVertexFeatureArraysString4 "SelectedVertexVertexFeatureArraysString4"
 #define SelectedVertexVertexEnsembleArraysString1 "SelectedVertexVertexEnsembleArraysString1"
 #define SelectedVertexVertexEnsembleArraysString2 "SelectedVertexVertexEnsembleArraysString2"
 #define SelectedVertexVertexEnsembleArraysString3 "SelectedVertexVertexEnsembleArraysString3"
@@ -237,9 +237,9 @@ void ArraySelectionExampleTest()
                               SelectedVolumeCellArraysString3, SelectedVolumeCellArraysString4);
   filt->setSelectedVolumeCellArrays(set1);
 
-  QSet<QString> set2 = getSet(SelectedVolumeCellFieldArraysString1, SelectedVolumeCellFieldArraysString2,
-                              SelectedVolumeCellFieldArraysString3, SelectedVolumeCellFieldArraysString4);
-  filt->setSelectedVolumeCellFieldArrays(set2);
+  QSet<QString> set2 = getSet(SelectedVolumeCellFeatureArraysString1, SelectedVolumeCellFeatureArraysString2,
+                              SelectedVolumeCellFeatureArraysString3, SelectedVolumeCellFeatureArraysString4);
+  filt->setSelectedVolumeCellFeatureArrays(set2);
 
   QSet<QString> set3 = getSet(SelectedVolumeCellEnsembleArraysString1, SelectedVolumeCellEnsembleArraysString2,
                               SelectedVolumeCellEnsembleArraysString3, SelectedVolumeCellEnsembleArraysString4);
@@ -257,9 +257,9 @@ void ArraySelectionExampleTest()
                               SelectedSurfaceEdgeArraysString3, SelectedSurfaceEdgeArraysString4);
   filt->setSelectedSurfaceEdgeArrays(set6);
 
-  QSet<QString> set7 = getSet(SelectedSurfaceFaceFieldArraysString1, SelectedSurfaceFaceFieldArraysString2,
-                              SelectedSurfaceFaceFieldArraysString3, SelectedSurfaceFaceFieldArraysString4);
-  filt->setSelectedSurfaceFaceFieldArrays(set7);
+  QSet<QString> set7 = getSet(SelectedSurfaceFaceFeatureArraysString1, SelectedSurfaceFaceFeatureArraysString2,
+                              SelectedSurfaceFaceFeatureArraysString3, SelectedSurfaceFaceFeatureArraysString4);
+  filt->setSelectedSurfaceFaceFeatureArrays(set7);
 
   QSet<QString> set8 = getSet(SelectedSurfaceFaceEnsembleArraysString1, SelectedSurfaceFaceEnsembleArraysString2,
                               SelectedSurfaceFaceEnsembleArraysString3, SelectedSurfaceFaceEnsembleArraysString4);
@@ -269,9 +269,9 @@ void ArraySelectionExampleTest()
                               SelectedVertexVertexArraysString3, SelectedVertexVertexArraysString4);
   filt->setSelectedVertexVertexArrays(set9);
 
-  QSet<QString> set10 = getSet(SelectedVertexVertexFieldArraysString1, SelectedVertexVertexFieldArraysString2,
-                               SelectedVertexVertexFieldArraysString3, SelectedVertexVertexFieldArraysString4);
-  filt->setSelectedVertexVertexFieldArrays(set10);
+  QSet<QString> set10 = getSet(SelectedVertexVertexFeatureArraysString1, SelectedVertexVertexFeatureArraysString2,
+                               SelectedVertexVertexFeatureArraysString3, SelectedVertexVertexFeatureArraysString4);
+  filt->setSelectedVertexVertexFeatureArrays(set10);
 
   QSet<QString> set11 = getSet(SelectedVertexVertexEnsembleArraysString1, SelectedVertexVertexEnsembleArraysString2,
                                SelectedVertexVertexEnsembleArraysString3, SelectedVertexVertexEnsembleArraysString4);
@@ -313,16 +313,16 @@ void ArraySelectionExampleTest()
   iter++;
   DREAM3D_REQUIRED(SelectedVolumeCellArraysString4, == , *iter)
 
-  QSet<QString> set2Read = filt->getSelectedVolumeCellFieldArrays();
+  QSet<QString> set2Read = filt->getSelectedVolumeCellFeatureArrays();
   iter = set2Read.begin();
 
-  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString1, == , *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellFeatureArraysString1, == , *iter)
   iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString2, == , *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellFeatureArraysString2, == , *iter)
   iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString3, == , *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellFeatureArraysString3, == , *iter)
   iter++;
-  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString4, == , *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellFeatureArraysString4, == , *iter)
 
   QSet<QString> set3Read = filt->getSelectedVolumeCellEnsembleArrays();
   iter = set3Read.begin();
@@ -368,16 +368,16 @@ void ArraySelectionExampleTest()
   iter++;
   DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString4, == , *iter)
 
-  QSet<QString> set7Read = filt->getSelectedSurfaceFaceFieldArrays();
+  QSet<QString> set7Read = filt->getSelectedSurfaceFaceFeatureArrays();
   iter = set7Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString1, == , *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceFeatureArraysString1, == , *iter)
   iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString2, == , *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceFeatureArraysString2, == , *iter)
   iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString3, == , *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceFeatureArraysString3, == , *iter)
   iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString4, == , *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceFeatureArraysString4, == , *iter)
 
   QSet<QString> set8Read = filt->getSelectedSurfaceFaceEnsembleArrays();
   iter = set8Read.begin();
@@ -401,16 +401,16 @@ void ArraySelectionExampleTest()
   iter++;
   DREAM3D_REQUIRED(SelectedVertexVertexArraysString4, == , *iter)
 
-  QSet<QString> set10Read = filt->getSelectedVertexVertexFieldArrays();
+  QSet<QString> set10Read = filt->getSelectedVertexVertexFeatureArrays();
   iter = set10Read.begin();
 
-  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString1, == , *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexFeatureArraysString1, == , *iter)
   iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString2, == , *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexFeatureArraysString2, == , *iter)
   iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString3, == , *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexFeatureArraysString3, == , *iter)
   iter++;
-  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString4, == , *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexFeatureArraysString4, == , *iter)
 
   QSet<QString> set11Read = filt->getSelectedVertexVertexEnsembleArrays();
   iter = set11Read.begin();
@@ -451,13 +451,13 @@ void GenericExampleTest()
   filt->setWriteAlignmentShifts(WriteAlignmentShiftsTestValue);
   filt->setConversionType(ConversionTypeTestValue);
   filt->setSelectedVolumeCellArrayName(SelectedCellArrayNameTestValue);
-  filt->setSelectedVolumeFieldArrayName(SelectedFieldArrayNameTestValue);
+  filt->setSelectedVolumeFeatureArrayName(SelectedFeatureArrayNameTestValue);
   filt->setSelectedVolumeEnsembleArrayName(SelectedEnsembleArrayNameTestValue);
   filt->setSelectedSurfaceVertexArrayName(SurfaceMeshVertexArrayNameTestValue);
   filt->setSelectedSurfaceFaceArrayName(SurfaceMeshFaceArrayNameTestValue);
   filt->setSelectedSurfaceEdgeArrayName(SurfaceMeshEdgeArrayNameTestValue);
   filt->setSelectedVertexVertexArrayName(SolidMeshVertexArrayNameTestValue);
-  filt->setSelectedVertexFieldArrayName(SolidMeshFaceArrayNameTestValue);
+  filt->setSelectedVertexFeatureArrayName(SolidMeshFaceArrayNameTestValue);
   filt->setSelectedVertexEnsembleArrayName(SolidMeshEdgeArrayNameTestValue);
 
   QVector<QString> strVector;
@@ -536,13 +536,13 @@ void GenericExampleTest()
   DREAM3D_REQUIRED( WriteAlignmentShiftsTestValue, == , filt->getWriteAlignmentShifts() )
   DREAM3D_REQUIRED( ConversionTypeTestValue, == , filt->getConversionType() )
   DREAM3D_REQUIRED( SelectedCellArrayNameTestValue, == , filt->getSelectedVolumeCellArrayName() )
-  DREAM3D_REQUIRED( SelectedFieldArrayNameTestValue, == , filt->getSelectedVolumeFieldArrayName() )
+  DREAM3D_REQUIRED( SelectedFeatureArrayNameTestValue, == , filt->getSelectedVolumeFeatureArrayName() )
   DREAM3D_REQUIRED( SelectedEnsembleArrayNameTestValue, == , filt->getSelectedVolumeEnsembleArrayName() )
   DREAM3D_REQUIRED( SurfaceMeshVertexArrayNameTestValue, == , filt->getSelectedSurfaceVertexArrayName() )
   DREAM3D_REQUIRED( SurfaceMeshFaceArrayNameTestValue, == , filt->getSelectedSurfaceFaceArrayName() )
   DREAM3D_REQUIRED( SurfaceMeshEdgeArrayNameTestValue, == , filt->getSelectedSurfaceEdgeArrayName() )
   DREAM3D_REQUIRED( SolidMeshVertexArrayNameTestValue, == , filt->getSelectedVertexVertexArrayName() )
-  DREAM3D_REQUIRED( SolidMeshFaceArrayNameTestValue, == , filt->getSelectedVertexFieldArrayName() )
+  DREAM3D_REQUIRED( SolidMeshFaceArrayNameTestValue, == , filt->getSelectedVertexFeatureArrayName() )
   DREAM3D_REQUIRED( SolidMeshEdgeArrayNameTestValue, == , filt->getSelectedVertexEnsembleArrayName() )
 
   // Test the IntVec3Widget
@@ -602,10 +602,10 @@ void ThresholdExampleTest()
                                                           CellComparisonInputsCompOperator2, CellComparisonInputsCompValue2);
   filt->setCellComparisonInputs(cellComparisonInputsVector);
 
-  QVector<ComparisonInput_t> fieldComparisonInputsVector = getComparisonInputsVector(FieldComparisonInputsArrayName1, FieldComparisonInputsCompOperator1,
-                                                           FieldComparisonInputsCompValue1, FieldComparisonInputsArrayName2,
-                                                           FieldComparisonInputsCompOperator2, FieldComparisonInputsCompValue2);
-  filt->setFieldComparisonInputs(fieldComparisonInputsVector);
+  QVector<ComparisonInput_t> featureComparisonInputsVector = getComparisonInputsVector(FeatureComparisonInputsArrayName1, FeatureComparisonInputsCompOperator1,
+                                                           FeatureComparisonInputsCompValue1, FeatureComparisonInputsArrayName2,
+                                                           FeatureComparisonInputsCompOperator2, FeatureComparisonInputsCompValue2);
+  filt->setFeatureComparisonInputs(featureComparisonInputsVector);
 
   QVector<ComparisonInput_t> ensembleComparisonInputsVector = getComparisonInputsVector(EnsembleComparisonInputsArrayName1, EnsembleComparisonInputsCompOperator1,
                                                               EnsembleComparisonInputsCompValue1, EnsembleComparisonInputsArrayName2,
@@ -659,9 +659,9 @@ void ThresholdExampleTest()
   ComparisonInput_t cellComparisonInputs1 = cellComparisonInputsVectorRead[0];
   ComparisonInput_t cellComparisonInputs2 = cellComparisonInputsVectorRead[1];
 
-  QVector<ComparisonInput_t> fieldComparisonInputsVectorRead = filt->getFieldComparisonInputs();
-  ComparisonInput_t fieldComparisonInputs1 = fieldComparisonInputsVectorRead[0];
-  ComparisonInput_t fieldComparisonInputs2 = fieldComparisonInputsVectorRead[1];
+  QVector<ComparisonInput_t> featureComparisonInputsVectorRead = filt->getFeatureComparisonInputs();
+  ComparisonInput_t featureComparisonInputs1 = featureComparisonInputsVectorRead[0];
+  ComparisonInput_t featureComparisonInputs2 = featureComparisonInputsVectorRead[1];
 
   QVector<ComparisonInput_t> ensembleComparisonInputsVectorRead = filt->getEnsembleComparisonInputs();
   ComparisonInput_t ensembleComparisonInputs1 = ensembleComparisonInputsVectorRead[0];
@@ -686,12 +686,12 @@ void ThresholdExampleTest()
   DREAM3D_REQUIRED(CellComparisonInputsCompOperator2, == , cellComparisonInputs2.compOperator)
   DREAM3D_REQUIRED(CellComparisonInputsCompValue2, == , cellComparisonInputs2.compValue)
 
-  DREAM3D_REQUIRED(FieldComparisonInputsArrayName1, == , fieldComparisonInputs1.arrayName)
-  DREAM3D_REQUIRED(FieldComparisonInputsCompOperator1, == , fieldComparisonInputs1.compOperator)
-  DREAM3D_REQUIRED(FieldComparisonInputsCompValue1, == , fieldComparisonInputs1.compValue)
-  DREAM3D_REQUIRED(FieldComparisonInputsArrayName2, == , fieldComparisonInputs2.arrayName)
-  DREAM3D_REQUIRED(FieldComparisonInputsCompOperator2, == , fieldComparisonInputs2.compOperator)
-  DREAM3D_REQUIRED(FieldComparisonInputsCompValue2, == , fieldComparisonInputs2.compValue)
+  DREAM3D_REQUIRED(FeatureComparisonInputsArrayName1, == , featureComparisonInputs1.arrayName)
+  DREAM3D_REQUIRED(FeatureComparisonInputsCompOperator1, == , featureComparisonInputs1.compOperator)
+  DREAM3D_REQUIRED(FeatureComparisonInputsCompValue1, == , featureComparisonInputs1.compValue)
+  DREAM3D_REQUIRED(FeatureComparisonInputsArrayName2, == , featureComparisonInputs2.arrayName)
+  DREAM3D_REQUIRED(FeatureComparisonInputsCompOperator2, == , featureComparisonInputs2.compOperator)
+  DREAM3D_REQUIRED(FeatureComparisonInputsCompValue2, == , featureComparisonInputs2.compValue)
 
   DREAM3D_REQUIRED(EnsembleComparisonInputsArrayName1, == , ensembleComparisonInputs1.arrayName)
   DREAM3D_REQUIRED(EnsembleComparisonInputsCompOperator1, == , ensembleComparisonInputs1.compOperator)

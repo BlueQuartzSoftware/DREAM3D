@@ -53,7 +53,7 @@ FindCellQuats::FindCellQuats() :
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_CellPhases(NULL),
   m_Quats(NULL),
   m_CellEulerAngles(NULL),
@@ -93,7 +93,7 @@ int FindCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
 
   setErrorCondition(0);
@@ -147,9 +147,9 @@ void FindCellQuats::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalFeatures = m->getNumCellFeatureTuples();
   size_t totalEnsembles = m->getNumCellEnsembleTuples();
-  dataCheck(false, totalPoints, totalFields, totalEnsembles);
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

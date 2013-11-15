@@ -70,17 +70,17 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(avgMisorientationArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const QString getHumanLabel() { return "Find Field Neighbor Misorientations"; }
+    virtual const QString getHumanLabel() { return "Find Feature Neighbor Misorientations"; }
 
     /**
     * @brief This method will write the options to a file
@@ -110,14 +110,14 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_AvgQuats;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_MisorientationList;
     float* m_avgMisorientation;
 
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindMisorientations(const FindMisorientations&); // Copy Constructor Not Implemented
     void operator=(const FindMisorientations&); // Operator '=' Not Implemented

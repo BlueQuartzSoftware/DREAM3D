@@ -109,7 +109,7 @@ int FindSlicetoSliceRotations::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSlicetoSliceRotations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindSlicetoSliceRotations::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -158,7 +158,7 @@ void FindSlicetoSliceRotations::execute()
 
   //int64_t totalPoints = m->getTotalPoints();
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;

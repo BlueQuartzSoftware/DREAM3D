@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -125,7 +125,7 @@ int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -169,7 +169,7 @@ void NeighborCICorrelation::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -194,7 +194,7 @@ void NeighborCICorrelation::execute()
   int neighbor;
   DimType column, row, plane;
   //int neighpoint;
-// size_t numgrains = m->getNumCellFieldTuples();
+// size_t numfeatures = m->getNumCellFeatureTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);

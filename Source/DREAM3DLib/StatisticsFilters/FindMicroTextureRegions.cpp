@@ -2,7 +2,7 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -12,12 +12,12 @@
 FindMicroTextureRegions::FindMicroTextureRegions() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_MicroTextureRegionNumCellsArrayName(DREAM3D::FieldData::MicroTextureRegionNumCells),
-  m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FieldData::MicroTextureRegionFractionOccupied),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_MicroTextureRegionNumCellsArrayName(DREAM3D::FeatureData::MicroTextureRegionNumCells),
+  m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FeatureData::MicroTextureRegionFractionOccupied),
   m_MicroTextureRegionNumCells(NULL),
   m_MicroTextureRegionFractionOccupied(NULL),
-  m_GrainIds(NULL)
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -58,7 +58,7 @@ int FindMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -66,11 +66,11 @@ void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fi
 
   QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
 
-  // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MicroTextureRegionNumCells, int32_t, Int32ArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MicroTextureRegionFractionOccupied, float, FloatArrayType, 0, fields, dims)
+  // Feature Data
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, MicroTextureRegionNumCells, int32_t, Int32ArrayType, 0, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, MicroTextureRegionFractionOccupied, float, FloatArrayType, 0, features, dims)
 
 }
 
@@ -104,7 +104,7 @@ void FindMicroTextureRegions::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -123,7 +123,7 @@ void FindMicroTextureRegions::find_microtextureregions()
 
   int64_t totalPoints = m->getTotalPoints();
 
-  size_t nummicrotextureregions = m->getNumCellFieldTuples();
+  size_t nummicrotextureregions = m->getNumCellFeatureTuples();
 
   DataArray<double>::Pointer m_MicroTextureRegionCounts = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");
   DataArray<double>::Pointer m_MicroTextureRegionXMaxs = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");
@@ -162,7 +162,7 @@ void FindMicroTextureRegions::find_microtextureregions()
 
   for (size_t j = 0; j < totalPoints; j++)
   {
-    int mtnum = m_GrainIds[j];
+    int mtnum = m_FeatureIds[j];
     microtextureregioncounts[mtnum]++;
   }
 
@@ -181,7 +181,7 @@ void FindMicroTextureRegions::find_microtextureregions()
       yStride = j * xPoints;
       for(size_t k = 0; k < xPoints; k++)
       {
-        int mtnum = m_GrainIds[zStride + yStride + k];
+        int mtnum = m_FeatureIds[zStride + yStride + k];
         x = float(k) * xRes;
         y = float(j) * yRes;
         z = float(i) * zRes;

@@ -141,17 +141,17 @@ void CalculateTriangleGroupCurvatures::operator()() const
 
 
   int32_t* fl = faceLabels + m_TriangleIds[0] * 2;
-  int grain0 = 0;
-  int grain1 = 0;
+  int feature0 = 0;
+  int feature1 = 0;
   if (fl[0] < fl[1])
   {
-    grain0 = fl[0];
-    grain1 = fl[1];
+    feature0 = fl[0];
+    feature1 = fl[1];
   }
   else
   {
-    grain0 = fl[1];
-    grain1 = fl[0];
+    feature0 = fl[1];
+    feature1 = fl[0];
   }
 
   bool computeGaussian = (m_GaussianCurvature.get() != NULL);
@@ -166,8 +166,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
     if (m_ParentFilter->getCancel() == true) { return; }
     int triId = m_TriangleIds[i];
     nRingNeighborAlg->setTriangleId(triId);
-    nRingNeighborAlg->setRegionId0(grain0);
-    nRingNeighborAlg->setRegionId1(grain1);
+    nRingNeighborAlg->setRegionId0(feature0);
+    nRingNeighborAlg->setRegionId1(feature1);
     nRingNeighborAlg->setRing(m_NRing);
     nRingNeighborAlg->setSurfaceDataContainer(m_SurfaceDataContainer);
     nRingNeighborAlg->generate();

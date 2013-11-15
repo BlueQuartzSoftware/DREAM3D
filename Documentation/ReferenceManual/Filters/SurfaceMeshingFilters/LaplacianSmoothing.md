@@ -101,7 +101,7 @@ None
 ## Bibliography ##
 
 
-[1] _Field, D. A. (1988), Laplacian smoothing and Delaunay triangulations. Commun. appl. numer. methods, 4: 709–712. doi: 10.1002/cnm.1630040603_
+[1] _Feature, D. A. (1988), Laplacian smoothing and Delaunay triangulations. Commun. appl. numer. methods, 4: 709–712. doi: 10.1002/cnm.1630040603_
 
 [2] _Alexander Belyaev. "Mesh Smoothing and Enhancing. Curvature Estimation",_
 

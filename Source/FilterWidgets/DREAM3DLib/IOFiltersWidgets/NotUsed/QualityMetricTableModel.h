@@ -54,10 +54,10 @@ class QualityMetricTableModel : public QAbstractTableModel
   public:
     enum ColumnIndexes
     {
-      FieldName = 0,
-      FieldOperator,
-      FieldValue,
-      FieldPhaseValue,
+      FeatureName = 0,
+      FeatureOperator,
+      FeatureValue,
+      FeaturePhaseValue,
       ColumnCount
     };
 
@@ -147,13 +147,13 @@ class QualityMetricTableModel : public QAbstractTableModel
     virtual QAbstractItemDelegate* getItemDelegate() ;
 
 
-    void setPossibleFields(QStringList fields);
+    void setPossibleFeatures(QStringList features);
 
-    QStringList getPossibleFields();
+    QStringList getPossibleFeatures();
 
-    virtual void setTableData( QVector<QString> fieldNames, QVector<float> fieldValues,  QVector<QString> fieldOperators, QVector<int> fieldPhaseValues) ;
+    virtual void setTableData( QVector<QString> featureNames, QVector<float> featureValues,  QVector<QString> featureOperators, QVector<int> featurePhaseValues) ;
 
-    void getTableData( QVector<QString> &fieldNames, QVector<float> &fieldValues,  QVector<QString> &fieldOperators, QVector<int> &fieldPhaseValues);
+    void getTableData( QVector<QString> &featureNames, QVector<float> &featureValues,  QVector<QString> &featureOperators, QVector<int> &featurePhaseValues);
 
     void setNumberOfPhases(int n);
 
@@ -163,11 +163,11 @@ class QualityMetricTableModel : public QAbstractTableModel
     int m_RowCount;
     int m_NumberOfPhases;
 
-    QStringList   m_PossibleFields;
-    QVector<QString>   m_FieldNames;
-    QVector<float>     m_FieldValues;
-    QVector<QString> m_FieldOperators;
-    QVector<int>     m_FieldPhaseValues;
+    QStringList   m_PossibleFeatures;
+    QVector<QString>   m_FeatureNames;
+    QVector<float>     m_FeatureValues;
+    QVector<QString> m_FeatureOperators;
+    QVector<int>     m_FeaturePhaseValues;
 
 
     QualityMetricTableModel(const QualityMetricTableModel&); // Copy Constructor Not Implemented

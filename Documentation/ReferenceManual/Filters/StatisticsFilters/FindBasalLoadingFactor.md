@@ -5,7 +5,7 @@ Find Basal Loading Factor {#findbasalloadingfactor}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This filter calculates the Basal Loading Factor of each **Field** given its average orientation and a user defined loading axis.  The Basal Loading Factor is the stress on the basal plane in the given loading direction.
+This filter calculates the Basal Loading Factor of each **Feature** given its average orientation and a user defined loading axis.  The Basal Loading Factor is the stress on the basal plane in the given loading direction.
 
 ## Parameters ##
 
@@ -23,15 +23,15 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field**| | Find Field Phases (Generic), Read Field Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
-| Field | AvgQuats | Five (5) values (floats) defining the average orientation of the **Field** in quaternion representation | Filter will calculate average quaternions for **Fields** if not already calculated. | Find Field Average Orientations (Statistics) |
+| Feature | AvgQuats | Five (5) values (floats) defining the average orientation of the **Feature** in quaternion representation | Filter will calculate average quaternions for **Features** if not already calculated. | Find Feature Average Orientations (Statistics) |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | BasalLoadingFactor | Value of the Basal Loading Factor (float) the stress on the basal plane for the given loading direction. |
+| Feature | BasalLoadingFactor | Value of the Basal Loading Factor (float) the stress on the basal plane for the given loading direction. |
 
 ## Authors ##
 

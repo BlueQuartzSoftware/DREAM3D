@@ -70,13 +70,13 @@ DataContainerReader::DataContainerReader() :
   m_ReadAllEdgeArrays(false),
   m_ReadAllFaceArrays(false),
   m_ReadAllCellArrays(false),
-  m_ReadAllVertexFieldArrays(false),
+  m_ReadAllVertexFeatureArrays(false),
   m_ReadAllVertexEnsembleArrays(false),
-  m_ReadAllEdgeFieldArrays(false),
+  m_ReadAllEdgeFeatureArrays(false),
   m_ReadAllEdgeEnsembleArrays(false),
-  m_ReadAllFaceFieldArrays(false),
+  m_ReadAllFaceFeatureArrays(false),
   m_ReadAllFaceEnsembleArrays(false),
-  m_ReadAllCellFieldArrays(false),
+  m_ReadAllCellFeatureArrays(false),
   m_ReadAllCellEnsembleArrays(false),
   m_OverwriteExistingDataContainers(false)
 {
@@ -118,22 +118,22 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
   READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
   READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
   READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellField)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
   READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceField)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
   READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeField)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
   READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexField)
+  READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
   READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
 
   reader->closeFilterGroup();
@@ -157,22 +157,22 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellField)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceField)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeField)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexField)
+  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
 
   writer->closeFilterGroup();
@@ -182,7 +182,7 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t fields, size_t ensembles)
+void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t features, size_t ensembles)
 {
 
 }
@@ -389,10 +389,10 @@ void DataContainerReader::readData(bool preflight)
         {
           VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();
           vReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
-          vReader->setVertexFieldArraysToRead(m_SelectedVertexVertexFieldArrays);
+          vReader->setVertexFeatureArraysToRead(m_SelectedVertexVertexFeatureArrays);
           vReader->setVertexEnsembleArraysToRead(m_SelectedVertexVertexEnsembleArrays);
           vReader->setReadAllVertexArrays(m_ReadAllVertexArrays);
-          vReader->setReadAllVertexFieldArrays(m_ReadAllVertexFieldArrays);
+          vReader->setReadAllVertexFeatureArrays(m_ReadAllVertexFeatureArrays);
           vReader->setReadAllVertexEnsembleArrays(m_ReadAllVertexEnsembleArrays);
           if (getReadAllArrays() == true) { vReader->setReadAllArrays(); }
           vReader->setHdfFileId(fileId);
@@ -422,10 +422,10 @@ void DataContainerReader::readData(bool preflight)
         {
           EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
           eReader->setEdgeArraysToRead(m_SelectedEdgeEdgeArrays);
-          eReader->setEdgeFieldArraysToRead(m_SelectedEdgeEdgeFieldArrays);
+          eReader->setEdgeFeatureArraysToRead(m_SelectedEdgeEdgeFeatureArrays);
           eReader->setEdgeEnsembleArraysToRead(m_SelectedEdgeEdgeEnsembleArrays);
           eReader->setReadAllEdgeArrays(m_ReadAllEdgeArrays);
-          eReader->setReadAllEdgeFieldArrays(m_ReadAllEdgeFieldArrays);
+          eReader->setReadAllEdgeFeatureArrays(m_ReadAllEdgeFeatureArrays);
           eReader->setReadAllEdgeEnsembleArrays(m_ReadAllEdgeEnsembleArrays);
           if (getReadAllArrays() == true) { eReader->setReadAllArrays(); }
           eReader->setHdfFileId(fileId);
@@ -455,10 +455,10 @@ void DataContainerReader::readData(bool preflight)
         {
           SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
           smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
-          smReader->setFaceFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
+          smReader->setFaceFeatureArraysToRead(m_SelectedSurfaceFaceFeatureArrays);
           smReader->setFaceEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
           smReader->setReadAllFaceArrays(m_ReadAllFaceArrays);
-          smReader->setReadAllFaceFieldArrays(m_ReadAllFaceFieldArrays);
+          smReader->setReadAllFaceFeatureArrays(m_ReadAllFaceFeatureArrays);
           smReader->setReadAllFaceEnsembleArrays(m_ReadAllFaceEnsembleArrays);
           if (getReadAllArrays() == true) { smReader->setReadAllArrays(); }
           smReader->setHdfFileId(fileId);
@@ -488,10 +488,10 @@ void DataContainerReader::readData(bool preflight)
         {
           VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
           volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
-          volumeReader->setCellFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
+          volumeReader->setCellFeatureArraysToRead(m_SelectedVolumeCellFeatureArrays);
           volumeReader->setCellEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
           volumeReader->setReadAllCellArrays(m_ReadAllCellArrays);
-          volumeReader->setReadAllCellFieldArrays(m_ReadAllCellFieldArrays);
+          volumeReader->setReadAllCellFeatureArrays(m_ReadAllCellFeatureArrays);
           volumeReader->setReadAllCellEnsembleArrays(m_ReadAllCellEnsembleArrays);
           if (getReadAllArrays() == true) { volumeReader->setReadAllArrays(); }
           volumeReader->setHdfFileId(fileId);
@@ -533,14 +533,14 @@ void DataContainerReader::setVolumeSelectedArrayNames(QSet<QString> selectedVert
                                                       QSet<QString> selectedFaceArrays,
                                                       QSet<QString> selectedEdgeArrays,
                                                       QSet<QString> selectedCellArrays,
-                                                      QSet<QString> selectedFieldArrays,
+                                                      QSet<QString> selectedFeatureArrays,
                                                       QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeFaceArrays = selectedFaceArrays;
   m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
   m_SelectedVolumeCellArrays = selectedCellArrays;
-  m_SelectedVolumeCellFieldArrays = selectedFieldArrays;
+  m_SelectedVolumeCellFeatureArrays = selectedFeatureArrays;
   m_SelectedVolumeCellEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
@@ -551,13 +551,13 @@ void DataContainerReader::setVolumeSelectedArrayNames(QSet<QString> selectedVert
 void DataContainerReader::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                        QSet<QString> selectedEdgeArrays,
                                                        QSet<QString> selectedFaceArrays,
-                                                       QSet<QString> selectedFieldArrays,
+                                                       QSet<QString> selectedFeatureArrays,
                                                        QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
   m_SelectedSurfaceFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceFaceFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceFaceFeatureArrays = selectedFeatureArrays;
   m_SelectedSurfaceFaceEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
@@ -567,12 +567,12 @@ void DataContainerReader::setSurfaceSelectedArrayNames(QSet<QString> selectedVer
 // -----------------------------------------------------------------------------
 void DataContainerReader::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                     QSet<QString> selectedEdgeArrays,
-                                                    QSet<QString> selectedFieldArrays,
+                                                    QSet<QString> selectedFeatureArrays,
                                                     QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
-  m_SelectedEdgeEdgeFieldArrays = selectedFieldArrays;
+  m_SelectedEdgeEdgeFeatureArrays = selectedFeatureArrays;
   m_SelectedEdgeEdgeEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
@@ -581,11 +581,11 @@ void DataContainerReader::setEdgeSelectedArrayNames(QSet<QString> selectedVertex
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                      QSet<QString> selectedFieldArrays,
+                                                      QSet<QString> selectedFeatureArrays,
                                                       QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
-  m_SelectedVertexVertexFieldArrays = selectedFieldArrays;
+  m_SelectedVertexVertexFeatureArrays = selectedFeatureArrays;
   m_SelectedVertexVertexEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }

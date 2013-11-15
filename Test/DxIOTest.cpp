@@ -49,7 +49,7 @@
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
-#include "GenerateGrainIds.h"
+#include "GenerateFeatureIds.h"
 
 
 // -----------------------------------------------------------------------------
@@ -81,7 +81,7 @@ int TestDxWriter()
   DREAM3D_REQUIRE(err < 0);
   pipeline->popFront();
 
-  // Now have a VolumeDataContainer created but NO grain Ids. This pipeline should still fail
+  // Now have a VolumeDataContainer created but NO feature Ids. This pipeline should still fail
   CreateVolumeDataContainer::Pointer createVolumeDC = CreateVolumeDataContainer::New();
   pipeline->pushBack(createVolumeDC);
   pipeline->pushBack(writer);
@@ -91,13 +91,13 @@ int TestDxWriter()
   err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE(err < 0);
 
-  // Now create some GrainIds and lets setup a real pipeline that should work
+  // Now create some FeatureIds and lets setup a real pipeline that should work
   pipeline->clear(); // Remove any filters from the pipeline first
   // Put a filter that will just create an empty VolumeDataContainer
   pipeline->pushBack(createVolumeDC);
 
-  GenerateGrainIds::Pointer generateGrainIds = GenerateGrainIds::New();
-  pipeline->pushBack(generateGrainIds);
+  GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
+  pipeline->pushBack(generateFeatureIds);
 
   writer = DxWriter::New();
   writer->setOutputFile(UnitTest::DxIOTest::TestFile);
@@ -138,19 +138,19 @@ int TestDxReader()
   err = reader->getErrorCondition();
   m->getDimensions(nx, ny, nz);
 
-  IDataArray::Pointer mdata = reader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName)->getCellData(DREAM3D::CellData::GrainIds);
+  IDataArray::Pointer mdata = reader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName)->getCellData(DREAM3D::CellData::FeatureIds);
 
   DREAM3D_REQUIRE_EQUAL(err, 0);
-  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::GrainIdsTest::XSize);
-  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::GrainIdsTest::YSize);
-  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::GrainIdsTest::ZSize);
-  int size = UnitTest::GrainIdsTest::XSize * UnitTest::GrainIdsTest::YSize * UnitTest::GrainIdsTest::ZSize;
+  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
+  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
+  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
+  int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
   int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
 
   for (int i = 0; i < size; ++i)
   {
     int32_t file_value = data[i];
-    int32_t memory_value = i + UnitTest::GrainIdsTest::Offset;
+    int32_t memory_value = i + UnitTest::FeatureIdsTest::Offset;
     DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
   }
 

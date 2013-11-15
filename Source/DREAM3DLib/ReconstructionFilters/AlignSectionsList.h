@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT AlignSectionsList : public AlignSections
   private:
     bool* m_GoodVoxels;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     AlignSectionsList(const AlignSectionsList&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsList&); // Operator '=' Not Implemented

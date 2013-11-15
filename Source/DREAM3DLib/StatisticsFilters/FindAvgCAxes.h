@@ -69,9 +69,9 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgCAxesArrayName)
 
 
@@ -102,11 +102,11 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     float* m_Quats;
     float* m_AvgCAxes;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindAvgCAxes(const FindAvgCAxes&); // Copy Constructor Not Implemented
     void operator=(const FindAvgCAxes&); // Operator '=' Not Implemented

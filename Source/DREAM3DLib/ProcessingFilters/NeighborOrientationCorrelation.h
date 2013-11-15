@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
     int32_t* m_CellPhases;
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     NeighborOrientationCorrelation(const NeighborOrientationCorrelation&); // Copy Constructor Not Implemented

@@ -56,17 +56,17 @@ AngFields::~AngFields()
 // -----------------------------------------------------------------------------
 QVector<QString> AngFields::getFieldNames()
 {
-  QVector<QString> fields;
-  fields.push_back(Ebsd::Ang::Phi1);
-  fields.push_back(Ebsd::Ang::Phi);
-  fields.push_back(Ebsd::Ang::Phi2);
-  fields.push_back(Ebsd::Ang::ImageQuality);
-  fields.push_back(Ebsd::Ang::ConfidenceIndex);
-  fields.push_back(Ebsd::Ang::PhaseData);
-  fields.push_back(Ebsd::Ang::XPosition);
-  fields.push_back(Ebsd::Ang::YPosition);
-  fields.push_back(Ebsd::Ang::SEMSignal);
-  fields.push_back(Ebsd::Ang::Fit);
+  QVector<QString> features;
+  features.push_back(Ebsd::Ang::Phi1);
+  features.push_back(Ebsd::Ang::Phi);
+  features.push_back(Ebsd::Ang::Phi2);
+  features.push_back(Ebsd::Ang::ImageQuality);
+  features.push_back(Ebsd::Ang::ConfidenceIndex);
+  features.push_back(Ebsd::Ang::PhaseData);
+  features.push_back(Ebsd::Ang::XPosition);
+  features.push_back(Ebsd::Ang::YPosition);
+  features.push_back(Ebsd::Ang::SEMSignal);
+  features.push_back(Ebsd::Ang::Fit);
 
-  return fields;
+  return features;
 }

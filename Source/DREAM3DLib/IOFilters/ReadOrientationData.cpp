@@ -131,7 +131,7 @@ int ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -167,8 +167,8 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       m->setDimensions(dims[0], dims[1], dims[2]);
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
-      AngFields angfields;
-      names = angfields.getFilterFields<QVector<QString> > ();
+      AngFields angfeatures;
+      names = angfeatures.getFilterFeatures<QVector<QString> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -201,8 +201,8 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
         m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       }
       m->setOrigin(0.0f, 0.0f, 0.0f);
-      CtfFields ctffields;
-      names = ctffields.getFilterFields<QVector<QString> > ();
+      CtfFields ctffeatures;
+      names = ctffeatures.getFilterFeatures<QVector<QString> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -228,8 +228,8 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       m->setDimensions(dims[0], dims[1], dims[2]);
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
-      MicFields micfields;
-      names = micfields.getFilterFields<QVector<QString> > ();
+      MicFields micfeatures;
+      names = micfeatures.getFilterFeatures<QVector<QString> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)

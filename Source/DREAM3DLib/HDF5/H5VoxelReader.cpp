@@ -137,7 +137,7 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
   herr_t status;
   int rankc = 1;
 
-  dataset = H5Dopen(scalarGid, DREAM3D::CellData::GrainIds.toLatin1().data(), H5P_DEFAULT);
+  dataset = H5Dopen(scalarGid, DREAM3D::CellData::FeatureIds.toLatin1().data(), H5P_DEFAULT);
   filespace = H5Dget_space(dataset); /* Get filespace handle first. */
   col_dims[0] = xdim * ydim;
   memspace = H5Screate_simple(rankc, col_dims, NULL);
@@ -171,7 +171,7 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelReader::readVoxelData(int* grain_indicies,
+int H5VoxelReader::readVoxelData(int* feature_indicies,
                                  int* phases,
                                  float* eulerangles,
                                  std::vector<unsigned int>& crystruct,
@@ -186,7 +186,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   }
 
 
-  err = readScalarData(DREAM3D::CellData::GrainIds, grain_indicies);
+  err = readScalarData(DREAM3D::CellData::FeatureIds, feature_indicies);
   if (err < 0) { return err; }
 
   err = readScalarData(DREAM3D::CellData::Phases, phases);
@@ -224,15 +224,15 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   err |= H5Gclose(scalarGid);
 
 
-  err = readFieldData<unsigned int, uint32_t>(DREAM3D::EnsembleData::CrystalStructures, crystruct);
+  err = readFeatureData<unsigned int, uint32_t>(DREAM3D::EnsembleData::CrystalStructures, crystruct);
   if(err < 0)
   {
-    addErrorMessage(getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Field Data", err);
+    addErrorMessage(getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Feature Data", err);
     err |= H5Gclose(reconGid);
     return err;
   }
 
-  err = readFieldData<unsigned int, uint32_t>(DREAM3D::EnsembleData::PhaseTypes, phaseType);
+  err = readFeatureData<unsigned int, uint32_t>(DREAM3D::EnsembleData::PhaseTypes, phaseType);
   if(err < 0)
   {
     addErrorMessage(getHumanLabel(), "H5VoxelReader Error Reading the Phase Type Data", err);

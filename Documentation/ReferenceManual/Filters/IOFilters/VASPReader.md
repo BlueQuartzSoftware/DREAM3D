@@ -11,7 +11,7 @@ This filter reads in files generated using the VASP program. See [the VASP web s
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Field Array Name | String |
+| Feature Array Name | String |
 
 ## Required Arrays ##
 

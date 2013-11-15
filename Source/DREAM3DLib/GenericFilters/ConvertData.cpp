@@ -275,7 +275,7 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ConvertData::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   QString ss;

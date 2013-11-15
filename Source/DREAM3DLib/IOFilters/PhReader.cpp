@@ -56,8 +56,8 @@ PhReader::PhReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_InputFile(""),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_GrainIds(NULL),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL),
   m_InStream(NULL)
 
 {
@@ -150,7 +150,7 @@ int PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void PhReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
 
   setErrorCondition(0);
@@ -171,7 +171,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   }
 
   QVector<int> dims(1, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, 0, voxels, dims)
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
@@ -295,12 +295,12 @@ int  PhReader::readFile()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t totalPoints = m->getTotalPoints();
-  Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(totalPoints, m_GrainIdsArrayName);
-  m_GrainIdData->initializeWithValues(-1);
-  int32_t* grainIds = m_GrainIdData->getPointer(0);
+  Int32ArrayType::Pointer m_FeatureIdData = Int32ArrayType::CreateArray(totalPoints, m_FeatureIdsArrayName);
+  m_FeatureIdData->initializeWithValues(-1);
+  int32_t* featureIds = m_FeatureIdData->getPointer(0);
   for(size_t n = 0; n < totalPoints; ++n)
   {
-    if (fscanf(m_InStream, "%d", grainIds + n) == 0)
+    if (fscanf(m_InStream, "%d", featureIds + n) == 0)
     {
       fclose(m_InStream);
       m_InStream = NULL;
@@ -311,7 +311,7 @@ int  PhReader::readFile()
   }
 
   // Read the data and stick it in the data Container
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellData(DREAM3D::CellData::FeatureIds, m_FeatureIdData);
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);

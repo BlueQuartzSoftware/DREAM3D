@@ -66,7 +66,7 @@ VolumeDataContainerWriter::~VolumeDataContainerWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VolumeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -148,7 +148,7 @@ void VolumeDataContainerWriter::execute()
     return;
   }
 
-  err = writeCellFieldData(dcGid);
+  err = writeCellFeatureData(dcGid);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -420,7 +420,7 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
+int VolumeDataContainerWriter::writeCellFeatureData(hid_t dcGid)
 {
   int err = 0;
   VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
@@ -439,7 +439,7 @@ int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
   int64_t volDims[3] = { 0, 0, 0 };
 
 
-  // Write the Field Data
+  // Write the Feature Data
   err = QH5Utilities::createGroupsFromPath(H5_CELL_FIELD_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
@@ -452,11 +452,11 @@ int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
     return err;
   }
 
-  hid_t fieldGroupId = H5Gopen(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t featureGroupId = H5Gopen(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
   if(err < 0)
   {
 
-    QString ss = QObject::tr("Error opening field Group %1").arg(H5_CELL_FIELD_DATA_GROUP_NAME);
+    QString ss = QObject::tr("Error opening feature Group %1").arg(H5_CELL_FIELD_DATA_GROUP_NAME);
     setErrorCondition(-65);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -467,42 +467,42 @@ int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
   typedef std::vector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
-  NameListType names = dc->getCellFieldArrayNameList();
+  NameListType names = dc->getCellFeatureArrayNameList();
   if (names.size() > 0)
   {
-    IDataArray::Pointer array = dc->getCellFieldData(names.front());
+    IDataArray::Pointer array = dc->getCellFeatureData(names.front());
     total = array->GetSize();
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
 #if WRITE_FIELD_XDMF
 
-    QString ss = QObject::tr("Field Data (%1)").arg(total);
-    writeFieldXdmfGridHeader(total, ss.str());
+    QString ss = QObject::tr("Feature Data (%1)").arg(total);
+    writeFeatureXdmfGridHeader(total, ss.str());
 #endif
   }
-  // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
+  // Now loop over all the feature data and write it out, possibly wrapping it with XDMF code also.
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = dc->getCellFieldData(*iter);
+    IDataArray::Pointer array = dc->getCellFeatureData(*iter);
     if (array->getTypeAsString().compare(NeighborList<int>::ClassName()) == 0)
     {
       neighborListArrays.push_back(array.get());
     }
     else if (NULL != array.get())
     {
-      err = array->writeH5Data(fieldGroupId);
+      err = array->writeH5Data(featureGroupId);
       if(err < 0)
       {
-        QString ss = QObject::tr("Error writing field array '%1' to the HDF5 File").arg(*iter);
+        QString ss = QObject::tr("Error writing feature array '%1' to the HDF5 File").arg(*iter);
         addErrorMessage(getHumanLabel(), ss, err);
         setErrorCondition(err);
-        H5Gclose(fieldGroupId); // Close the Cell Group
+        H5Gclose(featureGroupId); // Close the Cell Group
         H5Gclose(dcGid); // Close the Data Container Group
         return err;
       }
 #if WRITE_FIELD_XDMF
-      array->writeXdmfAttribute( *getXdmfOStream(), volDims, hdfFileName, xdmfGroupPath, " (Field)");
+      array->writeXdmfAttribute( *getXdmfOStream(), volDims, hdfFileName, xdmfGroupPath, " (Feature)");
 #endif
     }
   }
@@ -511,7 +511,7 @@ int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
 #if WRITE_FIELD_XDMF
   if (names.size() > 0)
   {
-    writeXdmfGridFooter("Field Data");
+    writeXdmfGridFooter("Feature Data");
   }
 #endif
 
@@ -538,18 +538,18 @@ int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
 #if WRITE_FIELD_XDMF
 
     QString ss = QObject::tr("Neighbor Data (%1)").arg(total);
-    writeFieldXdmfGridHeader(total, ss.str());
+    writeFeatureXdmfGridHeader(total, ss.str());
 #endif
     for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
     {
-      err = (*iter)->writeH5Data(fieldGroupId);
+      err = (*iter)->writeH5Data(featureGroupId);
       if(err < 0)
       {
 
-        QString ss = QObject::tr("Error writing field array '%1' to the HDF5 File").arg((*iter)->GetName());
+        QString ss = QObject::tr("Error writing feature array '%1' to the HDF5 File").arg((*iter)->GetName());
         addErrorMessage(getHumanLabel(), ss, err);
         setErrorCondition(err);
-        H5Gclose(fieldGroupId); // Close the Cell Group
+        H5Gclose(featureGroupId); // Close the Cell Group
         H5Gclose(dcGid); // Close the Data Container Group
         return err;
       }
@@ -563,7 +563,7 @@ int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
 
   }
 
-  H5Gclose(fieldGroupId);
+  H5Gclose(featureGroupId);
   return err;
 }
 

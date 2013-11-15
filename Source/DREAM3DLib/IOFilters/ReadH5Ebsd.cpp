@@ -129,7 +129,7 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
   // we need to support H5Ebsd Files from previous versions of DREAM3D where there was a "Voxel" data container so
   // try reading these values. If they are there then it is an older file and it will set the appropriate values
   setSelectedVolumeCellArrays( reader->readArraySelections("VoxelCell", getSelectedVolumeCellArrays() ) );
-  setSelectedVolumeCellFieldArrays( reader->readArraySelections("VoxelField", getSelectedVolumeCellFieldArrays() ) );
+  setSelectedVolumeCellFeatureArrays( reader->readArraySelections("VoxelFeature", getSelectedVolumeCellFeatureArrays() ) );
   setSelectedVolumeCellEnsembleArrays( reader->readArraySelections("VoxelEnsemble", getSelectedVolumeCellEnsembleArrays() ) );
 
   // If we are reading a Version 4.3 file and above then the data container names have changed and the last set of
@@ -139,22 +139,22 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
   READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
   READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
   READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellField)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
   READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceField)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
   READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeField)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
   READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexField)
+  READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
   READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
 
   reader->closeFilterGroup();
@@ -176,22 +176,22 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellField)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceField)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeField)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexField)
+  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
 
   writer->closeFilterGroup();
@@ -237,7 +237,7 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -332,21 +332,21 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   if (m_Manufacturer == Ebsd::TSL)
   {
-    AngFields angFields;
+    AngFields angFeatures;
     reader = H5AngVolumeReader::New();
-    names = angFields.getFilterFields<QVector<QString> > ();
+    names = angFeatures.getFilterFeatures<QVector<QString> > ();
   }
   else if (m_Manufacturer == Ebsd::HKL)
   {
-    CtfFields cfields;
+    CtfFields cfeatures;
     reader = H5CtfVolumeReader::New();
-    names = cfields.getFilterFields<QVector<QString> > ();
+    names = cfeatures.getFilterFeatures<QVector<QString> > ();
   }
   else if (m_Manufacturer == Ebsd::HEDM)
   {
-    MicFields mfields;
+    MicFields mfeatures;
     reader = H5MicVolumeReader::New();
-    names = mfields.getFilterFields<QVector<QString> > ();
+    names = mfeatures.getFilterFeatures<QVector<QString> > ();
   }
   else
   {
@@ -600,14 +600,14 @@ void ReadH5Ebsd::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                              QSet<QString> selectedEdgeArrays,
                                              QSet<QString> selectedFaceArrays,
                                              QSet<QString> selectedCellArrays,
-                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedFeatureArrays,
                                              QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
   m_SelectedVolumeFaceArrays = selectedFaceArrays;
   m_SelectedVolumeCellArrays = selectedCellArrays;
-  m_SelectedVolumeCellFieldArrays = selectedFieldArrays;
+  m_SelectedVolumeCellFeatureArrays = selectedFeatureArrays;
   m_SelectedVolumeCellEnsembleArrays = selectedEnsembleArrays;
 }
 
@@ -617,7 +617,7 @@ void ReadH5Ebsd::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
 void ReadH5Ebsd::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                               QSet<QString> selectedEdgeArrays,
                                               QSet<QString> selectedFaceArrays,
-                                              QSet<QString> selectedFieldArrays,
+                                              QSet<QString> selectedFeatureArrays,
                                               QSet<QString> selectedEnsembleArrays)
 {
   // Empty because there is no Surface data in an H5Ebsd file
@@ -628,7 +628,7 @@ void ReadH5Ebsd::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                            QSet<QString> selectedEdgeArrays,
-                                           QSet<QString> selectedFieldArrays,
+                                           QSet<QString> selectedFeatureArrays,
                                            QSet<QString> selectedEnsembleArrays)
 {
   // Empty because there is no Edge data in an H5Ebsd file
@@ -638,7 +638,7 @@ void ReadH5Ebsd::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                             QSet<QString> selectedFieldArrays,
+                                             QSet<QString> selectedFeatureArrays,
                                              QSet<QString> selectedEnsembleArrays)
 {
   // Empty because there is no Vertex data in an H5Ebsd file

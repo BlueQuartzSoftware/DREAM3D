@@ -158,10 +158,10 @@ void SyntheticBuilder_PreFlight()
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
   pipeline.push_back(match_crystallography);
 
-  MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile)
-  FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
-  write_fielddata->setFieldDataFile(FieldDataFile);
-  pipeline.push_back(write_fielddata);
+  MAKE_OUTPUT_FILE_PATH( FeatureDataFile, DREAM3D::SyntheticBuilder::GrainDataFile)
+  FeatureDataCSVWriter::Pointer write_featuredata = FeatureDataCSVWriter::New();
+  write_featuredata->setFeatureDataFile(FeatureDataFile);
+  pipeline.push_back(write_featuredata);
 
   int preflightError = 0;
   QStringstream preflightMessageStream;
@@ -233,7 +233,7 @@ MAKE_FILTER_TEST(  FindBoundingBoxGrains, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  ReadH5Ebsd, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  DataContainerReader, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  DataContainerWriter, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FieldDataCSVWriter, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FeatureDataCSVWriter, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  VtkRectilinearGridWriter, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  H5VoxelFileReader, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  DxWriter, FAIL_IS_PASS)
@@ -268,7 +268,7 @@ MAKE_FILTER_TEST(  FindEuclideanDistMap, FAIL_IS_PASS)
 //MAKE_FILTER_TEST(  FindMDF, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindNeighborhoods, FAIL_IS_PASS)
 //MAKE_FILTER_TEST(  FindODF, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindNumFields, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindNumFeatures, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindDeformationStatistics, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindSchmids, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindShapes, FAIL_IS_PASS)
@@ -301,7 +301,7 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST( ReadH5Ebsd_PreFlightTest() )
   DREAM3D_REGISTER_TEST( DataContainerReader_PreFlightTest() )
   DREAM3D_REGISTER_TEST( DataContainerWriter_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FieldDataCSVWriter_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FeatureDataCSVWriter_PreFlightTest() )
   DREAM3D_REGISTER_TEST( VtkRectilinearGridWriter_PreFlightTest() )
   DREAM3D_REGISTER_TEST( H5VoxelFileReader_PreFlightTest() )
   DREAM3D_REGISTER_TEST( DxWriter_PreFlightTest() )
@@ -336,7 +336,7 @@ int main(int argc, char** argv)
   //DREAM3D_REGISTER_TEST( FindMDF_PreFlightTest() )
   DREAM3D_REGISTER_TEST( FindNeighborhoods_PreFlightTest() )
   //DREAM3D_REGISTER_TEST( FindODF_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindNumFields_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindNumFeatures_PreFlightTest() )
   DREAM3D_REGISTER_TEST( FindDeformationStatistics_PreFlightTest() )
   DREAM3D_REGISTER_TEST( FindSchmids_PreFlightTest() )
   DREAM3D_REGISTER_TEST( FindShapes_PreFlightTest() )

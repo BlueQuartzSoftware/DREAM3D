@@ -48,7 +48,7 @@
 
 /**
  * @class PerPhaseMinSize PerPhaseMinSize.h DREAM3DLib/ProcessingFilters/PerPhaseMinSize.h
- * @brief This filter ensures each Grain or Region has a minimum number of voxels.
+ * @brief This filter ensures each Feature or Region has a minimum number of voxels.
  * @author
  * @date Nov 19, 2011
  * @version 1.0
@@ -63,10 +63,10 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     virtual ~PerPhaseMinSize();
 
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
 
@@ -93,12 +93,12 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     PerPhaseMinSize();
 
     // We over ride this method because we need to change the functionality
-    virtual void remove_smallgrains();
-    virtual void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    virtual void remove_smallfeatures();
+    virtual void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
     int32_t* m_CellPhases;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
 
 
     PerPhaseMinSize(const PerPhaseMinSize&); // Copy Constructor Not Implemented

@@ -228,7 +228,7 @@ int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());

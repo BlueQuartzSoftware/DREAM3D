@@ -69,10 +69,10 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors)
@@ -98,18 +98,18 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
     MinNeighbors();
 
     void assign_badpoints();
-    void merge_containedgrains();
+    void merge_containedfeatures();
 
 
   private:
     bool* m_AlreadyChecked;
     int32_t* m_Neighbors;
 
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_NumNeighbors;
     bool* m_Active;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     MinNeighbors(const MinNeighbors&); // Copy Constructor Not Implemented
     void operator=(const MinNeighbors&); // Operator '=' Not Implemented

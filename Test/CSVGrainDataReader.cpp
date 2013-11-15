@@ -74,7 +74,7 @@ CSVGrainDataReader::CSVGrainDataReader() :
   m_NumNeighbors = NULL;
   m_SurfaceGrain = NULL;
 
-  m_NumFields = 11;
+  m_NumFeatures = 11;
 
 }
 
@@ -261,7 +261,7 @@ void CSVGrainDataReader::readData(const QString& line, int row, size_t i)
 
   int gid, obb, nn, sg;
 
-  m_NumFields = sscanf(line.c_str(), "%d,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d", &gid, &p1, &p, &p2, &eq, &ba, &ca, &o3, &obb, &nn, &sg);
+  m_NumFeatures = sscanf(line.c_str(), "%d,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d", &gid, &p1, &p, &p2, &eq, &ba, &ca, &o3, &obb, &nn, &sg);
 
 
   m_GrainId[row] = gid;

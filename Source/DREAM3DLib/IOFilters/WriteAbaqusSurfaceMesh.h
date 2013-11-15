@@ -116,16 +116,16 @@ class DREAM3DLib_EXPORT WriteAbaqusSurfaceMesh : public AbstractFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    int writeHeader(FILE* f, int nodeCount, int triCount, int grainCount);
+    int writeHeader(FILE* f, int nodeCount, int triCount, int featureCount);
     int writeNodes(FILE* f);
     int writeTriangles(FILE* f);
-    int writeGrains(FILE* f);
+    int writeFeatures(FILE* f);
 
     WriteAbaqusSurfaceMesh(const WriteAbaqusSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const WriteAbaqusSurfaceMesh&); // Operator '=' Not Implemented

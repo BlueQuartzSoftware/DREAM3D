@@ -45,7 +45,7 @@
 
 /**
  * @class PhWriter PhWriter.h DREAM3DLib/IOFilters/PhWriter.h
- * @brief This class writes a "Ph" file from the Grain Generator Data but is templated
+ * @brief This class writes a "Ph" file from the Feature Generator Data but is templated
  * so that possibly other classes can use this writing method. This code was adapted
  * from code supplied by S. Sintay and J. Tucker.
  * @author Michael A. Jackson for BlueQuartz Software
@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
     virtual ~PhWriter();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Write Ph File (Grain Ids)"; }
+    virtual const QString getHumanLabel() { return "Write Ph File (Feature Ids)"; }
 
     /**
      * @brief This method will instantiate all the end user settable options/parameters
@@ -120,13 +120,13 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
 
     PhWriter(const PhWriter&); // Copy Constructor Not Implemented
     void operator=(const PhWriter&); // Operator '=' Not Implemented

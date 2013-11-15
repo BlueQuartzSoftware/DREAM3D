@@ -96,13 +96,13 @@ int  ReadPHFile(QString FileName, QVector<int> &data, int &nx, int &ny, int &nz)
     return -1;
   }
 
-  Int32ArrayType* grainIds = Int32ArrayType::SafePointerDownCast(m->getCellData(DREAM3D::CellData::GrainIds).get());
-  size_t count = grainIds->getNumberOfTuples();
+  Int32ArrayType* featureIds = Int32ArrayType::SafePointerDownCast(m->getCellData(DREAM3D::CellData::FeatureIds).get());
+  size_t count = featureIds->getNumberOfTuples();
 
   data.resize(count);
   for(size_t i = 0; i < count; ++i)
   {
-    data[i] = grainIds->GetValue(i);
+    data[i] = featureIds->GetValue(i);
   }
 
 
@@ -211,10 +211,10 @@ int writePhDataToHDF5File(const QString &h5File, QVector<int> &data, int &nx, in
   { totalPoints };
 
   int numComp = 1;
-  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::GrainIds, numComp, rank, dims);
+  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::FeatureIds, numComp, rank, dims);
   if (err < 0)
   {
-    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::GrainIds << "' to " << DREAM3D::HDF5::VolumeDataContainerName;
+    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::FeatureIds << "' to " << DREAM3D::HDF5::VolumeDataContainerName;
     return err;
   }
   // Close the file when we are done with it.
@@ -308,7 +308,7 @@ int main(int argc, char **argv)
     int ny = 0;
     int nz = 0;
 
-    qDebug() << "Merging the GrainID data from " << phFile;
+    qDebug() << "Merging the FeatureID data from " << phFile;
     qDebug() << "  into";
     qDebug() << "file: " << h5File;
 
@@ -322,14 +322,14 @@ int main(int argc, char **argv)
     qDebug() << "Ph File has dimensions: " << nx << " x " << ny << " x " << nz;
 
 
-    qDebug() << "Now Overwriting the GrainID data set in the HDF5 file....";
+    qDebug() << "Now Overwriting the FeatureID data set in the HDF5 file....";
     err = writePhDataToHDF5File(h5File, voxels, nz, ny, nz);
     if (err < 0)
     {
-     qDebug() << "There was an error writing the grain id data. Check other errors for possible clues.";
+     qDebug() << "There was an error writing the feature id data. Check other errors for possible clues.";
      return EXIT_FAILURE;
     }
-    qDebug() << "+ Done Writing the Grain ID Data.";
+    qDebug() << "+ Done Writing the Feature ID Data.";
 
 
     QMap<int, EulerSet> gidToEulerMap;
@@ -348,7 +348,7 @@ int main(int argc, char **argv)
       qDebug() << "Now Over Writing the Euler Angles data in the HDF5 file.....";
       int totalPoints = nx * ny * nz;
       int numComp = 3;
-      // Loop over each Voxel getting its Grain ID and then setting the Euler Angle
+      // Loop over each Voxel getting its Feature ID and then setting the Euler Angle
       QVector<float> dataf(totalPoints * 3);
       for (int i = 0; i < totalPoints; ++i)
       {

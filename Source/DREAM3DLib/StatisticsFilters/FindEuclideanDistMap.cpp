@@ -73,7 +73,7 @@ class FindEuclideanMap
     {
       // qDebug() << "  FindEuclideanMap: Loop = " << loop << "\n";
       int64_t totalPoints = m->getTotalPoints();
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), m_GrainIds);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::FeatureIds, Int32ArrayType, int32_t, (totalPoints), m_FeatureIds);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints * 3), m_NearestNeighbors);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::GBEuclideanDistances, FloatArrayType, float, totalPoints, m_GBEuclideanDistances);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::TJEuclideanDistances, FloatArrayType, float, totalPoints, m_TJEuclideanDistances);
@@ -175,7 +175,7 @@ class FindEuclideanMap
         }
         for (int j = 0; j < (totalPoints); ++j)
         {
-          if(voxel_NearestNeighbor[j] != -1 && voxel_EuclideanDistance[j] == -1 && m_GrainIds[j] > 0)
+          if(voxel_NearestNeighbor[j] != -1 && voxel_EuclideanDistance[j] == -1 && m_FeatureIds[j] > 0)
           {
             voxel_EuclideanDistance[j] = euclideanDistance;
           }
@@ -216,12 +216,12 @@ class FindEuclideanMap
 FindEuclideanDistMap::FindEuclideanDistMap() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
   m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
   m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_NearestNeighbors(NULL),
   m_GBEuclideanDistances(NULL),
   m_TJEuclideanDistances(NULL),
@@ -268,14 +268,14 @@ int FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, float, FloatArrayType, -1, voxels, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, float, FloatArrayType, -1, voxels, dims)
@@ -315,7 +315,7 @@ void FindEuclideanDistMap::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(),  m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(),  m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -349,7 +349,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
   size_t column, row, plane;
   int add = 1;
   int good = 0;
-  int grain, neighbor;
+  int feature, neighbor;
   QVector<int> coordination;
 
   size_t udims[3] = {0, 0, 0};
@@ -381,8 +381,8 @@ void FindEuclideanDistMap::find_euclideandistmap()
 
   for (int64_t a = 0; a < totalPoints; ++a)
   {
-    grain = m_GrainIds[a];
-    if(grain > 0)
+    feature = m_FeatureIds[a];
+    if(feature > 0)
     {
       column = a % xPoints;
       row = (a / xPoints) % yPoints;
@@ -397,14 +397,14 @@ void FindEuclideanDistMap::find_euclideandistmap()
         if(k == 4 && row == (yPoints - 1)) { good = 0; }
         if(k == 2 && column == 0) { good = 0; }
         if(k == 3 && column == (xPoints - 1)) { good = 0; }
-        if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
+        if(good == 1 && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
         {
           add = 1;
           for(size_t i = 0; i < coordination.size(); i++)
           {
-            if(m_GrainIds[neighbor] == coordination[i]) { add = 0; }
+            if(m_FeatureIds[neighbor] == coordination[i]) { add = 0; }
           }
-          if(add == 1) { coordination.push_back(m_GrainIds[neighbor]); }
+          if(add == 1) { coordination.push_back(m_FeatureIds[neighbor]); }
         }
       }
       if(coordination.size() == 0) { m_NearestNeighbors[a * 3 + 0] = -1, m_NearestNeighbors[a * 3 + 1] = -1, m_NearestNeighbors[a * 3 + 2] = -1; }

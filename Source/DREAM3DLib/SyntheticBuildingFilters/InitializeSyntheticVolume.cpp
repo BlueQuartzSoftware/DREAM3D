@@ -55,7 +55,7 @@
 InitializeSyntheticVolume::InitializeSyntheticVolume() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
@@ -66,7 +66,7 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   m_XRes(0.15f),
   m_YRes(0.15f),
   m_ZRes(0.15f),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_GoodVoxels(NULL)
 
@@ -126,7 +126,7 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -134,7 +134,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   QVector<int> dims(1, 1);
   //Cell Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, -1, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, -1, voxels, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, bool, BoolArrayType, true, voxels, dims)
 
@@ -198,7 +198,7 @@ void InitializeSyntheticVolume::preflight()
   read_data->setHdfFileId(fileId);
   read_data->setHdfGroupId(dcGid);
   read_data->setReadCellData(false);
-  read_data->setReadCellFieldData(false);
+  read_data->setReadCellFeatureData(false);
   read_data->setReadCellEnsembleData(true);
   read_data->setReadAllCellEnsembleArrays(true);
   read_data->setDataContainer(getDataContainerArray()->getDataContainer(getDataContainerName()).get());
@@ -251,7 +251,7 @@ void InitializeSyntheticVolume::execute()
   read_data->setReadEdgeData(false);
   read_data->setReadFaceData(false);
   read_data->setReadCellData(false);
-  read_data->setReadCellFieldData(false);
+  read_data->setReadCellFeatureData(false);
   read_data->setReadCellEnsembleData(true);
   read_data->setReadAllCellEnsembleArrays(true);
   read_data->setDataContainer(getDataContainerArray()->getDataContainer(getDataContainerName()).get());
@@ -264,11 +264,11 @@ void InitializeSyntheticVolume::execute()
   m->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumCellFieldTuples();
+  int totalFeatures = m->getNumCellFeatureTuples();
   int totalEnsembles = m->getNumCellEnsembleTuples();
 
   // Check to make sure we have all of our data arrays available or make them available.
-  dataCheck(false, totalPoints, totalFields, totalEnsembles);
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

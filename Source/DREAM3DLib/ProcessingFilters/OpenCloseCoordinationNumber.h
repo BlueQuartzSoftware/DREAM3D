@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, Loop)
     DREAM3D_INSTANCE_PROPERTY(int, CoordinationNumber)
@@ -102,12 +102,12 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
   private:
     int32_t* m_Neighbors;
 
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
 
     QVector<QVector<int> > voxellists;
     QVector<int> nuclei;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     OpenCloseCoordinationNumber(const OpenCloseCoordinationNumber&); // Copy Constructor Not Implemented
     void operator=(const OpenCloseCoordinationNumber&); // Operator '=' Not Implemented

@@ -6,7 +6,7 @@ Add Bad Data {#addbaddata}
 Synthetic Builder Filters (Misc)
 
 ## Description ##
-This filter adds "bad" data to a volume.  This filter is intended to add "realism" (i.e. more representative of an experimental dataset) to synthetic structures that don't have any "bad" **Cells**.  The user can choose to add "random noise" and/or "noise" along **Field** boundaries.  If they choose to add either kind of "noise", the user must then set the volume fraction of **Cells** to set as "bad".  The volume fractions entered by the user apply to only the set of **Cells** that the "noise" would affect.  For example, if the user chose *0.2* for the volume fraction of boundary "noise", then each boundary **Cell** would have a *20%* chance of being changed to a "bad" **Cell** and all other **Cells** would have a *0%* chance of being changed.
+This filter adds "bad" data to a volume.  This filter is intended to add "realism" (i.e. more representative of an experimental dataset) to synthetic structures that don't have any "bad" **Cells**.  The user can choose to add "random noise" and/or "noise" along **Feature** boundaries.  If they choose to add either kind of "noise", the user must then set the volume fraction of **Cells** to set as "bad".  The volume fractions entered by the user apply to only the set of **Cells** that the "noise" would affect.  For example, if the user chose *0.2* for the volume fraction of boundary "noise", then each boundary **Cell** would have a *20%* chance of being changed to a "bad" **Cell** and all other **Cells** would have a *0%* chance of being changed.
 
 
 ## Parameters ##

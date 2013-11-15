@@ -86,15 +86,15 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public IOSupport
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     virtual int writeMeshData(hid_t dcGid);
 
     virtual int writeVertexData(hid_t dcGid, QString groupName);
-    virtual int writeVertexFieldData(hid_t dcGid, QString groupName);
+    virtual int writeVertexFeatureData(hid_t dcGid, QString groupName);
     virtual int writeVertexEnsembleData(hid_t dcGid, QString groupName);
 
     virtual void writeXdmfMeshStructure();

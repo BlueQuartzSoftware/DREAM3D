@@ -58,17 +58,17 @@ YSChoiAbaqusReader::YSChoiAbaqusReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_InputFile(""),
-  m_InputGrainInfoFile(""),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_InputFeatureInfoFile(""),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_CellPhases(NULL),
-  m_SurfaceFields(NULL),
+  m_SurfaceFeatures(NULL),
   m_Quats(NULL),
   m_AvgQuats(NULL),
   m_CellEulerAngles(NULL)
@@ -98,8 +98,8 @@ void YSChoiAbaqusReader::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Input Grain Orientation File");
-    option->setPropertyName("InputGrainInfoFile");
+    option->setHumanLabel("Input Feature Orientation File");
+    option->setPropertyName("InputFeatureInfoFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
@@ -116,7 +116,7 @@ void YSChoiAbaqusReader::readFilterParameters(AbstractFilterParametersReader* re
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
-  setInputGrainInfoFile( reader->readString( "InputGrainInfoFile", getInputGrainInfoFile() ) );
+  setInputFeatureInfoFile( reader->readString( "InputFeatureInfoFile", getInputFeatureInfoFile() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -128,7 +128,7 @@ int YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("InputGrainInfoFile", getInputGrainInfoFile() );
+  writer->writeValue("InputFeatureInfoFile", getInputFeatureInfoFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -136,7 +136,7 @@ int YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -201,11 +201,11 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dims)
   dims[0] = 4;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, 0, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, float, FloatArrayType, 0, features, dims)
   dims[0] = 1;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 1, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, bool, BoolArrayType, false, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, bool, BoolArrayType, false, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, 0, voxels, dims)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, dims)
@@ -282,26 +282,26 @@ void YSChoiAbaqusReader::execute()
       word = QString(buf);
     }
   }
-  // Read header from grian info file to figure out how many grains there are
+  // Read header from grian info file to figure out how many features there are
 
-  QFile in2(getInputGrainInfoFile());
+  QFile in2(getInputFeatureInfoFile());
   if (!in2.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    QString msg = QObject::tr("Abaqus Grain Info file could not be opened: %1").arg(getInputGrainInfoFile());
+    QString msg = QObject::tr("Abaqus Feature Info file could not be opened: %1").arg(getInputFeatureInfoFile());
     setErrorCondition(-100);
     notifyErrorMessage(msg, getErrorCondition());
     return;
   }
 
-  int numgrains;
+  int numfeatures;
 
   QByteArray buf = in2.readLine();
-  numgrains = buf.toInt(&ok, 10);
+  numfeatures = buf.toInt(&ok, 10);
   buf = in2.readLine();
   QList<QByteArray> tokens = buf.split(' ');
 //  in2 >> word >> word >> word >> word >> word >> word;
   totalpoints = m->getNumCellTuples();
-  dataCheck(false, totalpoints, numgrains + 1, 2);
+  dataCheck(false, totalpoints, numfeatures + 1, 2);
   //Read data file
   int gnum = 0;
   bool onedge = false;
@@ -320,8 +320,8 @@ void YSChoiAbaqusReader::execute()
     row = (i / xpoints) % ypoints;
     plane = i / (xpoints * ypoints);
     if (col == 0 || col == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) { onedge = true; }
-    m_GrainIds[i] = gnum;
-    m_SurfaceFields[gnum] = onedge;
+    m_FeatureIds[i] = gnum;
+    m_SurfaceFeatures[gnum] = onedge;
   }
   for (int iter1 = 0; iter1 < 3; iter1++)
   {
@@ -346,7 +346,7 @@ void YSChoiAbaqusReader::execute()
       }
     }
   }
-  //Read grain info
+  //Read feature info
   int numpoints;
   //float q0, q1, q2, q3;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -355,7 +355,7 @@ void YSChoiAbaqusReader::execute()
   avgQuats[0].z = 0.0;
   avgQuats[0].w = 0.0;
 
-  for (int i = 1; i < numgrains + 1; i++)
+  for (int i = 1; i < numfeatures + 1; i++)
   {
     buf = in2.readLine();
     tokens = buf.split(' ');
