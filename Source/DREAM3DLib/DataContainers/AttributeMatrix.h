@@ -135,8 +135,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     /* ****************** END Map Based Methods *******************************/
 
-
-    DOES_DATASET_EXIST_DECL(CellData)
+    DOES_DATASET_EXIST_DECL()
 
   protected:
     AttributeMatrix();
