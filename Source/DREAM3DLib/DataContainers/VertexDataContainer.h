@@ -53,14 +53,12 @@
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 #include "DREAM3DLib/DataArrays/StructArray.hpp"
 #include "DREAM3DLib/DataContainers/VertexArray.h"
-#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 
 /**
  * @class VertexDataContainer VertexDataContainer.h DREAM3DLib/DataContainers/VertexDataContainer.h
@@ -86,7 +84,6 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
      VertexDataContainer();
 
    private:
-    QVector<AttributeMatrix> m_AttributeMatrices;
 
      VertexDataContainer(const VertexDataContainer&);
      void operator =(const VertexDataContainer&);

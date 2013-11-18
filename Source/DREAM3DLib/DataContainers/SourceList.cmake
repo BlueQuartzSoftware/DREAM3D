@@ -12,7 +12,6 @@
 set(DREAM3DLib_DataContainers_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArray.h
-  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerMacros.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/EdgeDataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/SurfaceDataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexDataContainer.h

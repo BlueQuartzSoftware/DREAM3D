@@ -53,6 +53,11 @@
 class FindEuclideanMap
 {
     VolumeDataContainer* m;
+    int32_t* m_FeatureIds;
+    int32_t* m_NearestNeighbors;
+    float* m_GBEuclideanDistances;
+    float* m_TJEuclideanDistances;
+    float* m_QPEuclideanDistances;
     int mapType;
 
   public:
@@ -60,8 +65,13 @@ class FindEuclideanMap
      * @brief
      * @param datacontainer
      */
-    FindEuclideanMap(VolumeDataContainer* datacontainer, int type) :
+    FindEuclideanMap(VolumeDataContainer* datacontainer, int32_t* fIds, int32_t* nearNeighs, float* gbDists, float* tjDists, float* qpDists, int type) :
       m(datacontainer),
+      m_FeatureIds(fIds),
+      m_NearestNeighbors(nearNeighs),
+      m_GBEuclideanDistances(gbDists),
+      m_TJEuclideanDistances(tjDists),
+      m_QPEuclideanDistances(qpDists),
       mapType(type)
     {
     }
@@ -73,11 +83,6 @@ class FindEuclideanMap
     {
       // qDebug() << "  FindEuclideanMap: Loop = " << loop << "\n";
       int64_t totalPoints = m->getTotalPoints();
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::FeatureIds, Int32ArrayType, int32_t, (totalPoints), m_FeatureIds);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints * 3), m_NearestNeighbors);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::GBEuclideanDistances, FloatArrayType, float, totalPoints, m_GBEuclideanDistances);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::TJEuclideanDistances, FloatArrayType, float, totalPoints, m_TJEuclideanDistances);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::QPEuclideanDistances, FloatArrayType, float, totalPoints, m_QPEuclideanDistances);
 
       int euclideanDistance = 0;
       int count = 1;
@@ -426,9 +431,9 @@ void FindEuclideanDistMap::find_euclideandistmap()
   if (doParallel == true)
   {
     tbb::task_group* g = new tbb::task_group;
-    g->run(FindEuclideanMap(m, 0));
-    g->run(FindEuclideanMap(m, 1));
-    g->run(FindEuclideanMap(m, 2));
+    g->run(FindEuclideanMap(m, m_FeatureIds, m_NearestNeighbors, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, 0));
+    g->run(FindEuclideanMap(m, m_FeatureIds, m_NearestNeighbors, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, 1));
+    g->run(FindEuclideanMap(m, m_FeatureIds, m_NearestNeighbors, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, 2));
     g->wait();
     delete g;
   }
@@ -437,7 +442,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
   {
     for(int i = 0; i < 3; i++)
     {
-      FindEuclideanMap f(m, i);
+      FindEuclideanMap f(m, m_FeatureIds, m_NearestNeighbors, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, i);
       f();
     }
   }

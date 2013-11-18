@@ -47,7 +47,6 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -56,6 +55,31 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 
+#define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, feature, name, typeClass, m_msgType, size, valuePtr) \
+m_msgType* valuePtr = NULL;\
+{\
+  IDataArray::Pointer iDataArray = dataContainer->get##feature##Data(name);\
+  if (iDataArray.get() == NULL) { \
+    QString s = QObject::tr(": Array %1 from the DataContainer class was not in the DataContainer").arg(name);\
+    setErrorCondition(-10);\
+    addErrorMessage(getNameOfClass(), s, -10);\
+    return -10;\
+  } \
+  if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
+    QString s = QObject::tr(": Array %1 from the DataContainer class did not have the correct number of elements.").arg(name);\
+    setErrorCondition(-20);\
+    addErrorMessage(getNameOfClass(), s, -20);\
+    return -20;\
+  }\
+  valuePtr =\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##feature##Data(name).get());\
+  if (NULL == valuePtr) {\
+    QString s = QObject::tr(": Array %1 from the DataContainer class could not be cast to type ").arg(#m_msgType);\
+    setErrorCondition(-30);\
+    addErrorMessage(getNameOfClass(), s, -30);\
+    return -30;\
+  }\
+}
 
 
 /**
@@ -570,48 +594,6 @@ class VtkMiscFileWriter : public AbstractFilter
       return 0;
 
     }
-
-#if 0
-    /**
-     * @brief Writes a VTK visualization file with vector arrays for the Schmid Factor and feature ID.
-     * @param Output file name
-     * @return 0 on Success
-     */
-    template <typename T>
-    int writeSchmidFactorVizFile(T* m, const QString& file)
-    {
-      FILE* f = NULL;
-      f = fopen(file.toLatin1().data(), "wb");
-      if (NULL == f)
-      {
-        return 1;
-      }
-      // Write the correct header
-      if (m_WriteBinaryFiles == true)
-      {
-        WRITE_STRUCTURED_POINTS_HEADER("BINARY", m)
-      }
-      else
-      {
-        WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
-      }
-      size_t totalPoints = m->totalPoints();
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::FeatureIds, Int32ArrayType, int32_t, (m->totalPoints()), feature_indicies);
-
-      if (true == m_WriteBinaryFiles)
-      {
-        WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::CellData::FeatureIds);
-        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(m, DREAM3D::FeatureData::Schmids, float, schmidfactor)
-      }
-      else
-      {
-        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::FeatureIds, feature_indicies)
-        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(m, DREAM3D::FeatureData::Schmids, float, schmidfactor, "%f ")
-      }
-      fclose(f);
-      return 0;
-    }
-#endif
 
   protected:
     VtkMiscFileWriter() : AbstractFilter() { }

@@ -53,7 +53,6 @@
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
@@ -108,7 +107,6 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     VolumeDataContainer();
 
   private:
-    QVector<AttributeMatrix> m_AttributeMatrices;
 
     VolumeDataContainer(const VolumeDataContainer&);
     void operator =(const VolumeDataContainer&);

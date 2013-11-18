@@ -187,8 +187,6 @@ int DxWriter::writeFile()
     return -40;
   }
 
-  //GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::FeatureIds, Int32ArrayType, int32_t, totalPoints, feature_indicies);
-
   int err = 0;
   size_t udims[3] =
   { 0, 0, 0 };

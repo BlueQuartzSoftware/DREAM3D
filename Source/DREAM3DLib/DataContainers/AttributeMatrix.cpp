@@ -68,12 +68,14 @@ AttributeMatrix::~AttributeMatrix()
 
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DOES_DATASET_EXIST_DEFN(AttributeMatrix, AttributeArray)
-
+bool AttributeMatrix::doesAttributeArrayExist(const QString &name)
+{
+  return  m_AttributeMatrix.contains(name);\
+}
+  
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

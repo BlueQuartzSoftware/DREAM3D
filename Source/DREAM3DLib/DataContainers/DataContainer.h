@@ -36,13 +36,20 @@
 #ifndef _DataContainer_H_
 #define _DataContainer_H_
 
+//-- C++ includes
+#include <vector>
+#include <map>
+#include <sstream>
+#include <list>
 
 #include <QtCore/QString>
+#include <QtCore/QVector>
+#include <QtCore/QMap>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 
 /**
  * @brief The DataContainer class
@@ -56,7 +63,69 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     virtual ~DataContainer();
 
+    typedef QMap<QString, AttributeMatrix::Pointer> AttributeMatrixMap_t;
+
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QString, Name)
+    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(AttributeMatrixMap_t, AttributeMatrices)
+
+    template<typename T>
+    void CreateNonPrereqArray(AbstractFilter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* m_AttributeArray, T initValue, int Size, QVector<int> dims);
+
+    template<typename T>
+    void GetPrereqArray(AbstractFilter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* m_AttributeArray, int err, int Size, QVector<int> dims);
+
+    /**
+     * @brief Returns bool of whether a named array exists
+     * @param name The name of the data array
+     */
+    virtual bool doesAttributeMatrixExist(const QString &name);
+
+   /**
+   * @brief Adds/overwrites the data for a named array
+   * @param name The name that the array will be known by
+   * @param data The IDataArray::Pointer that will hold the data
+   */
+    virtual void addAttributeMatrix(const QString &name, AttributeMatrix::Pointer matrix);
+
+    /**
+     * @brief Returns the array for a given named array or the equivelant to a
+     * null pointer if the name does not exist.
+     * @param name The name of the data array
+     */
+    virtual AttributeMatrix::Pointer getAttributeMatrix(const QString &name);
+
+    /**
+    * @brief Removes the named data array from the Data Container and returns it to the calling
+    * method.
+    * @param name The name of the array
+    * @return
+    */
+    virtual AttributeMatrix::Pointer removeAttributeMatrix(const QString &name);
+
+    /**
+    * @brief Renames a cell data array from the Data Container
+    * @param name The name of the array
+    */
+    virtual bool renameAttributeMatrix(const QString &oldname, const QString &newname);
+
+  /**
+     * @brief Removes all the Cell Arrays
+     */
+    virtual void clearAttributeMatrices();
+
+    /**
+    * @brief Returns a list that contains the names of all the arrays currently stored in the
+    * Cell (Formerly Cell) group
+    * @return
+    */
+    virtual QList<QString> getAttributeMatrixNameList();
+
+    /**
+    * @brief Returns the total number of arrays that are stored in the Cell group
+    * @return
+    */
+    virtual int getNumAttributeMatrices();
+
 
   protected:
     DataContainer();

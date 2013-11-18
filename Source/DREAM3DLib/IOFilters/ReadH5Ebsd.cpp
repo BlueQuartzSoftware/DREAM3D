@@ -382,8 +382,6 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, size_
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
   m->addCellEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
-
-  ADD_HELP_INDEX_ENTRY(EnsembleData, MaterialName, XTalStructArrayType, 1);
 }
 
 // -----------------------------------------------------------------------------

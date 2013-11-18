@@ -58,7 +58,6 @@
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataArrays/StructArray.hpp"
 #include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
-#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
 #include "DREAM3DLib/DataContainers/FaceArray.hpp"
 
@@ -86,7 +85,6 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      SurfaceDataContainer();
 
    private:
-    QVector<AttributeMatrix> m_AttributeMatrices;
 
      SurfaceDataContainer(const SurfaceDataContainer&);
      void operator =(const SurfaceDataContainer&);

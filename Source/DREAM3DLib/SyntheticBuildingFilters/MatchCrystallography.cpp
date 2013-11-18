@@ -38,7 +38,6 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
