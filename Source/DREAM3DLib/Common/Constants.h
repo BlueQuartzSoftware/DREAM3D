@@ -288,6 +288,7 @@ namespace DREAM3D
   {
     const DREAM3D_STRING Alpha("Alpha");
     const DREAM3D_STRING Angle("Angle");
+    const DREAM3D_STRING AttributeMatrixName("AttributeMatrix");
     const DREAM3D_STRING Average("Average");
     const DREAM3D_STRING Axis("Axis");
     const DREAM3D_STRING AxisODFWeights("AxisODF-Weights");
