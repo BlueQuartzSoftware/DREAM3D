@@ -80,163 +80,11 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
 
     virtual ~EdgeDataContainer();
 
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Edge)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (EdgeFeature)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (EdgeEnsemble)
-
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeFeatureData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeEnsembleData)
-
     DREAM3D_INSTANCE_PROPERTY(EdgeArray::Pointer, Edges)
-
-    DOES_DATASET_EXIST_DECL(EdgeData)
-    DOES_DATASET_EXIST_DECL(EdgeFeatureData)
-    DOES_DATASET_EXIST_DECL(EdgeEnsembleData)
 
 /* ************ THESE ARE GOING TO GO AWAY I THINK. THEY ARE HERE TO GET THINGS TO COMPILE ******* */
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, MeshLinks)
 /* ************************************************************************************************* */
-
-
-    /**
-     * @brief Adds/overwrites the data for a named array
-     * @param name The name that the array will be known by
-     * @param data The IDataArray::Pointer that will hold the data
-     */
-    void addEdgeData(const QString &name, IDataArray::Pointer data);
-
-    /**
-     * @brief Returns the array for a given named array or the equivelant to a
-     * null pointer if the name does not exist.
-     * @param name The name of the data array
-     */
-    IDataArray::Pointer getEdgeData(const QString &name);
-
-    /**
-     * @brief Removes the named data array from the Data Container and returns it to the calling
-     * method.
-     * @param name The name of the array
-     * @return
-     */
-    IDataArray::Pointer removeEdgeData(const QString &name);
-
-    /**
-     * @brief Removes all the ensemble data
-     */
-    void clearEdgeData();
-
-    QList<QString> getEdgeArrayNameList();
-
-    int getNumEdgeArrays();
-
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeTuples)
-
-    /**
-     * @brief Adds/overwrites the data for a named array
-     * @param name The name that the array will be known by
-     * @param data The IDataArray::Pointer that will hold the data
-     */
-    void addEdgeFeatureData(const QString &name, IDataArray::Pointer data);
-
-    /**
-     * @brief Returns the array for a given named array or the equivelant to a
-     * null pointer if the name does not exist.
-     * @param name The name of the data array
-     */
-    IDataArray::Pointer getEdgeFeatureData(const QString &name);
-
-    /**
-     * @brief Removes the named data array from the Data Container and returns it to the calling
-     * method
-     * @param name The name of the array
-     * @return
-     */
-    IDataArray::Pointer removeEdgeFeatureData(const QString &name);
-
-    /**
-     * @brief Removes all the Feature Arrays
-     */
-    void clearEdgeFeatureData();
-
-    /**
-     * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Feature (Formerly Feature) group
-     * @return
-     */
-    QList<QString> getEdgeFeatureArrayNameList();
-
-    /**
-     * @brief Returns the total number of arrays that are stored in the Feature group
-     * @return
-     */
-    int getNumEdgeFeatureArrays();
-
-    /**
-     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
-     * in during a set of filtering operations then the a value of '32' would be returned.
-     * @return
-     */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeFeatureTuples)
-
-    /**
-     * @brief Resizes all of the Feature Arrays to have 'size' tuples
-     * @param size The number of tuples that each DataArray should contain.
-     */
-    void resizeEdgeFeatureDataArrays(size_t size);
-
-    /**
-     * @brief Adds/overwrites the data for a named array
-     * @param name The name that the array will be known by
-     * @param data The IDataArray::Pointer that will hold the data
-     */
-    void addEdgeEnsembleData(const QString &name, IDataArray::Pointer data);
-
-    /**
-     * @brief Returns the array for a given named array or the equivelant to a
-     * null pointer if the name does not exist.
-     * @param name The name of the data array
-     */
-    IDataArray::Pointer getEdgeEnsembleData(const QString &name);
-
-    /**
-     * @brief Removes the named data array from the Data Container and returns it to the calling
-     * method
-     * @param name The name of the array
-     * @return
-     */
-    IDataArray::Pointer removeEdgeEnsembleData(const QString &name);
-
-    /**
-     * @brief Removes all the Ensemble Arrays
-     */
-    void clearEdgeEnsembleData();
-
-    /**
-     * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Ensemble (Formerly Feature) group
-     * @return
-     */
-    QList<QString> getEdgeEnsembleArrayNameList();
-
-    /**
-     * @brief Returns the total number of arrays that are stored in the Ensemble group
-     * @return
-     */
-    int getNumEdgeEnsembleArrays();
-
-    /**
-     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
-     * in during a set of filtering operations then the a value of '32' would be returned.
-     * @return
-     */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeEnsembleTuples)
-
-    /**
-     * @brief Resizes all of the Ensemble Arrays to have 'size' tuples
-     * @param size The number of tuples that each DataArray should contain.
-     */
-    void resizeEdgeEnsembleDataArrays(size_t size);
 
 
 
@@ -244,10 +92,6 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      EdgeDataContainer();
 
    private:
-
-     QMap<QString, IDataArray::Pointer> m_EdgeData;
-     QMap<QString, IDataArray::Pointer> m_EdgeFeatureData;
-     QMap<QString, IDataArray::Pointer> m_EdgeEnsembleData;
 
      EdgeDataContainer(const EdgeDataContainer&);
      void operator =(const EdgeDataContainer&);

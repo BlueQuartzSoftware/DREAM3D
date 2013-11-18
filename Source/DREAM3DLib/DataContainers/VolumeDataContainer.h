@@ -78,167 +78,9 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
 
     virtual ~VolumeDataContainer();
 
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Cell)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(CellFeature)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(CellEnsemble)
-
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellFeatureData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(CellArray::Pointer, Cells)
 
-   /**
-   * @brief Adds/overwrites the data for a named array
-   * @param name The name that the array will be known by
-   * @param data The IDataArray::Pointer that will hold the data
-   */
-    virtual void addCellData(const QString &name, IDataArray::Pointer data);
-
-    /**
-     * @brief Returns the array for a given named array or the equivelant to a
-     * null pointer if the name does not exist.
-     * @param name The name of the data array
-     */
-    virtual IDataArray::Pointer getCellData(const QString &name);
-
-    /**
-    * @brief Removes the named data array from the Data Container and returns it to the calling
-    * method.
-    * @param name The name of the array
-    * @return
-    */
-    virtual IDataArray::Pointer removeCellData(const QString &name);
-
-    /**
-    * @brief Renames a cell data array from the Data Container
-    * @param name The name of the array
-    */
-    virtual bool renameCellData(const QString &oldname, const QString &newname);
-
-  /**
-     * @brief Removes all the Cell Arrays
-     */
-    virtual void clearCellData();
-
-    /**
-    * @brief Returns a list that contains the names of all the arrays currently stored in the
-    * Cell (Formerly Cell) group
-    * @return
-    */
-    virtual QList<QString> getCellArrayNameList();
-
-    /**
-    * @brief Returns the total number of arrays that are stored in the Cell group
-    * @return
-    */
-    virtual int getNumCellArrays();
-
-    /**
-    * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
-    * in during a set of filtering operations then the a value of '32' would be returned.
-    * @return
-    */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumCellTuples)
-
-    /**
-    * @brief Adds/overwrites the data for a named array
-    * @param name The name that the array will be known by
-    * @param data The IDataArray::Pointer that will hold the data
-    */
-    virtual void addCellFeatureData(const QString &name, IDataArray::Pointer data);
-
-    /**
-    * @brief Returns the array for a given named array or the equivelant to a
-    * null pointer if the name does not exist.
-    * @param name The name of the data array
-    */
-    virtual IDataArray::Pointer getCellFeatureData(const QString &name);
-
-    /**
-    * @brief Removes the named data array from the Data Container and returns it to the calling
-    * method
-    * @param name The name of the array
-    * @return
-    */
-    virtual IDataArray::Pointer removeCellFeatureData(const QString &name);
-
-    /**
-    * @brief Renames a feature data array from the Data Container
-    * @param name The name of the array
-    */
-    virtual bool renameCellFeatureData(const QString &oldname, const QString &newname);
-
-  /**
-     * @brief Removes all the Feature Arrays
-     */
-    virtual void clearCellFeatureData();
-
-    /**
-    * @brief Returns a list that contains the names of all the arrays currently stored in the
-    * Feature (Formerly Feature) group
-    * @return
-    */
-    virtual QList<QString> getCellFeatureArrayNameList();
-
-    /**
-    * @brief Returns the total number of arrays that are stored in the Feature group
-    * @return
-    */
-    virtual int getNumCellFeatureArrays();
-
-    /**
-    * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
-    * in during a set of filtering operations then the a value of '32' would be returned.
-    * @return
-    */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumCellFeatureTuples)
-
-    /**
-    * @brief Resizes all of the Feature Arrays to have 'size' tuples
-    * @param size The number of tuples that each DataArray should contain.
-    */
-    virtual void resizeCellFeatureDataArrays(size_t size);
-
-    /**
-    * @brief Adds/overwrites the data for a named array
-    * @param name The name that the array will be known by
-    * @param data The IDataArray::Pointer that will hold the data
-    */
-    virtual void addCellEnsembleData(const QString &name, IDataArray::Pointer data);
-
-    /**
-     * @brief Returns the array for a given named array or the equivelant to a
-     * null pointer if the name does not exist.
-     * @param name The name of the data array
-     */
-    virtual IDataArray::Pointer getCellEnsembleData(const QString &name);
-
-    /**
-    * @brief Removes the named data array from the Data Container and returns it to the calling
-    * method.
-    * @param name The name of the array
-    * @return
-    */
-    virtual IDataArray::Pointer removeCellEnsembleData(const QString &name);
-
-    /**
-     * @brief Removes all the ensemble data
-     */
-    virtual void clearCellEnsembleData();
-
-    virtual QList<QString> getCellEnsembleArrayNameList();
-
-     /**
-     * @brief Returns if a data set with the name exists in the data container for the Cell Data
-     */
-
-    virtual int getNumCellEnsembleArrays();
-
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumCellEnsembleTuples)
-
-
-    /* ****************** END Map Based Methods *******************************/
 
     DREAM3D_INSTANCE_VEC3_PROPERTY(size_t, Dimensions)
 
@@ -262,18 +104,10 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     // -----------------------------------------------------------------------------
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin)
 
-    DOES_DATASET_EXIST_DECL(CellData)
-    DOES_DATASET_EXIST_DECL(CellFeatureData)
-    DOES_DATASET_EXIST_DECL(CellEnsembleData)
-
   protected:
     VolumeDataContainer();
 
   private:
-
-    QMap<QString, IDataArray::Pointer> m_CellData;
-    QMap<QString, IDataArray::Pointer> m_CellFeatureData;
-    QMap<QString, IDataArray::Pointer> m_CellEnsembleData;
 
     VolumeDataContainer(const VolumeDataContainer&);
     void operator =(const VolumeDataContainer&);

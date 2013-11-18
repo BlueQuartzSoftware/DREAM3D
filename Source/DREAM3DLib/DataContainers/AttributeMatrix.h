@@ -76,7 +76,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     virtual ~AttributeMatrix();
 
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Cell)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA()
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getAttributeArray)
 
