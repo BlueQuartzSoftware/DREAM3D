@@ -92,6 +92,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      EdgeDataContainer();
 
    private:
+    QVector<AttributeMatrix> m_AttributeMatrices;
 
      EdgeDataContainer(const EdgeDataContainer&);
      void operator =(const EdgeDataContainer&);

@@ -80,6 +80,8 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getAttributeArray)
 
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, AMType)
+
    /**
    * @brief Adds/overwrites the data for a named array
    * @param name The name that the array will be known by

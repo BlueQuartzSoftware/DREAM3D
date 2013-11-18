@@ -60,6 +60,7 @@
 
 #include "DREAM3DLib/DataArrays/StructArray.hpp"
 #include "DREAM3DLib/DataContainers/VertexArray.h"
+#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 
 /**
  * @class VertexDataContainer VertexDataContainer.h DREAM3DLib/DataContainers/VertexDataContainer.h
@@ -79,12 +80,13 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
 
     DREAM3D_INSTANCE_PROPERTY(VertexArray::Pointer, Vertices)
 
-
+    
 
   protected:
      VertexDataContainer();
 
    private:
+    QVector<AttributeMatrix> m_AttributeMatrices;
 
      VertexDataContainer(const VertexDataContainer&);
      void operator =(const VertexDataContainer&);

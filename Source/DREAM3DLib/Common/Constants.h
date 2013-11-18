@@ -474,6 +474,22 @@ namespace DREAM3D
     const unsigned int UnknownDataContainer = 999; //!<
   }
 
+  namespace AttributeMatrixType
+  {
+    const unsigned int Vertex = 0; //!<
+    const unsigned int Edge = 1; //!<
+    const unsigned int Face = 2; //!<
+    const unsigned int Cell = 3; //!<
+    const unsigned int VertexFeature = 4; //!<
+    const unsigned int EdgeFeature = 5; //!<
+    const unsigned int FaceFeature = 6; //!<
+    const unsigned int CellFeature = 7; //!<
+    const unsigned int VertexEnsemble = 8; //!<
+    const unsigned int EdgeEnsemble = 9; //!<
+    const unsigned int FaceEnsemble = 10; //!<
+    const unsigned int CellEnsemble = 11; //!<
+  }
+
   namespace ShapeType
   {
     const unsigned int EllipsoidShape = 0; //!<

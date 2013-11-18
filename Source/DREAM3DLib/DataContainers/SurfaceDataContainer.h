@@ -86,6 +86,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      SurfaceDataContainer();
 
    private:
+    QVector<AttributeMatrix> m_AttributeMatrices;
 
      SurfaceDataContainer(const SurfaceDataContainer&);
      void operator =(const SurfaceDataContainer&);

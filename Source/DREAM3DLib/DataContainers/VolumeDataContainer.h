@@ -108,6 +108,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     VolumeDataContainer();
 
   private:
+    QVector<AttributeMatrix> m_AttributeMatrices;
 
     VolumeDataContainer(const VolumeDataContainer&);
     void operator =(const VolumeDataContainer&);
