@@ -54,8 +54,9 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+
 
 /**
  * @class AttributeMatrix AttributeMatrix DREAM3DLib/DataContainers/AttributeMatrix.h
@@ -82,11 +83,11 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       PtrType* valuePtr = NULL;
       IDataArray::Pointer iDataArray = getAttributeArray(arrayName);
       if (iDataArray.get() == NULL)
-      { 
+      {
         iDataArray = DataArrayType::CreateArray(size, dims, arrayName);
         iDataArray->initializeWithZeros();
         if (NULL == iDataArray.get())
-        { 
+        {
           QString s = QObject::tr(": Array '%1' could not allocate %2 elements.").arg(arrayName).arg(size);
           if (NULL != obv) {obv->setErrorCondition(-25);
           obv->addErrorMessage(getNameOfClass(), s, -25);
@@ -94,7 +95,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
           return valuePtr;
         }
         addAttributeArray(arrayName, iDataArray);
-      } 
+      }
       valuePtr = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());
       if (NULL == valuePtr)
       {
@@ -109,7 +110,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
 
     //Get Array Size Check Func Here
-    template<typename PtrType, typename DataArrayType, typename AbstractFilter> 
+    template<typename PtrType, typename DataArrayType, typename AbstractFilter>
     PtrType* ArraySizeCheck(const QString &arrayName, size_t size, int numComp, AbstractFilter* obv)
     {
       PtrType* gi = NULL;
@@ -118,19 +119,19 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       {
         return gi;
       }
-      if (size*numComp != iDataArray->GetSize()) 
+      if (size*numComp != iDataArray->GetSize())
       {
         QString s = QObject::tr(" - Array '%1' from the DataContainer class did not have the required number of elements. Required: %2 Contains: %3").arg(arrayName).arg((size*numComp)).arg(iDataArray->GetSize());
-        if (NULL != obv) 
+        if (NULL != obv)
         {
           obv->setErrorCondition(-501);
           obv->addErrorMessage(obv->getHumanLabel(), s, -501);
         }
         return gi;
       }
-      if (numComp != iDataArray->GetNumberOfComponents()) 
+      if (numComp != iDataArray->GetNumberOfComponents())
       {
-        if (NULL != obv) 
+        if (NULL != obv)
         {
           QString ss = QObject::tr("Filter '%1'' requires an array where the number of components is %2 but the array"
             " that was supplied has %3.").arg(obv->getHumanLabel()).arg(numComp).arg(iDataArray->GetNumberOfComponents());
@@ -139,13 +140,13 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         return gi;
       }
       gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());
-      if (NULL == gi) 
+      if (NULL == gi)
       {
         typename DataArrayType::Pointer dat = DataArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
         QString s = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"
           "An Array with name '%4' is stored in the %5 but is of type %6\n")
           .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
-        if (NULL != obv) 
+        if (NULL != obv)
         {
           obv->setErrorCondition(-502);
           obv->addErrorMessage(obv->getHumanLabel(), s, -502);

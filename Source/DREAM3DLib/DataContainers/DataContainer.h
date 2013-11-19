@@ -51,6 +51,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataContainers/AttributeMatrix.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 /**
  * @brief The DataContainer class
@@ -69,57 +70,59 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QString, Name)
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(AttributeMatrixMap_t, AttributeMatrices)
 
-    template<typename T>
-    static void getPrereqArray(AbstractFilter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* m_AttributeArray, int err, int Size, QVector<int> dims)
+    void foo(AbstractFilter* test) {}
+
+    template<typename T, class Filter>
+    static void getPrereqArray(Filter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* &m_AttributeArray, int err, int Size, QVector<int> dims)
     {
-      QString ss; 
+      QString ss;
       if (AttributeArrayName.isEmpty() == true)
-      { 
+      {
         filter->setErrorCondition(err*1000);
         ss = QObject::tr("The name of the Attribute Array - '%1' was empty. Please provide a name for this array").arg(AttributeArrayName);
-        filter->addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
-      AttributeMatrix::Pointer matrix = getAttributeMatrix(AttributeMatrixName);
-      if (matrix->doesAttributeArrayExist(AttributeArrayName) == false) 
+      AttributeMatrix::Pointer matrix = filter->getAttributeMatrix(AttributeMatrixName);
+      if (matrix->doesAttributeArrayExist(AttributeArrayName) == false)
       {
         filter->setErrorCondition(err*1000+1);
         ss = QObject::tr("An array with name '%1' does not exist and is required for this filter to execute.").arg(AttributeArrayName);
-        filter->addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
-      else 
-      { 
-        /* QString _s(#Name); 
+      else
+      {
+        /* QString _s(#Name);
         addRequired##DType(_s);*/
         int NumComp = dims[0];
         for(int i=1;i<dims.size();i++)
         {
           NumComp *= dims[i];
         }
-        m_AttributeArray = matrix->ArraySizeCheck<T, ArrayType, AbstractFilter>(AttributeArrayName, Size, NumComp, filter);
-        if (NULL == m_AttributeArray ) 
+        m_AttributeArray = matrix->ArraySizeCheck<T, Filter>(AttributeArrayName, Size, NumComp, filter);
+        if (NULL == m_AttributeArray )
         {
           ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array for this filter."
             "The preflight failed for one or more reasons. Check additional error messages for more details.").arg(AttributeArrayName);
           filter->setErrorCondition(err*1000+2);
-          filter->addErrorMessage(getHumanLabel(), ss, getErrorCondition()); 
+          filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
       }
     }
 
-    template<typename T>
-    void CreateNonPrereqArray(AbstractFilter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* m_AttributeArray, T initValue, int Size, QVector<int> dims)
+    template<typename T, class Filter>
+    void CreateNonPrereqArray(Filter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* m_AttributeArray, T initValue, int Size, QVector<int> dims)
     {
       if (AttributeMatrixName.isEmpty() == true)
       {
         filter->setErrorCondition(-10000);
         QString ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
-        filter->addErrorMessage(getHumanLabel(), ss, -10000);
+        filter->addErrorMessage(filter->getHumanLabel(), ss, -10000);
       }
       if (AttributeArrayName.isEmpty() == true)
       {
         filter->setErrorCondition(-10000);
         QString ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
-        filter->addErrorMessage(getHumanLabel(), ss, -10000);
+        filter->addErrorMessage(filter->getHumanLabel(), ss, -10000);
       }
       /* QString _s(#Name);*/
       int NumComp = dims[0];
@@ -128,33 +131,33 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
         NumComp *= dims[i];
       }
       AttributeMatrix::Pointer matrix = getAttributeMatrix(AttributeMatrixName);
-      m_AttributeArray = matrix->ArraySizeCheck<T, ArrayType, AbstractFilter>(AttributeArrayName, Size, NumComp, NULL);
-      if (NULL ==  m_AttributeArray) 
+      m_AttributeArray = matrix->ArraySizeCheck<T, Filter>(AttributeArrayName, Size, NumComp, NULL);
+      if (NULL ==  m_AttributeArray)
       {
-        ArrayType::Pointer p = ArrayType::CreateArray(Size, dims, AttributeArrayName);
-        if (NULL == p.get()) 
+        typename DataArray<T>::Pointer p = typename DataArray<T>::CreateArray(Size, dims, AttributeArrayName);
+        if (NULL == p.get())
         {
           QString ss;
-          if (AttributeArrayName.isEmpty() == true) 
+          if (AttributeArrayName.isEmpty() == true)
           {
             ss = QObject::tr("Filter %1 attempted to create array with an empty name and that is not allowed.").arg(getNameOfClass());
             filter->setErrorCondition(-501);
-          } 
-          else 
+          }
+          else
           {
             ss = QObject::tr("Filter %1 attempted to create array' %2' but was unsuccessful. This is most likely due to not enough contiguous memory.").arg(getNameOfClass()).arg(AttributeArrayName);
             filter->setErrorCondition(-500);
           }
-          filter->addErrorMessage(getHumanLabel(), ss, -50001);
-        } 
+          filter->addErrorMessage(filter->getHumanLabel(), ss, -50001);
+        }
         else if (p->getPointer(0) == NULL)
         {
           filter->setErrorCondition(-11000);
           QString ss = QObject::tr("'%1' was sized to Zero which may cause the program to crash in filters that use this array, including the current filter."
             " Please add a filter before this filter that will result in a properly sized array.").arg(AttributeArrayName);
-          filter->addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
-        else 
+        else
         {
           p->initializeWithValues(initValue);
           p->SetName(AttributeArrayName);

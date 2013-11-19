@@ -56,7 +56,6 @@
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-
 #include "DREAM3DLib/DataArrays/StructArray.hpp"
 #include "DREAM3DLib/DataContainers/VertexArray.h"
 
@@ -78,7 +77,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
 
     DREAM3D_INSTANCE_PROPERTY(VertexArray::Pointer, Vertices)
 
-    
+
 
   protected:
      VertexDataContainer();
