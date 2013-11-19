@@ -9,7 +9,8 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 project(DREAM3DProj)
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 2.8.12.1)
+cmake_policy(VERSION 2.8.12.1)
 
 include (CMakeParseArguments)
 
