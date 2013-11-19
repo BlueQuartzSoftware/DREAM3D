@@ -69,8 +69,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QString, Name)
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(AttributeMatrixMap_t, AttributeMatrices)
 
-    template<typename AbstractFilter, typename T>
-    void GetPrereqArray(AbstractFilter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* m_AttributeArray, int err, int Size, QVector<int> dims)
+    template<typename T>
+    static void getPrereqArray(AbstractFilter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* m_AttributeArray, int err, int Size, QVector<int> dims)
     {
       QString ss; 
       if (AttributeArrayName.isEmpty() == true)
@@ -106,7 +106,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       }
     }
 
-    template<typename AbstractFilter, typename T>
+    template<typename T>
     void CreateNonPrereqArray(AbstractFilter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* m_AttributeArray, T initValue, int Size, QVector<int> dims)
     {
       if (AttributeMatrixName.isEmpty() == true)

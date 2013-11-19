@@ -147,7 +147,8 @@ void AddBadData::dataCheck(bool preflight, size_t voxels, size_t features, size_
 
   // Cell Data
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -300, float, FloatArrayType, voxels, dims)
+  QString AMName = "CellData";
+  m->GetPrereqArray<AbstractFilter, float>(this, AMName,  m_GBEuclideanDistancesArrayName, m_GBEuclideanDistances, -301, voxels, dims);
 }
 
 // -----------------------------------------------------------------------------
@@ -183,9 +184,12 @@ void AddBadData::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getNumCellFeatureTuples();
+  QString FeatureAMName = "CellFeatureData";
+  size_t totalFeatures = m->getAttributeMatrix(FeatureAMName)->getNumTuples();
+  QString EnsembleAMName = "CellEnsembleData";
+  size_t totalEnsembles = m->getAttributeMatrix(EnsembleAMName)->getNumTuples();
 
-  dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -207,7 +211,8 @@ void  AddBadData::add_noise()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  QString AMName = "CellData";
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(AMName)->getAttributeArrayNameList();
 
   float random = 0.0;
   int64_t totalPoints = m->getTotalPoints();
@@ -221,7 +226,7 @@ void  AddBadData::add_noise()
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getCellData(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(AMName)->getAttributeArray(*iter);
           p->InitializeTuple(i, 0);
         }
       }
@@ -234,7 +239,7 @@ void  AddBadData::add_noise()
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getCellData(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(AMName)->getAttributeArray(*iter);
           p->InitializeTuple(i, 0);
         }
       }
