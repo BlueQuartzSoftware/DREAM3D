@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(AttributeMatrixMap_t, AttributeMatrices)
 
     template<typename T>
-    static void getPrereqArray(AbstractFilter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* m_AttributeArray, int err, int Size, QVector<int> dims)
+    void GetPrereqArray(AbstractFilter* filter, QString AttributeMatrixName, QString AttributeArrayName, T* m_AttributeArray, int err, int Size, QVector<int> dims)
     {
       QString ss; 
       if (AttributeArrayName.isEmpty() == true)
