@@ -194,7 +194,7 @@ void PrecipitatePhaseWidget::setupGui()
    w->setXAxisName(QString("Omega 3"));
    w->setYAxisName(QString("Frequency"));
    w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVOmega3);
+   w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVOmega3);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -211,7 +211,7 @@ void PrecipitatePhaseWidget::setupGui()
    w->setXAxisName(QString("B/A"));
    w->setYAxisName(QString("Frequency"));
    w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVBoverA);
+   w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVBoverA);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -227,7 +227,7 @@ void PrecipitatePhaseWidget::setupGui()
    w->setXAxisName(QString("C/A"));
    w->setYAxisName(QString("Frequency"));
    w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVCoverA);
+   w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVCoverA);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -243,7 +243,7 @@ void PrecipitatePhaseWidget::setupGui()
    w->setXAxisName(QString("Distance between Centroids"));
    w->setYAxisName(QString("Frequency"));
    w->setDistributionType(DREAM3D::DistributionType::LogNormal);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVClustering);
+   w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVClustering);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -556,7 +556,7 @@ int PrecipitatePhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   yCo.clear();
   int numsizebins = 1;
   binsizes.clear();
-  // QwtArray<int> numgrains;
+  // QwtArray<int> numfeatures;
   err = StatsGen::GenCutOff<float, QwtArray<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
   return 0;
@@ -604,7 +604,7 @@ void PrecipitatePhaseWidget::updateSizeDistributionPlot()
     m_CutOffMin = new QwtPlotMarker();
     m_CutOffMin->attach(m_SizeDistributionPlot);
   }
-  m_CutOffMin->setLabel(QString::fromLatin1("Cut Off Min Grain Diameter"));
+  m_CutOffMin->setLabel(QString::fromLatin1("Cut Off Min Feature Diameter"));
   m_CutOffMin->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
   m_CutOffMin->setLabelOrientation(Qt::Vertical);
   m_CutOffMin->setLineStyle(QwtPlotMarker::VLine);
@@ -616,7 +616,7 @@ void PrecipitatePhaseWidget::updateSizeDistributionPlot()
     m_CutOffMax = new QwtPlotMarker();
     m_CutOffMax->attach(m_SizeDistributionPlot);
   }
-  m_CutOffMax->setLabel(QString::fromLatin1("Cut Off Max Grain Diameter"));
+  m_CutOffMax->setLabel(QString::fromLatin1("Cut Off Max Feature Diameter"));
   m_CutOffMax->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
   m_CutOffMax->setLabelOrientation(Qt::Vertical);
   m_CutOffMax->setLineStyle(QwtPlotMarker::VLine);
@@ -672,7 +672,7 @@ void PrecipitatePhaseWidget::plotSizeDistribution()
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
   if (err < 0) { return; }
 
-  // Now that we have bins and grain sizes, push those to the other plot widgets
+  // Now that we have bins and feature sizes, push those to the other plot widgets
   // Setup Each Plot Widget
   // The MicroPreset class will set the distribution for each of the plots
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
@@ -773,11 +773,11 @@ int PrecipitatePhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
 
   precipitateStatsData->setPhaseFraction(calcPhaseFraction);
   precipitateStatsData->setPrecipBoundaryFraction(m_PptFraction);
-  // Grain Diameter Info
+  // Feature Diameter Info
   precipitateStatsData->setBinStepSize(stepSize);
-  precipitateStatsData->setMaxGrainDiameter(maxdiameter);
-  precipitateStatsData->setMinGrainDiameter(mindiameter);
-  // Grain Size Distribution
+  precipitateStatsData->setMaxFeatureDiameter(maxdiameter);
+  precipitateStatsData->setMinFeatureDiameter(mindiameter);
+  // Feature Size Distribution
   {
     VectorOfFloatArray data;
     FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Average);
@@ -786,37 +786,37 @@ int PrecipitatePhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
     data.push_back(d2);
     d1->SetValue(0, avglogdiam);
     d2->SetValue(0, sdlogdiam);
-    precipitateStatsData->setGrainSizeDistribution(data);
-    precipitateStatsData->setGrainSize_DistType(DREAM3D::DistributionType::LogNormal);
+    precipitateStatsData->setFeatureSizeDistribution(data);
+    precipitateStatsData->setFeatureSize_DistType(DREAM3D::DistributionType::LogNormal);
   }
 
-  // Now that we have bins and grain sizes, push those to the other plot widgets
+  // Now that we have bins and feature sizes, push those to the other plot widgets
 
-  //err = m_Omega3Plot->writeDataToHDF5(m, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
+  //err = m_Omega3Plot->writeDataToHDF5(m, DREAM3D::HDF5::Feature_SizeVOmega3_Distributions);
   {
     VectorOfFloatArray data = m_Omega3Plot->getStatisticsData();
-    precipitateStatsData->setGrainSize_Omegas(data);
+    precipitateStatsData->setFeatureSize_Omegas(data);
     precipitateStatsData->setOmegas_DistType(m_Omega3Plot->getDistributionType());
   }
 
-  //err = m_BOverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
+  //err = m_BOverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Feature_SizeVBoverA_Distributions);
   {
     VectorOfFloatArray data = m_BOverAPlot->getStatisticsData();
-    precipitateStatsData->setGrainSize_BOverA(data);
+    precipitateStatsData->setFeatureSize_BOverA(data);
     precipitateStatsData->setBOverA_DistType(m_BOverAPlot->getDistributionType());
   }
 
-  //err = m_COverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
+  //err = m_COverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Feature_SizeVCoverA_Distributions);
   {
     VectorOfFloatArray data = m_COverAPlot->getStatisticsData();
-    precipitateStatsData->setGrainSize_COverA(data);
+    precipitateStatsData->setFeatureSize_COverA(data);
     precipitateStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
   }
 
- // err = m_ClusteringPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVClustering_Distributions);
+ // err = m_ClusteringPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Feature_SizeVClustering_Distributions);
   {
     VectorOfFloatArray data = m_ClusteringPlot->getStatisticsData();
-    precipitateStatsData->setGrainSize_Clustering(data);
+    precipitateStatsData->setFeatureSize_Clustering(data);
     precipitateStatsData->setClustering_DistType(m_ClusteringPlot->getDistributionType());
   }
 
@@ -840,7 +840,7 @@ void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, in
   float sigma = 1.0f;
   float minCutOff = 5.0f;
   float maxCutOff = 5.0f;
-  float binStepSize, maxGrainSize, minGrainSize;
+  float binStepSize, maxFeatureSize, minFeatureSize;
 
   setPhaseIndex(index);
 
@@ -879,17 +879,17 @@ void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, in
   FloatArrayType::Pointer bins = precipitateStatsData->getBinNumbers();
 
 
-  /* Set the Grain_Diameter_Info Data */
+  /* Set the Feature_Diameter_Info Data */
 
   binStepSize = precipitateStatsData->getBinStepSize();
   m_BinStepSize->blockSignals(true);
   m_BinStepSize->setValue(binStepSize);
   m_BinStepSize->blockSignals(false);
-  maxGrainSize = precipitateStatsData->getMaxGrainDiameter();
-  minGrainSize = precipitateStatsData->getMinGrainDiameter();
+  maxFeatureSize = precipitateStatsData->getMaxFeatureDiameter();
+  minFeatureSize = precipitateStatsData->getMinFeatureDiameter();
 
-  /* Set the Grain_Size_Distribution Data */
-  VectorOfFloatArray distData = precipitateStatsData->getGrainSizeDistribution();
+  /* Set the Feature_Size_Distribution Data */
+  VectorOfFloatArray distData = precipitateStatsData->getFeatureSizeDistribution();
   mu = distData[0]->GetValue(0);
   sigma = distData[1]->GetValue(0);
   m_Mu_SizeDistribution->blockSignals(true);
@@ -901,8 +901,8 @@ void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, in
   m_Mu_SizeDistribution->blockSignals(false);
   m_Sigma_SizeDistribution->blockSignals(false);
 
-  minCutOff = (mu - log(minGrainSize))/sigma;
-  maxCutOff = (log(maxGrainSize) - mu)/sigma;
+  minCutOff = (mu - log(minFeatureSize))/sigma;
+  maxCutOff = (log(maxFeatureSize) - mu)/sigma;
 
   m_MinSigmaCutOff->blockSignals(true);
   m_MinSigmaCutOff->setText(QString::number(minCutOff));
@@ -924,19 +924,19 @@ void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, in
   }
 
   m_Omega3Plot->setDistributionType(precipitateStatsData->getOmegas_DistType(), false);
-  m_Omega3Plot->extractStatsData(m, index, qbins, precipitateStatsData->getGrainSize_Omegas());
+  m_Omega3Plot->extractStatsData(m, index, qbins, precipitateStatsData->getFeatureSize_Omegas());
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_BOverAPlot->setDistributionType(precipitateStatsData->getBOverA_DistType(), false);
-  m_BOverAPlot->extractStatsData(m, index, qbins, precipitateStatsData->getGrainSize_BOverA());
+  m_BOverAPlot->extractStatsData(m, index, qbins, precipitateStatsData->getFeatureSize_BOverA());
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_COverAPlot->setDistributionType(precipitateStatsData->getCOverA_DistType(), false);
-  m_COverAPlot->extractStatsData(m, index, qbins, precipitateStatsData->getGrainSize_COverA());
+  m_COverAPlot->extractStatsData(m, index, qbins, precipitateStatsData->getFeatureSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_ClusteringPlot->setDistributionType(precipitateStatsData->getClustering_DistType(), false);
-  m_ClusteringPlot->extractStatsData(m, index, qbins, precipitateStatsData->getGrainSize_Clustering());
+  m_ClusteringPlot->extractStatsData(m, index, qbins, precipitateStatsData->getFeatureSize_Clustering());
   m_ClusteringPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
 

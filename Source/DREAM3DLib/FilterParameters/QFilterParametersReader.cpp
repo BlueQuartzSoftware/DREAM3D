@@ -39,6 +39,10 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QStringList>
 
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -68,6 +72,53 @@ QFilterParametersReader::~QFilterParametersReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString filePath, QSettings::Format format)
+{
+  FilterManager::Pointer filtManager = FilterManager::Instance();
+  QFilterParametersReader::Pointer paramsReader = QFilterParametersReader::New();
+  paramsReader->openFile(filePath, format);
+  QSettings* prefs = paramsReader->getPrefs();
+  prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+  bool ok = false;
+  int filterCount = prefs->value(DREAM3D::Settings::NumFilters).toInt(&ok);
+  prefs->endGroup();
+
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+
+  if (false == ok) {filterCount = 0;}
+
+  for (int i = 0; i < filterCount; ++i)
+  {
+    QString gName = QString::number(i);
+
+    // Open the group to get the name of the filter then close again.
+    prefs->beginGroup(gName);
+    QString filterName = prefs->value(DREAM3D::Settings::FilterName, "").toString();
+    prefs->endGroup();
+    //qDebug() << "Group: " << gName << " FilterName: " << filterName;
+    if(filterName.isEmpty() == false)
+    {
+      IFilterFactory::Pointer factory = filtManager->getFactoryForFilter(filterName);
+      if(factory.get() != NULL)
+      {
+        AbstractFilter::Pointer filter = factory->create();
+
+        if(NULL != filter.get())
+        {
+          filter->readFilterParameters(paramsReader.get(), i);
+          pipeline->pushBack(filter);
+        }
+      }
+    }
+  }
+  return pipeline;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QSettings* QFilterParametersReader::getPrefs()
 {
   return m_Prefs;
@@ -76,13 +127,13 @@ QSettings* QFilterParametersReader::getPrefs()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterParametersReader::openFile(QString filename)
+void QFilterParametersReader::openFile(QString filename, QSettings::Format format)
 {
   if(NULL != m_Prefs)
   {
     closeFile();
   }
-  m_Prefs = new QSettings(filename, QSettings::IniFormat);
+  m_Prefs = new QSettings(filename, format);
 }
 
 // -----------------------------------------------------------------------------

@@ -126,7 +126,7 @@ int GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -176,12 +176,12 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   dims[0] = 2;
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
-//  addCreatedFieldData( faceLabelPtr->GetName());
+//  addCreatedFeatureData( faceLabelPtr->GetName());
   sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
 
   dims[0] = 3;
   DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceNormals);
-//  addCreatedFieldData( triNormalsPtr->GetName());
+//  addCreatedFeatureData( triNormalsPtr->GetName());
   sm->addFaceData(triNormalsPtr->GetName(), triNormalsPtr);
 
 }

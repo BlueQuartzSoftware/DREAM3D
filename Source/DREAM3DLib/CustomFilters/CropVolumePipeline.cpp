@@ -58,7 +58,7 @@
 #include "DREAM3DLib/Common/QualityMetricFilter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
-#include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
+#include "DREAM3DLib/IOFilters/FeatureDataCSVWriter.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSectionsMisorientation.h"
@@ -140,7 +140,7 @@ int CropVolumePipeline::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolumePipeline::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void CropVolumePipeline::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
 
   setErrorCondition(0);
@@ -198,7 +198,7 @@ QString getZ_spacingfile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString getFieldDataFile()
+QString getFeatureDataFile()
 {
   QString s =  "D:/IN100_run1/DREAM3D_files/test.csv";
   return s;
@@ -292,26 +292,26 @@ QVector<QualityMetricFilter::Pointer> getQualityMetricFilters()
   QVector<QualityMetricFilter::Pointer> filters;
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
-    filter->setFieldName(Ebsd::Ctf::Error);
-    filter->setFieldValue(0);
-    filter->setFieldOperator("=");
-    filter->setFieldPhaseNumber(1);
+    filter->setFeatureName(Ebsd::Ctf::Error);
+    filter->setFeatureValue(0);
+    filter->setFeatureOperator("=");
+    filter->setFeaturePhaseNumber(1);
     filters.push_back(filter);
   }
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
-    filter->setFieldName(Ebsd::Ctf::Error);
-    filter->setFieldValue(0);
-    filter->setFieldOperator("=");
-    filter->setFieldPhaseNumber(2);
+    filter->setFeatureName(Ebsd::Ctf::Error);
+    filter->setFeatureValue(0);
+    filter->setFeatureOperator("=");
+    filter->setFeaturePhaseNumber(2);
     filters.push_back(filter);
   }
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
-    filter->setFieldName(Ebsd::Ctf::Error);
-    filter->setFieldValue(0);
-    filter->setFieldOperator("=");
-    filter->setFieldPhaseNumber(3);
+    filter->setFeatureName(Ebsd::Ctf::Error);
+    filter->setFeatureValue(0);
+    filter->setFeatureOperator("=");
+    filter->setFeaturePhaseNumber(3);
     filters.push_back(filter);
   }
 
@@ -451,12 +451,12 @@ void CropVolumePipeline::execute()
 
 
 
-    FieldDataCSVWriter::Pointer field_data_write_csv = FieldDataCSVWriter::New();
-    QString field_csv =  "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".csv";
-    field_data_write_csv->setFieldDataFile(field_csv);
-    field_data_write_csv->setVoxelDataContainer(m);
-    field_data_write_csv->execute();
-    pipeline->pushBack(field_data_write_csv);
+    FeatureDataCSVWriter::Pointer feature_data_write_csv = FeatureDataCSVWriter::New();
+    QString feature_csv =  "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".csv";
+    feature_data_write_csv->setFeatureDataFile(feature_csv);
+    feature_data_write_csv->setVoxelDataContainer(m);
+    feature_data_write_csv->execute();
+    pipeline->pushBack(feature_data_write_csv);
 
 
 
@@ -504,7 +504,7 @@ void CropVolumePipeline::execute()
     //delete [] m;
     m->clearCellData();
     m->clearEnsembleData();
-    m->clearFieldData();
+    m->clearFeatureData();
 
 
 

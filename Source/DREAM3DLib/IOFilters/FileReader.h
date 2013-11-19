@@ -128,7 +128,7 @@ class DREAM3DLib_EXPORT FileReader : public AbstractFilter
 
     virtual int readFile();
 
-    virtual void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    virtual void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
     FileReader(const FileReader&); // Copy Constructor Not Implemented

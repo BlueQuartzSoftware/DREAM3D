@@ -78,7 +78,7 @@ void writePipeline(FilterPipeline::Pointer pipeline)
 {
 
   QFilterParametersWriter::Pointer writer = QFilterParametersWriter::New();
-  writer->openFile(UnitTest::QFilterParameterIOTest::TestFile);
+  writer->openFile(UnitTest::QFilterParameterIOTest::TestFile, QSettings::IniFormat);
   writer->setNumberOfFilters(pipeline->getFilterContainer().size());
   QVariant filterCount = pipeline->getFilterContainer().size();
   int count = pipeline->getFilterContainer().size();
@@ -109,17 +109,17 @@ void TestWriteQSettingsBasedFile()
   dcr->setReadAllFaceArrays(false);
   dcr->setReadVolumeData(true);
   dcr->setReadAllCellArrays(true);
-  dcr->setReadAllCellFieldArrays(true);
+  dcr->setReadAllCellFeatureArrays(true);
   dcr->setReadAllCellEnsembleArrays(true);
 
   QSet<QString> cellArrays;
-  cellArrays << DREAM3D::CellData::GrainIds;
-  QSet<QString> fieldArrays;
-  fieldArrays << DREAM3D::FieldData::Centroids;
+  cellArrays << DREAM3D::CellData::FeatureIds;
+  QSet<QString> featureArrays;
+  featureArrays << DREAM3D::FeatureData::Centroids;
   QSet<QString> ensembleArrays;
   ensembleArrays << DREAM3D::EnsembleData::CrystalStructures;
   QSet<QString> blank;
-  dcr->setVolumeSelectedArrayNames(blank,blank,blank,cellArrays,fieldArrays,ensembleArrays);
+  dcr->setVolumeSelectedArrayNames(blank,blank,blank,cellArrays,featureArrays,ensembleArrays);
 
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
   pipeline->pushBack(dcr);
@@ -295,7 +295,7 @@ void TestReadQSettingsBasedFile()
 
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
   QFilterParametersReader::Pointer paramsReader = QFilterParametersReader::New();
-  paramsReader->openFile(UnitTest::QFilterParameterIOTest::Prebuilt17);
+  paramsReader->openFile(UnitTest::QFilterParameterIOTest::Prebuilt17, QSettings::IniFormat);
   readPipeline(paramsReader, pipeline);
 
   AbstractFilter::Pointer filter = pipeline->getFilterContainer().at(0);

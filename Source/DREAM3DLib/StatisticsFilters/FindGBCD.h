@@ -69,8 +69,8 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceAreasArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDdimensionsArrayName)
@@ -134,18 +134,18 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
     double* m_SurfaceMeshFaceAreas;
     int32_t* m_SurfaceMeshFaceLabels;
     double* m_SurfaceMeshFaceNormals;
-    float* m_FieldEulerAngles;
-    int32_t* m_FieldPhases;
+    float* m_FeatureEulerAngles;
+    int32_t* m_FeaturePhases;
     unsigned int* m_CrystalStructures;
     double* m_GBCD;
     int32_t* m_GBCDdimensions;

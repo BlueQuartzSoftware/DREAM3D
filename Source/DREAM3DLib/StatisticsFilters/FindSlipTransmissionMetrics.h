@@ -86,8 +86,8 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
@@ -125,7 +125,7 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     float* m_AvgQuats;
     NeighborList<float>* m_F1;
     NeighborList<float>* m_F1spt;
@@ -134,7 +134,7 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     NeighborList<int>* m_NeighborList;
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindSlipTransmissionMetrics(const FindSlipTransmissionMetrics&); // Copy Constructor Not Implemented
     void operator=(const FindSlipTransmissionMetrics&); // Operator '=' Not Implemented

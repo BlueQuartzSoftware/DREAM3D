@@ -387,13 +387,13 @@ int H5AngReader::readData(hid_t parId)
   ANG_READER_ALLOCATE_AND_READ(Fit, float);
   if (err < 0)
   {
-    setNumFields(9);
+    setNumFeatures(9);
   }
 
   ANG_READER_ALLOCATE_AND_READ(SEMSignal, float);
   if (err < 0)
   {
-    setNumFields(8);
+    setNumFeatures(8);
   }
 
   err = H5Gclose(gid);

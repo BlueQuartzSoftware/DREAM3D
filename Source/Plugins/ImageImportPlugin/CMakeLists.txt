@@ -257,7 +257,7 @@ endif()
 
 # --------------------------------------------------------------------
 # Add the plugin as a MODULE ONLY if we are building the PipelineBuilder Lib
-if(TARGET PipelineBuilderLib)
+if(DREAM3D_BUILD_DREAM3D)
   add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_Project_SRCS})
 
   # --------------------------------------------------------------------

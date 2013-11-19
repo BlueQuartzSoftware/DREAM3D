@@ -87,15 +87,15 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     virtual int writeMeshData(hid_t dcGid);
 
     virtual int writeEdgeData(hid_t dcGid, QString groupName);
-    virtual int writeEdgeFieldData(hid_t dcGid, QString groupName);
+    virtual int writeEdgeFeatureData(hid_t dcGid, QString groupName);
     virtual int writeEdgeEnsembleData(hid_t dcGid, QString groupName);
 
     virtual void writeXdmfMeshStructure();

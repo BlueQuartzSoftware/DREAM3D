@@ -43,7 +43,7 @@
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -61,26 +61,26 @@
 GroupMicroTextureRegions::GroupMicroTextureRegions() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_MTRdensityArrayName(DREAM3D::CellData::MTRdensity),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_VolumesArrayName(DREAM3D::FieldData::Volumes),
-  m_ContiguousNeighborListArrayName(DREAM3D::FieldData::NeighborList),
-  m_NonContiguousNeighborListArrayName(DREAM3D::FieldData::NeighborhoodList),
-  m_ActiveArrayName(DREAM3D::FieldData::Active),
-  m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
+  m_ContiguousNeighborListArrayName(DREAM3D::FeatureData::NeighborList),
+  m_NonContiguousNeighborListArrayName(DREAM3D::FeatureData::NeighborhoodList),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CAxisTolerance(1.0f),
   m_UseNonContiguousNeighbors(false),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_CellParentIds(NULL),
-  m_FieldParentIds(NULL),
+  m_FeatureParentIds(NULL),
   m_MTRdensity(NULL),
   m_AvgQuats(NULL),
   m_Active(NULL),
-  m_FieldPhases(NULL),
+  m_FeaturePhases(NULL),
   m_Volumes(NULL),
   m_ContiguousNeighborList(NULL),
   m_NonContiguousNeighborList(NULL),
@@ -157,7 +157,7 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -172,17 +172,17 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
   QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, int32_t, Int32ArrayType, -1, voxels, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MTRdensity, float, FloatArrayType, 0, voxels, dims)
 
-  // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldParentIds, int32_t, Int32ArrayType, 0, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, dims)
+  // Feature Data
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, true, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureParentIds, int32_t, Int32ArrayType, 0, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, float, FloatArrayType, 0, features, dims)
   dims[0] = 4;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -302, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -302, float, FloatArrayType, features, dims)
 
   // Ensemble Data
   dims[0] = 1;
@@ -192,7 +192,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   if(m_UseNonContiguousNeighbors == false)
   {
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-    m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
+    m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFeatureData(DREAM3D::FeatureData::NeighborList).get());
     if(m_ContiguousNeighborList == NULL)
     {
       QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
@@ -203,8 +203,8 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   else
   {
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-    m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
-    m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborhoodList).get());
+    m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFeatureData(DREAM3D::FeatureData::NeighborList).get());
+    m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFeatureData(DREAM3D::FeatureData::NeighborhoodList).get());
     if(m_ContiguousNeighborList == NULL || m_NonContiguousNeighborList == NULL)
     {
       QString ss = QObject::tr("NeighborhoodLists Array Not Initialized correctly");
@@ -236,7 +236,7 @@ void GroupMicroTextureRegions::execute()
   }
 
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -284,23 +284,23 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   unsigned int phase1, phase2;
   int parentcount = 0;
-  parentnumbers.resize(numgrains, -1);
-  beenChecked.resize(numgrains, false);
-  intensities.resize(numgrains, 0.0);
+  parentnumbers.resize(numfeatures, -1);
+  beenChecked.resize(numfeatures, false);
+  intensities.resize(numfeatures, 0.0);
   int size1 = 0, size2 = 0, size = 0;
   parentnumbers[0] = 0;
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
+    if (parentnumbers[i] == -1 && m_FeaturePhases[i] > 0)
     {
       parentcount++;
       parentnumbers[i] = parentcount;
       if (i % 1000 == 0)
       {
-        QString ss = QObject::tr("Working On Grain %1 of %2").arg(i).arg(numgrains);
+        QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(numfeatures);
         notifyStatusMessage(ss);
       }
       m_Active[i] = true;
@@ -310,11 +310,11 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       totalCheckVolume = m_Volumes[i];
       for (std::vector<int>::size_type j = 0; j < microtexturelist.size(); j++)
       {
-        int firstgrain = microtexturelist[j];
-        size1 = int(neighborlist[firstgrain].size());
-        if (m_UseNonContiguousNeighbors == true) { size2 = int(neighborhoodlist[firstgrain].size()); }
-        QuaternionMathF::Copy(avgQuats[firstgrain], q1);
-        phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
+        int firstfeature = microtexturelist[j];
+        size1 = int(neighborlist[firstfeature].size());
+        if (m_UseNonContiguousNeighbors == true) { size2 = int(neighborhoodlist[firstfeature].size()); }
+        QuaternionMathF::Copy(avgQuats[firstfeature], q1);
+        phase1 = m_CrystalStructures[m_FeaturePhases[firstfeature]];
         OrientationMath::QuattoMat(q1, g1);
         //transpose the g matrix so when caxis is multiplied by it
         //it will give the sample direction that the caxis is along
@@ -332,17 +332,17 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
           for (int l = 0; l < size; l++)
           {
             angcur = 180.0f;
-            if (k == 0) { neigh = neighborlist[firstgrain][l]; }
-            else if (k == 1) { neigh = neighborhoodlist[firstgrain][l]; }
+            if (k == 0) { neigh = neighborlist[firstfeature][l]; }
+            else if (k == 1) { neigh = neighborhoodlist[firstfeature][l]; }
             if (beenChecked[neigh] == false)
             {
               totalCheckList.push_back(neigh);
               totalCheckVolume += m_Volumes[neigh];
             }
             beenChecked[neigh] = true;
-            if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
+            if (neigh != i && parentnumbers[neigh] == -1 && m_FeaturePhases[neigh] > 0)
             {
-              phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
+              phase2 = m_CrystalStructures[m_FeaturePhases[neigh]];
               if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
               {
                 QuaternionMathF::Copy(avgQuats[neigh], q2);
@@ -386,10 +386,10 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 
   for (size_t k = 0; k < totalPoints; k++)
   {
-    int grainname = m_GrainIds[k];
-    m_CellParentIds[k] = parentnumbers[grainname];
-    m_FieldParentIds[grainname] = m_CellParentIds[k];
-    m_MTRdensity[k] = intensities[parentnumbers[grainname]];
+    int featurename = m_FeatureIds[k];
+    m_CellParentIds[k] = parentnumbers[featurename];
+    m_FeatureParentIds[featurename] = m_CellParentIds[k];
+    m_MTRdensity[k] = intensities[parentnumbers[featurename]];
   }
 
 }

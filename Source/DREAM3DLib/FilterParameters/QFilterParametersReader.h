@@ -44,9 +44,9 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
-//#include "DREAM3DLib/FilterParameters/QFilterParamtersOperators.h"
 
 /*
  *
@@ -61,10 +61,12 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
 
     virtual ~QFilterParametersReader();
 
+    static FilterPipeline::Pointer ReadPipelineFromFile(QString filePath, QSettings::Format format);
+
 
     QSettings* getPrefs();
 
-    void openFile(QString filename);
+    void openFile(QString filename, QSettings::Format format);
     void closeFile();
 
     virtual int openFilterGroup(AbstractFilter* unused, int index);

@@ -6,7 +6,7 @@ SurfaceMesh
 
 ## Description ##
 
-This filter generates a per triangle pair of colors based on the Inverse Pole Figure (IPF) color triangle for the crystal structure of the grain. Each face has 2 colors because each face is the boundary between 2 Grains or **Fields**. The reference direction used for the IPF color generation is the Normal of the face.
+This filter generates a per triangle pair of colors based on the Inverse Pole Figure (IPF) color triangle for the crystal structure of the grain. Each face has 2 colors because each face is the boundary between 2 Grains or **Features**. The reference direction used for the IPF color generation is the Normal of the face.
 
 _The user will need to calculate the Face Normals before this filter is run._
 
@@ -35,7 +35,7 @@ SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face lis
 ## Created Arrays ##
 | Type | Name | Comment |
 |------|------|---------|
-| Triangle Attribute Array | SurfaceMeshTriangleIPFColors | N X 6 Array of Unsigned Chars that are the RGB colors for each **Field** Id Associated with the triangle. |
+| Triangle Attribute Array | SurfaceMeshTriangleIPFColors | N X 6 Array of Unsigned Chars that are the RGB colors for each **Feature** Id Associated with the triangle. |
 
 
 

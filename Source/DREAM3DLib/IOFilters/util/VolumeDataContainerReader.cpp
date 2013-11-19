@@ -51,10 +51,10 @@
 VolumeDataContainerReader::VolumeDataContainerReader() :
   SurfaceDataContainerReader(),
   m_ReadCellData(true),
-  m_ReadCellFieldData(true),
+  m_ReadCellFeatureData(true),
   m_ReadCellEnsembleData(true),
   m_ReadAllCellArrays(false),
-  m_ReadAllCellFieldArrays(false),
+  m_ReadAllCellFeatureArrays(false),
   m_ReadAllCellEnsembleArrays(false)
 {
 }
@@ -69,7 +69,7 @@ VolumeDataContainerReader::~VolumeDataContainerReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -87,11 +87,11 @@ void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
   else if (preflight == true)
   {
     if(m_CellArraysToRead.size() == 0 && m_ReadAllCellArrays != true) { m_ReadCellData = false; }
-    if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllCellFieldArrays != true) { m_ReadCellFieldData = false; }
+    if(m_CellFeatureArraysToRead.size() == 0 && m_ReadAllCellFeatureArrays != true) { m_ReadCellFeatureData = false; }
     if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllCellEnsembleArrays != true) { m_ReadCellEnsembleData = false; }
 
     if(m_ReadCellData == true) { dc->clearCellData(); }
-    if(m_ReadCellFieldData == true) { dc->clearCellFieldData(); }
+    if(m_ReadCellFeatureData == true) { dc->clearCellFeatureData(); }
     if(m_ReadCellEnsembleData == true) { dc->clearCellEnsembleData(); }
 
     int err = gatherData(preflight);
@@ -144,11 +144,11 @@ void VolumeDataContainerReader::execute()
   dc->setOrigin(origin);
 
   if(m_CellArraysToRead.size() == 0 && m_ReadAllCellArrays != true) { m_ReadCellData = false; }
-  if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllCellFieldArrays != true) { m_ReadCellFieldData = false; }
+  if(m_CellFeatureArraysToRead.size() == 0 && m_ReadAllCellFeatureArrays != true) { m_ReadCellFeatureData = false; }
   if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllCellEnsembleArrays != true) { m_ReadCellEnsembleData = false; }
 
   if(m_ReadCellData == true) { dc->clearCellData(); }
-  if(m_ReadCellFieldData == true) { dc->clearCellFieldData(); }
+  if(m_ReadCellFeatureData == true) { dc->clearCellFeatureData(); }
   if(m_ReadCellEnsembleData == true) { dc->clearCellEnsembleData(); }
 
   // We are actually wanting to read the file so set preflight to false
@@ -163,7 +163,7 @@ void VolumeDataContainerReader::execute()
 void VolumeDataContainerReader::setReadAllArrays()
 {
   m_ReadAllCellArrays = true;
-  m_ReadAllCellFieldArrays = true;
+  m_ReadAllCellFeatureArrays = true;
   m_ReadAllCellEnsembleArrays = true;
 }
 
@@ -375,11 +375,11 @@ int VolumeDataContainerReader::gatherData(bool preflight)
     }
   }
 
-  if(m_ReadCellFieldData == true)
+  if(m_ReadCellFeatureData == true)
   {
     QVector<QString> readNames;
-    QSet<QString> cellFieldArraysToRead = getCellFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, cellFieldArraysToRead, m_ReadAllCellFieldArrays);
+    QSet<QString> cellFeatureArraysToRead = getCellFeatureArraysToRead();
+    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, cellFeatureArraysToRead, m_ReadAllCellFeatureArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -475,7 +475,7 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupN
       }
       else if(groupName.compare(H5_CELL_FIELD_DATA_GROUP_NAME) == 0)
       {
-        dc->addCellFieldData(dPtr->GetName(), dPtr);
+        dc->addCellFeatureData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_CELL_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {

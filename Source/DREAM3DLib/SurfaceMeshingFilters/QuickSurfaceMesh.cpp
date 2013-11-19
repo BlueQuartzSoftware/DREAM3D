@@ -51,8 +51,8 @@ QuickSurfaceMesh::QuickSurfaceMesh() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_GrainIds(NULL)
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL)
 {
 
 }
@@ -86,7 +86,7 @@ int QuickSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
 
   setErrorCondition(0);
@@ -94,7 +94,7 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
@@ -121,7 +121,7 @@ void QuickSurfaceMesh::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -162,9 +162,9 @@ void QuickSurfaceMesh::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalFeatures = m->getNumCellFeatureTuples();
   size_t totalEnsembles = m->getNumCellEnsembleTuples();
-  dataCheck(false, totalPoints, totalFields, totalEnsembles);
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
   float m_OriginX, m_OriginY, m_OriginZ;
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
@@ -336,7 +336,7 @@ void QuickSurfaceMesh::execute()
           triangleCount++;
           triangleCount++;
         }
-        else if(m_GrainIds[point] != m_GrainIds[neigh1])
+        else if(m_FeatureIds[point] != m_FeatureIds[neigh1])
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
           if(m_NodeIds[nodeId1] == -1)
@@ -394,7 +394,7 @@ void QuickSurfaceMesh::execute()
           triangleCount++;
           triangleCount++;
         }
-        else if(m_GrainIds[point] != m_GrainIds[neigh2])
+        else if(m_FeatureIds[point] != m_FeatureIds[neigh2])
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
           if(m_NodeIds[nodeId1] == -1)
@@ -452,7 +452,7 @@ void QuickSurfaceMesh::execute()
           triangleCount++;
           triangleCount++;
         }
-        else if(k < zP - 1 && m_GrainIds[point] != m_GrainIds[neigh3])
+        else if(k < zP - 1 && m_FeatureIds[point] != m_FeatureIds[neigh3])
         {
           nodeId1 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
           if(m_NodeIds[nodeId1] == -1)
@@ -498,7 +498,7 @@ void QuickSurfaceMesh::execute()
 
   ownerLists.resize(nodeCount);
 
-  //Cycle through again assigning coordinates to each node and assigning node numbers and grain labels to each triangle
+  //Cycle through again assigning coordinates to each node and assigning node numbers and feature labels to each triangle
   triangleCount = 0;
   //const float k_Two = static_cast<float>(2.0);
   for(size_t k = 0; k < zP; k++)
@@ -537,24 +537,24 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId2]].insert(-1);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId3]].insert(-1);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId4]].insert(-1);
         }
         if(j == 0)
@@ -582,24 +582,24 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId2]].insert(-1);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId3]].insert(-1);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId4]].insert(-1);
         }
         if(k == 0)
@@ -627,24 +627,24 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId2]].insert(-1);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId3]].insert(-1);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId4]].insert(-1);
         }
         if(i == (xP - 1))
@@ -672,27 +672,27 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId2]].insert(-1);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId3]].insert(-1);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId4]].insert(-1);
         }
-        else if(m_GrainIds[point] != m_GrainIds[neigh1])
+        else if(m_FeatureIds[point] != m_FeatureIds[neigh1])
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
           QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
@@ -717,25 +717,25 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount * 2] = m_GrainIds[neigh1];
-          faceLabels[triangleCount * 2 + 1] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[neigh1];
+          faceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount * 2] = m_GrainIds[neigh1];
-          faceLabels[triangleCount * 2 + 1] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[neigh1];
+          faceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
           triangleCount++;
 
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[neigh1]);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[neigh1]);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[neigh1]);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[neigh1]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[neigh1]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[neigh1]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[neigh1]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[neigh1]);
         }
         if(j == (yP - 1))
         {
@@ -762,27 +762,27 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId2]].insert(-1);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId3]].insert(-1);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId4]].insert(-1);
         }
-        else if(m_GrainIds[point] != m_GrainIds[neigh2])
+        else if(m_FeatureIds[point] != m_FeatureIds[neigh2])
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
           QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
@@ -807,25 +807,25 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount * 2] = m_GrainIds[neigh2];
-          faceLabels[triangleCount * 2 + 1] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[neigh2];
+          faceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount * 2] = m_GrainIds[neigh2];
-          faceLabels[triangleCount * 2 + 1] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[neigh2];
+          faceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
           triangleCount++;
 
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[neigh2]);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[neigh2]);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[neigh2]);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[neigh2]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[neigh2]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[neigh2]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[neigh2]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[neigh2]);
         }
         if(k == (zP - 1))
         {
@@ -852,27 +852,27 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          faceLabels[triangleCount * 2] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[point];
           faceLabels[triangleCount * 2 + 1] = -1;
           triangleCount++;
 
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId2]].insert(-1);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId3]].insert(-1);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId4]].insert(-1);
         }
-        else if(m_GrainIds[point] != m_GrainIds[neigh3])
+        else if(m_FeatureIds[point] != m_FeatureIds[neigh3])
         {
           nodeId1 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
           QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
@@ -897,25 +897,25 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          faceLabels[triangleCount * 2] = m_GrainIds[neigh3];
-          faceLabels[triangleCount * 2 + 1] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[neigh3];
+          faceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
-          faceLabels[triangleCount * 2] = m_GrainIds[neigh3];
-          faceLabels[triangleCount * 2 + 1] = m_GrainIds[point];
+          faceLabels[triangleCount * 2] = m_FeatureIds[neigh3];
+          faceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
           triangleCount++;
 
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[neigh3]);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[neigh3]);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[neigh3]);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
-          ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[neigh3]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[neigh3]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId2]].insert(m_FeatureIds[neigh3]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId3]].insert(m_FeatureIds[neigh3]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
+          ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[neigh3]);
         }
       }
     }

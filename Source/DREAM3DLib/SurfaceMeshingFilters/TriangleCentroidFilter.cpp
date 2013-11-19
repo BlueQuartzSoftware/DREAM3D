@@ -143,7 +143,7 @@ int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -178,8 +178,9 @@ void TriangleCentroidFilter::preflight()
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getSurfaceDataContainerName() + " was not available.", getErrorCondition());
+    return;
   }
 
   dataCheck(true, 1, 1, 1);

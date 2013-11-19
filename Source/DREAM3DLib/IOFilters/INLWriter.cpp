@@ -62,12 +62,12 @@
 INLWriter::INLWriter() :
   FileWriter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL)
 
@@ -129,7 +129,7 @@ int INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void INLWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -144,7 +144,7 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   }
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, dims)
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, dims)
@@ -171,7 +171,7 @@ void INLWriter::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -194,9 +194,9 @@ int INLWriter::writeFile()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
-  dataCheck(false, totalPoints, numgrains, numensembles);
+  dataCheck(false, totalPoints, numfeatures, numensembles);
   if(getErrorCondition() < 0)
   {
     return -40;
@@ -292,26 +292,26 @@ int INLWriter::writeFile()
     fprintf(f, "#\r\n");
   }
 
-  QSet<int32_t> uniqueGrainIds;
+  QSet<int32_t> uniqueFeatureIds;
   for(int64_t i = 0; i < totalPoints; ++i)
   {
-    uniqueGrainIds.insert(m_GrainIds[i]);
+    uniqueFeatureIds.insert(m_FeatureIds[i]);
   }
-  count = static_cast<int32_t>(uniqueGrainIds.size());
-  fprintf(f, "# Num_Grains: %d \r\n", count);
+  count = static_cast<int32_t>(uniqueFeatureIds.size());
+  fprintf(f, "# Num_Features: %d \r\n", count);
   fprintf(f, "#\r\n");
 
   //  fprintf(f, "# Column 1-3: phi1, PHI, phi2 (orientation of point in radians)\r\n");
   //  fprintf(f, "# Column 4-6: x, y, z (coordinates of point in microns)\r\n");
-  //  fprintf(f, "# Column 7: Grain ID\r\n");
+  //  fprintf(f, "# Column 7: Feature ID\r\n");
   //  fprintf(f, "# Column 8: Phase ID\r\n");
 
 
-  fprintf(f, "# phi1 PHI phi2 x y z GrainId PhaseId Symmetry\r\n");
+  fprintf(f, "# phi1 PHI phi2 x y z FeatureId PhaseId Symmetry\r\n");
 
   float phi1, phi, phi2;
   float xPos, yPos, zPos;
-  int32_t grainId;
+  int32_t featureId;
   int32_t phaseId;
 
   // unsigned char rgba[4] = {0,0,0,255};
@@ -332,7 +332,7 @@ int INLWriter::writeFile()
         xPos = origin[0] + (x * res[0]);
         yPos = origin[1] + (y * res[1]);
         zPos = origin[2] + (z * res[2]);
-        grainId = m_GrainIds[index];
+        featureId = m_FeatureIds[index];
         phaseId = m_CellPhases[index];
         // rgba[0] = 0; rgba[1] = 0; rgba[2] = 0; // Reset the color to black
         symmetry = m_CrystalStructures[phaseId];
@@ -357,7 +357,7 @@ int INLWriter::writeFile()
         }
 
 
-        fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n", phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId, symmetry);
+        fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n", phi1, phi, phi2, xPos, yPos, zPos, featureId, phaseId, symmetry);
       }
     }
   }

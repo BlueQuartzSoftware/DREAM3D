@@ -39,7 +39,7 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 #include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
 
 // -----------------------------------------------------------------------------
@@ -48,15 +48,15 @@
 FindSchmids::FindSchmids() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
-  m_PolesArrayName(DREAM3D::FieldData::Poles),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_SlipSystemsArrayName(DREAM3D::FieldData::SlipSystems),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_SchmidsArrayName(DREAM3D::FeatureData::Schmids),
+  m_PolesArrayName(DREAM3D::FeatureData::Poles),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_SlipSystemsArrayName(DREAM3D::FeatureData::SlipSystems),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_Schmids(NULL),
   m_Poles(NULL),
-  m_FieldPhases(NULL),
+  m_FeaturePhases(NULL),
   m_AvgQuats(NULL),
   m_SlipSystems(NULL)
 {
@@ -118,22 +118,22 @@ int FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, float, FloatArrayType, 0, fields, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SlipSystems, int32_t, Int32ArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Schmids, float, FloatArrayType, 0, features, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -302, int32_t, Int32ArrayType, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, SlipSystems, int32_t, Int32ArrayType, 0, features, dims)
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Poles, int32_t, Int32ArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Poles, int32_t, Int32ArrayType, 0, features, dims)
   dims[0] = 4;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -301, float, FloatArrayType, features, dims)
 }
 
 
@@ -146,7 +146,7 @@ void FindSchmids::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -167,7 +167,7 @@ void FindSchmids::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -187,15 +187,15 @@ void FindSchmids::execute()
   sampleLoading[2] = m_LoadingDir.z;
   MatrixMath::Normalize3x1(sampleLoading);
 
-  size_t numgrains = m->getNumCellFieldTuples();
-  for (size_t i = 1; i < numgrains; i++)
+  size_t numfeatures = m->getNumCellFeatureTuples();
+  for (size_t i = 1; i < numfeatures; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
     OrientationMath::QuattoMat(q1, g);
 
     MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
 
-    m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getSchmidFactorAndSS(crystalLoading[0], crystalLoading[1], crystalLoading[2], schmid, ss);
+    m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getSchmidFactorAndSS(crystalLoading[0], crystalLoading[1], crystalLoading[2], schmid, ss);
 
     m_Schmids[i] = schmid;
     m_Poles[3 * i] = int32_t(crystalLoading[0] * 100);

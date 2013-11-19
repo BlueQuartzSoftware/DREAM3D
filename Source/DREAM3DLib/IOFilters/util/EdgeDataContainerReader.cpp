@@ -75,10 +75,10 @@ namespace Detail
 EdgeDataContainerReader::EdgeDataContainerReader() :
   VertexDataContainerReader(),
   m_ReadEdgeData(true),
-  m_ReadEdgeFieldData(true),
+  m_ReadEdgeFeatureData(true),
   m_ReadEdgeEnsembleData(true),
   m_ReadAllEdgeArrays(false),
-  m_ReadAllEdgeFieldArrays(false),
+  m_ReadAllEdgeFeatureArrays(false),
   m_ReadAllEdgeEnsembleArrays(false)
 {
 }
@@ -94,7 +94,7 @@ EdgeDataContainerReader::~EdgeDataContainerReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void EdgeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -114,11 +114,11 @@ void EdgeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fi
   else if (preflight == true)
   {
     if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true) { m_ReadEdgeData = false; }
-    if(m_EdgeFieldArraysToRead.size() == 0 && m_ReadAllEdgeFieldArrays != true) { m_ReadEdgeFieldData = false; }
+    if(m_EdgeFeatureArraysToRead.size() == 0 && m_ReadAllEdgeFeatureArrays != true) { m_ReadEdgeFeatureData = false; }
     if(m_EdgeEnsembleArraysToRead.size() == 0 && m_ReadAllEdgeEnsembleArrays != true) { m_ReadEdgeEnsembleData = false; }
 
     if(m_ReadEdgeData == true) { dc->clearEdgeData(); }
-    if(m_ReadEdgeFieldData == true) { dc->clearEdgeFieldData(); }
+    if(m_ReadEdgeFeatureData == true) { dc->clearEdgeFeatureData(); }
     if(m_ReadEdgeEnsembleData == true) { dc->clearEdgeEnsembleData(); }
 
     int err = gatherData(preflight);
@@ -159,11 +159,11 @@ void EdgeDataContainerReader::execute()
   setErrorCondition(err);
 
   if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true) { m_ReadEdgeData = false; }
-  if(m_EdgeFieldArraysToRead.size() == 0 && m_ReadAllEdgeFieldArrays != true) { m_ReadEdgeFieldData = false; }
+  if(m_EdgeFeatureArraysToRead.size() == 0 && m_ReadAllEdgeFeatureArrays != true) { m_ReadEdgeFeatureData = false; }
   if(m_EdgeEnsembleArraysToRead.size() == 0 && m_ReadAllEdgeEnsembleArrays != true) { m_ReadEdgeEnsembleData = false; }
 
   if(m_ReadEdgeData == true) { dc->clearEdgeData(); }
-  if(m_ReadEdgeFieldData == true) { dc->clearEdgeFieldData(); }
+  if(m_ReadEdgeFeatureData == true) { dc->clearEdgeFeatureData(); }
   if(m_ReadEdgeEnsembleData == true) { dc->clearEdgeEnsembleData(); }
 
   err = gatherData(false);
@@ -179,7 +179,7 @@ void EdgeDataContainerReader::execute()
 void EdgeDataContainerReader::setReadAllArrays()
 {
   m_ReadAllEdgeArrays = true;
-  m_ReadAllEdgeFieldArrays = true;
+  m_ReadAllEdgeFeatureArrays = true;
   m_ReadAllEdgeEnsembleArrays = true;
 }
 
@@ -226,11 +226,11 @@ int EdgeDataContainerReader::gatherData(bool preflight)
     }
   }
 
-  if(m_ReadEdgeFieldData == true)
+  if(m_ReadEdgeFeatureData == true)
   {
     QVector<QString> readNames;
-    QSet<QString> edgeFieldArraysToRead = getEdgeFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_EDGE_FIELD_DATA_GROUP_NAME, preflight, readNames, edgeFieldArraysToRead, m_ReadAllEdgeFieldArrays);
+    QSet<QString> edgeFeatureArraysToRead = getEdgeFeatureArraysToRead();
+    err |= readGroupsData(dcGid, H5_EDGE_FIELD_DATA_GROUP_NAME, preflight, readNames, edgeFeatureArraysToRead, m_ReadAllEdgeFeatureArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -416,7 +416,7 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupNam
       }
       else if(groupName.compare(H5_EDGE_FIELD_DATA_GROUP_NAME) == 0)
       {
-        dc->addEdgeFieldData(dPtr->GetName(), dPtr);
+        dc->addEdgeFeatureData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_EDGE_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {

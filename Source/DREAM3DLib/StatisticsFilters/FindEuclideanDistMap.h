@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
@@ -104,13 +104,13 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
     void find_euclideandistmap();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_NearestNeighbors;
     float* m_GBEuclideanDistances;
     float* m_TJEuclideanDistances;
     float* m_QPEuclideanDistances;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented

@@ -56,7 +56,7 @@
 // -----------------------------------------------------------------------------
 VolumeDataContainer::VolumeDataContainer() :
 m_NumCellTuples(0),
-m_NumCellFieldTuples(0),
+m_NumCellFeatureTuples(0),
 m_NumCellEnsembleTuples(0)
 {
   m_Dimensions[0] = 0; m_Dimensions[1] = 0; m_Dimensions[2] = 0;
@@ -79,7 +79,7 @@ VolumeDataContainer::~VolumeDataContainer()
 //
 // -----------------------------------------------------------------------------
 DOES_DATASET_EXIST_DEFN(VolumeDataContainer, CellData)
-DOES_DATASET_EXIST_DEFN(VolumeDataContainer, CellFieldData)
+DOES_DATASET_EXIST_DEFN(VolumeDataContainer, CellFeatureData)
 DOES_DATASET_EXIST_DEFN(VolumeDataContainer, CellEnsembleData)
 
 // -----------------------------------------------------------------------------
@@ -180,11 +180,11 @@ int VolumeDataContainer::getNumCellArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getCellFieldData(const QString &name)
+IDataArray::Pointer VolumeDataContainer::getCellFeatureData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_CellFieldData.find(name);
-  if ( it == m_CellFieldData.end() )
+  it =  m_CellFeatureData.find(name);
+  if ( it == m_CellFeatureData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -194,68 +194,68 @@ IDataArray::Pointer VolumeDataContainer::getCellFieldData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addCellFieldData(const QString &name, IDataArray::Pointer data)
+void VolumeDataContainer::addCellFeatureData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    qDebug() << "Adding Field array with different array name than key name" << "\n";
+    qDebug() << "Adding Feature array with different array name than key name" << "\n";
     qDebug() << "Key name: " << name << "\n";
     qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
-  m_CellFieldData[name] = data;
-  m_NumCellFieldTuples = data->getNumberOfTuples();
+  m_CellFeatureData[name] = data;
+  m_NumCellFeatureTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeCellFieldData(const QString &name)
+IDataArray::Pointer VolumeDataContainer::removeCellFeatureData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_CellFieldData.find(name);
-  if ( it == m_CellFieldData.end() )
+  it =  m_CellFeatureData.find(name);
+  if ( it == m_CellFeatureData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = it.value();
-  m_CellFieldData.erase(it);
+  m_CellFeatureData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameCellFieldData(const QString &oldname, const QString &newname)
+bool VolumeDataContainer::renameCellFeatureData(const QString &oldname, const QString &newname)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_CellFieldData.find(oldname);
-  if ( it == m_CellFieldData.end() )
+  it =  m_CellFeatureData.find(oldname);
+  if ( it == m_CellFeatureData.end() )
   {
     return false;
   }
   IDataArray::Pointer p = it.value();
   p->SetName(newname);
-  removeCellFieldData(oldname);
-  addCellFieldData(newname, p);
+  removeCellFeatureData(oldname);
+  addCellFeatureData(newname, p);
   return true;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::clearCellFieldData()
+void VolumeDataContainer::clearCellFeatureData()
 {
-  m_CellFieldData.clear();
+  m_CellFeatureData.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> VolumeDataContainer::getCellFieldArrayNameList()
+QList<QString> VolumeDataContainer::getCellFeatureArrayNameList()
 {
   QList<QString> keys;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellFeatureData.begin(); iter != m_CellFeatureData.end(); ++iter)
   {
     keys.push_back(iter.key());
   }
@@ -265,24 +265,24 @@ QList<QString> VolumeDataContainer::getCellFieldArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainer::getNumCellFieldArrays()
+int VolumeDataContainer::getNumCellFeatureArrays()
 {
-  return static_cast<int>(m_CellFieldData.size());
+  return static_cast<int>(m_CellFeatureData.size());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::resizeCellFieldDataArrays(size_t size)
+void VolumeDataContainer::resizeCellFeatureDataArrays(size_t size)
 {
  // int success = 0;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellFeatureData.begin(); iter != m_CellFeatureData.end(); ++iter)
   {
     //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
     IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
-  m_NumCellFieldTuples = size;
+  m_NumCellFeatureTuples = size;
 }
 
 // -----------------------------------------------------------------------------

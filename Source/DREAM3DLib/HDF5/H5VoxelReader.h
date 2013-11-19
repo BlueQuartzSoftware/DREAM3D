@@ -88,7 +88,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
     /**
      *
      */
-    int readVoxelData(int* grain_indicies,
+    int readVoxelData(int* feature_indicies,
                       int* phases,
                       float* eulerangles,
                       std::vector<unsigned int>& crystruct,
@@ -116,7 +116,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
       OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.toLatin1().data(), m_FileId);
       OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
 
-      // Read in the Grain ID data
+      // Read in the Feature ID data
       err = QH5Lite::readPointerDataset(scalarGid, dsetName, data);
       if(err < 0)
       {
@@ -136,7 +136,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
      *
      */
     template<typename CastTo, typename NativeType>
-    int readFieldData(const QString& dsetName, std::vector<CastTo>& data)
+    int readFeatureData(const QString& dsetName, std::vector<CastTo>& data)
     {
       int err = 0;
       if (m_FileId < 0)
@@ -150,15 +150,15 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
         m_FileId = fileId;
       }
       OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.toLatin1().data(), m_FileId);
-      OPEN_RECONSTRUCTION_GROUP(fieldGid, H5_FIELD_DATA_GROUP_NAME, reconGid);
+      OPEN_RECONSTRUCTION_GROUP(featureGid, H5_FIELD_DATA_GROUP_NAME, reconGid);
 
       std::vector<NativeType> nativeData;
-      err = QH5Lite::readVectorDataset(fieldGid, dsetName, nativeData);
+      err = QH5Lite::readVectorDataset(featureGid, dsetName, nativeData);
       if(err < 0)
       {
         QString ss = QObject::tr(" Error Reading the ").arg(dsetName);
         addErrorMessage(getHumanLabel(), ss, err);
-        err |= H5Gclose(fieldGid);
+        err |= H5Gclose(featureGid);
         err |= H5Gclose(reconGid);
         return err;
       }
@@ -167,7 +167,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
       {
         data[i] = static_cast<CastTo>(nativeData[i]);
       }
-      err |= H5Gclose(fieldGid);
+      err |= H5Gclose(featureGid);
       err |= H5Gclose(reconGid);
 
       return err;

@@ -63,17 +63,17 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
     virtual QVector<QString> getFieldNames();
 
     template<typename T>
-    T getFilterFields()
+    T getFilterFeatures()
     {
-      T fields;
+      T features;
 
-      fields.push_back(Ebsd::Ang::ImageQuality);
-      fields.push_back(Ebsd::Ang::ConfidenceIndex);
+      features.push_back(Ebsd::Ang::ImageQuality);
+      features.push_back(Ebsd::Ang::ConfidenceIndex);
 
-      fields.push_back(Ebsd::Ang::SEMSignal);
-      fields.push_back(Ebsd::Ang::Fit);
+      features.push_back(Ebsd::Ang::SEMSignal);
+      features.push_back(Ebsd::Ang::Fit);
 
-      return fields;
+      return features;
     }
 
   private:

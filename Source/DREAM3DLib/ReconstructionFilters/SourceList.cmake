@@ -25,9 +25,9 @@ set(_PublicFilters
   AlignSectionsFeature
   AlignSectionsFeatureCentroid
   AlignSectionsList
-  EBSDSegmentGrains
-  ScalarSegmentGrains
-  CAxisSegmentGrains
+  EBSDSegmentFeatures
+  ScalarSegmentFeatures
+  CAxisSegmentFeatures
   MergeTwins
   MergeColonies
   GroupMicroTextureRegions
@@ -48,7 +48,7 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-  SegmentGrains
+  SegmentFeatures
   AlignSections
 )
 

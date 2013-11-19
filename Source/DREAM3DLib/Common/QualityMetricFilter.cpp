@@ -55,9 +55,9 @@ QualityMetricFilter::~QualityMetricFilter()
 
 
 #define FILTER_DATA(m_msgType) \
-  if (m_FieldOperator.compare("<") == 0) filterDataLessThan<m_msgType>();\
-  else if (m_FieldOperator.compare(">") == 0) filterDataGreaterThan<m_msgType>();\
-  else if (m_FieldOperator.compare("=") == 0) filterDataEqualTo<m_msgType>();
+  if (m_FeatureOperator.compare("<") == 0) filterDataLessThan<m_msgType>();\
+  else if (m_FeatureOperator.compare(">") == 0) filterDataGreaterThan<m_msgType>();\
+  else if (m_FeatureOperator.compare("=") == 0) filterDataEqualTo<m_msgType>();
 
 
 // -----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ int QualityMetricFilter::filter()
   int err = 0;
   if (m_Output.get() == NULL)
   {
-    m_Output = DataArray<bool>::CreateArray(0, getFieldName());
+    m_Output = DataArray<bool>::CreateArray(0, getFeatureName());
   }
   m_Output->Resize(m_NumValues);
   m_Output->initializeWithZeros();

@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     UpdateCellQuats(const UpdateCellQuats&); // Copy Constructor Not Implemented
     void operator=(const UpdateCellQuats&); // Operator '=' Not Implemented

@@ -48,10 +48,10 @@
 FindAvgCAxes::FindAvgCAxes() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_AvgCAxesArrayName(DREAM3D::FieldData::AvgCAxes),
-  m_GrainIds(NULL),
+  m_AvgCAxesArrayName(DREAM3D::FeatureData::AvgCAxes),
+  m_FeatureIds(NULL),
   m_Quats(NULL),
   m_AvgCAxes(NULL)
 {
@@ -87,7 +87,7 @@ int FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -96,7 +96,7 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   QVector<int> dims(1, 4);
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, dims)
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgCAxes, float, FloatArrayType, 0, features, dims)
 }
 
 // -----------------------------------------------------------------------------
@@ -108,7 +108,7 @@ void FindAvgCAxes::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -130,13 +130,13 @@ void FindAvgCAxes::execute()
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   //int phase;
   QuatF q1;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
@@ -145,9 +145,9 @@ void FindAvgCAxes::execute()
   float caxis[3] = {0, 0, 1};
   float c1[3];
 
-  QVector<int> counter(numgrains, 0);
+  QVector<int> counter(numfeatures, 0);
 
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
     m_AvgCAxes[3 * i] = 0.0;
     m_AvgCAxes[3 * i + 1] = 0.0;
@@ -158,9 +158,9 @@ void FindAvgCAxes::execute()
   float w;
   for(int i = 0; i < totalPoints; i++)
   {
-    if(m_GrainIds[i] > 0)
+    if(m_FeatureIds[i] > 0)
     {
-      index = 3 * m_GrainIds[i];
+      index = 3 * m_FeatureIds[i];
       QuaternionMathF::Copy(quats[i], q1);
 
       OrientationMath::QuattoMat(q1, g1);
@@ -170,19 +170,19 @@ void FindAvgCAxes::execute()
       MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
       //normalize so that the magnitude is 1
       MatrixMath::Normalize3x1(c1);
-      curCAxis[0] = m_AvgCAxes[index] / counter[m_GrainIds[i]];
-      curCAxis[1] = m_AvgCAxes[index + 1] / counter[m_GrainIds[i]];
-      curCAxis[2] = m_AvgCAxes[index + 2] / counter[m_GrainIds[i]];
+      curCAxis[0] = m_AvgCAxes[index] / counter[m_FeatureIds[i]];
+      curCAxis[1] = m_AvgCAxes[index + 1] / counter[m_FeatureIds[i]];
+      curCAxis[2] = m_AvgCAxes[index + 2] / counter[m_FeatureIds[i]];
       MatrixMath::Normalize3x1(curCAxis);
       w = GeometryMath::CosThetaBetweenVectors(c1, curCAxis);
       if (w < 0) { MatrixMath::Multiply3x1withConstant(c1, -1); }
-      counter[m_GrainIds[i]]++;
+      counter[m_FeatureIds[i]]++;
       m_AvgCAxes[index] += c1[0];
       m_AvgCAxes[index + 1] += c1[1];
       m_AvgCAxes[index + 2] += c1[2];
     }
   }
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
     if(counter[i] == 0)
     {

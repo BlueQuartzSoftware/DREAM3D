@@ -1,12 +1,12 @@
-Find Field Sizes {#findsizes}
+Find Feature Sizes {#findsizes}
 ======
 
 ## Group (Subgroup) ##
 Statistics Filters (Morphological)
 
 ## Description ##
-This filter calculates the sizes of all **Fields**.  The filter simply iterates through all **Cells** asking the for **Field** that owns them.  
-The count of **Cells** for each **Field** is then stored as *NumCells* and the *Volume* and *EquivalentDiameter* are also calculated (and stored) by knowing 
+This filter calculates the sizes of all **Features**.  The filter simply iterates through all **Cells** asking the for **Feature** that owns them.  
+The count of **Cells** for each **Feature** is then stored as *NumCells* and the *Volume* and *EquivalentDiameter* are also calculated (and stored) by knowing 
 the volume of each **Cell**.
 
 ## Parameters ##
@@ -18,15 +18,15 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Fields (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the **Field**. |  |
-| Field | NumCells | Number (int) of **Cells** that are owned by the **Field**. | This value does not place any distinction between **Cells** that may be of a different size. |
-| Field | Volumes | Volume (float) in um^3 of the **Field**. | This value may be "redundant" from the NumCells value if all **Cells** are the same size and is calculable from the EquivalentDiameters value. |
+| Feature | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the **Feature**. |  |
+| Feature | NumCells | Number (int) of **Cells** that are owned by the **Feature**. | This value does not place any distinction between **Cells** that may be of a different size. |
+| Feature | Volumes | Volume (float) in um^3 of the **Feature**. | This value may be "redundant" from the NumCells value if all **Cells** are the same size and is calculable from the EquivalentDiameters value. |
 
 ## Authors ##
 

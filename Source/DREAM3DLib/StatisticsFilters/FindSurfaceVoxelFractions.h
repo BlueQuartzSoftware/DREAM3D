@@ -65,14 +65,14 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelFractionsArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Field Surface Voxel Fractions"; }
+    virtual const QString getHumanLabel() { return "Find Feature Surface Voxel Fractions"; }
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -96,11 +96,11 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
 
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int8_t* m_SurfaceVoxels;
     float* m_SurfaceVoxelFractions;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindSurfaceVoxelFractions(const FindSurfaceVoxelFractions&); // Copy Constructor Not Implemented
     void operator=(const FindSurfaceVoxelFractions&); // Operator '=' Not Implemented

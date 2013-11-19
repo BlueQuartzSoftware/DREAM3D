@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -55,11 +55,11 @@
 OpenCloseCoordinationNumber::OpenCloseCoordinationNumber() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_Loop(false),
   m_CoordinationNumber(6),
   m_Neighbors(NULL),
-  m_GrainIds(NULL)
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -125,14 +125,14 @@ int OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseCoordinationNumber::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void OpenCloseCoordinationNumber::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
 }
 
 
@@ -145,7 +145,7 @@ void OpenCloseCoordinationNumber::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -169,7 +169,7 @@ void OpenCloseCoordinationNumber::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -201,11 +201,11 @@ void OpenCloseCoordinationNumber::execute()
 //  float x, y, z;
 //  DimType row, plane;
   int neighpoint;
-  size_t numgrains = m->getNumCellFieldTuples();
-  if (numgrains == 0)
+  size_t numfeatures = m->getNumCellFeatureTuples();
+  if (numfeatures == 0)
   {
     setErrorCondition(-90001);
-    notifyErrorMessage("No grains have been defined in the Field map. A filter needs to be executed before this filter that defines the number of grains.", getErrorCondition());
+    notifyErrorMessage("No features have been defined in the Feature map. A filter needs to be executed before this filter that defines the number of features.", getErrorCondition());
     notifyStatusMessage("Completed with Errors");
     return;
   }
@@ -221,14 +221,14 @@ void OpenCloseCoordinationNumber::execute()
 
   size_t point = 0;
   int kstride, jstride;
-  int grainname, grain;
+  int featurename, feature;
   int coordination = 0;
   int current = 0;
   int most = 0;
 
   QList<QString> voxelArrayNames = m->getCellArrayNameList();
 
-  QVector<int > n(numgrains + 1, 0);
+  QVector<int > n(numfeatures + 1, 0);
 
   QVector<int > coordinationNumber(totalPoints, 0);
   bool keepgoing = true;
@@ -247,7 +247,7 @@ void OpenCloseCoordinationNumber::execute()
         for (int i = 0; i < dims[0]; i++)
         {
           point = kstride + jstride + i;
-          grainname = m_GrainIds[point];
+          featurename = m_FeatureIds[point];
           coordination = 0;
           current = 0;
           most = 0;
@@ -263,12 +263,12 @@ void OpenCloseCoordinationNumber::execute()
             if (l == 3 && i == (dims[0] - 1)) { good = 0; }
             if (good == 1)
             {
-              grain = m_GrainIds[neighpoint];
-              if((grainname > 0 && grain == 0) || (grainname == 0 && grain > 0))
+              feature = m_FeatureIds[neighpoint];
+              if((featurename > 0 && feature == 0) || (featurename == 0 && feature > 0))
               {
                 coordination = coordination + 1;
-                n[grain]++;
-                current = n[grain];
+                n[feature]++;
+                current = n[feature];
                 if (current > most)
                 {
                   most = current;
@@ -300,8 +300,8 @@ void OpenCloseCoordinationNumber::execute()
             if (l == 3 && i == (dims[0] - 1)) { good = 0; }
             if (good == 1)
             {
-              grain = m_GrainIds[neighpoint];
-              if(grain > 0) { n[grain] = 0; }
+              feature = m_FeatureIds[neighpoint];
+              if(feature > 0) { n[feature] = 0; }
             }
           }
         }

@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual int openFilterGroup(AbstractFilter* filter, int index) = 0;
     virtual int closeFilterGroup() = 0;
 
+
     virtual QString readString(const QString name, QString value) = 0;
     virtual QVector<QString> readStrings(const QString name, QVector<QString> value) = 0;
 

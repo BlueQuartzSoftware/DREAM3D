@@ -80,17 +80,17 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
     virtual ~SurfaceDataContainer();
 
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Face)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (FaceField)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (FaceFeature)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (FaceEnsemble)
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceFeatureData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(FaceArray::Pointer, Faces)
 
     DOES_DATASET_EXIST_DECL(FaceData)
-    DOES_DATASET_EXIST_DECL(FaceFieldData)
+    DOES_DATASET_EXIST_DECL(FaceFeatureData)
     DOES_DATASET_EXIST_DECL(FaceEnsembleData)
 
 
@@ -123,7 +123,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Face (Formerly Grain) group
+     * Face (Formerly Feature) group
      * @return
      */
     QList<QString> getFaceArrayNameList();
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
     int getNumFaceArrays();
 
     /**
-     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
@@ -152,14 +152,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFaceFieldData(const QString &name, IDataArray::Pointer data);
+    void addFaceFeatureData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFaceFieldData(const QString &name);
+    IDataArray::Pointer getFaceFeatureData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -167,38 +167,38 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFaceFieldData(const QString &name);
+    IDataArray::Pointer removeFaceFeatureData(const QString &name);
 
     /**
-     * @brief Removes all the Field Arrays
+     * @brief Removes all the Feature Arrays
      */
-    void clearFaceFieldData();
+    void clearFaceFeatureData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Field (Formerly Grain) group
+     * Feature (Formerly Feature) group
      * @return
      */
-    QList<QString> getFaceFieldArrayNameList();
+    QList<QString> getFaceFeatureArrayNameList();
 
     /**
-     * @brief Returns the total number of arrays that are stored in the Field group
+     * @brief Returns the total number of arrays that are stored in the Feature group
      * @return
      */
-    int getNumFaceFieldArrays();
+    int getNumFaceFeatureArrays();
 
     /**
-     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumFaceFieldTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumFaceFeatureTuples)
 
     /**
-     * @brief Resizes all of the Field Arrays to have 'size' tuples
+     * @brief Resizes all of the Feature Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeFaceFieldDataArrays(size_t size);
+    void resizeFaceFeatureDataArrays(size_t size);
 
     /**
      * @brief Adds/overwrites the data for a named array
@@ -229,7 +229,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Ensemble (Formerly Grain) group
+     * Ensemble (Formerly Feature) group
      * @return
      */
     QList<QString> getFaceEnsembleArrayNameList();
@@ -241,7 +241,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
     int getNumFaceEnsembleArrays();
 
     /**
-     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
@@ -261,7 +261,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
    private:
 
      QMap<QString, IDataArray::Pointer> m_FaceData;
-     QMap<QString, IDataArray::Pointer> m_FaceFieldData;
+     QMap<QString, IDataArray::Pointer> m_FaceFeatureData;
      QMap<QString, IDataArray::Pointer> m_FaceEnsembleData;
 
      SurfaceDataContainer(const SurfaceDataContainer&);

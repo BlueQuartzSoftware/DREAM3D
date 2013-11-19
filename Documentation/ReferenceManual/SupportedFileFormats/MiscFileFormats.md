@@ -28,7 +28,7 @@ Import & Export File Formats {#miscfileformats}
 + VTK Polydata (Solidmesh Based Data)
 + INL (CSV File of Voxel attributes)
 + Nodes/Triangles from Surfacemesh
-+ CSV File of Field Values
++ CSV File of Feature Values
 
 Please take a look at each of the various filters that read or write these files for notes on each type of file.
 

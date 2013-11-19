@@ -72,12 +72,12 @@ class DREAM3DPluginFrame : public QFrame
     /**
       * @brief Reads the Preferences from the users pref file
       */
-    virtual void readSettings(QSettings &prefs, bool shouldClear) = 0;
+    virtual void readSettings(QSettings &prefs, bool shouldClear);
 
      /**
       * @brief Writes the preferences to the users pref file
       */
-    virtual void writeSettings(QSettings &prefs) = 0;
+    virtual void writeSettings(QSettings &prefs);
 
     /**
      * @brief Enables or Disables all the widgets in a list

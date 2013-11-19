@@ -68,11 +68,11 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
@@ -106,7 +106,7 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
   private:
 
 
-    size_t firstMatrixField;
+    size_t firstMatrixFeature;
     unsigned long long int Seed;
     float sizex;
     float sizey;
@@ -114,16 +114,16 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
     float totalvol;
 
 
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellPhases;
 
     bool* m_Active;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
 
     unsigned int* m_PhaseTypes;
     StatsDataArray* m_StatsDataArray;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     EstablishMatrixPhase(const EstablishMatrixPhase&); // Copy Constructor Not Implemented
     void operator=(const EstablishMatrixPhase&); // Operator '=' Not Implemented

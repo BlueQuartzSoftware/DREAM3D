@@ -66,7 +66,7 @@ class ThresholdExample : public AbstractFilter
     // -----------------------------------------------------------------------------
     /* Each Filter can ONLY have ONE of each of these types of widgets */
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, CellComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, FieldComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, FeatureComparisonInputs)
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, EnsembleComparisonInputs)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, PointComparisonInputs)
@@ -130,10 +130,10 @@ class ThresholdExample : public AbstractFilter
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
 

@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT QFilterParametersWriter : public AbstractFilterParameter
 
     QSettings* getPrefs();
 
-    void openFile(QString filename);
+    void openFile(QString filename, QSettings::Format format);
     void closeFile();
     void setNumberOfFilters(int numFilters);
 

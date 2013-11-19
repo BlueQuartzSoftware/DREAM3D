@@ -86,22 +86,22 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
   READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
   READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
   READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellField)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
   READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceField)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
   READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
   READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeField)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
   READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
   READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexField)
+  READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
   READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
   reader->closeFilterGroup();
 }
@@ -116,22 +116,22 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellField)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceField)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeField)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
   WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexField)
+  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
   WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -145,14 +145,14 @@ void ArraySelectionExample::setVolumeSelectedArrayNames(QSet<QString> selectedVe
                                                         QSet<QString> selectedEdgeArrays,
                                                         QSet<QString> selectedFaceArrays,
                                                         QSet<QString> selectedCellArrays,
-                                                        QSet<QString> selectedFieldArrays,
+                                                        QSet<QString> selectedFeatureArrays,
                                                         QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
   m_SelectedVolumeFaceArrays = selectedFaceArrays;
   m_SelectedVolumeCellArrays = selectedCellArrays;
-  m_SelectedVolumeCellFieldArrays = selectedFieldArrays;
+  m_SelectedVolumeCellFeatureArrays = selectedFeatureArrays;
   m_SelectedVolumeCellEnsembleArrays = selectedEnsembleArrays;
 }
 
@@ -162,13 +162,13 @@ void ArraySelectionExample::setVolumeSelectedArrayNames(QSet<QString> selectedVe
 void ArraySelectionExample::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                          QSet<QString> selectedEdgeArrays,
                                                          QSet<QString> selectedFaceArrays,
-                                                         QSet<QString> selectedFieldArrays,
+                                                         QSet<QString> selectedFeatureArrays,
                                                          QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
   m_SelectedSurfaceFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceFaceFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceFaceFeatureArrays = selectedFeatureArrays;
   m_SelectedSurfaceFaceEnsembleArrays = selectedEnsembleArrays;
 }
 
@@ -177,12 +177,12 @@ void ArraySelectionExample::setSurfaceSelectedArrayNames(QSet<QString> selectedV
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                       QSet<QString> selectedEdgeArrays,
-                                                      QSet<QString> selectedFieldArrays,
+                                                      QSet<QString> selectedFeatureArrays,
                                                       QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
-  m_SelectedEdgeEdgeFieldArrays = selectedFieldArrays;
+  m_SelectedEdgeEdgeFeatureArrays = selectedFeatureArrays;
   m_SelectedEdgeEdgeEnsembleArrays = selectedEnsembleArrays;
 }
 
@@ -190,11 +190,11 @@ void ArraySelectionExample::setEdgeSelectedArrayNames(QSet<QString> selectedVert
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                        QSet<QString> selectedFieldArrays,
+                                                        QSet<QString> selectedFeatureArrays,
                                                         QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
-  m_SelectedVertexVertexFieldArrays = selectedFieldArrays;
+  m_SelectedVertexVertexFeatureArrays = selectedFeatureArrays;
   m_SelectedVertexVertexEnsembleArrays = selectedEnsembleArrays;
 }
 
@@ -203,7 +203,7 @@ void ArraySelectionExample::setVertexSelectedArrayNames(QSet<QString> selectedVe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ArraySelectionExample::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -215,8 +215,14 @@ void ArraySelectionExample::dataCheck(bool preflight, size_t voxels, size_t fiel
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

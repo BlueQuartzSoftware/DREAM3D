@@ -76,9 +76,9 @@ void ThresholdExample::setupFilterParameters()
   /* To Compare Arrays like a threshold filter */
   {
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
-    parameter->setHumanLabel("Voxel Field Arrays to Threshold");
-    parameter->setPropertyName("FieldComparisonInputs");
-    parameter->setWidgetType(FilterParameter::FieldArrayComparisonSelectionWidget);
+    parameter->setHumanLabel("Voxel Feature Arrays to Threshold");
+    parameter->setPropertyName("FeatureComparisonInputs");
+    parameter->setWidgetType(FilterParameter::FeatureArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
@@ -131,7 +131,7 @@ void ThresholdExample::readFilterParameters(AbstractFilterParametersReader* read
 
   reader->openFilterGroup(this, index);
   setCellComparisonInputs(reader->readComparisonInputs("CellComparisonInputs", getCellComparisonInputs()));
-  setFieldComparisonInputs(reader->readComparisonInputs("FieldComparisonInputs", getFieldComparisonInputs()));
+  setFeatureComparisonInputs(reader->readComparisonInputs("FeatureComparisonInputs", getFeatureComparisonInputs()));
   setEnsembleComparisonInputs(reader->readComparisonInputs("EnsembleComparisonInputs", getEnsembleComparisonInputs()));
   setPointComparisonInputs(reader->readComparisonInputs("PointComparisonInputs", getPointComparisonInputs()));
   setFaceComparisonInputs(reader->readComparisonInputs("FaceComparisonInputs", getFaceComparisonInputs()));
@@ -151,8 +151,8 @@ int ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writ
   /* --- CellArrayComparisonSelectionWidget --- */
   writer->writeValue( "CellComparisonInputs", getCellComparisonInputs() );
 
-  /* --- FieldArrayComparisonSelectionWidget --- */
-  writer->writeValue( "FieldComparisonInputs", getFieldComparisonInputs() );
+  /* --- FeatureArrayComparisonSelectionWidget --- */
+  writer->writeValue( "FeatureComparisonInputs", getFeatureComparisonInputs() );
 
   /* --- EnsembleArrayComparisonSelectionWidget --- */
   writer->writeValue("EnsembleComparisonInputs", getEnsembleComparisonInputs() );
@@ -172,7 +172,7 @@ int ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ThresholdExample::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ThresholdExample::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -198,8 +198,14 @@ void ThresholdExample::dataCheck(bool preflight, size_t voxels, size_t fields, s
 // -----------------------------------------------------------------------------
 void ThresholdExample::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

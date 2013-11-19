@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
   private:
     bool* m_GoodVoxels;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     AlignSectionsFeatureCentroid(const AlignSectionsFeatureCentroid&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsFeatureCentroid&); // Operator '=' Not Implemented

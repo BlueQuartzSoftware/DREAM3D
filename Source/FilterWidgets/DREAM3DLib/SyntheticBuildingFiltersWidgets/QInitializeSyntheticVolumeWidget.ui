@@ -205,7 +205,7 @@ font-size: 11px;
          </rect>
         </property>
         <layout class="QFormLayout" name="formLayout_2">
-         <property name="fieldGrowthPolicy">
+         <property name="FieldGrowthPolicy">
           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
          </property>
          <property name="horizontalSpacing">

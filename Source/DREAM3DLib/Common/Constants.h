@@ -110,15 +110,15 @@ namespace DREAM3D
     const DREAM3D_STRING ConfidenceIndexNoSpace("ConfidenceIndex");
     const DREAM3D_STRING EulerAngles("EulerAngles");
     const DREAM3D_STRING EulerColor("EulerColor");
-    const DREAM3D_STRING FarFieldQuats("FarFieldQuats");
-    const DREAM3D_STRING FarFieldZoneIds("FarFieldZoneIds");
+    const DREAM3D_STRING FarFeatureQuats("FarFeatureQuats");
+    const DREAM3D_STRING FarFeatureZoneIds("FarFeatureZoneIds");
     const DREAM3D_STRING FlatImageData("FlatImageData");
     const DREAM3D_STRING GBEuclideanDistances("GBEuclideanDistances");
     const DREAM3D_STRING GlobAlpha("GlobAlpha");
     const DREAM3D_STRING GoodVoxels("GoodVoxels");
-    const DREAM3D_STRING GrainIds("GrainIds");
-    const DREAM3D_STRING GrainReferenceCAxisMisorientations("GrainReferenceCAxisMisorientations");
-    const DREAM3D_STRING GrainReferenceMisorientations("GrainReferenceMisorientations");
+    const DREAM3D_STRING FeatureIds("FeatureIds");
+    const DREAM3D_STRING FeatureReferenceCAxisMisorientations("FeatureReferenceCAxisMisorientations");
+    const DREAM3D_STRING FeatureReferenceMisorientations("FeatureReferenceMisorientations");
     const DREAM3D_STRING IPFColor("IPFColor");
     const DREAM3D_STRING ImageData("ImageData");
     const DREAM3D_STRING ImageQuality("Image Quality");
@@ -141,8 +141,9 @@ namespace DREAM3D
     const DREAM3D_STRING TJEuclideanDistances("TJEuclideanDistances");
   }
 
-  namespace FieldData
+  namespace FeatureData
   {
+    const DREAM3D_STRING FeatureID("Feature_ID");
     const DREAM3D_STRING Active("Active");
     const DREAM3D_STRING AspectRatios("AspectRatios");
     const DREAM3D_STRING AvgCAxes("AvgCAxes");
@@ -152,7 +153,7 @@ namespace DREAM3D
     const DREAM3D_STRING AxisEulerAngles("AxisEulerAngles");
     const DREAM3D_STRING AxisLengths("AxisLengths");
     const DREAM3D_STRING BasalLoadingFactor("BasalLoadingFactor");
-    const DREAM3D_STRING BiasedFields("BiasedFields");
+    const DREAM3D_STRING BiasedFeatures("BiasedFeatures");
     const DREAM3D_STRING CAxisMisalignmentList("CAxisMisalignmentList");
     const DREAM3D_STRING Centroids("Centroids");
     const DREAM3D_STRING ClusteringList("ClusteringList");
@@ -162,12 +163,12 @@ namespace DREAM3D
     const DREAM3D_STRING F1("F1");
     const DREAM3D_STRING F1spt("F1spt");
     const DREAM3D_STRING F7("F7");
-    const DREAM3D_STRING FarFieldOrientations("FarFieldOrientations");
-    const DREAM3D_STRING FieldPhases("Phases");
-    const DREAM3D_STRING GoodFields("GoodFields");
-    const DREAM3D_STRING GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
-    const DREAM3D_STRING GrainAvgMisorientations("GrainAvgMisorientations");
-    const DREAM3D_STRING GrainStdevCAxisMisorientations("GrainStdevCAxisMisorientations");
+    const DREAM3D_STRING FarFeatureOrientations("FarFeatureOrientations");
+    const DREAM3D_STRING FeaturePhases("Phases");
+    const DREAM3D_STRING GoodFeatures("GoodFeatures");
+    const DREAM3D_STRING FeatureAvgCAxisMisorientations("FeatureAvgCAxisMisorientations");
+    const DREAM3D_STRING FeatureAvgMisorientations("FeatureAvgMisorientations");
+    const DREAM3D_STRING FeatureStdevCAxisMisorientations("FeatureStdevCAxisMisorientations");
     const DREAM3D_STRING KernelAvgMisorientations("KernelAvgMisorientations");
     const DREAM3D_STRING LMG("LMG");
     const DREAM3D_STRING LargestCrossSections("LargestCrossSections");
@@ -180,7 +181,7 @@ namespace DREAM3D
     const DREAM3D_STRING NeighborhoodList("NeighborhoodList");
     const DREAM3D_STRING Neighborhoods("Neighborhoods");
     const DREAM3D_STRING NumCells("NumCells");
-    const DREAM3D_STRING NumGrainsPerParent("NumGrainsPerParent");
+    const DREAM3D_STRING NumFeaturesPerParent("NumFeaturesPerParent");
     const DREAM3D_STRING NumNeighbors("NumNeighbors");
     const DREAM3D_STRING Omega3s("Omega3s");
     const DREAM3D_STRING ParentIds("ParentIds");
@@ -190,7 +191,7 @@ namespace DREAM3D
     const DREAM3D_STRING Schmids("Schmids");
     const DREAM3D_STRING SharedSurfaceAreaList("SharedSurfaceAreaList");
     const DREAM3D_STRING SlipSystems("SlipSystems");
-    const DREAM3D_STRING SurfaceFields("SurfaceFields");
+    const DREAM3D_STRING SurfaceFeatures("SurfaceFeatures");
     const DREAM3D_STRING SurfaceVoxelFractions("SurfaceVoxelFractions");
     const DREAM3D_STRING Volumes("Volumes");
     const DREAM3D_STRING avgMisorientation("avgMisorientation");
@@ -200,7 +201,7 @@ namespace DREAM3D
 
   namespace EnsembleData
   {
-    const DREAM3D_STRING NumFields("NumFields");
+    const DREAM3D_STRING NumFeatures("NumFeatures");
     const DREAM3D_STRING VolFractions("VolFractions");
     const DREAM3D_STRING TotalSurfaceAreas("TotalSurfaceAreas");
     const DREAM3D_STRING CrystalStructures("CrystalStructures");
@@ -247,7 +248,7 @@ namespace DREAM3D
     const DREAM3D_STRING SurfaceMeshTwinBoundarySchmidFactors("SurfaceMeshTwinBoundarySchmidFactors");
     const DREAM3D_STRING SurfaceMeshFaceDihedralAngles("SurfaceMeshFaceDihedralAngles");
     const DREAM3D_STRING SurfaceMeshFaceNormals("SurfaceMeshFaceNormals");
-    const DREAM3D_STRING SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
+    const DREAM3D_STRING SurfaceMeshFeatureFaceId("SurfaceMeshFeatureFaceId");
     const DREAM3D_STRING SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
     const DREAM3D_STRING SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
     const DREAM3D_STRING SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
@@ -279,6 +280,7 @@ namespace DREAM3D
     const DREAM3D_STRING FilterName("Filter_Name");
     const DREAM3D_STRING HumanLabel("Filter_Human_Label");
     const DREAM3D_STRING Version("Version");
+    const DREAM3D_STRING PipelineBuilderGeomertry("PipelineBuilderGeometry");
   }
 
 
@@ -318,14 +320,14 @@ namespace DREAM3D
     const DREAM3D_STRING FileVersion("6.0");
     const DREAM3D_STRING FileVersionName("FileVersion");
     const DREAM3D_STRING GBCD("GBCD");
-    const DREAM3D_STRING GrainAvgDisorientation ("GrainAvgDisorientation");
-    const DREAM3D_STRING Grain_Diameter_Info("Grain_Diameter_Info");
-    const DREAM3D_STRING Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");
-    const DREAM3D_STRING Grain_SizeVCoverA_Distributions("GrainSize Vs C Over A Distributions");
-    const DREAM3D_STRING Grain_SizeVNeighbors_Distributions("GrainSize Vs Neighbors Distributions");
-    const DREAM3D_STRING Grain_SizeVOmega3_Distributions("GrainSize Vs Omega3 Distributions");
-    const DREAM3D_STRING Grain_SizeVClustering_Distributions("GrainSize Vs Clustering Distributions");
-    const DREAM3D_STRING Grain_Size_Distribution("GrainSize Distribution");
+    const DREAM3D_STRING FeatureAvgDisorientation ("FeatureAvgDisorientation");
+    const DREAM3D_STRING Feature_Diameter_Info("Feature_Diameter_Info");
+    const DREAM3D_STRING Feature_SizeVBoverA_Distributions("FeatureSize Vs B Over A Distributions");
+    const DREAM3D_STRING Feature_SizeVCoverA_Distributions("FeatureSize Vs C Over A Distributions");
+    const DREAM3D_STRING Feature_SizeVNeighbors_Distributions("FeatureSize Vs Neighbors Distributions");
+    const DREAM3D_STRING Feature_SizeVOmega3_Distributions("FeatureSize Vs Omega3 Distributions");
+    const DREAM3D_STRING Feature_SizeVClustering_Distributions("FeatureSize Vs Clustering Distributions");
+    const DREAM3D_STRING Feature_Size_Distribution("FeatureSize Distribution");
     const DREAM3D_STRING KernelAvgDisorientation( "KernelAvgDisorientation");
     const DREAM3D_STRING LogNormalDistribution("Log Normal Distribution");
     const DREAM3D_STRING MDFWeights("MDF-Weights");
@@ -334,7 +336,7 @@ namespace DREAM3D
     const DREAM3D_STRING MicroTextureBins("MicroTextureBins");
     const DREAM3D_STRING MinimumValue("Minimum Value");
     const DREAM3D_STRING MisorientationBins("MisorientationBins");
-    const DREAM3D_STRING Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
+    const DREAM3D_STRING Neighbor_Feature_ID_List( "Neighbor_Feature_ID_List");
     const DREAM3D_STRING NumComponents("NumComponents");
     const DREAM3D_STRING ODF("ODF");
     const DREAM3D_STRING ODFWeights("ODF-Weights");
@@ -400,11 +402,11 @@ namespace DREAM3D
 
   namespace StatisticsType
   {
-    const unsigned int Grain_SizeVBoverA = 0;    //!<
-    const unsigned int Grain_SizeVCoverA = 1;        //!<
-    const unsigned int Grain_SizeVNeighbors = 2;     //!<
-    const unsigned int Grain_SizeVOmega3 = 3;        //!<
-    const unsigned int Grain_SizeVClustering = 4;        //!<
+    const unsigned int Feature_SizeVBoverA = 0;    //!<
+    const unsigned int Feature_SizeVCoverA = 1;        //!<
+    const unsigned int Feature_SizeVNeighbors = 2;     //!<
+    const unsigned int Feature_SizeVOmega3 = 3;        //!<
+    const unsigned int Feature_SizeVClustering = 4;        //!<
     const unsigned int UnknownStatisticsGroup = 999;    //!<
   }
 
@@ -495,33 +497,16 @@ namespace DREAM3D
 
     const DREAM3D_STRING VisualizationVizFile("Visualization.vtk");//11
     const DREAM3D_STRING DownSampledVizFile("DownSampled_Visualization.vtk");//11
-    const DREAM3D_STRING HDF5GrainFile("Grains.h5grain");
-  }
-
-  namespace GrainData
-  {
-    const DREAM3D_STRING GrainID("Grain_ID");
-    const DREAM3D_STRING PhaseID("Phase_ID");
-    const DREAM3D_STRING Phi1("Phi1");
-    const DREAM3D_STRING PHI("PHI");
-    const DREAM3D_STRING Phi2("Phi2");
-    const DREAM3D_STRING EquivDiam("Equiv_Diameter");
-    const DREAM3D_STRING B_Over_A("b/a");
-    const DREAM3D_STRING C_Over_A("c/a");
-    const DREAM3D_STRING Omega3("Omega3");
-    const DREAM3D_STRING SurfaceGrain("Surface_Grain");
-    const DREAM3D_STRING OutsideBoundingBox("Outside_Bounding_Box");
-    const DREAM3D_STRING NumNeighbors("No_Neighbors");
-    const char Delimiter = ',';
+    const DREAM3D_STRING HDF5FeatureFile("Features.h5feature");
   }
 
   namespace SyntheticBuilder
   {
-    const DREAM3D_STRING GrainDataFile("GrainData.csv");
+    const DREAM3D_STRING FeatureDataFile("FeatureData.csv");
     const DREAM3D_STRING H5VoxelFile("VoxelData.h5voxel");
 
     const DREAM3D_STRING VisualizationVizFile("Visualization.vtk");
-    const DREAM3D_STRING HDF5GrainFile("Grains.h5grain");
+    const DREAM3D_STRING HDF5FeatureFile("Features.h5feature");
 
     const DREAM3D_STRING ErrorFile("Error.txt");
     const DREAM3D_STRING VtkFile("Test.vtk");
@@ -530,7 +515,7 @@ namespace DREAM3D
   namespace MicroStats
   {
     const DREAM3D_STRING H5StatisticsFile("Results.h5stats");
-    const DREAM3D_STRING GrainDataFile("GrainData.csv");//14
+    const DREAM3D_STRING FeatureDataFile("FeatureData.csv");//14
     const DREAM3D_STRING DeformationStatsFile("Deformation_Stats.txt");
     const DREAM3D_STRING IPFDeformVTKFile("IPF_DeformationData.vtk");
     const DREAM3D_STRING VoxelDataName("VoxelData");

@@ -66,23 +66,23 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellParentIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GlobAlphaArrayName)
-    //------ Required Field Data
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Created Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldParentIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
+    //------ Created Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureParentIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const QString getHumanLabel() { return "Reconstruct Prior Beta Grains"; }
+    virtual const QString getHumanLabel() { return "Reconstruct Prior Beta Features"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
@@ -113,14 +113,14 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     void identify_globAlpha();
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellPhases;
     int32_t* m_CellParentIds;
-    int32_t* m_FieldParentIds;
+    int32_t* m_FeatureParentIds;
     int32_t* m_GlobAlpha;
     float* m_AvgQuats;
     bool* m_Active;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     NeighborList<int>* m_NeighborList;
 
     unsigned int* m_CrystalStructures;
@@ -130,7 +130,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     MergeColonies(const MergeColonies&); // Copy Constructor Not Implemented

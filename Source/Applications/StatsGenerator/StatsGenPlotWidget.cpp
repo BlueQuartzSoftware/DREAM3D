@@ -643,17 +643,17 @@ void StatsGenPlotWidget::setBins(QVector<float> &binNumbers)
 
     switch(m_StatsType)
     {
-      case DREAM3D::Reconstruction::Grain_SizeVBoverA:
-        msg.append(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions.toLatin1().data());
+      case DREAM3D::Reconstruction::Feature_SizeVBoverA:
+        msg.append(DREAM3D::HDF5::Feature_SizeVBoverA_Distributions.toLatin1().data());
         break;
-      case DREAM3D::Reconstruction::Grain_SizeVCoverA:
-        msg.append(DREAM3D::HDF5::Grain_SizeVCoverA_Distributions.toLatin1().data());
+      case DREAM3D::Reconstruction::Feature_SizeVCoverA:
+        msg.append(DREAM3D::HDF5::Feature_SizeVCoverA_Distributions.toLatin1().data());
         break;
-      case DREAM3D::Reconstruction::Grain_SizeVNeighbors:
-        msg.append(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions.toLatin1().data());
+      case DREAM3D::Reconstruction::Feature_SizeVNeighbors:
+        msg.append(DREAM3D::HDF5::Feature_SizeVNeighbors_Distributions.toLatin1().data());
         break;
-      case DREAM3D::Reconstruction::Grain_SizeVOmega3:
-        msg.append(DREAM3D::HDF5::Grain_SizeVOmega3_Distributions.toLatin1().data());
+      case DREAM3D::Reconstruction::Feature_SizeVOmega3:
+        msg.append(DREAM3D::HDF5::Feature_SizeVOmega3_Distributions.toLatin1().data());
         break;
       default:
         msg.append("Unknown");

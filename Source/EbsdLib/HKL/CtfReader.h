@@ -106,10 +106,10 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     EBSD_POINTER_PROP(BandSlope, BS, int)
 
     /**
-     * @brief Returns the pointer to the data for a given field
-     * @param fieldName The name of the field to return the pointer to.
+     * @brief Returns the pointer to the data for a given feature
+     * @param featureName The name of the feature to return the pointer to.
      */
-    void* getPointerByName(const QString &fieldName);
+    void* getPointerByName(const QString &featureName);
     void setPointerByName(const QString &name, void* p);
 
 
@@ -117,11 +117,11 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
-     * @param fieldName The name of the field.
+     * @param featureName The name of the feature.
      */
-    Ebsd::NumType getPointerType(const QString &fieldName);
-    int getTypeSize(const QString &fieldName);
-    DataParser::Pointer getParser(const QString &fieldName, void* ptr, size_t size);
+    Ebsd::NumType getPointerType(const QString &featureName);
+    int getTypeSize(const QString &featureName);
+    DataParser::Pointer getParser(const QString &featureName, void* ptr, size_t size);
 
     QList<QString> getColumnNames();
 

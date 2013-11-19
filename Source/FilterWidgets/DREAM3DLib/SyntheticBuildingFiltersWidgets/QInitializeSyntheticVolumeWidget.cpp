@@ -265,7 +265,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
     QFileInfo fi(m_InputFile->text());
     if(fi.exists() && fi.isFile())
     {
-      
+
 
       DataContainerArray::Pointer dca = DataContainerArray::New();
       m_DataContainer = VolumeDataContainer::New();
@@ -355,8 +355,8 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
         formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
       }
 
-      // Estimate the number of grains
-      estimateNumGrainsSetup();
+      // Estimate the number of Features
+      estimateNumFeaturesSetup();
 
     }
   }
@@ -370,7 +370,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
 // -----------------------------------------------------------------------------
 void QInitializeSyntheticVolumeWidget::on_m_XPoints_valueChanged(int v)
 {
-  estimateNumGrainsSetup();
+  estimateNumFeaturesSetup();
   emit parametersChanged();
 }
 
@@ -379,7 +379,7 @@ void QInitializeSyntheticVolumeWidget::on_m_XPoints_valueChanged(int v)
 // -----------------------------------------------------------------------------
 void QInitializeSyntheticVolumeWidget::on_m_YPoints_valueChanged(int v)
 {
-  estimateNumGrainsSetup();
+  estimateNumFeaturesSetup();
   emit parametersChanged();
 }
 
@@ -388,7 +388,7 @@ void QInitializeSyntheticVolumeWidget::on_m_YPoints_valueChanged(int v)
 // -----------------------------------------------------------------------------
 void QInitializeSyntheticVolumeWidget::on_m_ZPoints_valueChanged(int v)
 {
-  estimateNumGrainsSetup();
+  estimateNumFeaturesSetup();
   emit parametersChanged();
 }
 
@@ -398,7 +398,7 @@ void QInitializeSyntheticVolumeWidget::on_m_ZPoints_valueChanged(int v)
 // -----------------------------------------------------------------------------
 void QInitializeSyntheticVolumeWidget::on_m_ZResolution_valueChanged(double v)
 {
-  estimateNumGrainsSetup();
+  estimateNumFeaturesSetup();
   emit parametersChanged();
 }
 
@@ -407,7 +407,7 @@ void QInitializeSyntheticVolumeWidget::on_m_ZResolution_valueChanged(double v)
 // -----------------------------------------------------------------------------
 void QInitializeSyntheticVolumeWidget::on_m_YResolution_valueChanged(double v)
 {
-  estimateNumGrainsSetup();
+  estimateNumFeaturesSetup();
   emit parametersChanged();
 }
 
@@ -416,14 +416,14 @@ void QInitializeSyntheticVolumeWidget::on_m_YResolution_valueChanged(double v)
 // -----------------------------------------------------------------------------
 void QInitializeSyntheticVolumeWidget::on_m_XResolution_valueChanged(double v)
 {
-  estimateNumGrainsSetup();
+  estimateNumFeaturesSetup();
   emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres)
+int QInitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres)
 {
 //  int err = -1;
 
@@ -436,7 +436,7 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
 //  QVector<float> double_data;
 //  QVector<float> avgdiam;
 //  QVector<float> sddiam;
-//  QVector<float> grainDiamInfo;
+//  QVector<float> FeatureDiamInfo;
 //  QVector<float> maxdiameter;
 //  QVector<float> mindiameter;
 
@@ -492,7 +492,7 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
   {
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
   }
-  // generate the grains
+  // generate the Features
   int gid = 1;
 
   float currentvol = 0.0;
@@ -511,14 +511,14 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
       {
         volgood = 1;
         // u = rg.genrand_res53();
-        if(pp->getGrainSize_DistType() == DREAM3D::DistributionType::LogNormal)
+        if(pp->getFeatureSize_DistType() == DREAM3D::DistributionType::LogNormal)
         {
-          float avgdiam = pp->getGrainSizeDistribution().at(0)->GetValue(0);
-          float sddiam = pp->getGrainSizeDistribution().at(1)->GetValue(0);
+          float avgdiam = pp->getFeatureSizeDistribution().at(0)->GetValue(0);
+          float sddiam = pp->getFeatureSizeDistribution().at(1)->GetValue(0);
           diam = rg.genrand_norm(avgdiam, sddiam);
           diam = exp(diam);
-          if(diam >= pp->getMaxGrainDiameter()) volgood = 0;
-          if(diam < pp->getMinGrainDiameter()) volgood = 0;
+          if(diam >= pp->getMaxFeatureDiameter()) volgood = 0;
+          if(diam < pp->getMinFeatureDiameter()) volgood = 0;
           vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
         }
       }
@@ -535,7 +535,7 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QInitializeSyntheticVolumeWidget::estimateNumGrainsSetup()
+void QInitializeSyntheticVolumeWidget::estimateNumFeaturesSetup()
 {
   int xpoints, ypoints, zpoints;
   float xres, yres, zres;
@@ -545,8 +545,8 @@ void QInitializeSyntheticVolumeWidget::estimateNumGrainsSetup()
   xres = m_XResolution->value();
   yres = m_YResolution->value();
   zres = m_ZResolution->value();
-  int est_ngrains = estimate_numgrains(xpoints, ypoints, zpoints, xres, yres, zres);
-  m_EstimatedGrains->setText(QString::number(est_ngrains));
+  int est_nFeatures = estimate_numFeatures(xpoints, ypoints, zpoints, xres, yres, zres);
+  m_EstimatedGrains->setText(QString::number(est_nFeatures));
 }
 
 

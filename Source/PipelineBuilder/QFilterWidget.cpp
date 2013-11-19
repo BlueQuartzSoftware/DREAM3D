@@ -732,9 +732,9 @@ void QFilterWidget::setupGui()
     {
       setupCellArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VolumeFieldArrayNameSelectionWidget)
+    else if (wType == FilterParameter::VolumeFeatureArrayNameSelectionWidget)
     {
-      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+      setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::VolumeEnsembleArrayNameSelectionWidget)
     {
@@ -752,9 +752,9 @@ void QFilterWidget::setupGui()
     {
       setupFaceArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::SurfaceFieldArrayNameSelectionWidget)
+    else if (wType == FilterParameter::SurfaceFeatureArrayNameSelectionWidget)
     {
-      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+      setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::SurfaceEnsembleArrayNameSelectionWidget)
     {
@@ -768,9 +768,9 @@ void QFilterWidget::setupGui()
     {
       setupEdgeArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::EdgeFieldArrayNameSelectionWidget)
+    else if (wType == FilterParameter::EdgeFeatureArrayNameSelectionWidget)
     {
-      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+      setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::EdgeEnsembleArrayNameSelectionWidget)
     {
@@ -780,9 +780,9 @@ void QFilterWidget::setupGui()
     {
       setupVertexArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VertexFieldArrayNameSelectionWidget)
+    else if (wType == FilterParameter::VertexFeatureArrayNameSelectionWidget)
     {
-      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+      setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::VertexEnsembleArrayNameSelectionWidget)
     {
@@ -973,7 +973,7 @@ void QFilterWidget::setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int o
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex,
+void QFilterWidget::setupFeatureArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex,
                                                     FilterParameter* option, QLabel* label )
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
@@ -1026,8 +1026,8 @@ void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optI
     case FilterParameter::CellArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::CellListType);
       break;
-    case FilterParameter::FieldArrayComparisonSelectionWidget:
-      w->setArrayListType(ComparisonSelectionWidget::FieldListType);
+    case FilterParameter::FeatureArrayComparisonSelectionWidget:
+      w->setArrayListType(ComparisonSelectionWidget::FeatureListType);
       break;
     case FilterParameter::EnsembleArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::EnsembleListType);
@@ -1568,21 +1568,21 @@ void QFilterWidget::emitParametersChanged()
   emit parametersChanged();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::writeOptions(QSettings &prefs)
-{
+//// -----------------------------------------------------------------------------
+////
+//// -----------------------------------------------------------------------------
+//void QFilterWidget::writeOptions(QSettings &prefs)
+//{
 
-}
+//}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::readOptions(QSettings &prefs)
-{
+//// -----------------------------------------------------------------------------
+////
+//// -----------------------------------------------------------------------------
+//void QFilterWidget::readOptions(QSettings &prefs)
+//{
 
-}
+//}
 
 // -----------------------------------------------------------------------------
 //
@@ -1740,68 +1740,70 @@ void QFilterWidget::preflightAboutToExecute(DataContainerArray::Pointer dca)
     FilterParameter::WidgetType wType = option->getWidgetType();
     QString propertyName = (option->getPropertyName());
 
-    //switch(wType)
-    //{
-    //  case FilterParameter::VolumeVertexArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(vldc->getVertexArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::VolumeEdgeArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(vldc->getEdgeArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::VolumeFaceArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(vldc->getFaceArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::VolumeCellArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(vldc->getCellArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::VolumeFieldArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(vldc->getCellFieldArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::VolumeEnsembleArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(vldc->getCellEnsembleArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::SurfaceVertexArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(sdc->getVertexArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::SurfaceEdgeArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(sdc->getEdgeArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::SurfaceFaceArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(sdc->getFaceArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::SurfaceFieldArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(sdc->getFaceFieldArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::SurfaceEnsembleArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(sdc->getFaceEnsembleArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::EdgeVertexArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(edc->getVertexArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::EdgeEdgeArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(edc->getEdgeArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::EdgeFieldArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(edc->getEdgeFieldArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::EdgeEnsembleArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(edc->getEdgeEnsembleArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::VertexVertexArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(vdc->getVertexArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::VertexFieldArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(vdc->getVertexFieldArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::VertexEnsembleArrayNameSelectionWidget:
-    //    updateArrayNameComboBox(vdc->getVertexEnsembleArrayNameList(), propertyName);
-    //    break;
-    //  case FilterParameter::ArraySelectionWidget:
-    //    //     updateArraySelectionWidget(vdc, smdc, sdc, propertyName);
-    //    break;
-    //  default:
-    //    break;
-    //}
+    switch(wType)
+    {
+      #if 0
+      case FilterParameter::VolumeVertexArrayNameSelectionWidget:
+        updateArrayNameComboBox(vldc->getVertexArrayNameList(), propertyName);
+        break;
+      case FilterParameter::VolumeEdgeArrayNameSelectionWidget:
+        updateArrayNameComboBox(vldc->getEdgeArrayNameList(), propertyName);
+        break;
+      case FilterParameter::VolumeFaceArrayNameSelectionWidget:
+        updateArrayNameComboBox(vldc->getFaceArrayNameList(), propertyName);
+        break;
+      case FilterParameter::VolumeCellArrayNameSelectionWidget:
+        updateArrayNameComboBox(vldc->getCellArrayNameList(), propertyName);
+        break;
+      case FilterParameter::VolumeFieldArrayNameSelectionWidget:
+        updateArrayNameComboBox(vldc->getCellFieldArrayNameList(), propertyName);
+        break;
+      case FilterParameter::VolumeEnsembleArrayNameSelectionWidget:
+        updateArrayNameComboBox(vldc->getCellEnsembleArrayNameList(), propertyName);
+        break;
+      case FilterParameter::SurfaceVertexArrayNameSelectionWidget:
+        updateArrayNameComboBox(sdc->getVertexArrayNameList(), propertyName);
+        break;
+      case FilterParameter::SurfaceEdgeArrayNameSelectionWidget:
+        updateArrayNameComboBox(sdc->getEdgeArrayNameList(), propertyName);
+        break;
+      case FilterParameter::SurfaceFaceArrayNameSelectionWidget:
+        updateArrayNameComboBox(sdc->getFaceArrayNameList(), propertyName);
+        break;
+      case FilterParameter::SurfaceFieldArrayNameSelectionWidget:
+        updateArrayNameComboBox(sdc->getFaceFieldArrayNameList(), propertyName);
+        break;
+      case FilterParameter::SurfaceEnsembleArrayNameSelectionWidget:
+        updateArrayNameComboBox(sdc->getFaceEnsembleArrayNameList(), propertyName);
+        break;
+      case FilterParameter::EdgeVertexArrayNameSelectionWidget:
+        updateArrayNameComboBox(edc->getVertexArrayNameList(), propertyName);
+        break;
+      case FilterParameter::EdgeEdgeArrayNameSelectionWidget:
+        updateArrayNameComboBox(edc->getEdgeArrayNameList(), propertyName);
+        break;
+      case FilterParameter::EdgeFieldArrayNameSelectionWidget:
+        updateArrayNameComboBox(edc->getEdgeFieldArrayNameList(), propertyName);
+        break;
+      case FilterParameter::EdgeEnsembleArrayNameSelectionWidget:
+        updateArrayNameComboBox(edc->getEdgeEnsembleArrayNameList(), propertyName);
+        break;
+      case FilterParameter::VertexVertexArrayNameSelectionWidget:
+        updateArrayNameComboBox(vdc->getVertexArrayNameList(), propertyName);
+        break;
+      case FilterParameter::VertexFieldArrayNameSelectionWidget:
+        updateArrayNameComboBox(vdc->getVertexFieldArrayNameList(), propertyName);
+        break;
+      case FilterParameter::VertexEnsembleArrayNameSelectionWidget:
+        updateArrayNameComboBox(vdc->getVertexEnsembleArrayNameList(), propertyName);
+        break;
+      case FilterParameter::ArraySelectionWidget:
+        //     updateArraySelectionWidget(vdc, smdc, sdc, propertyName);
+        break;
+        #endif
+      default:
+        break;
+    }
   }
 }
 

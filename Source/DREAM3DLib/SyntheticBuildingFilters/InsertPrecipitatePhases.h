@@ -62,7 +62,7 @@ typedef struct
   float m_AxisLengths[3];
   float m_AxisEulerAngles[3];
   float m_Omega3s;
-  int m_FieldPhases;
+  int m_FeaturePhases;
   int m_Neighborhoods;
 } Precip;
 
@@ -84,10 +84,10 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
@@ -96,13 +96,13 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
     //------ Created Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NumFeaturesArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)
@@ -138,22 +138,22 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
     Int32ArrayType::Pointer initialize_packinggrid();
 
-    void place_precipitates(Int32ArrayType::Pointer grainOwnersPtr);
+    void place_precipitates(Int32ArrayType::Pointer featureOwnersPtr);
     void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps);
 
     void transfer_attributes(int gnum, Precip* precip);
-    void insert_precipitate(size_t grainNum);
+    void insert_precipitate(size_t featureNum);
 
-    void move_precipitate(size_t grainNum, float xc, float yc, float zc);
+    void move_precipitate(size_t featureNum, float xc, float yc, float zc);
 
     float check_sizedisterror(Precip* precip);
-    void determine_clustering(size_t grainNum, int add);
+    void determine_clustering(size_t featureNum, int add);
     float check_clusteringerror(int gadd, int gremove);
 
-    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr);
+    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr);
     void assign_voxels();
     void assign_gaps();
-    void cleanup_grains();
+    void cleanup_features();
     void write_goal_attributes();
 
     float find_xcoord(long long int index);
@@ -170,7 +170,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
   private:
 
-    int firstPrecipitateField;
+    int firstPrecipitateFeature;
     unsigned long long int Seed;
     float sizex;
     float sizey;
@@ -184,7 +184,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     ShapeOps::Pointer m_EllipsoidOps;
     ShapeOps::Pointer m_SuperEllipsoidOps;
 
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellPhases;
     int8_t* m_SurfaceVoxels;
 
@@ -195,13 +195,13 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     float* m_Omega3s;
     float* m_EquivalentDiameters;
     bool* m_Active;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeaturePhases;
     int32_t* m_NumCells;
     NeighborList<float>* m_ClusteringList;
 
     unsigned int* m_PhaseTypes;
     unsigned int* m_ShapeTypes;
-    int32_t* m_NumFields;
+    int32_t* m_NumFeatures;
     StatsDataArray* m_StatsDataArray;
 
     OrthoRhombicOps::Pointer m_OrthoOps;
@@ -217,12 +217,12 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     int m_PackingPoints[3];
     int m_TotalPackingPoints;
 
-    QVector<QVector<float> > grainsizedist;
-    QVector<QVector<float> > simgrainsizedist;
+    QVector<QVector<float> > featuresizedist;
+    QVector<QVector<float> > simfeaturesizedist;
     QVector<QVector<QVector<float> > > clusteringdist;
     QVector<QVector<QVector<float> > > simclusteringdist;
 
-    QVector<float> grainsizediststep;
+    QVector<float> featuresizediststep;
     QVector<float> clusteringdiststep;
 
     QVector<int> newnames;
@@ -233,7 +233,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     float currentclusteringerror, oldclusteringerror;
     float currentsizedisterror, oldsizedisterror;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     InsertPrecipitatePhases(const InsertPrecipitatePhases&); // Copy Constructor Not Implemented
     void operator=(const InsertPrecipitatePhases&); // Operator '=' Not Implemented

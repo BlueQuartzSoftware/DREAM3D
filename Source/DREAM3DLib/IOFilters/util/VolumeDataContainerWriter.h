@@ -92,10 +92,10 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     * arrays in the data container
     * @param preflight
     * @param voxels The number of voxels
-    * @param fields The number of fields
+    * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     int writeMetaInfo(const QString& hdfPath, int64_t volDims[3],
@@ -104,7 +104,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     virtual int writeMeshData(hid_t dcGid);
 
     virtual int writeCellData(hid_t dcGid);
-    virtual int writeCellFieldData(hid_t dcGid);
+    virtual int writeCellFeatureData(hid_t dcGid);
     virtual int writeCellEnsembleData(hid_t dcGid);
 
     virtual void writeXdmfMeshStructure();

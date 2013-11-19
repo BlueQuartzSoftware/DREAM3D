@@ -71,9 +71,9 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
 
-    int estimate_numgrains(int xpoints, int ypoints, int zpoints,
+    int estimate_numFeatures(int xpoints, int ypoints, int zpoints,
                            float xres, float yres, float zres);
-    void estimateNumGrainsSetup();
+    void estimateNumFeaturesSetup();
 
     QFilterWidget* createDeepCopy();
 

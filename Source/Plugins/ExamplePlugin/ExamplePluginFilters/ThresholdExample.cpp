@@ -75,9 +75,9 @@ void ThresholdExample::setupFilterParameters()
   /* To Compare Arrays like a threshold filter */
   {
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
-    parameter->setHumanLabel("Voxel Field Arrays to Threshold");
-    parameter->setPropertyName("FieldComparisonInputs");
-    parameter->setWidgetType(FilterParameter::FieldArrayComparisonSelectionWidget);
+    parameter->setHumanLabel("Voxel Feature Arrays to Threshold");
+    parameter->setPropertyName("FeatureComparisonInputs");
+    parameter->setWidgetType(FilterParameter::FeatureArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
@@ -130,7 +130,7 @@ void ThresholdExample::readFilterParameters(AbstractFilterParametersReader* read
 
   reader->openFilterGroup(this, index);
   setCellComparisonInputs(reader->readValue("CellComparisonInputs", getCellComparisonInputs()));
-  setFieldComparisonInputs(reader->readValue("FieldComparisonInputs", getFieldComparisonInputs()));
+  setFeatureComparisonInputs(reader->readValue("FeatureComparisonInputs", getFeatureComparisonInputs()));
   setEnsembleComparisonInputs(reader->readValue("EnsembleComparisonInputs", getEnsembleComparisonInputs()));
   setPointComparisonInputs(reader->readValue("PointComparisonInputs", getPointComparisonInputs()));
   setFaceComparisonInputs(reader->readValue("FaceComparisonInputs", getFaceComparisonInputs()));
@@ -150,8 +150,8 @@ int ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writ
   /* --- CellArrayComparisonSelectionWidget --- */
   writer->writeValue( "CellComparisonInputs", getCellComparisonInputs() );
 
-  /* --- FieldArrayComparisonSelectionWidget --- */
-  writer->writeValue( "FieldComparisonInputs", getFieldComparisonInputs() );
+  /* --- FeatureArrayComparisonSelectionWidget --- */
+  writer->writeValue( "FeatureComparisonInputs", getFeatureComparisonInputs() );
 
   /* --- EnsembleArrayComparisonSelectionWidget --- */
   writer->writeValue("EnsembleComparisonInputs", getEnsembleComparisonInputs() );
@@ -171,7 +171,7 @@ int ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ThresholdExample::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ThresholdExample::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 

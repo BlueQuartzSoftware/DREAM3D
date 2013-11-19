@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -55,14 +55,14 @@
 OpenCloseBadData::OpenCloseBadData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_Direction(0),
   m_NumIterations(1),
   m_XDirOn(true),
   m_YDirOn(true),
   m_ZDirOn(true),
   m_Neighbors(NULL),
-  m_GrainIds(NULL)
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -162,14 +162,14 @@ int OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
 }
 
 
@@ -182,7 +182,7 @@ void OpenCloseBadData::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -206,7 +206,7 @@ void OpenCloseBadData::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -238,7 +238,7 @@ void OpenCloseBadData::execute()
 //  float x, y, z;
 //  DimType row, plane;
   int neighpoint;
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -251,12 +251,12 @@ void OpenCloseBadData::execute()
 
   size_t count = 0;
   int kstride, jstride;
-  int grainname, grain;
+  int featurename, feature;
 
   int current;
   int most;
 
-  QVector<int > n(numgrains + 1, 0);
+  QVector<int > n(numfeatures + 1, 0);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {
     for (int k = 0; k < dims[2]; k++)
@@ -269,8 +269,8 @@ void OpenCloseBadData::execute()
         {
           count = kstride + jstride + i;
 
-          grainname = m_GrainIds[count];
-          if (grainname == 0)
+          featurename = m_FeatureIds[count];
+          if (featurename == 0)
           {
             current = 0;
             most = 0;
@@ -286,15 +286,15 @@ void OpenCloseBadData::execute()
               else if (l == 3 && (i == (dims[0] - 1) || m_XDirOn == false)) { good = 0; }
               if (good == 1)
               {
-                grain = m_GrainIds[neighpoint];
-                if (m_Direction == 0 && grain > 0)
+                feature = m_FeatureIds[neighpoint];
+                if (m_Direction == 0 && feature > 0)
                 {
                   m_Neighbors[neighpoint] = count;
                 }
-                if ((grain > 0 && m_Direction == 1))
+                if ((feature > 0 && m_Direction == 1))
                 {
-                  n[grain]++;
-                  current = n[grain];
+                  n[feature]++;
+                  current = n[feature];
                   if (current > most)
                   {
                     most = current;
@@ -317,8 +317,8 @@ void OpenCloseBadData::execute()
                 if (l == 3 && i == (dims[0] - 1)) { good = 0; }
                 if (good == 1)
                 {
-                  grain = m_GrainIds[neighpoint];
-                  n[grain] = 0;
+                  feature = m_FeatureIds[neighpoint];
+                  n[feature] = 0;
                 }
               }
             }
@@ -329,12 +329,12 @@ void OpenCloseBadData::execute()
     QList<QString> voxelArrayNames = m->getCellArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
-      grainname = m_GrainIds[j];
+      featurename = m_FeatureIds[j];
       int neighbor = m_Neighbors[j];
       if (neighbor >= 0)
       {
-        if ( (grainname == 0 && m_GrainIds[neighbor] > 0 && m_Direction == 1)
-             || (grainname > 0 && m_GrainIds[neighbor] == 0 && m_Direction == 0))
+        if ( (featurename == 0 && m_FeatureIds[neighbor] > 0 && m_Direction == 1)
+             || (featurename > 0 && m_FeatureIds[neighbor] == 0 && m_Direction == 0))
         {
           for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {

@@ -83,28 +83,28 @@ class FilterParameter
       AxisAngleWidget,
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
       VolumeVertexArrayNameSelectionWidget, // ComboBox where the Cell Array names are used to populate
-      VolumeEdgeArrayNameSelectionWidget, //ComboBox where the Field Array names are used to populate
+      VolumeEdgeArrayNameSelectionWidget, //ComboBox where the Feature Array names are used to populate
       VolumeFaceArrayNameSelectionWidget, //ComboBox where the Ensemble Array names are used to populate
       VolumeCellArrayNameSelectionWidget, // ComboBox where the Cell Array names are used to populate
-      VolumeFieldArrayNameSelectionWidget, //ComboBox where the Field Array names are used to populate
+      VolumeFeatureArrayNameSelectionWidget, //ComboBox where the Feature Array names are used to populate
       VolumeEnsembleArrayNameSelectionWidget, //ComboBox where the Ensemble Array names are used to populate
       SurfaceVertexArrayNameSelectionWidget,
       SurfaceFaceArrayNameSelectionWidget,
       SurfaceEdgeArrayNameSelectionWidget,
-      SurfaceFieldArrayNameSelectionWidget,
+      SurfaceFeatureArrayNameSelectionWidget,
       SurfaceEnsembleArrayNameSelectionWidget,
       EdgeVertexArrayNameSelectionWidget,
       EdgeEdgeArrayNameSelectionWidget,
-      EdgeFieldArrayNameSelectionWidget,
+      EdgeFeatureArrayNameSelectionWidget,
       EdgeEnsembleArrayNameSelectionWidget,
       VertexVertexArrayNameSelectionWidget,
-      VertexFieldArrayNameSelectionWidget,
+      VertexFeatureArrayNameSelectionWidget,
       VertexEnsembleArrayNameSelectionWidget,
       /* ****  AND THIS LINE ******** */
       ArraySelectionWidget, // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
       /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
       CellArrayComparisonSelectionWidget,
-      FieldArrayComparisonSelectionWidget,
+      FeatureArrayComparisonSelectionWidget,
       EnsembleArrayComparisonSelectionWidget,
       VertexArrayComparisonSelectionWidget,
       FaceArrayComparisonSelectionWidget,

@@ -138,7 +138,7 @@ int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   QString ss;
@@ -155,18 +155,18 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     QFileInfo fi(m_EbsdFileList.front());
     QString ext = fi.suffix();
     QVector<QString> columnNames;
-    //    AbstractEbsdFields* ebsdFields = NULL;
+    //    AbstractEbsdFields* ebsdFeatures = NULL;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
-      //      ebsdFields = new AngFields;
+      //      ebsdFeatures = new AngFields;
     }
     else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
-      //       ebsdFields = new CtfFields;
+      //       ebsdFeatures = new CtfFields;
     }
     else if(ext.compare(Ebsd::Mic::FileExt) == 0)
     {
-      //       ebsdFields = new MicFields;
+      //       ebsdFeatures = new MicFields;
     }
     else
     {
@@ -176,7 +176,7 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
       setErrorCondition(-1);
       return;
     }
-    //    columnNames = ebsdFields->getFieldNames();
+    //    columnNames = ebsdFeatures->getFeatureNames();
     //    for(QVector<QString>::size_type i = 0; i < columnNames.size(); ++i)
     //    {
     //      addCreatedCellData(columnNames[i]);

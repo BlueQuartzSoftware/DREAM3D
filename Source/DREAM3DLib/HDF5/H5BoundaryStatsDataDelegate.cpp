@@ -61,7 +61,7 @@ H5BoundaryStatsDataDelegate::~H5BoundaryStatsDataDelegate()
 int H5BoundaryStatsDataDelegate::readBoundaryStatsData(BoundaryStatsData* data, hid_t groupId)
 {
   int err = 0;
-  //Read the NumFields
+  //Read the NumFeatures
   err = readBoundaryArea(data, groupId);
 
   //Read the PhaseFraction
@@ -85,7 +85,7 @@ int H5BoundaryStatsDataDelegate::writeBoundaryStatsData(BoundaryStatsData* data,
   }
   int err = 0;
 
-  // Write the NumFields
+  // Write the NumFeatures
   err = writeBoundaryArea(data, groupId);
   if (err < 0)
   {

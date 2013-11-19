@@ -148,7 +148,7 @@ int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -402,11 +402,11 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vt
 {
   //# first line = number of nodes
   //# column 1 = node id, starts from zero.
-  //# column 2 = node type, 2 = on the grain boundary, 3 = on the triple line, 4 = quadruple point or on quadruple line
+  //# column 2 = node type, 2 = on the feature boundary, 3 = on the triple line, 4 = quadruple point or on quadruple line
   //#                       if 10 is added, eg 12, 13, and 14, then they are on the surface of microstructure.
-  //#                       For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring grains.
-  //#                       12 = on the grain boundary trace area at the surface of microstructure
-  //#                       13 = on the grain boundary trace line
+  //#                       For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring features.
+  //#                       12 = on the feature boundary trace area at the surface of microstructure
+  //#                       13 = on the feature boundary trace line
   //#                 14 = on the triple point, and so on‚àö√¢
   //# column 3 to 5 = coordinates of nodes, x, y, and z
 
@@ -503,10 +503,10 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString& TrianglesFile, FILE*
     offset = 2;
   }
   std::vector<int> tri_ids(triangleCount);
-  // Write the GrainId Data to the file
+  // Write the FeatureId Data to the file
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
-  fprintf(vtkFile, "SCALARS GrainID int 1\n");
+  fprintf(vtkFile, "SCALARS FeatureID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
 
@@ -562,7 +562,7 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
   FILE* triFile = fopen(TrianglesFile.toLatin1().data(), "rb");
   fscanf(triFile, "%d", &nread); // Read the number of triangles and throw it away
 
-  // Write the GrainId Data to the file
+  // Write the FeatureId Data to the file
   int triangleCount = nTriangles;
   if (false == conformalMesh)
   {
@@ -570,7 +570,7 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
   }
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
-  fprintf(vtkFile, "SCALARS GrainID int 1\n");
+  fprintf(vtkFile, "SCALARS FeatureID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
   int tData[9];

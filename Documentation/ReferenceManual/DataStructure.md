@@ -16,7 +16,7 @@ However, once the topology of the "structure" is set, the user can begin *groupi
 
 @image latex Images/DataStructure-1.png "DREAM.3D Data Structure " width=6in 
 
-DREAM.3D uses two additional levels above the topological levels required to define the "structure" of the data.  These two levels are called: **Field** and **Ensemble**.  These levels allow the user to *group* topological elements together based on criteria of similarity.  For the example above, the **Cells** are *grouped* to identify **Fields** (i.e. grains) by applying a criterion of similar crystallographic orientation (i.e. neighboring **Cells** with similar orientation are said to belong to the same **Field**).  The **Fields** are then *grouped* to identify **Ensembles** by a criterion of similar phase (i.e. all grains of the same phase in the dataset are said to belong to the same **Ensemble**).  The grouping criteria are at the discretion of the user, because these additional levels are not required for description of the "structure", but rather are organizational levels for describing the information that lives on the "structure".  
+DREAM.3D uses two additional levels above the topological levels required to define the "structure" of the data.  These two levels are called: **Feature** and **Ensemble**.  These levels allow the user to *group* topological elements together based on criteria of similarity.  For the example above, the **Cells** are *grouped* to identify **Features** (i.e. grains) by applying a criterion of similar crystallographic orientation (i.e. neighboring **Cells** with similar orientation are said to belong to the same **Feature**).  The **Features** are then *grouped* to identify **Ensembles** by a criterion of similar phase (i.e. all grains of the same phase in the dataset are said to belong to the same **Ensemble**).  The grouping criteria are at the discretion of the user, because these additional levels are not required for description of the "structure", but rather are organizational levels for describing the information that lives on the "structure".  
 
 At each level, DREAM.3D creates a *Map* to store information/data about the individual elements at that level.  Additional information about the maps of the DREAM.3D data structure and "typical" data are given below:
 
@@ -33,24 +33,24 @@ At each level, DREAM.3D creates a *Map* to store information/data about the indi
 ## Face ##
   - Map of attributes associated with surface patches.    
   - Measured values - data is not typically measured at the **Face** level.
-  - Calculated values (i.e. Bounding Field Ids, Normals, Curvature, etc.) - these calculated values are typically IDs to the higher level maps (**Field** and **Ensemble**), related to gradients of the measured values, values associated with the connectivity or geometry of the "mesh" or "structure" itself or relationships to values calculated in the higher level maps. 
+  - Calculated values (i.e. Bounding Feature Ids, Normals, Curvature, etc.) - these calculated values are typically IDs to the higher level maps (**Feature** and **Ensemble**), related to gradients of the measured values, values associated with the connectivity or geometry of the "mesh" or "structure" itself or relationships to values calculated in the higher level maps. 
 
 ## Cell ##
   - Map of attributes associated with single *datapoints* - often these *datapoints* are not truly *volumes*, but rather point-probe measurements that are homogenized over the volume nearest to each probe-point.    
   - Measured values (i.e. Orientation, Chemistry, Greyscale, etc.) - typically this is the level at which most data is actually acquired.
-  - Calculated values (i.e. Field Ids, Kernel Avg. Misorientation, Euclidean Distance, etc.) - these calculated values are typically IDs to the higher level maps (**Field** and **Ensemble**), related to gradients of the measured values or relationships to values calculated in the higher level maps. 
+  - Calculated values (i.e. Feature Ids, Kernel Avg. Misorientation, Euclidean Distance, etc.) - these calculated values are typically IDs to the higher level maps (**Feature** and **Ensemble**), related to gradients of the measured values or relationships to values calculated in the higher level maps. 
 
 
-## Field ##
+## Feature ##
   - Map of attributes associated with sets of *datapoints* - generally *elements* in this map are sets of contiguous **Cells** that have some aspect of similarity, often in their measured values (i.e. orientation, chemistry, greyscale, etc.).
-  - Measured values (i.e. Avg. Stresses, Avg. Strains, etc) - some measurement techniques are capable of measuring values averaged over an entire **Field** (i.e. High Energy Diffraction Microscopy). 
-  - Calculated values (i.e. Avg. Orientation, Size, Shape, No. of Neighbors, etc.) - generally there is little measured data at this level and these values are calculated from averaging the measured data from the **Cells** that constitute each **Field** or geometrically describe the size and/or shape of the set of **Cells**.
+  - Measured values (i.e. Avg. Stresses, Avg. Strains, etc) - some measurement techniques are capable of measuring values averaged over an entire **Feature** (i.e. High Energy Diffraction Microscopy). 
+  - Calculated values (i.e. Avg. Orientation, Size, Shape, No. of Neighbors, etc.) - generally there is little measured data at this level and these values are calculated from averaging the measured data from the **Cells** that constitute each **Feature** or geometrically describe the size and/or shape of the set of **Cells**.
 
 
 ## Ensemble ##
-  - Map of attributes associated with sets of **Fields**
+  - Map of attributes associated with sets of **Features**
   - Measured/Set values (i.e. Crystal Structure, Phase Type, etc.) - measured values at the **Ensemble** level are usually user-defined parameters during the data collection or during analysis within DREAM.3D.
-  - Calculated values (i.e. Size Distribution, No. of Fields, ODF, etc.) - these values are typically descriptions of the distribution of values from the lower level **Field** map.  
+  - Calculated values (i.e. Size Distribution, No. of Features, ODF, etc.) - these values are typically descriptions of the distribution of values from the lower level **Feature** map.  
 
 
 

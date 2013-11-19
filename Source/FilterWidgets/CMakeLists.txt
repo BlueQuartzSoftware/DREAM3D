@@ -61,7 +61,7 @@ target_link_libraries(FilterWidgetCodeGen  EbsdLib DREAM3DLib)
 add_custom_command(TARGET FilterWidgetCodeGen POST_BUILD
                     COMMAND $<TARGET_FILE:FilterWidgetCodeGen> )
 
-if(0)
+if(1)
 
 # --------------------------------------------------------------------
 # Set some Include directories

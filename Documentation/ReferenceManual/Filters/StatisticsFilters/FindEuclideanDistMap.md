@@ -5,10 +5,10 @@ Find Euclidean Distance Map {#findeuclideandistmap}
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter calculates the distance of each **Cell** from the nearest **Field** boundary, triple line and quadruple point.  The following algorithm explains the process:
+This Filter calculates the distance of each **Cell** from the nearest **Feature** boundary, triple line and quadruple point.  The following algorithm explains the process:
 
-1. Find the **Field** that owns each **Cell**
-2. Find the number of different **Fields** that own the six face-face neighbors of each **Cell**
+1. Find the **Feature** that owns each **Cell**
+2. Find the number of different **Features** that own the six face-face neighbors of each **Cell**
 3. For all **Cells** that have *at least 2* different neighbors, set their *GBEuclideanDistance* to *0*.  For all **Cells** that have *at least 3* different neighbors, set their *TJEuclideanDistance* to *0*.  For all **Cells** that have *at least 4* different neighbors, set their *QPEuclideanDistance* to *0*.
 4. For each of the three *EuclideanDistace* maps, iteratively "grow" out from the **Cells** identified to have a distance of *0* by the following sub-steps:
 
@@ -32,7 +32,7 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Fields (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 
 ## Created Arrays ##
 

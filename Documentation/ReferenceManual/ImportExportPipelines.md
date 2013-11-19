@@ -29,7 +29,7 @@ The following is a partial listing of a 3D EBSD reconstruction pipeline saved as
 	ArraySelections_VoxelCell\2\VoxelCell=EulerAngles
 	ArraySelections_VoxelCell\3\VoxelCell=Image Quality
 	ArraySelections_VoxelCell\4\VoxelCell=Phases
-	ArraySelections_VoxelField\size=0
+	ArraySelections_VoxelFeature\size=0
 	ArraySelections_VoxelEnsemble\size=2
 	ArraySelections_VoxelEnsemble\1\VoxelEnsemble=CrystalStructures
 	ArraySelections_VoxelEnsemble\2\VoxelEnsemble=MaterialName

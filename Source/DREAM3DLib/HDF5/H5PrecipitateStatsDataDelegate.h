@@ -79,8 +79,8 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
     int writePrecipBoundaryFraction(PrecipitateStatsData* data, hid_t groupId);
     int readPrecipBoundaryFraction(PrecipitateStatsData* data, hid_t groupId);
 
-    int writeGrainDiameterInfo(PrecipitateStatsData* data, hid_t groupId);
-    int readGrainDiameterInfo(PrecipitateStatsData* data, hid_t groupId);
+    int writeFeatureDiameterInfo(PrecipitateStatsData* data, hid_t groupId);
+    int readFeatureDiameterInfo(PrecipitateStatsData* data, hid_t groupId);
 
     int writeBinNumbers(PrecipitateStatsData* data, hid_t groupId);
     int readBinNumbers(PrecipitateStatsData* data, hid_t groupId);

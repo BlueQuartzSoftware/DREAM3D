@@ -91,7 +91,7 @@ class GenerateGrainIds : public AbstractFilter
       m->setOrigin(1.0f, 2.0f, 3.0f);
 
       int64_t totalPoints = m->getTotalPoints();
-      dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+      dataCheck(false, totalPoints, m->getNumFeatureTuples(), m->getNumEnsembleTuples());
       // Set the default data into the GrainIds
       for (int i = 0; i < size; ++i)
       {
@@ -115,7 +115,7 @@ class GenerateGrainIds : public AbstractFilter
   private:
     int32_t* m_GrainIds;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
     {
       setErrorCondition(0);
       QStringstream ss;

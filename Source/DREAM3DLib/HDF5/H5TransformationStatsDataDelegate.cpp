@@ -119,7 +119,7 @@ VectorOfFloatArray H5TransformationStatsDataDelegate::createDistributionVector(u
 int H5TransformationStatsDataDelegate::readTransformationStatsData(TransformationStatsData* data, hid_t groupId)
 {
   int err = 0;
-  //Read the NumFields
+  //Read the NumFeatures
   err = readBoundaryArea(data, groupId);
 
   //Read the PhaseFraction
@@ -128,51 +128,51 @@ int H5TransformationStatsDataDelegate::readTransformationStatsData(Transformatio
   // Read the Parent Phase
   err = readParentPhase(data, groupId);
 
-  // Read the Grain Diameter Info
-  err = readGrainDiameterInfo(data, groupId);
+  // Read the Feature Diameter Info
+  err = readFeatureDiameterInfo(data, groupId);
 
-  // Read the Grain Size Distribution
-  uint32_t dType = readDistributionType(groupId, DREAM3D::HDF5::Grain_Size_Distribution);
-  data->setGrainSize_DistType(dType);
-  data->setGrainSizeDistribution(createDistributionVector(data->getGrainSize_DistType()));
+  // Read the Feature Size Distribution
+  uint32_t dType = readDistributionType(groupId, DREAM3D::HDF5::Feature_Size_Distribution);
+  data->setFeatureSize_DistType(dType);
+  data->setFeatureSizeDistribution(createDistributionVector(data->getFeatureSize_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Grain_Size_Distribution,
-                             data->getGrainSizeDistribution());
+                             DREAM3D::HDF5::Feature_Size_Distribution,
+                             data->getFeatureSizeDistribution());
 
   // Read the Bin Numbers
   err = readBinNumbers(data, groupId);
 
   // Read the B Over A
-  dType = readDistributionType(groupId, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
+  dType = readDistributionType(groupId, DREAM3D::HDF5::Feature_SizeVBoverA_Distributions);
   data->setBOverA_DistType(dType);
-  data->setGrainSize_BOverA( createDistributionVector(data->getBOverA_DistType()));
+  data->setFeatureSize_BOverA( createDistributionVector(data->getBOverA_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Grain_SizeVBoverA_Distributions,
-                             data->getGrainSize_BOverA());
+                             DREAM3D::HDF5::Feature_SizeVBoverA_Distributions,
+                             data->getFeatureSize_BOverA());
 
   // Read the C Over A
-  dType = readDistributionType(groupId, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
+  dType = readDistributionType(groupId, DREAM3D::HDF5::Feature_SizeVCoverA_Distributions);
   data->setCOverA_DistType(dType);
-  data->setGrainSize_COverA( createDistributionVector(data->getCOverA_DistType()));
+  data->setFeatureSize_COverA( createDistributionVector(data->getCOverA_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
-                             data->getGrainSize_COverA());
+                             DREAM3D::HDF5::Feature_SizeVCoverA_Distributions,
+                             data->getFeatureSize_COverA());
 
   // Read the Neighbors
-  dType = readDistributionType(groupId, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
+  dType = readDistributionType(groupId, DREAM3D::HDF5::Feature_SizeVNeighbors_Distributions);
   data->setNeighbors_DistType(dType);
-  data->setGrainSize_Neighbors( createDistributionVector(data->getNeighbors_DistType()));
+  data->setFeatureSize_Neighbors( createDistributionVector(data->getNeighbors_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions,
-                             data->getGrainSize_Neighbors());
+                             DREAM3D::HDF5::Feature_SizeVNeighbors_Distributions,
+                             data->getFeatureSize_Neighbors());
 
   // Read the Omegas
-  dType = readDistributionType(groupId, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
+  dType = readDistributionType(groupId, DREAM3D::HDF5::Feature_SizeVOmega3_Distributions);
   data->setOmegas_DistType(dType);
-  data->setGrainSize_Omegas( createDistributionVector(data->getOmegas_DistType()));
+  data->setFeatureSize_Omegas( createDistributionVector(data->getOmegas_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Grain_SizeVOmega3_Distributions,
-                             data->getGrainSize_Omegas());
+                             DREAM3D::HDF5::Feature_SizeVOmega3_Distributions,
+                             data->getFeatureSize_Omegas());
 
   // Read the Misorientation Bins
   FloatArrayType::Pointer misoBins = FloatArrayType::CreateArray(0, DREAM3D::HDF5::MisorientationBins);
@@ -219,7 +219,7 @@ int H5TransformationStatsDataDelegate::writeTransformationStatsData(Transformati
   }
   int err = 0;
 
-  // Write the NumFields
+  // Write the NumFeatures
   err = writeBoundaryArea(data, groupId);
   if (err < 0)
   {
@@ -236,14 +236,14 @@ int H5TransformationStatsDataDelegate::writeTransformationStatsData(Transformati
   // Write the Parent Phase
   err = writeParentPhase(data, groupId);
 
-  // Write the Grain Diameter Info
-  err = writeGrainDiameterInfo(data, groupId);
+  // Write the Feature Diameter Info
+  err = writeFeatureDiameterInfo(data, groupId);
 
-  // Write the Grain Size Distribution
+  // Write the Feature Size Distribution
   err = writeDistributionData(groupId,
-                              data->getGrainSize_DistType(),
-                              DREAM3D::HDF5::Grain_Size_Distribution,
-                              data->getGrainSizeDistribution());
+                              data->getFeatureSize_DistType(),
+                              DREAM3D::HDF5::Feature_Size_Distribution,
+                              data->getFeatureSizeDistribution());
 
   // Write the Bin Numbers
   err = writeBinNumbers(data, groupId);
@@ -251,26 +251,26 @@ int H5TransformationStatsDataDelegate::writeTransformationStatsData(Transformati
   // Write the B Over A
   err = writeDistributionData(groupId,
                               data->getBOverA_DistType(),
-                              DREAM3D::HDF5::Grain_SizeVBoverA_Distributions,
-                              data->getGrainSize_BOverA());
+                              DREAM3D::HDF5::Feature_SizeVBoverA_Distributions,
+                              data->getFeatureSize_BOverA());
 
   // Write the C Over A
   err = writeDistributionData(groupId,
                               data->getCOverA_DistType(),
-                              DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
-                              data->getGrainSize_COverA());
+                              DREAM3D::HDF5::Feature_SizeVCoverA_Distributions,
+                              data->getFeatureSize_COverA());
 
   // Write the Neighbors
   err = writeDistributionData(groupId,
                               data->getNeighbors_DistType(),
-                              DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions,
-                              data->getGrainSize_Neighbors());
+                              DREAM3D::HDF5::Feature_SizeVNeighbors_Distributions,
+                              data->getFeatureSize_Neighbors());
 
   // Write the Omegas
   err = writeDistributionData(groupId,
                               data->getOmegas_DistType(),
-                              DREAM3D::HDF5::Grain_SizeVOmega3_Distributions,
-                              data->getGrainSize_Omegas());
+                              DREAM3D::HDF5::Feature_SizeVOmega3_Distributions,
+                              data->getFeatureSize_Omegas());
 
   // Write the Misorientation Bins
   if (NULL != data->getMisorientationBins().get())
@@ -635,35 +635,35 @@ int H5TransformationStatsDataDelegate::readParentPhase(TransformationStatsData* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5TransformationStatsDataDelegate::writeGrainDiameterInfo(TransformationStatsData* data, hid_t pid)
+int H5TransformationStatsDataDelegate::writeFeatureDiameterInfo(TransformationStatsData* data, hid_t pid)
 {
   hsize_t dims[1];
   dims[0] = 3;
   int32_t rank = 1;
 
   /*
-   * Grain Diameter Info is encode as 3 floats: BinStepSize, MaxDiameter, MinDiameter
+   * Feature Diameter Info is encode as 3 floats: BinStepSize, MaxDiameter, MinDiameter
    */
-  float grainDiameterInfo[3];
-  data->getGrainDiameterInfo(grainDiameterInfo);
+  float featureDiameterInfo[3];
+  data->getFeatureDiameterInfo(featureDiameterInfo);
 
-  return QH5Lite::writePointerDataset(pid, DREAM3D::HDF5::Grain_Diameter_Info, rank, dims, grainDiameterInfo);
+  return QH5Lite::writePointerDataset(pid, DREAM3D::HDF5::Feature_Diameter_Info, rank, dims, featureDiameterInfo);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5TransformationStatsDataDelegate::readGrainDiameterInfo(TransformationStatsData* data, hid_t groupId)
+int H5TransformationStatsDataDelegate::readFeatureDiameterInfo(TransformationStatsData* data, hid_t groupId)
 {
   int err = 0;
   /*
-   * Grain Diameter Info is encode as 3 floats: BinStepSize, MaxDiameter, MinDiameter
+   * Feature Diameter Info is encode as 3 floats: BinStepSize, MaxDiameter, MinDiameter
    */
-  float grainDiameterInfo[3] =
+  float featureDiameterInfo[3] =
   { 0.0f, 0.0f, 0.0f };
 
-  err = QH5Lite::readPointerDataset(groupId, DREAM3D::HDF5::Grain_Diameter_Info, grainDiameterInfo);
-  data->setGrainDiameterInfo(grainDiameterInfo);
+  err = QH5Lite::readPointerDataset(groupId, DREAM3D::HDF5::Feature_Diameter_Info, featureDiameterInfo);
+  data->setFeatureDiameterInfo(featureDiameterInfo);
   return err;
 }
 

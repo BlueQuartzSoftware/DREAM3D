@@ -54,7 +54,7 @@ const static float m_pi = static_cast<float>(M_PI);
 AdjustVolume::AdjustVolume() :
   AbstractFilter(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_MaxIterations(1),
   m_GrainIds(NULL),
   m_EquivalentDiameters(NULL)
@@ -109,7 +109,7 @@ int AdjustVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -117,7 +117,7 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FeatureData, EquivalentDiameters, float, FloatArrayType, 0, features, 1)
 }
 
 
@@ -144,10 +144,10 @@ void AdjustVolume::execute()
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumFieldTuples();
+  int totalFeatures = m->getNumFeatureTuples();
 
   // Check to make sure we have all of our data arrays available or make them available.
-  dataCheck(false, totalPoints, totalFields, 1);
+  dataCheck(false, totalPoints, totalFeatures, 1);
   if (getErrorCondition() < 0)
   {
     return;
@@ -188,11 +188,11 @@ void AdjustVolume::execute()
 
   float voxtovol = m->getXRes() * m->getYRes() * m->getZRes() * (0.75f) * (1.0f / m_pi);
 
-  gsizes.resize(m->getNumFieldTuples());
+  gsizes.resize(m->getNumFeatureTuples());
 
   QVector<int> voxellist(vListSize, -1);
   QVector<int> affectedvoxellist(vListSize, -1);
-  for(size_t i = 1; i < m->getNumFieldTuples(); i++)
+  for(size_t i = 1; i < m->getNumFeatureTuples(); i++)
   {
     gsizes[i] = 0;
   }
@@ -206,8 +206,8 @@ void AdjustVolume::execute()
   PackPrimaryPhases::Pointer packGrains = PackPrimaryPhases::New();
   packGrains->setVoxelDataContainer(getVoxelDataContainer());
   packGrains->setObservers(this->getObservers());
-//  Field field;
-//  oldsizedisterror = packGrains->check_sizedisterror(&field);
+//  Feature feature;
+//  oldsizedisterror = packGrains->check_sizedisterror(&feature);
   while(iterations < m_MaxIterations)
   {
 
@@ -218,8 +218,8 @@ void AdjustVolume::execute()
     while (good == 0)
     {
       good = 1;
-      selectedgrain = int(rg.genrand_res53() * m->getNumFieldTuples());
-      if (selectedgrain >= static_cast<int>(m->getNumFieldTuples())) { selectedgrain = m->getNumFieldTuples() - 1;}
+      selectedgrain = int(rg.genrand_res53() * m->getNumFeatureTuples());
+      if (selectedgrain >= static_cast<int>(m->getNumFeatureTuples())) { selectedgrain = m->getNumFeatureTuples() - 1;}
       if (selectedgrain == 0) { selectedgrain = 1; }
     }
     growth = 1;
@@ -288,17 +288,17 @@ void AdjustVolume::execute()
         gsizes[reassigned[index]] = gsizes[reassigned[index]] - 1;
       }
     }
-    for(size_t i = 1; i < m->getNumFieldTuples(); i++)
+    for(size_t i = 1; i < m->getNumFeatureTuples(); i++)
     {
       index = i;
       diam = 2.0f * powf((gsizes[index] * voxtovol), (1.0f / 3.0f));
       m_EquivalentDiameters[index] = diam;
     }
-//    currentsizedisterror = packGrains->check_sizedisterror(&field);
+//    currentsizedisterror = packGrains->check_sizedisterror(&feature);
     if(currentsizedisterror <= oldsizedisterror)
     {
       oldsizedisterror = currentsizedisterror;
-      for(size_t i = 1; i < m->getNumFieldTuples(); i++)
+      for(size_t i = 1; i < m->getNumFeatureTuples(); i++)
       {
 //        if(gsizes[i] == 0) m->m_Grains.erase(m->m_Grains.begin() + i);
       }
@@ -316,7 +316,7 @@ void AdjustVolume::execute()
           gsizes[m_GrainIds[index]]++;
         }
       }
-      for(size_t i = 1; i < m->getNumFieldTuples(); i++)
+      for(size_t i = 1; i < m->getNumFeatureTuples(); i++)
       {
         index = i;
         diam = 2.0f * powf((gsizes[index] * voxtovol), (1.0f / 3.0f));

@@ -104,7 +104,7 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
   private:
     float* m_CellEulerAngles;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     AddOrientationNoise(const AddOrientationNoise&); // Copy Constructor Not Implemented
     void operator=(const AddOrientationNoise&); // Operator '=' Not Implemented

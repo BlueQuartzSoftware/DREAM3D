@@ -39,6 +39,11 @@
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
+
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
 
 #include "DREAM3DLib/FilterParameters/H5FilterParametersConstants.h"
 
@@ -85,6 +90,69 @@ H5FilterParametersReader::Pointer H5FilterParametersReader::OpenDREAM3DFileForRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FilterPipeline::Pointer H5FilterParametersReader::ReadPipelineFromFile(QString filePath)
+{
+  hid_t fid = -1;
+  fid = QH5Utilities::openFile(filePath);
+  if(fid < 0) { return FilterPipeline::NullPointer(); }
+
+  HDF5ScopedFileSentinel sentinel(&fid, true);
+
+
+  // Open the Pipeline Group
+  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  if (pipelineGroupId < 0)
+  {
+    H5Fclose(fid);
+    fid = -1;
+    return FilterPipeline::NullPointer();
+  }
+
+  sentinel.addGroupId(&pipelineGroupId);
+  // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
+  QList<QString> groupList;
+  herr_t err = QH5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
+
+
+  H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
+  reader->setPipelineGroupId(pipelineGroupId);
+
+  // Get a FilterManager Instance
+  FilterManager::Pointer filterManager = FilterManager::Instance();
+
+  // Create a FilterPipeline Object
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  // Loop over the items getting the "ClassName" attribute from each group
+  QString classNameStr = "";
+  for (int i=0; i<groupList.size(); i++)
+  {
+
+    QString iStr = QString::number(i);
+    err = QH5Lite::readStringAttribute(pipelineGroupId, iStr, "ClassName", classNameStr);
+
+    // Instantiate a new filter using the FilterFactory based on the value of the className attribute
+    IFilterFactory::Pointer ff = filterManager->getFactoryForFilter(classNameStr);
+    if (NULL != ff)
+    {
+      AbstractFilter::Pointer filter = ff->create();
+      if(NULL != ff)
+      {
+        // Read the parameters
+        filter->readFilterParameters( reader.get(), i );
+
+        // Add filter to pipeline
+        pipeline->pushBack(filter);
+      }
+    }
+  }
+
+  return pipeline;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5FilterParametersReader::openFilterGroup(AbstractFilter* filter, int index)
 {
   int err = 0;
@@ -107,6 +175,7 @@ int H5FilterParametersReader::closeFilterGroup()
   m_CurrentGroupId = -1;
   return 0;
 }
+
 
 // -----------------------------------------------------------------------------
 //

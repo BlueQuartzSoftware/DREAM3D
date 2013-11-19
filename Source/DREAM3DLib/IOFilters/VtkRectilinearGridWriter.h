@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
@@ -81,9 +81,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(BCArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ImageQualityArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceRotationsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceCAxisMisorientationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceRotationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceMisorientationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceCAxisMisorientationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
@@ -93,7 +93,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainIds)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteParentIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WritePhaseIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBandContrasts)
@@ -102,15 +102,15 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGlobAlpha)
     //DREAM3D_INSTANCE_PROPERTY(bool, WriteRodriguesGAMColors)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainReferenceMisorientations)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainReferenceCAxisMisorientations)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureReferenceMisorientations)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureReferenceCAxisMisorientations)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteKernelAverageMisorientations)
     //DREAM3D_INSTANCE_PROPERTY(bool, WriteIPFColors)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGBEuclideanDistanceMap)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteTJEuclideanDistanceMap)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteQPEuclideanDistanceMap)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteSchmidFactors)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainSizes)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureSizes)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteEulerAngles)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
 
@@ -257,11 +257,11 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
   protected:
     VtkRectilinearGridWriter();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_ParentIds;
     int32_t* m_CellPhases;
     int32_t* m_BC;
@@ -273,9 +273,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     float*   m_GBEuclideanDistances;
     float*   m_TJEuclideanDistances;
     float*   m_QPEuclideanDistances;
-    float*   m_GrainReferenceRotations;
-    float*   m_GrainReferenceMisorientations;
-    float*   m_GrainReferenceCAxisMisorientations;
+    float*   m_FeatureReferenceRotations;
+    float*   m_FeatureReferenceMisorientations;
+    float*   m_FeatureReferenceCAxisMisorientations;
     float*   m_KernelAverageMisorientations;
     float*   m_EquivalentDiameters;
     float*   m_Schmids;

@@ -74,7 +74,7 @@
     m->add##DCType(#Type, t_##Type);\
     IDataArray::Pointer t = m->get##DCType(#Type);\
     DREAM3D_TEST_POINTER(ptr, !=, NULL);\
-    t = m->removeCellFieldData(#Type);\
+    t = m->removeCellFeatureData(#Type);\
     DREAM3D_TEST_POINTER(ptr, !=, NULL);\
     t = m->get##DCType(#Type);\
     DREAM3D_REQUIRE_EQUAL(t.get(), NULL);\
@@ -110,12 +110,12 @@ void TestDataContainerWriter()
   QDir dir(UnitTest::DataContainerIOTest::TestDir);
   dir.mkpath(".");
 
-  Int32ArrayType::Pointer grainIds = Int32ArrayType::CreateArray(size, DREAM3D::CellData::GrainIds);
+  Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(size, DREAM3D::CellData::FeatureIds);
   for (int i = 0; i < size; ++i)
   {
-    grainIds->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
+    featureIds->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
   }
-  m->addCellData(DREAM3D::CellData::GrainIds, grainIds);
+  m->addCellData(DREAM3D::CellData::FeatureIds, featureIds);
 
   BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, DREAM3D::CellData::SurfaceVoxels);
   for (int i = 0; i < size; ++i)
@@ -125,14 +125,14 @@ void TestDataContainerWriter()
   m->addCellData(DREAM3D::CellData::SurfaceVoxels, boolArray);
 
   QVector<int> dims(1, 3);
-  FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(4, dims, DREAM3D::FieldData::AxisEulerAngles);
+  FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(4, dims, DREAM3D::FeatureData::AxisEulerAngles);
   for(size_t i = 0; i < 4; ++i)
   {
     avgEuler->SetComponent(i, 0, i * 0.665f);
     avgEuler->SetComponent(i, 1, i * 0.665f);
     avgEuler->SetComponent(i, 2, i * 0.665f);
   }
-  m->addCellFieldData(DREAM3D::FieldData::AxisEulerAngles, avgEuler);
+  m->addCellFeatureData(DREAM3D::FeatureData::AxisEulerAngles, avgEuler);
 
 
   FloatArrayType::Pointer surfArea = FloatArrayType::CreateArray(4, DREAM3D::EnsembleData::TotalSurfaceAreas);
@@ -144,9 +144,9 @@ void TestDataContainerWriter()
 
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
-  neighborlistPtr->SetName(DREAM3D::FieldData::NeighborList);
-  neighborlistPtr->setNumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors);
-  m->addCellFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
+  neighborlistPtr->SetName(DREAM3D::FeatureData::NeighborList);
+  neighborlistPtr->setNumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors);
+  m->addCellFeatureData(DREAM3D::FeatureData::NeighborList, neighborlistPtr);
 
   for(int i = 0; i < 4; ++i)
   {
@@ -202,13 +202,13 @@ void TestDataContainerReader()
   mPtr->getDimensions(nx, ny, nz);
 
   DREAM3D_REQUIRE_EQUAL(mPtr->getNumCellArrays(), 2);
-  DREAM3D_REQUIRE_EQUAL(mPtr->getNumCellFieldArrays(), 3);
+  DREAM3D_REQUIRE_EQUAL(mPtr->getNumCellFeatureArrays(), 3);
   DREAM3D_REQUIRE_EQUAL(mPtr->getNumCellEnsembleArrays(), 1);
 
 
   // Validate the NeighborList Data
   NeighborList<int32_t>* neighborlistPtr
-    = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(mPtr->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
+    = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(mPtr->getCellFeatureData(DREAM3D::FeatureData::NeighborList).get());
   DREAM3D_REQUIRE_NE(NULL, neighborlistPtr);
   NeighborList<int32_t>::SharedVectorType vec;
   size_t nLists = neighborlistPtr->getNumberOfTuples();
@@ -252,12 +252,12 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   t = m->getCellData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), 0);
 
-  m->addCellFieldData("Test", p);
-  t = m->getCellFieldData("Test");
+  m->addCellFeatureData("Test", p);
+  t = m->getCellFeatureData("Test");
   DREAM3D_TEST_POINTER(t.get(), !=, NULL);
-  t = m->removeCellFieldData( "Test" );
+  t = m->removeCellFeatureData( "Test" );
   DREAM3D_TEST_POINTER(t.get(), !=, NULL);
-  t = m->getCellFieldData( "Test" );
+  t = m->getCellFeatureData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), 0);
 
   m->addCellEnsembleData("Test", p);
@@ -294,7 +294,7 @@ void TestInsertDelete()
   nameList = m->getCellArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
-  nameList = m->getCellFieldArrayNameList();
+  nameList = m->getCellFeatureArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
   nameList = m->getCellEnsembleArrayNameList();
@@ -343,40 +343,40 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   IDataArray::Pointer t = m->removeCellData( "Test" );
   DREAM3D_TEST_POINTER(ptr, !=, NULL);
 
-  /********************************* Field Data Tests *********************************************/
-  ptr = m->createCellFieldData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
+  /********************************* Feature Data Tests *********************************************/
+  ptr = m->createCellFeatureData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_TEST_POINTER(ptr, !=, NULL);
   absFilt->setErrorCondition(0);
 
   // First try getting the array, but pass in a bad array name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getCellFieldDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
+  ptr =  m->getCellFeatureDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getCellFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
+  ptr =  m->getCellFeatureDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
-  bool_ptr =  m->getCellFieldDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
+  bool_ptr =  m->getCellFeatureDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
   // Zero Error Condition
-  ptr = m->getCellFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->getCellFeatureDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_TEST_POINTER(ptr, !=, NULL);
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
 
-  t = m->removeCellFieldData( "Test" );
+  t = m->removeCellFeatureData( "Test" );
   DREAM3D_TEST_POINTER(ptr, !=, NULL);
 
 
@@ -444,7 +444,7 @@ void TestArrayCreation()
   nameList = m->getCellArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
-  nameList = m->getCellFieldArrayNameList();
+  nameList = m->getCellFeatureArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
   nameList = m->getCellEnsembleArrayNameList();
@@ -467,11 +467,11 @@ void TestDataContainer()
   assert (neighborList != NULL);
 
 
-  for (int grainId = 0; grainId < 10; ++grainId)
+  for (int featureId = 0; featureId < 10; ++featureId)
   {
-    for (int neighborId = 0; neighborId < grainId + 5; ++neighborId)
+    for (int neighborId = 0; neighborId < featureId + 5; ++neighborId)
     {
-      neighborList->addEntry(grainId, neighborId * 23);
+      neighborList->addEntry(featureId, neighborId * 23);
     }
   }
   bool ok = true;
@@ -483,7 +483,7 @@ void TestDataContainer()
   BOOST_ASSERT(!ok);
 
   std::cout << "Number of Lists: " << neighborList->getNumberOfLists() << std::endl;
-  std::cout << "Number of Entries for Grain Id[5]: " << neighborList->getListSize(5) << std::endl;
+  std::cout << "Number of Entries for Feature Id[5]: " << neighborList->getListSize(5) << std::endl;
   std::cout << "Value for [5][3]: " << neighborList->getValue(5, 3, ok) << std::endl;
 
   VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New();

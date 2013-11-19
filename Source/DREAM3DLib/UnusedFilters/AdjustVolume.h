@@ -67,7 +67,7 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
@@ -101,7 +101,7 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
     float*   m_EquivalentDiameters;
     QVector<int> gsizes;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     AdjustVolume(const AdjustVolume&); // Copy Constructor Not Implemented
     void operator=(const AdjustVolume&); // Operator '=' Not Implemented

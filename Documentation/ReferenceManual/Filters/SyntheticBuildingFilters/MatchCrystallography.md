@@ -5,7 +5,7 @@ Match Crystallography {#matchcrystallography}
 Synthetic Builder Filters (Crystallography)
 
 ## Description ##
-This Filter iteratively either swaps out the orientation of a **Field** (selected at random) for a new orientation (sampled from the goal Orientation Distribution Function) or switches the orientations of two **Fields** (selected at random).  The switch or swap is accepted if it lowers the error of the current ODF and Misorientation Distribution Function from the goal.  This is done for a user defined number of iterations.  
+This Filter iteratively either swaps out the orientation of a **Feature** (selected at random) for a new orientation (sampled from the goal Orientation Distribution Function) or switches the orientations of two **Features** (selected at random).  The switch or swap is accepted if it lowers the error of the current ODF and Misorientation Distribution Function from the goal.  This is done for a user defined number of iterations.  
 
 ## Parameters ##
 
@@ -20,11 +20,11 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Fields (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field**| | Find Field Phases (Generic), Read Field Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Field | SurfaceFields |  |  | Find Surface Fields (Generic)
+| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature | SurfaceFeatures |  |  | Find Surface Features (Generic)
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
-| Ensemble | NumFields |  |  | Find Number of Fields (Statistics) |
+| Ensemble | NumFeatures |  |  | Find Number of Features (Statistics) |
 | Ensemble | Statistics |  |  | Generate Ensemble Statistics (Statistics), StatsGenerator Application |
 
 ## Created Arrays ##
@@ -32,9 +32,9 @@ Voxel
 | Type | Default Name | Comment |
 |------|--------------|---------|
 | Cell | CellEulerAngles |  |
-| Field | AvgQuats |  |
-| Field | FieldEulerAngles |  |
-| Field | Volumes |  |
+| Feature | AvgQuats |  |
+| Feature | FeatureEulerAngles |  |
+| Feature | Volumes |  |
 
 ## Authors ##
 

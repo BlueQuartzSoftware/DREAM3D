@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT ClearData : public AbstractFilter
 
   private:
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     ClearData(const ClearData&); // Copy Constructor Not Implemented
     void operator=(const ClearData&); // Operator '=' Not Implemented

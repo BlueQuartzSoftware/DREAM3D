@@ -80,12 +80,12 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
 {
   reader->openFilterGroup(this, index);
   setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays()) );
-  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays()) );
+  setSelectedVoxelFeatureArrays( reader->readValue("SelectedVoxelFeatureArrays", getSelectedVoxelFeatureArrays()) );
   setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays()) );
   setSelectedSurfaceMeshVertexArrays( reader->readValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays()) );
   setSelectedSurfaceMeshFaceArrays( reader->readValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays()) );
   setSelectedSurfaceMeshEdgeArrays( reader->readValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays()) );
-  setSelectedSurfaceMeshFieldArrays( reader->readValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays()) );
+  setSelectedSurfaceMeshFeatureArrays( reader->readValue("SelectedSurfaceMeshFeatureArrays", getSelectedSurfaceMeshFeatureArrays()) );
   setSelectedSurfaceMeshEnsembleArrays( reader->readValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays()) );
   setSelectedSolidMeshVertexArrays( reader->readValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays()) );
   setSelectedSolidMeshFaceArrays( reader->readValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays()) );
@@ -100,12 +100,12 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays());
-  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays());
+  writer->writeValue("SelectedVoxelFeatureArrays", getSelectedVoxelFeatureArrays());
   writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays());
   writer->writeValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays());
   writer->writeValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays());
   writer->writeValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays());
-  writer->writeValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays());
+  writer->writeValue("SelectedSurfaceMeshFeatureArrays", getSelectedSurfaceMeshFeatureArrays());
   writer->writeValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays());
   writer->writeValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays());
   writer->writeValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays());
@@ -119,11 +119,11 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setVoxelSelectedArrayNames(QSet<QString> selectedCellArrays,
-                                                       QSet<QString> selectedFieldArrays,
+                                                       QSet<QString> selectedFeatureArrays,
                                                        QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVoxelCellArrays = selectedCellArrays;
-  m_SelectedVoxelFieldArrays = selectedFieldArrays;
+  m_SelectedVoxelFeatureArrays = selectedFeatureArrays;
   m_SelectedVoxelEnsembleArrays = selectedEnsembleArrays;
 }
 
@@ -133,13 +133,13 @@ void ArraySelectionExample::setVoxelSelectedArrayNames(QSet<QString> selectedCel
 void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
     QSet<QString> selectedFaceArrays,
     QSet<QString> selectedEdgeArrays,
-    QSet<QString> selectedFieldArrays,
+    QSet<QString> selectedFeatureArrays,
     QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
   m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
-  m_SelectedSurfaceMeshFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceMeshFeatureArrays = selectedFeatureArrays;
   m_SelectedSurfaceMeshEnsembleArrays = selectedEnsembleArrays;
 }
 
@@ -160,7 +160,7 @@ void ArraySelectionExample::setSolidMeshSelectedArrayNames(QSet<QString> selecte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ArraySelectionExample::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 

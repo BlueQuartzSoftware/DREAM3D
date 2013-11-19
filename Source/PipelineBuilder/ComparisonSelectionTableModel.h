@@ -56,9 +56,9 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionTableModel : public QAbstract
   public:
     enum ColumnIndexes
     {
-      FieldName = 0,
-      FieldOperator,
-      FieldValue,
+      FeatureName = 0,
+      FeatureOperator,
+      FeatureValue,
       ColumnCount
     };
 
@@ -149,14 +149,14 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionTableModel : public QAbstract
     virtual QAbstractItemDelegate* getItemDelegate() ;
 
 
-    void setPossibleFields(QStringList fields);
-    void setPossibleFields(QList<QString> &fields);
+    void setPossibleFeatures(QStringList features);
+    void setPossibleFeatures(QList<QString> &features);
 
-    QStringList getPossibleFields();
+    QStringList getPossibleFeatures();
 
-    virtual void setTableData(QVector<QString> fieldNames, QVector<float> fieldValues,  QVector<int> fieldOperators) ;
+    virtual void setTableData(QVector<QString> featureNames, QVector<float> featureValues,  QVector<int> featureOperators) ;
 
-    void getTableData( QVector<QString> &fieldNames, QVector<float> &fieldValues,  QVector<int> &fieldOperators);
+    void getTableData( QVector<QString> &featureNames, QVector<float> &featureValues,  QVector<int> &featureOperators);
 
     void setNumberOfPhases(int n);
 
@@ -166,10 +166,10 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionTableModel : public QAbstract
     int m_RowCount;
     int m_NumberOfPhases;
 
-    QStringList   m_PossibleFields;
-    QVector<QString>   m_FieldNames;
-    QVector<float>     m_FieldValues;
-    QVector<QString> m_FieldOperators;
+    QStringList   m_PossibleFeatures;
+    QVector<QString>   m_FeatureNames;
+    QVector<float>     m_FeatureValues;
+    QVector<QString> m_FeatureOperators;
 
 
     ComparisonSelectionTableModel(const ComparisonSelectionTableModel&); // Copy Constructor Not Implemented

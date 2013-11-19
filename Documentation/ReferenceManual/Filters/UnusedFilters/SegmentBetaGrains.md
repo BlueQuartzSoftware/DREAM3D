@@ -1,5 +1,5 @@
 
-Segment **Fields** (Prior Beta Grains) {#segmentbetagrains}
+Segment **Features** (Prior Beta Grains) {#segmentbetagrains}
 ======
 
 ## Group (Subgroup) ##
@@ -32,7 +32,7 @@ Voxel
 |------|--------------|---------|
 | Cell | GoodVoxels |  |
 | Cell | GrainIds |  |
-| Field | Active |  |
+| Feature | Active |  |
 
 ## Authors ##
 

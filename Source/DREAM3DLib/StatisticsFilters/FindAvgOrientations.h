@@ -69,18 +69,18 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const QString getHumanLabel() { return "Find Field Average Orientations"; }
+    virtual const QString getHumanLabel() { return "Find Feature Average Orientations"; }
 
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
@@ -105,15 +105,15 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellPhases;
-    float* m_FieldEulerAngles;
+    float* m_FeatureEulerAngles;
     float* m_Quats;
     float* m_AvgQuats;
 
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindAvgOrientations(const FindAvgOrientations&); // Copy Constructor Not Implemented
     void operator=(const FindAvgOrientations&); // Operator '=' Not Implemented

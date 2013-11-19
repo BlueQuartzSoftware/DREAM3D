@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -48,10 +48,10 @@
 FindLargestCrossSections::FindLargestCrossSections() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_LargestCrossSectionsArrayName(DREAM3D::FieldData::LargestCrossSections),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_LargestCrossSectionsArrayName(DREAM3D::FeatureData::LargestCrossSections),
   m_Plane(0),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_LargestCrossSections(NULL)
 {
   setupFilterParameters();
@@ -110,15 +110,15 @@ int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindLargestCrossSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindLargestCrossSections::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, LargestCrossSections, float, FloatArrayType, 0, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, LargestCrossSections, float, FloatArrayType, 0, features, dims)
 }
 
 
@@ -131,7 +131,7 @@ void FindLargestCrossSections::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -151,7 +151,7 @@ void FindLargestCrossSections::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -174,10 +174,10 @@ void FindLargestCrossSections::find_crosssections()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
 
-  DataArray<double>::Pointer m_GrainCounts = DataArray<double>::CreateArray(numgrains, "GrainCounts");
-  double* graincounts = m_GrainCounts->getPointer(0);
+  DataArray<double>::Pointer m_FeatureCounts = DataArray<double>::CreateArray(numfeatures, "FeatureCounts");
+  double* featurecounts = m_FeatureCounts->getPointer(0);
 
   int outPlane, inPlane1, inPlane2;
   float res_scalar, area;
@@ -217,9 +217,9 @@ void FindLargestCrossSections::find_crosssections()
   }
   for(int i = 0; i < outPlane; i++)
   {
-    for (size_t g = 0; g < numgrains * 1; g++)
+    for (size_t g = 0; g < numfeatures * 1; g++)
     {
-      graincounts[g] = 0.0f;
+      featurecounts[g] = 0.0f;
     }
     istride = i * stride1;
     for (int j = 0; j < inPlane1; j++)
@@ -229,13 +229,13 @@ void FindLargestCrossSections::find_crosssections()
       {
         kstride = k * stride3;
         point = istride + jstride + kstride;
-        gnum = m_GrainIds[point];
-        graincounts[gnum]++;
+        gnum = m_FeatureIds[point];
+        featurecounts[gnum]++;
       }
     }
-    for (size_t g = 1; g < numgrains; g++)
+    for (size_t g = 1; g < numfeatures; g++)
     {
-      area = graincounts[g] * res_scalar;
+      area = featurecounts[g] * res_scalar;
       if(area > m_LargestCrossSections[g]) { m_LargestCrossSections[g] = area; }
     }
   }

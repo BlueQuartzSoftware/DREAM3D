@@ -80,7 +80,7 @@ int QuickSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* writer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSolidMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void QuickSolidMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
 
   setErrorCondition(0);
@@ -132,9 +132,9 @@ void QuickSolidMesh::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
+  size_t totalFeatures = m->getNumFeatureTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();
-  dataCheck(false, totalPoints, totalFields, totalEnsembles);
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

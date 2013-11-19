@@ -8,7 +8,7 @@ IOFilters (Output)
 ## Description ##
 This filter writes out a file that is appropriate to use as an input into Ricardo Lebensohn's FFT 3D simulation codes[1].
 
-The format of the file is an ASCII text file with the following space delimited fields
+The format of the file is an ASCII text file with the following space delimited features
 
 	Phi1   Phi   Phi2  X  Y   Z  Grain_ID   Phase_ID
 
@@ -32,7 +32,7 @@ Grain ID & Phase Id are the integer values for the grain and phase **Starting at
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Cell | GrainIds Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Fields (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | GrainIds Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 | Cell | CellEulerAngles | These are the angles used to determine the colors | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
 | Cell | CellPhases |  These are used to determine which ensemble the **Cell** belongs to | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 

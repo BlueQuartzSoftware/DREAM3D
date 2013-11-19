@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
 
 
 
@@ -48,10 +48,10 @@
 FindSurfaceVoxelFractions::FindSurfaceVoxelFractions() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
-  m_SurfaceVoxelFractionsArrayName(DREAM3D::FieldData::SurfaceVoxelFractions),
-  m_GrainIds(NULL),
+  m_SurfaceVoxelFractionsArrayName(DREAM3D::FeatureData::SurfaceVoxelFractions),
+  m_FeatureIds(NULL),
   m_SurfaceVoxels(NULL),
   m_SurfaceVoxelFractions(NULL)
 {
@@ -94,16 +94,16 @@ int FindSurfaceVoxelFractions::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSurfaceVoxelFractions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindSurfaceVoxelFractions::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, -301, int8_t, Int8ArrayType, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceVoxelFractions, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceVoxelFractions, float, FloatArrayType, 0, features, dims)
 
 }
 
@@ -117,7 +117,7 @@ void FindSurfaceVoxelFractions::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -137,7 +137,7 @@ void FindSurfaceVoxelFractions::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -157,26 +157,26 @@ void FindSurfaceVoxelFractions::find_surface_voxel_fractions()
 
   int64_t totalPoints = m->getTotalPoints();
 
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
 
-  DataArray<float>::Pointer m_SurfVoxCounts = DataArray<float>::CreateArray(numgrains, "SurfVoxCounts");
+  DataArray<float>::Pointer m_SurfVoxCounts = DataArray<float>::CreateArray(numfeatures, "SurfVoxCounts");
   float* surfvoxcounts = m_SurfVoxCounts->getPointer(0);
-  DataArray<float>::Pointer m_VoxCounts = DataArray<float>::CreateArray(numgrains, "VoxCounts");
+  DataArray<float>::Pointer m_VoxCounts = DataArray<float>::CreateArray(numfeatures, "VoxCounts");
   float* voxcounts = m_VoxCounts->getPointer(0);
 
   // Initialize every element to 0.0
-  for (size_t i = 0; i < numgrains * 1; i++)
+  for (size_t i = 0; i < numfeatures * 1; i++)
   {
     surfvoxcounts[i] = 0.0f;
     voxcounts[i] = 0.0f;
   }
   for (int64_t j = 0; j < totalPoints; j++)
   {
-    int gnum = m_GrainIds[j];
+    int gnum = m_FeatureIds[j];
     voxcounts[gnum]++;
     if(m_SurfaceVoxels[j] > 0) { surfvoxcounts[gnum]++; }
   }
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
     m_SurfaceVoxelFractions[i] = surfvoxcounts[i] / voxcounts[i];
   }

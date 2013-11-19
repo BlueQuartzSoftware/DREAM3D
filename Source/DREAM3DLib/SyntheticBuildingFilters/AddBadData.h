@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
   private:
     float* m_GBEuclideanDistances;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     AddBadData(const AddBadData&); // Copy Constructor Not Implemented
     void operator=(const AddBadData&); // Operator '=' Not Implemented

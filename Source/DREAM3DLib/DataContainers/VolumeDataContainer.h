@@ -79,11 +79,11 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     virtual ~VolumeDataContainer();
 
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Cell)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(CellField)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(CellFeature)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(CellEnsemble)
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellFeatureData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(CellArray::Pointer, Cells)
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     virtual int getNumCellArrays();
 
     /**
-    * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+    * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
     * in during a set of filtering operations then the a value of '32' would be returned.
     * @return
     */
@@ -146,14 +146,14 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
     */
-    virtual void addCellFieldData(const QString &name, IDataArray::Pointer data);
+    virtual void addCellFeatureData(const QString &name, IDataArray::Pointer data);
 
     /**
     * @brief Returns the array for a given named array or the equivelant to a
     * null pointer if the name does not exist.
     * @param name The name of the data array
     */
-    virtual IDataArray::Pointer getCellFieldData(const QString &name);
+    virtual IDataArray::Pointer getCellFeatureData(const QString &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -161,44 +161,44 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeCellFieldData(const QString &name);
+    virtual IDataArray::Pointer removeCellFeatureData(const QString &name);
 
     /**
-    * @brief Renames a field data array from the Data Container
+    * @brief Renames a feature data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameCellFieldData(const QString &oldname, const QString &newname);
+    virtual bool renameCellFeatureData(const QString &oldname, const QString &newname);
 
   /**
-     * @brief Removes all the Field Arrays
+     * @brief Removes all the Feature Arrays
      */
-    virtual void clearCellFieldData();
+    virtual void clearCellFeatureData();
 
     /**
     * @brief Returns a list that contains the names of all the arrays currently stored in the
-    * Field (Formerly Grain) group
+    * Feature (Formerly Feature) group
     * @return
     */
-    virtual QList<QString> getCellFieldArrayNameList();
+    virtual QList<QString> getCellFeatureArrayNameList();
 
     /**
-    * @brief Returns the total number of arrays that are stored in the Field group
+    * @brief Returns the total number of arrays that are stored in the Feature group
     * @return
     */
-    virtual int getNumCellFieldArrays();
+    virtual int getNumCellFeatureArrays();
 
     /**
-    * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+    * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
     * in during a set of filtering operations then the a value of '32' would be returned.
     * @return
     */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumCellFieldTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumCellFeatureTuples)
 
     /**
-    * @brief Resizes all of the Field Arrays to have 'size' tuples
+    * @brief Resizes all of the Feature Arrays to have 'size' tuples
     * @param size The number of tuples that each DataArray should contain.
     */
-    virtual void resizeCellFieldDataArrays(size_t size);
+    virtual void resizeCellFeatureDataArrays(size_t size);
 
     /**
     * @brief Adds/overwrites the data for a named array
@@ -263,7 +263,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin)
 
     DOES_DATASET_EXIST_DECL(CellData)
-    DOES_DATASET_EXIST_DECL(CellFieldData)
+    DOES_DATASET_EXIST_DECL(CellFeatureData)
     DOES_DATASET_EXIST_DECL(CellEnsembleData)
 
   protected:
@@ -272,7 +272,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
   private:
 
     QMap<QString, IDataArray::Pointer> m_CellData;
-    QMap<QString, IDataArray::Pointer> m_CellFieldData;
+    QMap<QString, IDataArray::Pointer> m_CellFeatureData;
     QMap<QString, IDataArray::Pointer> m_CellEnsembleData;
 
     VolumeDataContainer(const VolumeDataContainer&);

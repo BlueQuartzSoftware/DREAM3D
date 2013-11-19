@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     virtual int readHeader();
     virtual int readFile();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
     int32_t* m_NumberOfArms;

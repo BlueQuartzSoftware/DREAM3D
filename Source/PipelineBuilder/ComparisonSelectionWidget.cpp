@@ -67,17 +67,17 @@ QVector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
   if (m_ComparisonSelectionTableModel == NULL) { return comps; }
 
   int filterCount = m_ComparisonSelectionTableModel->rowCount();
-  QVector<QString> fieldNames;
-  QVector<float> fieldValues;
-  QVector<int> fieldOperators;
-  m_ComparisonSelectionTableModel->getTableData(fieldNames, fieldValues, fieldOperators);
+  QVector<QString> featureNames;
+  QVector<float> featureValues;
+  QVector<int> featureOperators;
+  m_ComparisonSelectionTableModel->getTableData(featureNames, featureValues, featureOperators);
 
   for(int i = 0; i < filterCount; ++i)
   {
     ComparisonInput_t comp;
-    comp.arrayName = fieldNames[i];
-    comp.compOperator = fieldOperators[i];
-    comp.compValue = fieldValues[i];
+    comp.arrayName = featureNames[i];
+    comp.compOperator = featureOperators[i];
+    comp.compValue = featureValues[i];
     comps.push_back(comp);
   }
   return comps;
@@ -154,22 +154,24 @@ void ComparisonSelectionWidget::on_removeComparison_clicked()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateArrayNames(DataContainerArray::Pointer dca)
 {
-
+#if __APPLE__
+#warning This needs to be fixed
+#endif
   if (m_ArrayListType >= CellListType && m_ArrayListType <= FaceListType )
   {
-    populateVolumeArrayNames(vldc);
+//    populateVolumeArrayNames(vldc);
   }
-  else if (m_ArrayListType >= FieldListType && m_ArrayListType <= FaceListType)
-  { 
-    populateSurfaceArrayNames(sdc);
+  else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= FaceListType)
+  {
+    //populateSurfaceArrayNames(sdc);
   }
-  else if (m_ArrayListType >= FieldListType && m_ArrayListType <= EdgeListType)
-  { 
-    populateEdgeArrayNames(edc);
+  else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= EdgeListType)
+  {
+  //  populateEdgeArrayNames(edc);
   }
-  else if (m_ArrayListType >= FieldListType && m_ArrayListType <= VertexListType)
-  { 
-    populateVertexArrayNames(vdc);
+  else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= VertexListType)
+  {
+  //  populateVertexArrayNames(vdc);
   }
 
 
@@ -223,15 +225,15 @@ void ComparisonSelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Po
   {
     cellNames = vldc->getCellArrayNameList();
   }
-  else if (m_ArrayListType == FieldListType)
+  else if (m_ArrayListType == FeatureListType)
   {
-    cellNames = vldc->getCellFieldArrayNameList();
+    cellNames = vldc->getCellFeatureArrayNameList();
   }
   else if (m_ArrayListType == EnsembleListType)
   {
     cellNames = vldc->getCellEnsembleArrayNameList();
   }
-  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
+  m_ComparisonSelectionTableModel->setPossibleFeatures(cellNames);
 }
 
 // -----------------------------------------------------------------------------
@@ -252,15 +254,15 @@ void ComparisonSelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::
   {
     cellNames = sdc->getFaceArrayNameList();
   }
-  else if (m_ArrayListType == FieldListType)
+  else if (m_ArrayListType == FeatureListType)
   {
-    cellNames = sdc->getFaceFieldArrayNameList();
+    cellNames = sdc->getFaceFeatureArrayNameList();
   }
   else if (m_ArrayListType == EnsembleListType)
   {
     cellNames = sdc->getFaceEnsembleArrayNameList();
   }
-  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
+  m_ComparisonSelectionTableModel->setPossibleFeatures(cellNames);
 }
 
 // -----------------------------------------------------------------------------
@@ -277,15 +279,15 @@ void ComparisonSelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointe
   {
     cellNames = edc->getEdgeArrayNameList();
   }
-  else if (m_ArrayListType == FieldListType)
+  else if (m_ArrayListType == FeatureListType)
   {
-    cellNames = edc->getEdgeFieldArrayNameList();
+    cellNames = edc->getEdgeFeatureArrayNameList();
   }
   else if (m_ArrayListType == EnsembleListType)
   {
     cellNames = edc->getEdgeEnsembleArrayNameList();
   }
-  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
+  m_ComparisonSelectionTableModel->setPossibleFeatures(cellNames);
 }
 
 // -----------------------------------------------------------------------------
@@ -298,15 +300,15 @@ void ComparisonSelectionWidget::populateVertexArrayNames(VertexDataContainer::Po
   {
     cellNames = vdc->getVertexArrayNameList();
   }
-  else if (m_ArrayListType == FieldListType)
+  else if (m_ArrayListType == FeatureListType)
   {
-    cellNames = vdc->getVertexFieldArrayNameList();
+    cellNames = vdc->getVertexFeatureArrayNameList();
   }
   else if (m_ArrayListType == EnsembleListType)
   {
     cellNames = vdc->getVertexEnsembleArrayNameList();
   }
-  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
+  m_ComparisonSelectionTableModel->setPossibleFeatures(cellNames);
 }
 
 // -----------------------------------------------------------------------------

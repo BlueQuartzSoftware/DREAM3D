@@ -47,15 +47,15 @@
 // -----------------------------------------------------------------------------
 FindMDF::FindMDF()  :
   AbstractFilter(),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_AvgQuats(NULL),
-  m_SurfaceFields(NULL),
-  m_FieldPhases(NULL),
+  m_SurfaceFeatures(NULL),
+  m_FeaturePhases(NULL),
   m_TotalSurfaceAreas(NULL),
   m_NeighborList(NULL),
   m_SharedSurfaceAreaList(NULL),
@@ -100,27 +100,27 @@ int FindMDF::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindMDF::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FeatureData, AvgQuats, -301, float, FloatArrayType, features, 4)
+  TEST_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, err, -302, bool, BoolArrayType, features, 1)
   if(err == -302)
   {
     setErrorCondition(0);
-    FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-    find_surfacefields->setObservers(this->getObservers());
-    find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) { find_surfacefields->preflight(); }
-    if(preflight == false) { find_surfacefields->execute(); }
+    FindSurfaceGrains::Pointer find_surfacefeatures = FindSurfaceGrains::New();
+    find_surfacefeatures->setObservers(this->getObservers());
+    find_surfacefeatures->setVoxelDataContainer(getVoxelDataContainer());
+    if(preflight == true) { find_surfacefeatures->preflight(); }
+    if(preflight == false) { find_surfacefeatures->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, -302, bool, BoolArrayType, features, 1)
 
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303,  int32_t, Int32ArrayType, fields, 1)
+  TEST_PREREQ_DATA(m, DREAM3D, FeatureData, FeaturePhases, err, -303,  int32_t, Int32ArrayType, features, 1)
   if(err == -303)
   {
     setErrorCondition(0);
@@ -130,11 +130,11 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     if(preflight == true) { find_grainphases->preflight(); }
     if(preflight == false) { find_grainphases->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, 1)
 
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFeatureData(DREAM3D::FeatureData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
     setErrorCondition(0);
@@ -143,7 +143,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) { find_neighbors->preflight(); }
     if(preflight == false) { find_neighbors->execute(); }
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFeatureData(DREAM3D::FeatureData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
       ss.str("");
@@ -152,7 +152,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
       addErrorMessage(getHumanLabel(), ss.str(), -305);
     }
   }
-  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFeatureData(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
     setErrorCondition(0);
@@ -161,7 +161,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) { find_neighbors->preflight(); }
     if(preflight == false) { find_neighbors->execute(); }
-    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFeatureData(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {
       ss.str("");
@@ -207,7 +207,7 @@ void FindMDF::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFeatureTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -228,7 +228,7 @@ void FindMDF::execute()
   float w;
   float q1[5];
   float q2[5];
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumFeatureTuples();
   unsigned int phase1, phase2;
   QVector<FloatArrayType::Pointer> misobin;
   int numbins = 0;
@@ -263,7 +263,7 @@ void FindMDF::execute()
     q1[2] = m_AvgQuats[5 * i + 2];
     q1[3] = m_AvgQuats[5 * i + 3];
     q1[4] = m_AvgQuats[5 * i + 4];
-    phase1 = m_CrystalStructures[m_FieldPhases[i]];
+    phase1 = m_CrystalStructures[m_FeaturePhases[i]];
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = 10000.0;
@@ -273,23 +273,23 @@ void FindMDF::execute()
       q2[2] = m_AvgQuats[5 * nname + 2];
       q2[3] = m_AvgQuats[5 * nname + 3];
       q2[4] = m_AvgQuats[5 * nname + 4];
-      phase2 = m_CrystalStructures[m_FieldPhases[nname]];
+      phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
       if (phase1 == phase2) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
       if (phase1 == phase2)
       {
         OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-        if ((nname > i || m_SurfaceFields[nname] == true))
+        if ((nname > i || m_SurfaceFeatures[nname] == true))
         {
           mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);
           nsa = neighborsurfacearealist[i][j];
-          misobin[m_FieldPhases[i]]->SetValue(mbin, (misobin[m_FieldPhases[i]]->GetValue(mbin) + (nsa / m_TotalSurfaceAreas[m_FieldPhases[i]])));
+          misobin[m_FeaturePhases[i]]->SetValue(mbin, (misobin[m_FeaturePhases[i]]->GetValue(mbin) + (nsa / m_TotalSurfaceAreas[m_FeaturePhases[i]])));
         }
       }
     }
   }
 
   // We do this to create new set of MisorientationList objects
-  dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getNumCellTuples(), m->getNumFeatureTuples(), m->getNumEnsembleTuples());
 
 // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for (size_t i = 1; i < numensembles; i++)

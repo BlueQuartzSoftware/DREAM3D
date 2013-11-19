@@ -163,7 +163,7 @@ int ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ClearData::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -244,7 +244,7 @@ void ClearData::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -267,7 +267,7 @@ void ClearData::execute()
   }
 
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if(getErrorCondition() < 0)
   {
     return;

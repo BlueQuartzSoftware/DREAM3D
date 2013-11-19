@@ -68,7 +68,7 @@ void ArraySelectionWidget::setupGui()
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(volumeCellArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(volumeCellFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(volumeCellFeatureArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(volumeCellEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
@@ -79,7 +79,7 @@ void ArraySelectionWidget::setupGui()
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(surfaceEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(surfaceFaceFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(surfaceFaceFeatureArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(surfaceFaceEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
@@ -88,14 +88,14 @@ void ArraySelectionWidget::setupGui()
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(edgeEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(edgeEdgeFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(edgeEdgeFeatureArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(edgeEdgeEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
 
   connect(vertexVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(vertexVertexFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(vertexVertexFeatureArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(vertexVertexEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
@@ -116,10 +116,13 @@ void ArraySelectionWidget::arrayListUpdated(QListWidgetItem *item)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateArrayNames(DataContainerArray::Pointer dca)
 {
-  populateVolumeArrayNames(vldc);
-  populateSurfaceArrayNames(sdc);
-  populateEdgeArrayNames(edc);
-  populateVertexArrayNames(vdc);
+#if __APPLE__
+#warning This needs to be fixed
+#endif
+//  populateVolumeArrayNames(vldc);
+//  populateSurfaceArrayNames(sdc);
+//  populateEdgeArrayNames(edc);
+//  populateVertexArrayNames(vdc);
 }
 
 
@@ -140,8 +143,8 @@ void ArraySelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Pointer
   QList<QString> cellNames = vldc->getCellArrayNameList();
   populateArrayList(volumeCellArrayList, cellNames, volumeCellCB);
 
-  QList<QString> fieldNames = vldc->getCellFieldArrayNameList();
-  populateArrayList(volumeCellFieldArrayList, fieldNames, volumeCellFieldCB);
+  QList<QString> featureNames = vldc->getCellFeatureArrayNameList();
+  populateArrayList(volumeCellFeatureArrayList, featureNames, volumeCellFeatureCB);
 
   QList<QString> ensembleNames = vldc->getCellEnsembleArrayNameList();
   populateArrayList(volumeCellEnsembleArrayList, ensembleNames, volumeCellEnsembleCB);
@@ -161,8 +164,8 @@ void ArraySelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::Point
   QList<QString> faceNames = sdc->getFaceArrayNameList();
   populateArrayList(surfaceFaceArrayList, faceNames, surfaceFaceArraysCB);
 
-  QList<QString> fieldNames = sdc->getFaceFieldArrayNameList();
-  populateArrayList(surfaceFaceFieldArrayList, fieldNames, surfaceFaceFieldArraysCB);
+  QList<QString> featureNames = sdc->getFaceFeatureArrayNameList();
+  populateArrayList(surfaceFaceFeatureArrayList, featureNames, surfaceFaceFeatureArraysCB);
 
   QList<QString> ensembleNames = sdc->getFaceEnsembleArrayNameList();
   populateArrayList(surfaceFaceEnsembleArrayList, ensembleNames, surfaceFaceEnsembleArraysCB);
@@ -179,8 +182,8 @@ void ArraySelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointer edc
   QList<QString> edgeNames = edc->getEdgeArrayNameList();
   populateArrayList(edgeEdgeArrayList, edgeNames, edgeEdgeCB);
 
-  QList<QString> fieldNames = edc->getEdgeFieldArrayNameList();
-  populateArrayList(edgeEdgeFieldArrayList, fieldNames, edgeEdgeFieldCB);
+  QList<QString> featureNames = edc->getEdgeFeatureArrayNameList();
+  populateArrayList(edgeEdgeFeatureArrayList, featureNames, edgeEdgeFeatureCB);
 
   QList<QString> ensembleNames = edc->getEdgeEnsembleArrayNameList();
   populateArrayList(edgeEdgeEnsembleArrayList, ensembleNames, edgeEdgeEnsembleCB);
@@ -194,8 +197,8 @@ void ArraySelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer
   QList<QString> vertexNames = vdc->getVertexArrayNameList();
   populateArrayList(vertexVertexArrayList, vertexNames, NULL);
 
-  QList<QString> fieldNames = vdc->getVertexFieldArrayNameList();
-  populateArrayList(vertexVertexFieldArrayList, fieldNames, NULL);
+  QList<QString> featureNames = vdc->getVertexFeatureArrayNameList();
+  populateArrayList(vertexVertexFeatureArrayList, featureNames, NULL);
 
   QList<QString> ensembleNames = vdc->getVertexEnsembleArrayNameList();
   populateArrayList(vertexVertexEnsembleArrayList, ensembleNames, NULL);
@@ -278,13 +281,13 @@ void ArraySelectionWidget::on_vertexVertexCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_vertexVertexFieldCB_stateChanged(int state)
+void ArraySelectionWidget::on_vertexVertexFeatureCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    vertexVertexFieldCB->setCheckState(Qt::Checked);
+    vertexVertexFeatureCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(vertexVertexFieldArrayList, state);
+  toggleListSelections(vertexVertexFeatureArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -326,13 +329,13 @@ void ArraySelectionWidget::on_edgeEdgeCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_edgeEdgeFieldCB_stateChanged(int state)
+void ArraySelectionWidget::on_edgeEdgeFeatureCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    edgeEdgeFieldCB->setCheckState(Qt::Checked);
+    edgeEdgeFeatureCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(edgeEdgeFieldArrayList, state);
+  toggleListSelections(edgeEdgeFeatureArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -386,13 +389,13 @@ void ArraySelectionWidget::on_surfaceFaceArraysCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_surfaceFaceFieldArraysCB_stateChanged(int state)
+void ArraySelectionWidget::on_surfaceFaceFeatureArraysCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    surfaceFaceFieldArraysCB->setCheckState(Qt::Checked);
+    surfaceFaceFeatureArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(surfaceFaceFieldArrayList, state);
+  toggleListSelections(surfaceFaceFeatureArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -458,13 +461,13 @@ void ArraySelectionWidget::on_volumeCellCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_volumeCellFieldCB_stateChanged(int state)
+void ArraySelectionWidget::on_volumeCellFeatureCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    volumeCellFieldCB->setCheckState(Qt::Checked);
+    volumeCellFeatureCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(volumeCellFieldArrayList, state);
+  toggleListSelections(volumeCellFeatureArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -546,7 +549,7 @@ void ArraySelectionWidget::removeSelectionsFromDataContainers(DataContainerArray
       REMOVE_ARRAYS_HELPER(volume, vl, Edge, Selected)
       REMOVE_ARRAYS_HELPER(volume, vl, Face, Selected)
       REMOVE_ARRAYS_HELPER(volume, vl, Cell, Selected)
-      REMOVE_ARRAYS_HELPER(volume, vl, CellField, Selected)
+      REMOVE_ARRAYS_HELPER(volume, vl, CellFeature, Selected)
       REMOVE_ARRAYS_HELPER(volume, vl, CellEnsemble, Selected)
     }
     if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer)
@@ -554,20 +557,20 @@ void ArraySelectionWidget::removeSelectionsFromDataContainers(DataContainerArray
       REMOVE_ARRAYS_HELPER(surface, sm, Vertex, Selected)
       REMOVE_ARRAYS_HELPER(surface, sm, Face, Selected)
       REMOVE_ARRAYS_HELPER(surface, sm, Edge, Selected)
-      REMOVE_ARRAYS_HELPER(surface, sm, FaceField, Selected)
+      REMOVE_ARRAYS_HELPER(surface, sm, FaceFeature, Selected)
       REMOVE_ARRAYS_HELPER(surface, sm, FaceEnsemble, Selected)
     }
     if(dcType == DREAM3D::DataContainerType::EdgeDataContainer)
     {
       REMOVE_ARRAYS_HELPER(edge, e, Vertex, Selected)
       REMOVE_ARRAYS_HELPER(edge, e, Edge, Selected)
-      REMOVE_ARRAYS_HELPER(edge, e, EdgeField, Selected)
+      REMOVE_ARRAYS_HELPER(edge, e, EdgeFeature, Selected)
       REMOVE_ARRAYS_HELPER(edge, e, EdgeEnsemble, Selected)
     }
     if(dcType == DREAM3D::DataContainerType::VertexDataContainer)
     {
       REMOVE_ARRAYS_HELPER(vertex, v, Vertex, Selected)
-      REMOVE_ARRAYS_HELPER(vertex, v, VertexField, Selected)
+      REMOVE_ARRAYS_HELPER(vertex, v, VertexFeature, Selected)
       REMOVE_ARRAYS_HELPER(vertex, v, VertexEnsemble, Selected)
     }
   }
@@ -597,7 +600,7 @@ void ArraySelectionWidget::removeNonSelectionsFromDataContainers(DataContainerAr
       REMOVE_ARRAYS_HELPER(volume, vl, Edge, NonSelected)
       REMOVE_ARRAYS_HELPER(volume, vl, Face, NonSelected)
       REMOVE_ARRAYS_HELPER(volume, vl, Cell, NonSelected)
-      REMOVE_ARRAYS_HELPER(volume, vl, CellField, NonSelected)
+      REMOVE_ARRAYS_HELPER(volume, vl, CellFeature, NonSelected)
       REMOVE_ARRAYS_HELPER(volume, vl, CellEnsemble, NonSelected)
     }
     if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer)
@@ -605,20 +608,20 @@ void ArraySelectionWidget::removeNonSelectionsFromDataContainers(DataContainerAr
       REMOVE_ARRAYS_HELPER(surface, sm, Vertex, NonSelected)
       REMOVE_ARRAYS_HELPER(surface, sm, Face, NonSelected)
       REMOVE_ARRAYS_HELPER(surface, sm, Edge, NonSelected)
-      REMOVE_ARRAYS_HELPER(surface, sm, FaceField, NonSelected)
+      REMOVE_ARRAYS_HELPER(surface, sm, FaceFeature, NonSelected)
       REMOVE_ARRAYS_HELPER(surface, sm, FaceEnsemble, NonSelected)
     }
     if(dcType == DREAM3D::DataContainerType::EdgeDataContainer)
     {
       REMOVE_ARRAYS_HELPER(edge, e, Vertex, NonSelected)
       REMOVE_ARRAYS_HELPER(edge, e, Edge, NonSelected)
-      REMOVE_ARRAYS_HELPER(edge, e, EdgeField, NonSelected)
+      REMOVE_ARRAYS_HELPER(edge, e, EdgeFeature, NonSelected)
       REMOVE_ARRAYS_HELPER(edge, e, EdgeEnsemble, NonSelected)
     }
     if(dcType == DREAM3D::DataContainerType::VertexDataContainer)
     {
       REMOVE_ARRAYS_HELPER(vertex, v, Vertex, NonSelected)
-      REMOVE_ARRAYS_HELPER(vertex, v, VertexField, NonSelected)
+      REMOVE_ARRAYS_HELPER(vertex, v, VertexFeature, NonSelected)
       REMOVE_ARRAYS_HELPER(vertex, v, VertexEnsemble, NonSelected)
     }
   }
@@ -690,22 +693,22 @@ void ArraySelectionWidget::clearArraySelectionLists()
   volumeEdgeArrayList->clear();
   volumeFaceArrayList->clear();
   volumeCellArrayList->clear();
-  volumeCellFieldArrayList->clear();
+  volumeCellFeatureArrayList->clear();
   volumeCellEnsembleArrayList->clear();
 
   surfaceVertexArrayList->clear();
   surfaceFaceArrayList->clear();
   surfaceEdgeArrayList->clear();
-  surfaceFaceFieldArrayList->clear();
+  surfaceFaceFeatureArrayList->clear();
   surfaceFaceEnsembleArrayList->clear();
 
   edgeVertexArrayList->clear();
   edgeEdgeArrayList->clear();
-  edgeEdgeFieldArrayList->clear();
+  edgeEdgeFeatureArrayList->clear();
   edgeEdgeEnsembleArrayList->clear();
 
   vertexVertexArrayList->clear();
-  vertexVertexFieldArrayList->clear();
+  vertexVertexFeatureArrayList->clear();
   vertexVertexEnsembleArrayList->clear();
 }
 
@@ -718,22 +721,22 @@ void ArraySelectionWidget::readOptions(QSettings &prefs, QString name)
   readSelections(prefs, name, "VolumeEdge", volumeEdgeArrayList);
   readSelections(prefs, name, "VolumeFace", volumeFaceArrayList);
   readSelections(prefs, name, "VolumeCell", volumeCellArrayList);
-  readSelections(prefs, name, "VolumeField", volumeCellFieldArrayList);
+  readSelections(prefs, name, "VolumeFeature", volumeCellFeatureArrayList);
   readSelections(prefs, name, "VolumeEnsemble", volumeCellEnsembleArrayList);
 
   readSelections(prefs, name, "SurfaceVertex", surfaceVertexArrayList);
   readSelections(prefs, name, "SurfaceFace", surfaceFaceArrayList);
   readSelections(prefs, name, "SurfaceEdge", surfaceEdgeArrayList);
-  readSelections(prefs, name, "SurfaceField", surfaceFaceFieldArrayList);
+  readSelections(prefs, name, "SurfaceFeature", surfaceFaceFeatureArrayList);
   readSelections(prefs, name, "SurfaceEnsemble", surfaceFaceEnsembleArrayList);
 
   readSelections(prefs, name, "EdgeVertex", edgeVertexArrayList);
   readSelections(prefs, name, "EdgeEdge", edgeEdgeArrayList);
-  readSelections(prefs, name, "EdgeField", edgeEdgeFieldArrayList);
+  readSelections(prefs, name, "EdgeFeature", edgeEdgeFeatureArrayList);
   readSelections(prefs, name, "EdgeEnsemble", edgeEdgeEnsembleArrayList);
 
   readSelections(prefs, name, "VertexVertex", vertexVertexArrayList);
-  readSelections(prefs, name, "VertexField", vertexVertexFieldArrayList);
+  readSelections(prefs, name, "VertexFeature", vertexVertexFeatureArrayList);
   readSelections(prefs, name, "VertexEnsemble", vertexVertexEnsembleArrayList);
 }
 // -----------------------------------------------------------------------------
@@ -745,22 +748,22 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
   writeSelections(prefs, name, "VolumeEdge", volumeEdgeArrayList);
   writeSelections(prefs, name, "VolumeFace", volumeFaceArrayList);
   writeSelections(prefs, name, "VolumeCell", volumeCellArrayList);
-  writeSelections(prefs, name, "VolumeField", volumeCellFieldArrayList);
+  writeSelections(prefs, name, "VolumeFeature", volumeCellFeatureArrayList);
   writeSelections(prefs, name, "VolumeEnsemble", volumeCellEnsembleArrayList);
 
   writeSelections(prefs, name, "SurfaceVertex", surfaceVertexArrayList);
   writeSelections(prefs, name, "SurfaceFace", surfaceFaceArrayList);
   writeSelections(prefs, name, "SurfaceEdge", surfaceEdgeArrayList);
-  writeSelections(prefs, name, "SurfaceField", surfaceFaceFieldArrayList);
+  writeSelections(prefs, name, "SurfaceFeature", surfaceFaceFeatureArrayList);
   writeSelections(prefs, name, "SurfaceEnsemble", surfaceFaceEnsembleArrayList);
 
   writeSelections(prefs, name, "EdgeVertex", edgeVertexArrayList);
   writeSelections(prefs, name, "EdgeEdge", edgeEdgeArrayList);
-  writeSelections(prefs, name, "EdgeField", edgeEdgeFieldArrayList);
+  writeSelections(prefs, name, "EdgeFeature", edgeEdgeFeatureArrayList);
   writeSelections(prefs, name, "EdgeEnsemble", edgeEdgeEnsembleArrayList);
 
   writeSelections(prefs, name, "VertexVertex", vertexVertexArrayList);
-  writeSelections(prefs, name, "VertexField", vertexVertexFieldArrayList);
+  writeSelections(prefs, name, "VertexFeature", vertexVertexFeatureArrayList);
   writeSelections(prefs, name, "VertexEnsemble", vertexVertexEnsembleArrayList);
 }
 

@@ -112,22 +112,16 @@ int RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-10000);
-    addErrorMessage(getHumanLabel(), "Volume Data Container is NULL", getErrorCondition());
-    return;
-  }
   setErrorCondition(0);
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    QString ss = QObject::tr("An array from the Voxel Data Container must be selected.");
+    QString ss = QObject::tr("An array from the Volume DataContainer must be selected.");
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else

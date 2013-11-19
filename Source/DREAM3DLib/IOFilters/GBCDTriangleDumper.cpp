@@ -48,11 +48,11 @@ GBCDTriangleDumper::GBCDTriangleDumper() :
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
-  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
-  m_FieldEulerAngles(NULL)
+  m_FeatureEulerAngles(NULL)
 {
   setupFilterParameters();
 }
@@ -77,7 +77,7 @@ void GBCDTriangleDumper::setupFilterParameters()
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setFileExtension("*.ph");
-    option->setFileType("CMU Grain Growth");
+    option->setFileType("CMU Feature Growth");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -112,7 +112,7 @@ int GBCDTriangleDumper::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -139,18 +139,18 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
   else
   {
     QVector<int> dims(1, 2);
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, dims)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
     dims[0] = 3;
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, dims)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, features, dims)
     dims[0] = 1;
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, dims)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, features, dims)
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -163,7 +163,7 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
     return;
   }
   QVector<int> dims(1, 3);
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, -301, float, FloatArrayType, features, dims)
 }
 
 // -----------------------------------------------------------------------------
@@ -222,7 +222,7 @@ void GBCDTriangleDumper::execute()
   // Note the use of the voxel datacontainer num ensembles to set the gbcd size
   dataCheckSurfaceMesh(false, 0, totalFaces, m->getNumCellEnsembleTuples());
 
-  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalFeatures = m->getNumCellFeatureTuples();
   size_t totalEnsembles = m->getNumCellEnsembleTuples();
 
   FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
@@ -233,18 +233,18 @@ void GBCDTriangleDumper::execute()
     return;
   }
 
-  dataCheckVoxel(false, 0, totalFields, totalEnsembles);
+  dataCheckVoxel(false, 0, totalFeatures, totalEnsembles);
 
   float radToDeg = 180.0 / M_PI;
 
-  int gid0 = 0; // Grain id 0
-  int gid1 = 0; // Grain id 1
+  int gid0 = 0; // Feature id 0
+  int gid1 = 0; // Feature id 1
   float* euAng0 = NULL;
   float* euAng1 = NULL;
   double* tNorm = NULL;
   for(size_t t = 0; t < totalFaces; ++t)
   {
-    // Get the Grain Ids for the triangle
+    // Get the Feature Ids for the triangle
     gid0 = m_SurfaceMeshFaceLabels[t * 2];
     gid1 = m_SurfaceMeshFaceLabels[t * 2 + 1];
 
@@ -257,9 +257,9 @@ void GBCDTriangleDumper::execute()
       continue;
     }
 
-    // Now get the Euler Angles for that grain id, WATCH OUT: This is pointer arithmetic
-    euAng0 = m_FieldEulerAngles + (gid0 * 3);
-    euAng1 = m_FieldEulerAngles + (gid1 * 3);
+    // Now get the Euler Angles for that feature id, WATCH OUT: This is pointer arithmetic
+    euAng0 = m_FeatureEulerAngles + (gid0 * 3);
+    euAng1 = m_FeatureEulerAngles + (gid1 * 3);
 
     // Get the Triangle Normal
     tNorm = m_SurfaceMeshFaceNormals + (t * 3);

@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
     //------ Created Cell Data
@@ -106,14 +106,14 @@ class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     int32_t* m_CellPhases;
     float* m_KernelAverageMisorientations;
     float* m_Quats;
 
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindKernelAvgMisorientations(const FindKernelAvgMisorientations&); // Copy Constructor Not Implemented
     void operator=(const FindKernelAvgMisorientations&); // Operator '=' Not Implemented

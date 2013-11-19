@@ -38,7 +38,7 @@ AbstractFilter::AbstractFilter() :
   m_ErrorCondition(0),
   m_Cancel(false)
 {
-  m_DataContainerArray = DataContainerArray::Pointer();
+  m_DataContainerArray = DataContainerArray::New();
   setupFilterParameters();
 }
 

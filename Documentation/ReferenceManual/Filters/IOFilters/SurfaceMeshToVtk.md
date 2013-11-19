@@ -13,8 +13,8 @@ __Write Binary Vtk File__ If this option is selected then the data portions of t
 binary format as stipulated by the VTK file format.
 
 - __Write Conformal Mesh__ If this is ___true___ then only a single triangle will be written which will be shared
-between 2 **Field** (region) ids. If this is ___false___ then 2 triangles with opposite winding will be written and each
-will have a **Field** ID assigned to it.
+between 2 **Feature** (region) ids. If this is ___false___ then 2 triangles with opposite winding will be written and each
+will have a **Feature** ID assigned to it.
 
 
 

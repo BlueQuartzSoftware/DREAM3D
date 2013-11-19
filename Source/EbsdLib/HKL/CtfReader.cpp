@@ -147,12 +147,12 @@ void CtfReader::setPointerByName(const QString &name, void* p)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* CtfReader::getPointerByName(const QString &fieldName)
+void* CtfReader::getPointerByName(const QString &featureName)
 {
   void* ptr = NULL;
-  if(m_NamePointerMap.contains(fieldName) == true)
+  if(m_NamePointerMap.contains(featureName) == true)
   {
-    ptr = m_NamePointerMap.value(fieldName)->getVoidPointer();
+    ptr = m_NamePointerMap.value(featureName)->getVoidPointer();
   }
   return ptr;
 }
@@ -160,75 +160,75 @@ void* CtfReader::getPointerByName(const QString &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType CtfReader::getPointerType(const QString &fieldName)
+Ebsd::NumType CtfReader::getPointerType(const QString &featureName)
 {
-  // std::cout << "fieldName: " << fieldName << std::endl;
-  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::GrainIndex) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Ebsd::Int32;}
-  // std::cout << "THIS IS NOT GOOD. Fieldname: " << fieldName << " was not found in the list" << std::endl;
+  // std::cout << "featureName: " << featureName << std::endl;
+  if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Z) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Bands) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Euler3) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::MAD) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::BC) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::BS) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::GrainIndex) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Ebsd::Int32;}
+  // std::cout << "THIS IS NOT GOOD. Featurename: " << featureName << " was not found in the list" << std::endl;
   return Ebsd::UnknownNumType;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::getTypeSize(const QString &fieldName)
+int CtfReader::getTypeSize(const QString &featureName)
 {
-  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::GrainIndex) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::X) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Y) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Z) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Bands) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Error) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Euler1) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Euler2) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Euler3) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::MAD) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::BC) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::BS) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::GrainIndex) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return 4;}
   return 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataParser::Pointer CtfReader::getParser(const QString &fieldName, void* ptr, size_t size)
+DataParser::Pointer CtfReader::getParser(const QString &featureName, void* ptr, size_t size)
 {
-  // These are defaulted to a "3D" CTF file with Grain IDS already determined and their colors
-  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName, 0);}
-  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName, 1);}
-  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName, 2);}
-  if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName, 3);}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName, 4);}
-  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName, 5);}
-  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName, 6);}
-  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName, 7);}
-  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName, 8);}
-  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName, 9);}
-  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName, 10);}
-  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName, 11);}
-  if (fieldName.compare(Ebsd::Ctf::GrainIndex) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName, 12);}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName, 13);}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName, 14);}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName, 15);}
+  // These are defaulted to a "3D" CTF file with Feature IDS already determined and their colors
+  if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 0);}
+  if (featureName.compare(Ebsd::Ctf::X) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 1);}
+  if (featureName.compare(Ebsd::Ctf::Y) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 2);}
+  if (featureName.compare(Ebsd::Ctf::Z) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 3);}
+  if (featureName.compare(Ebsd::Ctf::Bands) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 4);}
+  if (featureName.compare(Ebsd::Ctf::Error) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 5);}
+  if (featureName.compare(Ebsd::Ctf::Euler1) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 6);}
+  if (featureName.compare(Ebsd::Ctf::Euler2) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 7);}
+  if (featureName.compare(Ebsd::Ctf::Euler3) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 8);}
+  if (featureName.compare(Ebsd::Ctf::MAD) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 9);}
+  if (featureName.compare(Ebsd::Ctf::BC) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 10);}
+  if (featureName.compare(Ebsd::Ctf::BS) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 11);}
+  if (featureName.compare(Ebsd::Ctf::GrainIndex) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 12);}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 13);}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 14);}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 15);}
   return DataParser::NullPointer();
 }
 

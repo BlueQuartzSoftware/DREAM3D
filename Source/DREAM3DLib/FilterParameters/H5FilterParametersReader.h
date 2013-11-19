@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 
 
@@ -69,8 +70,16 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
      */
     static Pointer OpenDREAM3DFileForReadingPipeline(QString filePath, hid_t& fid);
 
+    /**
+     * @brief ReadPipelineFromFile
+     * @param filePath
+     * @return
+     */
+    static FilterPipeline::Pointer ReadPipelineFromFile(QString filePath);
 
     DREAM3D_INSTANCE_PROPERTY(hid_t, PipelineGroupId)
+
+
 
     virtual int openFilterGroup(AbstractFilter* filter, int index);
     virtual int closeFilterGroup();

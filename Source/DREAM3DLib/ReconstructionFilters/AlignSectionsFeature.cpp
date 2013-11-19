@@ -112,7 +112,7 @@ int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -137,7 +137,7 @@ void AlignSectionsFeature::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -159,9 +159,9 @@ void AlignSectionsFeature::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
-  dataCheck(false, totalPoints, numgrains, numensembles);
+  dataCheck(false, totalPoints, numfeatures, numensembles);
   if (getErrorCondition() < 0)
   {
     return;

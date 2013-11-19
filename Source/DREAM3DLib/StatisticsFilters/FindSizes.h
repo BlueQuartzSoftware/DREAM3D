@@ -65,15 +65,15 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Field Sizes"; }
+    virtual const QString getHumanLabel() { return "Find Feature Sizes"; }
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -98,12 +98,12 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     float* m_Volumes;
     float* m_EquivalentDiameters;
     int32_t* m_NumCells;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindSizes(const FindSizes&); // Copy Constructor Not Implemented
     void operator=(const FindSizes&); // Operator '=' Not Implemented

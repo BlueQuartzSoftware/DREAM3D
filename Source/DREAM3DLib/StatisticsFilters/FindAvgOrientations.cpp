@@ -48,15 +48,15 @@
 FindAvgOrientations::FindAvgOrientations() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_GrainIds(NULL),
+  m_FeatureIds(NULL),
   m_CellPhases(NULL),
-  m_FieldEulerAngles(NULL),
+  m_FeatureEulerAngles(NULL),
   m_Quats(NULL),
   m_AvgQuats(NULL)
 {
@@ -92,22 +92,22 @@ int FindAvgOrientations::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType,  voxels, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType,  voxels, dims)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, dims)
 
   dims[0] = 4;
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, dims)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, float, FloatArrayType, 0, features, dims)
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, float, FloatArrayType, 0, fields, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, float, FloatArrayType, 0, features, dims)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   dims[0] = 1;
@@ -123,7 +123,7 @@ void FindAvgOrientations::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -145,14 +145,14 @@ void FindAvgOrientations::execute()
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  size_t numgrains = m->getNumCellFieldTuples();
-  QVector<float> counts(numgrains, 0.0);
+  size_t numfeatures = m->getNumCellFeatureTuples();
+  QVector<float> counts(numfeatures, 0.0);
 
   int phase;
   QuatF voxquat;
@@ -160,30 +160,30 @@ void FindAvgOrientations::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
     QuaternionMathF::ElementWiseAssign(avgQuats[i], 0.0);
   }
   for(int i = 0; i < totalPoints; i++)
   {
-    if(m_GrainIds[i] > 0 && m_CellPhases[i] > 0)
+    if(m_FeatureIds[i] > 0 && m_CellPhases[i] > 0)
     {
-      counts[m_GrainIds[i]] += 1;
+      counts[m_FeatureIds[i]] += 1;
       phase = m_CellPhases[i];
       QuaternionMathF::Copy(quats[i], voxquat);
-      QuaternionMathF::Copy(avgQuats[m_GrainIds[i]], curavgquat);
-      QuaternionMathF::ScalarDivide(curavgquat, counts[m_GrainIds[i]]);
+      QuaternionMathF::Copy(avgQuats[m_FeatureIds[i]], curavgquat);
+      QuaternionMathF::ScalarDivide(curavgquat, counts[m_FeatureIds[i]]);
 
-      if(counts[m_GrainIds[i]] == 1)
+      if(counts[m_FeatureIds[i]] == 1)
       {
         QuaternionMathF::Identity(curavgquat);
       }
       m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
-      QuaternionMathF::Add(avgQuats[m_GrainIds[i]], voxquat, avgQuats[m_GrainIds[i]]);
+      QuaternionMathF::Add(avgQuats[m_FeatureIds[i]], voxquat, avgQuats[m_FeatureIds[i]]);
     }
   }
   float ea1, ea2, ea3;
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
     if(counts[i] == 0)
     {
@@ -192,9 +192,9 @@ void FindAvgOrientations::execute()
     QuaternionMathF::ScalarDivide(avgQuats[i], counts[i]);
     QuaternionMathF::UnitQuaternion(avgQuats[i]);
     OrientationMath::QuattoEuler(avgQuats[i], ea1, ea2, ea3);
-    m_FieldEulerAngles[3 * i] = ea1;
-    m_FieldEulerAngles[3 * i + 1] = ea2;
-    m_FieldEulerAngles[3 * i + 2] = ea3;
+    m_FeatureEulerAngles[3 * i] = ea1;
+    m_FeatureEulerAngles[3 * i + 1] = ea2;
+    m_FeatureEulerAngles[3 * i + 2] = ea3;
   }
   notifyStatusMessage("Completed");
 }

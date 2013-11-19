@@ -118,7 +118,7 @@ int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   if (m_OutputStlDirectory.isEmpty() == true)
@@ -147,10 +147,11 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, s
 void SurfaceMeshToStl::preflight()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
+  if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-384);
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getSurfaceDataContainerName() + " was not available.", getErrorCondition());
+    return;
   }
 
   dataCheck(true, 1, 1, 1);
@@ -191,7 +192,7 @@ void SurfaceMeshToStl::execute()
 
   VertexArray& nodes = *(sm->getVertices());
   FaceArray& triangles = *(sm->getFaces());
-  // Get the Labels(GrainIds or Region Ids) for the triangles
+  // Get the Labels(FeatureIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
@@ -231,12 +232,12 @@ void SurfaceMeshToStl::execute()
     FILE* f = fopen(filename.toLatin1().data(), "wb");
 
     {
-      QString ss = QObject::tr("Writing STL for Grain Id ").arg(spin);
+      QString ss = QObject::tr("Writing STL for Feature Id ").arg(spin);
       notifyStatusMessage(ss);
     }
 
 
-    QString header = "DREAM3D Generated For Grain ID " + QString::number(spin);
+    QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);
     err = writeHeader(f, header, 0);
     if(err < 0) {
     }
@@ -303,7 +304,7 @@ void SurfaceMeshToStl::execute()
       if (totalWritten != 50)
       {
 
-        QString ss = QObject::tr("Error Writing STL File. Not enough elements written for grain id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
+        QString ss = QObject::tr("Error Writing STL File. Not enough elements written for feature id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
         notifyErrorMessage(ss, -1201);
       }
       triCount++;

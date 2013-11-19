@@ -120,23 +120,23 @@ int TiffUtilities::readInputImage(TiffImage* data, const char* inputFileName)
   unsigned short yRes = 0;
   unsigned short resUnits = 1;
 
-  err = TIFFGetField(in, TIFFTAG_IMAGEWIDTH, &width);
+  err = TIFFGetFeature(in, TIFFTAG_IMAGEWIDTH, &width);
   data->width = width;
-  err = TIFFGetField(in, TIFFTAG_IMAGELENGTH, &height);
+  err = TIFFGetFeature(in, TIFFTAG_IMAGELENGTH, &height);
   data->height = height;
-  err = TIFFGetField(in, TIFFTAG_SAMPLESPERPIXEL, &samplesperpixel);
+  err = TIFFGetFeature(in, TIFFTAG_SAMPLESPERPIXEL, &samplesperpixel);
   data->samplesPerPixel = samplesperpixel;
-  err = TIFFGetField(in, TIFFTAG_BITSPERSAMPLE, &bitspersample);
+  err = TIFFGetFeature(in, TIFFTAG_BITSPERSAMPLE, &bitspersample);
   data->bitsPerSample = bitspersample;
-  err = TIFFGetField(in, TIFFTAG_PHOTOMETRIC, &photometric);
+  err = TIFFGetFeature(in, TIFFTAG_PHOTOMETRIC, &photometric);
   data->photometric = photometric;
-  err = TIFFGetField(in, TIFFTAG_ORIENTATION, &orientation);
+  err = TIFFGetFeature(in, TIFFTAG_ORIENTATION, &orientation);
   data->orientation = orientation;
-  err = TIFFGetField(in, TIFFTAG_XRESOLUTION, &xRes);
+  err = TIFFGetFeature(in, TIFFTAG_XRESOLUTION, &xRes);
   data->xResolution = xRes;
-  err = TIFFGetField(in, TIFFTAG_YRESOLUTION, &yRes);
+  err = TIFFGetFeature(in, TIFFTAG_YRESOLUTION, &yRes);
   data->yResolution = yRes;
-  err = TIFFGetField(in, TIFFTAG_RESOLUTIONUNIT, &resUnits);
+  err = TIFFGetFeature(in, TIFFTAG_RESOLUTIONUNIT, &resUnits);
   data->resolutionUnits = resUnits;
 
 
@@ -276,36 +276,36 @@ int TiffUtilities::writeGrayScaleImage(const char* filename, int rows, int colum
 
    err = 0;
    // set the basic values
-   err = TIFFSetField(out, TIFFTAG_IMAGEWIDTH, (int)columns);
-   err = TIFFSetField(out, TIFFTAG_IMAGELENGTH, (int)rows);
-   err = TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, 8);
-   err = TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, 1);
-   err = TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, (int)rows); // 1 strip
+   err = TIFFSetFeature(out, TIFFTAG_IMAGEWIDTH, (int)columns);
+   err = TIFFSetFeature(out, TIFFTAG_IMAGELENGTH, (int)rows);
+   err = TIFFSetFeature(out, TIFFTAG_BITSPERSAMPLE, 8);
+   err = TIFFSetFeature(out, TIFFTAG_SAMPLESPERPIXEL, 1);
+   err = TIFFSetFeature(out, TIFFTAG_ROWSPERSTRIP, (int)rows); // 1 strip
 
 
    std::string dateTime = tifDateTime();
-   err = TIFFSetField(out, TIFFTAG_DATETIME, dateTime.c_str());
+   err = TIFFSetFeature(out, TIFFTAG_DATETIME, dateTime.c_str());
 
 
    // String based tags
    if (NULL != filename)
    {
-     err = TIFFSetField(out, TIFFTAG_DOCUMENTNAME, filename);
+     err = TIFFSetFeature(out, TIFFTAG_DOCUMENTNAME, filename);
    }
    if (NULL != imageDescription)
    {
-     err = TIFFSetField(out, TIFFTAG_IMAGEDESCRIPTION, imageDescription);
+     err = TIFFSetFeature(out, TIFFTAG_IMAGEDESCRIPTION, imageDescription);
    }
 
-   err = TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_BOTLEFT);
-   err = TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK);
+   err = TIFFSetFeature(out, TIFFTAG_ORIENTATION, ORIENTATION_BOTLEFT);
+   err = TIFFSetFeature(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK);
 
 
  #if 0
-   err = TIFFSetField(image, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
-   err = TIFFSetField(image, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL);
+   err = TIFFSetFeature(image, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
+   err = TIFFSetFeature(image, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL);
  #else
-   err = TIFFSetField(out, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
+   err = TIFFSetFeature(out, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
  #endif
 
    // Insert Resolution Units here if possible
@@ -315,9 +315,9 @@ int TiffUtilities::writeGrayScaleImage(const char* filename, int rows, int colum
    snprintf(software, 1024, "%s using libTif", MXA::Version::Complete().c_str() );
 
 
-   err = TIFFSetField(out, TIFFTAG_SOFTWARE, software);
+   err = TIFFSetFeature(out, TIFFTAG_SOFTWARE, software);
 
- //  err = TIFFSetField(out, TIFFTAG_HOSTCOMPUTER, EMMPM_SYSTEM);
+ //  err = TIFFSetFeature(out, TIFFTAG_HOSTCOMPUTER, EMMPM_SYSTEM);
 
    // Write the information to the file
    area = (tsize_t)( columns *  rows);
@@ -383,27 +383,27 @@ int TiffUtilities::writePalettedImage(TiffImage* data,
 
   err = 0;
   // set the basic values
-  err = TIFFSetField(out, TIFFTAG_IMAGEWIDTH, (int)data->width);
-  err = TIFFSetField(out, TIFFTAG_IMAGELENGTH, (int)data->height);
-  err = TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, bitsPerSample);
-  err = TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, 1);
-  err = TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, (int)data->height); // 1 strip
+  err = TIFFSetFeature(out, TIFFTAG_IMAGEWIDTH, (int)data->width);
+  err = TIFFSetFeature(out, TIFFTAG_IMAGELENGTH, (int)data->height);
+  err = TIFFSetFeature(out, TIFFTAG_BITSPERSAMPLE, bitsPerSample);
+  err = TIFFSetFeature(out, TIFFTAG_SAMPLESPERPIXEL, 1);
+  err = TIFFSetFeature(out, TIFFTAG_ROWSPERSTRIP, (int)data->height); // 1 strip
 
   dateTime = EIMTOMO_TiffDateTime();
-  err = TIFFSetField(out, TIFFTAG_DATETIME, dateTime);
+  err = TIFFSetFeature(out, TIFFTAG_DATETIME, dateTime);
   // String based tags
   if (NULL != outputFileName)
   {
-    err = TIFFSetField(out, TIFFTAG_DOCUMENTNAME, outputFileName);
+    err = TIFFSetFeature(out, TIFFTAG_DOCUMENTNAME, outputFileName);
   }
   if (NULL != imageDescription)
   {
-    err = TIFFSetField(out, TIFFTAG_IMAGEDESCRIPTION, imageDescription);
+    err = TIFFSetFeature(out, TIFFTAG_IMAGEDESCRIPTION, imageDescription);
   }
 
-  err = TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
-  err = TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_PALETTE);
- // err = TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG); // single image plane
+  err = TIFFSetFeature(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
+  err = TIFFSetFeature(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_PALETTE);
+ // err = TIFFSetFeature(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG); // single image plane
 
   r = (uint16 *) _TIFFmalloc(sizeof(uint16) * nColors);
   g = (uint16 *) _TIFFmalloc(sizeof(uint16) * nColors);
@@ -420,13 +420,13 @@ int TiffUtilities::writePalettedImage(TiffImage* data,
     b[i] = UINT16_MAX * ( (float)data->grayTable[i]/(float)UINT8_MAX);
   }
 
-  TIFFSetField(out, TIFFTAG_COLORMAP, r, g, b);
+  TIFFSetFeature(out, TIFFTAG_COLORMAP, r, g, b);
 
 #if USE_LZW_COMPRESSION
-  err = TIFFSetField(image, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
-  err = TIFFSetField(image, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL);
+  err = TIFFSetFeature(image, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
+  err = TIFFSetFeature(image, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL);
 #else
-  err = TIFFSetField(out, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
+  err = TIFFSetFeature(out, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
 #endif
 
   // Insert Resolution Units here if possible
@@ -435,13 +435,13 @@ int TiffUtilities::writePalettedImage(TiffImage* data,
   memset(software, 0, 1024);
   snprintf(software, 1024, "%s using libTIFF", TomoEngine_PACKAGE_COMPLETE);
 
-  err = TIFFSetField(out, TIFFTAG_SOFTWARE, software);
+  err = TIFFSetFeature(out, TIFFTAG_SOFTWARE, software);
 
 
   {
-    err = TIFFSetField(out, TIFFTAG_XRESOLUTION, data->xResolution);
-    err = TIFFSetField(out, TIFFTAG_YRESOLUTION, data->yResolution);
-    err = TIFFSetField(out, TIFFTAG_RESOLUTIONUNIT, data->resolutionUnits);
+    err = TIFFSetFeature(out, TIFFTAG_XRESOLUTION, data->xResolution);
+    err = TIFFSetFeature(out, TIFFTAG_YRESOLUTION, data->yResolution);
+    err = TIFFSetFeature(out, TIFFTAG_RESOLUTIONUNIT, data->resolutionUnits);
   }
 
   // Write the information to the file

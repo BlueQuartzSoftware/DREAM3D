@@ -84,34 +84,34 @@ int writeColorTiff(const std::string filename, DataArray<uint8_t>::Pointer image
 
    err = 0;
    // set the basic values
-   err = TIFFSetField(out, TIFFTAG_IMAGEWIDTH, width);
-   err = TIFFSetField(out, TIFFTAG_IMAGELENGTH, height);
-   err = TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, 8);
-   err = TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, 3);
-   err = TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, height); // 1 strip
-   err = TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG); // single image plane
+   err = TIFFSetFeature(out, TIFFTAG_IMAGEWIDTH, width);
+   err = TIFFSetFeature(out, TIFFTAG_IMAGELENGTH, height);
+   err = TIFFSetFeature(out, TIFFTAG_BITSPERSAMPLE, 8);
+   err = TIFFSetFeature(out, TIFFTAG_SAMPLESPERPIXEL, 3);
+   err = TIFFSetFeature(out, TIFFTAG_ROWSPERSTRIP, height); // 1 strip
+   err = TIFFSetFeature(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG); // single image plane
 
    dateTime = tifDateTime();
-   err = TIFFSetField(out, TIFFTAG_DATETIME, dateTime.c_str());
+   err = TIFFSetFeature(out, TIFFTAG_DATETIME, dateTime.c_str());
    // String based tags
    if (filename.empty() == false)
    {
-     err = TIFFSetField(out, TIFFTAG_DOCUMENTNAME, filename.c_str());
+     err = TIFFSetFeature(out, TIFFTAG_DOCUMENTNAME, filename.c_str());
    }
    if (imageDescription.empty() == false)
    {
-     err = TIFFSetField(out, TIFFTAG_IMAGEDESCRIPTION, imageDescription.c_str());
+     err = TIFFSetFeature(out, TIFFTAG_IMAGEDESCRIPTION, imageDescription.c_str());
    }
 
-   err = TIFFSetField(out, TIFFTAG_ORIENTATION, orientation);
-   err = TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
+   err = TIFFSetFeature(out, TIFFTAG_ORIENTATION, orientation);
+   err = TIFFSetFeature(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
 
 
  #if USE_LZW_COMPRESSION
-   err = TIFFSetField(image, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
-   err = TIFFSetField(image, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL);
+   err = TIFFSetFeature(image, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
+   err = TIFFSetFeature(image, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL);
  #else
-   err = TIFFSetField(out, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
+   err = TIFFSetFeature(out, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
  #endif
 
    // Insert Resolution Units here if possible
@@ -120,9 +120,9 @@ int writeColorTiff(const std::string filename, DataArray<uint8_t>::Pointer image
    memset(software, 0, 1024);
    snprintf(software, 1024, "%s using libTif", EbsdLib::Version::Complete().c_str());
 
-   err = TIFFSetField(out, TIFFTAG_SOFTWARE, software);
+   err = TIFFSetFeature(out, TIFFTAG_SOFTWARE, software);
 
-   err = TIFFSetField(out, TIFFTAG_HOSTCOMPUTER, MXADATAMODEL_SYSTEM);
+   err = TIFFSetFeature(out, TIFFTAG_HOSTCOMPUTER, MXADATAMODEL_SYSTEM);
 
    // Write the information to the file
    area = (tsize_t)( width *  height * 3);

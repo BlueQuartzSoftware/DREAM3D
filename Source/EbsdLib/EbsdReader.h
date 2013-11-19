@@ -82,7 +82,7 @@ class EbsdLib_EXPORT EbsdReader
     /** @brief Sets the file name of the ebsd file to be read */
     EBSD_INSTANCE_STRING_PROPERTY(FileName)
     /** @brief The Number of Columns of Data in the Ebsd Data file */
-    EBSD_INSTANCE_PROPERTY(int, NumFields)
+    EBSD_INSTANCE_PROPERTY(int, NumFeatures)
 
     /** @brief The unchanged header from the data file */
     EBSD_INSTANCE_STRING_PROPERTY(OriginalHeader)
@@ -129,17 +129,17 @@ class EbsdLib_EXPORT EbsdReader
     virtual void setYDimension(int ydim) = 0;
 
     /**
-     * @brief Returns the pointer to the data for a given field
-     * @param fieldName The name of the field to return the pointer to.
+     * @brief Returns the pointer to the data for a given feature
+     * @param featureName The name of the feature to return the pointer to.
      */
-    virtual void* getPointerByName(const QString &fieldName) = 0;
+    virtual void* getPointerByName(const QString &featureName) = 0;
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
-     * @param fieldName The name of the field.
+     * @param featureName The name of the feature.
      */
-    virtual Ebsd::NumType getPointerType(const QString &fieldName) = 0;
+    virtual Ebsd::NumType getPointerType(const QString &featureName) = 0;
 
     /**
     * @brief Reads the complete EBSD data file storing all columns of data and the

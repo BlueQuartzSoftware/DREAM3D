@@ -86,17 +86,17 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceMisorientationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
-    //------ Required Field Data
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureAvgMisorientationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
     //------ Required Ensemble Data
@@ -134,17 +134,17 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_GrainIds;
-    int32_t* m_FieldPhases;
+    int32_t* m_FeatureIds;
+    int32_t* m_FeaturePhases;
     int32_t* m_NearestNeighbors;
-    float* m_GrainReferenceMisorientations;
+    float* m_FeatureReferenceMisorientations;
     float* m_KernelAverageMisorientations;
     float* m_AvgQuats;
     float* m_F1;
     float* m_F1spt;
     float* m_F7;
     float* m_mPrime;
-    float* m_GrainAvgMisorientations;
+    float* m_FeatureAvgMisorientations;
     int32_t* m_Poles;
     float* m_Schmids;
     float* m_GBEuclideanDistances;
@@ -153,7 +153,7 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindDeformationStatistics(const FindDeformationStatistics&); // Copy Constructor Not Implemented
     void operator=(const FindDeformationStatistics&); // Operator '=' Not Implemented

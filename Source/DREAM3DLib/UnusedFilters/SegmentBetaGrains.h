@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT SegmentBetaGrains : public SegmentGrains
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT SegmentBetaGrains : public SegmentGrains
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
-    virtual const QString getHumanLabel() { return "Segment Fields (Prior Beta Grains)"; }
+    virtual const QString getHumanLabel() { return "Segment Features (Prior Beta Grains)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -127,7 +127,7 @@ class DREAM3DLib_EXPORT SegmentBetaGrains : public SegmentGrains
     unsigned int* m_CrystalStructures;
 
     int check_for_burgers(float betaQuat[5], float alphaQuat[5]);
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     SegmentBetaGrains(const SegmentBetaGrains&); // Copy Constructor Not Implemented

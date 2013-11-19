@@ -52,7 +52,7 @@
 VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
@@ -60,16 +60,16 @@ VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
   m_BCArrayName(Ebsd::Ctf::BC),
   m_ConfidenceIndexArrayName(Ebsd::Ang::ConfidenceIndex),
   m_ImageQualityArrayName(Ebsd::Ang::ImageQuality),
-  m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
-  m_GrainReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::GrainReferenceCAxisMisorientations),
+  m_FeatureReferenceMisorientationsArrayName(DREAM3D::CellData::FeatureReferenceMisorientations),
+  m_FeatureReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::FeatureReferenceCAxisMisorientations),
   m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
   m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-  m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
-  m_WriteGrainIds(false),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
+  m_SchmidsArrayName(DREAM3D::FeatureData::Schmids),
+  m_WriteFeatureIds(false),
   m_WriteParentIds(false),
   m_WritePhaseIds(false),
   m_WriteBandContrasts(false),
@@ -77,15 +77,15 @@ VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
   m_WriteImageQualities(false),
   m_WriteGoodVoxels(false),
   m_WriteGlobAlpha(false),
-  m_WriteGrainReferenceMisorientations(false),
-  m_WriteGrainReferenceCAxisMisorientations(false),
+  m_WriteFeatureReferenceMisorientations(false),
+  m_WriteFeatureReferenceCAxisMisorientations(false),
   m_WriteKernelAverageMisorientations(false),
   //m_WriteIPFColors(false),
   m_WriteGBEuclideanDistanceMap(false),
   m_WriteTJEuclideanDistanceMap(false),
   m_WriteQPEuclideanDistanceMap(false),
   m_WriteSchmidFactors(false),
-  m_WriteGrainSizes(false),
+  m_WriteFeatureSizes(false),
   m_WriteEulerAngles(false),
   m_WriteBinaryFile(false)
 {
@@ -118,8 +118,8 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Grain Ids");
-    option->setPropertyName("WriteGrainIds");
+    option->setHumanLabel("Write Feature Ids");
+    option->setPropertyName("WriteFeatureIds");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -174,16 +174,16 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Grain Reference Misorientation Values");
-    option->setPropertyName("WriteGrainReferenceMisorientations");
+    option->setHumanLabel("Write Feature Reference Misorientation Values");
+    option->setPropertyName("WriteFeatureReferenceMisorientations");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Grain Reference CAxis Misorientation Values");
-    option->setPropertyName("WriteGrainReferenceCAxisMisorientations");
+    option->setHumanLabel("Write Feature Reference CAxis Misorientation Values");
+    option->setPropertyName("WriteFeatureReferenceCAxisMisorientations");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -246,8 +246,8 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Grain Sizes");
-    option->setPropertyName("WriteGrainSizes");
+    option->setHumanLabel("Write Feature Sizes");
+    option->setPropertyName("WriteFeatureSizes");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -278,15 +278,15 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
-  setWriteGrainIds( reader->readValue("WriteGrainIds", false) );
+  setWriteFeatureIds( reader->readValue("WriteFeatureIds", false) );
   setWriteParentIds( reader->readValue("WriteParentIds", false) );
   setWritePhaseIds( reader->readValue("WritePhaseIds", false) );
   setWriteBandContrasts( reader->readValue("WriteBandContrasts", false) );
   setWriteImageQualities( reader->readValue("WriteImageQualities", false) );
   setWriteConfidenceIndicies( reader->readValue("WriteConfidenceIndicies", false) );
   setWriteKernelAverageMisorientations( reader->readValue("WriteKernelAverageMisorientations", false) );
-  setWriteGrainReferenceMisorientations( reader->readValue("WriteGrainReferenceMisorientations", false) );
-  setWriteGrainReferenceCAxisMisorientations( reader->readValue("WriteGrainReferenceCAxisMisorientations", false) );
+  setWriteFeatureReferenceMisorientations( reader->readValue("WriteFeatureReferenceMisorientations", false) );
+  setWriteFeatureReferenceCAxisMisorientations( reader->readValue("WriteFeatureReferenceCAxisMisorientations", false) );
   setWriteGoodVoxels( reader->readValue("WriteGoodVoxels", false) );
   setWriteGlobAlpha( reader->readValue("WriteGlobAlpha", false) );
   //  setWriteIPFColors( reader->readValue("WriteIPFColors", false) );
@@ -294,7 +294,7 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
   setWriteGBEuclideanDistanceMap( reader->readValue("WriteGBEuclideanDistanceMap", false) );
   setWriteTJEuclideanDistanceMap( reader->readValue("WriteTJEuclideanDistanceMap", false) );
   setWriteQPEuclideanDistanceMap( reader->readValue("WriteQPEuclideanDistanceMap", false) );
-  setWriteGrainSizes( reader->readValue("WriteGrainSizes", false) );
+  setWriteFeatureSizes( reader->readValue("WriteFeatureSizes", false) );
   setWriteEulerAngles( reader->readValue("WriteEulerAngles", false) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", false) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
@@ -308,7 +308,7 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("WriteGrainIds", getWriteGrainIds() );
+  writer->writeValue("WriteFeatureIds", getWriteFeatureIds() );
   writer->writeValue("WriteParentIds", getWriteParentIds() );
   writer->writeValue("WritePhaseIds", getWritePhaseIds() );
   writer->writeValue("WriteBandContrasts", getWriteBandContrasts() );
@@ -319,12 +319,12 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
   writer->writeValue("WriteGBEuclideanDistanceMap", getWriteGBEuclideanDistanceMap() );
   writer->writeValue("WriteTJEuclideanDistanceMap", getWriteTJEuclideanDistanceMap() );
   writer->writeValue("WriteQPEuclideanDistanceMap", getWriteQPEuclideanDistanceMap() );
-  writer->writeValue("WriteGrainReferenceMisorientations", getWriteGrainReferenceMisorientations() );
-  writer->writeValue("WriteGrainReferenceCAxisMisorientations", getWriteGrainReferenceCAxisMisorientations() );
+  writer->writeValue("WriteFeatureReferenceMisorientations", getWriteFeatureReferenceMisorientations() );
+  writer->writeValue("WriteFeatureReferenceCAxisMisorientations", getWriteFeatureReferenceCAxisMisorientations() );
   writer->writeValue("WriteKernelAverageMisorientations", getWriteKernelAverageMisorientations() );
   //  writer->writeValue("WriteIPFColors", getWriteIPFColors() );
   writer->writeValue("WriteSchmidFactors", getWriteSchmidFactors() );
-  writer->writeValue("WriteGrainSizes", getWriteGrainSizes() );
+  writer->writeValue("WriteFeatureSizes", getWriteFeatureSizes() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -333,7 +333,7 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -364,9 +364,9 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   }
 
   QVector<int> dims(1, 1);
-  if(m_WriteGrainIds == true)
+  if(m_WriteFeatureIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
   }
   if(m_WriteParentIds == true)
   {
@@ -388,13 +388,13 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -303, float, FloatArrayType, voxels, dims)
   }
-  if(m_WriteGrainReferenceMisorientations == true)
+  if(m_WriteFeatureReferenceMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, -303, float, FloatArrayType, voxels, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureReferenceMisorientations, -303, float, FloatArrayType, voxels, dims)
   }
-  if(m_WriteGrainReferenceCAxisMisorientations == true)
+  if(m_WriteFeatureReferenceCAxisMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, -303, float, FloatArrayType, voxels, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureReferenceCAxisMisorientations, -303, float, FloatArrayType, voxels, dims)
   }
   if(m_WriteBandContrasts == true)
   {
@@ -422,11 +422,11 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   }
   if(m_WriteSchmidFactors == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, -305, float, FloatArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Schmids, -305, float, FloatArrayType, features, dims)
   }
-  if(m_WriteGrainSizes == true)
+  if(m_WriteFeatureSizes == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -305, float, FloatArrayType, fields, dims)
+    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, -305, float, FloatArrayType, features, dims)
   }
   if(m_WriteEulerAngles == true)
   {
@@ -444,7 +444,7 @@ void VtkRectilinearGridWriter::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -480,17 +480,17 @@ void VtkRectilinearGridWriter::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalFeatures = m->getNumCellFeatureTuples();
   size_t totalEnsembleTuples = m->getNumCellEnsembleTuples();
 
-  dataCheck(false, totalPoints, totalFields, totalEnsembleTuples);
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembleTuples);
 
   // Setup all the classes that will help us write the Scalars to the VTK File
   std::vector<VtkScalarWriter*> scalarsToWrite;
 
-  if (m_WriteGrainIds == true)
+  if (m_WriteFeatureIds == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<VolumeDataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelFeatureIdScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
@@ -572,16 +572,16 @@ void VtkRectilinearGridWriter::execute()
     scalarsToWrite.push_back(w0);
   }
 
-  if (m_WriteGrainReferenceMisorientations == true)
+  if (m_WriteFeatureReferenceMisorientations == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainReferenceMisorientationScalarWriter<VolumeDataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelFeatureReferenceMisorientationScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
 
-  if (m_WriteGrainReferenceCAxisMisorientations == true)
+  if (m_WriteFeatureReferenceCAxisMisorientations == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainReferenceCAxisMisorientationScalarWriter<VolumeDataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelFeatureReferenceCAxisMisorientationScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
@@ -601,9 +601,9 @@ void VtkRectilinearGridWriter::execute()
     scalarsToWrite.push_back(w0);
   }
 
-  if(m_WriteGrainSizes == true)
+  if(m_WriteFeatureSizes == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new FieldSizeScalarWriter<VolumeDataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new FeatureSizeScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }

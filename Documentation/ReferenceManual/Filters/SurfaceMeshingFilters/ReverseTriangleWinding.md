@@ -5,7 +5,7 @@ Reverse Triangle Winding Filter {#reversetrianglewinding}
 SurfaceMesh
 
 ## Description ##
-This filter reverses the winding on each triangle. If the next filter is to compute the surface normals the user will notice that the normals now point in the opposite direction. Some analysis filters require the normals to be pointing "away" from the center of a **Field**. The current surface meshing algorithms tend to orient the normals pointing "into" the **Field**.
+This filter reverses the winding on each triangle. If the next filter is to compute the surface normals the user will notice that the normals now point in the opposite direction. Some analysis filters require the normals to be pointing "away" from the center of a **Feature**. The current surface meshing algorithms tend to orient the normals pointing "into" the **Feature**.
 
 
 ## Parameters ##

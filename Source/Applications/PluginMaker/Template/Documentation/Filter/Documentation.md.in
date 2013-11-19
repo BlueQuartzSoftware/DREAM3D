@@ -11,7 +11,7 @@ This filter does the following...
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Field Array Name | String |
+| Feature Array Name | String |
 
 ## Required Arrays ##
 

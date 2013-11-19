@@ -2,7 +2,7 @@ Writing a Plugin {#writingplugins}
 =========
 
 ##  Introduction
-Creating a plugin for the DREAM.3D Application involves many different types of files being created and being placed in the correct positions in the project directory. To alleviate the developer of the tedious task of creating all of these files there is a shortcut that has been written using the CMake build system. Nicely enough there is a **PluginMaker** application that the developer can Launch and fill in a few text fields and then have all the files generated with skeleton source code. This minimal set of files will compile with DREAM3D but will have no functionality. The developer now needs to add their own algorithms to filter the results and produce what they need.
+Creating a plugin for the DREAM.3D Application involves many different types of files being created and being placed in the correct positions in the project directory. To alleviate the developer of the tedious task of creating all of these files there is a shortcut that has been written using the CMake build system. Nicely enough there is a **PluginMaker** application that the developer can Launch and fill in a few text features and then have all the files generated with skeleton source code. This minimal set of files will compile with DREAM3D but will have no functionality. The developer now needs to add their own algorithms to filter the results and produce what they need.
 
 
 ![PluginMaker Application](Images/PluginMaker.png)
@@ -39,10 +39,10 @@ If you need to get some input from the user then you need to create one or more 
     };
 
 - StringWidget - This will display a Text Edit for the user to enter a string of text characters
-- IntWidget - This will display a Text Edit field that only accepts integer values
-- DoubleWidget - This will display a Text Edit field that only accepts floating point values
-- InputFileWidget - This will display a Text Field and a button that the user can use to select a file from the local file system
-- OutputFileWidget - This will display a Text Field and a button that the user can use to save a file to the local file system
+- IntWidget - This will display a Text Edit feature that only accepts integer values
+- DoubleWidget - This will display a Text Edit feature that only accepts floating point values
+- InputFileWidget - This will display a Text Feature and a button that the user can use to select a file from the local file system
+- OutputFileWidget - This will display a Text Feature and a button that the user can use to save a file to the local file system
 - BooleanWidget - This will display a Checkbox widget to the user to mark as True or False
 - IntConstrainedWidget - This is not implemented yet
 - DoubleConstrainedWidget - This is not implemented yet
@@ -83,7 +83,7 @@ The next method to update is the _void [Class Name]::writeFilterOptions(Abstract
 
 The next method to look at is the _dataCheck()_ method. This method performs checks on the availability of needed arrays, inputs files and parameters before running the filter. There are 2 important macros that you can use to initialize local pointers to arrays that you will be accessing during your filter. There are a lot of arguments to each macro which will be explained. Continuing with our example filter, say that we want to multiply each grain ID by the "Factor" parameter we would need access the GrainID data array. For this we will use the _GET_PREREQ_DATA_ macro with 10 arguments:
 
-    void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+    void CropVolume::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
     {
       setErrorCondition(0);
       std::stringstream ss;
@@ -95,7 +95,7 @@ The arugments are as follows:
 
 - **m** Variable referencing the DataContainer object
 - **DREAM3D** The namespace that the "GrainIds" are store in
-- **CellData** The Type of data array we are accessing (CellData, FieldData, EnsembleData)
+- **CellData** The Type of data array we are accessing (CellData, FeatureData, EnsembleData)
 - **GrainIds** The name of the Array (These are defined in DREAM3DLib/Common/Constants.h)
 - **ss** A std::stringstream variable to push error messages into if needed.
 - **-300** Some negative error code that would help users identify the error message to you

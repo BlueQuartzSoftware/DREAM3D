@@ -66,22 +66,22 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-    //------ Created Field Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
 
-    DREAM3D_DECLARE_ARRAY(double, grainmoments, GrainMoments) // N x 6 Array
-    DREAM3D_DECLARE_ARRAY(double, graineigenvals, GrainEigenVals) // N x 3 Array
+    DREAM3D_DECLARE_ARRAY(double, featuremoments, FeatureMoments) // N x 6 Array
+    DREAM3D_DECLARE_ARRAY(double, featureeigenvals, FeatureEigenVals) // N x 3 Array
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Field Shapes"; }
+    virtual const QString getHumanLabel() { return "Find Feature Shapes"; }
 
 
     /**
@@ -119,7 +119,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float find_zcoord(size_t index);
 
   private:
-    int32_t* m_GrainIds;
+    int32_t* m_FeatureIds;
     float* m_AxisEulerAngles;
     float* m_Centroids;
     float* m_AxisLengths;
@@ -127,7 +127,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float* m_Volumes;
     float* m_AspectRatios;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindShapes(const FindShapes&); // Copy Constructor Not Implemented
     void operator=(const FindShapes&); // Operator '=' Not Implemented

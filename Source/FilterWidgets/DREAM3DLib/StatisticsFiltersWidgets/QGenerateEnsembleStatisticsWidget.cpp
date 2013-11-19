@@ -297,17 +297,18 @@ void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(DataContainerArr
       }
     }
 
-    vldc->addCellEnsembleData(phaseTypes->GetName(), phaseTypes);
+//FIXME:
+#if __APPLE__
+#warning THIS NEEDS TO BE FIXED
+#endif
+    //vldc->addCellEnsembleData(phaseTypes->GetName(), phaseTypes);
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QGenerateEnsembleStatisticsWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc,
-                                                                SurfaceDataContainer::Pointer sdc,
-                                                                EdgeDataContainer::Pointer edc,
-                                                                VertexDataContainer::Pointer vdc)
+void QGenerateEnsembleStatisticsWidget::preflightDoneExecuting(DataContainerArray::Pointer dca)
 {
 
 }

@@ -1,4 +1,4 @@
-Read Dx File (Field Ids) {#dxreader}
+Read Dx File (Feature Ids) {#dxreader}
 ======
 ## Group (Subgroup) ##
 I/O Filters (Input)
@@ -40,7 +40,7 @@ object 3 class array type int rank 0 items 60 data follows
 
 attribute "dep" string "connections"
 
-object "DREAM3D Generated" class field
+object "DREAM3D Generated" class feature
 component  "positions"    value 1
 component  "connections"  value 2
 component  "data"         value 3
@@ -69,7 +69,7 @@ None
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 
 

@@ -81,7 +81,7 @@ void H5EbsdVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5EbsdVolumeReader::getPointerByName(const QString &fieldName)
+void* H5EbsdVolumeReader::getPointerByName(const QString &featureName)
 {
   return NULL;
 }
@@ -89,7 +89,7 @@ void* H5EbsdVolumeReader::getPointerByName(const QString &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5EbsdVolumeReader::getPointerType(const QString &fieldName)
+Ebsd::NumType H5EbsdVolumeReader::getPointerType(const QString &featureName)
 {
   return Ebsd::UnknownNumType;
 }

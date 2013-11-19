@@ -92,7 +92,7 @@ class DREAM3DLib_EXPORT FlattenImage : public AbstractFilter
   protected:
     FlattenImage();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
     unsigned char* m_ImageData;

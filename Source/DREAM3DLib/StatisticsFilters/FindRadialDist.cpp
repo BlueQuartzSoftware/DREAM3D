@@ -45,9 +45,9 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-#include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
-#include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
+#include "DREAM3DLib/GenericFilters/FindSurfaceFeatures.h"
+#include "DREAM3DLib/GenericFilters/FindFeatureCentroids.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 
 
@@ -58,17 +58,17 @@
 FindRadialDist::FindRadialDist() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-  m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
-  m_VolumesArrayName(DREAM3D::FieldData::Volumes),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_OutputFile(""),
-  m_FieldPhases(NULL),
+  m_FeaturePhases(NULL),
   m_EquivalentDiameters(NULL),
   m_Volumes(NULL),
   m_Centroids(NULL),
-  m_SurfaceFields(NULL)
+  m_SurfaceFeatures(NULL)
 {
   setupFilterParameters();
 }
@@ -119,19 +119,19 @@ int FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, -302, float, FloatArrayType, fields, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -304, int32_t, Int32ArrayType, features, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, -302, bool, BoolArrayType, features, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, -302, float, FloatArrayType, features, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, -302, float, FloatArrayType, features, dims)
   dims[0] = 3;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, -305, float, FloatArrayType, features, dims)
 
   if (getOutputFile().isEmpty() == true)
   {
@@ -164,7 +164,7 @@ void FindRadialDist::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -184,7 +184,7 @@ void FindRadialDist::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -221,7 +221,7 @@ void FindRadialDist::find_radialdist()
   float x, y, z;
   float xn, yn, zn;
   float dist;
-  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numfeatures = m->getNumCellFeatureTuples();
 
   bool writeFile = !m_OutputFile.isEmpty();
 
@@ -251,11 +251,11 @@ void FindRadialDist::find_radialdist()
   float totalvolume = 0;
   float largestESD = 0;
   float largestDistToSurface = 0;
-  QVector<float> distToSurface(numgrains, -1);
-  for (size_t i = 1; i < numgrains; i++)
+  QVector<float> distToSurface(numfeatures, -1);
+  for (size_t i = 1; i < numfeatures; i++)
   {
 
-    if(m_SurfaceFields[i] == false)
+    if(m_SurfaceFeatures[i] == false)
     {
       number++;
       totalvolume = totalvolume + m_Volumes[i];
@@ -281,9 +281,9 @@ void FindRadialDist::find_radialdist()
     count[i].fill(0.0f, numbins);
     volume[i].fill(0.0f, numbins);
   }
-  for (size_t i = 1; i < numgrains; i++)
+  for (size_t i = 1; i < numfeatures; i++)
   {
-    if(m_SurfaceFields[i] == false)
+    if(m_SurfaceFeatures[i] == false)
     {
       for(int j = 0; j < numbins; j++)
       {
@@ -295,9 +295,9 @@ void FindRadialDist::find_radialdist()
       x = m_Centroids[3 * i];
       y = m_Centroids[3 * i + 1];
       z = m_Centroids[3 * i + 2];
-      for (size_t j = 1; j < numgrains; j++)
+      for (size_t j = 1; j < numfeatures; j++)
       {
-        if(m_SurfaceFields[j] == false && i != j)
+        if(m_SurfaceFeatures[j] == false && i != j)
         {
           xn = m_Centroids[3 * j];
           yn = m_Centroids[3 * j + 1];
@@ -346,7 +346,7 @@ void FindRadialDist::find_boundingbox()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t size = m->getNumCellFieldTuples();
+  size_t size = m->getNumCellFeatureTuples();
 
   float coords[7];
   float x, y, z;
@@ -361,7 +361,7 @@ void FindRadialDist::find_boundingbox()
   boundbox[6] = m->getZPoints() * m->getZRes();
   for (size_t i = 1; i < size; i++)
   {
-    if(m_SurfaceFields[i] == true)
+    if(m_SurfaceFeatures[i] == true)
     {
       move = 1;
       mindist = 10000000000.0;

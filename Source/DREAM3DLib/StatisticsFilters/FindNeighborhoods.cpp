@@ -40,8 +40,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-#include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
+#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
+#include "DREAM3DLib/GenericFilters/FindFeatureCentroids.h"
 
 
 
@@ -51,14 +51,14 @@
 FindNeighborhoods::FindNeighborhoods() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
-  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
-  m_NeighborhoodListArrayName(DREAM3D::FieldData::NeighborhoodList),
-  m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
+  m_NeighborhoodListArrayName(DREAM3D::FeatureData::NeighborhoodList),
+  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_MultiplesOfAverage(1),
-  m_FieldPhases(NULL),
+  m_FeaturePhases(NULL),
   m_Centroids(NULL),
   m_EquivalentDiameters(NULL),
   m_Neighborhoods(NULL),
@@ -116,24 +116,24 @@ int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  // Field Data
-  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFieldTuples will = 0
+  // Feature Data
+  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                       (m->getCellFieldData(m_NeighborhoodListArrayName).get());
+                       (m->getCellFeatureData(m_NeighborhoodListArrayName).get());
   if(m_NeighborhoodList == NULL)
   {
     NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
     neighborhoodlistPtr->SetName(m_NeighborhoodListArrayName);
-    neighborhoodlistPtr->Resize(fields);
+    neighborhoodlistPtr->Resize(features);
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
-    m->addCellFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
+    m->addCellFeatureData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
 
     if (neighborhoodlistPtr.get() == NULL)
     {
@@ -141,7 +141,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
       setErrorCondition(-308);
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                         (m->getCellFieldData(m_NeighborhoodListArrayName).get());
+                         (m->getCellFeatureData(m_NeighborhoodListArrayName).get());
 
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
@@ -149,18 +149,18 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     e->setFilterGroup(this->getGroupName());
     e->setFilterSubGroup(this->getSubGroupName());
     e->setArrayDefaultName(m_NeighborhoodListArrayName);
-    e->setArrayGroup("Field");
+    e->setArrayGroup("Feature");
     e->setArrayNumComponents(0);
     e->setArrayType("NeighborList");
     addCreatedArrayHelpIndexEntry(e);
   }
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, int32_t, Int32ArrayType, 0, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, -302, float, FloatArrayType, features, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -304, int32_t, Int32ArrayType, features, dims)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Neighborhoods, int32_t, Int32ArrayType, 0, features, dims)
   dims[0] = 3;
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, dims)
+  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, -305, float, FloatArrayType, features, dims)
 }
 
 
@@ -173,7 +173,7 @@ void FindNeighborhoods::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     return;
   }
 
@@ -193,7 +193,7 @@ void FindNeighborhoods::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -216,17 +216,17 @@ void FindNeighborhoods::find_neighborhoods()
 
   QVector<QVector<int> > neighborhoodlist;
 
-  int totalFields = int(m->getNumCellFieldTuples());
+  int totalFeatures = int(m->getNumCellFeatureTuples());
 
-  neighborhoodlist.resize(totalFields);
+  neighborhoodlist.resize(totalFeatures);
 
   float aveDiam = 0;
-  for (size_t i = 1; i < totalFields; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     m_Neighborhoods[i] = 0;
     aveDiam += m_EquivalentDiameters[i];
   }
-  aveDiam /= totalFields;
+  aveDiam /= totalFeatures;
   float criticalDistance = aveDiam * m_MultiplesOfAverage;
 
   float m_OriginX, m_OriginY, m_OriginZ;
@@ -259,8 +259,8 @@ void FindNeighborhoods::find_neighborhoods()
 //  int numZBins = int(sizeZ/criticalDistance);
 
   int xbin, ybin, zbin, bin, bin1, bin2;
-  QVector<size_t> bins(totalFields, 0);
-  for (size_t i = 1; i < totalFields; i++)
+  QVector<size_t> bins(totalFeatures, 0);
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
@@ -271,19 +271,19 @@ void FindNeighborhoods::find_neighborhoods()
     bin = (zbin * numXBins * numYBins) + (ybin * numXBins) + (xbin);
     bins[i] = bin;
   }
-  for (size_t i = 1; i < totalFields; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     if (i % 1000 == 0)
     {
 
-      QString ss = QObject::tr("Working On Grain %1 of %2").arg(i).arg(totalFields);
+      QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
       notifyStatusMessage(ss);
     }
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
     bin1 = bins[i];
-    for (size_t j = i + 1; j < totalFields; j++)
+    for (size_t j = i + 1; j < totalFeatures; j++)
     {
       bin2 = bins[j];
       if(bin1 == bin2)
@@ -311,7 +311,7 @@ void FindNeighborhoods::find_neighborhoods()
       }
     }
   }
-  for (size_t i = 1; i < totalFields; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     // Set the vector for each list into the NeighborhoodList Object
     NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);

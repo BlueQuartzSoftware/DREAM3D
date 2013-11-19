@@ -5,7 +5,7 @@ Find Twin Boundaries {#findtwinboundaries}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This filter identifies all **Faces** between neighboring **Fields** that have a Sigma 3 twin relationship.  The filter uses the average orientation of the **Fields** on either side of the **Face** to determine the *misorientation* between the **Fields**.  If the *axis-angle* that describes the *misorientation* is within a user-defined tolerance, then the **Face** is flagged as being a twin.  After the **Face** is flagged as a twin, the crystal direction parallel to the **Face** normal is determined and compared with the *misorientation axis*.  The misalignment of these two crystal directions is stored as the incoherence value for the **Face** (the value is in degrees).   
+This filter identifies all **Faces** between neighboring **Features** that have a Sigma 3 twin relationship.  The filter uses the average orientation of the **Features** on either side of the **Face** to determine the *misorientation* between the **Features**.  If the *axis-angle* that describes the *misorientation* is within a user-defined tolerance, then the **Face** is flagged as being a twin.  After the **Face** is flagged as a twin, the crystal direction parallel to the **Face** normal is determined and compared with the *misorientation axis*.  The misalignment of these two crystal directions is stored as the incoherence value for the **Face** (the value is in degrees).   
 
 ## Parameters ##
 
@@ -26,8 +26,8 @@ This filter identifies all **Faces** between neighboring **Fields** that have a 
 | Face   | SurfaceMeshFaceLabels | N x 2 Col of signed integer |  | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 | Face   | SurfaceMeshFaceNormals | N x 3 Col of floats |  | Generate Triangle Normals Filter (SurfaceMeshing) |
 | Face   | SurfaceMeshTwinBoundary | boolean value equal to 1 for twin and 0 for non-twin |  | Find Twin Boundaries (Statistics) |
-| Field (Voxel) | AvgQuats | Five (5) values (floats) defining the average orientation of the **Field** in quaternion representation | Filter will calculate average quaternions for **Fields** if not already calculated. | Find Field Average Orientations (Statistics) |
-| Field (Voxel) | FieldPhases | Phase Id (int) specifying the phase of the **Field**| | Find Field Phases (Generic), Read Field Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature (Voxel) | AvgQuats | Five (5) values (floats) defining the average orientation of the **Feature** in quaternion representation | Filter will calculate average quaternions for **Features** if not already calculated. | Find Feature Average Orientations (Statistics) |
+| Feature (Voxel) | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 | Ensemble (Voxel) | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
 
 ## Created Arrays ##

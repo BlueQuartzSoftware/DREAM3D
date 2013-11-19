@@ -9,7 +9,7 @@ This Filter segments 2D slices, creates *GrainIds* that are used to determine th
 
 The user choses the level of _misorientation tolerance_ by which to align **Cells**, where here the tolerance means the _misorientation_ cannot exceed a given value. If the rotation angle is below the tolerance, then the **Cell** is grouped with other **Cells** that satisfy the criterion.
 
-The approach used in this filter is to group neighboring **Cells** on a slice that have a _misorientation_ below the tolerance the user entered. _Misorientation_ here means the minimum rotation angle of one **Cell**'s crystal axis needed to coincide with another **Cell**'s crystal axis. When the **Fields** in the slices are defined, they are moved until _'disks'_ in neighboring slices align with each other.
+The approach used in this filter is to group neighboring **Cells** on a slice that have a _misorientation_ below the tolerance the user entered. _Misorientation_ here means the minimum rotation angle of one **Cell**'s crystal axis needed to coincide with another **Cell**'s crystal axis. When the **Features** in the slices are defined, they are moved until _'disks'_ in neighboring slices align with each other.
 
 _Mutual information_ is one of many quantities that measures how much one random variable
 tells us about another. It is a dimensionless quantity with (generally) units of bits, and can be

@@ -70,10 +70,10 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
 
     virtual ~FindMDF();
 
-    //------ Required Field Data
+    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
@@ -111,8 +111,8 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_AvgQuats;
-    bool* m_SurfaceFields;
-    int32_t* m_FieldPhases;
+    bool* m_SurfaceFeatures;
+    int32_t* m_FeaturePhases;
     float* m_TotalSurfaceAreas;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
 
     StatsDataArray* m_StatsDataArray;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
     FindMDF(const FindMDF&); // Copy Constructor Not Implemented
     void operator=(const FindMDF&); // Operator '=' Not Implemented

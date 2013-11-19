@@ -116,8 +116,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
-    virtual void writeOptions(QSettings &prefs);
-    virtual void readOptions(QSettings &prefs);
+//    virtual void writeOptions(QSettings &prefs);
+//    virtual void readOptions(QSettings &prefs);
     virtual void setBorderColorStyle(QString s);
     virtual QString getBorderColorStyle();
     virtual bool isSelected();
@@ -236,7 +236,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     void setupEdgeArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupFaceArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
-    void setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
+    void setupFeatureArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupArraySelectionWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
     void setupIntVec3Widget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );

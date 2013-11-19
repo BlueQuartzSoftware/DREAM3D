@@ -205,7 +205,7 @@ void GenericExample::setupFilterParameters()
     option->setUnits("");
     options.push_back(option);
   }
-  /* To Display a Combobox with a list of current Volume Field Arrays in it */
+  /* To Display a Combobox with a list of current Volume Feature Arrays in it */
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Volume Edge Array Name");
@@ -235,12 +235,12 @@ void GenericExample::setupFilterParameters()
     option->setUnits("");
     options.push_back(option);
   }
-  /* To Display a Combobox with a list of current Volume Field Arrays in it */
+  /* To Display a Combobox with a list of current Volume Feature Arrays in it */
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Volume Field Array Name");
-    option->setPropertyName("SelectedVolumeFieldArrayName");
-    option->setWidgetType(FilterParameter::VolumeFieldArrayNameSelectionWidget);
+    option->setHumanLabel("Volume Feature Array Name");
+    option->setPropertyName("SelectedVolumeFeatureArrayName");
+    option->setWidgetType(FilterParameter::VolumeFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -289,9 +289,9 @@ void GenericExample::setupFilterParameters()
   /* To Display a Combobox with a list of current Surface Edge Arrays in it */
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Surface Field Array Name");
-    option->setPropertyName("SelectedSurfaceFieldArrayName");
-    option->setWidgetType(FilterParameter::SurfaceFieldArrayNameSelectionWidget);
+    option->setHumanLabel("Surface Feature Array Name");
+    option->setPropertyName("SelectedSurfaceFeatureArrayName");
+    option->setWidgetType(FilterParameter::SurfaceFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -330,9 +330,9 @@ void GenericExample::setupFilterParameters()
   /* To Display a Combobox with a list of current Edge Edge Arrays in it */
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Edge Field Array Name");
-    option->setPropertyName("SelectedEdgeFieldArrayName");
-    option->setWidgetType(FilterParameter::EdgeFieldArrayNameSelectionWidget);
+    option->setHumanLabel("Edge Feature Array Name");
+    option->setPropertyName("SelectedEdgeFeatureArrayName");
+    option->setWidgetType(FilterParameter::EdgeFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -361,9 +361,9 @@ void GenericExample::setupFilterParameters()
   /* To Display a Combobox with a list of current Vertex Face Arrays in it */
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Vertex Field Array Name");
-    option->setPropertyName("SelectedVertexFieldArrayName");
-    option->setWidgetType(FilterParameter::VertexFieldArrayNameSelectionWidget);
+    option->setHumanLabel("Vertex Feature Array Name");
+    option->setPropertyName("SelectedVertexFeatureArrayName");
+    option->setWidgetType(FilterParameter::VertexFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -416,19 +416,19 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
   setSelectedVolumeEdgeArrayName( reader->readString("SelectedVolumeEdgeArrayName", getSelectedVolumeEdgeArrayName()) );
   setSelectedVolumeFaceArrayName( reader->readString("SelectedVolumeFaceArrayName", getSelectedVolumeFaceArrayName()) );
   setSelectedVolumeCellArrayName( reader->readString("SelectedVolumeCellArrayName", getSelectedVolumeCellArrayName()) );
-  setSelectedVolumeFieldArrayName( reader->readString("SelectedVolumeFieldArrayName", getSelectedVolumeFieldArrayName()) );
+  setSelectedVolumeFeatureArrayName( reader->readString("SelectedVolumeFeatureArrayName", getSelectedVolumeFeatureArrayName()) );
   setSelectedVolumeEnsembleArrayName( reader->readString("SelectedVolumeEnsembleArrayName", getSelectedVolumeEnsembleArrayName()) );
   setSelectedSurfaceVertexArrayName( reader->readString("SelectedSurfaceVertexArrayName", getSelectedSurfaceVertexArrayName()) );
   setSelectedSurfaceEdgeArrayName( reader->readString("SelectedSurfaceEdgeArrayName", getSelectedSurfaceEdgeArrayName()) );
   setSelectedSurfaceFaceArrayName( reader->readString("SelectedSurfaceFaceArrayName", getSelectedSurfaceFaceArrayName()) );
-  setSelectedSurfaceFieldArrayName( reader->readString("SelectedSurfaceFieldArrayName", getSelectedSurfaceFieldArrayName()) );
+  setSelectedSurfaceFeatureArrayName( reader->readString("SelectedSurfaceFeatureArrayName", getSelectedSurfaceFeatureArrayName()) );
   setSelectedSurfaceEnsembleArrayName( reader->readString("SelectedSurfaceEnsembleArrayName", getSelectedSurfaceEnsembleArrayName()) );
   setSelectedEdgeVertexArrayName( reader->readString("SelectedEdgeVertexArrayName", getSelectedEdgeVertexArrayName()) );
   setSelectedEdgeEdgeArrayName( reader->readString("SelectedEdgeEdgeArrayName", getSelectedEdgeEdgeArrayName()) );
-  setSelectedEdgeFieldArrayName( reader->readString("SelectedEdgeFieldArrayName", getSelectedEdgeFieldArrayName()) );
+  setSelectedEdgeFeatureArrayName( reader->readString("SelectedEdgeFeatureArrayName", getSelectedEdgeFeatureArrayName()) );
   setSelectedEdgeEnsembleArrayName( reader->readString("SelectedEdgeEnsembleArrayName", getSelectedEdgeEnsembleArrayName()) );
   setSelectedVertexVertexArrayName( reader->readString("SelectedVertexVertexArrayName", getSelectedVertexVertexArrayName()) );
-  setSelectedVertexFieldArrayName( reader->readString("SelectedVertexFieldArrayName", getSelectedVertexFieldArrayName()) );
+  setSelectedVertexFeatureArrayName( reader->readString("SelectedVertexFeatureArrayName", getSelectedVertexFeatureArrayName()) );
   setSelectedVertexEnsembleArrayName( reader->readString("SelectedVertexEnsembleArrayName", getSelectedVertexEnsembleArrayName()) );
 
 
@@ -484,19 +484,19 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("SelectedVolumeEdgeArrayName", getSelectedVolumeEdgeArrayName());
   writer->writeValue("SelectedVolumeFaceArrayName", getSelectedVolumeFaceArrayName());
   writer->writeValue("SelectedVolumeCellArrayName", getSelectedVolumeCellArrayName());
-  writer->writeValue("SelectedVolumeFieldArrayName", getSelectedVolumeFieldArrayName());
+  writer->writeValue("SelectedVolumeFeatureArrayName", getSelectedVolumeFeatureArrayName());
   writer->writeValue("SelectedVolumeEnsembleArrayName", getSelectedVolumeEnsembleArrayName());
   writer->writeValue("SelectedSurfaceVertexArrayName", getSelectedSurfaceVertexArrayName());
   writer->writeValue("SelectedSurfaceEdgeArrayName", getSelectedSurfaceEdgeArrayName());
   writer->writeValue("SelectedSurfaceFaceArrayName", getSelectedSurfaceFaceArrayName());
-  writer->writeValue("SelectedSurfaceFieldArrayName", getSelectedSurfaceFieldArrayName());
+  writer->writeValue("SelectedSurfaceFeatureArrayName", getSelectedSurfaceFeatureArrayName());
   writer->writeValue("SelectedSurfaceEnsembleArrayName", getSelectedSurfaceEnsembleArrayName());
   writer->writeValue("SelectedEdgeVertexArrayName", getSelectedEdgeVertexArrayName());
   writer->writeValue("SelectedEdgeEdgeArrayName", getSelectedEdgeEdgeArrayName());
-  writer->writeValue("SelectedEdgeFieldArrayName", getSelectedEdgeFieldArrayName());
+  writer->writeValue("SelectedEdgeFeatureArrayName", getSelectedEdgeFeatureArrayName());
   writer->writeValue("SelectedEdgeEnsembleArrayName", getSelectedEdgeEnsembleArrayName());
   writer->writeValue("SelectedVertexVertexArrayName", getSelectedVertexVertexArrayName());
-  writer->writeValue("SelectedVertexFieldArrayName", getSelectedVertexFieldArrayName());
+  writer->writeValue("SelectedVertexFeatureArrayName", getSelectedVertexFeatureArrayName());
   writer->writeValue("SelectedVertexEnsembleArrayName", getSelectedVertexEnsembleArrayName());
 
   writer->writeValue("Int8Array", getInt8Array());
@@ -532,7 +532,7 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericExample::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GenericExample::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -558,8 +558,14 @@ void GenericExample::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 // -----------------------------------------------------------------------------
 void GenericExample::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

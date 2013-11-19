@@ -111,7 +111,7 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
     int32_t* m_CellPhases;
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     BadDataNeighborOrientationCheck(const BadDataNeighborOrientationCheck&); // Copy Constructor Not Implemented

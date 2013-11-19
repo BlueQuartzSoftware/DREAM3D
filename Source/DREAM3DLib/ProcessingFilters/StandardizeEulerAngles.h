@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT StandardizeEulerAngles : public AbstractFilter
   protected:
     StandardizeEulerAngles();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
     float* m_CellEulerAngles;

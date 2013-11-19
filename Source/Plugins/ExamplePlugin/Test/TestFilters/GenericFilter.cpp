@@ -15,7 +15,7 @@
 #define WriteAlignmentShiftsDefaultValue false
 #define ConversionTypeDefaultValue 78
 #define SelectedCellArrayNameDefaultValue "SelectedCellArrayNameDefaultValue"
-#define SelectedFieldArrayNameDefaultValue "SelectedFieldArrayNameDefaultValue"
+#define SelectedFeatureArrayNameDefaultValue "SelectedFeatureArrayNameDefaultValue"
 #define SelectedEnsembleArrayNameDefaultValue "SelectedEnsembleArrayNameDefaultValue"
 #define SurfaceMeshPointArrayNameDefaultValue "SurfaceMeshPointArrayNameDefaultValue"
 #define SurfaceMeshFaceArrayNameDefaultValue "SurfaceMeshFaceArrayNameDefaultValue"
@@ -176,12 +176,12 @@ void GenericFilter::setupFilterParameters()
     option->setUnits("");
     options.push_back(option);
   }
-  /* To Display a Combobox with a list of current Voxel Field Arrays in it */
+  /* To Display a Combobox with a list of current Voxel Feature Arrays in it */
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Voxel Field Array Name");
-    option->setPropertyName("SelectedVoxelFieldArrayName");
-    option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
+    option->setHumanLabel("Voxel Feature Array Name");
+    option->setPropertyName("SelectedVoxelFeatureArrayName");
+    option->setWidgetType(FilterParameter::VoxelFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -300,7 +300,7 @@ void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader,
   setTestAxisAngleRotations( reader->readValue("TestAxisAngleRotations", getTestAxisAngleRotations()) );
 
   setSelectedVoxelCellArrayName( reader->readValue("SelectedVoxelCellArrayName", getSelectedVoxelCellArrayName()) );
-  setSelectedVoxelFieldArrayName( reader->readValue("SelectedFieldArrayName", getSelectedVoxelFieldArrayName()) );
+  setSelectedVoxelFeatureArrayName( reader->readValue("SelectedFeatureArrayName", getSelectedVoxelFeatureArrayName()) );
   setSelectedVoxelEnsembleArrayName( reader->readValue("SelectedEnsembleArrayName", getSelectedVoxelEnsembleArrayName()) );
   setSelectedSurfaceMeshPointArrayName( reader->readValue("SelectedSurfaceMeshPointArrayName", getSelectedSurfaceMeshPointArrayName()) );
   setSelectedSurfaceMeshFaceArrayName( reader->readValue("SelectedSurfaceMeshFaceArrayName", getSelectedSurfaceMeshFaceArrayName()) );
@@ -336,7 +336,7 @@ int GenericFilter::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue("TestAxisAngleRotations", getTestAxisAngleRotations());
 
   writer->writeValue("SelectedVoxelCellArrayName", getSelectedVoxelCellArrayName());
-  writer->writeValue("SelectedFieldArrayName", getSelectedVoxelFieldArrayName());
+  writer->writeValue("SelectedFeatureArrayName", getSelectedVoxelFeatureArrayName());
   writer->writeValue("SelectedEnsembleArrayName", getSelectedVoxelEnsembleArrayName());
   writer->writeValue("SelectedSurfaceMeshPointArrayName", getSelectedSurfaceMeshPointArrayName());
   writer->writeValue("SelectedSurfaceMeshFaceArrayName", getSelectedSurfaceMeshFaceArrayName());
@@ -355,7 +355,7 @@ int GenericFilter::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GenericFilter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
