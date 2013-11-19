@@ -69,6 +69,7 @@ namespace DREAM3D
     const DREAM3D_STRING SyntheticBuildingFilters("SyntheticBuilding");
     const DREAM3D_STRING SurfaceMeshingFilters("SurfaceMeshing");
     const DREAM3D_STRING SolidMeshingFilters("SolidMeshing");
+    const DREAM3D_STRING ExperimentalFilters("Experimental");
   }
 
   namespace FilterSubGroups

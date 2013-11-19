@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT WritePoleFigure : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ExperimentalFilters; }
 
     /**
      * @brief getSubGroupName This returns the subgroup within the main group for this filter.
