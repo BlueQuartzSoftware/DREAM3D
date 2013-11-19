@@ -143,6 +143,21 @@ bool AttributeMatrix::renameAttributeArray(const QString &oldname, const QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AttributeMatrix::resizeAttributeArrays(size_t size)
+{
+// int success = 0;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeMatrix.begin(); iter != m_AttributeMatrix.end(); ++iter)
+  {
+    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    IDataArray::Pointer d = iter.value();
+    d->Resize(size);
+  }
+  m_NumTuples = size;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AttributeMatrix::clearAttributeArrays()
 {
   m_AttributeMatrix.clear();

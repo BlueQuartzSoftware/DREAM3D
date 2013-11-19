@@ -55,6 +55,8 @@
 InitializeSyntheticVolume::InitializeSyntheticVolume() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
@@ -69,7 +71,6 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_GoodVoxels(NULL)
-
 {
   setupFilterParameters();
 }
@@ -134,9 +135,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   QVector<int> dims(1, 1);
   //Cell Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, -1, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, bool, BoolArrayType, true, voxels, dims)
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, m_FeatureIds, -301, voxels, dims);
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, m_CellPhases, -301, voxels, dims);
+  m->createNonPrereqArray<bool, BoolArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, m_GoodVoxels, true, voxels, dims);
 
   if(m_InputFile.isEmpty() == true)
   {
@@ -211,7 +212,7 @@ void InitializeSyntheticVolume::preflight()
   dataCheck(true, 1, 1, 1);
 
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 }
 
 // -----------------------------------------------------------------------------
@@ -261,14 +262,12 @@ void InitializeSyntheticVolume::execute()
   m->setResolution(m_XRes, m_YRes, m_ZRes);
 
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
-  m->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
-
+  m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
   int64_t totalPoints = m->getTotalPoints();
-  int totalFeatures = m->getNumCellFeatureTuples();
-  int totalEnsembles = m->getNumCellEnsembleTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
 
   // Check to make sure we have all of our data arrays available or make them available.
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, totalPoints, 0, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

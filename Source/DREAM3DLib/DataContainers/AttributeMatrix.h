@@ -193,7 +193,13 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     */
     virtual bool renameAttributeArray(const QString &oldname, const QString &newname);
 
-  /**
+    /**
+    * @brief Resizes an array from the Data Container
+    * @param size The new size of the array
+    */
+    void AttributeMatrix::resizeAttributeArrays(size_t size);
+
+    /**
      * @brief Removes all the Cell Arrays
      */
     virtual void clearAttributeArrays();

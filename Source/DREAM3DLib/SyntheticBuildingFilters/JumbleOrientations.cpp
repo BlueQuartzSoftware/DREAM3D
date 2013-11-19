@@ -54,6 +54,8 @@
 JumbleOrientations::JumbleOrientations() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -114,17 +116,17 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t feature
 
   QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, m_FeatureIds, -301, voxels, dims);
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dims)
+  m->getPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, m_CellEulerAngles, -301, voxels, dims);
 
   // Feature Data
   dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, dims)
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, m_FeaturePhases, -301, features, dims);
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, float, FloatArrayType, 0, features, dims)
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureEulerAnglesArrayName, m_FeatureEulerAngles, 0, features, dims);
   dims[0] = 4;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, float, FloatArrayType, 0, features, dims)
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgQuatsArrayName, m_AvgQuats, 0, features, dims);
 }
 
 // -----------------------------------------------------------------------------
@@ -158,10 +160,10 @@ void JumbleOrientations::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  int totalFeatures = m->getNumCellFeatureTuples();
-  int numEnsembleTuples = m->getNumCellEnsembleTuples();
-  dataCheck(false, totalPoints, totalFeatures, numEnsembleTuples);
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+
+  dataCheck(false, totalPoints, totalFeatures, 0);
   if (getErrorCondition() < 0)
   {
     return;

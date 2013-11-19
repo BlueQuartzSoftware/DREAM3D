@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
 
     virtual ~AddBadData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)

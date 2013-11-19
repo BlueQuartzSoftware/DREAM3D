@@ -75,17 +75,17 @@ endMacro()
 
 # Add in our NON-Filter classes
 D3DCompileDir(Common)
-#D3DCompileDir(DataArrays)
+D3DCompileDir(DataArrays)
 D3DCompileDir(DataContainers)
-#D3DCompileDir(DistributionAnalysisOps)
-#D3DCompileDir(FilterParameters)
-#D3DCompileDir(HDF5)
-#D3DCompileDir(Math)
-#D3DCompileDir(OrientationOps)
-#D3DCompileDir(ShapeOps)
-#D3DCompileDir(StatsData)
-#D3DCompileDir(Utilities)
-#D3DCompileDir(VTKUtils)
+D3DCompileDir(DistributionAnalysisOps)
+D3DCompileDir(FilterParameters)
+D3DCompileDir(HDF5)
+D3DCompileDir(Math)
+D3DCompileDir(OrientationOps)
+D3DCompileDir(ShapeOps)
+D3DCompileDir(StatsData)
+D3DCompileDir(Utilities)
+D3DCompileDir(VTKUtils)
 
 
 
@@ -146,7 +146,7 @@ file(WRITE ${FilterWidget_GEN_SRCS_File})
 #include(${DREAM3DLib_SOURCE_DIR}/SamplingFilters/SourceList.cmake)
 #include(${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/SourceList.cmake)
 #include(${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SourceList.cmake)
-#include(${DREAM3DLib_SOURCE_DIR}/SyntheticBuildingFilters/SourceList.cmake)
+include(${DREAM3DLib_SOURCE_DIR}/SyntheticBuildingFilters/SourceList.cmake)
 
 #-----------------------------------------------------
 # conditionally compile our example codes- These should be turned off for a release

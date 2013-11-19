@@ -229,6 +229,9 @@ class AssignVoxelsGapsImpl
 PackPrimaryPhases::PackPrimaryPhases() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
@@ -361,28 +364,29 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t features
 
   QVector<int> dims(1, 1);
   //Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, dims)
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, m_FeatureIds, -301, voxels, dims);
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, m_CellPhases, -301, voxels, dims);
 
   //Feature Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, int32_t, Int32ArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, float, FloatArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Omega3s, float, FloatArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, float, FloatArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, true, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Neighborhoods, int32_t, Int32ArrayType, 0, features, dims)
+  m->createNonPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, m_FeaturePhases, 0, features, dims);
+  m->createNonPrereqArray<bool, BoolArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_ActiveArrayName, m_Active, 0, features, dims);
+  m->createNonPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_NeighborhoodsArrayName, m_Neighborhoods, 0, features, dims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, m_EquivalentDiameters, 0, features, dims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_VolumesArrayName, m_Volumes, 0, features, dims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_Omega3sArrayName, m_Omega3s, 0, features, dims);
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisEulerAngles, float, FloatArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisLengths, float, FloatArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, float, FloatArrayType, 0, features, dims)
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, m_Centroids, 0, features, dims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AxisEulerAnglesArrayName, m_AxisEulerAngles, 0, features, dims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AxisLengthsArrayName, m_AxisLengths, 0, features, dims);
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, -302, unsigned int, PhaseTypeArrayType, ensembles, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, ShapeTypes, -305, unsigned int, ShapeTypeArrayType, ensembles, dims)
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  m->getPrereqArray<unsigned int, PhaseTypeArrayType, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_PhaseTypesArrayName, m_PhaseTypes, -301, ensembles, dims);
+  m->getPrereqArray<unsigned int, PhaseTypeArrayType, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_ShapeTypesArrayName, m_ShapeTypes, -301, ensembles, dims);
+
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     QString ss = QObject::tr("Stats Array Not Initialized correctly");
@@ -443,10 +447,12 @@ void PackPrimaryPhases::execute()
   m_Seed = QDateTime::currentMSecsSinceEpoch();
   DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getNumCellFeatureTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
+
   if(totalFeatures == 0) { totalFeatures = 1; }
-  dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -488,9 +494,6 @@ void PackPrimaryPhases::execute()
   float totalprimaryvol = static_cast<float>(totalprimaryvolTEMP);
   totalprimaryvol = totalprimaryvol * (m->getXRes() * m->getYRes() * m->getZRes());
 
-  size_t numensembles = m->getNumCellEnsembleTuples();
-
-
   // float change1, change2;
   float change = 0.0f;
   int phase = 0;
@@ -506,7 +509,7 @@ void PackPrimaryPhases::execute()
   int acceptedmoves = 0;
   float totalprimaryfractions = 0.0;
   // find which phases are primary phases
-  for (size_t i = 1; i < numensembles; ++i)
+  for (size_t i = 1; i < totalEnsembles; ++i)
   {
 
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
@@ -595,8 +598,8 @@ void PackPrimaryPhases::execute()
 
   // Estimate the total Number of features here
   int estNumFeatures = estimate_numfeatures((int)(udims[0]), (int)(udims[1]), (int)(udims[2]), xRes, yRes, zRes);
-  m->resizeCellFeatureDataArrays(estNumFeatures);
-  dataCheck(false, totalPoints, estNumFeatures, m->getNumCellEnsembleTuples());
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(estNumFeatures);
+  dataCheck(false, totalPoints, estNumFeatures, totalEnsembles);
 
   int gid = 1;
   firstPrimaryFeature = gid;
@@ -621,10 +624,10 @@ void PackPrimaryPhases::execute()
 
         QString ss = QObject::tr("Packing Features (1/2) - Generating Feature #%1").arg(gid);
         notifyStatusMessage(ss);
-        if (gid + 1 >= static_cast<int>(m->getNumCellFeatureTuples()))
+        if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()))
         {
-          m->resizeCellFeatureDataArrays(gid + 1);
-          dataCheck(false, totalPoints, gid + 1, m->getNumCellEnsembleTuples());
+          m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(gid + 1);
+          dataCheck(false, totalPoints, gid + 1, totalEnsembles);
         }
 
         m_Active[gid] = true;
@@ -650,7 +653,7 @@ void PackPrimaryPhases::execute()
   {
     iter = 0;
     int xfeatures, yfeatures, zfeatures;
-    xfeatures = int(powf((m->getNumCellFeatureTuples() * (sizex / sizey) * (sizex / sizez)), (1.0f / 3.0f)) + 1);
+    xfeatures = int(powf((m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples() * (sizex / sizey) * (sizex / sizez)), (1.0f / 3.0f)) + 1);
     yfeatures = int(xfeatures * (sizey / sizex) + 1);
     zfeatures = int(xfeatures * (sizez / sizex) + 1);
     factor = 0.25f * (1.0f - (float((xfeatures - 2) * (yfeatures - 2) * (zfeatures - 2)) / float(xfeatures * yfeatures * zfeatures)));
@@ -670,10 +673,10 @@ void PackPrimaryPhases::execute()
 
           QString ss = QObject::tr("Packing Features (2/2) - Generating Feature #").arg(gid);
           notifyStatusMessage(ss);
-          if (gid + 1 >= static_cast<int>(m->getNumCellFeatureTuples()) )
+          if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()) )
           {
-            m->resizeCellFeatureDataArrays(gid + 1);
-            dataCheck(false, totalPoints, gid + 1, m->getNumCellEnsembleTuples());
+            m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(gid + 1);
+            dataCheck(false, totalPoints, gid + 1, totalEnsembles);
           }
 
           m_Active[gid] = true;
@@ -694,8 +697,9 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  m->resizeCellFeatureDataArrays(gid);
-  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(gid);
+  totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
   if (getCancel() == true)
   {
@@ -767,25 +771,23 @@ void PackPrimaryPhases::execute()
   //  for each feature : select centroid, determine voxels in feature, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the feature is added and its neighbors are determined
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
-
-  columnlist.resize(numfeatures);
-  rowlist.resize(numfeatures);
-  planelist.resize(numfeatures);
-  ellipfunclist.resize(numfeatures);
-  packqualities.resize(numfeatures);
+  columnlist.resize(totalFeatures);
+  rowlist.resize(totalFeatures);
+  planelist.resize(totalFeatures);
+  ellipfunclist.resize(totalFeatures);
+  packqualities.resize(totalFeatures);
   fillingerror = 1;
 
   int count = 0;
   int column, row, plane;
   int progFeature = 0;
-  int progFeatureInc = numfeatures * .01;
-  for (size_t i = firstPrimaryFeature; i < numfeatures; i++)
+  int progFeatureInc = totalFeatures * .01;
+  for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
     if ((int)i > progFeature + progFeatureInc)
     {
 
-      QString ss = QObject::tr("Placing Feature #%1/%2").arg(i).arg(numfeatures);
+      QString ss = QObject::tr("Placing Feature #%1/%2").arg(i).arg(totalFeatures);
       notifyStatusMessage(ss);
       progFeature = i;
     }
@@ -830,7 +832,7 @@ void PackPrimaryPhases::execute()
 
   notifyStatusMessage("Determining Neighbors");
   progFeature = 0;
-  progFeatureInc = numfeatures * .01;
+  progFeatureInc = totalFeatures * .01;
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
@@ -838,15 +840,15 @@ void PackPrimaryPhases::execute()
   float timeDiff = 0.0f;
 
   // determine neighborhoods and initial neighbor distribution errors
-  for (size_t i = firstPrimaryFeature; i < numfeatures; i++)
+  for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
     currentMillis = QDateTime::currentMSecsSinceEpoch();
     if (currentMillis - millis > 1000)
     {
 
-      QString ss = QObject::tr("Determining Neighbors %1/%2").arg(i).arg(numfeatures);
+      QString ss = QObject::tr("Determining Neighbors %1/%2").arg(i).arg(totalFeatures);
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
-      estimatedTime = (float)(numfeatures - i) / timeDiff;
+      estimatedTime = (float)(totalFeatures - i) / timeDiff;
       ss = QObject::tr(" Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
       notifyStatusMessage(ss);
 
@@ -856,7 +858,7 @@ void PackPrimaryPhases::execute()
   }
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing features to try to improve packing
-  int totalAdjustments = static_cast<int>(100 * (numfeatures - 1));
+  int totalAdjustments = static_cast<int>(100 * (totalFeatures - 1));
 
   millis = QDateTime::currentMSecsSinceEpoch();
   startMillis = millis;
@@ -897,17 +899,16 @@ void PackPrimaryPhases::execute()
 
     if(writeErrorFile == true && iteration % 25 == 0)
     {
-      outFile << iteration << " " << fillingerror << "  " << oldsizedisterror << "  " << oldneighborhooderror << "  " << numfeatures << " " << acceptedmoves
-              << "\n";
+      outFile << iteration << " " << fillingerror << "  " << oldsizedisterror << "  " << oldneighborhooderror << "  " << totalFeatures << " " << acceptedmoves << "\n";
     }
 
     // JUMP - this option moves one feature to a random spot in the volume
     if(option == 0)
     {
-      randomfeature = firstPrimaryFeature + int(rg.genrand_res53() * (numfeatures - firstPrimaryFeature));
+      randomfeature = firstPrimaryFeature + int(rg.genrand_res53() * (totalFeatures - firstPrimaryFeature));
       good = false;
       count = 0;
-      while(good == false && count < static_cast<int>((numfeatures - firstPrimaryFeature)) )
+      while(good == false && count < static_cast<int>((totalFeatures - firstPrimaryFeature)) )
       {
         xc = m_Centroids[3 * randomfeature];
         yc = m_Centroids[3 * randomfeature + 1];
@@ -918,7 +919,7 @@ void PackPrimaryPhases::execute()
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
         if(featureOwners[featureOwnersIdx] > 1) { good = true; }
         else { randomfeature++; }
-        if(static_cast<size_t>(randomfeature) >= numfeatures) { randomfeature = firstPrimaryFeature; }
+        if(static_cast<size_t>(randomfeature) >= totalFeatures) { randomfeature = firstPrimaryFeature; }
         count++;
       }
       m_Seed++;
@@ -976,10 +977,10 @@ void PackPrimaryPhases::execute()
     // NUDGE - this option moves one feature to a spot close to its current centroid
     if(option == 1)
     {
-      randomfeature = firstPrimaryFeature + int(rg.genrand_res53() * (numfeatures - firstPrimaryFeature));
+      randomfeature = firstPrimaryFeature + int(rg.genrand_res53() * (totalFeatures - firstPrimaryFeature));
       good = false;
       count = 0;
-      while(good == false && count < static_cast<int>((numfeatures - firstPrimaryFeature)) )
+      while(good == false && count < static_cast<int>((totalFeatures - firstPrimaryFeature)) )
       {
         xc = m_Centroids[3 * randomfeature];
         yc = m_Centroids[3 * randomfeature + 1];
@@ -990,7 +991,7 @@ void PackPrimaryPhases::execute()
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
         if(featureOwners[featureOwnersIdx] > 1) { good = true; }
         else { randomfeature++; }
-        if(static_cast<size_t>(randomfeature) >= numfeatures) { randomfeature = firstPrimaryFeature; }
+        if(static_cast<size_t>(randomfeature) >= totalFeatures) { randomfeature = firstPrimaryFeature; }
         count++;
       }
       m_Seed++;
@@ -1069,13 +1070,13 @@ void PackPrimaryPhases::execute()
     write_goal_attributes();
   }
 
-  m->removeCellFeatureData(m_EquivalentDiametersArrayName);
-  m->removeCellFeatureData(m_Omega3sArrayName);
-  m->removeCellFeatureData(m_AxisEulerAnglesArrayName);
-  m->removeCellFeatureData(m_AxisLengthsArrayName);
-  m->removeCellFeatureData(m_VolumesArrayName);
-  m->removeCellFeatureData(m_CentroidsArrayName);
-  m->removeCellFeatureData(m_NeighborhoodsArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_EquivalentDiametersArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_Omega3sArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_AxisEulerAnglesArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_AxisLengthsArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_VolumesArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_CentroidsArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_NeighborhoodsArrayName);
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("Packing Features Complete");
@@ -1328,11 +1329,11 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
   y = m_Centroids[3 * gnum + 1];
   z = m_Centroids[3 * gnum + 2];
   dia = m_EquivalentDiameters[gnum];
-  size_t numFeatureTuples = m->getNumCellFeatureTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
   int32_t increment = 0;
   if(add > 0) { increment = 1; }
   if(add < 0) { increment = -1; }
-  for (size_t n = firstPrimaryFeature; n < numFeatureTuples; n++)
+  for (size_t n = firstPrimaryFeature; n < totalFeatures; n++)
   {
     xn = m_Centroids[3 * n];
     yn = m_Centroids[3 * n + 1];
@@ -1402,8 +1403,8 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
     float minFeatureDia = pp->getMinFeatureDiameter();
     float oneOverBinStepSize = 1.0f / pp->getBinStepSize();
 
-
-    for (size_t i = firstPrimaryFeature; i < m->getNumCellFeatureTuples(); i++)
+    int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+    for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
     {
       nnum = 0;
       index = i;
@@ -1554,10 +1555,10 @@ float PackPrimaryPhases::check_sizedisterror(Feature* feature)
       curSimFeatureSizeDist[i] = 0.0f;
     }
 
-    size_t nFeatureTuples = m->getNumCellFeatureTuples();
+    int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
     float oneOverCurFeatureSizeDistStep = 1.0f / featuresizediststep[iter];
     float halfMinFeatureDiameter = pp->getMinFeatureDiameter() * 0.5f;
-    for (size_t b = firstPrimaryFeature; b < nFeatureTuples; b++)
+    for (int64_t b = firstPrimaryFeature; b < totalFeatures; b++)
     {
       index = b;
       if(m_FeaturePhases[index] == phase)
@@ -1816,7 +1817,7 @@ void PackPrimaryPhases::assign_voxels()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  int64_t totpoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -1845,11 +1846,11 @@ void PackPrimaryPhases::assign_voxels()
   float zRes = m->getZRes();
   float res[3] = {xRes, yRes, zRes};
 
-  Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totpoints, "newowners");
+  Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "newowners");
   int32_t* newowners = newownersPtr->getPointer(0);
   newownersPtr->initializeWithValues(-1);
 
-  FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totpoints, "ellipfuncs");
+  FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totalPoints, "ellipfuncs");
   float* ellipfuncs = ellipfuncsPtr->getPointer(0);
   ellipfuncsPtr->initializeWithValues(-1);
 
@@ -1857,7 +1858,8 @@ void PackPrimaryPhases::assign_voxels()
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
 
-  for (size_t i = firstPrimaryFeature; i < m->getNumCellFeatureTuples(); i++)
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  for (int64_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
     featuresPerTime++;
     currentMillis = QDateTime::currentMSecsSinceEpoch();
@@ -1953,11 +1955,11 @@ void PackPrimaryPhases::assign_voxels()
   }
 
   int gnum;
-  for (size_t i = firstPrimaryFeature; i < m->getNumCellFeatureTuples(); i++)
+  for (int64_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
     m_Active[i] = false;
   }
-  for (size_t i = 0; i < static_cast<size_t>(totpoints); i++)
+  for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
   {
     if(ellipfuncs[i] >= 0) { m_FeatureIds[i] = newowners[i]; }
     gnum = m_FeatureIds[i];
@@ -1979,7 +1981,9 @@ void PackPrimaryPhases::assign_voxels()
     return;
   }
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getCancel() == true)
   {
 
@@ -1988,11 +1992,11 @@ void PackPrimaryPhases::assign_voxels()
     setErrorCondition(-1);
     return;
   }
-  for (size_t i = firstPrimaryFeature; i < m->getNumCellFeatureTuples(); i++)
+  for (int64_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
     m_Active[i] = false;
   }
-  for(int64_t i = 0; i < totpoints; i++)
+  for(int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
     if(gnum >= 0)
@@ -2023,7 +2027,8 @@ void PackPrimaryPhases::assign_gaps_only()
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());
   int zPoints = static_cast<int>(m->getZPoints());
-  int totalPoints = xPoints * yPoints * zPoints;
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
 
   int neighpoints[6];
   neighpoints[0] = -xPoints * yPoints;
@@ -2037,7 +2042,7 @@ void PackPrimaryPhases::assign_gaps_only()
   m_Neighbors = neighborsPtr->getPointer(0);
   neighborsPtr->initializeWithValues(-1);
 
-  QVector<int > n(m->getNumCellFeatureTuples() + 1, 0);
+  QVector<int > n(totalFeatures + 1, 0);
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
 
@@ -2135,7 +2140,8 @@ void PackPrimaryPhases::cleanup_features()
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
-  int64_t totpoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -2162,9 +2168,9 @@ void PackPrimaryPhases::cleanup_features()
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
   QVector<QVector<int> > vlists;
-  vlists.resize(m->getNumCellFeatureTuples());
+  vlists.resize(totalFeatures);
   QVector<int> currentvlist;
-  QVector<bool> checked(totpoints, false);
+  QVector<bool> checked(totalPoints, false);
   size_t count;
   int touchessurface = 0;
   int good;
@@ -2172,15 +2178,15 @@ void PackPrimaryPhases::cleanup_features()
   DimType column, row, plane;
   int index;
   float minsize = 0;
-  gsizes.resize(m->getNumCellFeatureTuples());
-  for (size_t i = 1; i < m->getNumCellFeatureTuples(); i++)
+  gsizes.resize(totalFeatures);
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     gsizes[i] = 0;
     m_Active[i] = true;
   }
 
   float resConst = m->getXRes() * m->getYRes() * m->getZRes();
-  for (int i = 0; i < totpoints; i++)
+  for (int i = 0; i < totalPoints; i++)
   {
     touchessurface = 0;
     if(checked[i] == false && m_FeatureIds[i] > firstPrimaryFeature)
@@ -2271,15 +2277,15 @@ void PackPrimaryPhases::cleanup_features()
     }
   }
   assign_gaps_only();
-  for (int i = 0; i < totpoints; i++)
+  for (int i = 0; i < totalPoints; i++)
   {
     if(m_FeatureIds[i] > 0) { gsizes[m_FeatureIds[i]]++; }
   }
-  for (size_t i = firstPrimaryFeature; i < m->getNumCellFeatureTuples(); i++)
+  for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
     if(gsizes[i] == 0) { m_Active[i] = false; }
   }
-  for (int i = 0; i < totpoints; i++)
+  for (int i = 0; i < totalPoints; i++)
   {
     if(m_FeatureIds[i] > 0) { m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]]; }
   }
@@ -2302,11 +2308,11 @@ int PackPrimaryPhases::estimate_numfeatures(int xpoints, int ypoints, int zpoint
   }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  IDataArray::Pointer iPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+  IDataArray::Pointer iPtr = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
   // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
   DataArray<uint32_t>* phaseType = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
 
-  iPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics);
+  iPtr = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(DREAM3D::EnsembleData::Statistics);
   StatsDataArray* statsDataArrayPtr = StatsDataArray::SafePointerDownCast(iPtr.get());
   if(NULL == statsDataArrayPtr)
   {
@@ -2381,6 +2387,8 @@ void PackPrimaryPhases::write_goal_attributes()
   setErrorCondition(err);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+
 // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QFileInfo fi(m_CsvOutputFile);
@@ -2406,9 +2414,9 @@ void PackPrimaryPhases::write_goal_attributes()
 
   char space = ',';
   // Write the total number of features
-  dStream << m->getNumCellFeatureTuples() - firstPrimaryFeature;
+  dStream << totalFeatures - firstPrimaryFeature;
   // Get all the names of the arrays from the Data Container
-  QList<QString> headers = m->getCellFeatureArrayNameList();
+  QList<QString> headers = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArrayNameList();
 
   QVector<IDataArray::Pointer> data;
 
@@ -2421,7 +2429,7 @@ void PackPrimaryPhases::write_goal_attributes()
   for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
-    IDataArray::Pointer p = m->getCellFeatureData(*iter);
+    IDataArray::Pointer p = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
       if (p->GetNumberOfComponents() == 1)

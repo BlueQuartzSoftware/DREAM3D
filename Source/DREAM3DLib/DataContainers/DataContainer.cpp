@@ -59,7 +59,7 @@ DataContainer::~DataContainer()
 // -----------------------------------------------------------------------------
 bool DataContainer::doesAttributeMatrixExist(const QString &name)
 {
-  return  m_AttributeMatrices.contains(name);\
+  return  m_AttributeMatrices.contains(name);
 }
   
 // -----------------------------------------------------------------------------
@@ -139,7 +139,7 @@ void DataContainer::clearAttributeMatrices()
 QList<QString> DataContainer::getAttributeMatrixNameList()
 {
   QList<QString> keys;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeMatrices.begin(); iter != m_AttributeMatrices.end(); ++iter)
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = m_AttributeMatrices.begin(); iter != m_AttributeMatrices.end(); ++iter)
   {
     keys.push_back( iter.key() );
   }

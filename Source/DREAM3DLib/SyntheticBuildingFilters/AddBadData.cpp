@@ -50,6 +50,7 @@
 AddBadData::AddBadData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_PoissonNoise(false),
   m_PoissonVolFraction(0.0f),
@@ -147,8 +148,7 @@ void AddBadData::dataCheck(bool preflight, size_t voxels, size_t features, size_
 
   // Cell Data
   QVector<int> dims(1, 1);
-  QString AMName = "CellData";
-  m->GetPrereqArray<AbstractFilter, float>(this, AMName,  m_GBEuclideanDistancesArrayName, m_GBEuclideanDistances, -301, voxels, dims);
+  m->getPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GBEuclideanDistancesArrayName, m_GBEuclideanDistances, -301, voxels, dims);
 }
 
 // -----------------------------------------------------------------------------
@@ -183,13 +183,9 @@ void AddBadData::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  QString FeatureAMName = "CellFeatureData";
-  size_t totalFeatures = m->getAttributeMatrix(FeatureAMName)->getNumTuples();
-  QString EnsembleAMName = "CellEnsembleData";
-  size_t totalEnsembles = m->getAttributeMatrix(EnsembleAMName)->getNumTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
 
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -211,8 +207,7 @@ void  AddBadData::add_noise()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  QString AMName = "CellData";
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(AMName)->getAttributeArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(m_CellAttributeMatrixName)->getAttributeArrayNameList();
 
   float random = 0.0;
   int64_t totalPoints = m->getTotalPoints();
@@ -226,7 +221,7 @@ void  AddBadData::add_noise()
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getAttributeMatrix(AMName)->getAttributeArray(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(m_CellAttributeMatrixName)->getAttributeArray(*iter);
           p->InitializeTuple(i, 0);
         }
       }
@@ -239,7 +234,7 @@ void  AddBadData::add_noise()
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getAttributeMatrix(AMName)->getAttributeArray(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(m_CellAttributeMatrixName)->getAttributeArray(*iter);
           p->InitializeTuple(i, 0);
         }
       }

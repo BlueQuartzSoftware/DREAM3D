@@ -53,6 +53,7 @@
 AddOrientationNoise::AddOrientationNoise() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_Magnitude(1.0f),
   m_CellEulerAngles(NULL)
@@ -125,7 +126,7 @@ void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t featur
   }
   // Cell Data
   QVector<int> dims(1, 3);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, dims)
+  m->getPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, m_CellEulerAngles, -301, voxels, dims);
 }
 
 // -----------------------------------------------------------------------------
@@ -160,10 +161,9 @@ void AddOrientationNoise::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getNumCellFeatureTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
 
-  dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;

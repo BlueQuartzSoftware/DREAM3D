@@ -64,6 +64,9 @@
 InsertPrecipitatePhases::InsertPrecipitatePhases() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
@@ -194,34 +197,31 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fe
 
   // Cell Data
   QVector<int> compDims(1,1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, compDims)
-
-  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, -301, int8_t, Int8ArrayType, voxels, compDims)
-
-
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, compDims)
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, m_FeatureIds, -301, voxels, compDims);
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, m_CellPhases, -301, voxels, compDims);
+  m->getPrereqArray<int8_t, Int8ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_SurfaceVoxelsArrayName, m_SurfaceVoxels, -301, voxels, compDims);
 
   // Feature Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, int32_t, Int32ArrayType, 0, features, compDims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, float, FloatArrayType, 0, features, compDims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Omega3s, float, FloatArrayType, 0, features, compDims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, float, FloatArrayType, 0, features, compDims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, false, features, compDims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, NumCells, int32_t, Int32ArrayType, 0, features, compDims)
-
+  m->createNonPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, m_FeaturePhases, 0, features, compDims);
+  m->createNonPrereqArray<bool, BoolArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_ActiveArrayName, m_Active, 0, features, compDims);
+  m->createNonPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_NumCellsArrayName, m_NumCells, 0, features, compDims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, m_EquivalentDiameters, 0, features, compDims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_VolumesArrayName, m_Volumes, 0, features, compDims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_Omega3sArrayName, m_Omega3s, 0, features, compDims);
   compDims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, float, FloatArrayType, 0, features, compDims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisEulerAngles, float, FloatArrayType, 0, features, compDims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisLengths, float, FloatArrayType, 0, features, compDims)
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, m_Centroids, 0, features, compDims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AxisEulerAnglesArrayName, m_AxisEulerAngles, 0, features, compDims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AxisLengthsArrayName, m_AxisLengths, 0, features, compDims);
 
   //Ensemble Data
   compDims[0] = 1;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, -301, unsigned int, PhaseTypeArrayType, ensembles, compDims)
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, ShapeTypes, -304, unsigned int, ShapeTypeArrayType, ensembles, compDims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFeatures, int32_t, Int32ArrayType, 0, ensembles, compDims)
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  m->getPrereqArray<unsigned int, PhaseTypeArrayType, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_PhaseTypesArrayName, m_PhaseTypes, -301, ensembles, compDims);
+  m->getPrereqArray<unsigned int, PhaseTypeArrayType, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_ShapeTypesArrayName, m_ShapeTypes, -301, ensembles, compDims);
+  m->createNonPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_NumFeaturesArrayName, m_NumFeatures, 0, features, compDims);
+
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     QString ss = QObject::tr("Stats Array Not Initialized At Beginning Correctly");
@@ -270,11 +270,12 @@ void InsertPrecipitatePhases::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getNumCellFeatureTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
 
   if(totalFeatures == 0) { totalFeatures = 1; }
-  dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -312,7 +313,11 @@ void InsertPrecipitatePhases::execute()
     return;
   }
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
+
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
   notifyStatusMessage("Packing Precipitates - Filling Gaps");
   assign_gaps();
@@ -338,13 +343,13 @@ void InsertPrecipitatePhases::execute()
     write_goal_attributes();
   }
 
-  m->removeCellFeatureData(m_EquivalentDiametersArrayName);
-  m->removeCellFeatureData(m_Omega3sArrayName);
-  m->removeCellFeatureData(m_AxisEulerAnglesArrayName);
-  m->removeCellFeatureData(m_AxisLengthsArrayName);
-  m->removeCellFeatureData(m_VolumesArrayName);
-  m->removeCellFeatureData(m_CentroidsArrayName);
-  m->removeCellFeatureData(m_NumCellsArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_EquivalentDiametersArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_Omega3sArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_AxisEulerAnglesArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_AxisLengthsArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_VolumesArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_CentroidsArrayName);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_NumCellsArrayName);
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("InsertPrecipitatePhases Completed");
@@ -386,12 +391,13 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   sizez = dims[2] * m->getZRes();
   totalvol = sizex * sizey * sizez;
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t currentnumfeatures = m->getNumCellFeatureTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  int64_t currentnumfeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  int64_t numensembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
   if(currentnumfeatures == 0)
   {
-    m->resizeCellFeatureDataArrays(1);
-    dataCheck(false, totalPoints, 1, m->getNumCellEnsembleTuples());
+    m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(1);
+    dataCheck(false, totalPoints, 1, numensembles);
     currentnumfeatures = 1;
   }
   firstPrecipitateFeature = currentnumfeatures;
@@ -405,9 +411,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   int acceptedmoves = 0;
   double totalprecipitatefractions = 0.0;
 
-  size_t numensembles = m->getNumCellEnsembleTuples();
-
-  for (size_t i = 1; i < numensembles; ++i)
+  for (int64_t i = 1; i < numensembles; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
@@ -479,8 +483,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
         QString ss = QObject::tr("Packing Precipitates - Generating Feature #%1").arg(currentnumfeatures);
         notifyStatusMessage(ss);
 
-        m->resizeCellFeatureDataArrays(currentnumfeatures + 1);
-        dataCheck(false, totalPoints, currentnumfeatures + 1, m->getNumCellEnsembleTuples());
+        m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(currentnumfeatures + 1);
+        dataCheck(false, totalPoints, currentnumfeatures + 1, numensembles);
         m_Active[currentnumfeatures] = true;
         transfer_attributes(currentnumfeatures, &precip);
         oldsizedisterror = currentsizedisterror;
@@ -544,7 +548,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   //  for each feature : select centroid, determine voxels in feature, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the feature is added and its clustering are determined
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
 
   columnlist.resize(numfeatures);
   rowlist.resize(numfeatures);
@@ -625,8 +629,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 //      }
 //    }
   }
-  int numFeatures = m->getNumCellFeatureTuples();
-  for (size_t i = firstPrecipitateFeature; i < numFeatures; i++)
+  for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
   {
     oldclusteringerror = check_clusteringerror(i, -1000);
     for (size_t k = 0; k < clusteringdist[0][0].size(); k++)
@@ -930,7 +933,7 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
   x = m_Centroids[3 * gnum];
   y = m_Centroids[3 * gnum + 1];
   z = m_Centroids[3 * gnum + 2];
-  size_t numFeatures = m->getNumCellFeatureTuples();
+  size_t numFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
   for (size_t n = firstPrecipitateFeature; n < numFeatures; n++)
   {
     if (m_FeaturePhases[n] == phase && n != gnum)
@@ -1061,7 +1064,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
       curSimFeatureSizeDist[i] = 0.0f;
     }
 
-    size_t nFeatureTuples = m->getNumCellFeatureTuples();
+    size_t nFeatureTuples = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
     float oneOverCurFeatureSizeDistStep = 1.0f / featuresizediststep[iter];
     float halfMinFeatureDiameter = pp->getMinFeatureDiameter() * 0.5f;
     for (size_t b = firstPrecipitateFeature; b < nFeatureTuples; b++)
@@ -1328,14 +1331,14 @@ void InsertPrecipitatePhases::assign_voxels()
   //float dist;
   float coords[3];
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
-  // int64_t totpoints = m->totalPoints();
-  gsizes.resize(m->getNumCellFeatureTuples());
+  int64_t numFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  gsizes.resize(numFeatures);
 
-  for (size_t i = firstPrecipitateFeature; i < m->getNumCellFeatureTuples(); i++)
+  for (int64_t i = firstPrecipitateFeature; i < numFeatures; i++)
   {
     gsizes[i] = 0;
   }
-  for (size_t i = firstPrecipitateFeature; i < m->getNumCellFeatureTuples(); i++)
+  for (int64_t i = firstPrecipitateFeature; i < numFeatures; i++)
   {
     float volcur = m_Volumes[i];
     float bovera = m_AxisLengths[3 * i + 1];
@@ -1452,7 +1455,7 @@ void InsertPrecipitatePhases::assign_voxels()
       }
     }
   }
-  for (size_t i = firstPrecipitateFeature; i < m->getNumCellFeatureTuples(); i++)
+  for (int64_t i = firstPrecipitateFeature; i < numFeatures; i++)
   {
     m_Active[i] = false;
   }
@@ -1511,11 +1514,12 @@ void InsertPrecipitatePhases::assign_gaps()
   float* ellipfuncs = ellipfuncsPtr->getPointer(0);
   ellipfuncsPtr->initializeWithValues(-1);
 
+  int64_t numEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
   while (unassignedcount != 0)
   {
     unassignedcount = 0;
     timestep = timestep + 50;
-    for (size_t i = firstPrecipitateFeature; i < m->getNumCellFeatureTuples(); i++)
+    for (int64_t i = firstPrecipitateFeature; i < numEnsembles; i++)
     {
       float volcur = m_Volumes[i];
       float bovera = m_AxisLengths[3 * i + 1];
@@ -1671,6 +1675,8 @@ void InsertPrecipitatePhases::cleanup_features()
   DimType yp = dims[1];
   DimType zp = dims[2];
 
+  int64_t numFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+
   neighpoints[0] = -(xp * yp);
   neighpoints[1] = -xp;
   neighpoints[2] = -1;
@@ -1678,7 +1684,7 @@ void InsertPrecipitatePhases::cleanup_features()
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
   QVector<QVector<int> > vlists;
-  vlists.resize(m->getNumCellFeatureTuples());
+  vlists.resize(numFeatures);
   QVector<int> currentvlist;
   QVector<bool> checked(totpoints, false);
   size_t count;
@@ -1688,8 +1694,8 @@ void InsertPrecipitatePhases::cleanup_features()
   DimType column, row, plane;
   int index;
   float minsize = 0;
-  gsizes.resize(m->getNumCellFeatureTuples());
-  for (size_t i = 1; i < m->getNumCellFeatureTuples(); i++)
+  gsizes.resize(numFeatures);
+  for (int64_t i = 1; i < numFeatures; i++)
   {
     gsizes[i] = 0;
     m_Active[i] = true;
@@ -1791,7 +1797,7 @@ void InsertPrecipitatePhases::cleanup_features()
   {
     if(m_FeatureIds[i] > 0) { gsizes[m_FeatureIds[i]]++; }
   }
-  for (size_t i = firstPrecipitateFeature; i < m->getNumCellFeatureTuples(); i++)
+  for (int64_t i = firstPrecipitateFeature; i < numFeatures; i++)
   {
     if(gsizes[i] == 0) { m_Active[i] = false; }
   }
@@ -1884,13 +1890,15 @@ void InsertPrecipitatePhases::write_goal_attributes()
     return;
   }
 
+  int64_t numFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+
   QTextStream dStream(&outFile);
 
   char space = ',';
   // Write the total number of features
-  dStream << static_cast<qint32>(m->getNumCellFeatureTuples() - firstPrecipitateFeature);
+  dStream << static_cast<qint32>(numFeatures - firstPrecipitateFeature);
   // Get all the names of the arrays from the Data Container
-  QList<QString> headers = m->getCellFeatureArrayNameList();
+  QList<QString> headers = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArrayNameList();
 
   QVector<IDataArray::Pointer> data;
 
@@ -1903,7 +1911,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
-    IDataArray::Pointer p = m->getCellFeatureData(*iter);
+    IDataArray::Pointer p = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
       if (p->GetNumberOfComponents() == 1)

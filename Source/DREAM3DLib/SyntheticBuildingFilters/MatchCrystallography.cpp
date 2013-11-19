@@ -63,6 +63,9 @@
 MatchCrystallography::MatchCrystallography() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -151,22 +154,22 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t featu
 
   QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, m_FeatureIds, -301, voxels, dims);
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dims)
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, m_CellEulerAngles, 0, voxels, dims);
 
   // Feature Data
   dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, -302, bool, BoolArrayType, features, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, float, FloatArrayType, 0, features, dims)
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, m_FeaturePhases, -301, features, dims);
+  m->getPrereqArray<bool, BoolArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, m_SurfaceFeatures, -301, features, dims);
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_VolumesArrayName, m_Volumes, 0, features, dims);
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, float, FloatArrayType, 0, features, dims)
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureEulerAnglesArrayName, m_FeatureEulerAngles, 0, features, dims);
   dims[0] = 4;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, float, FloatArrayType, 0, features, dims)
+  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgQuatsArrayName, m_AvgQuats, 0, features, dims);
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  if (NULL == m->getCellFeatureData(m_NeighborListArrayName).get())
+  if (NULL == m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(m_NeighborListArrayName).get())
   {
 
     QString ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
@@ -175,10 +178,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t featu
   }
   else
   {
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFeatureData(DREAM3D::FeatureData::NeighborList).get());
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
   }
 
-  if(NULL == m->getCellFeatureData(m_SharedSurfaceAreaListArrayName).get())
+  if(NULL == m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(m_SharedSurfaceAreaListArrayName).get())
   {
 
     QString ss = QObject::tr("'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
@@ -187,10 +190,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t featu
   }
   else
   {
-    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getCellFeatureData(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
+    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
   }
 
-  if(NULL == m->getCellEnsembleData(m_StatsDataArrayName).get())
+  if(NULL == m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(m_StatsDataArrayName).get())
   {
 
     QString ss = QObject::tr("'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
@@ -199,15 +202,15 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t featu
   }
   else
   {
-    m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(m_StatsDataArrayName).get());
+    m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(m_StatsDataArrayName).get());
   }
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -307, unsigned int, XTalStructArrayType, ensembles, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, -307, unsigned int, PhaseTypeArrayType, ensembles, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFeatures, -308, int32_t, Int32ArrayType, ensembles, dims)
+  m->getPrereqArray<unsigned int, XTalStructArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CrystalStructuresArrayName, m_CrystalStructures, -301, ensembles, dims);
+  m->getPrereqArray<unsigned int, PhaseTypeArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_PhaseTypesArrayName, m_PhaseTypes, -301, ensembles, dims);
+  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_NumFeaturesArrayName, m_NumFeatures, -301, ensembles, dims);
 }
 
 // -----------------------------------------------------------------------------
@@ -241,10 +244,10 @@ void MatchCrystallography::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  int totalFeatures = m->getNumCellFeatureTuples();
-  int numEnsembleTuples = m->getNumCellEnsembleTuples();
-  dataCheck(false, totalPoints, totalFeatures, numEnsembleTuples);
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -261,9 +264,7 @@ void MatchCrystallography::execute()
   notifyStatusMessage(ss);
   determine_boundary_areas();
 
-
-  size_t size = m->getNumCellEnsembleTuples();
-  for (size_t i = 1; i < size; ++i)
+  for (int64_t i = 1; i < totalEnsembles; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase ||  m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
@@ -344,16 +345,16 @@ void MatchCrystallography::determine_volumes()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t totalPoints = m->getNumCellTuples();
-  size_t totalFeatures = m->getNumCellFeatureTuples();
-  size_t totalEnsembles = m->getNumCellEnsembleTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
 
   unbiasedvol.resize(totalEnsembles);
-  for (size_t i = 1; i < totalFeatures; i++)
+  for (int64_t i = 1; i < totalFeatures; i++)
   {
     m_Volumes[i] = 0.0;
   }
-  for (size_t i = 0; i < totalPoints; i++)
+  for (int64_t i = 0; i < totalPoints; i++)
   {
     m_Volumes[m_FeatureIds[i]]++;
   }
@@ -378,8 +379,8 @@ void MatchCrystallography::determine_boundary_areas()
   NeighborList<int>& neighborlist = *m_NeighborList;
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
-  size_t totalFeatures = m->getNumCellFeatureTuples();
-  size_t totalEnsembles = m->getNumCellEnsembleTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
 
   m_TotalSurfaceArea.fill(0.0, totalEnsembles);
 
@@ -421,9 +422,9 @@ void MatchCrystallography::assign_eulers(int ensem)
   float random;
   int choose, phase;
 
-  int totalFeatures = m->getNumCellFeatureTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
 
-  for (int i = 1; i < totalFeatures; i++)
+  for (int64_t i = 1; i < totalFeatures; i++)
   {
     phase = m_FeaturePhases[i];
     if(phase == ensem)
@@ -534,8 +535,8 @@ void MatchCrystallography::matchCrystallography(int ensem)
   NeighborList<int>& neighborlist = *m_NeighborList;
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getNumCellFeatureTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
 
   DREAM3D_RANDOMNG_NEW()
   int numbins = 0;
@@ -554,8 +555,6 @@ void MatchCrystallography::matchCrystallography(int ensem)
   float totaldensity = 0, deltaerror = 0;
   float currentodferror = 0, currentmdferror = 0;
   size_t selectedfeature1 = 0, selectedfeature2 = 0;
-  //size_t numensembles = m->getNumCellEnsembleTuples();
-  size_t numfeatures = m->getNumCellFeatureTuples();
   iterations = 0;
   badtrycount = 0;
   if( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[ensem]) { numbins = 18 * 18 * 18; }
@@ -581,14 +580,14 @@ void MatchCrystallography::matchCrystallography(int ensem)
     if(random < 0.5) // SwapOutOrientation
     {
       counter = 0;
-      selectedfeature1 = int(rg.genrand_res53() * numfeatures);
-      while ((m_SurfaceFeatures[selectedfeature1] == true || m_FeaturePhases[selectedfeature1] != static_cast<int32_t>(ensem)) && counter < numfeatures)
+      selectedfeature1 = int(rg.genrand_res53() * totalFeatures);
+      while ((m_SurfaceFeatures[selectedfeature1] == true || m_FeaturePhases[selectedfeature1] != static_cast<int32_t>(ensem)) && counter < totalFeatures)
       {
-        if(selectedfeature1 >= numfeatures) { selectedfeature1 = selectedfeature1 - numfeatures; }
+        if(selectedfeature1 >= totalFeatures) { selectedfeature1 = selectedfeature1 - totalFeatures; }
         selectedfeature1++;
         counter++;
       }
-      if(counter == numfeatures)
+      if(counter == totalFeatures)
       {
         badtrycount = 10 * m_NumFeatures[ensem];
       }
@@ -657,28 +656,28 @@ void MatchCrystallography::matchCrystallography(int ensem)
     else // SwitchOrientation
     {
       counter = 0;
-      selectedfeature1 = int(rg.genrand_res53() * numfeatures);
-      while ((m_SurfaceFeatures[selectedfeature1] == true || m_FeaturePhases[selectedfeature1] != static_cast<int32_t>(ensem)) && counter < numfeatures)
+      selectedfeature1 = int(rg.genrand_res53() * totalFeatures);
+      while ((m_SurfaceFeatures[selectedfeature1] == true || m_FeaturePhases[selectedfeature1] != static_cast<int32_t>(ensem)) && counter < totalFeatures)
       {
-        if(selectedfeature1 >= numfeatures) { selectedfeature1 = selectedfeature1 - numfeatures; }
+        if(selectedfeature1 >= totalFeatures) { selectedfeature1 = selectedfeature1 - totalFeatures; }
         selectedfeature1++;
         counter++;
       }
-      if(counter == numfeatures)
+      if(counter == totalFeatures)
       {
         badtrycount = 10 * m_NumFeatures[ensem];
       }
       else
       {
         counter = 0;
-        selectedfeature2 = int(rg.genrand_res53() * numfeatures);
-        while ((m_SurfaceFeatures[selectedfeature2] == true || m_FeaturePhases[selectedfeature2] != static_cast<int32_t>(ensem) || selectedfeature2 == selectedfeature1) && counter < numfeatures)
+        selectedfeature2 = int(rg.genrand_res53() * totalFeatures);
+        while ((m_SurfaceFeatures[selectedfeature2] == true || m_FeaturePhases[selectedfeature2] != static_cast<int32_t>(ensem) || selectedfeature2 == selectedfeature1) && counter < totalFeatures)
         {
-          if(selectedfeature2 >= numfeatures) { selectedfeature2 = selectedfeature2 - numfeatures; }
+          if(selectedfeature2 >= totalFeatures) { selectedfeature2 = selectedfeature2 - totalFeatures; }
           selectedfeature2++;
           counter++;
         }
-        if(counter == numfeatures)
+        if(counter == totalFeatures)
         {
           badtrycount = 10 * m_NumFeatures[ensem];
         }
@@ -834,7 +833,9 @@ void MatchCrystallography::measure_misorientations(int ensem)
 
   unsigned int crys1;
   int mbin = 0;
-  size_t totalFeatures = m->getNumCellFeatureTuples();
+
+  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+
   //float threshold = 0.0f;
 
   m_MisorientationLists.resize(totalFeatures);

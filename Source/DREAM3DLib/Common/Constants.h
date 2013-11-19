@@ -299,6 +299,9 @@ namespace DREAM3D
     const DREAM3D_STRING BoundaryArea("BoundaryArea");
     const DREAM3D_STRING BoundaryStatsData("BoundaryStatsData");
     const DREAM3D_STRING CellNeighbors("CellNeighbors");
+    const DREAM3D_STRING CellAttributeMatrixName("CellData");
+    const DREAM3D_STRING CellFeatureAttributeMatrixName("CellFeatureData");
+    const DREAM3D_STRING CellEnsembleAttributeMatrixName("CellEnsembleData");
     const DREAM3D_STRING CellsContainingVert("CellsContainingVert");
     const DREAM3D_STRING CellsName("Cells");
     const DREAM3D_STRING CrystalStructure("CrystalStructure");
@@ -308,6 +311,9 @@ namespace DREAM3D
     const DREAM3D_STRING Dims("Dims");
     const DREAM3D_STRING DistributionType("Distribution Type");
     const DREAM3D_STRING EdgeDataContainerName("EdgeDataContainer");
+    const DREAM3D_STRING EdgeAttributeMatrixName("EdgeData");
+    const DREAM3D_STRING EdgeFeatureAttributeMatrixName("EdgeFeatureData");
+    const DREAM3D_STRING EdgeEnsembleAttributeMatrixName("EdgeEnsembleData");
     const DREAM3D_STRING EdgeNeighbors("EdgeNeighbors");
     const DREAM3D_STRING EdgesContainingVert("EdgesContainingVert");
     const DREAM3D_STRING EdgesName("Edges");
@@ -315,6 +321,9 @@ namespace DREAM3D
     const DREAM3D_STRING Euler2("Euler 2");
     const DREAM3D_STRING Euler3("Euler 3");
     const DREAM3D_STRING Exp_k("K");
+    const DREAM3D_STRING FaceAttributeMatrixName("FaceData");
+    const DREAM3D_STRING FaceFeatureAttributeMatrixName("FaceFeatureData");
+    const DREAM3D_STRING FaceEnsembleAttributeMatrixName("FaceEnsembleData");
     const DREAM3D_STRING FaceNeighbors("FaceNeighbors");
     const DREAM3D_STRING FacesContainingVert("FacesContainingVert");
     const DREAM3D_STRING FacesName("Faces");
@@ -361,6 +370,9 @@ namespace DREAM3D
     const DREAM3D_STRING TransformationStatsData("TransformationStatsData");
     const DREAM3D_STRING UnknownDistribution("Unknown Distribution");
     const DREAM3D_STRING VertexDataContainerName("VertexDataContainer");
+    const DREAM3D_STRING VertexAttributeMatrixName("VertexData");
+    const DREAM3D_STRING VertexFeatureAttributeMatrixName("VertexFeatureData");
+    const DREAM3D_STRING VertexEnsembleAttributeMatrixName("VertexEnsembleData");
     const DREAM3D_STRING VerticesName("Vertices");
     const DREAM3D_STRING VertsName("Verts");
     const DREAM3D_STRING VolumeDataContainerName("VolumeDataContainer");
