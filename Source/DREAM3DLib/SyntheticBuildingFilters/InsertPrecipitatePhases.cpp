@@ -641,7 +641,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
 
 
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(100 * ((numgrains - firstPrecipitateField) - 1));
+  int totalAdjustments = static_cast<int>(300 * ((numgrains - firstPrecipitateField) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
 
