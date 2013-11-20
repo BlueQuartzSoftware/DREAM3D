@@ -6,31 +6,36 @@ Filter Group (Filter Subgroup)
 
 
 ## Description ##
-This filter does the following...
+This filter will correlate one **Feature** with another **Feature** and bin the result.
 
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Field Array Name | String |
+| Feature Array To Fit | String | Feature to be fit to a distribution. |
+| Distribution Type | Choice | Choose from a lognormal, power and beta distribution. |
+| Array To Correlate With | String | Feature to correlate with the Selected Feature Array To Fit. |
+| Number Of Bins For Correlated Array | Integer | |
+| Remove Biased Features | Boolean | TRUE if biased features are to be omitted from the binning counts. |
 
 ## Required Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
-
+| Feature | BiasedFeatures | Boolean flag of 1 if **Feature** is biased or of 0 if it is not. | | Find Biased Features (Generic) |
+| Feature | SelectedFeature | | | |
+| Feature | Correlated Feature | | | |
 
 ## Created Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+| Ensemble | Statistics |  |  |
 
 
 
 ## Authors ##
 
-**Copyright** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright** 2013 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info** dream3d@bluequartz.net
 
