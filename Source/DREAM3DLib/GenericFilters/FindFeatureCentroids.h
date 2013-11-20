@@ -61,10 +61,8 @@ class DREAM3DLib_EXPORT FindFeatureCentroids : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-
+        //------ Created Feature Data
+    
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
 

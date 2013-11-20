@@ -67,8 +67,7 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdScalarName)
 
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Vtk File (STRUCTURED_POINTS) Feature Ids Only"; }

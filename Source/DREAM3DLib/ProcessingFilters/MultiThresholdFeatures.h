@@ -62,8 +62,7 @@ class DREAM3DLib_EXPORT MultiThresholdFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
-
+    
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, ComparisonInputs)
 
 
@@ -124,7 +123,7 @@ class DREAM3DLib_EXPORT MultiThresholdFeatures : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    bool* m_Output;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Output)
 
     MultiThresholdFeatures(const MultiThresholdFeatures&); // Copy Constructor Not Implemented
     void operator=(const MultiThresholdFeatures&); // Operator '=' Not Implemented

@@ -62,13 +62,9 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+            //------ Created Cell Data
+        //------ Required Ensemble Data
+    
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
@@ -95,9 +91,9 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    float* m_Quats;
-    float* m_CellEulerAngles;
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 

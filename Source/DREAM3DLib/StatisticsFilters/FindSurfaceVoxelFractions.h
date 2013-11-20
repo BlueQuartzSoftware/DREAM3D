@@ -66,11 +66,8 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelFractionsArrayName)
-
+            //------ Created Feature Data
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Surface Voxel Fractions"; }
@@ -99,7 +96,7 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
-    float* m_SurfaceVoxelFractions;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceVoxelFractions)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

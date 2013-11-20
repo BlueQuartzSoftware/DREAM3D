@@ -60,8 +60,7 @@ class DREAM3DLib_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
     virtual ~TriangleCentroidFilter();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleCentroidsArrayName)
-
+    
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
 
@@ -122,7 +121,7 @@ class DREAM3DLib_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    double* m_SurfaceMeshTriangleCentroids;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleCentroids)
 
     TriangleCentroidFilter(const TriangleCentroidFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleCentroidFilter&); // Operator '=' Not Implemented

@@ -70,10 +70,8 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-
+        //------ Created Feature Data
+    
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedFeatureSize)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

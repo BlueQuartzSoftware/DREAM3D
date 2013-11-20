@@ -70,15 +70,11 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
-   DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
+           //------ Required Ensemble Data
+        DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
     //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(avgMisorientationArrayName)
-
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighbor Misorientations"; }
@@ -110,13 +106,13 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    float* m_AvgQuats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_MisorientationList;
-    float* m_avgMisorientation;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, avgMisorientation)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

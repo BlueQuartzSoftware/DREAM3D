@@ -60,9 +60,7 @@ class DREAM3DLib_EXPORT FlattenImage : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FlatImageDataArrayName)
-
+        
 
     DREAM3D_INSTANCE_PROPERTY(uint32_t, FlattenMethod)
 
@@ -96,8 +94,8 @@ class DREAM3DLib_EXPORT FlattenImage : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    unsigned char* m_ImageData;
-    int32_t* m_FlatImageData;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned char, ImageData)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FlatImageData)
 
     FlattenImage(const FlattenImage&); // Copy Constructor Not Implemented
     void operator=(const FlattenImage&); // Operator '=' Not Implemented

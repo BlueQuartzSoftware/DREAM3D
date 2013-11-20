@@ -66,12 +66,8 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
     //------ Created Vertex Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumberOfArmsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NodeConstraintsArrayName)
-    //------ Created Edge Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(BurgersVectorsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SlipPlaneNormalsArrayName)
-
+            //------ Created Edge Data
+        
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read ParaDis File"; }
@@ -101,10 +97,10 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    int32_t* m_NumberOfArms;
-    int32_t* m_NodeConstraints;
-    float* m_BurgersVectors;
-    float* m_SlipPlaneNormals;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumberOfArms)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NodeConstraints)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, BurgersVectors)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SlipPlaneNormals)
     QFile  m_InStream;
 
     int numVerts;

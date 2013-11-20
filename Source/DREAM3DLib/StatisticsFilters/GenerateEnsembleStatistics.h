@@ -74,22 +74,9 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ (Possible) Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFeaturesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
-    //------ (Possible) Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-
+                                                //------ (Possible) Required Ensemble Data
+        DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
     virtual const QString getHumanLabel() { return "Generate Ensemble Statistics"; }
@@ -143,18 +130,18 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    float* m_AvgQuats;
-    float* m_FeatureEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    bool* m_BiasedFeatures;
-    bool* m_SurfaceFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
-    float* m_AspectRatios;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AspectRatios)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    int32_t* m_Neighborhoods;
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
 
     NeighborList<int>* m_NeighborList;

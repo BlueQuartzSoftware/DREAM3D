@@ -65,10 +65,7 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-
+            
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
@@ -98,7 +95,7 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    float*   m_CellEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
     unsigned int* m_CrystalStructures;
     StringDataArray::Pointer m_MaterialNames;
 

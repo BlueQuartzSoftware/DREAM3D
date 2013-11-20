@@ -66,8 +66,7 @@ class SaveImages : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ImagePrefix)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
     DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ColorsArrayName)
-
+    
     enum ImageFormatType
     {
       TifImageType = 0,

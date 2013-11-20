@@ -70,20 +70,12 @@ class DREAM3DLib_EXPORT FindFeatureReferenceMisorientations : public AbstractFil
 
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceMisorientationsArrayName)
-    //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureAvgMisorientationsArrayName)
-
+                    //------ Created Cell Data
+        //------ Required Feature Data
+        //------ Created Feature Data
+    
     //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Reference Misorientations"; }
@@ -120,13 +112,13 @@ class DREAM3DLib_EXPORT FindFeatureReferenceMisorientations : public AbstractFil
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    float* m_GBEuclideanDistances;
-    float* m_FeatureReferenceMisorientations;
-    float* m_AvgQuats;
-    float* m_FeatureAvgMisorientations;
-    float* m_Quats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceMisorientations)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureAvgMisorientations)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

@@ -61,16 +61,12 @@ class DREAM3DLib_EXPORT GenerateRodriguesColors : public AbstractFilter
     virtual ~GenerateRodriguesColors();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-
+    
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-
+    
     //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellRodriguesColorsArrayName)
-
+        //------ Created Cell Data
+    
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
 
@@ -132,9 +128,9 @@ class DREAM3DLib_EXPORT GenerateRodriguesColors : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    float* m_CellEulerAngles;
-    unsigned int* m_CrystalStructures;
-    uint8_t* m_CellRodriguesColors;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, CellRodriguesColors)
 
     GenerateRodriguesColors(const GenerateRodriguesColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateRodriguesColors&); // Operator '=' Not Implemented

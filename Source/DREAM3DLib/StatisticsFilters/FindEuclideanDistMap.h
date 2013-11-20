@@ -66,13 +66,8 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
-
+        //------ Created Cell Data
+                
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Euclidean Distance Map"; }
@@ -106,10 +101,10 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    int32_t* m_NearestNeighbors;
-    float* m_GBEuclideanDistances;
-    float* m_TJEuclideanDistances;
-    float* m_QPEuclideanDistances;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NearestNeighbors)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, TJEuclideanDistances)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, QPEuclideanDistances)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

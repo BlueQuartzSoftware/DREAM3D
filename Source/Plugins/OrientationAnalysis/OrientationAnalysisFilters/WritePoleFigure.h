@@ -66,11 +66,8 @@ class WritePoleFigure : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+            DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ImagePrefix)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)

@@ -62,8 +62,7 @@ class DREAM3DLib_EXPORT TriangleNormalFilter : public SurfaceMeshFilter
     virtual ~TriangleNormalFilter();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleNormalsArrayName)
-
+    
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
     /**
@@ -123,7 +122,7 @@ class DREAM3DLib_EXPORT TriangleNormalFilter : public SurfaceMeshFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    double* m_SurfaceMeshTriangleNormals;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleNormals)
 
     TriangleNormalFilter(const TriangleNormalFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleNormalFilter&); // Operator '=' Not Implemented

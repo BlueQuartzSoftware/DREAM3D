@@ -67,11 +67,7 @@ class DREAM3DLib_EXPORT GBCDTriangleDumper : public SurfaceMeshFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceAreasArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
-
+                
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
@@ -136,10 +132,10 @@ class DREAM3DLib_EXPORT GBCDTriangleDumper : public SurfaceMeshFilter
     void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    double* m_SurfaceMeshFaceAreas;
-    int32_t* m_SurfaceMeshFaceLabels;
-    double* m_SurfaceMeshFaceNormals;
-    float* m_FeatureEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceAreas)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceNormals)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
 
 
     GBCDTriangleDumper(const GBCDTriangleDumper&); // Copy Constructor Not Implemented

@@ -70,8 +70,7 @@ class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
   
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    
+        
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
@@ -98,7 +97,7 @@ class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
     bool* m_AlreadyChecked;
     int32_t* m_Neighbors;
 
-    bool* m_GoodVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     QVector<QVector<int> > voxellists;
     QVector<int> nuclei;

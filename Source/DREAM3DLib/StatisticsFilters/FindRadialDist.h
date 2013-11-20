@@ -66,12 +66,7 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
-
+                    
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -109,7 +104,7 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
-    bool* m_SurfaceFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
 
     float boundbox[7];
 

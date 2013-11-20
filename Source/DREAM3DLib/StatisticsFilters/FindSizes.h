@@ -66,12 +66,8 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-
+        //------ Created Feature Data
+            
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Sizes"; }

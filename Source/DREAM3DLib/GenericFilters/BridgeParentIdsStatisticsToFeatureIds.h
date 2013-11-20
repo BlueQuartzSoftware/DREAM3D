@@ -33,16 +33,12 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellParentIdsArrayName)
-    //------ Created Cell Data
+            //------ Created Cell Data
     //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureParentIdsArrayName)
-    //------ Created Feature Data
+        //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NumFeaturesPerParentArrayName)
     //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::MemoryManagementFilters;}
     virtual const QString getHumanLabel() { return "Bridge ParentIds Statistics To FeatureIds"; }
@@ -67,11 +63,11 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    int32_t* m_CellParentIds;
-    int32_t* m_FeatureParentIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
     int32_t* m_NumFeaturesPerParent;
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles, bool afterLink);

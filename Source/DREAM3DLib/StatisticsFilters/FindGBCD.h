@@ -66,15 +66,7 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceAreasArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GBCDdimensionsArrayName)
-    DREAM3D_INSTANCE_PROPERTY(float, GBCDRes)
+                                    DREAM3D_INSTANCE_PROPERTY(float, GBCDRes)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, GBCDArrayNames)
 
@@ -141,14 +133,14 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    double* m_SurfaceMeshFaceAreas;
-    int32_t* m_SurfaceMeshFaceLabels;
-    double* m_SurfaceMeshFaceNormals;
-    float* m_FeatureEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceAreas)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceNormals)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    unsigned int* m_CrystalStructures;
-    double* m_GBCD;
-    int32_t* m_GBCDdimensions;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, GBCD)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GBCDdimensions)
 
     FindGBCD(const FindGBCD&); // Copy Constructor Not Implemented
     void operator=(const FindGBCD&); // Operator '=' Not Implemented

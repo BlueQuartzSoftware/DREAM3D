@@ -60,8 +60,7 @@ class DREAM3DLib_EXPORT RotateEulerRefFrame : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-
+    
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, RotationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, RotationAngle)
 
@@ -94,7 +93,7 @@ class DREAM3DLib_EXPORT RotateEulerRefFrame : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    float* m_CellEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
 
     RotateEulerRefFrame(const RotateEulerRefFrame&); // Copy Constructor Not Implemented
     void operator=(const RotateEulerRefFrame&); // Operator '=' Not Implemented

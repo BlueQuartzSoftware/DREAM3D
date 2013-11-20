@@ -70,18 +70,11 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellParentIdsArrayName)
-    //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureParentIdsArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+        //------ Created Cell Data
+        //------ Required Feature Data
+            //------ Created Feature Data
+            //------ Required Ensemble Data
+    
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
@@ -114,14 +107,14 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    int32_t* m_CellParentIds;
-    int32_t* m_FeatureParentIds;
-    float* m_AvgQuats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     NeighborList<int>* m_NeighborList;
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     QVector<int> m_ParentNumbers;
     int numParents;

@@ -82,27 +82,10 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceMisorientationsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
-    //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureAvgMisorientationsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+                    //------ Required Cell Data
+                                //------ Required Feature Data
+                        //------ Required Ensemble Data
+    
     DREAM3D_INSTANCE_STRING_PROPERTY(DeformationStatisticsFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
 
@@ -137,22 +120,22 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    int32_t* m_NearestNeighbors;
-    float* m_FeatureReferenceMisorientations;
-    float* m_KernelAverageMisorientations;
-    float* m_AvgQuats;
-    float* m_F1;
-    float* m_F1spt;
-    float* m_F7;
-    float* m_mPrime;
-    float* m_FeatureAvgMisorientations;
-    int32_t* m_Poles;
-    float* m_Schmids;
-    float* m_GBEuclideanDistances;
-    float* m_TJEuclideanDistances;
-    float* m_QPEuclideanDistances;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NearestNeighbors)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceMisorientations)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, KernelAverageMisorientations)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, F1)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, F1spt)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, F7)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, mPrime)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureAvgMisorientations)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Poles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Schmids)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, TJEuclideanDistances)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, QPEuclideanDistances)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

@@ -71,13 +71,8 @@ class DREAM3DLib_EXPORT H5VoxelFileReader : public FileReader
    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    //------ Created Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-
+                //------ Created Ensemble Data
+        
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Legacy DREAM.3D H5Voxel File"; }
@@ -104,9 +99,9 @@ class DREAM3DLib_EXPORT H5VoxelFileReader : public FileReader
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    float* m_CellEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);

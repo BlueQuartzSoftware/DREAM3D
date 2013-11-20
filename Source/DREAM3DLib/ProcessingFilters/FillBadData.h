@@ -70,8 +70,7 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-
+    
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

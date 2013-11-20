@@ -67,14 +67,9 @@ class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+                //------ Created Cell Data
+        //------ Required Ensemble Data
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Kernel Average Misorientations"; }
@@ -109,10 +104,10 @@ class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    float* m_KernelAverageMisorientations;
-    float* m_Quats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, KernelAverageMisorientations)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

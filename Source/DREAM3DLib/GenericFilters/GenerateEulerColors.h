@@ -61,14 +61,10 @@ class DREAM3DLib_EXPORT GenerateEulerColors : public AbstractFilter
     virtual ~GenerateEulerColors();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+            //------ Required Ensemble Data
+    
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerColorsArrayName)
-
+    
 
 
     /**
@@ -129,9 +125,9 @@ class DREAM3DLib_EXPORT GenerateEulerColors : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    float* m_CellEulerAngles;
-    uint8_t* m_CellEulerColors;
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, CellEulerColors)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     GenerateEulerColors(const GenerateEulerColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateEulerColors&); // Operator '=' Not Implemented

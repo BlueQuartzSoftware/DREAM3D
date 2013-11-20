@@ -70,8 +70,7 @@ class DREAM3DLib_EXPORT NeighborCICorrelation : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
-
+    
     DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)
     DREAM3D_INSTANCE_PROPERTY(bool, Loop)
 
@@ -99,7 +98,7 @@ class DREAM3DLib_EXPORT NeighborCICorrelation : public AbstractFilter
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    float* m_ConfidenceIndex;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ConfidenceIndex)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

@@ -67,13 +67,9 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
+        //------ Created Cell Data
+        //------ Created Feature Data
+            DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
 
     /**
@@ -102,8 +98,8 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
-    bool* m_SurfaceFeatures;
-    int32_t* m_NumNeighbors;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumNeighbors)
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 

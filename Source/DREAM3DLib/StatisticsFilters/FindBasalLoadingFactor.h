@@ -34,14 +34,10 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-
+    
     //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(BasalLoadingFactorArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+            //------ Required Ensemble Data
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Basal Loading Factors"; }
@@ -73,11 +69,11 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
 //    HexagonalOps::Pointer m_HexOps;
 //    OrthoRhombicOps::Pointer m_OrthoOps;
 
-    float* m_BasalLoadingFactor;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, BasalLoadingFactor)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    float* m_AvgQuats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

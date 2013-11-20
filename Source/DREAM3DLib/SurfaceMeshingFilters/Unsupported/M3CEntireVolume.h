@@ -53,7 +53,7 @@
  * of memory needed considerably. The trade off is speed. The algorithm is fairly
  * quick but at the expense of a large resident memory size during and after execution.
  * Multiple material marching cubes algorithm, Ziji Wu1, John M. Sullivan Jr2, International Journal for Numerical Methods in Engineering
- * Special Issue: Trends in Unstructured Mesh Generation, Volume 58, Issue 2, pages 189–207, 14 September 2003
+ * Special Issue: Trends in Unstructured Mesh Generation, Volume 58, Issue 2, pages 189ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ207, 14 September 2003
  * @author
  * @date
  * @version 1.0
@@ -70,11 +70,9 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
     //------ Created Surface Mesh Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshInternalEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
-
+    
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //DREAM3D_INSTANCE_STRING_PROPERTY(VoxelCoordsArrayName)
+        //DREAM3D_INSTANCE_STRING_PROPERTY(VoxelCoordsArrayName)
 
     //--------- Input Parameters
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
@@ -135,8 +133,8 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    int32_t*  m_GrainIds;
-    int8_t*   m_SurfaceMeshNodeType;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GrainIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
 
     int createMesh();
 

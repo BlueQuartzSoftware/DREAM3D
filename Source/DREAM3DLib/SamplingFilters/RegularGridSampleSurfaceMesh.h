@@ -66,8 +66,7 @@ class DREAM3DLib_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
-   DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-
+   
     DREAM3D_INSTANCE_PROPERTY(int, XPoints)
     DREAM3D_INSTANCE_PROPERTY(int, YPoints)
     DREAM3D_INSTANCE_PROPERTY(int, ZPoints)

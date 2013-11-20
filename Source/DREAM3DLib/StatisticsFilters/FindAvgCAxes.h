@@ -71,10 +71,8 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
     
    //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgCAxesArrayName)
-
+        //------ Created Feature Data
+    
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
@@ -104,8 +102,8 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    float* m_Quats;
-    float* m_AvgCAxes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgCAxes)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

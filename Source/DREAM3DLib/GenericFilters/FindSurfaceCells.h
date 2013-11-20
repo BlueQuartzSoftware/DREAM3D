@@ -61,10 +61,8 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
-
+        //------ Created Cell Data
+    
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }

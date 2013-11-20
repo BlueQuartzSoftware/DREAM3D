@@ -70,12 +70,8 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+                //------ Required Ensemble Data
+    
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_INSTANCE_PROPERTY(int, NumberOfNeighbors)
 
@@ -107,10 +103,10 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    float* m_Quats;
-    bool* m_GoodVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

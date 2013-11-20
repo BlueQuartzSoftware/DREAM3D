@@ -70,15 +70,9 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SlipSystemsArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+        //------ Created Feature Data
+                    //------ Required Ensemble Data
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Schmid Factors"; }
@@ -110,13 +104,13 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    float* m_Schmids;
-    int32_t* m_Poles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Schmids)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Poles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    float* m_AvgQuats;
-    int32_t* m_SlipSystems;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SlipSystems)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

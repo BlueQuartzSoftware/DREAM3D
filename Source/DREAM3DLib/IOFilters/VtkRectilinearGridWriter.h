@@ -74,25 +74,8 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GlobAlphaArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(BCArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ImageQualityArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceRotationsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceMisorientationsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceCAxisMisorientationsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
-
+                                    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceRotationsArrayName)
+                                    
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteParentIds)
@@ -263,23 +246,23 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    int32_t* m_ParentIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, ParentIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    int32_t* m_BC;
-    int32_t* m_GlobAlpha;
-    float* m_ImageQuality;
-    float* m_ConfidenceIndex;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, BC)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GlobAlpha)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ImageQuality)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ConfidenceIndex)
     bool*    m_GoodVoxels;
-    float*   m_CellEulerAngles;
-    float*   m_GBEuclideanDistances;
-    float*   m_TJEuclideanDistances;
-    float*   m_QPEuclideanDistances;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, TJEuclideanDistances)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, QPEuclideanDistances)
     float*   m_FeatureReferenceRotations;
-    float*   m_FeatureReferenceMisorientations;
-    float*   m_FeatureReferenceCAxisMisorientations;
-    float*   m_KernelAverageMisorientations;
-    float*   m_EquivalentDiameters;
-    float*   m_Schmids;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceMisorientations)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceCAxisMisorientations)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, KernelAverageMisorientations)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Schmids)
 
 
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented

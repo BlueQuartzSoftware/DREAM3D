@@ -68,16 +68,10 @@ class DREAM3DLib_EXPORT SegmentBetaGrains : public SegmentGrains
     virtual ~SegmentBetaGrains();
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+                //------ Created Cell Data
+        //------ Created Feature Data
+        //------ Required Ensemble Data
+    
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
@@ -118,13 +112,13 @@ class DREAM3DLib_EXPORT SegmentBetaGrains : public SegmentGrains
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
 
-    int32_t* m_GrainIds;
-    float* m_Quats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GrainIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    bool* m_GoodVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     int check_for_burgers(float betaQuat[5], float alphaQuat[5]);
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);

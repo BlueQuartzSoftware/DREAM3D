@@ -6,7 +6,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QtDebug>
 #include <QtCore/QStringList>
-
+#include <QtCore/QDir>
+#include <QtCore/QDirIterator>
 
 
 // -----------------------------------------------------------------------------
@@ -27,6 +28,7 @@ void replaceText(QString hFile, QString cppFile)
 
   int index = cpp.indexOf("m->getPrereqArray<");
   int endIdx = 0;
+  bool doReplace = false;
   while (index > 0)
   {
     endIdx = cpp.indexOf(";", index);
@@ -41,19 +43,10 @@ void replaceText(QString hFile, QString cppFile)
     _type = _type.section('<', 1, 1);
     _type = _type.section(',', 0, 0);
     typeNames << _type;
-    qDebug() << sub;
+ //   qDebug() << sub;
 
     index = cpp.indexOf("m->getPrereqArray<", index + 1);
-  }
-
-
-  // Now open the header file and read that.
-  for (int i = 0; i < varNames.size(); ++i)
-  {
-    QString s = typeNames.at(i) + "* m_" + varNames.at(i);
-    index = header.indexOf(s, 0);
-    QString replace = "DEFINE_PTR_WEAKPTR_DATAARRAY(" + typeNames.at(i) + ", " + varNames.at(i) + ")";
-    header.replace(s, replace);
+    doReplace = true;
   }
 
 
@@ -73,22 +66,34 @@ void replaceText(QString hFile, QString cppFile)
     _type = _type.section('<', 1, 1);
     _type = _type.section(',', 0, 0);
     typeNames << _type;
-    qDebug() << sub;
+   // qDebug() << sub;
 
     index = cpp.indexOf("m->createNonPrereqArray<", index + 1);
+    doReplace = true;
   }
+  if (doReplace == false) { return; }
+
+  // Now open the header file and read that and do the replacements
+//  for (int i = 0; i < varNames.size(); ++i)
+//  {
+//    QString s = typeNames.at(i) + "* m_" + varNames.at(i) + ";";
+//    index = header.indexOf(s, 0);
+//    QString replace = "DEFINE_PTR_WEAKPTR_DATAARRAY(" + typeNames.at(i) + ", " + varNames.at(i) + ")";
+//    header.replace(s, replace);
+//  }
+
 
 
   // Now open the header file and read that.
   for (int i = 0; i < varNames.size(); ++i)
   {
-    QString s = typeNames.at(i) + "* m_" + varNames.at(i);
+    QString s = typeNames.at(i) + "*   m_" + varNames.at(i) + ";";
     index = header.indexOf(s, 0);
-    QString replace = "DEFINE_PTR_WEAKPTR_DATAARRAY(" + typeNames.at(i) + ", " + varNames.at(i) + ")\n";
+    QString replace = "DEFINE_PTR_WEAKPTR_DATAARRAY(" + typeNames.at(i) + ", " + varNames.at(i) + ")";
     header.replace(s, replace);
 
     //DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    s = "DREAM3D_INSTANCE_STRING_PROPERTY(" + varNames.at(i) + "ArrayName)";
+    s = "DREAM3D_INSTANCE_STRING_PROPERTY(" + varNames.at(i) + "ArrayName)\n";
     header.replace(s, "");
   }
 
@@ -96,11 +101,13 @@ void replaceText(QString hFile, QString cppFile)
   //// WRITE THE HEADER BACK OUT TO A FILE
   h.close();
   QFileInfo fi(hFile);
-  QFile hOut("/tmp/" + fi.fileName() );
+  QFile hOut(hFile);
   hOut.open(QFile::WriteOnly);
   QTextStream stream( &hOut );
-    stream << header;
-    hOut.close();
+  stream << header;
+  hOut.close();
+
+  qDebug() << "Saved File " << hFile;
 
 
 }
@@ -108,9 +115,27 @@ void replaceText(QString hFile, QString cppFile)
 
 
 
+void scanDirIter(QDir dir)
+{
+  QDirIterator iterator(dir.absolutePath(), QDirIterator::Subdirectories);
+  while (iterator.hasNext())
+  {
+    iterator.next();
+    if (!iterator.fileInfo().isDir())
+    {
+      QString filename = iterator.fileName();
+      if (filename.endsWith(".cpp") )
+      {
+        qDebug("Found %s matching pattern.", qPrintable(filename));
+        QFileInfo fi(iterator.filePath());
+        QString header = fi.path() + "/" + fi.baseName() + ".h";
+        QString source = iterator.filePath();
+        replaceText(header, source);
+      }
+    }
+  }
 
-
-
+}
 
 
 
@@ -119,7 +144,13 @@ int main(int argc, char *argv[])
 
   QString header = argv[1];
   QString source = argv[2];
-  replaceText(header, source);
+
+  scanDirIter(QString("/Users/mjackson/Workspace/DREAM3D_Rewrite/Source/Plugins"));
+
+
+
+
+  //replaceText(header, source);
 
   return 0;
 }

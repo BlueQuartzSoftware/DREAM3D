@@ -70,8 +70,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (Feature)"; }
@@ -102,7 +101,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
     virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
 
   private:
-    bool* m_GoodVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

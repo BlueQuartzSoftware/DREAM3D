@@ -68,8 +68,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-
+    
     DREAM3D_INSTANCE_PROPERTY(int, ReferenceSlice)
     DREAM3D_INSTANCE_PROPERTY(bool, UseReferenceSlice)
 
@@ -102,7 +101,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
     virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
 
   private:
-    bool* m_GoodVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

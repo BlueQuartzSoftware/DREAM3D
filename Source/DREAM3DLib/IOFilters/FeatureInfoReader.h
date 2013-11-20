@@ -64,13 +64,7 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
-   DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-
+                       
     /* Input Parameters */
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, CreateCellLevelArrays)
@@ -106,9 +100,9 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    float* m_CellEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    float* m_FeatureEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
     FeatureInfoReader(const FeatureInfoReader&); //Not Implemented

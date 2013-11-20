@@ -70,12 +70,8 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     virtual ~FindAxisODF();
 
     //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-
+                //------ Required Ensemble Data
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Axis ODF"; }
@@ -98,7 +94,7 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     FindAxisODF();
 
   private:
-    bool* m_SurfaceFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)

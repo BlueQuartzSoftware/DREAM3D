@@ -215,10 +215,13 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t featu
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   dims[0] = 1;
-  m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CrystalStructuresArrayName, -301, ensembles, dims);
-  m_PhaseTypes = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellAttributeMatrixName,  m_PhaseTypesArrayName, -301, ensembles, dims);
-  m_NumFeatures = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_NumFeaturesArrayName, -301, ensembles, dims);
-}
+  m_CrystalStructuresPtr = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CrystalStructuresArrayName, -301, ensembles, dims);
+  m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  m_PhaseTypesPtr = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_PhaseTypesArrayName, -301, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_PhaseTypes */
+  m_NumFeaturesPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_NumFeaturesArrayName, 0, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_NumFeatures */
+ }
 
 // -----------------------------------------------------------------------------
 //

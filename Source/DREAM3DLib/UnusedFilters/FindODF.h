@@ -70,14 +70,8 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     virtual ~FindODF();
 
     //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-
+                    //------ Required Ensemble Data
+        
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find ODF"; }
@@ -106,11 +100,11 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    float* m_FeatureEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    bool* m_SurfaceFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     StatsDataArray* m_StatsDataArray;
 

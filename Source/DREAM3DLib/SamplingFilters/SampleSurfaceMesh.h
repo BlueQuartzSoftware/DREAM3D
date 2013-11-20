@@ -64,8 +64,7 @@ class DREAM3DLib_EXPORT SampleSurfaceMesh : public AbstractFilter
     virtual ~SampleSurfaceMesh();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
-
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Sample Surface Mesh"; }
@@ -106,7 +105,7 @@ class DREAM3DLib_EXPORT SampleSurfaceMesh : public AbstractFilter
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    int32_t* m_SurfaceMeshFaceLabels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
 
     SampleSurfaceMesh(const SampleSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const SampleSurfaceMesh&); // Operator '=' Not Implemented

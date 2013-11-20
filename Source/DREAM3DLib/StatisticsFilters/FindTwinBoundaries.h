@@ -70,16 +70,9 @@ class DREAM3DLib_EXPORT FindTwinBoundaries : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTwinBoundaryArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTwinBoundaryIncoherenceArrayName)
-
+            //------ Required Ensemble Data
+    
+                
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
 
@@ -115,13 +108,13 @@ class DREAM3DLib_EXPORT FindTwinBoundaries : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    float* m_AvgQuats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    unsigned int* m_CrystalStructures;
-    int32_t* m_SurfaceMeshFaceLabels;
-    double* m_SurfaceMeshFaceNormals;
-    bool* m_SurfaceMeshTwinBoundary;
-    float* m_SurfaceMeshTwinBoundaryIncoherence;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceNormals)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceMeshTwinBoundary)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshTwinBoundaryIncoherence)
 
     void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles);

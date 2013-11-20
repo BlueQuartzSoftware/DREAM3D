@@ -60,8 +60,7 @@ class DREAM3DLib_EXPORT TriangleAreaFilter : public SurfaceMeshFilter
     virtual ~TriangleAreaFilter();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleAreasArrayName)
-
+    
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
 
@@ -122,7 +121,7 @@ class DREAM3DLib_EXPORT TriangleAreaFilter : public SurfaceMeshFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    double* m_SurfaceMeshTriangleAreas;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleAreas)
 
     TriangleAreaFilter(const TriangleAreaFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleAreaFilter&); // Operator '=' Not Implemented

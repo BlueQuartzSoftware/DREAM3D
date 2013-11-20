@@ -60,8 +60,7 @@ class DREAM3DLib_EXPORT TriangleDihedralAngleFilter : public SurfaceMeshFilter
     virtual ~TriangleDihedralAngleFilter();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleDihedralAnglesArrayName)
-
+    
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
 
@@ -122,7 +121,7 @@ class DREAM3DLib_EXPORT TriangleDihedralAngleFilter : public SurfaceMeshFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    double* m_SurfaceMeshTriangleDihedralAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleDihedralAngles)
 
     TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleDihedralAngleFilter&); // Operator '=' Not Implemented

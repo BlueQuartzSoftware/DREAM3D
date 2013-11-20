@@ -71,14 +71,8 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     virtual ~FindMDF();
 
     //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-
+                //------ Required Ensemble Data
+            
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find MDF"; }
@@ -110,14 +104,14 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    float* m_AvgQuats;
-    bool* m_SurfaceFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    float* m_TotalSurfaceAreas;
+   DEFINE_PTR_WEAKPTR_DATAARRAY( float, TotalSurfaceAreas)
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
 
     StatsDataArray* m_StatsDataArray;

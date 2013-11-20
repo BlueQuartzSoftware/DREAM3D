@@ -90,7 +90,7 @@
  * algorithm from small voxel volumes to very large voxel volumes.
  *
  * Multiple material marching cubes algorithm, Ziji Wu1, John M. Sullivan Jr2, International Journal for Numerical Methods in Engineering
- * Special Issue: Trends in Unstructured Mesh Generation, Volume 58, Issue 2, pages 189–207, 14 September 2003
+ * Special Issue: Trends in Unstructured Mesh Generation, Volume 58, Issue 2, pages 189ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ207, 14 September 2003
  * @author
  * @date
  * @version 1.0
@@ -108,9 +108,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
+            DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles)
 

@@ -60,8 +60,7 @@ class DREAM3DLib_EXPORT ConvertEulerAngles : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-
+    
 
     DREAM3D_INSTANCE_PROPERTY(uint32_t, ConversionType)
 
@@ -95,7 +94,7 @@ class DREAM3DLib_EXPORT ConvertEulerAngles : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    float* m_CellEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
 
     ConvertEulerAngles(const ConvertEulerAngles&); // Copy Constructor Not Implemented
     void operator=(const ConvertEulerAngles&); // Operator '=' Not Implemented

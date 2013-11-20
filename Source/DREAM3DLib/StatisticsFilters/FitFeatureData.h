@@ -33,8 +33,7 @@ class DREAM3DLib_EXPORT FitFeatureData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFeaturesArrayName)
-
+    
     DREAM3D_INSTANCE_PROPERTY(unsigned int, DistributionType)
     DREAM3D_INSTANCE_PROPERTY(bool, RemoveBiasedFeatures)
 
@@ -95,7 +94,7 @@ class DREAM3DLib_EXPORT FitFeatureData : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    bool* m_BiasedFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
 
     FitFeatureData(const FitFeatureData&); // Copy Constructor Not Implemented
     void operator=(const FitFeatureData&); // Operator '=' Not Implemented

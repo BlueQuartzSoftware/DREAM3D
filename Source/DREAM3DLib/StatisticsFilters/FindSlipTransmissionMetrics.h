@@ -88,11 +88,8 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
     //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+            //------ Required Ensemble Data
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Neighbor Slip Transmission Metrics"; }
@@ -127,13 +124,13 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    float* m_AvgQuats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     NeighborList<float>* m_F1;
     NeighborList<float>* m_F1spt;
     NeighborList<float>* m_F7;
     NeighborList<float>* m_mPrime;
     NeighborList<int>* m_NeighborList;
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

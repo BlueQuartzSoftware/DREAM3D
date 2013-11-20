@@ -69,23 +69,14 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellParentIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(MTRdensityArrayName)
-    //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ContiguousNeighborListArrayName)
+        //------ Created Cell Data
+            //------ Required Feature Data
+                DREAM3D_INSTANCE_STRING_PROPERTY(ContiguousNeighborListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NonContiguousNeighborListArrayName)
     //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureParentIdsArrayName)
-
+        
     //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
@@ -116,17 +107,17 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    int32_t* m_CellParentIds;
-    int32_t* m_FeatureParentIds;
-    float* m_MTRdensity;
-    float* m_AvgQuats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, MTRdensity)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     NeighborList<int>* m_ContiguousNeighborList;
     NeighborList<int>* m_NonContiguousNeighborList;
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
 
     std::vector<int> parentnumbers;

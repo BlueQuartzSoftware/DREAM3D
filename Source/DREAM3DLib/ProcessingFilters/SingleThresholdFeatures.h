@@ -62,8 +62,7 @@ class DREAM3DLib_EXPORT SingleThresholdFeatures : public AbstractFilter
    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
     //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
-
+    
     DREAM3D_INSTANCE_PROPERTY(int, ComparisonOperator)
     DREAM3D_INSTANCE_PROPERTY(double, ComparisonValue)
 
@@ -99,7 +98,7 @@ class DREAM3DLib_EXPORT SingleThresholdFeatures : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    bool* m_Output;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Output)
 
 
     SingleThresholdFeatures(const SingleThresholdFeatures&); // Copy Constructor Not Implemented

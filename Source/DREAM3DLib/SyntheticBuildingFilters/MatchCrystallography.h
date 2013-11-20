@@ -143,7 +143,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     // Cell Data
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    float*   m_CellEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
 
     // Feature Data
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)

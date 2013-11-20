@@ -82,17 +82,9 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshF1sArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshF1sptsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshF7sArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshmPrimesArrayName)
-
+            //------ Required Ensemble Data
+    
+                    
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Loading)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -129,14 +121,14 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    float* m_AvgQuats;
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
-    int32_t* m_SurfaceMeshFaceLabels;
-    float* m_SurfaceMeshF1s;
-    float* m_SurfaceMeshF1spts;
-    float* m_SurfaceMeshF7s;
-    float* m_SurfaceMeshmPrimes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshF1s)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshF1spts)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshF7s)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshmPrimes)
 
     void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles);

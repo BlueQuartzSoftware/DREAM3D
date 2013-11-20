@@ -66,10 +66,8 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
     virtual ~AdjustVolume();
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-
+        //------ Created Feature Data
+    
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
@@ -97,8 +95,8 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
     AdjustVolume();
 
   private:
-    int32_t* m_GrainIds;
-    float*   m_EquivalentDiameters;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GrainIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
     QVector<int> gsizes;
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);

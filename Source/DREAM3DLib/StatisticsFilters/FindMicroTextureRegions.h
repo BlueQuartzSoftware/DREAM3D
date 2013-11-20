@@ -31,11 +31,8 @@ class DREAM3DLib_EXPORT FindMicroTextureRegions : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(MicroTextureRegionNumCellsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(MicroTextureRegionFractionOccupiedArrayName)
-    //------ Required Feature Data
+        //------ Created Feature Data
+            //------ Required Feature Data
     //------ Required Ensemble Data
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -64,8 +61,8 @@ class DREAM3DLib_EXPORT FindMicroTextureRegions : public AbstractFilter
 
 
   private:
-    int32_t* m_MicroTextureRegionNumCells;
-    float* m_MicroTextureRegionFractionOccupied;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, MicroTextureRegionNumCells)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, MicroTextureRegionFractionOccupied)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);

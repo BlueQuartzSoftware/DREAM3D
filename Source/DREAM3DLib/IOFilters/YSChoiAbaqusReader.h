@@ -58,16 +58,9 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFeatureInfoFile)
 
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    //------ Created Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+                        //------ Created Feature Data
+        //------ Created Ensemble Data
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
@@ -91,12 +84,12 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    bool* m_SurfaceFeatures;
-    float* m_Quats;
-    float* m_AvgQuats;
-    float* m_CellEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

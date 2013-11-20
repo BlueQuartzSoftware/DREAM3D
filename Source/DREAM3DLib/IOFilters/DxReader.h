@@ -69,8 +69,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-
+    
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Dx File (Feature Ids)"; }

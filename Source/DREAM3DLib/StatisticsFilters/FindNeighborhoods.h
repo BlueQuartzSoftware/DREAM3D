@@ -68,12 +68,8 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
    //------ Required Cell Data
 
     //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodListArrayName)
+                //------ Created Feature Data
+        DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MultiplesOfAverage)
@@ -111,7 +107,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    int32_t* m_Neighborhoods;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
     NeighborList<int>* m_NeighborhoodList;
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);

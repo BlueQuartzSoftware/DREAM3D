@@ -70,16 +70,10 @@ class DREAM3DLib_EXPORT CAxisSegmentFeatures : public SegmentFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+                //------ Created Cell Data
+        //------ Created Feature Data
+        //------ Required Ensemble Data
+    
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
@@ -117,12 +111,12 @@ class DREAM3DLib_EXPORT CAxisSegmentFeatures : public SegmentFeatures
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    float* m_Quats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    bool* m_GoodVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

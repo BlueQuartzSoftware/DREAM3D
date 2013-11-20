@@ -63,8 +63,7 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
-   DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-
+   
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed

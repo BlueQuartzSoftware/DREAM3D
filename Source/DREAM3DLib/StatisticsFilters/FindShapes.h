@@ -67,16 +67,9 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
-
+        //------ Required Feature Data
+        //------ Created Feature Data
+                    
     DREAM3D_DECLARE_ARRAY(double, featuremoments, FeatureMoments) // N x 6 Array
     DREAM3D_DECLARE_ARRAY(double, featureeigenvals, FeatureEigenVals) // N x 3 Array
 
@@ -126,7 +119,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisLengths)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    float* m_AspectRatios;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AspectRatios)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

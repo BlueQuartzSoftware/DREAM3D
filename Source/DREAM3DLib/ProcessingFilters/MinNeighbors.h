@@ -70,12 +70,9 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-
+        //------ Required Feature Data
+        //------ Created Feature Data
+    
     DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
@@ -107,7 +104,7 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
     int32_t* m_Neighbors;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    int32_t* m_NumNeighbors;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumNeighbors)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);

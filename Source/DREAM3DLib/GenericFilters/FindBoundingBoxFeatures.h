@@ -66,11 +66,8 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFeaturesArrayName)
-
+            //------ Created Feature Data
+    
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
@@ -99,8 +96,8 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
-    bool* m_SurfaceFeatures;
-    bool* m_BiasedFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
   

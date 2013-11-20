@@ -69,8 +69,7 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConnectivity : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
-
+    
 //   NodeTrianglesMap_t& getNode2TriangleMap();
 
     /**
@@ -130,7 +129,7 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConnectivity : public AbstractFilter
 
   private:
 //   int32_t* m_SurfaceMeshUniqueEdges;
-    int32_t* m_SurfaceMeshTriangleEdges;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshTriangleEdges)
 
 
     /**

@@ -70,12 +70,8 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
+                //------ Required Ensemble Data
+    
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -103,11 +99,11 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
     virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
 
   private:
-    float* m_Quats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    bool* m_GoodVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 

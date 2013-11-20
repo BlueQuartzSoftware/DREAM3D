@@ -63,11 +63,7 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     virtual ~PerPhaseMinSize();
 
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-
+                
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

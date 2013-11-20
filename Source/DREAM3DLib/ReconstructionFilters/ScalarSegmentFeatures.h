@@ -74,10 +74,8 @@ class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
    //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ScalarArrayName)
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-
+        //------ Created Feature Data
+    
     DREAM3D_INSTANCE_PROPERTY(float, ScalarTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
@@ -113,7 +111,7 @@ class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
   private:
     IDataArray::Pointer m_InputData;
 
-    int32_t*  m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     bool*     m_Active;
     CompareFunctor* m_Compare;
 
