@@ -215,9 +215,9 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t featu
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   dims[0] = 1;
-  m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CrystalStructuresArrayName, m_CrystalStructures, -301, ensembles, dims);
-  m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellAttributeMatrixName,  m_PhaseTypesArrayName, m_PhaseTypes, -301, ensembles, dims);
-  m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_NumFeaturesArrayName, m_NumFeatures, -301, ensembles, dims);
+  m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CrystalStructuresArrayName, -301, ensembles, dims);
+  m_PhaseTypes = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellAttributeMatrixName,  m_PhaseTypesArrayName, -301, ensembles, dims);
+  m_NumFeatures = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_NumFeaturesArrayName, -301, ensembles, dims);
 }
 
 // -----------------------------------------------------------------------------

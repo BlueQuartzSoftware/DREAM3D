@@ -64,9 +64,9 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     //------ Created Cell Data
-//    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+//    
+//    
+//    
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
 

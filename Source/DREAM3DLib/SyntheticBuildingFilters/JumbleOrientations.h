@@ -73,14 +73,14 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    
     //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
+    
     //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
+    
+    
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
@@ -112,8 +112,8 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
 
     // Feature Data
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    float* m_FeatureEulerAngles;
-    float* m_AvgQuats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

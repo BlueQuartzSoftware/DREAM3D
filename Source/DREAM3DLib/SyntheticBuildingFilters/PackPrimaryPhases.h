@@ -84,21 +84,21 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    
+    
     //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
+    
+    
 
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
@@ -176,7 +176,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     // Feature Data - make sure these are all initialized to NULL in the constructor
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    int32_t* m_Neighborhoods;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisLengths)

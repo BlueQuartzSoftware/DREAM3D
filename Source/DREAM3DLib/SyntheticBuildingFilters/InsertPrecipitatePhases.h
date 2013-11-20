@@ -87,25 +87,25 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
+    
+    
+    
     //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+    
+    
+    
+    
+    
     DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+    
+    
+    
+    
     //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
+    
+    
     //------ Created Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumFeaturesArrayName)
+    
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)

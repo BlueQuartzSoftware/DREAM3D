@@ -78,20 +78,20 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    
     //------ Required Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
+    
+    
     //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+    
+    
+    
     //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumFeaturesArrayName)
+    
+    
+    
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(StatsDataArrayName)
@@ -146,16 +146,16 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     float*   m_CellEulerAngles;
 
     // Feature Data
-    bool* m_SurfaceFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    float* m_FeatureEulerAngles;
-    float* m_AvgQuats;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 
     //Ensemble Data
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeatures)
     StatsDataArray* m_StatsDataArray;

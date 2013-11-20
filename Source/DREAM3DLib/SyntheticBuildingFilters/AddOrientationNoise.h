@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    
 
     DREAM3D_INSTANCE_PROPERTY(float, Magnitude)
 
@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
     void add_orientation_noise();
 
   private:
-    float* m_CellEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
