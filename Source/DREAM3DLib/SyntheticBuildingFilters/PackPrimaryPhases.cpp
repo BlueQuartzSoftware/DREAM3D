@@ -364,27 +364,27 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t features
 
   QVector<int> dims(1, 1);
   //Cell Data
-  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, m_FeatureIds, -301, voxels, dims);
-  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, m_CellPhases, -301, voxels, dims);
+  m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -301, voxels, dims);
+  m_CellPhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -301, voxels, dims);
 
   //Feature Data
-  m->createNonPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, m_FeaturePhases, 0, features, dims);
-  m->createNonPrereqArray<bool, BoolArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_ActiveArrayName, m_Active, 0, features, dims);
-  m->createNonPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_NeighborhoodsArrayName, m_Neighborhoods, 0, features, dims);
-  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, m_EquivalentDiameters, 0, features, dims);
-  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_VolumesArrayName, m_Volumes, 0, features, dims);
-  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_Omega3sArrayName, m_Omega3s, 0, features, dims);
+  m_FeaturePhases = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, 0, features, dims);
+  m_Active = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_ActiveArrayName, 0, features, dims);
+  m_Neighborhoods = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_NeighborhoodsArrayName, 0, features, dims);
+  m_EquivalentDiameters = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, 0, features, dims);
+  m_Volumes = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_VolumesArrayName, 0, features, dims);
+  m_Omega3s = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_Omega3sArrayName, 0, features, dims);
   dims[0] = 3;
-  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, m_Centroids, 0, features, dims);
-  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AxisEulerAnglesArrayName, m_AxisEulerAngles, 0, features, dims);
-  m->createNonPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AxisLengthsArrayName, m_AxisLengths, 0, features, dims);
+  m_Centroids = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, 0, features, dims);
+  m_AxisEulerAngles = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AxisEulerAnglesArrayName, 0, features, dims);
+  m_AxisLengths = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AxisLengthsArrayName, 0, features, dims);
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   dims[0] = 1;
-  m->getPrereqArray<unsigned int, PhaseTypeArrayType, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_PhaseTypesArrayName, m_PhaseTypes, -301, ensembles, dims);
-  m->getPrereqArray<unsigned int, PhaseTypeArrayType, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_ShapeTypesArrayName, m_ShapeTypes, -301, ensembles, dims);
+  m_PhaseTypes = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_PhaseTypesArrayName, -301, ensembles, dims);
+  m_ShapeTypes = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_ShapeTypesArrayName, -301, ensembles, dims);
 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
@@ -1640,8 +1640,8 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         if(plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
         int currentFeatureOwner = featureOwners[featureOwnersIdx];
-        if(exclusionZones[featureOwnersIdx] == true) multiplier = 2.0; 
-        if(efl[i] > 0.1) exclusionZones[featureOwnersIdx] = true; 
+        if(exclusionZones[featureOwnersIdx] == true) multiplier = 2.0;
+        if(efl[i] > 0.1) exclusionZones[featureOwnersIdx] = true;
         fillingerror = fillingerror + (multiplier*(k1 * currentFeatureOwner  + k2));
         featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
         packquality = packquality + ((currentFeatureOwner) * (currentFeatureOwner));
@@ -1652,8 +1652,8 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         {
           featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
           int currentFeatureOwner = featureOwners[featureOwnersIdx];
-          if(exclusionZones[featureOwnersIdx] == true) multiplier = 2.0; 
-          if(efl[i] > 0.1) exclusionZones[featureOwnersIdx] = true; 
+          if(exclusionZones[featureOwnersIdx] == true) multiplier = 2.0;
+          if(efl[i] > 0.1) exclusionZones[featureOwnersIdx] = true;
           fillingerror = fillingerror + (multiplier*(k1 * currentFeatureOwner  + k2));
           featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
           packquality = packquality + ((currentFeatureOwner) * (currentFeatureOwner));
@@ -1688,8 +1688,8 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         if(plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
         int currentFeatureOwner = featureOwners[featureOwnersIdx];
-        if(exclusionZones[featureOwnersIdx] == true && currentFeatureOwner > 1) multiplier = 2.0; 
-        if(efl[i] > 0.1 && featureOwners[featureOwnersIdx] == 1) exclusionZones[featureOwnersIdx] = false; 
+        if(exclusionZones[featureOwnersIdx] == true && currentFeatureOwner > 1) multiplier = 2.0;
+        if(efl[i] > 0.1 && featureOwners[featureOwnersIdx] == 1) exclusionZones[featureOwnersIdx] = false;
         fillingerror = fillingerror + (multiplier*(k1 * currentFeatureOwner  + k2));
         featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
       }
@@ -1699,8 +1699,8 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         {
           featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
           int currentFeatureOwner = featureOwners[featureOwnersIdx];
-          if(exclusionZones[featureOwnersIdx] == true && currentFeatureOwner > 1) multiplier = 2.0; 
-          if(efl[i] > 0.1 && featureOwners[featureOwnersIdx] == 1) exclusionZones[featureOwnersIdx] = false; 
+          if(exclusionZones[featureOwnersIdx] == true && currentFeatureOwner > 1) multiplier = 2.0;
+          if(efl[i] > 0.1 && featureOwners[featureOwnersIdx] == 1) exclusionZones[featureOwnersIdx] = false;
           fillingerror = fillingerror + (multiplier*(k1 * currentFeatureOwner  + k2));
           featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
         }
