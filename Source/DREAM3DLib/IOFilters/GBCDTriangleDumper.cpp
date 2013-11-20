@@ -163,7 +163,7 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fe
     return;
   }
   QVector<int> dims(1, 3);
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, -301, float, FloatArrayType, features, dims)
+  m_FeatureEulerAngles = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureEulerAnglesArrayName, -301, features, dims);
 }
 
 // -----------------------------------------------------------------------------

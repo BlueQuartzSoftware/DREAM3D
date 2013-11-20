@@ -116,9 +116,9 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
     if(preflight == true) { find_grainphases->preflight(); }
     if(preflight == false) { find_grainphases->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, FeatureData, FeaturePhases, -301, int32_t, Int32ArrayType, features, 1)
+  m_FeaturePhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -301, features, 1);
 
-  GET_PREREQ_DATA(m, DREAM3D, FeatureData, FeatureEulerAngles, -302, float, FloatArrayType, features, 3)
+  m_FeatureEulerAngles = m->getPrereqArray<float, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_FeatureEulerAnglesArrayName, -302, features, 3);
 
   TEST_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, err, -303, bool, BoolArrayType, features, 1)
   if(err == -303)
@@ -130,15 +130,15 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
     if(preflight == true) { find_surfacefeatures->preflight(); }
     if(preflight == false) { find_surfacefeatures->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, -303, bool, BoolArrayType, features, 1)
+  m_SurfaceFeatures = m->getPrereqArray<bool, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -303, features, 1);
 
 
-  GET_PREREQ_DATA(m, DREAM3D, FeatureData, Volumes, -304, float, FloatArrayType, features, 1)
+  m_Volumes = m->getPrereqArray<float, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_VolumesArrayName, -304, features, 1);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -305, ensembles, 1);
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
+  m_PhaseTypes = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_PhaseTypesArrayName, -307, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {

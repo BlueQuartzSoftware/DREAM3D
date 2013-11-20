@@ -111,7 +111,7 @@ void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t features, s
     return;
   }
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -301, bool, BoolArrayType, voxels, dims)
+  m_GoodVoxels = m->getPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -301, voxels, dims);
 }
 
 

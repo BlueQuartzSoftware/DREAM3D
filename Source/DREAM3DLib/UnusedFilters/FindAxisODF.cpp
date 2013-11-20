@@ -95,7 +95,7 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t features, size
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, FeatureData, AxisEulerAngles, -301, float, FloatArrayType, features, 3)
+  m_AxisEulerAngles = m->getPrereqArray<float, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_AxisEulerAnglesArrayName, -301, features, 3);
 
   TEST_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, err, -302, bool, BoolArrayType, features, 1)
   if(err == -302)
@@ -107,7 +107,7 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t features, size
     if(preflight == true) { find_surfacefeatures->preflight(); }
     if(preflight == false) { find_surfacefeatures->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, -302, bool, BoolArrayType, features, 1)
+  m_SurfaceFeatures = m->getPrereqArray<bool, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, 1);
 
   err = 0;
   TEST_PREREQ_DATA(m, DREAM3D, FeatureData, FeaturePhases, err, -303, int32_t, Int32ArrayType, features, 1)
@@ -120,10 +120,10 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t features, size
     if(preflight == true) { find_grainphases->preflight(); }
     if(preflight == false) { find_grainphases->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, FeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, 1)
+  m_FeaturePhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -303, features, 1);
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
+  m_PhaseTypes = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_PhaseTypesArrayName, -307, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {

@@ -89,14 +89,14 @@ void BridgeParentIdsStatisticsToFeatureIds::dataCheck(bool preflight, size_t vox
   // Cell Data
 
   QVector<int> dims(1 ,1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, -304, int32_t, Int32ArrayType, voxels, dims)
+  m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -301, voxels, dims);
+  m_CellParentIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellParentIdsArrayName, -304, voxels, dims);
 
   // Feature Data
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureParentIds, -302, int32_t, Int32ArrayType, features, dims)
+  m_FeatureParentIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureParentIdsArrayName, -302, features, dims);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
+  m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -305, ensembles, dims);
 }
 
 // -----------------------------------------------------------------------------

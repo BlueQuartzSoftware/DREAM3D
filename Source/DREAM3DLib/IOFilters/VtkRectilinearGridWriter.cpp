@@ -366,72 +366,72 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   QVector<int> dims(1, 1);
   if(m_WriteFeatureIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
+    m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -301, voxels, dims);
   }
   if(m_WriteParentIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, -301, int32_t, Int32ArrayType, voxels, dims)
+    m_ParentIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ParentIdsArrayName, -301, voxels, dims);
   }
   if(m_WritePhaseIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, dims)
+    m_CellPhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -302, voxels, dims);
   }
   if(m_WriteGoodVoxels == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, dims)
+    m_GoodVoxels = m->getPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -303, voxels, dims);
   }
   if(m_WriteGlobAlpha == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, -303, int32_t, Int32ArrayType, voxels, dims)
+    m_GlobAlpha = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GlobAlphaArrayName, -303, voxels, dims);
   }
   if(m_WriteKernelAverageMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -303, float, FloatArrayType, voxels, dims)
+    m_KernelAverageMisorientations = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_KernelAverageMisorientationsArrayName, -303, voxels, dims);
   }
   if(m_WriteFeatureReferenceMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureReferenceMisorientations, -303, float, FloatArrayType, voxels, dims)
+    m_FeatureReferenceMisorientations = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureReferenceMisorientationsArrayName, -303, voxels, dims);
   }
   if(m_WriteFeatureReferenceCAxisMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureReferenceCAxisMisorientations, -303, float, FloatArrayType, voxels, dims)
+    m_FeatureReferenceCAxisMisorientations = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureReferenceCAxisMisorientationsArrayName, -303, voxels, dims);
   }
   if(m_WriteBandContrasts == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, BC, -304, int32_t, Int32ArrayType, voxels, dims)
+    m_BC = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_BCArrayName, -304, voxels, dims);
   }
   if(m_WriteConfidenceIndicies == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -304, float, FloatArrayType, voxels, dims)
+    m_ConfidenceIndex = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ConfidenceIndexArrayName, -304, voxels, dims);
   }
   if(m_WriteImageQualities == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageQuality, -304, float, FloatArrayType, voxels, dims)
+    m_ImageQuality = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ImageQualityArrayName, -304, voxels, dims);
   }
   if(m_WriteGBEuclideanDistanceMap == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -305, float, FloatArrayType, voxels, dims)
+    m_GBEuclideanDistances = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GBEuclideanDistancesArrayName, -305, voxels, dims);
   }
   if(m_WriteTJEuclideanDistanceMap == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, -305, float, FloatArrayType, voxels, dims)
+    m_TJEuclideanDistances = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_TJEuclideanDistancesArrayName, -305, voxels, dims);
   }
   if(m_WriteQPEuclideanDistanceMap == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, -305, float, FloatArrayType, voxels, dims)
+    m_QPEuclideanDistances = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QPEuclideanDistancesArrayName, -305, voxels, dims);
   }
   if(m_WriteSchmidFactors == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Schmids, -305, float, FloatArrayType, features, dims)
+    m_Schmids = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SchmidsArrayName, -305, features, dims);
   }
   if(m_WriteFeatureSizes == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, -305, float, FloatArrayType, features, dims)
+    m_EquivalentDiameters = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, -305, features, dims);
   }
   if(m_WriteEulerAngles == true)
   {
     dims[0] = 3;
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -305, float, FloatArrayType, voxels, dims)
+    m_CellEulerAngles = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -305, voxels, dims);
   }
 }
 

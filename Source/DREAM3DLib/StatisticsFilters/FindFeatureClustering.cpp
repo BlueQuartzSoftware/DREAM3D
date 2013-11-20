@@ -102,11 +102,11 @@ void FindFeatureClustering::dataCheck(bool preflight, size_t voxels, size_t feat
   }
 
   QVector<int> dims(1,1);
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, -302, float, FloatArrayType, features, dims)
+  m_EquivalentDiameters = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, -302, features, dims);
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -304, int32_t, Int32ArrayType, features, dims)
+  m_FeaturePhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -304, features, dims);
   dims[0] = 3;
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, -305, float, FloatArrayType, features, dims)
+  m_Centroids = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, -305, features, dims);
 }
 
 

@@ -177,17 +177,17 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MTRdensity, float, FloatArrayType, 0, voxels, dims)
 
   // Feature Data
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, dims)
+  m_FeaturePhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -303, features, dims);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, true, features, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureParentIds, int32_t, Int32ArrayType, 0, features, dims)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, float, FloatArrayType, 0, features, dims)
   dims[0] = 4;
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -302, float, FloatArrayType, features, dims)
+  m_AvgQuats = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgQuatsArrayName, -302, features, dims);
 
   // Ensemble Data
   dims[0] = 1;
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
+  m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -305, ensembles, dims);
 
   if(m_UseNonContiguousNeighbors == false)
   {

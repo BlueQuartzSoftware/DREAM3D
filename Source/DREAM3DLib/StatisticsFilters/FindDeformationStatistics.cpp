@@ -149,32 +149,32 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -300, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, FeatureReferenceMisorientations, -300, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -300, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, -300, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, -300, float, FloatArrayType, voxels, dims)
+  m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims);
+  m_KernelAverageMisorientations = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_KernelAverageMisorientationsArrayName, -300, voxels, dims);
+  m_FeatureReferenceMisorientations = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureReferenceMisorientationsArrayName, -300, voxels, dims);
+  m_GBEuclideanDistances = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GBEuclideanDistancesArrayName, -300, voxels, dims);
+  m_TJEuclideanDistances = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_TJEuclideanDistancesArrayName, -300, voxels, dims);
+  m_QPEuclideanDistances = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QPEuclideanDistancesArrayName, -300, voxels, dims);
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Schmids, -305, float, FloatArrayType, features, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -302, int32_t, Int32ArrayType, features, dims)
+  m_Schmids = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SchmidsArrayName, -305, features, dims);
+  m_FeaturePhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -302, features, dims);
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureAvgMisorientations, -306, float, FloatArrayType, features, dims)
+  m_FeatureAvgMisorientations = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureAvgMisorientationsArrayName, -306, features, dims);
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, F1, -307, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, F1spt, -308, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, F7, -309, float, FloatArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, mPrime, -310, float, FloatArrayType, voxels, dims)
+  m_F1 = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_F1ArrayName, -307, voxels, dims);
+  m_F1spt = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_F1sptArrayName, -308, voxels, dims);
+  m_F7 = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_F7ArrayName, -309, voxels, dims);
+  m_mPrime = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_mPrimeArrayName, -310, voxels, dims);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
+  m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -305, ensembles, dims);
 
   dims[0] = 3;
-  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, -300, int32_t, Int32ArrayType, voxels, dims)
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Poles, -306, int32_t, Int32ArrayType, features, dims)
+  m_NearestNeighbors = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_NearestNeighborsArrayName, -300, voxels, dims);
+  m_Poles = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_PolesArrayName, -306, features, dims);
 
   dims[0] = 4;
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -301, float, FloatArrayType, features, dims)
+  m_AvgQuats = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgQuatsArrayName, -301, features, dims);
 }
 
 // -----------------------------------------------------------------------------

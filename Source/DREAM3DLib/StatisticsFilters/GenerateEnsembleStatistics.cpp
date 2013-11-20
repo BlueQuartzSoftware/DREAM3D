@@ -164,32 +164,32 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, dims)
+  m_FeaturePhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -303, features, dims);
 
   if(m_SizeDistribution == true || m_Omega3Distribution == true
       || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, BiasedFeatures, -302, bool, BoolArrayType, features, dims)
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, EquivalentDiameters, -302, float, FloatArrayType, features, dims)
+    m_BiasedFeatures = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, -302, features, dims);
+    m_EquivalentDiameters = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, -302, features, dims);
   }
   if(m_NeighborhoodDistribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Neighborhoods, -304, int32_t, Int32ArrayType, features, dims)
+    m_Neighborhoods = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_NeighborhoodsArrayName, -304, features, dims);
   }
   if(m_AspectRatioDistribution == true)
   {
     dims[0] = 2;
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AspectRatios, -307, float, FloatArrayType, features, dims)
+    m_AspectRatios = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AspectRatiosArrayName, -307, features, dims);
   }
   if(m_Omega3Distribution == true)
   {
     dims[0] = 1;
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Omega3s, -306, float, FloatArrayType, features, dims)
+    m_Omega3s = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_Omega3sArrayName, -306, features, dims);
   }
   if(m_CalculateAxisODF == true)
   {
     dims[0] = 3;
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AxisEulerAngles, -305, float, FloatArrayType, features, dims)
+    m_AxisEulerAngles = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AxisEulerAnglesArrayName, -305, features, dims);
   }
 
 
@@ -197,20 +197,20 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   {
     dims[0] = 1;
     typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, dims)
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, -302, bool, BoolArrayType, features, dims)
+    m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -305, ensembles, dims);
+    m_SurfaceFeatures = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims);
   }
   if(m_CalculateODF == true)
   {
     dims[0] = 1;
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Volumes, -304, float, FloatArrayType, features, dims)
+    m_Volumes = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_VolumesArrayName, -304, features, dims);
     dims[0] = 3;
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureEulerAngles, -302, float, FloatArrayType, features, dims)
+    m_FeatureEulerAngles = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureEulerAnglesArrayName, -302, features, dims);
   }
   if(m_CalculateMDF == true)
   {
     dims[0] = 4;
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, -301, float, FloatArrayType, features, dims)
+    m_AvgQuats = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgQuatsArrayName, -301, features, dims);
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getCellFeatureData(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {

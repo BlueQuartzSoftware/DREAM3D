@@ -526,9 +526,9 @@ void ReadH5Ebsd::execute()
 
   QVector<int> dim(1, 1);
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, m->getNumCellEnsembleTuples(), dim)
+  m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, m->getNumCellEnsembleTuples(), dim);
   dim[0] = 6;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, -305, float, FloatArrayType, m->getNumCellEnsembleTuples(), dim)
+  m_LatticeConstants = m->getPrereqArray<float, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_LatticeConstantsArrayName, -305, m->getNumCellEnsembleTuples(), dim);
 
   // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)

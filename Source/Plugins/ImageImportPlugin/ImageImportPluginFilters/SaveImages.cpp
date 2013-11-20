@@ -174,7 +174,7 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t features, size_
   else
   {
     QVector<int> dims(1, 3);
-    GET_PREREQ_DATA(m, DREAM3D, CellData, Colors, -300, uint8_t, UInt8ArrayType, voxels, dims)
+    m_Colors = m->getPrereqArray<uint8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ColorsArrayName, -300, voxels, dims);
   }
 
 }

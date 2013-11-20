@@ -160,7 +160,7 @@ void ConvertEulerAngles::dataCheck(bool preflight, size_t voxels, size_t feature
   }
 
   QVector<int> dims(1, 3);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, dims)
+  m_CellEulerAngles = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -301, voxels, dims);
 }
 
 // -----------------------------------------------------------------------------

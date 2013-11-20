@@ -169,7 +169,7 @@ void AlignSectionsFeatureCentroid::dataCheck(bool preflight, size_t voxels, size
   }
 
   QVector<int> dims(1 ,1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, dims)
+  m_GoodVoxels = m->getPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -303, voxels, dims);
 }
 
 

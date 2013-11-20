@@ -92,7 +92,7 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 3);
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, -301, float, FloatArrayType, features, dims)
+  m_Centroids = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, -301, features, dims);
   if(getErrorCondition() == -301)
   {
     setErrorCondition(0);
@@ -101,10 +101,10 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
     find_featurecentroids->setDataContainerArray(getDataContainerArray());
     if(preflight == true) { find_featurecentroids->preflight(); }
     if(preflight == false) { find_featurecentroids->execute(); }
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, -301, float, FloatArrayType, features, dims)
+    m_Centroids = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, -301, features, dims);
   }
   dims[0] = 1;
-  GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, -302, bool, BoolArrayType, features, dims)
+  m_SurfaceFeatures = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims);
   if(getErrorCondition() == -302)
   {
     setErrorCondition(0);
@@ -113,7 +113,7 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
     find_surfacefeatures->setDataContainerArray(getDataContainerArray());
     if(preflight == true) { find_surfacefeatures->preflight(); }
     if(preflight == false) { find_surfacefeatures->execute(); }
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, -302, bool, BoolArrayType, features, dims)
+    m_SurfaceFeatures = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims);
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, BiasedFeatures, bool, BoolArrayType, false, features, dims)

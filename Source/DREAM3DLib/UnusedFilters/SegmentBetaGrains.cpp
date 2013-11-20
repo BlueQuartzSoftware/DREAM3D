@@ -251,7 +251,7 @@ void SegmentBetaGrains::dataCheck(bool preflight, size_t voxels, size_t features
   int err = 0;
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, bool, BoolArrayType,  true, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
+  m_CellPhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -302,  voxels, 1);
 
   TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
   if(err == -303)
@@ -263,14 +263,14 @@ void SegmentBetaGrains::dataCheck(bool preflight, size_t voxels, size_t features
     if(preflight == true) { find_cellquats->preflight(); }
     if(preflight == false) { find_cellquats->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
+  m_Quats = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QuatsArrayName, -303, voxels, 4);
 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FeatureData, Active, bool, BoolArrayType, true, features, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, ensembles, 1);
 
 }
 

@@ -136,7 +136,7 @@ void FitCorrelatedFeatureData::dataCheck(bool preflight, size_t voxels, size_t f
   if(m_RemoveBiasedFeatures == true)
   {
     QVector<int> dims(1, 1);
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, BiasedFeatures, -302, bool, BoolArrayType, features, dims)
+    m_BiasedFeatures = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, -302, features, dims);
   }
 }
 

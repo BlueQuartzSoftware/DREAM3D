@@ -106,7 +106,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
 
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
-  GET_PREREQ_DATA(m, DREAM3D, FeatureData, AvgQuats, -301, float, FloatArrayType, features, 4)
+  m_AvgQuats = m->getPrereqArray<float, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_AvgQuatsArrayName, -301, features, 4);
   TEST_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, err, -302, bool, BoolArrayType, features, 1)
   if(err == -302)
   {
@@ -117,7 +117,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
     if(preflight == true) { find_surfacefeatures->preflight(); }
     if(preflight == false) { find_surfacefeatures->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, -302, bool, BoolArrayType, features, 1)
+  m_SurfaceFeatures = m->getPrereqArray<bool, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, 1);
 
 
   TEST_PREREQ_DATA(m, DREAM3D, FeatureData, FeaturePhases, err, -303,  int32_t, Int32ArrayType, features, 1)
@@ -130,7 +130,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
     if(preflight == true) { find_grainphases->preflight(); }
     if(preflight == false) { find_grainphases->execute(); }
   }
-  GET_PREREQ_DATA(m, DREAM3D, FeatureData, FeaturePhases, -303, int32_t, Int32ArrayType, features, 1)
+  m_FeaturePhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -303, features, 1);
 
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
@@ -172,10 +172,10 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, -303,  float, FloatArrayType, ensembles, 1)
+  m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -305, ensembles, 1);
+  m_TotalSurfaceAreas = m->getPrereqArray< float, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_TotalSurfaceAreasArrayName, -303, ensembles, 1);
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
+  m_PhaseTypes = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_PhaseTypesArrayName, -307, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
