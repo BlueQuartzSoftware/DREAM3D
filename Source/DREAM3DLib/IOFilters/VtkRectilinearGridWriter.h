@@ -71,8 +71,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
     virtual ~VtkRectilinearGridWriter();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)

@@ -58,8 +58,9 @@ class DREAM3DLib_EXPORT FindNumFeatures : public AbstractFilter
 
     virtual ~FindNumFeatures();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NumFeaturesArrayName)

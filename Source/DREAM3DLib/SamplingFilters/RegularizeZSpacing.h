@@ -62,8 +62,9 @@ class DREAM3DLib_EXPORT RegularizeZSpacing : public AbstractFilter
 
     virtual ~RegularizeZSpacing();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
 
     DREAM3D_INSTANCE_PROPERTY(float, NewZRes)

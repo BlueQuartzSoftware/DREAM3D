@@ -67,8 +67,9 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 
     virtual ~MinSize();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)

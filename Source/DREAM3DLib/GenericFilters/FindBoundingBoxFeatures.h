@@ -63,8 +63,9 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
 
     virtual ~FindBoundingBoxFeatures();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFeaturesArrayName)
     //------ Created Feature Data

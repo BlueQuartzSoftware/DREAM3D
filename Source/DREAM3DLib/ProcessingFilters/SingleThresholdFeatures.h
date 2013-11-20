@@ -57,8 +57,9 @@ class DREAM3DLib_EXPORT SingleThresholdFeatures : public AbstractFilter
 
     virtual ~SingleThresholdFeatures();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
     //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)

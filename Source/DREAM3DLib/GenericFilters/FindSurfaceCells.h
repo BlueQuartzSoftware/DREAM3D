@@ -58,8 +58,9 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
 
     virtual ~FindSurfaceCells();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)

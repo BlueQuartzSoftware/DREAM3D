@@ -67,8 +67,9 @@ class DREAM3DLib_EXPORT NeighborCICorrelation : public AbstractFilter
 
     virtual ~NeighborCICorrelation();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)

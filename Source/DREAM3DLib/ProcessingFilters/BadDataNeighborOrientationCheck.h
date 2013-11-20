@@ -67,8 +67,9 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
 
     virtual ~BadDataNeighborOrientationCheck();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)

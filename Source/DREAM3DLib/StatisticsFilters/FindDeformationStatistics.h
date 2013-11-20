@@ -79,8 +79,9 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 
     virtual ~FindDeformationStatistics();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)

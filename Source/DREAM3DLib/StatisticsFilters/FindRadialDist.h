@@ -63,8 +63,9 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
 
     virtual ~FindRadialDist();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)

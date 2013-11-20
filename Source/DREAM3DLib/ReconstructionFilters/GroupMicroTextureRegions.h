@@ -66,8 +66,9 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
     virtual ~GroupMicroTextureRegions();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellParentIdsArrayName)

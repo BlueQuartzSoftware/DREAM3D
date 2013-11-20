@@ -69,8 +69,9 @@ class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
 
     virtual ~ScalarSegmentFeatures();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ScalarArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)

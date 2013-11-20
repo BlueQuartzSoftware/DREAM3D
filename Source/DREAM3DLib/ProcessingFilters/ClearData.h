@@ -62,8 +62,9 @@ class DREAM3DLib_EXPORT ClearData : public AbstractFilter
 
     virtual ~ClearData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_PROPERTY(int, XMin)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   DREAM3D_INSTANCE_PROPERTY(int, XMin)
     DREAM3D_INSTANCE_PROPERTY(int, YMin)
     DREAM3D_INSTANCE_PROPERTY(int, ZMin)
 

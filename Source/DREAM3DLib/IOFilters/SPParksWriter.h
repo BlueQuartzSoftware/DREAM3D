@@ -60,8 +60,9 @@ class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
 
     virtual ~SPParksWriter();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
 
 

@@ -67,8 +67,9 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
 
     virtual ~MinNeighbors();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)

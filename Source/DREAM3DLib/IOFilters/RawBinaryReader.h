@@ -62,8 +62,9 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
 
     virtual ~RawBinaryReader();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    typedef struct { int x; int y; int z; } Dimensions_t;
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   typedef struct { int x; int y; int z; } Dimensions_t;
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, ScalarType)

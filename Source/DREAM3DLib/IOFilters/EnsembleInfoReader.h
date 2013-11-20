@@ -62,8 +62,9 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 
     virtual ~EnsembleInfoReader();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)

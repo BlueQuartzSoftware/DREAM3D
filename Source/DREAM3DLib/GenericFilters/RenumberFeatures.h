@@ -63,8 +63,9 @@ class DREAM3DLib_EXPORT RenumberFeatures : public AbstractFilter
 
     virtual ~RenumberFeatures();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)

@@ -60,8 +60,9 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 
     virtual ~SurfaceMeshToVtk();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    // DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   // DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputVtkFile)

@@ -67,8 +67,9 @@ class DREAM3DLib_EXPORT AlignSectionsList : public AlignSections
 
     virtual ~AlignSectionsList();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}

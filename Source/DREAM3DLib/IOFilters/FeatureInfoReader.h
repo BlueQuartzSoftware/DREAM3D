@@ -62,8 +62,9 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
 
     virtual ~FeatureInfoReader();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureEulerAnglesArrayName)

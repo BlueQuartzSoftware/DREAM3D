@@ -68,8 +68,9 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
 
     virtual ~FindMisorientations();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FeaturePhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)

@@ -31,8 +31,9 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
 
     virtual ~FindBasalLoadingFactor();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 
     //------ Created Feature Data

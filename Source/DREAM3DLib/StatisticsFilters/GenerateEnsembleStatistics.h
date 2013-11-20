@@ -71,8 +71,9 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 
     virtual ~GenerateEnsembleStatistics();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ (Possible) Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ (Possible) Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFeaturesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)

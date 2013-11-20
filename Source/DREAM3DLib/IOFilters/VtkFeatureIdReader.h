@@ -57,8 +57,9 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
 
     virtual ~VtkFeatureIdReader();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(Comment)
     DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType)

@@ -62,8 +62,9 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
 
     virtual ~DxReader();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 

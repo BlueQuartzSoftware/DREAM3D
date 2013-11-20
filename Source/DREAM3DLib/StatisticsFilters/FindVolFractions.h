@@ -58,8 +58,9 @@ class DREAM3DLib_EXPORT FindVolFractions : public AbstractFilter
 
     virtual ~FindVolFractions();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(VolFractionsArrayName)

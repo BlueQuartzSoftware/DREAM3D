@@ -57,8 +57,9 @@ class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
 
     virtual ~SingleThresholdCells();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)

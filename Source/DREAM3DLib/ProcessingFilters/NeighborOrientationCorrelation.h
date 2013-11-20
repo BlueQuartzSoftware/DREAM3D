@@ -67,8 +67,9 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
 
     virtual ~NeighborOrientationCorrelation();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)

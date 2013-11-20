@@ -67,8 +67,9 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
 
     virtual ~FillBadData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize)

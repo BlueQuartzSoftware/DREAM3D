@@ -64,8 +64,9 @@ class DREAM3DLib_EXPORT UncertainRegularGridSampleSurfaceMesh : public SampleSur
 
     virtual ~UncertainRegularGridSampleSurfaceMesh();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, XPoints)
     DREAM3D_INSTANCE_PROPERTY(int, YPoints)

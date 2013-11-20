@@ -80,8 +80,9 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
 
     virtual ~FindSlipTransmissionMetrics();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)

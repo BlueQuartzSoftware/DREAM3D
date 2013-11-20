@@ -67,8 +67,9 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 
     virtual ~FindSchmids();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    //------ Required Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    
+   //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
