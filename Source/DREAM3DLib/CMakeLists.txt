@@ -85,7 +85,7 @@ D3DCompileDir(OrientationOps)
 D3DCompileDir(ShapeOps)
 D3DCompileDir(StatsData)
 D3DCompileDir(Utilities)
-D3DCompileDir(VTKUtils)
+#D3DCompileDir(VTKUtils)
 
 
 
@@ -146,13 +146,13 @@ file(WRITE ${FilterWidget_GEN_SRCS_File})
 #include(${DREAM3DLib_SOURCE_DIR}/SamplingFilters/SourceList.cmake)
 #include(${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/SourceList.cmake)
 #include(${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SourceList.cmake)
-include(${DREAM3DLib_SOURCE_DIR}/SyntheticBuildingFilters/SourceList.cmake)
+#include(${DREAM3DLib_SOURCE_DIR}/SyntheticBuildingFilters/SourceList.cmake)
 
 #-----------------------------------------------------
 # conditionally compile our example codes- These should be turned off for a release
 option(DREAM3D_BUILD_TEST_FILTERS "Build the Test filters: These should be OFF when doing a release" ON)
 if(DREAM3D_BUILD_TEST_FILTERS)
-include(${DREAM3DLib_SOURCE_DIR}/TestFilters/SourceList.cmake)
+  include(${DREAM3DLib_SOURCE_DIR}/TestFilters/SourceList.cmake)
 endif()
 
 #-----------------------------------------------------

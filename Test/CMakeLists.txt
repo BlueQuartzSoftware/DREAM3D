@@ -18,36 +18,18 @@ if("${DREAM3D_DATA_DIR}" STREQUAL "")
 endif()
 # --------------------------------------------------------------------------
 macro(ConvertPathToHeaderCompatible INPUT)
-  #message(STATUS "INPUT: ${INPUT}  ${${INPUT}}")
     if(WIN32)
       STRING(REPLACE "\\" "\\\\" ${INPUT} ${${INPUT}} )
       STRING(REPLACE "/" "\\\\" ${INPUT} ${${INPUT}}  )
     endif()
 endmacro()
-#message(STATUS "DREAM3DTest_BINARY_DIR: ${DREAM3DTest_BINARY_DIR}")
 include_directories(${DREAM3DTest_BINARY_DIR})
 set(TEST_TEMP_DIR ${DREAM3DTest_BINARY_DIR}/Temp)
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
-# GET_FILENAME_COMPONENT(_TEST_SRC_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
-#file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/DataImportTest.xml" DATAIMPORT_TEST_IMPORT_XML_FILE)
-#file(TO_NATIVE_PATH "${DREAM3DTest_BINARY_DIR}" DREAM3DTest_BUILD_DIR_NATIVE)
-#file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}" DREAM3DProj_BUILD_DIR_NATIVE)
-#file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}/Bin" DREAM3DProj_BIN_DIR_NATIVE)
-#file(TO_NATIVE_PATH "${PROJECT_RESOURCES_DIR}/EbsdTestFiles/" EBSD_REFERENCE_DATA_DIR_NATIVE)
-#file(TO_NATIVE_PATH "${PROJECT_RESOURCES_DIR}/HedmTestFiles/" HEDM_REFERENCE_DATA_DIR_NATIVE)
-#file(TO_NATIVE_PATH "${DREAM3D_SUPPORT_DIR}" DREAM3D_SUPPORT_DIR_NATIVE)
-#file(TO_NATIVE_PATH "${DREAM3D_SUPPORT_DIR}" DREAM3D_DATA_DIR_NATIVE)
-
 #-- Convert all '\' to '\\' so that they are properly escaped in the header file
 set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${TEST_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
-#ConvertPathToHeaderCompatible(DATAIMPORT_TEST_IMPORT_XML_FILE)
-#ConvertPathToHeaderCompatible(DREAM3DTest_BUILD_DIR_NATIVE)
-#ConvertPathToHeaderCompatible(DREAM3DProj_BUILD_DIR_NATIVE)
-#ConvertPathToHeaderCompatible(DREAM3DProj_BIN_DIR_NATIVE)
-#ConvertPathToHeaderCompatible(EBSD_REFERENCE_DATA_DIR_NATIVE)
-#ConvertPathToHeaderCompatible(HEDM_REFERENCE_DATA_DIR_NATIVE)
-#ConvertPathToHeaderCompatible(DREAM3D_SUPPORT_DIR_NATIVE)
+
 
 configure_file(${DREAM3DTest_SOURCE_DIR}/TestFileLocations.h.in
                ${DREAM3DTest_BINARY_DIR}/TestFileLocations.h @ONLY IMMEDIATE)
@@ -74,8 +56,17 @@ macro(DREAM3D_ADD_UNIT_TEST testname Exename)
     endif()
 endmacro()
 
+# --------------------------------------------------------------------------
+# Generic Filter Test
+# --------------------------------------------------------------------------
+add_executable(GenericFilterTest ${DREAM3DTest_SOURCE_DIR}/GenericFilterTest.cpp)
+target_link_libraries(GenericFilterTest ${QT_QTCORE_LIBRARY} DREAM3DLib)
+set_target_properties(GenericFilterTest PROPERTIES FOLDER Test)
+add_test(GenericFilterTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/GenericFilterTest)
 
 
+
+if(0)
 # --------------------------------------------------------------------------
 # H5Support Library Testing
 # --------------------------------------------------------------------------
@@ -268,6 +259,8 @@ add_executable(FilterParametersRWTest ${DREAM3DTest_SOURCE_DIR}/FilterParameters
 target_link_libraries(FilterParametersRWTest DREAM3DLib )
 set_target_properties(FilterParametersRWTest PROPERTIES FOLDER Test)
 add_test(FilterParametersRWTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterParametersRWTest)
+
+endif()
 
 # --------------------------------------------------------------------------
 # Data Fusion Test

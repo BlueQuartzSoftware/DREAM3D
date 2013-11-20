@@ -58,6 +58,7 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 
 
     virtual ~InitializeSyntheticVolume();
+
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
@@ -109,9 +110,9 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 
   private:
     // Cell Data - make sure these are all initialized to NULL in the constructor
-    int32_t* m_FeatureIds;
-    int32_t* m_CellPhases;
-    bool* m_GoodVoxels;
+    Int32ArrayType::Pointer  m_FeatureIds;
+    Int32ArrayType::Pointer  m_CellPhases;
+    BoolArrayType::Pointer   m_GoodVoxels;
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

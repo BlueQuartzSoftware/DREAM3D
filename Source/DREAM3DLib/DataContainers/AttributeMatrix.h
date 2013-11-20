@@ -76,84 +76,98 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     virtual ~AttributeMatrix();
 
+#if 0
     //Initalize Array Func Here
-    template<typename PtrType, typename DataArrayType, typename AbstractFilter>
-    PtrType* createAttributeArray(const QString &arrayName, size_t size, QVector<int> dims, AbstractFilter* obv)
+    template<typename T, class Filter>
+    typename DataArray<T>::Pointer createAttributeArray(const QString &arrayName, size_t size, QVector<int> dims, Filter* obv)
     {
-      PtrType* valuePtr = NULL;
+      typename DataArray<T>::Pointer valuePtr = DataArray<T>::NullPointer();
       IDataArray::Pointer iDataArray = getAttributeArray(arrayName);
-      if (iDataArray.get() == NULL)
+      if (iDataArray.get() == NULL) // There was NO AttributeArray with the given name in the AttributeMatrix
       {
-        iDataArray = DataArrayType::CreateArray(size, dims, arrayName);
-        iDataArray->initializeWithZeros();
-        if (NULL == iDataArray.get())
+        valuePtr = DataArray<T>::CreateArray(size, dims, arrayName);
+
+        if (NULL == valuePtr.get())
         {
           QString s = QObject::tr(": Array '%1' could not allocate %2 elements.").arg(arrayName).arg(size);
           if (NULL != obv) {obv->setErrorCondition(-25);
-          obv->addErrorMessage(getNameOfClass(), s, -25);
+            obv->addErrorMessage(getNameOfClass(), s, -25);
           }
           return valuePtr;
         }
-        addAttributeArray(arrayName, iDataArray);
+        valuePtr->initializeWithZeros();
+        addAttributeArray(arrayName, valuePtr);
+        return valuePtr;
       }
+
       valuePtr = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());
       if (NULL == valuePtr)
       {
         QString s = QObject::tr(": Array '%1' could not be cast to proper type").arg(arrayName);
         if (NULL != obv) {obv->setErrorCondition(-12);
-        obv->addErrorMessage(getNameOfClass(), s, -12);
+          obv->addErrorMessage(getNameOfClass(), s, -12);
         }
         return valuePtr;
       }
       return valuePtr;
     }
-
+#endif
 
     //Get Array Size Check Func Here
-    template<typename PtrType, typename DataArrayType, typename AbstractFilter>
-    PtrType* ArraySizeCheck(const QString &arrayName, size_t size, int numComp, AbstractFilter* obv)
+    template<typename T, class AbstractFilter>
+    bool dataArrayCompatibility(const QString &arrayName, size_t size, int numComp, AbstractFilter* filter)
     {
-      PtrType* gi = NULL;
+      // First try checking by name
       IDataArray::Pointer iDataArray = getAttributeArray(arrayName);
       if (iDataArray.get() == 0)
       {
-        return gi;
+        if (NULL != filter)
+        {
+          QString s = QObject::tr("Filter '%1' requires an available array with name '%2'").arg(filter->getHumanLabel()).arg(arrayName);
+          filter->setErrorCondition(-501);
+          filter->addErrorMessage(filter->getHumanLabel(), s, -501);
+        }
+        return false;
       }
+      // Make sure the sizes are equal to what is being asked for
       if (size*numComp != iDataArray->GetSize())
       {
-        QString s = QObject::tr(" - Array '%1' from the DataContainer class did not have the required number of elements. Required: %2 Contains: %3").arg(arrayName).arg((size*numComp)).arg(iDataArray->GetSize());
-        if (NULL != obv)
+        if (NULL != filter)
         {
-          obv->setErrorCondition(-501);
-          obv->addErrorMessage(obv->getHumanLabel(), s, -501);
+          QString s = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Compoenets = %3. The currently available array "
+          " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((size*numComp)).arg(iDataArray->GetSize());
+          filter->setErrorCondition(-501);
+          filter->addErrorMessage(filter->getHumanLabel(), s, -501);
         }
-        return gi;
+        return false;
       }
+      // Make sure the number of components match
       if (numComp != iDataArray->GetNumberOfComponents())
       {
-        if (NULL != obv)
+        if (NULL != filter)
         {
-          QString ss = QObject::tr("Filter '%1'' requires an array where the number of components is %2 but the array"
-            " that was supplied has %3.").arg(obv->getHumanLabel()).arg(numComp).arg(iDataArray->GetNumberOfComponents());
-          obv->addErrorMessage(obv->getHumanLabel(), ss, -503);
+          QString ss = QObject::tr("Filter '%1' requires an array where the number of components is %2 but the currently available array"
+                                   " that was supplied has %3.").arg(filter->getHumanLabel()).arg(numComp).arg(iDataArray->GetNumberOfComponents());
+          filter->addErrorMessage(filter->getHumanLabel(), ss, -503);
         }
-        return gi;
+        return false;
       }
-      gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());
-      if (NULL == gi)
+      // Make sure we can downcast to the proper type
+      DataArray<T>* array = DataArray<T>::SafePointerDownCast(iDataArray.get());
+      if (NULL == array)
       {
-        typename DataArrayType::Pointer dat = DataArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
+        typename DataArray<T>::Pointer dat = DataArray<T>::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
         QString s = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"
-          "An Array with name '%4' is stored in the %5 but is of type %6\n")
-          .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
-        if (NULL != obv)
+                                "An Array with name '%4' is stored in the %5 but is of type %6\n")
+            .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
+        if (NULL != filter)
         {
-          obv->setErrorCondition(-502);
-          obv->addErrorMessage(obv->getHumanLabel(), s, -502);
+          filter->setErrorCondition(-502);
+          filter->addErrorMessage(filter->getHumanLabel(), s, -502);
         }
-        return gi;
+        return false;
       }
-      return gi;
+      return true;
     }
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, AMType)
@@ -165,7 +179,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      */
     virtual bool doesAttributeArrayExist(const QString &name);
 
-   /**
+    /**
    * @brief Adds/overwrites the data for a named array
    * @param name The name that the array will be known by
    * @param data The IDataArray::Pointer that will hold the data
@@ -197,7 +211,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @brief Resizes an array from the Data Container
     * @param size The new size of the array
     */
-    void AttributeMatrix::resizeAttributeArrays(size_t size);
+    void resizeAttributeArrays(size_t size);
 
     /**
      * @brief Removes all the Cell Arrays
@@ -225,8 +239,8 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     DREAM3D_INSTANCE_PROPERTY(size_t, NumTuples)
 
 
-  protected:
-    AttributeMatrix();
+    protected:
+      AttributeMatrix();
 
   private:
 

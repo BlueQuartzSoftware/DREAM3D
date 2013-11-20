@@ -59,8 +59,14 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GenericExample, AbstractFilter)
 
     virtual ~GenericExample();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPatternQualityArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(StlFilePrefix)
@@ -185,6 +191,12 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
+    Int32ArrayType::WeakPointer m_FeatureIds;
+    FloatArrayType::WeakPointer m_CellPatternQuality;
+    FloatArrayType::WeakPointer m_CellEulerAngles;
+    UInt8ArrayType::WeakPointer m_GoodVoxels;
+
+
 
     GenericExample(const GenericExample&); // Copy Constructor Not Implemented
     void operator=(const GenericExample&); // Operator '=' Not Implemented

@@ -67,10 +67,7 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   m_ZVoxels(50),
   m_XRes(0.15f),
   m_YRes(0.15f),
-  m_ZRes(0.15f),
-  m_FeatureIds(NULL),
-  m_CellPhases(NULL),
-  m_GoodVoxels(NULL)
+  m_ZRes(0.15f)
 {
   setupFilterParameters();
 }
@@ -135,9 +132,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   QVector<int> dims(1, 1);
   //Cell Data
-  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, m_FeatureIds, -301, voxels, dims);
-  m->getPrereqArray<int32_t, Int32ArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, m_CellPhases, -301, voxels, dims);
-  m->createNonPrereqArray<bool, BoolArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, m_GoodVoxels, true, voxels, dims);
+  m_FeatureIds = m->getPrereqArray<int32_t, InitializeSyntheticVolume>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -301, voxels, dims);
+  m_CellPhases = m->getPrereqArray<int32_t, InitializeSyntheticVolume>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -301, voxels, dims);
+  m_GoodVoxels = m->createNonPrereqArray<bool, InitializeSyntheticVolume>(this, m_CellAttributeMatrixName, m_GoodVoxelsArrayName, true, voxels, dims);
 
   if(m_InputFile.isEmpty() == true)
   {

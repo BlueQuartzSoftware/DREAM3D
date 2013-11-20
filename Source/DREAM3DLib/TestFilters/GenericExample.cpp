@@ -45,6 +45,11 @@
 GenericExample::GenericExample() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_CellPatternQualityArrayName("Pattern Quality"),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_StlFilePrefix(""),
   m_MaxIterations(0),
   m_MisorientationTolerance(0),
@@ -536,19 +541,24 @@ void GenericExample::dataCheck(bool preflight, size_t voxels, size_t features, s
 {
   setErrorCondition(0);
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.isEmpty() == true)
-  {
-    ss << "The output file must be set before executing this filter.";
-    PipelineMessage em(getNameOfClass(), "There was an error", -666);
-    addErrorMessage(em);
-    setErrorCondition(-1);
-  }
-  */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
+  QVector<int> dims(1, 1);
+  // Require the following Cell Data
+  m_FeatureIds = m->getPrereqArray<int32_t, GenericExample>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -301, voxels, dims);
+  m_CellPatternQuality = m->getPrereqArray<float, GenericExample>(this, m_CellAttributeMatrixName,  m_CellPatternQualityArrayName, -302, voxels, dims);
+
+  // Create the following array
+  dims[0] = 3; // We are going to create a [1x3] component for each Cell.
+  m_CellEulerAngles = m->createNonPrereqArray<float, GenericExample>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -303, voxels, dims);
+
+  // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
+  dims[0] = 1;
+  m_GoodVoxels = m->getPrereqArray<uint8_t, GenericExample>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -304, voxels, dims);
+  if(NULL == m_GoodVoxels.lock().get() )  // The Good Voxels array was NOT available so create it
+  {
+    m_GoodVoxels = m->createNonPrereqArray<uint8_t, GenericExample>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, 0, voxels, dims);
+  }
 
 }
 
@@ -559,15 +569,28 @@ void GenericExample::dataCheck(bool preflight, size_t voxels, size_t features, s
 void GenericExample::preflight()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
+  if(m == NULL)
   {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+    AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New();
+    attrMatrix->setName(getCellAttributeMatrixName());
+    vdc->addAttributeMatrix(getCellAttributeMatrixName(), attrMatrix);
   }
 
   dataCheck(true, 1, 1, 1);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void computeEulerAngle(float pq, float* eulerAngle)
+{
+
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -586,7 +609,25 @@ void GenericExample::execute()
   }
   setErrorCondition(0);
 
-  /* Place all your code to execute your filter here. */
+  // Get the number of cells
+  int64_t numCells = m->getTotalPoints();
+
+  // Run the data check to get references to all of our data arrays initialized to the values stored in memory
+  dataCheck(false, numCells, 0, 0);
+
+  // We want to work with the raw point for shear speed so initialize some local variables. We have to temporarily turn
+  // the weak shared pointer into a shared_ptr<> using the ".lock()" then we can use the normal -> semantics to access
+  // the DataArray methods.
+  float* pq = m_CellPatternQuality.lock()->getPointer(0);
+  float* eulerAngles = m_CellEulerAngles.lock()->getPointer(0);
+
+  for(int64_t c = 0; c < numCells; c++)
+  {
+    computeEulerAngle(pq[c], eulerAngles + c);
+
+  }
+
+
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
