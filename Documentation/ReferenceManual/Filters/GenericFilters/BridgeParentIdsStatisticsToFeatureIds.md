@@ -35,10 +35,11 @@ Voxel
 | Cell | MTRdensity | Float of the voxel fraction of "flipped" microtexture against the region searched in Find Neighborhoods filter. | To convert to a **Feature**, use Create Feature Array From Cell Array Filter. |
 | Feature | ParentIds | List of grouped microtexture region **Features**. |  |
 | Cell | ParentIds | List of grouped microtexture region **Cells**.  |  |
+| Cell | OldGrainIds | List of original grain IDs mapped over to the new parent IDs which are now called grain IDs. | |
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2013 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 
