@@ -194,7 +194,7 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     Int32ArrayType::WeakPointer m_FeatureIds;
     FloatArrayType::WeakPointer m_CellPatternQuality;
     FloatArrayType::WeakPointer m_CellEulerAngles;
-    UInt8ArrayType::WeakPointer m_GoodVoxels;
+    BoolArrayType::WeakPointer m_GoodVoxels;
 
 
 

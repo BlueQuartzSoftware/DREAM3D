@@ -554,10 +554,10 @@ void GenericExample::dataCheck(bool preflight, size_t voxels, size_t features, s
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   dims[0] = 1;
-  m_GoodVoxels = m->getPrereqArray<uint8_t, GenericExample>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -304, voxels, dims);
+  m_GoodVoxels = m->getPrereqArray<bool, GenericExample>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -304, voxels, dims);
   if(NULL == m_GoodVoxels.lock().get() )  // The Good Voxels array was NOT available so create it
   {
-    m_GoodVoxels = m->createNonPrereqArray<uint8_t, GenericExample>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, 0, voxels, dims);
+    m_GoodVoxels = m->createNonPrereqArray<bool, GenericExample>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, 0, voxels, dims);
   }
 
 }
