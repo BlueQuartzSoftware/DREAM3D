@@ -232,8 +232,8 @@ void ScalarSegmentFeatures::dataCheck(bool preflight, size_t voxels, size_t feat
   }
 
   QVector<int> dims(1, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, 0, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, true, features, dims)
+  m_FeatureIds = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims);
+  m_Active = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_ActiveArrayName, true, features, dims);
 }
 
 // -----------------------------------------------------------------------------

@@ -69,8 +69,8 @@ void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fe
   m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims);
 
   // Feature Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, MicroTextureRegionNumCells, int32_t, Int32ArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, MicroTextureRegionFractionOccupied, float, FloatArrayType, 0, features, dims)
+  m_MicroTextureRegionNumCells = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_MicroTextureRegionNumCellsArrayName, 0, features, dims);
+  m_MicroTextureRegionFractionOccupied = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_MicroTextureRegionFractionOccupiedArrayName, 0, features, dims);
 
 }
 

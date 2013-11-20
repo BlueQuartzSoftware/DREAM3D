@@ -158,11 +158,11 @@ void CAxisSegmentFeatures::dataCheck(bool preflight, size_t voxels, size_t featu
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1 ,1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, bool, BoolArrayType,  true, voxels, dims)
+  m_GoodVoxels = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName,  true, voxels, dims);
   m_CellPhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -302,  voxels, dims);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, 0, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Active, bool, BoolArrayType, true, features, dims)
+  m_FeatureIds = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims);
+  m_Active = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_ActiveArrayName, true, features, dims);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, ensembles, dims);

@@ -126,7 +126,7 @@ void GenerateRodriguesColors::dataCheck(bool preflight, size_t voxels, size_t fe
 
   dims[0] = 3;
   m_CellEulerAngles = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -300, voxels, dims);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellRodriguesColors, uint8_t, UInt8ArrayType, 0, voxels, dims)
+  m_CellRodriguesColors = m->createNonPrereqArray<uint8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellRodriguesColorsArrayName, 0, voxels, dims);
 }
 
 

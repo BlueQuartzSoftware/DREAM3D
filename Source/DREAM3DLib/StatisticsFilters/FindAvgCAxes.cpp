@@ -96,7 +96,7 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t features, siz
   QVector<int> dims(1, 4);
   m_Quats = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QuatsArrayName, -303, voxels, dims);
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgCAxes, float, FloatArrayType, 0, features, dims)
+  m_AvgCAxes = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgCAxesArrayName, 0, features, dims);
 }
 
 // -----------------------------------------------------------------------------

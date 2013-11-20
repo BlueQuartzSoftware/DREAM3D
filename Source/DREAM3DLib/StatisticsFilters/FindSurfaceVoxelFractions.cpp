@@ -103,7 +103,7 @@ void FindSurfaceVoxelFractions::dataCheck(bool preflight, size_t voxels, size_t 
   QVector<int> dims(1, 1);
   m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims);
   m_SurfaceVoxels = m->getPrereqArray<int8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_SurfaceVoxelsArrayName, -301, voxels, dims);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceVoxelFractions, float, FloatArrayType, 0, features, dims)
+  m_SurfaceVoxelFractions = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceVoxelFractionsArrayName, 0, features, dims);
 
 }
 

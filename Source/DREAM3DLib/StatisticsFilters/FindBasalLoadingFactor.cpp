@@ -91,7 +91,7 @@ void FindBasalLoadingFactor::dataCheck(bool preflight, size_t voxels, size_t fea
   m_AvgQuats = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgQuatsArrayName, -301, features, dims);
 
   dims[0] = 1;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, BasalLoadingFactor, float, FloatArrayType, 0, features, dims)
+  m_BasalLoadingFactor = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BasalLoadingFactorArrayName, 0, features, dims);
 
   m_FeaturePhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -302, features, dims);
 

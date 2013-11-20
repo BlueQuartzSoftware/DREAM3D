@@ -144,7 +144,7 @@ void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t features
   dims[0] = 1;
   m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, ensembles, dims);
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellIPFColors, uint8_t, UInt8ArrayType, 0, voxels, dims)
+  m_CellIPFColors = m->createNonPrereqArray<uint8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellIPFColorsArrayName, 0, voxels, dims);
 }
 
 

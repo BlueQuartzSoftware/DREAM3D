@@ -90,7 +90,7 @@ void FindSurfaceFeatures::dataCheck(bool preflight, size_t voxels, size_t featur
   GET_PREREQ_DATA( m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
 
   // Feature Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, bool, BoolArrayType, false, features, dims)
+  m_SurfaceFeatures = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, false, features, dims);
 }
 
 // -----------------------------------------------------------------------------

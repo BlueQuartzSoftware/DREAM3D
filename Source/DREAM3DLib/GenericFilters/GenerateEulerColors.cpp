@@ -113,7 +113,7 @@ void GenerateEulerColors::dataCheck(bool preflight, size_t voxels, size_t featur
   m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, ensembles, dims);
   dims[0] = 3;
   m_CellEulerAngles = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -300, voxels, dims);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerColors, uint8_t, UInt8ArrayType, 0, voxels, dims)
+  m_CellEulerColors = m->createNonPrereqArray<uint8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerColorsArrayName, 0, voxels, dims);
 }
 
 

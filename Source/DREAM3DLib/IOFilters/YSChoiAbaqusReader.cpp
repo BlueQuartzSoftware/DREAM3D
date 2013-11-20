@@ -198,17 +198,17 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t feature
   }
 
   QVector<int> dims(1, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dims)
+  m_CellEulerAngles = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, 0, voxels, dims);
   dims[0] = 4;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, 0, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, AvgQuats, float, FloatArrayType, 0, features, dims)
+  m_Quats = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QuatsArrayName, 0, voxels, dims);
+  m_AvgQuats = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgQuatsArrayName, 0, features, dims);
   dims[0] = 1;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 1, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, bool, BoolArrayType, false, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, 0, voxels, dims)
+  m_CellPhases = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, 1, voxels, dims);
+  m_SurfaceFeatures = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, false, features, dims);
+  m_FeatureIds = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, dims)
+  m_CrystalStructures = m->createNonPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::Cubic_High, ensembles, dims);
 }
 
 void YSChoiAbaqusReader::preflight()

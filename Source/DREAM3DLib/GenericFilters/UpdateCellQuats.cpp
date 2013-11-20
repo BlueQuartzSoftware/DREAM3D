@@ -93,7 +93,7 @@ void UpdateCellQuats::dataCheck(bool preflight, size_t voxels, size_t features, 
   QVector<int> dims(1, 5);
   m_Quats = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QuatsArrayName, -301, voxels, dims);
   dims[0] = 4;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, 0, voxels, dims)
+  m_Quats = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QuatsArrayName, 0, voxels, dims);
 }
 
 
@@ -142,7 +142,7 @@ void UpdateCellQuats::execute()
   float* quats5ptr = quats5->getPointer(0);
   //creating the 4 component quaternions in the data container
   QVector<int> dims(1, 4);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, 0, totalPoints, dims)
+  m_Quats = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QuatsArrayName, 0, totalPoints, dims);
 
   if (getErrorCondition() < 0)
   {

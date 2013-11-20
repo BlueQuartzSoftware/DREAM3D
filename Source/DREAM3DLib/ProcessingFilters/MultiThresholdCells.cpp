@@ -135,7 +135,7 @@ void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t featur
   }
 
   QVector<int> dims(1, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, bool, BoolArrayType, true, voxels, dims)
+  m_Output = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_OutputArrayName, true, voxels, dims);
 }
 
 

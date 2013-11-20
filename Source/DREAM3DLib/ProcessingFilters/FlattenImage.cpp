@@ -177,7 +177,7 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t features, siz
   QVector<int> dims(1, numImageComp);
   m_ImageData = m->getPrereqArray<unsigned char, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ImageDataArrayName, -301, voxels, dims);
   dims[0] = 1;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FlatImageData, int32_t, Int32ArrayType, 0, voxels, dims)
+  m_FlatImageData = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FlatImageDataArrayName, 0, voxels, dims);
 }
 
 // -----------------------------------------------------------------------------

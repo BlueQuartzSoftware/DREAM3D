@@ -92,7 +92,7 @@ void FindNumFeatures::dataCheck(bool preflight, size_t voxels, size_t features, 
 
   QVector<int> dims(1, 1);
   m_FeaturePhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -301, features, dims);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFeatures, int32_t, Int32ArrayType, 0, ensembles, dims)
+  m_NumFeatures = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_NumFeaturesArrayName, 0, ensembles, dims);
 }
 
 

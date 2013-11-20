@@ -129,11 +129,11 @@ void ParaDisReader::dataCheck(bool preflight, size_t voxels, size_t features, si
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QVector<int> dims(1, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NumberOfArms, int32_t, Int32ArrayType, 0, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NodeConstraints, int32_t, Int32ArrayType, 0, voxels, dims)
+  m_NumberOfArms = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NumberOfArmsArrayName, 0, voxels, dims);
+  m_NodeConstraints = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NodeConstraintsArrayName, 0, voxels, dims);
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, BurgersVectors, float, FloatArrayType, 0.0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, SlipPlaneNormals, float, FloatArrayType, 0.0, features, dims)
+  m_BurgersVectors = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_BurgersVectorsArrayName, 0.0, features, dims);
+  m_SlipPlaneNormals = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_SlipPlaneNormalsArrayName, 0.0, features, dims);
 
   if (m_InStream.isOpen() == true)
   {
@@ -357,8 +357,8 @@ int ParaDisReader::readFile()
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
   //  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   QVector<int> dims(1, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NumberOfArms, int32_t, Int32ArrayType, 0, numVerts, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, NodeConstraints, int32_t, Int32ArrayType, 0, numVerts, dims)
+  m_NumberOfArms = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NumberOfArmsArrayName, 0, numVerts, dims);
+  m_NodeConstraints = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NodeConstraintsArrayName, 0, numVerts, dims);
 
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
@@ -471,8 +471,8 @@ int ParaDisReader::readFile()
   EdgeArray::Edge_t* edge = edges.get()->getPointer(0);
 
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, BurgersVectors, float, FloatArrayType, 0.0, numEdges, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EdgeData, SlipPlaneNormals, float, FloatArrayType, 0.0, numEdges, dims)
+  m_BurgersVectors = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_BurgersVectorsArrayName, 0.0, numEdges, dims);
+  m_SlipPlaneNormals = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_SlipPlaneNormalsArrayName, 0.0, numEdges, dims);
 
   for(int i = 0; i < numEdges; i++)
   {

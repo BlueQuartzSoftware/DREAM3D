@@ -158,7 +158,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t features
   QVector<int> dims(1, 1);
   m_EquivalentDiameters = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, -302, features, dims);
   m_FeaturePhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -304, features, dims);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Neighborhoods, int32_t, Int32ArrayType, 0, features, dims)
+  m_Neighborhoods = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_NeighborhoodsArrayName, 0, features, dims);
   dims[0] = 3;
   m_Centroids = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, -305, features, dims);
 }

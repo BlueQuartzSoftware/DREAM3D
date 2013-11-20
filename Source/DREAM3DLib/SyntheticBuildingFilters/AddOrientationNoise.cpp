@@ -126,7 +126,7 @@ void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t featur
   }
   // Cell Data
   QVector<int> dims(1, 3);
-  m->getPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, m_CellEulerAngles, -301, voxels, dims);
+  m_CellEulerAngles = m->getPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -301, voxels, dims);
 }
 
 // -----------------------------------------------------------------------------

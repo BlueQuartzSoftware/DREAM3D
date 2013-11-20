@@ -127,9 +127,9 @@ void VASPReader::dataCheck(bool preflight, size_t voxels, size_t features, size_
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QVector<int> dims(1, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, AtomVelocities, float, FloatArrayType, 0.0, voxels, dims)
+  m_AtomVelocities = m->createNonPrereqArray<float, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0.0, voxels, dims);
   dims[0] = 1;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, AtomTypes, int32_t, Int32ArrayType, 0, voxels, dims)
+  m_AtomTypes = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomTypesArrayName, 0, voxels, dims);
 
   if (m_InStream.isOpen() == true)
   {
@@ -301,9 +301,9 @@ int VASPReader::readFile()
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
   //  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   QVector<int> dims(1, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, AtomVelocities, float, FloatArrayType, 0, totalAtoms, dims)
+  m_AtomVelocities = m->createNonPrereqArray<float, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0, totalAtoms, dims);
   dims[0] = 1;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VertexData, AtomTypes, int32_t, Int32ArrayType, 0, totalAtoms, dims)
+  m_AtomTypes = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomTypesArrayName, 0, totalAtoms, dims);
 
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);

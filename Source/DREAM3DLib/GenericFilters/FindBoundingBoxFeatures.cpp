@@ -116,7 +116,7 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
     m_SurfaceFeatures = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims);
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, BiasedFeatures, bool, BoolArrayType, false, features, dims)
+  m_BiasedFeatures = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, false, features, dims);
 }
 
 

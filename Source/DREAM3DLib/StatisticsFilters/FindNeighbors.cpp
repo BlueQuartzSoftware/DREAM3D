@@ -101,10 +101,10 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t features, si
   QVector<int> dims(1, 1);
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, FeatureIds, -300, int32_t, Int32ArrayType, voxels, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, int8_t, Int8ArrayType, 0, voxels, dims)
+  m_SurfaceVoxels = m->createNonPrereqArray<int8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_SurfaceVoxelsArrayName, 0, voxels, dims);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, NumNeighbors, int32_t, Int32ArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, SurfaceFeatures, bool, BoolArrayType, false, features, dims)
+  m_NumNeighbors = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_NumNeighborsArrayName, 0, features, dims);
+  m_SurfaceFeatures = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, false, features, dims);
 
   // Feature Data
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0

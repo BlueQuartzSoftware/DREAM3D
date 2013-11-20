@@ -140,8 +140,8 @@ void FindFeatureReferenceMisorientations::dataCheck(bool preflight, size_t voxel
   QVector<int> dims(1, 1);
   m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims);
   m_CellPhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -300,  voxels, dims);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureAvgMisorientations, float, FloatArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureReferenceMisorientations, float, FloatArrayType, 0, voxels, dims)
+  m_FeatureAvgMisorientations = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureAvgMisorientationsArrayName, 0, features, dims);
+  m_FeatureReferenceMisorientations = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureReferenceMisorientationsArrayName, 0, voxels, dims);
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -305, ensembles, dims);
 

@@ -102,7 +102,7 @@ class GenerateFeatureIds : public AbstractFilter
         return;
       }
       QVector<int> dims(1, 1);
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureIds, int32_t, Int32ArrayType, 0, voxels, dims)
+      m_FeatureIds = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims);
     }
 
     GenerateFeatureIds(const GenerateFeatureIds&); // Copy Constructor Not Implemented

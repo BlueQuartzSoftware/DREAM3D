@@ -95,7 +95,7 @@ void FindFeatureCentroids::dataCheck(bool preflight, size_t voxels, size_t featu
   QVector<int> dims(1, 1);
   m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims);
   dims[0] = 3;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, Centroids, float, FloatArrayType, 0, features, dims)
+  m_Centroids = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, 0, features, dims);
 
 }
 

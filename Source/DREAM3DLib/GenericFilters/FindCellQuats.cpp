@@ -109,7 +109,7 @@ void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t features, si
   m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, ensembles, dims);
 
   dims[0] = 4;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, 0, voxels, dims)
+  m_Quats = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QuatsArrayName, 0, voxels, dims);
 
 }
 

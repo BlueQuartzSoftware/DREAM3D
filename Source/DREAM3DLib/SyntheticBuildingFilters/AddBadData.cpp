@@ -148,7 +148,7 @@ void AddBadData::dataCheck(bool preflight, size_t voxels, size_t features, size_
 
   // Cell Data
   QVector<int> dims(1, 1);
-  m->getPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GBEuclideanDistancesArrayName, m_GBEuclideanDistances, -301, voxels, dims);
+  m_GBEuclideanDistances = m->getPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GBEuclideanDistancesArrayName, -301, voxels, dims);
 }
 
 // -----------------------------------------------------------------------------

@@ -239,7 +239,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   {
     dims[0] = 1;
     typedef DataArray<unsigned int> PhaseTypeArrayType;
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, dims)
+    m_PhaseTypes = m->createNonPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_PhaseTypesArrayName, DREAM3D::PhaseType::UnknownPhaseType, ensembles, dims);
   }
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)

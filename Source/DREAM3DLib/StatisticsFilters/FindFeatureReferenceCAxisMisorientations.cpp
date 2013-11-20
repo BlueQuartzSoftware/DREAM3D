@@ -120,9 +120,9 @@ void FindFeatureReferenceCAxisMisorientations::dataCheck(bool preflight, size_t 
   QVector<int> dims(1, 1);
   m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims);
   m_CellPhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -300,  voxels, dims);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureAvgCAxisMisorientations, float, FloatArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFeatureData, FeatureStdevCAxisMisorientations, float, FloatArrayType, 0, features, dims)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FeatureReferenceCAxisMisorientations, float, FloatArrayType, 0, voxels, dims)
+  m_FeatureAvgCAxisMisorientations = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureAvgCAxisMisorientationsArrayName, 0, features, dims);
+  m_FeatureStdevCAxisMisorientations = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureStdevCAxisMisorientationsArrayName, 0, features, dims);
+  m_FeatureReferenceCAxisMisorientations = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureReferenceCAxisMisorientationsArrayName, 0, voxels, dims);
   dims[0] = 3;
   m_AvgCAxes = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgCAxesArrayName, -303, features, dims);
   dims[0] = 4;
