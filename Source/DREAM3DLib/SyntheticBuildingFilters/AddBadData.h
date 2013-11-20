@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
+    //DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
     void add_noise();
 
   private:
-    float* m_GBEuclideanDistances;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

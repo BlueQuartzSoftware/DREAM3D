@@ -170,7 +170,8 @@ void TriangleAreaFilter::dataCheck(bool preflight, size_t voxels, size_t feature
   else
   {
     QVector<int> dims(1, 1);
-    m_SurfaceMeshTriangleAreas = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTriangleAreasArrayName, 0, voxels, dims);
+    m_SurfaceMeshTriangleAreasPtr = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTriangleAreasArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshTriangleAreas = m_SurfaceMeshTriangleAreasPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceMeshTriangleAreas */
   }
 }
 

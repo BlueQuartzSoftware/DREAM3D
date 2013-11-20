@@ -102,7 +102,8 @@ class GenerateFeatureIds : public AbstractFilter
         return;
       }
       QVector<int> dims(1, 1);
-      m_FeatureIds = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims);
+      m_FeatureIdsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  	  m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FeatureIds */
     }
 
     GenerateFeatureIds(const GenerateFeatureIds&); // Copy Constructor Not Implemented

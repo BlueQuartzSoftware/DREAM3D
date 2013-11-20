@@ -175,9 +175,11 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t features, siz
   }
 
   QVector<int> dims(1, numImageComp);
-  m_ImageData = m->getPrereqArray<unsigned char, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ImageDataArrayName, -301, voxels, dims);
+  m_ImageDataPtr = m->getPrereqArray<unsigned char, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ImageDataArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ImageData = m_ImageDataPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_ImageData */
   dims[0] = 1;
-  m_FlatImageData = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FlatImageDataArrayName, 0, voxels, dims);
+  m_FlatImageDataPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FlatImageDataArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FlatImageData = m_FlatImageDataPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FlatImageData */
 }
 
 // -----------------------------------------------------------------------------

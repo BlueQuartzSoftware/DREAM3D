@@ -116,7 +116,8 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t features, 
 
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  m_GrainIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GrainIdsArrayName, -300, voxels, 1);
+  m_GrainIdsPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GrainIdsArrayName, -300, voxels, 1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GrainIds = m_GrainIdsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GrainIds */
 
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
@@ -132,7 +133,8 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t features, 
     StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
     StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
 
-    m_SurfaceMeshNodeType = sm->createNonPrereqArray<int8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, 0, 1, 1);
+    m_SurfaceMeshNodeTypePtr = sm->createNonPrereqArray<int8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, 0, 1, 1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceMeshNodeType */
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);

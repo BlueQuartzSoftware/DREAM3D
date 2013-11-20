@@ -64,9 +64,9 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+//    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+//    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+//    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
 
@@ -110,9 +110,9 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 
   private:
     // Cell Data - make sure these are all initialized to NULL in the constructor
-    Int32ArrayType::Pointer  m_FeatureIds;
-    Int32ArrayType::Pointer  m_CellPhases;
-    BoolArrayType::Pointer   m_GoodVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

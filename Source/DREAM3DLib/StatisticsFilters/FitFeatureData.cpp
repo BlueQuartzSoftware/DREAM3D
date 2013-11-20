@@ -111,7 +111,8 @@ void FitFeatureData::dataCheck(bool preflight, size_t voxels, size_t features, s
   if(m_RemoveBiasedFeatures == true)
   {
     QVector<int> dims(1, 1);
-    m_BiasedFeatures = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, -302, features, dims);
+    m_BiasedFeaturesPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_BiasedFeatures */
   }
 }
 

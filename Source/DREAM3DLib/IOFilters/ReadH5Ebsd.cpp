@@ -371,14 +371,18 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, size_
   }
 
   QVector<int> dim(1, 3);
-  m_CellEulerAngles = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, 0, voxels, dim);
+  m_CellEulerAnglesPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, 0, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellEulerAngles */
   dim[0] = 1;
-  m_CellPhases = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, 0, voxels, dim);
+  m_CellPhasesPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, 0, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellPhases */
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructures = m->createNonPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, dim);
+  m_CrystalStructuresPtr = m->createNonPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CrystalStructures */
   dim[0] = 6;
-  m_LatticeConstants = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_LatticeConstantsArrayName, 0.0, ensembles, dim);
+  m_LatticeConstantsPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_LatticeConstantsArrayName, 0.0, ensembles, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_LatticeConstants */
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
   m->addCellEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
@@ -526,9 +530,11 @@ void ReadH5Ebsd::execute()
 
   QVector<int> dim(1, 1);
   typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructures = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, m->getNumCellEnsembleTuples(), dim);
+  m_CrystalStructuresPtr = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, m->getNumCellEnsembleTuples(), dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CrystalStructures */
   dim[0] = 6;
-  m_LatticeConstants = m->getPrereqArray<float, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_LatticeConstantsArrayName, -305, m->getNumCellEnsembleTuples(), dim);
+  m_LatticeConstantsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_LatticeConstantsArrayName, -305, m->getNumCellEnsembleTuples(), dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_LatticeConstants */
 
   // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)

@@ -169,7 +169,8 @@ void AlignSectionsFeatureCentroid::dataCheck(bool preflight, size_t voxels, size
   }
 
   QVector<int> dims(1 ,1);
-  m_GoodVoxels = m->getPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -303, voxels, dims);
+  m_GoodVoxelsPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -303, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GoodVoxels */
 }
 
 

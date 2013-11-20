@@ -129,11 +129,15 @@ void ParaDisReader::dataCheck(bool preflight, size_t voxels, size_t features, si
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QVector<int> dims(1, 1);
-  m_NumberOfArms = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NumberOfArmsArrayName, 0, voxels, dims);
-  m_NodeConstraints = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NodeConstraintsArrayName, 0, voxels, dims);
+  m_NumberOfArmsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NumberOfArmsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumberOfArms = m_NumberOfArmsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_NumberOfArms */
+  m_NodeConstraintsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NodeConstraintsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NodeConstraints = m_NodeConstraintsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_NodeConstraints */
   dims[0] = 3;
-  m_BurgersVectors = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_BurgersVectorsArrayName, 0.0, features, dims);
-  m_SlipPlaneNormals = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_SlipPlaneNormalsArrayName, 0.0, features, dims);
+  m_BurgersVectorsPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_BurgersVectorsArrayName, 0.0, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BurgersVectors = m_BurgersVectorsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_BurgersVectors */
+  m_SlipPlaneNormalsPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_SlipPlaneNormalsArrayName, 0.0, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SlipPlaneNormals = m_SlipPlaneNormalsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SlipPlaneNormals */
 
   if (m_InStream.isOpen() == true)
   {
@@ -357,8 +361,10 @@ int ParaDisReader::readFile()
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
   //  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   QVector<int> dims(1, 1);
-  m_NumberOfArms = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NumberOfArmsArrayName, 0, numVerts, dims);
-  m_NodeConstraints = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NodeConstraintsArrayName, 0, numVerts, dims);
+  m_NumberOfArmsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NumberOfArmsArrayName, 0, numVerts, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumberOfArms = m_NumberOfArmsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_NumberOfArms */
+  m_NodeConstraintsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NodeConstraintsArrayName, 0, numVerts, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NodeConstraints = m_NodeConstraintsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_NodeConstraints */
 
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
@@ -471,8 +477,10 @@ int ParaDisReader::readFile()
   EdgeArray::Edge_t* edge = edges.get()->getPointer(0);
 
   dims[0] = 3;
-  m_BurgersVectors = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_BurgersVectorsArrayName, 0.0, numEdges, dims);
-  m_SlipPlaneNormals = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_SlipPlaneNormalsArrayName, 0.0, numEdges, dims);
+  m_BurgersVectorsPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_BurgersVectorsArrayName, 0.0, numEdges, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BurgersVectors = m_BurgersVectorsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_BurgersVectors */
+  m_SlipPlaneNormalsPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_SlipPlaneNormalsArrayName, 0.0, numEdges, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SlipPlaneNormals = m_SlipPlaneNormalsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SlipPlaneNormals */
 
   for(int i = 0; i < numEdges; i++)
   {

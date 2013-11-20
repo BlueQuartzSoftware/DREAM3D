@@ -66,11 +66,14 @@ void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fe
 
   QVector<int> dims(1, 1);
   // Cell Data
-  m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims);
+  m_FeatureIdsPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FeatureIds */
 
   // Feature Data
-  m_MicroTextureRegionNumCells = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_MicroTextureRegionNumCellsArrayName, 0, features, dims);
-  m_MicroTextureRegionFractionOccupied = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_MicroTextureRegionFractionOccupiedArrayName, 0, features, dims);
+  m_MicroTextureRegionNumCellsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_MicroTextureRegionNumCellsArrayName, 0, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_MicroTextureRegionNumCells = m_MicroTextureRegionNumCellsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_MicroTextureRegionNumCells */
+  m_MicroTextureRegionFractionOccupiedPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_MicroTextureRegionFractionOccupiedArrayName, 0, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_MicroTextureRegionFractionOccupied = m_MicroTextureRegionFractionOccupiedPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_MicroTextureRegionFractionOccupied */
 
 }
 

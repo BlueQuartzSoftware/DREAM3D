@@ -259,7 +259,8 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
     // Check for Node Type Array
     int size = sm->getVertices()->getNumberOfTuples();
     QVector<int> dims(1, 1);
-    m_SurfaceMeshNodeType = sm->getPrereqArray<int8_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, -390, size, dims);
+    m_SurfaceMeshNodeTypePtr = sm->getPrereqArray<int8_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, -390, size, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceMeshNodeType */
   }
 
   if ( getConstrainQuadPoints() == true || getSmoothTripleLines() == true )

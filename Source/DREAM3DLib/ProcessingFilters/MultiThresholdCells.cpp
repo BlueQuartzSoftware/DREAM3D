@@ -135,7 +135,8 @@ void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t featur
   }
 
   QVector<int> dims(1, 1);
-  m_Output = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_OutputArrayName, true, voxels, dims);
+  m_OutputPtr = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_OutputArrayName, true, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_Output = m_OutputPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_Output */
 }
 
 

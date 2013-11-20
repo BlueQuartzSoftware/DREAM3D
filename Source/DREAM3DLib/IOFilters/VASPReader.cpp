@@ -127,9 +127,11 @@ void VASPReader::dataCheck(bool preflight, size_t voxels, size_t features, size_
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QVector<int> dims(1, 3);
-  m_AtomVelocities = m->createNonPrereqArray<float, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0.0, voxels, dims);
+  m_AtomVelocitiesPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0.0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_AtomVelocities */
   dims[0] = 1;
-  m_AtomTypes = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomTypesArrayName, 0, voxels, dims);
+  m_AtomTypesPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomTypesArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_AtomTypes */
 
   if (m_InStream.isOpen() == true)
   {
@@ -301,9 +303,11 @@ int VASPReader::readFile()
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
   //  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   QVector<int> dims(1, 3);
-  m_AtomVelocities = m->createNonPrereqArray<float, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0, totalAtoms, dims);
+  m_AtomVelocitiesPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0, totalAtoms, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_AtomVelocities */
   dims[0] = 1;
-  m_AtomTypes = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomTypesArrayName, 0, totalAtoms, dims);
+  m_AtomTypesPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomTypesArrayName, 0, totalAtoms, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_AtomTypes */
 
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);

@@ -366,72 +366,89 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   QVector<int> dims(1, 1);
   if(m_WriteFeatureIds == true)
   {
-    m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -301, voxels, dims);
+    m_FeatureIdsPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FeatureIds */
   }
   if(m_WriteParentIds == true)
   {
-    m_ParentIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ParentIdsArrayName, -301, voxels, dims);
+    m_ParentIdsPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ParentIdsArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ParentIds = m_ParentIdsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_ParentIds */
   }
   if(m_WritePhaseIds == true)
   {
-    m_CellPhases = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -302, voxels, dims);
+    m_CellPhasesPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -302, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellPhases */
   }
   if(m_WriteGoodVoxels == true)
   {
-    m_GoodVoxels = m->getPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -303, voxels, dims);
+    m_GoodVoxelsPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -303, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GoodVoxels */
   }
   if(m_WriteGlobAlpha == true)
   {
-    m_GlobAlpha = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GlobAlphaArrayName, -303, voxels, dims);
+    m_GlobAlphaPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GlobAlphaArrayName, -303, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GlobAlpha = m_GlobAlphaPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GlobAlpha */
   }
   if(m_WriteKernelAverageMisorientations == true)
   {
-    m_KernelAverageMisorientations = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_KernelAverageMisorientationsArrayName, -303, voxels, dims);
+    m_KernelAverageMisorientationsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_KernelAverageMisorientationsArrayName, -303, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_KernelAverageMisorientations = m_KernelAverageMisorientationsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_KernelAverageMisorientations */
   }
   if(m_WriteFeatureReferenceMisorientations == true)
   {
-    m_FeatureReferenceMisorientations = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureReferenceMisorientationsArrayName, -303, voxels, dims);
+    m_FeatureReferenceMisorientationsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureReferenceMisorientationsArrayName, -303, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureReferenceMisorientations = m_FeatureReferenceMisorientationsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FeatureReferenceMisorientations */
   }
   if(m_WriteFeatureReferenceCAxisMisorientations == true)
   {
-    m_FeatureReferenceCAxisMisorientations = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureReferenceCAxisMisorientationsArrayName, -303, voxels, dims);
+    m_FeatureReferenceCAxisMisorientationsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureReferenceCAxisMisorientationsArrayName, -303, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureReferenceCAxisMisorientations = m_FeatureReferenceCAxisMisorientationsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FeatureReferenceCAxisMisorientations */
   }
   if(m_WriteBandContrasts == true)
   {
-    m_BC = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_BCArrayName, -304, voxels, dims);
+    m_BCPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_BCArrayName, -304, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BC = m_BCPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_BC */
   }
   if(m_WriteConfidenceIndicies == true)
   {
-    m_ConfidenceIndex = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ConfidenceIndexArrayName, -304, voxels, dims);
+    m_ConfidenceIndexPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ConfidenceIndexArrayName, -304, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ConfidenceIndex = m_ConfidenceIndexPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_ConfidenceIndex */
   }
   if(m_WriteImageQualities == true)
   {
-    m_ImageQuality = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ImageQualityArrayName, -304, voxels, dims);
+    m_ImageQualityPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ImageQualityArrayName, -304, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ImageQuality = m_ImageQualityPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_ImageQuality */
   }
   if(m_WriteGBEuclideanDistanceMap == true)
   {
-    m_GBEuclideanDistances = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GBEuclideanDistancesArrayName, -305, voxels, dims);
+    m_GBEuclideanDistancesPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GBEuclideanDistancesArrayName, -305, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GBEuclideanDistances */
   }
   if(m_WriteTJEuclideanDistanceMap == true)
   {
-    m_TJEuclideanDistances = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_TJEuclideanDistancesArrayName, -305, voxels, dims);
+    m_TJEuclideanDistancesPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_TJEuclideanDistancesArrayName, -305, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_TJEuclideanDistances = m_TJEuclideanDistancesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_TJEuclideanDistances */
   }
   if(m_WriteQPEuclideanDistanceMap == true)
   {
-    m_QPEuclideanDistances = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QPEuclideanDistancesArrayName, -305, voxels, dims);
+    m_QPEuclideanDistancesPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QPEuclideanDistancesArrayName, -305, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_QPEuclideanDistances = m_QPEuclideanDistancesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_QPEuclideanDistances */
   }
   if(m_WriteSchmidFactors == true)
   {
-    m_Schmids = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SchmidsArrayName, -305, features, dims);
+    m_SchmidsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SchmidsArrayName, -305, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_Schmids = m_SchmidsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_Schmids */
   }
   if(m_WriteFeatureSizes == true)
   {
-    m_EquivalentDiameters = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, -305, features, dims);
+    m_EquivalentDiametersPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, -305, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_EquivalentDiameters */
   }
   if(m_WriteEulerAngles == true)
   {
     dims[0] = 3;
-    m_CellEulerAngles = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -305, voxels, dims);
+    m_CellEulerAnglesPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -305, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellEulerAngles */
   }
 }
 

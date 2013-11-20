@@ -126,7 +126,8 @@ void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t featur
   }
   // Cell Data
   QVector<int> dims(1, 3);
-  m_CellEulerAngles = m->getPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -301, voxels, dims);
+  m_CellEulerAnglesPtr = m->getPrereqArray<float, FloatArrayType, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellEulerAngles */
 }
 
 // -----------------------------------------------------------------------------

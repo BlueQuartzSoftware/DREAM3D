@@ -432,6 +432,15 @@ virtual int getClassVersion() { return vers; }
     m_##var = f;\
   }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+#define DEFINE_PTR_WEAKPTR_DATAARRAY(type, name)\
+private:\
+  DataArray<type>::WeakPointer m_##name##Ptr;\
+  type* m_##name;\
+  DREAM3D_INSTANCE_STRING_PROPERTY(name##ArrayName);
+
 
 // -----------------------------------------------------------------------------
 //

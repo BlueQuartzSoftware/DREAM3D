@@ -120,7 +120,8 @@ class GenerateGrainIds : public AbstractFilter
       setErrorCondition(0);
       QStringstream ss;
       VoxelDataContainer* m = getVoxelDataContainer();
-      m_GrainIds = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GrainIdsArrayName, 0, voxels, 1);
+      m_GrainIdsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GrainIdsArrayName, 0, voxels, 1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GrainIds = m_GrainIdsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GrainIds */
 
       setErrorMessage(ss.str());
     }

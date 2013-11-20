@@ -280,13 +280,18 @@ void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t featu
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QVector<int> dims(1, 1);
-  m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims);
+  m_FeatureIdsPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FeatureIds */
 
-  m_GBEuclideanDistances = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GBEuclideanDistancesArrayName, -1, voxels, dims);
-  m_TJEuclideanDistances = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_TJEuclideanDistancesArrayName, -1, voxels, dims);
-  m_QPEuclideanDistances = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QPEuclideanDistancesArrayName, -1, voxels, dims);
+  m_GBEuclideanDistancesPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GBEuclideanDistancesArrayName, -1, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GBEuclideanDistances */
+  m_TJEuclideanDistancesPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_TJEuclideanDistancesArrayName, -1, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_TJEuclideanDistances = m_TJEuclideanDistancesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_TJEuclideanDistances */
+  m_QPEuclideanDistancesPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QPEuclideanDistancesArrayName, -1, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_QPEuclideanDistances = m_QPEuclideanDistancesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_QPEuclideanDistances */
   dims[0] = 3;
-  m_NearestNeighbors = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_NearestNeighborsArrayName, 0, voxels, dims);
+  m_NearestNeighborsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_NearestNeighborsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NearestNeighbors = m_NearestNeighborsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_NearestNeighbors */
 
 }
 

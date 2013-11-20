@@ -140,7 +140,8 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t features,
   {
     QVector<int> arraydims(1, 1);
     // This would be for a gray scale image
-    m_ImageData = m->createNonPrereqArray<uint8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ImageDataArrayName, 0, voxels, arraydims);
+    m_ImageDataPtr = m->createNonPrereqArray<uint8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ImageDataArrayName, 0, voxels, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ImageData = m_ImageDataPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_ImageData */
     // If we have RGB or RGBA Images then we are going to have to change things a bit.
     // We should read the file and see what we have? Of course Qt is going to read it up into
     // an RGB array by default
