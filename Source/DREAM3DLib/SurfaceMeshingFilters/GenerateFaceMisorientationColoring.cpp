@@ -238,7 +238,7 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, si
     QVector<int> dims(1, 2);
     GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
     dims[0] = 3;
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceMisorientationColors, float, FloatArrayType, 0, features, dims)
+    m_SurfaceMeshFaceMisorientationColors = sm->createNonPrereqArray<float, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceMisorientationColorsArrayName, 0, features, dims);
   }
 }
 

@@ -165,7 +165,7 @@ void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fea
   else
   {
     QVector<int> dims(1, 3);
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleCentroids, double, DoubleArrayType, 0, voxels, dims)
+    m_SurfaceMeshTriangleCentroids = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTriangleCentroidsArrayName, 0, voxels, dims);
   }
 }
 

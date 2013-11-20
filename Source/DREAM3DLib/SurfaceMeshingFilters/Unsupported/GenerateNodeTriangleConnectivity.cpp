@@ -125,7 +125,7 @@ void GenerateNodeTriangleConnectivity::dataCheck(bool preflight, size_t voxels, 
     {
       // This depends on the triangles array already being created
       int size = sm->getFaces()->GetNumberOfTuples();
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleEdges, int32_t, Int32ArrayType, 0, size, 3)
+      m_SurfaceMeshTriangleEdges = sm->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_SurfaceMeshTriangleEdgesArrayName, 0, size, 3);
     }
 
     // We do not know the size of the array so we can not use the macro so we just manually call

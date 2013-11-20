@@ -195,7 +195,7 @@ void TriangleDihedralAngleFilter::dataCheck(bool preflight, size_t voxels, size_
   else
   {
     QVector<int> dims(1, 1);
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleDihedralAngles, double, DoubleArrayType, 0, voxels, dims)
+    m_SurfaceMeshTriangleDihedralAngles = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTriangleDihedralAnglesArrayName, 0, voxels, dims);
   }
 }
 

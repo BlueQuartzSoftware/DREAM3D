@@ -391,9 +391,9 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t featur
     GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, features, dims)
     dims[0] = 1;
     GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, features, dims)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, double, DoubleArrayType, 0, ensembles, dims)
+    m_GBCD = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, 0, ensembles, dims);
     dims[0] = 5;
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, int32_t, Int32ArrayType, 1, ensembles, dims)
+    m_GBCDdimensions = sm->createNonPrereqArray<int32_t, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDdimensionsArrayName, 1, ensembles, dims);
   }
 }
 
@@ -553,7 +553,7 @@ void FindGBCD::execute()
   dims[3] = m_GBCDsizes[3];
   dims[4] = m_GBCDsizes[4];
   dims[5] = 2;
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, double, DoubleArrayType, 0, m->getNumCellEnsembleTuples(), dims)
+  m_GBCD = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, 0, m->getNumCellEnsembleTuples(), dims);
   for(int i = 0; i < m->getNumCellEnsembleTuples(); i++)
   {
     m_GBCDdimensions[5 * i + 0] = m_GBCDsizes[0];

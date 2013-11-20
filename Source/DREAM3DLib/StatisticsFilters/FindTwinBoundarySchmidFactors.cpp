@@ -324,7 +324,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh(bool preflight, size_t 
   GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
   dims[0] = 3;
   GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, features, dims)
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundarySchmidFactors, float, FloatArrayType, 0, features, dims)
+  m_SurfaceMeshTwinBoundarySchmidFactors = sm->createNonPrereqArray<float, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTwinBoundarySchmidFactorsArrayName, 0, features, dims);
   dims[0] = 1;
   GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundary, -388, bool, BoolArrayType, features, dims)
 }

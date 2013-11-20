@@ -152,10 +152,10 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, 
   {
     QVector<int> dims(1, 2);
     GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1s, float, FloatArrayType, 0, features, dims)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1spts, float, FloatArrayType, 0, features, dims)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF7s, float, FloatArrayType, 0, features, dims)
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshmPrimes, float, FloatArrayType, 0, features, dims)
+    m_SurfaceMeshF1s = sm->createNonPrereqArray<float, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshF1sArrayName, 0, features, dims);
+    m_SurfaceMeshF1spts = sm->createNonPrereqArray<float, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshF1sptsArrayName, 0, features, dims);
+    m_SurfaceMeshF7s = sm->createNonPrereqArray<float, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshF7sArrayName, 0, features, dims);
+    m_SurfaceMeshmPrimes = sm->createNonPrereqArray<float, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshmPrimesArrayName, 0, features, dims);
   }
 }
 

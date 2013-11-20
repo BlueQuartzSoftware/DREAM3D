@@ -410,7 +410,7 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t features, 
   FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
 
   int8_t* m_SurfaceMeshNodeType;
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, int8_t, Int8ArrayType, 0, 1, dims)
+  m_SurfaceMeshNodeType = sm->createNonPrereqArray<int8_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, 0, 1, dims);
 
   dims[0] = 2;
   DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);

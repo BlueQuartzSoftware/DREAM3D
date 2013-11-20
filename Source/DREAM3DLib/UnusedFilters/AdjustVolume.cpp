@@ -117,7 +117,7 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t features, siz
 
   m_GrainIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GrainIdsArrayName, -300, voxels, 1);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FeatureData, EquivalentDiameters, float, FloatArrayType, 0, features, 1)
+  m_EquivalentDiameters = m->createNonPrereqArray<float, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, 0, features, 1);
 }
 
 

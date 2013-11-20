@@ -281,7 +281,7 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels
     dims[0] = 3;
     GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, features, dims)
     dims[0] = 6;
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceIPFColors, uint8_t, UInt8ArrayType, 0, features, dims)
+    m_SurfaceMeshFaceIPFColors = sm->createNonPrereqArray<uint8_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceIPFColorsArrayName, 0, features, dims);
   }
 }
 

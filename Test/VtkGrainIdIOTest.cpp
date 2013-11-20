@@ -120,7 +120,7 @@ class GenerateGrainIds : public AbstractFilter
       setErrorCondition(0);
       QStringstream ss;
       VoxelDataContainer* m = getVoxelDataContainer();
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
+      m_GrainIds = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GrainIdsArrayName, 0, voxels, 1);
 
       setErrorMessage(ss.str());
     }

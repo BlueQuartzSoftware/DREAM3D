@@ -284,8 +284,8 @@ void FindTwinBoundaries::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
   dims[0] = 3;
   GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, features, dims)
   dims[0] = 1;
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundary, bool, BoolArrayType, false, features, dims)
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundaryIncoherence, float, FloatArrayType, 180.0, features, dims)
+  m_SurfaceMeshTwinBoundary = sm->createNonPrereqArray<bool, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTwinBoundaryArrayName, false, features, dims);
+  m_SurfaceMeshTwinBoundaryIncoherence = sm->createNonPrereqArray<float, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTwinBoundaryIncoherenceArrayName, 180.0, features, dims);
 }
 
 // -----------------------------------------------------------------------------

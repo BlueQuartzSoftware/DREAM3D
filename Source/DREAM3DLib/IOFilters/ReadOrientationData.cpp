@@ -254,14 +254,14 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
     }
 
     QVector<int> dim(1, 3);
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, dim)
+    m_CellEulerAngles = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, 0, voxels, dim);
     dim[0] = 1;
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, dim)
+    m_CellPhases = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, 0, voxels, dim);
 
     typedef DataArray<unsigned int> XTalStructArrayType;
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, dim)
+    m_CrystalStructures = m->createNonPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, dim);
     dim[0] = 6;
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, float, FloatArrayType, 0.0, ensembles, dim)
+    m_LatticeConstants = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_LatticeConstantsArrayName, 0.0, ensembles, dim);
 
     StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
     m->addCellEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);

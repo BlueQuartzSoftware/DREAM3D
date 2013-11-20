@@ -132,7 +132,7 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t features, 
     StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
     StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
 
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, int8_t, Int8ArrayType, 0, 1, 1)
+    m_SurfaceMeshNodeType = sm->createNonPrereqArray<int8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, 0, 1, 1);
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);
