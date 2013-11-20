@@ -105,7 +105,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Number of Bins for Correlated Array");
+    option->setHumanLabel("Number Of Bins For Correlated Array");
     option->setPropertyName("NumberOfCorrelatedBins");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
