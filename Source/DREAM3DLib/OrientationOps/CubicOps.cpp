@@ -1498,7 +1498,7 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
   }
 
 
-
+#if 0
   size_t dims[3] = {config.imageDim, config.imageDim, 1};
   float res[3] = {1.0, 1.0, 1.0};
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity001->GetName() + ".vtk",
@@ -1507,7 +1507,7 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
                                                  intensity011.get(), dims, res, "double", true );
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity111->GetName() + ".vtk",
                                                  intensity111.get(), dims, res, "double", true );
-
+#endif
   return poleFigures;
 }
 
