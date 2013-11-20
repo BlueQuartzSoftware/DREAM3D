@@ -80,7 +80,7 @@ class DREAM3DLib_EXPORT FitFeatureData : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilterss; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
