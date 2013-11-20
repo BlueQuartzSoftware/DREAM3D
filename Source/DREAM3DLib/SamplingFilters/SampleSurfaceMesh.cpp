@@ -181,7 +181,7 @@ void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features
   else
   {
     QVector<int> dims(1, 2);
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
+    m_SurfaceMeshFaceLabels = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims);
   }
 }
 

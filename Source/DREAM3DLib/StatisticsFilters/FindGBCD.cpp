@@ -386,11 +386,11 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t featur
   else
   {
     QVector<int> dims(1, 2);
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
+    m_SurfaceMeshFaceLabels = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims);
     dims[0] = 3;
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, features, dims)
+    m_SurfaceMeshFaceNormals = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceNormalsArrayName, -387, features, dims);
     dims[0] = 1;
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, features, dims)
+    m_SurfaceMeshFaceAreas = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceAreasArrayName, -388, features, dims);
     m_GBCD = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, 0, ensembles, dims);
     dims[0] = 5;
     m_GBCDdimensions = sm->createNonPrereqArray<int32_t, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDdimensionsArrayName, 1, ensembles, dims);

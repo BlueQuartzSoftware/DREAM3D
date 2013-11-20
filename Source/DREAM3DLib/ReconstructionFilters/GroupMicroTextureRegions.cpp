@@ -172,7 +172,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
   QVector<int> dims(1, 1);
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, FeatureIds, -301, int32_t, Int32ArrayType, voxels, dims)
+  m_FeatureIds = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -301, voxels, dims);
   m_CellParentIds = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellParentIdsArrayName, -1, voxels, dims);
   m_MTRdensity = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_MTRdensityArrayName, 0, voxels, dims);
 

@@ -259,7 +259,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
     // Check for Node Type Array
     int size = sm->getVertices()->getNumberOfTuples();
     QVector<int> dims(1, 1);
-    GET_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, -390, int8_t, Int8ArrayType, size, dims)
+    m_SurfaceMeshNodeType = sm->getPrereqArray<int8_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, -390, size, dims);
   }
 
   if ( getConstrainQuadPoints() == true || getSmoothTripleLines() == true )

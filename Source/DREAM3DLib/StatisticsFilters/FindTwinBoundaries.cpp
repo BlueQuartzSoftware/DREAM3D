@@ -280,9 +280,9 @@ void FindTwinBoundaries::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   QVector<int> dims(1, 2);
-  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
+  m_SurfaceMeshFaceLabels = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims);
   dims[0] = 3;
-  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, features, dims)
+  m_SurfaceMeshFaceNormals = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceNormalsArrayName, -387, features, dims);
   dims[0] = 1;
   m_SurfaceMeshTwinBoundary = sm->createNonPrereqArray<bool, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTwinBoundaryArrayName, false, features, dims);
   m_SurfaceMeshTwinBoundaryIncoherence = sm->createNonPrereqArray<float, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTwinBoundaryIncoherenceArrayName, 180.0, features, dims);

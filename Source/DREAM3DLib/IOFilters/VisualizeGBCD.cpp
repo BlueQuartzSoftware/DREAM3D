@@ -197,10 +197,10 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     else
     {
       QVector<int> dims(1, 5);
-      GET_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, -301, int32_t, Int32ArrayType, ensembles, dims)
+      m_GBCDdimensions = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDdimensionsArrayName, -301, ensembles, dims);
       int numComp = iDataArray->GetNumberOfComponents();
       dims[0] = numComp;
-      GET_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, -301, double, DoubleArrayType, ensembles, dims)
+      m_GBCD = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, -301, ensembles, dims);
     }
   }
 }

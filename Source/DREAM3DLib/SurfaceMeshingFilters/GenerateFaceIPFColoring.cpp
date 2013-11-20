@@ -277,9 +277,9 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels
   else
   {
     QVector<int> dims(1, 2);
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, features, dims)
+    m_SurfaceMeshFaceLabels = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims);
     dims[0] = 3;
-    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, features, dims)
+    m_SurfaceMeshFaceNormals = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceNormalsArrayName, -387, features, dims);
     dims[0] = 6;
     m_SurfaceMeshFaceIPFColors = sm->createNonPrereqArray<uint8_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceIPFColorsArrayName, 0, features, dims);
   }
