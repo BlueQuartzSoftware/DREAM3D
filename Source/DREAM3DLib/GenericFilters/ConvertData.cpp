@@ -62,7 +62,7 @@ namespace Detail
   //
   // -----------------------------------------------------------------------------
   template<typename T>
-  void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const QString& name)
+  void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const QString attributeMatrixName, const QString& name)
   {
     int numberOfComponents = ptr->GetNumberOfComponents();
     int voxels = ptr->getNumberOfTuples();
@@ -73,7 +73,7 @@ namespace Detail
     if (scalarType == Detail::Int8)
     {
       Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, dims, name);
-      m->addCellData(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
         p->SetValue(v, ptr->GetValue(v) );
@@ -82,7 +82,7 @@ namespace Detail
     else if (scalarType == Detail::UInt8)
     {
       UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, dims, name);
-      m->addCellData(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
         p->SetValue(v, ptr->GetValue(v) );
@@ -91,7 +91,7 @@ namespace Detail
     else if (scalarType == Detail::Int16)
     {
       Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, dims, name);
-      m->addCellData(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
         p->SetValue(v, ptr->GetValue(v) );
@@ -100,7 +100,7 @@ namespace Detail
     else if (scalarType == Detail::UInt16)
     {
       UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, dims, name);
-      m->addCellData(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
         p->SetValue(v, ptr->GetValue(v) );
@@ -109,7 +109,7 @@ namespace Detail
     else if (scalarType == Detail::Int32)
     {
       Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, dims, name);
-      m->addCellData(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
         p->SetValue(v, ptr->GetValue(v) );
@@ -118,7 +118,7 @@ namespace Detail
     else if (scalarType == Detail::UInt32)
     {
       UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, dims, name);
-      m->addCellData(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
         p->SetValue(v, ptr->GetValue(v) );
@@ -127,7 +127,7 @@ namespace Detail
     else if (scalarType == Detail::Int64)
     {
       Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, dims, name);
-      m->addCellData(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
         p->SetValue(v, ptr->GetValue(v) );
@@ -136,7 +136,7 @@ namespace Detail
     else if (scalarType == Detail::UInt64)
     {
       UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, dims, name);
-      m->addCellData(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
         p->SetValue(v, ptr->GetValue(v) );
@@ -145,12 +145,12 @@ namespace Detail
     else if (scalarType == Detail::Float)
     {
       FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, dims, name);
-      m->addCellData(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
     }
     else if (scalarType == Detail::Double)
     {
       DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, dims, name);
-      m->addCellData(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
       for(size_t v = 0; v < size; ++v)
       {
         p->SetValue(v, ptr->GetValue(v) );

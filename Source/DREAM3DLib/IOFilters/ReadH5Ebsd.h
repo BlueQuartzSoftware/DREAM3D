@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual ~ReadH5Ebsd();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
+
    //------ Created Cell Data
             //------ Created Ensemble Data
             DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
@@ -239,9 +239,8 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-
-    uint32_t* m_CrystalStructures;
-    float*    m_LatticeConstants;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
 
     int tempxpoints;
     int tempypoints;
