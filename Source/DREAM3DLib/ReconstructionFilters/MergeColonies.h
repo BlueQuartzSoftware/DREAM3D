@@ -114,14 +114,14 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     void identify_globAlpha();
 
   private:
-    int32_t* m_FeatureIds;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     int32_t* m_CellParentIds;
     int32_t* m_FeatureParentIds;
     int32_t* m_GlobAlpha;
     float* m_AvgQuats;
-    bool* m_Active;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     NeighborList<int>* m_NeighborList;
 
     unsigned int* m_CrystalStructures;

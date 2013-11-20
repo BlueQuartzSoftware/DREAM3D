@@ -107,11 +107,11 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
 
   private:
     // Cell Data
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     float*   m_CellEulerAngles;
 
     // Feature Data
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     float* m_FeatureEulerAngles;
     float* m_AvgQuats;
 

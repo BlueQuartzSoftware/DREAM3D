@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
     virtual int writeFile();
 
   private:
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
 
     SPParksWriter(const SPParksWriter&); // Copy Constructor Not Implemented
     void operator=(const SPParksWriter&); // Operator '=' Not Implemented

@@ -128,7 +128,7 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     float* m_AvgQuats;
     unsigned int* m_CrystalStructures;
 

@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
 //    OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_BasalLoadingFactor;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     float* m_AvgQuats;
 
     unsigned int* m_CrystalStructures;

@@ -106,7 +106,7 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
 
     float* m_ConfidenceIndex;
     float* m_Quats;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);

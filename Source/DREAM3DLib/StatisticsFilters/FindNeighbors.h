@@ -100,8 +100,8 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     FindNeighbors();
 
   private:
-    int32_t* m_FeatureIds;
-    int8_t* m_SurfaceVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
     bool* m_SurfaceFeatures;
     int32_t* m_NumNeighbors;
     NeighborList<int>* m_NeighborList;

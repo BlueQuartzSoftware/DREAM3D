@@ -64,6 +64,12 @@ target_link_libraries(GenericFilterTest ${QT_QTCORE_LIBRARY} DREAM3DLib)
 set_target_properties(GenericFilterTest PROPERTIES FOLDER Test)
 add_test(GenericFilterTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/GenericFilterTest)
 
+# --------------------------------------------------------------------------
+# Generic Filter Test
+# --------------------------------------------------------------------------
+add_executable(ReplaceText ${DREAM3DTest_SOURCE_DIR}/ReplaceText.cpp)
+target_link_libraries(ReplaceText ${QT_QTCORE_LIBRARY})
+set_target_properties(ReplaceText PROPERTIES FOLDER Test)
 
 
 if(0)

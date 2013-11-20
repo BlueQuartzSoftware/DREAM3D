@@ -104,10 +104,10 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
-    unsigned int* m_PhaseTypes;
-    float* m_Volumes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     float* m_FeatureEulerAngles;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     bool* m_SurfaceFeatures;
 
     unsigned int* m_CrystalStructures;

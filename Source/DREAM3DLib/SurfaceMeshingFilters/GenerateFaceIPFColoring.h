@@ -134,7 +134,7 @@ class DREAM3DLib_EXPORT GenerateFaceIPFColoring : public SurfaceMeshFilter
     double* m_SurfaceMeshFaceNormals;
     uint8_t* m_SurfaceMeshFaceIPFColors;
     float* m_FeatureEulerAngles;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     unsigned int* m_CrystalStructures;
 
     GenerateFaceIPFColoring(const GenerateFaceIPFColoring&); // Copy Constructor Not Implemented

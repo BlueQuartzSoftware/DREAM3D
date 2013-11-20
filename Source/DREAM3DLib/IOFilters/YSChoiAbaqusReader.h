@@ -89,8 +89,8 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
 
   private:
-    int32_t* m_FeatureIds;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     bool* m_SurfaceFeatures;
     float* m_Quats;
     float* m_AvgQuats;

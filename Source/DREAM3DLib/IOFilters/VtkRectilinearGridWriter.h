@@ -262,9 +262,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
 
   private:
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     int32_t* m_ParentIds;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     int32_t* m_BC;
     int32_t* m_GlobAlpha;
     float* m_ImageQuality;

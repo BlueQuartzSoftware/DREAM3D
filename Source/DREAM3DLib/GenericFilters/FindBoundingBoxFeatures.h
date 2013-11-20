@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
 
 
   private:
-    float* m_Centroids;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
     bool* m_SurfaceFeatures;
     bool* m_BiasedFeatures;
 

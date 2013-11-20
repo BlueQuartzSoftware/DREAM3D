@@ -114,7 +114,7 @@ class DREAM3DLib_EXPORT UncertainRegularGridSampleSurfaceMesh : public SampleSur
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
 
     UncertainRegularGridSampleSurfaceMesh(const UncertainRegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const UncertainRegularGridSampleSurfaceMesh&); // Operator '=' Not Implemented

@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 
   private:
     unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
 
     EnsembleInfoReader(const EnsembleInfoReader&); //Not Implemented
     void operator=(const EnsembleInfoReader&); //Not Implemented

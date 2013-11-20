@@ -111,7 +111,7 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_AvgQuats;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_MisorientationList;
     float* m_avgMisorientation;

@@ -108,9 +108,9 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     void find_neighborhoods();
 
   private:
-    int32_t* m_FeaturePhases;
-    float* m_Centroids;
-    float* m_EquivalentDiameters;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
     int32_t* m_Neighborhoods;
     NeighborList<int>* m_NeighborhoodList;
 

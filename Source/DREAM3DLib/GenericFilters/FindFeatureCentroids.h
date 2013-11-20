@@ -94,8 +94,8 @@ class DREAM3DLib_EXPORT FindFeatureCentroids : public AbstractFilter
     void find_centroids();
 
   private:
-    int32_t* m_FeatureIds;
-    float* m_Centroids;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
 
     DECLARE_WRAPPED_ARRAY(featurecenters, m_FeatureCenters, float) // N x 5 Array
 

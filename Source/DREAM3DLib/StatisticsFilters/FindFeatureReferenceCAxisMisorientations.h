@@ -110,8 +110,8 @@ class DREAM3DLib_EXPORT FindFeatureReferenceCAxisMisorientations : public Abstra
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_FeatureIds;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     float* m_Quats;
     float* m_AvgCAxes;
     float* m_FeatureReferenceCAxisMisorientations;

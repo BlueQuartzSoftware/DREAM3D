@@ -112,13 +112,13 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
 
     float* m_AvgQuats;
     bool* m_SurfaceFeatures;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     float* m_TotalSurfaceAreas;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 
     unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
 
     StatsDataArray* m_StatsDataArray;
 

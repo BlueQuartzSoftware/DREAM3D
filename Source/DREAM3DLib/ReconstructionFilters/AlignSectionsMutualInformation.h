@@ -109,9 +109,9 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     void form_features_sections();
 
   private:
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     float* m_Quats;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     bool* m_GoodVoxels;
 
     unsigned int* m_CrystalStructures;

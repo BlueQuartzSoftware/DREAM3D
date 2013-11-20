@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     float* m_AvgQuats;
     NeighborList<float>* m_F1;
     NeighborList<float>* m_F1spt;

@@ -104,8 +104,8 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 
     int32_t* m_Neighbors;
 
-    int32_t* m_FeatureIds;
-    bool* m_Active;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;

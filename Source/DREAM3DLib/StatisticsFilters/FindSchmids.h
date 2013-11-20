@@ -112,7 +112,7 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 
     float* m_Schmids;
     int32_t* m_Poles;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     float* m_AvgQuats;
     int32_t* m_SlipSystems;
 

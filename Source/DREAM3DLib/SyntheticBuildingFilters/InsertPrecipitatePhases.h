@@ -187,24 +187,24 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     ShapeOps::Pointer m_EllipsoidOps;
     ShapeOps::Pointer m_SuperEllipsoidOps;
 
-    int32_t* m_FeatureIds;
-    int32_t* m_CellPhases;
-    int8_t* m_SurfaceVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
 
-    float* m_AxisEulerAngles;
-    float* m_Centroids;
-    float* m_AxisLengths;
-    float* m_Volumes;
-    float* m_Omega3s;
-    float* m_EquivalentDiameters;
-    bool* m_Active;
-    int32_t* m_FeaturePhases;
-    int32_t* m_NumCells;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisLengths)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumCells)
     NeighborList<float>* m_ClusteringList;
 
-    unsigned int* m_PhaseTypes;
-    unsigned int* m_ShapeTypes;
-    int32_t* m_NumFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, ShapeTypes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeatures)
     StatsDataArray* m_StatsDataArray;
 
     OrthoRhombicOps::Pointer m_OrthoOps;

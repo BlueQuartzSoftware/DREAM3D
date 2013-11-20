@@ -99,9 +99,9 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
 
   private:
     bool* m_SurfaceFeatures;
-    int32_t* m_FeaturePhases;
-    float* m_AxisEulerAngles;
-    unsigned int* m_PhaseTypes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
 
     StatsDataArray* m_StatsDataArray;
 

@@ -104,7 +104,7 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
 
   private:
     float* m_Quats;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     bool* m_GoodVoxels;
 
     unsigned int* m_CrystalStructures;

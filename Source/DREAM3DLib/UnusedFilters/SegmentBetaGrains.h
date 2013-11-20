@@ -120,9 +120,9 @@ class DREAM3DLib_EXPORT SegmentBetaGrains : public SegmentGrains
 
     int32_t* m_GrainIds;
     float* m_Quats;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     bool* m_GoodVoxels;
-    bool* m_Active;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
     unsigned int* m_CrystalStructures;
 

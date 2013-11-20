@@ -116,7 +116,7 @@ class DREAM3DLib_EXPORT FindTwinBoundarySchmidFactors : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_AvgQuats;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     unsigned int* m_CrystalStructures;
     int32_t* m_SurfaceMeshFaceLabels;
     double* m_SurfaceMeshFaceNormals;

@@ -132,7 +132,7 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     int32_t* m_SurfaceMeshFaceLabels;
     float* m_SurfaceMeshFaceMisorientationColors;
     float* m_AvgQuats;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     unsigned int* m_CrystalStructures;
 
     GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&); // Copy Constructor Not Implemented

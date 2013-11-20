@@ -94,8 +94,8 @@ class DREAM3DLib_EXPORT RenumberFeatures : public AbstractFilter
     RenumberFeatures();
 
   private:
-    int32_t* m_FeatureIds;
-    bool* m_Active;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 

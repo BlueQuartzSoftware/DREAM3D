@@ -88,7 +88,7 @@ class DREAM3DLib_EXPORT FindVolFractions : public AbstractFilter
     FindVolFractions();
 
   private:
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
 
     float* m_VolFractions;
 

@@ -145,7 +145,7 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     int32_t* m_SurfaceMeshFaceLabels;
     double* m_SurfaceMeshFaceNormals;
     float* m_FeatureEulerAngles;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     unsigned int* m_CrystalStructures;
     double* m_GBCD;
     int32_t* m_GBCDdimensions;

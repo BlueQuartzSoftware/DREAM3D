@@ -115,14 +115,14 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     void characterize_micro_texture_regions();
 
   private:
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     int32_t* m_CellParentIds;
     int32_t* m_FeatureParentIds;
     float* m_MTRdensity;
     float* m_AvgQuats;
-    bool* m_Active;
-    int32_t* m_FeaturePhases;
-    float* m_Volumes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     NeighborList<int>* m_ContiguousNeighborList;
     NeighborList<int>* m_NonContiguousNeighborList;
 

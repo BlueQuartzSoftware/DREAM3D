@@ -145,17 +145,17 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 
     float* m_AvgQuats;
     float* m_FeatureEulerAngles;
-    float* m_Volumes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     bool* m_BiasedFeatures;
     bool* m_SurfaceFeatures;
-    int32_t* m_FeaturePhases;
-    float* m_AxisEulerAngles;
-    float* m_Omega3s;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
     float* m_AspectRatios;
-    float* m_EquivalentDiameters;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
     int32_t* m_Neighborhoods;
     unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
 
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;

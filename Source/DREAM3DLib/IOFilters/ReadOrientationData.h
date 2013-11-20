@@ -224,7 +224,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     }
 
   private:
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     float* m_CellEulerAngles;
 
     uint32_t* m_CrystalStructures;

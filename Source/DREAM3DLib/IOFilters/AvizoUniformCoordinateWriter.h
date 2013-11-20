@@ -143,7 +143,7 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     int writeData(QDataStream& out);
 
   private:
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
 
     AvizoUniformCoordinateWriter(const AvizoUniformCoordinateWriter&); // Copy Constructor Not Implemented
     void operator=(const AvizoUniformCoordinateWriter&); // Operator '=' Not Implemented

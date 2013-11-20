@@ -113,12 +113,12 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     void characterize_twins();
 
   private:
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     int32_t* m_CellParentIds;
     int32_t* m_FeatureParentIds;
     float* m_AvgQuats;
-    bool* m_Active;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     NeighborList<int>* m_NeighborList;
 
     unsigned int* m_CrystalStructures;

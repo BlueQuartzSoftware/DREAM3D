@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
 
     RegularGridSampleSurfaceMesh(const RegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const RegularGridSampleSurfaceMesh&); // Operator '=' Not Implemented

@@ -142,13 +142,13 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
   private:
 
     // Cell Data
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     float*   m_CellEulerAngles;
 
     // Feature Data
     bool* m_SurfaceFeatures;
-    int32_t* m_FeaturePhases;
-    float* m_Volumes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     float* m_FeatureEulerAngles;
     float* m_AvgQuats;
     NeighborList<int>* m_NeighborList;
@@ -156,8 +156,8 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     //Ensemble Data
     unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
-    int32_t* m_NumFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeatures)
     StatsDataArray* m_StatsDataArray;
 
     // All other private instance variables

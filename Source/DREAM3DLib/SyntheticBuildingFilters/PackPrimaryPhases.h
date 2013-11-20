@@ -169,24 +169,24 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     int32_t* m_Neighbors;
 
     // Cell Data - make sure these are all initialized to NULL in the constructor
-    int32_t* m_FeatureIds;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     int8_t*  m_SurfaceVoxels;
 
     // Feature Data - make sure these are all initialized to NULL in the constructor
-    bool* m_Active;
-    int32_t* m_FeaturePhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     int32_t* m_Neighborhoods;
-    float* m_Centroids;
-    float* m_Volumes;
-    float* m_AxisLengths;
-    float* m_AxisEulerAngles;
-    float* m_Omega3s;
-    float* m_EquivalentDiameters;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisLengths)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
 
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
-    unsigned int* m_PhaseTypes;
-    unsigned int* m_ShapeTypes;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, ShapeTypes)
     StatsDataArray* m_StatsDataArray;
 
     // All other private variables

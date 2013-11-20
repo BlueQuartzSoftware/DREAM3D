@@ -105,10 +105,10 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
     void find_boundingbox();
 
   private:
-    int32_t* m_FeaturePhases;
-    float* m_EquivalentDiameters;
-    float* m_Volumes;
-    float* m_Centroids;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
     bool* m_SurfaceFeatures;
 
     float boundbox[7];

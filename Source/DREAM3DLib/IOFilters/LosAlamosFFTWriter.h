@@ -96,8 +96,8 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
     virtual int writeFile();
 
   private:
-    int32_t* m_FeatureIds;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     float*   m_CellEulerAngles;
     unsigned int* m_CrystalStructures;
     StringDataArray::Pointer m_MaterialNames;

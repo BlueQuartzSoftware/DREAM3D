@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     FindCellQuats();
 
   private:
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     float* m_Quats;
     float* m_CellEulerAngles;
     unsigned int* m_CrystalStructures;

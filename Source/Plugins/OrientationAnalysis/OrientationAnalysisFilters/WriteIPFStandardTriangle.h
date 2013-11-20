@@ -158,7 +158,7 @@ class WriteIPFStandardTriangle : public AbstractFilter
 
   private:
     float* m_CellEulerAngles;
-    int32_t* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     unsigned int* m_CrystalStructures;
 
     WriteIPFStandardTriangle(const WriteIPFStandardTriangle&); // Copy Constructor Not Implemented

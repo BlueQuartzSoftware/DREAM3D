@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_FeatureIds;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     float* m_Quats;
     float* m_AvgCAxes;
 
