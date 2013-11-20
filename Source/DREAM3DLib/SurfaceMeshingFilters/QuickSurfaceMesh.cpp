@@ -163,8 +163,8 @@ void QuickSurfaceMesh::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getNumCellFeatureTuples();
-  size_t totalEnsembles = m->getNumCellEnsembleTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
   float m_OriginX, m_OriginY, m_OriginZ;

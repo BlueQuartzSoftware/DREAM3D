@@ -254,7 +254,7 @@ void MinNeighbors::assign_badpoints()
 //  int curfeature = 0;
 // DimType row, plane;
   int neighpoint;
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);

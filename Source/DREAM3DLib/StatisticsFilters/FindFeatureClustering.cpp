@@ -72,7 +72,7 @@ void FindFeatureClustering::dataCheck(bool preflight, size_t voxels, size_t feat
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_ClusteringList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >
-                     (m->getCellFeatureData(m_ClusteringListArrayName).get());
+                     (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_ClusteringListArrayName).get());
   if(m_ClusteringList == NULL)
   {
     NeighborList<float>::Pointer clusteringPtr = NeighborList<float>::New();
@@ -87,7 +87,7 @@ void FindFeatureClustering::dataCheck(bool preflight, size_t voxels, size_t feat
       addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
     m_ClusteringList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >
-                       (m->getCellFeatureData(m_ClusteringListArrayName).get());
+                       (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_ClusteringListArrayName).get());
 
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());

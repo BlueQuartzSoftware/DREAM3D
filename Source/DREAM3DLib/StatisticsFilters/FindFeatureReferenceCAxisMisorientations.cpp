@@ -170,7 +170,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int64_t totalFeatures = m->getNumCellFeatureTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -178,7 +178,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     return;
   }
 
-  size_t numFeatures = m->getNumCellFeatureTuples();
+  size_t numFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int avgMisoComps = 3;
   QVector<int> dims(1, avgMisoComps);
   FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(numFeatures, dims, "AvgMiso_Temp");

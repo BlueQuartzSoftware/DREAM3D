@@ -200,7 +200,7 @@ void FindFeatureReferenceMisorientations::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int64_t totalFeatures = m->getNumCellFeatureTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -209,7 +209,7 @@ void FindFeatureReferenceMisorientations::execute()
   }
 
   float** avgmiso = new float *[m->getNumCellFeatureTuples()];
-  for (size_t i = 1; i < m->getNumCellFeatureTuples(); i++)
+  for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {
     avgmiso[i] = new float[2];
     for (int j = 0; j < 2; j++)
@@ -304,7 +304,7 @@ void FindFeatureReferenceMisorientations::execute()
     }
   }
 
-  size_t featuresSize = m->getNumCellFeatureTuples();
+  size_t featuresSize = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   for (size_t i = 1; i < featuresSize; i++)
   {
     m_FeatureAvgMisorientations[i] = avgmiso[i][1] / avgmiso[i][0];
@@ -312,7 +312,7 @@ void FindFeatureReferenceMisorientations::execute()
   }
 
   // Clean up all the heap allocated memory
-  for (size_t i = 1; i < m->getNumCellFeatureTuples(); i++)
+  for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {
     delete[] avgmiso[i];
   }

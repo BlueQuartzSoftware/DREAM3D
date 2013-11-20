@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
     virtual ~ReadH5Ebsd();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
    //------ Created Cell Data

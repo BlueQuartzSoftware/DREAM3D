@@ -187,7 +187,7 @@ void PerPhaseMinSize::remove_smallfeatures()
 
   int gnum;
 
-  int numfeatures = m->getNumCellFeatureTuples();
+  int numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   std::vector<int> voxcounts;
   voxcounts.resize(numfeatures, 0);

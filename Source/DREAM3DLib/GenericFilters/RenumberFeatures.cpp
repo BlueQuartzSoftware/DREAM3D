@@ -138,7 +138,7 @@ void RenumberFeatures::preflight()
   QList<QString> headers = m->getCellFeatureArrayNameList();
   for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
-    IDataArray::Pointer p = m->getCellFeatureData(*iter);
+    IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(*iter);
     QString type = p->getTypeAsString();
     if(type.compare("NeighborList<T>") == 0) { m->removeCellFeatureData(*iter);}
   }
@@ -160,7 +160,7 @@ void RenumberFeatures::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getNumCellFeatureTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -196,7 +196,7 @@ void RenumberFeatures::execute()
     QList<QString> headers = m->getCellFeatureArrayNameList();
     for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
-      IDataArray::Pointer p = m->getCellFeatureData(*iter);
+      IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(*iter);
 
       ss = QObject::tr("Updating Feature Array '%1'").arg(*iter);
       notifyStatusMessage(ss);
@@ -212,7 +212,7 @@ void RenumberFeatures::execute()
       //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;
     }
     m->setNumCellFeatureTuples(m->getNumCellFeatureTuples() - RemoveList.size());
-    totalFeatures = m->getNumCellFeatureTuples();
+    totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
     dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
 
     // Loop over all the points and correct all the feature names

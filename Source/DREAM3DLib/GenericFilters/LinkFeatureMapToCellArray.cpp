@@ -174,7 +174,7 @@ void LinkFeatureMapToCellArray::execute()
   }
   setErrorCondition(0);
   int64_t voxels = m->getTotalPoints();
-  int64_t features = m->getNumCellFeatureTuples();
+  int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck(false, voxels, features, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {

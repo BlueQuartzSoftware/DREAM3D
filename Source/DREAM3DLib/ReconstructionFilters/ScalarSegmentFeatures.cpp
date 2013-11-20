@@ -350,7 +350,7 @@ void ScalarSegmentFeatures::execute()
   if (true == m_RandomizeFeatureIds)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFeatures = m->getNumCellFeatureTuples();
+    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
     // Generate all the numbers up front
     const int rangeMin = 1;

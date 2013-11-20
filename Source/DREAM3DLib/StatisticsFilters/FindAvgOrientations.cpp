@@ -157,7 +157,7 @@ void FindAvgOrientations::execute()
     return;
   }
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   QVector<float> counts(numfeatures, 0.0);
 
   int phase;

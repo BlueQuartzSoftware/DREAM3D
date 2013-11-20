@@ -227,7 +227,7 @@ void CAxisSegmentFeatures::execute()
   if (true == m_RandomizeFeatureIds)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFeatures = m->getNumCellFeatureTuples();
+    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
     dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
     if (getErrorCondition() < 0)
     {

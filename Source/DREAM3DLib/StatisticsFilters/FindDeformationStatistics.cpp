@@ -556,7 +556,7 @@ void FindDeformationStatistics::execute()
   fprintf(vtkFile,  "POINTS %ld float\n", m->getNumCellFeatureTuples() - 1);
 
 
-  size_t size = m->getNumCellFeatureTuples();
+  size_t size = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   float x, y, z;
   float xtemp, ytemp, ztemp;

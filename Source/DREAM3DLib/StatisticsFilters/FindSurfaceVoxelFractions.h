@@ -63,6 +63,7 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
 
     virtual ~FindSurfaceVoxelFractions();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data

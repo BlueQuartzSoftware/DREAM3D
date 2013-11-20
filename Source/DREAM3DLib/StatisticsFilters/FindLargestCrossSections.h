@@ -63,6 +63,7 @@ class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
 
     virtual ~FindLargestCrossSections();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data

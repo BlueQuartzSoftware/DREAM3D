@@ -176,7 +176,7 @@ void FindLargestCrossSections::find_crosssections()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   DataArray<double>::Pointer m_FeatureCounts = DataArray<double>::CreateArray(numfeatures, "FeatureCounts");
   double* featurecounts = m_FeatureCounts->getPointer(0);

@@ -43,8 +43,8 @@
 CopyFeatureArrayToCellArray::CopyFeatureArrayToCellArray() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_SelectedFeatureArrayName(""),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -191,8 +191,9 @@ void CopyFeatureArrayToCellArray::execute()
   }
   setErrorCondition(0);
   int64_t voxels = m->getTotalPoints();
-  int64_t features = m->getNumCellFeatureTuples();
-  dataCheck(false, voxels, features, m->getNumCellEnsembleTuples());
+  int64_t featureTuples = 0;
+  int64_t ensembleTuples = 0;
+  dataCheck(false, voxels, featureTuples, ensembleTuples);
   if (getErrorCondition() < 0)
   {
     return;
@@ -200,7 +201,8 @@ void CopyFeatureArrayToCellArray::execute()
   //int err = 0;
   QString ss;
 
-  IDataArray::Pointer inputData = m->getCellFeatureData(m_SelectedFeatureArrayName);
+    IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
+
   if (NULL == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);

@@ -167,7 +167,7 @@ void FindSizes::find_sizes()
   float radcubed;
   float diameter;
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   DataArray<double>::Pointer m_FeatureCounts = DataArray<double>::CreateArray(numfeatures, "FeatureCounts");
   double* featurecounts = m_FeatureCounts->getPointer(0);
@@ -203,7 +203,7 @@ void FindSizes::find_sizes2D()
 
   float radsquared;
   float diameter;
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   DataArray<float>::Pointer m_FeatureCounts = DataArray<float>::CreateArray(numfeatures, "FeatureCounts");
   float* featurecounts = m_FeatureCounts->getPointer(0);

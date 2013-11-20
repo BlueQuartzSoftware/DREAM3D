@@ -486,8 +486,8 @@ void FindGBCD::execute()
   // Note the use of the voxel datacontainer num ensembles to set the gbcd size
   dataCheckSurfaceMesh(false, 0, totalFaces, m->getNumCellEnsembleTuples());
 
-  size_t totalFeatures = m->getNumCellFeatureTuples();
-  size_t totalEnsembles = m->getNumCellEnsembleTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   dataCheckVoxel(false, 0, totalFeatures, totalEnsembles);
 
@@ -563,7 +563,7 @@ void FindGBCD::execute()
   dims[5] = 2;
   m_GBCDPtr = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, 0, m->getNumCellEnsembleTuples(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_GBCD = m_GBCDPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GBCD */
-  for(int i = 0; i < m->getNumCellEnsembleTuples(); i++)
+  for(int i = 0; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {
     m_GBCDdimensions[5 * i + 0] = m_GBCDsizes[0];
     m_GBCDdimensions[5 * i + 1] = m_GBCDsizes[1];

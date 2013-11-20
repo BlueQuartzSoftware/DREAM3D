@@ -33,6 +33,8 @@ class DREAM3DLib_EXPORT FindFeatureNeighborCAxisMisalignments : public AbstractF
     virtual ~FindFeatureNeighborCAxisMisalignments();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
             //------ Required Ensemble Data
         DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)

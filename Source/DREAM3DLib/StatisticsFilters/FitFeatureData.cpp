@@ -216,8 +216,8 @@ void FitFeatureData::execute()
   }
   setErrorCondition(0);
   int64_t voxels = m->getTotalPoints();
-  int64_t features = m->getNumCellFeatureTuples();
-  int64_t ensembles = m->getNumCellEnsembleTuples();
+  int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int64_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck(false, voxels, features, ensembles);
   if (getErrorCondition() < 0)
   {
@@ -226,7 +226,8 @@ void FitFeatureData::execute()
 
   QString ss;
 
-  IDataArray::Pointer inputData = m->getCellFeatureData(m_SelectedFeatureArrayName);
+    IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
+
   if (NULL == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);

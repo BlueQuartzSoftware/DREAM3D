@@ -126,7 +126,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t features
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                       (m->getCellFeatureData(m_NeighborhoodListArrayName).get());
+                       (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborhoodListArrayName).get());
   if(m_NeighborhoodList == NULL)
   {
     NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
@@ -141,7 +141,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t features
       setErrorCondition(-308);
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                         (m->getCellFeatureData(m_NeighborhoodListArrayName).get());
+                         (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborhoodListArrayName).get());
 
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());

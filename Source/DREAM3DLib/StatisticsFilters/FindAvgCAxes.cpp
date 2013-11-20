@@ -138,7 +138,7 @@ void FindAvgCAxes::execute()
     return;
   }
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   //int phase;
   QuatF q1;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);

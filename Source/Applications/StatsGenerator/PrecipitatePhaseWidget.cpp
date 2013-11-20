@@ -754,7 +754,7 @@ int PrecipitatePhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  size_t ensembles = m->getNumCellEnsembleTuples();
+  size_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   // Get pointers
   unsigned int* crystalStructures = m->getCellEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(DREAM3D::EnsembleData::CrystalStructures, ensembles, 1, NULL);

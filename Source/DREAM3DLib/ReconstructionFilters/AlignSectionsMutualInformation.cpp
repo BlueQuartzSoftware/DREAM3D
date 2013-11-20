@@ -199,8 +199,8 @@ void AlignSectionsMutualInformation::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t numfeatures = m->getNumCellFeatureTuples();
-  size_t numensembles = m->getNumCellEnsembleTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, numfeatures, numensembles);
   if (getErrorCondition() < 0)
   {

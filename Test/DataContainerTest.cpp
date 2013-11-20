@@ -253,11 +253,11 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   DREAM3D_REQUIRE_EQUAL(t.get(), 0);
 
   m->addCellFeatureData("Test", p);
-  t = m->getCellFeatureData("Test");
+  t = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray("Test");
   DREAM3D_TEST_POINTER(t.get(), !=, NULL);
   t = m->removeCellFeatureData( "Test" );
   DREAM3D_TEST_POINTER(t.get(), !=, NULL);
-  t = m->getCellFeatureData( "Test" );
+  t = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), 0);
 
   m->addCellEnsembleData("Test", p);

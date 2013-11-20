@@ -115,7 +115,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t features, si
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                   (m->getCellFeatureData(m_NeighborListArrayName).get());
+                   (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborListArrayName).get());
   if(m_NeighborList == NULL)
   {
     NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
@@ -129,7 +129,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t features, si
       setErrorCondition(-308);
     }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                     (m->getCellFeatureData(m_NeighborListArrayName).get());
+                     (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborListArrayName).get());
 
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
@@ -145,7 +145,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t features, si
 
   // And we do the same for the SharedSurfaceArea list
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                            (m->getCellFeatureData(m_SharedSurfaceAreaListArrayName).get());
+                            (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_SharedSurfaceAreaListArrayName).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
     NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
@@ -161,7 +161,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t features, si
       addErrorMessage(getHumanLabel(), ss, -308);
     }
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                              (m->getCellFeatureData(m_SharedSurfaceAreaListArrayName).get());
+                              (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_SharedSurfaceAreaListArrayName).get());
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
     e->setFilterHumanLabel(this->getHumanLabel());
@@ -308,7 +308,7 @@ void FindNeighbors::execute()
   // We do this to create new set of NeighborList objects
   dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
 
-  for (size_t i = 1; i < m->getNumCellFeatureTuples(); i++)
+  for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {
 
     QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i / totalFeatures) * 100);

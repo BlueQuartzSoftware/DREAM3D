@@ -162,11 +162,11 @@ namespace Detail
 
 } // End Namespace Detail
 
-#define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, OutputName)\
+#define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, AttributeMatrixName, OutputName)\
   if(false == completed) {\
     Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
     if (NULL != Type##Ptr) {\
-      Detail::ConvertData<Type>(Type##Ptr, DataContainer, ScalarType, OutputName);\
+      Detail::ConvertData<Type>(Type##Ptr, DataContainer, ScalarType, AttributeMatrixName, OutputName);\
       completed = true;\
     }\
   }
@@ -388,17 +388,17 @@ void ConvertData::execute()
   IDataArray::Pointer iArray = m->getCellData(m_SelectedCellArrayName);
   bool completed = false;
 
-  CHECK_AND_CONVERT(UInt8ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
-  CHECK_AND_CONVERT(Int8ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
-  CHECK_AND_CONVERT(UInt16ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
-  CHECK_AND_CONVERT(Int16ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
-  CHECK_AND_CONVERT(UInt32ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
-  CHECK_AND_CONVERT(Int32ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
-  CHECK_AND_CONVERT(UInt64ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
-  CHECK_AND_CONVERT(Int64ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
+  CHECK_AND_CONVERT(UInt8ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(Int8ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(UInt16ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(Int16ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(UInt32ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(Int32ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(UInt64ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(Int64ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
 
-  CHECK_AND_CONVERT(FloatArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
-  CHECK_AND_CONVERT(DoubleArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
+  CHECK_AND_CONVERT(FloatArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(DoubleArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

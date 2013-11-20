@@ -313,7 +313,7 @@ void MatchCrystallography::initializeArrays(int ensem)
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
-  // size_t size = m->getNumCellEnsembleTuples();
+  // size_t size = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   if(m_PhaseTypes[ensem] == DREAM3D::PhaseType::PrecipitatePhase)
   {

@@ -226,7 +226,7 @@ void FindRadialDist::find_radialdist()
   float x, y, z;
   float xn, yn, zn;
   float dist;
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   bool writeFile = !m_OutputFile.isEmpty();
 
@@ -351,7 +351,7 @@ void FindRadialDist::find_boundingbox()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t size = m->getNumCellFeatureTuples();
+  size_t size = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   float coords[7];
   float x, y, z;

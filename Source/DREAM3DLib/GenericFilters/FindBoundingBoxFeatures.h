@@ -64,10 +64,11 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
     virtual ~FindBoundingBoxFeatures();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+
    //------ Required Feature Data
             //------ Created Feature Data
-    
+
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
@@ -100,10 +101,10 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
 
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
-  
+
     void find_boundingboxfeatures();
     void find_boundingboxfeatures2D();
-  
+
 
     FindBoundingBoxFeatures(const FindBoundingBoxFeatures&); // Copy Constructor Not Implemented
     void operator=(const FindBoundingBoxFeatures&); // Operator '=' Not Implemented

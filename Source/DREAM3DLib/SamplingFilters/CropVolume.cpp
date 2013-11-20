@@ -404,7 +404,7 @@ void CropVolume::execute()
   if (m_RenumberFeatures == true)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFeatures = m->getNumCellFeatureTuples();
+    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
     if (0 == totalFeatures)
     {
       notifyErrorMessage("The number of features is Zero and should be greater than Zero", -600);

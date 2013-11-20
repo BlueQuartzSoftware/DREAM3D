@@ -86,7 +86,7 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck(bool preflight, size_t vox
   m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CrystalStructures */
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  IDataArray::Pointer neighborListPtr = m->getCellFeatureData(m_NeighborListArrayName);
+  IDataArray::Pointer neighborListPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborListArrayName);
   if (NULL == neighborListPtr.get())
   {
     ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
@@ -98,7 +98,7 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck(bool preflight, size_t vox
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(neighborListPtr.get());
   }
 
-  IDataArray::Pointer misalignmentPtr = m->getCellFeatureData(m_CAxisMisalignmentListArrayName);
+  IDataArray::Pointer misalignmentPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_CAxisMisalignmentListArrayName);
   if(NULL == misalignmentPtr.get())
   {
     NeighborList<float>::Pointer misalignmentListPtr = NeighborList<float>::New();
@@ -168,7 +168,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   unsigned int phase1, phase2;
 
   float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
@@ -224,7 +224,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   // We do this to create new set of MisalignmentList objects
   dataCheck(false, m->getNumCellTuples(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
 
-  for (size_t i = 1; i < m->getNumCellFeatureTuples(); i++)
+  for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType misaL(new std::vector<float>);

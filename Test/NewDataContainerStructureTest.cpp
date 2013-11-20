@@ -224,7 +224,7 @@ void TestDataContainerReader()
 
   // Validate the NeighborList Data
   NeighborList<int32_t>* neighborlistPtr
-    = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getCellFeatureData(DREAM3D::FeatureData::NeighborList).get());
+    = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::NeighborList).get());
   DREAM3D_REQUIRE_NE(NULL, neighborlistPtr);
   NeighborList<int32_t>::SharedVectorType vec;
   size_t nLists = neighborlistPtr->getNumberOfTuples();
@@ -269,11 +269,11 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
   m->addCellFeatureData("Test", p);
-  t = m->getCellFeatureData("Test");
+  t = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
   t = m->removeCellFeatureData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->getCellFeatureData( "Test" );
+  t = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
   m->addCellEnsembleData("Test", p);

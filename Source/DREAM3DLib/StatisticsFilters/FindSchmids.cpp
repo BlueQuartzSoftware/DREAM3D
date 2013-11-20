@@ -193,7 +193,7 @@ void FindSchmids::execute()
   sampleLoading[2] = m_LoadingDir.z;
   MatrixMath::Normalize3x1(sampleLoading);
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   for (size_t i = 1; i < numfeatures; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);

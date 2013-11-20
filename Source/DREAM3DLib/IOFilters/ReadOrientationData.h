@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 
     virtual ~ReadOrientationData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
 
     //------ Created Cell Data

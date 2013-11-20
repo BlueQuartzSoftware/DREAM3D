@@ -160,7 +160,7 @@ void FindSurfaceVoxelFractions::find_surface_voxel_fractions()
 
   int64_t totalPoints = m->getTotalPoints();
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   DataArray<float>::Pointer m_SurfVoxCounts = DataArray<float>::CreateArray(numfeatures, "SurfVoxCounts");
   float* surfvoxcounts = m_SurfVoxCounts->getPointer(0);

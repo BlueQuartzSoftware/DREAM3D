@@ -200,7 +200,7 @@ void FindShapes::find_moments()
   float u011 = 0;
   float u101 = 0;
   float xx, yy, zz, xy, xz, yz;
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   m_FeatureMoments->Resize(numfeatures*6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
@@ -328,7 +328,7 @@ void FindShapes::find_moments2D()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   float xx, yy, xy;
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   m_FeatureMoments->Resize(numfeatures*6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
@@ -418,7 +418,7 @@ void FindShapes::find_axes()
   float bovera, covera;
   float value;
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   m_FeatureMoments->Resize(numfeatures*6);
   featuremoments = m_FeatureMoments->getPointer(0);
@@ -505,7 +505,7 @@ void FindShapes::find_axes2D()
 
   float Ixx, Iyy, Ixy;
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   m_FeatureMoments->Resize(numfeatures*6);
   featuremoments = m_FeatureMoments->getPointer(0);
@@ -537,7 +537,7 @@ void FindShapes::find_axiseulers()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   float ea1 = 0, ea2 = 0, ea3 = 0;
   for (size_t i = 1; i < numfeatures; i++)
   {
@@ -692,7 +692,7 @@ void FindShapes::find_axiseulers2D()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   for (size_t i = 1; i < numfeatures; i++)
   {

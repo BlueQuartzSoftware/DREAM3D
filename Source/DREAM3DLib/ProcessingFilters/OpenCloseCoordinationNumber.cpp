@@ -202,7 +202,7 @@ void OpenCloseCoordinationNumber::execute()
 //  float x, y, z;
 //  DimType row, plane;
   int neighpoint;
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (numfeatures == 0)
   {
     setErrorCondition(-90001);

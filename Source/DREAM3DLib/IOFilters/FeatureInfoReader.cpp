@@ -234,7 +234,7 @@ int  FeatureInfoReader::readFile()
 
   // Now that we know how many unique features are in the file initialize the Feature Map to the proper size:
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalEnsembles = m->getNumCellEnsembleTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, numfeatures + 1, totalEnsembles);
 
   // Create and initialize the Feature Active Array with a default value of true
@@ -290,7 +290,7 @@ int  FeatureInfoReader::readFile()
   if (m_RenumberFeatures == true)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFeatures = m->getNumCellFeatureTuples();
+    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
     if (0 == totalFeatures)
     {
       notifyErrorMessage("The number of features is Zero and should be greater than Zero", -600);

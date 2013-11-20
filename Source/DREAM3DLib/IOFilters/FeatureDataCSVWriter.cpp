@@ -210,7 +210,7 @@ void FeatureDataCSVWriter::execute()
   for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
-    IDataArray::Pointer p = m->getCellFeatureData(*iter);
+    IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
       if (p->GetNumberOfComponents() == 1)
@@ -268,7 +268,7 @@ void FeatureDataCSVWriter::execute()
     for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       // Only get the array if the name does NOT match those listed
-      IDataArray::Pointer p = m->getCellFeatureData(*iter);
+      IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(*iter);
       if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
         outFile << DREAM3D::FeatureData::FeatureID << m_Delimiter << DREAM3D::FeatureData::NumNeighbors << m_Delimiter << (*iter) << "\n";

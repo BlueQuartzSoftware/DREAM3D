@@ -172,7 +172,7 @@ void MultiThresholdFeatures::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t nFeatures = m->getNumCellFeatureTuples();
+  int64_t nFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -180,7 +180,7 @@ void MultiThresholdFeatures::execute()
   }
   /* Place all your code to execute your filter here. */
 
-  IDataArray::Pointer outputArrayPtr = m->getCellFeatureData(m_OutputArrayName);
+  IDataArray::Pointer outputArrayPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_OutputArrayName);
   BoolArrayType* outputArray = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(outputArrayPtr.get());
   if (NULL == outputArray)
   {
@@ -198,7 +198,7 @@ void MultiThresholdFeatures::execute()
                                  comp_0.compValue,
                                  outputArray);
 
-    err = filter.execute(m->getCellFeatureData(comp_0.arrayName).get(), outputArrayPtr.get());
+    err = filter.execute(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(comp_0.arrayName).get(), outputArrayPtr.get());
 
     if (err < 0)
     {
@@ -220,7 +220,7 @@ void MultiThresholdFeatures::execute()
                                  compRef.compValue,
                                  currentArrayPtr.get());
 
-    err = filter.execute(m->getCellFeatureData(compRef.arrayName).get(), currentArrayPtr.get());
+    err = filter.execute(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(compRef.arrayName).get(), currentArrayPtr.get());
     if (err < 0)
     {
       setErrorCondition(-13002);

@@ -240,7 +240,7 @@ void MinSize::assign_badpoints()
   //  int curfeature = 0;
   // DimType row, plane;
   int neighpoint;
-  size_t numfeatures = m->getNumCellFeatureTuples();
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -356,7 +356,7 @@ void MinSize::remove_smallfeatures()
 
   int gnum;
 
-  int numfeatures = m->getNumCellFeatureTuples();
+  int numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   QVector<int> voxcounts(numfeatures, 0);
 

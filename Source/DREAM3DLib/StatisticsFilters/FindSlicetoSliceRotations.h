@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT FindSlicetoSliceRotations : public AbstractFilter
 
     virtual ~FindSlicetoSliceRotations();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ Required Cell Data

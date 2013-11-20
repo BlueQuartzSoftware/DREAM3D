@@ -30,6 +30,7 @@ class DREAM3DLib_EXPORT FitCorrelatedFeatureData : public AbstractFilter
 
     virtual ~FitCorrelatedFeatureData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)

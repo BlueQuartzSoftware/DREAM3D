@@ -127,7 +127,7 @@ void FindSurfaceFeatures::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getNumCellFeatureTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   ss = QObject::tr("FSG Points - %1, Features - %2").arg(totalPoints).arg(totalFeatures);
   notifyStatusMessage(ss);
   dataCheck(false, totalPoints, totalFeatures, 1);

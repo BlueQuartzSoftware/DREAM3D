@@ -126,7 +126,7 @@ void FindMicroTextureRegions::find_microtextureregions()
 
   int64_t totalPoints = m->getTotalPoints();
 
-  size_t nummicrotextureregions = m->getNumCellFeatureTuples();
+  size_t nummicrotextureregions = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   DataArray<double>::Pointer m_MicroTextureRegionCounts = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");
   DataArray<double>::Pointer m_MicroTextureRegionXMaxs = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");

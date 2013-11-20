@@ -836,7 +836,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   }
 
   // Get the number of Phases
-  size_t ensembles = m->getNumCellEnsembleTuples();
+  size_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   unsigned int* phaseTypes = m->getCellEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);

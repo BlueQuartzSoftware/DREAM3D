@@ -264,7 +264,7 @@ void InitializeSyntheticVolume::execute()
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
   m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
   int64_t totalPoints = m->getTotalPoints();
-  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   // Check to make sure we have all of our data arrays available or make them available.
   dataCheck(false, totalPoints, 0, totalEnsembles);

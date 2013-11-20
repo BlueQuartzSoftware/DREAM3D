@@ -103,7 +103,7 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
     if(preflight == true) { find_featurecentroids->preflight(); }
     if(preflight == false) { find_featurecentroids->execute(); }
     m_CentroidsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_Centroids = m_CentroidsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_Centroids */
+    m_Centroids = m_CentroidsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_Centroids */
   }
   dims[0] = 1;
   m_SurfaceFeaturesPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -117,7 +117,7 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
     if(preflight == true) { find_surfacefeatures->preflight(); }
     if(preflight == false) { find_surfacefeatures->execute(); }
     m_SurfaceFeaturesPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceFeatures */
+    m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceFeatures */
   }
 
   m_BiasedFeaturesPtr = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, false, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -154,7 +154,13 @@ void FindBoundingBoxFeatures::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(),  m->getNumCellEnsembleTuples());
+  int64_t totalPoints = m->getTotalPoints();
+  size_t featureTuples = 0;
+  if (m->doesAttributeMatrixExist(getCellFeatureAttributeMatrixName()) == true) {
+    featureTuples = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  }
+  size_t ensembleTuples = 0;
+  dataCheck(false, totalPoints, featureTuples, ensembleTuples);
   if (getErrorCondition() < 0)
   {
     return;
@@ -173,7 +179,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t size = m->getNumCellFeatureTuples();
+  size_t size = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   float boundbox[7];
   float coords[7];
   float x, y, z;
@@ -233,7 +239,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t size = m->getNumCellFeatureTuples();
+  size_t size = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   float boundbox[5];
   float coords[5];
   float x, y;

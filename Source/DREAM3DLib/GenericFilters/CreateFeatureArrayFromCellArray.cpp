@@ -7,8 +7,8 @@
 CreateFeatureArrayFromCellArray::CreateFeatureArrayFromCellArray() :
   AbstractFilter(),
  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_SelectedCellArrayName(""),
+    m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -158,7 +158,7 @@ void CreateFeatureArrayFromCellArray::execute()
   }
   setErrorCondition(0);
   int64_t voxels = m->getTotalPoints();
-  int64_t features = m->getNumCellFeatureTuples();
+  int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck(false, voxels, features, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -225,7 +225,7 @@ void CreateFeatureArrayFromCellArray::execute()
 
   if (p.get() != NULL)
   {
-    m->addCellFeatureData(p->GetName(), p);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixArrayName())->addAttributeArray(p->GetName(), p);
 
   }
   else

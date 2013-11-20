@@ -63,6 +63,9 @@ class DREAM3DLib_EXPORT GBCDTriangleDumper : public SurfaceMeshFilter
 
     virtual ~GBCDTriangleDumper();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Face)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
