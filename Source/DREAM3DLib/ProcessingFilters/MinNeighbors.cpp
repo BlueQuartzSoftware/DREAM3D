@@ -366,7 +366,7 @@ void MinNeighbors::merge_containedfeatures()
   bool good = false;
 
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
-  size_t totalFeatures = static_cast<size_t>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = static_cast<size_t>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
   for (size_t i = 0; i < totalFeatures; i++)
   {
     m_Active[i] = true;

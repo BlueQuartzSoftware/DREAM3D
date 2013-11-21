@@ -176,7 +176,7 @@ void FindFeatureClustering::find_clustering()
 
   std::vector<std::vector<float> > clusteringlist;
 
-  int totalFeatures = int(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int totalFeatures = int(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
 
   clusteringlist.resize(totalFeatures);
 

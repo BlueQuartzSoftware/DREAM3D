@@ -214,7 +214,7 @@ void RenumberFeatures::execute()
       }
       //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;
     }
-    m->setNumCellFeatureTuples(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+    m->setNumCellFeatureTuples(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
     totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
     size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
     dataCheck(false, totalPoints, totalFeatures, totalEnsembles);

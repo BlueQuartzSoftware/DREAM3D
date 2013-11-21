@@ -472,8 +472,7 @@ void M3CSliceBySlice::execute()
     sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(), totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

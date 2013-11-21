@@ -396,8 +396,7 @@ void FindTwinBoundarySchmidFactors::execute()
 #endif
 
   int numTriangles = sm->getNumFaceTuples();
-  dataCheckVoxel(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheckSurfaceMesh(false, 0, numTriangles, 0);
+dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(), totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
