@@ -209,7 +209,8 @@ void FindSlipTransmissionMetrics::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   int64_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

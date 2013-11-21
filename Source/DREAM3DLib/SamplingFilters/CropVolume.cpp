@@ -414,7 +414,8 @@ void CropVolume::execute()
       notifyStatusMessage("Completed");
       return;
     }
-    dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
+    size_t totalEnsembles = 0;
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
 
 
