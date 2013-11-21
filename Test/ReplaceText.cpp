@@ -27,7 +27,7 @@ void replaceText(QString hFile, QString cppFile)
   QStringList varNames;
   QStringList typeNames;
 
-  int index = cpp.indexOf("m->createNonPrereqArray<");
+  int index = cpp.indexOf("m->getPrereqArray<");
   int endIdx = 0;
   bool doReplace = false;
   while (index > 0)
@@ -41,7 +41,7 @@ void replaceText(QString hFile, QString cppFile)
     sub = sub.mid(2, endIdx-2);
     varNames << sub;
     doReplace = true;
-    index = cpp.indexOf("m->createNonPrereqArray<", index + 1);
+    index = cpp.indexOf("m->getPrereqArray<", index + 1);
     //break;
   }
 
@@ -54,7 +54,7 @@ void replaceText(QString hFile, QString cppFile)
     index = header.indexOf(s, 0);
     if (index < 0) { // Not found
 
-      QString dc("DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)\n");
+      QString dc("DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)\n");
       int idx = header.indexOf(dc, 0);
       if (idx > 0)
       {
