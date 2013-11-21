@@ -209,7 +209,7 @@ void SingleThresholdFeatures::execute()
     return;
   }
 
-  IDataArray::Pointer goodFeaturesPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_OutputArrayName);
+  IDataArray::Pointer goodFeaturesPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_OutputArrayName);
   BoolArrayType* goodFeatures = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(goodFeaturesPtr.get());
   if (NULL == goodFeatures)
   {

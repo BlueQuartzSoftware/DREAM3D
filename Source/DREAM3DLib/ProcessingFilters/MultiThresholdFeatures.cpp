@@ -181,7 +181,7 @@ void MultiThresholdFeatures::execute()
   }
   /* Place all your code to execute your filter here. */
 
-  IDataArray::Pointer outputArrayPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_OutputArrayName);
+  IDataArray::Pointer outputArrayPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_OutputArrayName);
   BoolArrayType* outputArray = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(outputArrayPtr.get());
   if (NULL == outputArray)
   {
