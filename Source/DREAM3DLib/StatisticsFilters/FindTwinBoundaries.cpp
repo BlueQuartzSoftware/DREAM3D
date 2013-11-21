@@ -355,11 +355,12 @@ void FindTwinBoundaries::execute()
 #endif
 
   int numTriangles = sm->getNumFaceTuples();
-  dataCheckVoxel(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);  if (getErrorCondition() < 0)
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);  
+  if (getErrorCondition() < 0)
   {
     return;
   }

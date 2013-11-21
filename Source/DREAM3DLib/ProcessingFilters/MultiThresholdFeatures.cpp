@@ -199,7 +199,7 @@ void MultiThresholdFeatures::execute()
                                  comp_0.compValue,
                                  outputArray);
 
-    err = filter.execute(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(comp_0.arrayName).get(), outputArrayPtr.get());
+    err = filter.execute(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(comp_0.arrayName).get(), outputArrayPtr.get());
 
     if (err < 0)
     {
@@ -221,7 +221,7 @@ void MultiThresholdFeatures::execute()
                                  compRef.compValue,
                                  currentArrayPtr.get());
 
-    err = filter.execute(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(compRef.arrayName).get(), currentArrayPtr.get());
+    err = filter.execute(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(compRef.arrayName).get(), currentArrayPtr.get());
     if (err < 0)
     {
       setErrorCondition(-13002);
