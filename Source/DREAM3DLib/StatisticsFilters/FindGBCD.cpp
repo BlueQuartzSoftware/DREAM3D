@@ -387,18 +387,23 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t featur
   {
     QVector<int> dims(1, 2);
     m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceMeshFaceLabels */
+  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 3;
     m_SurfaceMeshFaceNormalsPtr = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceNormalsArrayName, -387, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceMeshFaceNormals */
+  if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 1;
     m_SurfaceMeshFaceAreasPtr = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceAreasArrayName, -388, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceMeshFaceAreas */
+  if( NULL != m_SurfaceMeshFaceAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     m_GBCDPtr = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, 0, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_GBCD = m_GBCDPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GBCD */
+  if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 5;
     m_GBCDdimensionsPtr = sm->createNonPrereqArray<int32_t, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDdimensionsArrayName, 1, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_GBCDdimensions = m_GBCDdimensionsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GBCDdimensions */
+  if( NULL != m_GBCDdimensionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_GBCDdimensions = m_GBCDdimensionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -412,13 +417,16 @@ void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t features, si
 
   QVector<int> dims(1, 3);
   m_FeatureEulerAnglesPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureEulerAnglesArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FeatureEulerAngles */
+  if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
   m_FeaturePhasesPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -302,  features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FeaturePhases */
+  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CrystalStructures */
+  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 }
 
@@ -562,7 +570,8 @@ void FindGBCD::execute()
   dims[4] = m_GBCDsizes[4];
   dims[5] = 2;
   m_GBCDPtr = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, 0, m->getNumCellEnsembleTuples(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_GBCD = m_GBCDPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GBCD */
+  if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   for(int i = 0; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {
     m_GBCDdimensions[5 * i + 0] = m_GBCDsizes[0];

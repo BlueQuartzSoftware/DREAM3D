@@ -95,10 +95,12 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t features, siz
 
   QVector<int> dims(1, 4);
   m_QuatsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QuatsArrayName, -303, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_Quats = m_QuatsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_Quats */
+  if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 3;
   m_AvgCAxesPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgCAxesArrayName, 0, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_AvgCAxes = m_AvgCAxesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_AvgCAxes */
+  if( NULL != m_AvgCAxesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_AvgCAxes = m_AvgCAxesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------

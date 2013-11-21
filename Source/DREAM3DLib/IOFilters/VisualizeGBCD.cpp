@@ -198,11 +198,13 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     {
       QVector<int> dims(1, 5);
       m_GBCDdimensionsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDdimensionsArrayName, -301, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_GBCDdimensions = m_GBCDdimensionsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GBCDdimensions */
+  if( NULL != m_GBCDdimensionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_GBCDdimensions = m_GBCDdimensionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
       int numComp = iDataArray->GetNumberOfComponents();
       dims[0] = numComp;
       m_GBCDPtr = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, -301, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_GBCD = m_GBCDPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GBCD */
+  if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
   }
 }

@@ -93,7 +93,8 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
 
   QVector<int> dims(1, 3);
   m_CentroidsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_Centroids = m_CentroidsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_Centroids */
+  if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() == -301)
   {
     setErrorCondition(0);
@@ -103,11 +104,13 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
     if(preflight == true) { find_featurecentroids->preflight(); }
     if(preflight == false) { find_featurecentroids->execute(); }
     m_CentroidsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    m_Centroids = m_CentroidsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_Centroids */
+    if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   dims[0] = 1;
   m_SurfaceFeaturesPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceFeatures */
+  if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() == -302)
   {
     setErrorCondition(0);
@@ -117,11 +120,13 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
     if(preflight == true) { find_surfacefeatures->preflight(); }
     if(preflight == false) { find_surfacefeatures->execute(); }
     m_SurfaceFeaturesPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceFeatures */
+    if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   m_BiasedFeaturesPtr = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, false, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_BiasedFeatures */
+  if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 

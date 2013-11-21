@@ -88,7 +88,8 @@ void QuickSolidMesh::dataCheck(bool preflight, size_t voxels, size_t features, s
   VoxelDataContainer* m = getVoxelDataContainer();
 
   m_GrainIdsPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GrainIdsArrayName, -300, voxels, 1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_GrainIds = m_GrainIdsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GrainIds */
+  if( NULL != m_GrainIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_GrainIds = m_GrainIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   SolidMeshDataContainer* sm = getSolidMeshDataContainer();
   if (NULL == sm)

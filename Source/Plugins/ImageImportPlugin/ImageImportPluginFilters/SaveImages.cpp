@@ -175,7 +175,8 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t features, size_
   {
     QVector<int> dims(1, 3);
     m_ColorsPtr = m->getPrereqArray<uint8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ColorsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_Colors = m_ColorsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_Colors */
+  if( NULL != m_ColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
 }

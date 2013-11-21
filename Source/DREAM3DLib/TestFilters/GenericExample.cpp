@@ -546,23 +546,28 @@ void GenericExample::dataCheck(bool preflight, size_t voxels, size_t features, s
   QVector<int> dims(1, 1);
   // Require the following Cell Data
   m_FeatureIdsPtr = m->getPrereqArray<int32_t, GenericExample>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FeatureIds */
+  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_CellPatternQualityPtr = m->getPrereqArray<float, GenericExample>(this, m_CellAttributeMatrixName,  m_CellPatternQualityArrayName, -302, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_CellPatternQuality = m_CellPatternQualityPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellPatternQuality */
+  if( NULL != m_CellPatternQualityPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_CellPatternQuality = m_CellPatternQualityPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Create the following array
   dims[0] = 3; // We are going to create a [1x3] component for each Cell.
   m_CellEulerAnglesPtr = m->createNonPrereqArray<float, GenericExample>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -303, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellEulerAngles */
+  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   dims[0] = 1;
   m_GoodVoxelsPtr = m->getPrereqArray<bool, GenericExample>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -304, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GoodVoxels */
+  if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(NULL == m_GoodVoxelsPtr.lock().get() )  // The Good Voxels array was NOT available so create it
   {
     m_GoodVoxelsPtr = m->createNonPrereqArray<bool, GenericExample>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GoodVoxels */
+    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
 }

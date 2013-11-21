@@ -181,7 +181,8 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t featu
   {
     QVector<int> dims(1, 3);
     m_SurfaceMeshTriangleNormalsPtr = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTriangleNormalsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_SurfaceMeshTriangleNormals */
+  if( NULL != m_SurfaceMeshTriangleNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
