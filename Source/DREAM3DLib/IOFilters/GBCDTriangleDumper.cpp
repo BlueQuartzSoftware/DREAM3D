@@ -231,7 +231,7 @@ void GBCDTriangleDumper::execute()
   dataCheckSurfaceMesh(false, 0, totalFaces, m->getNumCellEnsembleTuples());
 
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = 0;
 
   FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
   if (NULL == f)

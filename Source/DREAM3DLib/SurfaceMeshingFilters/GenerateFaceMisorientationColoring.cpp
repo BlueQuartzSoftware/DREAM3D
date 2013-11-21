@@ -328,7 +328,7 @@ void GenerateFaceMisorientationColoring::execute()
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheckVoxel(false, totalPoints, totalFeatures, totalEnsembles);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;

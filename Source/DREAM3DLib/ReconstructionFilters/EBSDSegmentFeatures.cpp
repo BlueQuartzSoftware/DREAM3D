@@ -200,10 +200,13 @@ void EBSDSegmentFeatures::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
   m->resizeCellFeatureDataArrays(1);
+
   // This runs a subfilter
-  dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -220,7 +223,7 @@ void EBSDSegmentFeatures::execute()
 
   SegmentFeatures::execute();
 
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+   totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (totalFeatures < 2)
   {
     setErrorCondition(-87000);
@@ -312,7 +315,7 @@ int64_t EBSDSegmentFeatures::getSeed(size_t gnum)
   {
     m_FeatureIds[seed] = gnum;
     m->resizeCellFeatureDataArrays(gnum + 1);
-    dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+    dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(), 0);
   }
   return seed;
 }

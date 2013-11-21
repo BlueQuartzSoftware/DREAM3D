@@ -191,7 +191,7 @@ void SingleThresholdFeatures::execute()
   setErrorCondition(0);
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = 0;
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);  
   if (getErrorCondition() < 0)
   {
@@ -209,7 +209,7 @@ void SingleThresholdFeatures::execute()
     return;
   }
 
-  IDataArray::Pointer goodFeaturesPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_OutputArrayName);
+  IDataArray::Pointer goodFeaturesPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_OutputArrayName);
   BoolArrayType* goodFeatures = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(goodFeaturesPtr.get());
   if (NULL == goodFeatures)
   {

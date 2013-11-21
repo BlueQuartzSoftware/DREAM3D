@@ -59,10 +59,10 @@ class DREAM3DLib_EXPORT StandardizeEulerAngles : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
+
    //------ Required Cell Data
             //------ Required Ensemble Data
-    
+
     virtual void preflight();
 
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT StandardizeEulerAngles : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    int* m_CellPhases;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     StandardizeEulerAngles(const StandardizeEulerAngles&); // Copy Constructor Not Implemented

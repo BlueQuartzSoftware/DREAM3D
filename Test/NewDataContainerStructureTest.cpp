@@ -224,7 +224,7 @@ void TestDataContainerReader()
 
   // Validate the NeighborList Data
   NeighborList<int32_t>* neighborlistPtr
-    = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::NeighborList).get());
+    = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
   DREAM3D_REQUIRE_NE(NULL, neighborlistPtr);
   NeighborList<int32_t>::SharedVectorType vec;
   size_t nLists = neighborlistPtr->getNumberOfTuples();

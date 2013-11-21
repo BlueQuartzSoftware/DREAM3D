@@ -303,7 +303,7 @@ void FitCorrelatedFeatureData::execute()
     notifyErrorMessage(ss, getErrorCondition());
     return;
   }
-  IDataArray::Pointer correlatedData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_CorrelatedFeatureArrayName);
+  IDataArray::Pointer correlatedData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_CorrelatedFeatureArrayName);
   if (NULL == correlatedData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_CorrelatedFeatureArrayName);

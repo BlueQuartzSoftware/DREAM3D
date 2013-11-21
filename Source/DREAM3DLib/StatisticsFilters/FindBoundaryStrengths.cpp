@@ -243,8 +243,10 @@ void FindBoundaryStrengths::execute()
   setErrorCondition(0);
 
   dataCheckSurfaceMesh(false, 0, sm->getNumFaceTuples(), 0);
-dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(), totalEnsembles);
-  if (getErrorCondition() < 0)
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheckVoxel(false, totalPoints, totalFeatures, totalEnsembles);  if (getErrorCondition() < 0)
   {
     return;
   }
