@@ -175,6 +175,9 @@ void FindShapes::execute()
   }
   setErrorCondition(0);
 
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFeatures = 0;//m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = 0;//m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
