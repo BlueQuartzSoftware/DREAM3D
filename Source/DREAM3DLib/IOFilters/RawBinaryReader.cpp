@@ -479,7 +479,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t features, 
       addWarningMessage(getHumanLabel(), ss, RBR_FILE_TOO_BIG);
     }
 
-    m->addCellData(p->GetName(), p);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->GetName(), p);
 
     m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
     m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
@@ -648,7 +648,7 @@ void RawBinaryReader::execute()
 
   if (NULL != array.get())
   {
-    m->addCellData(array->GetName(), array);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(array->GetName(), array);
   }
   else if(err == RBR_FILE_NOT_OPEN )
   {

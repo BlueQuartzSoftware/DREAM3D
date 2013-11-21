@@ -414,7 +414,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
     mutualinfo12 = NULL;
   }
 
-  m->removeCellData(DREAM3D::CellData::FeatureIds);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray(DREAM3D::CellData::FeatureIds);
 
   if(getWriteAlignmentShifts() == true)
   {

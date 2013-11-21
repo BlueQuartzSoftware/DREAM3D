@@ -133,7 +133,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t features
     neighborhoodlistPtr->SetName(m_NeighborhoodListArrayName);
     neighborhoodlistPtr->Resize(features);
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
-    m->addCellFeatureData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborhoodListArrayName, neighborhoodlistPtr);
 
     if (neighborhoodlistPtr.get() == NULL)
     {
@@ -197,7 +197,7 @@ void FindNeighborhoods::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
@@ -220,7 +220,7 @@ void FindNeighborhoods::find_neighborhoods()
 
   QVector<QVector<int> > neighborhoodlist;
 
-  int totalFeatures = int(m->getNumCellFeatureTuples());
+  int totalFeatures = int(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   neighborhoodlist.resize(totalFeatures);
 

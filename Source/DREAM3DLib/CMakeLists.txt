@@ -85,7 +85,7 @@ D3DCompileDir(OrientationOps)
 D3DCompileDir(ShapeOps)
 D3DCompileDir(StatsData)
 D3DCompileDir(Utilities)
-#D3DCompileDir(VTKUtils)
+D3DCompileDir(VTKUtils)
 
 
 
@@ -139,7 +139,7 @@ file(WRITE ${FilterWidget_GEN_SRCS_File})
 
 
 # Add in our Filter classes
-include(${DREAM3DLib_SOURCE_DIR}/GenericFilters/SourceList.cmake)
+#include(${DREAM3DLib_SOURCE_DIR}/GenericFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/IOFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SourceList.cmake)

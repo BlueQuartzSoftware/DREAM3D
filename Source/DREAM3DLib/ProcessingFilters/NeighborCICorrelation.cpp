@@ -170,7 +170,7 @@ void NeighborCICorrelation::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -254,7 +254,7 @@ void NeighborCICorrelation::execute()
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getCellData(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
           p->CopyTuple(neighbor, j);
         }
       }

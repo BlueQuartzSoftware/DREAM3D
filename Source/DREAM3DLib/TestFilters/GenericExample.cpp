@@ -562,7 +562,7 @@ void GenericExample::dataCheck(bool preflight, size_t voxels, size_t features, s
   if(NULL == m_GoodVoxelsPtr.lock().get() )  // The Good Voxels array was NOT available so create it
   {
     m_GoodVoxelsPtr = m->createNonPrereqArray<bool, GenericExample>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GoodVoxels */
+    m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GoodVoxels */
   }
 
 }

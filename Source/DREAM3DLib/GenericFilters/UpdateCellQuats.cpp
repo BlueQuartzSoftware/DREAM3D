@@ -134,7 +134,7 @@ void UpdateCellQuats::execute()
   int64_t totalPoints = m->getTotalPoints();
 
   //getting the 5 component quaternions from the data container and down-casting them
-  IDataArray::Pointer Quats5 = m->getCellData(DREAM3D::CellData::Quats);
+  IDataArray::Pointer Quats5 = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(DREAM3D::CellData::Quats);
   if(Quats5->GetNumberOfComponents() != 5)
   {
     notifyErrorMessage("The Quats array did not contain 5 components", -999);

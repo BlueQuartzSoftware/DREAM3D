@@ -111,7 +111,7 @@ void LinkFeatureMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t 
     addErrorMessage(getHumanLabel(), "Volume Data Container is NULL", getErrorCondition());
     return;
   }
-  IDataArray::Pointer data = m->getCellData(m_SelectedCellDataArrayName);
+  IDataArray::Pointer data = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellDataArrayName);
   if (NULL == data.get())
   {
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellDataArrayName);
@@ -135,10 +135,10 @@ void LinkFeatureMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t 
     return;
   }
 
-  m->clearCellFeatureData();
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->clearAttributeArrays();
   BoolArrayType::Pointer active = BoolArrayType::CreateArray(features, DREAM3D::FeatureData::Active);
   // bool* mActive = m_Active->getPointer(0);
-  m->addCellFeatureData(DREAM3D::FeatureData::Active, active);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::Active, active);
 
 }
 
@@ -173,21 +173,22 @@ void LinkFeatureMapToCellArray::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t voxels = m->getTotalPoints();
-  int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, voxels, features, m->getNumCellEnsembleTuples());
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFeatures = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
   }
-  //int err = 0;
-  QString ss;
 
-  m->clearCellFeatureData();
+  // We get the attribute maxtrix here but no need to check it as that should have been done in the "dataCheck()" function
+  AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  attrMatrix->clearAttributeArrays();
 
   int maxIndex = 0;
   std::vector<bool> active;
-  for(int64_t i = 0; i < voxels; i++)
+  for(int64_t i = 0; i < totalPoints; i++)
   {
     int index = m_SelectedCellData[i];
     if((index + 1) > maxIndex)
@@ -204,7 +205,7 @@ void LinkFeatureMapToCellArray::execute()
   {
     mActive[i] = active[i];
   }
-  m->addCellFeatureData(DREAM3D::FeatureData::Active, m_Active);
+  attrMatrix->addAttributeArray(DREAM3D::FeatureData::Active, m_Active);
 
   notifyStatusMessage("Complete");
 }

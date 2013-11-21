@@ -52,6 +52,8 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
     virtual ~YSChoiAbaqusReader();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)

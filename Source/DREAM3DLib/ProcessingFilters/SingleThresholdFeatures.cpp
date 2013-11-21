@@ -188,7 +188,7 @@ void SingleThresholdFeatures::execute()
     return;
   }
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
@@ -220,7 +220,7 @@ void SingleThresholdFeatures::execute()
   filter.execute(inputData.get(), goodFeaturesPtr.get());
 
 
-  m->addCellFeatureData(goodFeaturesPtr->GetName(), goodFeaturesPtr);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(goodFeaturesPtr->GetName(), goodFeaturesPtr);
   notifyStatusMessage("Complete");
 }
 

@@ -276,7 +276,7 @@ int testCase1_Execute(const QString& name, int scalarType)
   filt->execute();
   DREAM3D_REQUIRED(err, >= , 0)
 
-  IDataArray::Pointer iData = m->getCellData("Test_Array");
+  IDataArray::Pointer iData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray("Test_Array");
   T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
   T d, p;
   for(size_t i = 0; i < dataArraySize; ++i)
@@ -477,7 +477,7 @@ void testCase3_Execute(const QString& name, int scalarType)
   err = filt->getErrorCondition();
   DREAM3D_REQUIRED(err, >= , 0)
 
-  IDataArray::Pointer iData = m->getCellData("Test_Array");
+  IDataArray::Pointer iData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray("Test_Array");
   T* readData = reinterpret_cast<T*>(iData->GetVoidPointer(0));
   T d, p;
   for(size_t i = 0; i < dataArraySize; ++i)
@@ -585,7 +585,7 @@ void testCase4_Execute(const QString& name, int scalarType)
   err = filt->getErrorCondition();
   DREAM3D_REQUIRED(err, >= , 0)
 
-  IDataArray::Pointer iData = m->getCellData("Test_Array");
+  IDataArray::Pointer iData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray("Test_Array");
   T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
   T d, p;
   for(size_t i = 0; i < dataArraySize; ++i)
@@ -717,7 +717,7 @@ void testCase5_Execute(const QString& name, int scalarType)
   err = filt->getErrorCondition();
   DREAM3D_REQUIRED(err, >= , 0)
 
-  IDataArray::Pointer iData = m->getCellData("Test_Array");
+  IDataArray::Pointer iData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray("Test_Array");
   T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
   T d, p;
   for(size_t i = 0; i < dataArraySize; ++i)

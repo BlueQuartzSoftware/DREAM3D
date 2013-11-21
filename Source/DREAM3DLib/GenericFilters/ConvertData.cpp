@@ -296,7 +296,7 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t features, size
   }
 
   int numberOfComponents = 0;
-  IDataArray::Pointer iArray = m->getCellData(m_SelectedCellArrayName);
+  IDataArray::Pointer iArray = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayName);
   if (NULL != iArray)
   {
     numberOfComponents = iArray->GetNumberOfComponents();
@@ -346,7 +346,7 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t features, size
     {
       p = DoubleArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
-    m->addCellData(p->GetName(), p);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->GetName(), p);
   }
 }
 
@@ -385,7 +385,7 @@ void ConvertData::execute()
   }
   setErrorCondition(0);
 
-  IDataArray::Pointer iArray = m->getCellData(m_SelectedCellArrayName);
+  IDataArray::Pointer iArray = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayName);
   bool completed = false;
 
   CHECK_AND_CONVERT(UInt8ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)

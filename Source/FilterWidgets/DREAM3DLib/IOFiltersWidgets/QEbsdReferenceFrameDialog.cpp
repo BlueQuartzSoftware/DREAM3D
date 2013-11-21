@@ -267,7 +267,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   QImage image(dims[0], dims[1], QImage::Format_ARGB32);
   size_t index = 0;
 
-  IDataArray::Pointer arrayPtr = m->getCellData(ipfColorFilter->getCellIPFColorsArrayName());
+  IDataArray::Pointer arrayPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(ipfColorFilter->getCellIPFColorsArrayName());
   if (NULL == arrayPtr.get())
   {
       ipfLabel->setText("Error Generating IPF Colors from Array in Voxel Data Container" );

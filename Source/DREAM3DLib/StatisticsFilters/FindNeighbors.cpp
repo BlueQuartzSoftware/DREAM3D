@@ -122,7 +122,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t features, si
     neighborlistPtr->SetName(m_NeighborListArrayName);
     neighborlistPtr->Resize(features);
     neighborlistPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
-    m->addCellFeatureData(m_NeighborListArrayName, neighborlistPtr);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborListArrayName, neighborlistPtr);
     if (neighborlistPtr.get() == NULL)
     {
       QString ss = QObject::tr("NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter");
@@ -152,7 +152,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t features, si
     sharedSurfaceAreaListPtr->SetName(m_SharedSurfaceAreaListArrayName);
     sharedSurfaceAreaListPtr->Resize(features);
     sharedSurfaceAreaListPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
-    m->addCellFeatureData(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
     if (sharedSurfaceAreaListPtr.get() == NULL)
     {
 
@@ -207,7 +207,7 @@ void FindNeighbors::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFeatures = int(m->getNumCellFeatureTuples());
+  int totalFeatures = int(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {

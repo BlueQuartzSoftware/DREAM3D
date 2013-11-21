@@ -79,7 +79,7 @@ void FindFeatureClustering::dataCheck(bool preflight, size_t voxels, size_t feat
     clusteringPtr->SetName(m_ClusteringListArrayName);
     clusteringPtr->Resize(features);
     clusteringPtr->setNumNeighborsArrayName(m_ClusteringListArrayName);
-    m->addCellFeatureData(m_ClusteringListArrayName, clusteringPtr);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_ClusteringListArrayName, clusteringPtr);
     if (clusteringPtr.get() == NULL)
     {
       QString ss = QObject::tr("Clustering Array Not Initialized at Beginning of FindFeatureClustering Filter");
@@ -142,7 +142,7 @@ void FindFeatureClustering::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
@@ -173,7 +173,7 @@ void FindFeatureClustering::find_clustering()
 
   std::vector<std::vector<float> > clusteringlist;
 
-  int totalFeatures = int(m->getNumCellFeatureTuples());
+  int totalFeatures = int(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   clusteringlist.resize(totalFeatures);
 

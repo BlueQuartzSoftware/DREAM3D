@@ -283,7 +283,7 @@ void ImportImageStack::execute()
     }
   }
 
-  m->addCellData(data->GetName(), data);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(data->GetName(), data);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

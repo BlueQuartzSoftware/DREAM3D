@@ -195,9 +195,9 @@ void FeatureDataCSVWriter::execute()
   QTextStream outFile(&file);
 
   // Write the total number of features
-  outFile << m->getNumCellFeatureTuples() - 1 ;
+  outFile << m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples() - 1 ;
   // Get all the names of the arrays from the Data Container
-  QList<QString> headers = m->getCellFeatureArrayNameList();
+  QList<QString> headers = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
 
   std::vector<IDataArray::Pointer> data;
 
@@ -210,7 +210,7 @@ void FeatureDataCSVWriter::execute()
   for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
-    IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(*iter);
+    IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
       if (p->GetNumberOfComponents() == 1)
@@ -268,7 +268,7 @@ void FeatureDataCSVWriter::execute()
     for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       // Only get the array if the name does NOT match those listed
-      IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(*iter);
+      IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(*iter);
       if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
         outFile << DREAM3D::FeatureData::FeatureID << m_Delimiter << DREAM3D::FeatureData::NumNeighbors << m_Delimiter << (*iter) << "\n";

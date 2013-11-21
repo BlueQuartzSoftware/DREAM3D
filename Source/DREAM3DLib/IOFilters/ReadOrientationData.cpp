@@ -174,12 +174,12 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
           Int32ArrayType::Pointer array = Int32ArrayType::CreateArray(voxels, names[i]);
-          m->addCellData(names[i], array);
+          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
         }
         else if (reader.getPointerType(names[i]) == Ebsd::Float)
         {
           FloatArrayType::Pointer array = FloatArrayType::CreateArray(voxels, names[i]);
-          m->addCellData(names[i], array);
+          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
         }
       }
     }
@@ -208,12 +208,12 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
           Int32ArrayType::Pointer array = Int32ArrayType::CreateArray(voxels, names[i]);
-          m->addCellData(names[i], array);
+          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
         }
         else if (reader.getPointerType(names[i]) == Ebsd::Float)
         {
           FloatArrayType::Pointer array = FloatArrayType::CreateArray(voxels, names[i]);
-          m->addCellData(names[i], array);
+          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
         }
       }
     }
@@ -235,12 +235,12 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
           Int32ArrayType::Pointer array = Int32ArrayType::CreateArray(voxels, names[i]);
-          m->addCellData(names[i], array);
+          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
         }
         else if (reader.getPointerType(names[i]) == Ebsd::Float)
         {
           FloatArrayType::Pointer array = FloatArrayType::CreateArray(voxels, names[i]);
-          m->addCellData(names[i], array);
+          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
         }
       }
     }
@@ -268,7 +268,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
   m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_LatticeConstants */
 
     StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
-    m->addCellEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
+    m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray( DREAM3D::EnsembleData::MaterialName, materialNames);
   }
 }
 
@@ -375,7 +375,7 @@ void ReadOrientationData::readAngFile()
     }
     iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(DREAM3D::CellData::Phases, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
   {
@@ -392,35 +392,35 @@ void ReadOrientationData::readAngFile()
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::ImageQuality));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ImageQuality);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Ang::ImageQuality, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::ConfidenceIndex));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ConfidenceIndex);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Ang::ConfidenceIndex, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::SEMSignal));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::SEMSignal);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Ang::SEMSignal, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Fit));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::Fit);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Ang::Fit, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::Fit, fArray);
   }
 
 }
@@ -491,7 +491,7 @@ void ReadOrientationData::readCtfFile()
     }
     iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(DREAM3D::CellData::Phases, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
   {
     //  radianconversion = M_PI / 180.0;
@@ -511,42 +511,42 @@ void ReadOrientationData::readCtfFile()
       if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Hexagonal_High)
       {cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0);}
     }
-    m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
 
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Ctf::Bands));
     iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Bands);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::Bands, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::Bands, iArray);
   }
 
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Ctf::Error));
     iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Error);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::Error, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::Error, iArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ctf::MAD));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ctf::MAD);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Ctf::MAD, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::MAD, fArray);
   }
 
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Ctf::BC));
     iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BC);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::BC, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::BC, iArray);
   }
 
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Ctf::BS));
     iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BS);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::BS, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::BS, iArray);
   }
 
 }
@@ -612,7 +612,7 @@ void ReadOrientationData::readMicFile()
     }
     iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(DREAM3D::CellData::Phases, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
   QVector<int> compDims(1, 3); // Initially set this up for the Euler Angle 1x3
@@ -629,7 +629,7 @@ void ReadOrientationData::readMicFile()
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
 
   compDims[0] = 1; // Now reset the size of the first dimension to 1
@@ -637,14 +637,14 @@ void ReadOrientationData::readMicFile()
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Mic::Phase));
     iArray = Int32ArrayType::CreateArray(totalPoints, compDims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(DREAM3D::CellData::Phases, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Confidence));
     fArray = FloatArrayType::CreateArray(totalPoints, compDims, Ebsd::Mic::Confidence);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Mic::Confidence, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Mic::Confidence, fArray);
   }
 
 }

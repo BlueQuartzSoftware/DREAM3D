@@ -164,7 +164,7 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t features, siz
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int numImageComp = 1;
-  IDataArray::Pointer iDataArray = m->getCellData(m_ImageDataArrayName);
+  IDataArray::Pointer iDataArray = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_ImageDataArrayName);
   if(NULL != iDataArray.get())
   {
     UInt8ArrayType* imageDataPtr = UInt8ArrayType::SafePointerDownCast(iDataArray.get());
@@ -241,7 +241,7 @@ void FlattenImage::execute()
   bool doParallel = true;
 #endif
 
-  size_t comp = m->getCellData(m_ImageDataArrayName)->GetNumberOfComponents();
+  size_t comp = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_ImageDataArrayName)->GetNumberOfComponents();
 
   //  qDebug() << "FlattenImage: " << m_ConversionFactor << "\n";
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

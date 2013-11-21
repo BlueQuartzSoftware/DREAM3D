@@ -312,7 +312,13 @@ int  PhReader::readFile()
   }
 
   // Read the data and stick it in the data Container
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellData(DREAM3D::CellData::FeatureIds, m_FeatureIdData);
+  VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if (NULL == vdc) { return -1; }
+
+  AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellAttributeMatrixName());
+  if (NULL == attrMatrix.get() ) { return -2; }
+
+  attrMatrix->addAttributeArray(DREAM3D::CellData::FeatureIds, m_FeatureIdData);
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);

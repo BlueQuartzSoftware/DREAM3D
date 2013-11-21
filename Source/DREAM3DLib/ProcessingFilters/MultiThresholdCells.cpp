@@ -173,14 +173,14 @@ void MultiThresholdCells::execute()
   }
   setErrorCondition(0);
   int64_t nPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
   }
   /* Place all your code to execute your filter here. */
 
-  IDataArray::Pointer outputArrayPtr = m->getCellData(m_OutputArrayName);
+  IDataArray::Pointer outputArrayPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_OutputArrayName);
   BoolArrayType* outputArray = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(outputArrayPtr.get());
   if (NULL == outputArray)
   {
@@ -198,7 +198,7 @@ void MultiThresholdCells::execute()
                                  comp_0.compValue,
                                  outputArray);
 
-    err = filter.execute(m->getCellData(comp_0.arrayName).get(), outputArrayPtr.get());
+    err = filter.execute(m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(comp_0.arrayName).get(), outputArrayPtr.get());
 
     if (err < 0)
     {
@@ -220,7 +220,7 @@ void MultiThresholdCells::execute()
                                  compRef.compValue,
                                  currentArrayPtr.get());
 
-    err = filter.execute(m->getCellData(compRef.arrayName).get(), currentArrayPtr.get());
+    err = filter.execute(m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(compRef.arrayName).get(), currentArrayPtr.get());
     if (err < 0)
     {
       setErrorCondition(-13002);

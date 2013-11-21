@@ -133,7 +133,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t featur
     NeighborList<float>::Pointer misorientationListPtr = NeighborList<float>::New();
     misorientationListPtr->SetName(m_MisorientationListArrayName);
     misorientationListPtr->Resize(features);
-    m->addCellFeatureData(m_MisorientationListArrayName, misorientationListPtr);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_MisorientationListArrayName, misorientationListPtr);
     m_MisorientationList = misorientationListPtr.get();
     if (misorientationListPtr.get() == NULL)
     {
@@ -178,7 +178,7 @@ void FindMisorientations::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
@@ -236,7 +236,7 @@ void FindMisorientations::execute()
   }
 
   // We do this to create new set of MisorientationList objects
-  dataCheck(false, m->getNumCellTuples(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getNumCellTuples(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {

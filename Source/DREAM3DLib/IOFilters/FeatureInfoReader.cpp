@@ -170,10 +170,10 @@ void FeatureInfoReader::dataCheck(bool preflight, size_t voxels, size_t features
   if (m_CreateCellLevelArrays)
   {
     m_CellPhasesPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellPhases */
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellPhases */
     dims[0] = 3;
     m_CellEulerAnglesPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellEulerAngles */
+    m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellEulerAngles */
   }
   dims[0] = 1;
   m_ActivePtr = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_ActiveArrayName, true, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -234,8 +234,9 @@ int  FeatureInfoReader::readFile()
 
   // Now that we know how many unique features are in the file initialize the Feature Map to the proper size:
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, numfeatures + 1, totalEnsembles);
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
   // Create and initialize the Feature Active Array with a default value of true
   BoolArrayType::Pointer featureActive = BoolArrayType::CreateArray(numfeatures + 1, DREAM3D::FeatureData::Active);
@@ -264,9 +265,9 @@ int  FeatureInfoReader::readFile()
     featurePhaseData->SetValue(gnum, phase);
     if(phase > maxphase) { maxphase = phase; }
   }
-  m->addCellFeatureData(DREAM3D::FeatureData::EulerAngles, featureEulerData);
-  m->addCellFeatureData(DREAM3D::FeatureData::Phases, featurePhaseData);
-  m->addCellFeatureData(DREAM3D::FeatureData::Active, featureActive);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::EulerAngles, featureEulerData);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::Phases, featurePhaseData);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::Active, featureActive);
 
   if (m_CreateCellLevelArrays == true)
   {
@@ -283,8 +284,8 @@ int  FeatureInfoReader::readFile()
       cellEulerData->SetValue(3 * i + 2, featureEulerData->GetValue(3 * gnum + 2));
       cellPhaseData->SetValue(i, featurePhaseData->GetValue(gnum));
     }
-    m->addCellData(DREAM3D::CellData::EulerAngles, cellEulerData);
-    m->addCellData(DREAM3D::CellData::Phases, cellPhaseData);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, cellEulerData);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, cellPhaseData);
   }
 
   if (m_RenumberFeatures == true)
@@ -297,9 +298,9 @@ int  FeatureInfoReader::readFile()
       notifyStatusMessage("Completed");
       return -999;
     }
-    dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
 
-
+    size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+    dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
     // Find the unique set of feature ids
     for (size_t i = 1; i < totalFeatures; ++i)

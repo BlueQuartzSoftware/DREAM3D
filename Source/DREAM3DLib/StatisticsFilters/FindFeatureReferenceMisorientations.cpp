@@ -208,7 +208,7 @@ void FindFeatureReferenceMisorientations::execute()
     return;
   }
 
-  float** avgmiso = new float *[m->getNumCellFeatureTuples()];
+  float** avgmiso = new float *[m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples()];
   for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {
     avgmiso[i] = new float[2];

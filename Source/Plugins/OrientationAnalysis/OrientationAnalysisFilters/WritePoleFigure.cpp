@@ -329,7 +329,7 @@ void WritePoleFigure::execute()
   bool* m_GoodVoxels;
   BoolArrayType* goodVoxels = NULL;
   bool missingGoodVoxels = false;
-  IDataArray::Pointer gvPtr = m->getCellData(m_GoodVoxelsArrayName);
+  IDataArray::Pointer gvPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_GoodVoxelsArrayName);
 
   if (m->getCellData(m_GoodVoxelsArrayName).get() == NULL)
   {

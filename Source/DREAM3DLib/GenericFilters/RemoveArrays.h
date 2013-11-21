@@ -61,6 +61,16 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
 
 
+    virtual ~RemoveArrays();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
+
+
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEdgeArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFaceArrays)
@@ -82,12 +92,6 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexFeatureArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexEnsembleArrays)
-
-    virtual ~RemoveArrays();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
 
     typedef QSet<QString> ArrayList_t;
 

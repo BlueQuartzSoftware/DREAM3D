@@ -488,7 +488,7 @@ void RotateSampleRefFrame::execute()
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     //QString name = *iter;
-    IDataArray::Pointer p = m->getCellData(*iter);
+    IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name.
@@ -512,7 +512,7 @@ void RotateSampleRefFrame::execute()
         data->InitializeTuple(i, 0);
       }
     }
-    m->addCellData(*iter, data);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(*iter, data);
   }
   m->setResolution(params.xResNew, params.yResNew, params.zResNew);
   m->setDimensions(params.xpNew, params.ypNew, params.zpNew);

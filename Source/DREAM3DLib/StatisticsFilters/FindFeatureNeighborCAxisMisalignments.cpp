@@ -104,7 +104,7 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck(bool preflight, size_t vox
     NeighborList<float>::Pointer misalignmentListPtr = NeighborList<float>::New();
     misalignmentListPtr->SetName(m_CAxisMisalignmentListArrayName);
     misalignmentListPtr->Resize(features);
-    m->addCellFeatureData(m_CAxisMisalignmentListArrayName, misalignmentListPtr);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_CAxisMisalignmentListArrayName, misalignmentListPtr);
     m_CAxisMisalignmentList = misalignmentListPtr.get();
     if (misalignmentListPtr.get() == NULL)
     {
@@ -141,7 +141,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
@@ -222,7 +222,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   }
 
   // We do this to create new set of MisalignmentList objects
-  dataCheck(false, m->getNumCellTuples(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getNumCellTuples(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {

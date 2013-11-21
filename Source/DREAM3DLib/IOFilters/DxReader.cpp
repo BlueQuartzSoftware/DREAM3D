@@ -365,9 +365,9 @@ int DxReader::readFile()
   // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
   // method which is performed before this function. This will cause an error -501 because the array with the name
   // m_FeatureIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
-  m->removeCellData(m_FeatureIdsArrayName);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray(m_FeatureIdsArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
-  //  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  //  dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, totalPoints, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_FeatureIds */

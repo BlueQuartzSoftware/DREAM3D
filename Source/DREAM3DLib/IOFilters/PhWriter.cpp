@@ -162,7 +162,7 @@ int PhWriter::writeFile()
 
 //  int32_t* feature_indicies = 0;
 //  {
-//    IDataArray::Pointer iDataArray = m->getCellData(DREAM3D::CellData::FeatureIds);
+//    IDataArray::Pointer iDataArray = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(DREAM3D::CellData::FeatureIds);
 //    if (iDataArray.get() == 0) {
 //      return -10;
 //    }
@@ -170,7 +170,7 @@ int PhWriter::writeFile()
 //      return -20;
 //    }
 //    feature_indicies =
-//    IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t* >(m->getCellData(DREAM3D::CellData::FeatureIds).get());
+//    IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t* >(m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(DREAM3D::CellData::FeatureIds).get());
 //    if (0 == feature_indicies) {
 //      return -30;
 //    }

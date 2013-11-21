@@ -182,8 +182,8 @@ void AvizoUniformCoordinateWriter::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembleTuples = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembleTuples = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   dataCheck(false, totalPoints, totalFeatures, totalEnsembleTuples);
 

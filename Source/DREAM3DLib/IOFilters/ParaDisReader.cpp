@@ -359,7 +359,7 @@ int ParaDisReader::readFile()
   m->removeEdgeData(m_BurgersVectorsArrayName);
   m->removeEdgeData(m_SlipPlaneNormalsArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
-  //  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  //  dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   QVector<int> dims(1, 1);
   m_NumberOfArmsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NumberOfArmsArrayName, 0, numVerts, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_NumberOfArms = m_NumberOfArmsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_NumberOfArms */

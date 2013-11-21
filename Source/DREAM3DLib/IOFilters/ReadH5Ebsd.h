@@ -80,9 +80,9 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-   //------ Created Cell Data
-            //------ Created Ensemble Data
-            DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+    //------ Created Cell Data
+    //------ Created Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
 
@@ -199,10 +199,10 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         return getErrorCondition();
       }
 
-      DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, m_CrystalStructuresArrayName);
-      StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, m_MaterialNameArrayName);
+      DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
+      StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
       QVector<int> dims(1, 6);
-      FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, m_LatticeConstantsArrayName);
+      FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, getLatticeConstantsArrayName());
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
@@ -230,10 +230,14 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         latticeConstants->SetComponent(phaseID, 5, lc[5]);
 
       }
-      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
-      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
-      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setNumCellEnsembleTuples(crystalStructures->getNumberOfTuples());
+      VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      if(NULL == vdc) { return -1;}
+      AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
+      if(NULL == attrMatrix.get() ) { return -2; }
+
+      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
+      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
       return 0;
     }
 

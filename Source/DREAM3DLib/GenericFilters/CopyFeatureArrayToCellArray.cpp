@@ -261,7 +261,7 @@ void CopyFeatureArrayToCellArray::execute()
 
   if (p.get() != NULL)
   {
-    m->addCellData(p->GetName(), p);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->GetName(), p);
 
   }
   else

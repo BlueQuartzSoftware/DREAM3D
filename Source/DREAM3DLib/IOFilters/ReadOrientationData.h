@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 
     virtual ~ReadOrientationData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
 
@@ -211,21 +212,22 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
         latticeConstants->SetComponent(phaseID, 5, lc[5]);
 
       }
-      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      m_CrystalStructures = crystalStructures->getPointer(0);
-      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
-      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
-      m_LatticeConstants = latticeConstants->getPointer(0);
-      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setNumCellEnsembleTuples(crystalStructures->getNumberOfTuples());
+      VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      if(NULL == vdc) { return -1;}
+      AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
+      if(NULL == attrMatrix.get() ) { return -2; }
+
+      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
+      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
       return 0;
     }
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-
-    uint32_t* m_CrystalStructures;
-    float*    m_LatticeConstants;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
 
     ReadOrientationData(const ReadOrientationData&); // Copy Constructor Not Implemented
     void operator=(const ReadOrientationData&); // Operator '=' Not Implemented

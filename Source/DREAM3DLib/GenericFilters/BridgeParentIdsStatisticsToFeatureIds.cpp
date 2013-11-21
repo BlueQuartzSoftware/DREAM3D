@@ -81,7 +81,7 @@ int BridgeParentIdsStatisticsToFeatureIds::writeFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BridgeParentIdsStatisticsToFeatureIds::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles, bool afterLink)
+void BridgeParentIdsStatisticsToFeatureIds::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -116,7 +116,7 @@ void BridgeParentIdsStatisticsToFeatureIds::preflight()
     return;
   }
 
-  dataCheck(true, 1, 1, 1, false);
+  dataCheck(true, 1, 1, 1);
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
   rename_cell_array->setObservers(this->getObservers());
@@ -162,7 +162,10 @@ void BridgeParentIdsStatisticsToFeatureIds::execute()
   }
 
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples(), true);
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

@@ -132,7 +132,7 @@ void GenerateNodeTriangleConnectivity::dataCheck(bool preflight, size_t voxels, 
     // We do not know the size of the array so we can not use the macro so we just manually call
     // the needed methods that will propagate these array additions to the pipeline
     DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
-    sm->addCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
 
     // This is just for tracking what Arrays are being created by this filter. Normally the macro
     // would do this for us.

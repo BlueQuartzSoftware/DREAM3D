@@ -648,15 +648,15 @@ void StatsGeneratorUI::on_actionSave_triggered()
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   dca->pushBack(m);
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
-  m->addCellEnsembleData(DREAM3D::EnsembleData::Statistics, statsDataArray);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, statsDataArray);
 
   UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::CrystalStructures);
   crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-  m->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
 
   UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
-  m->addCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 
   // Loop on all the phases
 

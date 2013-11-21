@@ -273,9 +273,9 @@ void H5VoxelFileReader::execute()
     featureIds = DataArray<int>::NullPointer();
   }
 
-  m->addCellData(DREAM3D::CellData::FeatureIds, featureIds);
-  m->addCellData(DREAM3D::CellData::Phases, phases);
-  m->addCellData(DREAM3D::CellData::EulerAngles, eulers);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::FeatureIds, featureIds);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, phases);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, eulers);
 
   size_t gnum = 0;
   size_t maxId = 0;
@@ -312,6 +312,6 @@ void H5VoxelFileReader::execute()
     crystructs->SetValue(i, crystruct[i]);
     phaseTypes->SetValue(i, phaseType[i]);
   }
-  m->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystructs);
-  m->addCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystructs);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 }

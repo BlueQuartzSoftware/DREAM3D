@@ -135,12 +135,12 @@ void RenumberFeatures::preflight()
 
   dataCheck(true, 1, 1, 1);
 
-  QList<QString> headers = m->getCellFeatureArrayNameList();
+  QList<QString> headers = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
   for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
-    IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(*iter);
+    IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(*iter);
     QString type = p->getTypeAsString();
-    if(type.compare("NeighborList<T>") == 0) { m->removeCellFeatureData(*iter);}
+    if(type.compare("NeighborList<T>") == 0) { m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->removeAttributeArray(*iter);}
   }
 }
 
@@ -161,7 +161,8 @@ void RenumberFeatures::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
+  size_t totalEnsembles = 0; // m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -193,17 +194,17 @@ void RenumberFeatures::execute()
 
   if(RemoveList.size() > 0)
   {
-    QList<QString> headers = m->getCellFeatureArrayNameList();
+    QList<QString> headers = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
     for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
-      IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(*iter);
+      IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(*iter);
 
       ss = QObject::tr("Updating Feature Array '%1'").arg(*iter);
       notifyStatusMessage(ss);
       QString type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0)
       {
-        m->removeCellFeatureData(*iter);
+        m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->removeAttributeArray(*iter);
       }
       else
       {
@@ -211,9 +212,10 @@ void RenumberFeatures::execute()
       }
       //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;
     }
-    m->setNumCellFeatureTuples(m->getNumCellFeatureTuples() - RemoveList.size());
+    m->setNumCellFeatureTuples(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
     totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-    dataCheck(false, totalPoints, totalFeatures, m->getNumCellEnsembleTuples());
+    size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+    dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
     // Loop over all the points and correct all the feature names
     ss = QObject::tr("Renumbering Cell Region Ids");

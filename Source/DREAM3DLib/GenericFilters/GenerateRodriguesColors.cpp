@@ -131,6 +131,16 @@ void GenerateRodriguesColors::dataCheck(bool preflight, size_t voxels, size_t fe
   m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellEulerAngles */
   m_CellRodriguesColorsPtr = m->createNonPrereqArray<uint8_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellRodriguesColorsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_CellRodriguesColors = m_CellRodriguesColorsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CellRodriguesColors */
+    // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
+  dims[0] = 1;
+  m_GoodVoxelsPtr = m->getPrereqArray<bool, GenerateRodriguesColors>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -304, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(NULL != m_GoodVoxelsPtr.lock().get()) {
+    m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_GoodVoxels */
+  }
+  else
+  {
+    m_GoodVoxels= NULL;
+  }
 }
 
 
@@ -166,7 +176,7 @@ void GenerateRodriguesColors::execute()
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
@@ -174,19 +184,11 @@ void GenerateRodriguesColors::execute()
     return;
   }
 
-  bool* m_GoodVoxels;
-  BoolArrayType* goodVoxels = NULL;
-  bool missingGoodVoxels = false;
-  IDataArray::Pointer gvPtr = m->getCellData(m_GoodVoxelsArrayName);
+  bool missingGoodVoxels = true;
 
-  if (m->getCellData(m_GoodVoxelsArrayName).get() == NULL)
+  if (NULL != m_GoodVoxels)
   {
-    missingGoodVoxels = true;
-  }
-  else
-  {
-    goodVoxels = BoolArrayType::SafePointerDownCast(gvPtr.get());
-    m_GoodVoxels = goodVoxels->getPointer(0);
+    missingGoodVoxels = false;
   }
 
   // Create 1 of every type of Ops class. This condenses the code below

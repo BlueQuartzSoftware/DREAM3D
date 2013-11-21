@@ -140,14 +140,14 @@ void TestDataContainerWriter()
   {
     featureIds->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
   }
-  m->addCellData(DREAM3D::CellData::FeatureIds, featureIds);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::FeatureIds, featureIds);
 
   BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, DREAM3D::CellData::SurfaceVoxels);
   for (int i = 0; i < size; ++i)
   {
     boolArray->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
   }
-  m->addCellData(DREAM3D::CellData::SurfaceVoxels, boolArray);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceVoxels, boolArray);
 
   QVector<int> dims(1, 3);
   FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(4, dims, DREAM3D::FeatureData::AxisEulerAngles);
@@ -157,7 +157,7 @@ void TestDataContainerWriter()
     avgEuler->SetComponent(i, 1, i * 0.665f);
     avgEuler->SetComponent(i, 2, i * 0.665f);
   }
-  m->addCellFeatureData(DREAM3D::FeatureData::AxisEulerAngles, avgEuler);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::AxisEulerAngles, avgEuler);
 
 
   FloatArrayType::Pointer surfArea = FloatArrayType::CreateArray(4, DREAM3D::EnsembleData::TotalSurfaceAreas);
@@ -165,13 +165,13 @@ void TestDataContainerWriter()
   {
     surfArea->SetValue(i, i + 41.2f);
   }
-  m->addCellEnsembleData(DREAM3D::EnsembleData::TotalSurfaceAreas, surfArea);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::TotalSurfaceAreas, surfArea);
 
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
   neighborlistPtr->SetName(DREAM3D::FeatureData::NeighborList);
   neighborlistPtr->setNumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors);
-  m->addCellFeatureData(DREAM3D::FeatureData::NeighborList, neighborlistPtr);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::NeighborList, neighborlistPtr);
 
   for(int i = 0; i < 4; ++i)
   {
@@ -260,15 +260,15 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
 {
 
   IDataArray::Pointer p = T::CreateArray(5, "Test");
-  m->addCellData("Test", p);
-  IDataArray::Pointer t = m->getCellData("Test");
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray("Test", p);
+  IDataArray::Pointer t = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->removeCellData( "Test" );
+  t = m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->getCellData( "Test" );
+  t = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
-  m->addCellFeatureData("Test", p);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray("Test", p);
   t = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
   t = m->removeCellFeatureData( "Test" );
@@ -276,7 +276,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   t = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
-  m->addCellEnsembleData("Test", p);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray("Test", p);
   t = m->getCellEnsembleData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
   t = m->removeCellEnsembleData( "Test" );
@@ -308,7 +308,7 @@ void TestInsertDelete()
   nameList = m->getCellArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
-  nameList = m->getCellFeatureArrayNameList();
+  nameList = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
   nameList = m->getCellEnsembleArrayNameList();
@@ -354,7 +354,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   DREAM3D_REQUIRE_NE(ptr, NULL);
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
 
-  IDataArray::Pointer t = m->removeCellData( "Test" );
+  IDataArray::Pointer t = m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
 
   /********************************* Feature Data Tests *********************************************/
@@ -458,7 +458,7 @@ void TestArrayCreation()
   nameList = m->getCellArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
-  nameList = m->getCellFeatureArrayNameList();
+  nameList = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
   nameList = m->getCellEnsembleArrayNameList();

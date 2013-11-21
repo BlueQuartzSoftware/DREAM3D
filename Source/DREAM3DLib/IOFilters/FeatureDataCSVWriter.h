@@ -63,7 +63,8 @@ class DREAM3DLib_EXPORT FeatureDataCSVWriter : public AbstractFilter
 
     virtual ~FeatureDataCSVWriter();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(FeatureDataFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteNeighborListData)

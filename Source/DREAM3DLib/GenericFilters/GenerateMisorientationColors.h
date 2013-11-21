@@ -59,12 +59,9 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     //------ Required Cell Data
-    
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    
     //------ Required Ensemble Data
-        //------ Created Cell Data
-    
+    //------ Created Cell Data
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, ReferenceAxis)
     DREAM3D_INSTANCE_PROPERTY(float, ReferenceAngle)
@@ -131,6 +128,7 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, MisorientationColor)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     GenerateMisorientationColors(const GenerateMisorientationColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateMisorientationColors&); // Operator '=' Not Implemented

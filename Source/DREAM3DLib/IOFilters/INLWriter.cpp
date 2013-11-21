@@ -198,8 +198,8 @@ int INLWriter::writeFile()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t numensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numfeatures = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numensembles = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, numfeatures, numensembles);
   if(getErrorCondition() < 0)
   {

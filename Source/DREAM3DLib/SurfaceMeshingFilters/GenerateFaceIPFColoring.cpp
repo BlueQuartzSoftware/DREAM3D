@@ -364,7 +364,7 @@ void GenerateFaceIPFColoring::execute()
 
   // Run the data check to allocate the memory for the centroid array
   dataCheckSurfaceMesh(false, 0, sm->getNumFaceTuples(), 0);
-  dataCheckVoxel(false, m->getNumCellTuples(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheckVoxel(false, m->getNumCellTuples(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;

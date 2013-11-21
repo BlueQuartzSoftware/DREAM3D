@@ -139,7 +139,7 @@ void FindFeaturePhases::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   // This makes sure we get the allocated arrays and we size the Features to 1 to avoid any errors
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 

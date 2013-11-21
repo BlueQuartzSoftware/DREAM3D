@@ -186,7 +186,7 @@ void BadDataNeighborOrientationCheck::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;

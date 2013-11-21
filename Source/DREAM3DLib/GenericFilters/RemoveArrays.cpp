@@ -83,27 +83,27 @@ void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, 
 {
   reader->openFilterGroup(this, index);
   READ_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
+      READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
+      READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
+      READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
+      READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
+      READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
+      READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
+      READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
+      READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
+      READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
+      READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
-  READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
+      READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
+      READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
+      READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
+      READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
-  reader->closeFilterGroup();
+      READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
+      READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
+      READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+      reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -113,27 +113,27 @@ int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 {
   writer->openFilterGroup(this, index);
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
+      WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
+      WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
+      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
+      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
+      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
+      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
+      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
+      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
+      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
+      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
+      WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
+      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
+      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
+      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
-  writer->closeFilterGroup();
+      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
+      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
+      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+      writer->closeFilterGroup();
   return ++index;
 }
 
@@ -154,17 +154,26 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t features, siz
   }
   if (NULL != m)
   {
-    for(NameList_t::iterator iter = m_SelectedVolumeCellArrays.begin(); iter != m_SelectedVolumeCellArrays.end(); ++iter)
-    {
-      m->removeCellData(*iter);
+    AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
+    if(NULL != attrMatrix.get() ) {
+      for(NameList_t::iterator iter = m_SelectedVolumeCellArrays.begin(); iter != m_SelectedVolumeCellArrays.end(); ++iter)
+      {
+        attrMatrix->removeAttributeArray(*iter);
+      }
     }
-    for(NameList_t::iterator iter = m_SelectedVolumeCellFeatureArrays.begin(); iter != m_SelectedVolumeCellFeatureArrays.end(); ++iter)
-    {
-      m->removeCellFeatureData(*iter);
+    attrMatrix = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+    if(NULL != attrMatrix.get() ) {
+      for(NameList_t::iterator iter = m_SelectedVolumeCellFeatureArrays.begin(); iter != m_SelectedVolumeCellFeatureArrays.end(); ++iter)
+      {
+        attrMatrix->removeAttributeArray(*iter);
+      }
     }
-    for(NameList_t::iterator iter = m_SelectedVolumeCellEnsembleArrays.begin(); iter != m_SelectedVolumeCellEnsembleArrays.end(); ++iter)
-    {
-      m->removeCellEnsembleData(*iter);
+    attrMatrix = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
+    if(NULL != attrMatrix.get() ) {
+      for(NameList_t::iterator iter = m_SelectedVolumeCellEnsembleArrays.begin(); iter != m_SelectedVolumeCellEnsembleArrays.end(); ++iter)
+      {
+        attrMatrix->removeAttributeArray(*iter);
+      }
     }
   }
 

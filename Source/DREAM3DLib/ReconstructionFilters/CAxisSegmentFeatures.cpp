@@ -209,7 +209,7 @@ void CAxisSegmentFeatures::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   m->resizeCellFeatureDataArrays(1);
-  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
@@ -228,7 +228,7 @@ void CAxisSegmentFeatures::execute()
   {
     totalPoints = m->getTotalPoints();
     size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-    dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+    dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
     if (getErrorCondition() < 0)
     {
       return;
@@ -316,7 +316,7 @@ int64_t CAxisSegmentFeatures::getSeed(size_t gnum)
   {
     m_FeatureIds[seed] = gnum;
     m->resizeCellFeatureDataArrays(gnum + 1);
-    dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+    dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   }
   return seed;
 }

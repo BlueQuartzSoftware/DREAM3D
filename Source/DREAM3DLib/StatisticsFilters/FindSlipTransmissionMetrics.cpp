@@ -132,7 +132,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();
   f1Ptr->SetName(DREAM3D::FeatureData::F1);
   f1Ptr->Resize(features);
-  m->addCellFeatureData(DREAM3D::FeatureData::F1, f1Ptr);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::F1, f1Ptr);
   if (f1Ptr.get() == NULL)
   {
     QString ss = QObject::tr("F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
@@ -143,7 +143,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   NeighborList<float>::Pointer f1sptPtr = NeighborList<float>::New();
   f1sptPtr->SetName(DREAM3D::FeatureData::F1spt);
   f1sptPtr->Resize(features);
-  m->addCellFeatureData(DREAM3D::FeatureData::F1spt, f1sptPtr);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::F1spt, f1sptPtr);
   if (f1sptPtr.get() == NULL)
   {
     QString ss = QObject::tr("F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
@@ -154,7 +154,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   NeighborList<float>::Pointer f7Ptr = NeighborList<float>::New();
   f7Ptr->SetName(DREAM3D::FeatureData::F7);
   f7Ptr->Resize(features);
-  m->addCellFeatureData(DREAM3D::FeatureData::F7, f7Ptr);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::F7, f7Ptr);
   if (f7Ptr.get() == NULL)
   {
     QString ss = QObject::tr("F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
@@ -165,7 +165,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   NeighborList<float>::Pointer mPrimePtr = NeighborList<float>::New();
   mPrimePtr->SetName(DREAM3D::FeatureData::mPrime);
   mPrimePtr->Resize(features);
-  m->addCellFeatureData(DREAM3D::FeatureData::mPrime, mPrimePtr);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::mPrime, mPrimePtr);
   if (mPrimePtr.get() == NULL)
   {
     QString ss = QObject::tr("mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
@@ -277,7 +277,7 @@ void FindSlipTransmissionMetrics::execute()
   }
 
   // We do this to create new set of List objects
-  dataCheck(false, m->getNumCellTuples(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getNumCellTuples(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   for (int64_t i = 1; i < totalFeatures; i++)
   {

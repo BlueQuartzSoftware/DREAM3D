@@ -41,7 +41,7 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
         //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NumFeaturesPerParentArrayName)
     //------ Required Ensemble Data
-    
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::MemoryManagementFilters;}
     virtual const QString getHumanLabel() { return "Bridge ParentIds Statistics To FeatureIds"; }
@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles, bool afterLink);
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
 
     BridgeParentIdsStatisticsToFeatureIds(const BridgeParentIdsStatisticsToFeatureIds&); // Copy Constructor Not Implemented

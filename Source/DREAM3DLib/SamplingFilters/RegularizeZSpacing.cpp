@@ -224,7 +224,7 @@ void RegularizeZSpacing::execute()
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     QString name = *iter;
-    IDataArray::Pointer p = m->getCellData(*iter);
+    IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name. At least in theory
@@ -243,7 +243,7 @@ void RegularizeZSpacing::execute()
       destination = data->GetVoidPointer((data->GetNumberOfComponents() * i));
       ::memcpy(destination, source, p->GetTypeSize() * data->GetNumberOfComponents());
     }
-    m->addCellData(*iter, data);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(*iter, data);
   }
   m->setResolution(xRes, yRes, m_NewZRes);
   m->setDimensions(m_XP, m_YP, m_ZP);

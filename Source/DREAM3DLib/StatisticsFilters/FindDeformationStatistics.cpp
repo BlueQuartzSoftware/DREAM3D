@@ -225,7 +225,7 @@ void FindDeformationStatistics::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
@@ -553,7 +553,7 @@ void FindDeformationStatistics::execute()
   fprintf(vtkFile,  "DREAM3D Generated Data Set: Deformation Statistics\n");
   fprintf(vtkFile,  "ASCII\n");
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
-  fprintf(vtkFile,  "POINTS %ld float\n", m->getNumCellFeatureTuples() - 1);
+  fprintf(vtkFile,  "POINTS %ld float\n", m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
 
   size_t size = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
@@ -593,7 +593,7 @@ void FindDeformationStatistics::execute()
     fprintf(vtkFile, "%f %f %f\n", xFZ, yFZ, zFZ);
   }
 
-  fprintf(vtkFile, "CELLS %ld %ld\n", m->getNumCellFeatureTuples() - 1, ((m->getNumCellFeatureTuples() - 1) * 2));
+  fprintf(vtkFile, "CELLS %ld %ld\n", m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   //  Store the Feature Ids so we don't have to re-read the triangles file again
   for(size_t i = 1; i < size; i++)
   {
@@ -602,7 +602,7 @@ void FindDeformationStatistics::execute()
 
   // Write the CELL_TYPES into the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getNumCellFeatureTuples() - 1);
+  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   for(size_t i = 1; i < size; i++)
   {
     fprintf(vtkFile, "1\n");
@@ -611,7 +611,7 @@ void FindDeformationStatistics::execute()
 
   // Write the FeatureId Data to teh file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %ld\n", m->getNumCellFeatureTuples() - 1);
+  fprintf(vtkFile, "CELL_DATA %ld\n", m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   fprintf(vtkFile, "SCALARS Misorientation float\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (size_t i = 1; i < size; i++)

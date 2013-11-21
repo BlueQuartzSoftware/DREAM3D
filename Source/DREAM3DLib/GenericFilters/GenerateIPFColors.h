@@ -63,12 +63,9 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     //------ Required Cell Data
-    
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    
     //------ Required Ensemble Data
-        //------ Created Cell Data
-    
+    //------ Created Cell Data
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, ReferenceDir)
 
@@ -134,6 +131,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, CellIPFColors)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     GenerateIPFColors(const GenerateIPFColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateIPFColors&); // Operator '=' Not Implemented

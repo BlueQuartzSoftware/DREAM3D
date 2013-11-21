@@ -283,7 +283,7 @@ void FitFeatureData::execute()
     p = fitData<bool>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
 
-  m->addCellEnsembleData(p->GetName(), p);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->GetName(), p);
   notifyStatusMessage("Complete");
 }
 

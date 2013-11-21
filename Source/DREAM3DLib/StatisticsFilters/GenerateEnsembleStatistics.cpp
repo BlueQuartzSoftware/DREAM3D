@@ -260,7 +260,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
     StatsDataArray::Pointer p = StatsDataArray::New();
     m_StatsDataArray = p.get();
     m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
-    m->addCellEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+    m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, p);
   }
 
   if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
@@ -315,7 +315,7 @@ void GenerateEnsembleStatistics::execute()
   //  int totalPoints = m->getTotalPoints();
   //  int totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int totalEnsembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
@@ -343,16 +343,16 @@ void GenerateEnsembleStatistics::execute()
     {
       phaseTypes->SetValue(r, m_PhaseTypeArray[r]);
     }
-    m->addCellEnsembleData(phaseTypes->GetName(), phaseTypes);
+    m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(phaseTypes->GetName(), phaseTypes);
     m_PhaseTypes = phaseTypes->getPointer(0);
   }
 
   StatsDataArray::Pointer p = StatsDataArray::New();
   m_StatsDataArray = p.get();
   m_StatsDataArray->fillArrayWithNewStatsData(totalEnsembles, m_PhaseTypes);
-  m->addCellEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, p);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   if(m_SizeDistribution == true)
   {

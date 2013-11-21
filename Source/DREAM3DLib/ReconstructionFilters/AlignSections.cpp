@@ -249,7 +249,7 @@ void AlignSections::execute()
           for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
+            IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
             p->CopyTuple(currentPosition, newPosition);
           }
         }
@@ -259,7 +259,7 @@ void AlignSections::execute()
           for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
+            IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
             p->InitializeTuple(newPosition, 0.0);
           }
         }

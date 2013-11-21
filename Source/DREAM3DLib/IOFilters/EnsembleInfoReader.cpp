@@ -202,8 +202,8 @@ int EnsembleInfoReader::readFile()
     m_XTalStructData->SetValue(pnum, crystruct);
     m_PhaseTypeData->SetValue(pnum, ptype);
   }
-  m->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, m_XTalStructData);
-  m->addCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypeData);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, m_XTalStructData);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypeData);
 
   notifyStatusMessage("Complete");
   return 0;

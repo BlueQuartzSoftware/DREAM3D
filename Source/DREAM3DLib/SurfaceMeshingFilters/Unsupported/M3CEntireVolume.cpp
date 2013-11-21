@@ -138,8 +138,8 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t features, 
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);
-    sm->addCellData(DREAM3D::CellData::SurfaceMeshEdges, faceEdges);
-    sm->addCellData(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshEdges, faceEdges);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
 
     addCreatedCellData(DREAM3D::CellData::SurfaceMeshEdges);
     addCreatedCellData(DREAM3D::CellData::SurfaceMeshInternalEdges);
@@ -423,9 +423,9 @@ int M3CEntireVolume::createMesh()
   // Set the updated Nodes & Triangles into the SurfaceMeshDataContainer
   sm->setTriangles(triangles);
   sm->setNodes(nodes);
-  sm->addCellData(DREAM3D::CellData::SurfaceMeshEdges, faceEdges);
-  sm->addCellData(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
-  sm->addCellData(DREAM3D::CellData::SurfaceMeshNodeType, shortNodeKindPtr);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshEdges, faceEdges);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshNodeType, shortNodeKindPtr);
 
 //  notifyStatusMessage("\nOutputting nodes and triangles...\n");
 //  get_output(vertex, fedge, iedge, triangle, NS, nNodes, nFEdge, tnIEdge, nTriangle, mp);

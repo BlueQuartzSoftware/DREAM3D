@@ -183,7 +183,7 @@ void MinNeighbors::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
@@ -345,7 +345,7 @@ void MinNeighbors::assign_badpoints()
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getCellData(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
           p->CopyTuple(neighbor, j);
         }
       }
@@ -363,7 +363,7 @@ void MinNeighbors::merge_containedfeatures()
   bool good = false;
 
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
-  size_t totalFeatures = static_cast<size_t>(m->getNumCellFeatureTuples());
+  size_t totalFeatures = static_cast<size_t>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   for (size_t i = 0; i < totalFeatures; i++)
   {
     m_Active[i] = true;

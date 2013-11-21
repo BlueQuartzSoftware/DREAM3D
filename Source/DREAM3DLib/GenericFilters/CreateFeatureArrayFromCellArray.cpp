@@ -159,13 +159,15 @@ void CreateFeatureArrayFromCellArray::execute()
   setErrorCondition(0);
   int64_t voxels = m->getTotalPoints();
   int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, voxels, features, m->getNumCellEnsembleTuples());
+  size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+
+  dataCheck(false, voxels, features, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
+  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayName);
   if (NULL == inputData.get())
   {
 
@@ -225,7 +227,7 @@ void CreateFeatureArrayFromCellArray::execute()
 
   if (p.get() != NULL)
   {
-    m->getAttributeMatrix(getCellFeatureAttributeMatrixArrayName())->addAttributeArray(p->GetName(), p);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->GetName(), p);
 
   }
   else

@@ -18,6 +18,7 @@ void replaceText(QString hFile, QString cppFile)
   QFile h(hFile);
   h.open(QFile::ReadOnly);
   QString header = h.readAll();
+  h.close();
 
   QFile source(cppFile);
   source.open(QFile::ReadOnly);
@@ -40,12 +41,12 @@ void replaceText(QString hFile, QString cppFile)
     sub = sub.mid(2, endIdx-2);
     varNames << sub;
     doReplace = true;
-    index = cpp.indexOf("m->getPrereqArray<", index + 1);
+    index = cpp.indexOf("m->createNonPrereqArray<", index + 1);
     //break;
   }
 
   if (doReplace == false) { return; }
-
+  doReplace = false;
   // Now open the header file and read that.
   for (int i = 0; i < varNames.size(); ++i)
   {
@@ -58,26 +59,28 @@ void replaceText(QString hFile, QString cppFile)
       if (idx > 0)
       {
         header.replace(dc,  dc + "    " + s + "\n");
+        doReplace = true;
       }
     }
   }
 
 
   //// WRITE THE HEADER BACK OUT TO A FILE
-  h.close();
-  QFileInfo fi(hFile);
+  if(doReplace== true)
+  {
+    QFileInfo fi(hFile);
 #if 0
-  QFile hOut("/tmp/junk/" + fi.fileName());
-  #else
-  QFile hOut(hFile);
-  #endif
-  hOut.open(QFile::WriteOnly);
-  QTextStream stream( &hOut );
-  stream << header;
-  hOut.close();
+    QFile hOut("/tmp/junk/" + fi.fileName());
+#else
+    QFile hOut(hFile);
+#endif
+    hOut.open(QFile::WriteOnly);
+    QTextStream stream( &hOut );
+    stream << header;
+    hOut.close();
 
-  qDebug() << "Saved File " << "/tmp/junk/" << fi.fileName();
-
+    qDebug() << "Saved File " << hFile;
+  }
 
 }
 
@@ -95,7 +98,7 @@ void scanDirIter(QDir dir)
       QString filename = iterator.fileName();
       if (filename.endsWith(".cpp") )
       {
-       // qDebug("Found %s matching pattern.", qPrintable(filename));
+        // qDebug("Found %s matching pattern.", qPrintable(filename));
         QFileInfo fi(iterator.filePath());
         QString header = fi.path() + "/" + fi.baseName() + ".h";
         QString source = iterator.filePath();

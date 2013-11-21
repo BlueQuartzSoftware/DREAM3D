@@ -132,7 +132,7 @@ void FindAvgCAxes::execute()
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;

@@ -191,13 +191,13 @@ void SingleThresholdCells::execute()
     return;
   }
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFeatureTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
+  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayName);
   if (NULL == inputData.get())
   {
 
@@ -207,7 +207,7 @@ void SingleThresholdCells::execute()
     return;
   }
 
-  IDataArray::Pointer goodVoxelsPtr = m->getCellData(m_OutputArrayName);
+  IDataArray::Pointer goodVoxelsPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_OutputArrayName);
   BoolArrayType* goodVoxels = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(goodVoxelsPtr.get());
   if (NULL == goodVoxels)
   {
@@ -222,7 +222,7 @@ void SingleThresholdCells::execute()
   filter.execute(inputData.get(), goodVoxelsPtr.get());
 
 
-  m->addCellData(goodVoxelsPtr->GetName(), goodVoxelsPtr);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(goodVoxelsPtr->GetName(), goodVoxelsPtr);
   notifyStatusMessage("Complete");
 }
 

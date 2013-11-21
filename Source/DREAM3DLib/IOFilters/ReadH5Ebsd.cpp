@@ -361,12 +361,12 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, size_
     if (reader->getPointerType(names[i]) == Ebsd::Int32)
     {
       Int32ArrayType::Pointer array = Int32ArrayType::CreateArray(voxels, names[i]);
-      m->addCellData(names[i], array);
+      m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
     }
     else if (reader->getPointerType(names[i]) == Ebsd::Float)
     {
       FloatArrayType::Pointer array = FloatArrayType::CreateArray(voxels, names[i]);
-      m->addCellData(names[i], array);
+      m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
     }
   }
 
@@ -385,7 +385,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, size_
   m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_LatticeConstants */
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
-  m->addCellEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray( DREAM3D::EnsembleData::MaterialName, materialNames);
 }
 
 // -----------------------------------------------------------------------------
@@ -528,13 +528,13 @@ void ReadH5Ebsd::execute()
   }
 
 
-  QVector<int> dim(1, 1);
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, m->getNumCellEnsembleTuples(), dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CrystalStructures */
-  dim[0] = 6;
-  m_LatticeConstantsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_LatticeConstantsArrayName, -305, m->getNumCellEnsembleTuples(), dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_LatticeConstants */
+//  QVector<int> dim(1, 1);
+//  typedef DataArray<unsigned int> XTalStructArrayType;
+//  m_CrystalStructuresPtr = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, m->getNumCellEnsembleTuples(), dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+//  m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_CrystalStructures */
+//  dim[0] = 6;
+//  m_LatticeConstantsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_LatticeConstantsArrayName, -305, m->getNumCellEnsembleTuples(), dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+//  m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); /* Assigns the actual data pointer to our instance variable m_LatticeConstants */
 
   // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
@@ -780,7 +780,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
     iArray = Int32ArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(DREAM3D::CellData::Phases, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
   if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end() )
@@ -798,7 +798,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
 
   if (m_SelectedVolumeCellArrays.find(Ebsd::Ang::ImageQuality) != m_SelectedVolumeCellArrays.end() )
@@ -806,7 +806,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ImageQuality));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ImageQuality);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Ang::ImageQuality, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
   }
 
   if (m_SelectedVolumeCellArrays.find(Ebsd::Ang::ConfidenceIndex) != m_SelectedVolumeCellArrays.end() )
@@ -814,7 +814,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ConfidenceIndex);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Ang::ConfidenceIndex, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
   }
 
   if (m_SelectedVolumeCellArrays.find(Ebsd::Ang::SEMSignal) != m_SelectedVolumeCellArrays.end() )
@@ -822,7 +822,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::SEMSignal));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::SEMSignal);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Ang::SEMSignal, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
   }
 
   if (m_SelectedVolumeCellArrays.find(Ebsd::Ang::Fit) != m_SelectedVolumeCellArrays.end() )
@@ -830,7 +830,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Fit));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::Fit);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Ang::Fit, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::Fit, fArray);
   }
 }
 
@@ -853,7 +853,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
   phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
   iArray = Int32ArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::Phases);
   ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-  m->addCellData(DREAM3D::CellData::Phases, iArray);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, iArray);
 
   if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end() )
   {
@@ -874,7 +874,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
       if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Hexagonal_High)
       {cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0);}
     }
-    m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
 
   dims[0] = 1;
@@ -883,7 +883,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Bands));
     iArray = Int32ArrayType::CreateArray(totalPoints, dims, Ebsd::Ctf::Bands);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::Bands, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::Bands, iArray);
   }
 
   if (m_SelectedVolumeCellArrays.find(Ebsd::Ctf::Error) != m_SelectedVolumeCellArrays.end() )
@@ -891,7 +891,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Error));
     iArray = Int32ArrayType::CreateArray(totalPoints, dims, Ebsd::Ctf::Error);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::Error, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::Error, iArray);
   }
 
   if (m_SelectedVolumeCellArrays.find(Ebsd::Ctf::MAD) != m_SelectedVolumeCellArrays.end() )
@@ -899,7 +899,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::MAD));
     fArray = FloatArrayType::CreateArray(totalPoints, dims, Ebsd::Ctf::MAD);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Ctf::MAD, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::MAD, fArray);
   }
 
   if (m_SelectedVolumeCellArrays.find(Ebsd::Ctf::BC) != m_SelectedVolumeCellArrays.end() )
@@ -907,7 +907,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BC));
     iArray = Int32ArrayType::CreateArray(totalPoints, dims, Ebsd::Ctf::BC);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::BC, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::BC, iArray);
   }
 
   if (m_SelectedVolumeCellArrays.find(Ebsd::Ctf::BS) != m_SelectedVolumeCellArrays.end() )
@@ -915,7 +915,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BS));
     iArray = Int32ArrayType::CreateArray(totalPoints, dims, Ebsd::Ctf::BS);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::BS, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::BS, iArray);
   }
 }
 
@@ -963,7 +963,7 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
   dims[0] = 1;
   if (m_SelectedVolumeCellArrays.find(m_CellPhasesArrayName) != m_SelectedVolumeCellArrays.end() )
@@ -971,7 +971,7 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Mic::Phase));
     iArray = Int32ArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(DREAM3D::CellData::Phases, iArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
   if (m_SelectedVolumeCellArrays.find(Ebsd::Mic::Confidence) != m_SelectedVolumeCellArrays.end() )
@@ -979,6 +979,6 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Mic::Confidence));
     fArray = FloatArrayType::CreateArray(totalPoints, dims, Ebsd::Mic::Confidence);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->addCellData(Ebsd::Mic::Confidence, fArray);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Mic::Confidence, fArray);
   }
 }

@@ -189,12 +189,10 @@ void AvizoRectilinearCoordinateWriter::execute()
     return;
   }
 
-
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembleTuples = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembleTuples);
+  size_t totalFeatures = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
 
   QFile writer(getOutputFile());
