@@ -52,7 +52,9 @@ class GenerateFeatureIds : public AbstractFilter
       m->setDimensions(nx, ny, nz);
 
       int64_t totalPoints = m->getTotalPoints();
-      dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
       // Set the default data into the FeatureIds
       for (int i = 0; i < size; ++i)
       {

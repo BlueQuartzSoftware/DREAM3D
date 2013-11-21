@@ -13,6 +13,73 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void replaceText1(QString hFile, QString cppFile)
+{
+  QFile h(hFile);
+  h.open(QFile::ReadOnly);
+  QString header = h.readAll();
+  h.close();
+
+  QFile source(cppFile);
+  source.open(QFile::ReadOnly);
+  QString cpp = source.readAll();
+
+  QStringList varNames;
+  QStringList typeNames;
+
+  bool doReplace = false;
+
+  QString searchStr("size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();");
+  int index = cpp.indexOf(searchStr);
+  int hIndex = -1;
+  if(index > 0)
+  {
+     hIndex = header.indexOf("DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)");
+     if(hIndex < 0) // This class does not have a Feature Attribute Matrix Name
+     {
+      cpp.replace(searchStr, "size_t totalFeatures = 0;");
+      doReplace = true;
+     }
+  }
+
+
+  searchStr = QString("size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();");
+  index = cpp.indexOf(searchStr);
+  hIndex = -1;
+  if(index > 0)
+  {
+     hIndex = header.indexOf("DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)");
+     if(hIndex < 0) // This class does not have a Ensemble Attribute Matrix Name
+     {
+      cpp.replace(searchStr, "size_t totalEnsembles = 0;");
+      doReplace = true;
+     }
+  }
+
+  //// WRITE THE HEADER BACK OUT TO A FILE
+  if(doReplace== true)
+  {
+    QFileInfo fi(cppFile);
+#if 0
+    QFile hOut("/tmp/junk/" + fi.fileName());
+#else
+    QFile hOut(cppFile);
+#endif
+    hOut.open(QFile::WriteOnly);
+    QTextStream stream( &hOut );
+    stream << cpp;
+    hOut.close();
+
+    qDebug() << "Saved File " << cppFile;
+  }
+
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void replaceText(QString hFile, QString cppFile)
 {
   QFile h(hFile);
@@ -102,7 +169,7 @@ void scanDirIter(QDir dir)
         QFileInfo fi(iterator.filePath());
         QString header = fi.path() + "/" + fi.baseName() + ".h";
         QString source = iterator.filePath();
-        replaceText(header, source);
+        replaceText1(header, source);
       }
     }
   }
