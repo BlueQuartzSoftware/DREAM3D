@@ -227,7 +227,7 @@ void OpenCloseCoordinationNumber::execute()
   int current = 0;
   int most = 0;
 
-  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
 
   QVector<int > n(numfeatures + 1, 0);
 

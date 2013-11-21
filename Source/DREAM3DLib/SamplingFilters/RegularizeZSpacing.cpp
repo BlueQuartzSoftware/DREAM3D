@@ -220,7 +220,7 @@ void RegularizeZSpacing::execute()
     }
   }
 
-  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     QString name = *iter;

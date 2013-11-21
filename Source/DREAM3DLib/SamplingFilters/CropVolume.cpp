@@ -362,7 +362,7 @@ void CropVolume::execute()
   int64_t colold, rowold, planeold;
   int64_t index;
   int64_t index_old;
-  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
   for (int64_t i = 0; i < m_ZP; i++)
   {
     QString ss = QObject::tr("Cropping Volume - Slice %1 of %2 Complete").arg(i).arg(m_ZP);

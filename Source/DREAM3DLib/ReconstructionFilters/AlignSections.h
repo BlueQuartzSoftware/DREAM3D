@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
 
     virtual ~AlignSections();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)

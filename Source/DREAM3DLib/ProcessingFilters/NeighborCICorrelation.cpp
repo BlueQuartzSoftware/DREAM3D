@@ -245,7 +245,7 @@ void NeighborCICorrelation::execute()
         }
       }
     }
-    QList<QString> voxelArrayNames = m->getCellArrayNameList();
+    QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
       neighbor = bestNeighbor[j];

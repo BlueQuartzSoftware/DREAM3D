@@ -392,7 +392,7 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = dc->getCellArrayNameList();
+  NameListType names = dc->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
 
@@ -467,7 +467,7 @@ int VolumeDataContainerWriter::writeCellFeatureData(hid_t dcGid)
   typedef std::vector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
-  NameListType names = dc->getCellFeatureArrayNameList();
+  NameListType names = dc->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
   if (names.size() > 0)
   {
     IDataArray::Pointer array = dc->getCellFeatureData(names.front());

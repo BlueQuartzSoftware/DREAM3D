@@ -179,9 +179,7 @@ void AlignSections::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t numensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, numfeatures, numensembles);
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -212,7 +210,7 @@ void AlignSections::execute()
 
   find_shifts(xshifts, yshifts);
 
-  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
   DimType progIncrement = dims[2] / 100;
   DimType prog = 1;
   int progressInt = 0;

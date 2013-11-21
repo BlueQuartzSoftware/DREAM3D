@@ -287,7 +287,7 @@ void ClearData::execute()
 
 
   int index;
-  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
   for (int k = m_ZMin; k < m_ZMax + 1; k++)
   {
     for (int j = m_YMin; j < m_YMax + 1; j++)
