@@ -210,7 +210,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   if(m_UseNonContiguousNeighbors == false)
   {
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-    m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::NeighborList).get());
+    m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
     if(m_ContiguousNeighborList == NULL)
     {
       QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
@@ -221,8 +221,8 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   else
   {
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-    m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::NeighborList).get());
-    m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::NeighborhoodList).get());
+    m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
+    m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborhoodList).get());
     if(m_ContiguousNeighborList == NULL || m_NonContiguousNeighborList == NULL)
     {
       QString ss = QObject::tr("NeighborhoodLists Array Not Initialized correctly");
