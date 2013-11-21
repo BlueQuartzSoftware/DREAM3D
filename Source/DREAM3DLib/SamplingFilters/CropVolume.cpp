@@ -310,8 +310,10 @@ void CropVolume::execute()
     return;
   }
 
-dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(), totalEnsembles);
-  if(getErrorCondition() < 0)
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = 0;
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);  if(getErrorCondition() < 0)
   {
     return;
   }
@@ -390,7 +392,7 @@ dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatri
     }
   }
   m->setDimensions(static_cast<size_t>(m_XP), static_cast<size_t>(m_YP), static_cast<size_t>(m_ZP));
-  int64_t totalPoints = m->getTotalPoints();
+  totalPoints = m->getTotalPoints();
 
 
   // Resize all the other Voxel Arrays

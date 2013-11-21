@@ -191,7 +191,7 @@ void SingleThresholdFeatures::execute()
   setErrorCondition(0);
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = 0;
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);  
   if (getErrorCondition() < 0)
   {

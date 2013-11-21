@@ -331,15 +331,15 @@ void FindEuclideanDistMap::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t featureTuples = 0;
+  size_t totalFeatures = 0;
   if (m->doesAttributeMatrixExist(getCellFeatureAttributeMatrixName()) == true) {
-    featureTuples = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+    totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   }
-  size_t ensembleTuples = 0;
+  size_t totalEnsembles = 0;
   if (m->doesAttributeMatrixExist(getCellEnsembleAttributeMatrixName()) == true) {
-    ensembleTuples = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+    totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   }
-  dataCheck(false, totalPoints, featureTuples, ensembleTuples);
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

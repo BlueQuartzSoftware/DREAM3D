@@ -172,8 +172,8 @@ void OpenCloseCoordinationNumber::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = 0;
+  size_t totalEnsembles = 0;
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {

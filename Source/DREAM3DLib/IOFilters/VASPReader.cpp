@@ -304,8 +304,8 @@ int VASPReader::readFile()
   m->removeVertexData(m_AtomTypesArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
   //  int64_t totalPoints = m->getTotalPoints();
-  //size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  //size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  //size_t totalFeatures = 0;
+  //size_t totalEnsembles = 0;
   //dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   QVector<int> dims(1, 3);
   m_AtomVelocitiesPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0, totalAtoms, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

@@ -119,7 +119,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t featur
 { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  IDataArray::Pointer neighborListPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborListArrayName);
+  IDataArray::Pointer neighborListPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborListArrayName);
   if (NULL == neighborListPtr.get())
   {
     QString ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
@@ -131,7 +131,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t featur
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(neighborListPtr.get());
   }
 
-  IDataArray::Pointer misorientationPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_MisorientationListArrayName);
+  IDataArray::Pointer misorientationPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_MisorientationListArrayName);
   if(NULL == misorientationPtr.get())
   {
     NeighborList<float>::Pointer misorientationListPtr = NeighborList<float>::New();
@@ -243,9 +243,9 @@ void FindMisorientations::execute()
   }
 
   // We do this to create new set of MisorientationList objects
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  totalPoints = m->getTotalPoints();
+  totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
   for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
