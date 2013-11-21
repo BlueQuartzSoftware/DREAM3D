@@ -176,7 +176,7 @@ void FindKernelAvgMisorientations::execute()
     return;
   }
 
-  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

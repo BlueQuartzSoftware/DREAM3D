@@ -225,7 +225,7 @@ void FindDeformationStatistics::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

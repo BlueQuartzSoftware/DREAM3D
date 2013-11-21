@@ -315,7 +315,7 @@ void GenerateEnsembleStatistics::execute()
   //  int totalPoints = m->getTotalPoints();
   //  int totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int totalEnsembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -352,7 +352,7 @@ void GenerateEnsembleStatistics::execute()
   m_StatsDataArray->fillArrayWithNewStatsData(totalEnsembles, m_PhaseTypes);
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, p);
 
-  dataCheck(false, m->getTotalPoints(), m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
   if(m_SizeDistribution == true)
   {
