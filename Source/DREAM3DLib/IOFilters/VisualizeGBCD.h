@@ -67,6 +67,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
 
     virtual ~VisualizeGBCD();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceEnsembleAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
             DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
