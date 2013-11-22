@@ -210,7 +210,7 @@ if(HDF5_FOUND)
 
     CHECK_SYMBOL_EXISTS(H5_BUILT_AS_DYNAMIC_LIB "H5pubconf.h" HAVE_HDF5_DLL)
     if(HAVE_HDF5_DLL)
-     set(HDF5_IS_SHARED 1 CACHE INTERNAL "HDF5 Built as DLL or Shared Library")
+		set(HDF5_IS_SHARED 1 CACHE INTERNAL "HDF5 Built as DLL or Shared Library")
     endif()
 
     # Restore CMAKE_REQUIRED_INCLUDES and CMAKE_REQUIRED_FLAGS variables
@@ -231,13 +231,10 @@ if(HDF5_FOUND)
           list(GET VERSION_LIST 2 HDF5_VERSION_SUBMINOR)
           set(HDF5_VERSION "${HDF5_VERSION_MAJOR}.${HDF5_VERSION_MINOR}.${HDF5_VERSION_SUBMINOR}" CACHE STRING "Version of HDF5 found")
           mark_as_advanced(HDF5_VERSION)
-          message(STATUS "Found HDF5 Version ${HDF5_VERSION_MAJOR}.${HDF5_VERSION_MINOR}.${HDF5_VERSION_SUBMINOR}")
         else()
          message(WARNING
             "Unable to parse HDF5 version from ${HDF5_INCLUDE_DIRS}/H5pubconf.h. You may not be using the latest version of HDF5. This should NOT impact any compiles")
         endif()
     endif()
-
-
-
+	message(STATUS "      HDF5 Version ${HDF5_VERSION}")
 endif(HDF5_FOUND)

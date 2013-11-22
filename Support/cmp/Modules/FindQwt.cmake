@@ -138,4 +138,5 @@ if(QWT_FOUND)
   SET(CMAKE_REQUIRED_FLAGS    ${CMAKE_REQUIRED_FLAGS_SAVE})
   #
   #############################################
+  message(STATUS "Found Qwt Library: ${QWT_INCLUDE_DIR}")
 endif()
