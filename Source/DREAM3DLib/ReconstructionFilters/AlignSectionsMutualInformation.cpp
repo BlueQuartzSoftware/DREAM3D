@@ -97,9 +97,25 @@ AlignSectionsMutualInformation::~AlignSectionsMutualInformation()
 void AlignSectionsMutualInformation::setupFilterParameters()
 {
   // Run the superclass first.
-  //AlignSections::setupFilterParameters();
-  // Now append our options
-  std::vector<FilterParameter::Pointer> parameters = getFilterParameters();
+  std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Alignment Shift File");
+    option->setPropertyName("WriteAlignmentShifts");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Alignment File");
+    option->setPropertyName("AlignmentShiftFileName");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+
+  setFilterParameters(parameters);
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Tolerance");

@@ -82,8 +82,25 @@ AlignSectionsFeature::~AlignSectionsFeature()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::setupFilterParameters()
 {
-  // Run the superclass first.
-  //AlignSections::setupFilterParameters();
+  std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Alignment Shift File");
+    option->setPropertyName("WriteAlignmentShifts");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Alignment File");
+    option->setPropertyName("AlignmentShiftFileName");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -116,9 +133,9 @@ void AlignSectionsFeature::readFilterParameters(AbstractFilterParametersReader* 
 //
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
-
+  writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
+  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
 }
 
 // -----------------------------------------------------------------------------

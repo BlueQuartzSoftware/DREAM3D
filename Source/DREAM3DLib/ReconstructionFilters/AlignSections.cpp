@@ -115,7 +115,6 @@ void AlignSections::readFilterParameters(AbstractFilterParametersReader* reader)
 //
 // -----------------------------------------------------------------------------
 void AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
