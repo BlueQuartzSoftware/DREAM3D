@@ -66,6 +66,7 @@ AlignSectionsList::AlignSectionsList() :
 AlignSections(),
 m_GoodVoxels(NULL)
 {
+  setWriteAlignmentShifts(false);
   setupFilterParameters();
 }
 
@@ -91,6 +92,7 @@ void AlignSectionsList::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
+
   setFilterParameters(parameters);
 }
 
@@ -105,8 +107,9 @@ void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* rea
 //
 // -----------------------------------------------------------------------------
 void AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
+  writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
+  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
   writer->writeValue("InputFile", getInputFile() );
 }
 
@@ -117,7 +120,6 @@ void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   std::stringstream ss;
-
 
   if(true == m_InputFile.empty())
   {
@@ -135,6 +137,7 @@ void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t fields, 
 void AlignSectionsList::preflight()
 {
   dataCheck(true, 1, 1, 1);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -195,7 +198,7 @@ void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> 
   int newxshift, newyshift;
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-	inFile >> slice >> newxshift >> newyshift;
+  inFile >> slice >> newxshift >> newyshift;
     xshifts[iter] = xshifts[iter-1] + newxshift;
     yshifts[iter] = yshifts[iter-1] + newyshift;
   }
