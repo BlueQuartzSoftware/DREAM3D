@@ -100,6 +100,15 @@ void AlignSectionsMutualInformation::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Misorientation Tolerance");
+    option->setPropertyName("MisorientationTolerance");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Alignment Shift File");
     option->setPropertyName("WriteAlignmentShifts");
     option->setWidgetType(FilterParameter::BooleanWidget);
@@ -115,16 +124,6 @@ void AlignSectionsMutualInformation::setupFilterParameters()
     parameters.push_back(option);
   }
 
-  setFilterParameters(parameters);
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Misorientation Tolerance");
-    option->setPropertyName("MisorientationTolerance");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    parameters.push_back(option);
-  }
   setFilterParameters(parameters);
 }
 
