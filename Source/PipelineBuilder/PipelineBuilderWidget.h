@@ -165,7 +165,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     /**
      * @brief Getter for the m_FavoritesActionList private variable
      */
-    QList<QAction*> getFavoritesActionList() {return m_ActionList;}
+    //QList<QAction*> getFavoritesActionList() {return m_ActionList;}
 
     /**
      * @brief Checks the QString "newFavoriteTitle" for illegal characters
@@ -216,6 +216,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void actionAppendFavorite_triggered();
     void actionShowInFileSystem_triggered();
     void actionFilterListHelp_triggered();
+    void actionUpdateFavorite_triggered();
 
     void on_m_GoBtn_clicked();
     void disableGoBtn();
@@ -248,6 +249,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     virtual void pipelineComplete();
     virtual void pipelineProgress(int value);
 
+  protected:
+    void removeFavorite(QTreeWidgetItem* item);
+    void addFavorite(QString favoriteTitle);
+
   signals:
     void fireWriteSettings();
     void fireReadSettings();
@@ -260,15 +265,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QThread*                    m_WorkerThread;
     bool                        m_DocErrorTabsIsOpen;
     QString                     m_OpenDialogLastDirectory;
-    QAction*                    m_actionClearPipeline;
-    QAction*                    m_actionOpenPipeline;
-    QAction*                    m_actionSavePipeline;
-    QAction*                    m_actionAddFavorite;
-    QAction*                    m_actionRemoveFavorite;
-    QAction*                    m_actionRenameFavorite;
-    QAction*                    m_actionAppendFavorite;
-    QAction*                    m_actionShowInFileSystem;
-    QList<QAction*>             m_ActionList;
+
+    QList<QAction*>             m_FavoriteCategoryActions;
+    QList<QAction*>             m_FavoriteItemActions;
+    QList<QAction*>             m_PrebuiltItemActions;
 
     QTreeWidgetItem*            m_favorites;
     QTreeWidgetItem*            m_prebuilts;
