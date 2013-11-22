@@ -8,8 +8,13 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
+if(NOT ${DREAM3D_SDK} STREQUAL "")
+  include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
+endif()
+
 project(DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.9)
+#cmake_policy(VERSION 2.8.12.1)
 
 include (CMakeParseArguments)
 
