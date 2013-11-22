@@ -49,6 +49,8 @@
 FindNeighbors::FindNeighbors() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
@@ -211,10 +213,9 @@ void FindNeighbors::execute()
   }
 
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, totalPoints, totalFeatures, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -248,8 +249,6 @@ void FindNeighbors::execute()
   int onsurf = 0;
   int good = 0;
   int neighbor = 0;
-
-  //size_t xtalCount = m->getCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->getNumberOfTuples();
 
   QVector<QVector<int> > neighborlist;
   QVector<QVector<float> > neighborsurfacearealist;

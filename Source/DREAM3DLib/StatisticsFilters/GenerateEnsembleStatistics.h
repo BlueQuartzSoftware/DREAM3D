@@ -73,7 +73,6 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
    //------ (Possible) Required Feature Data
                                                 //------ (Possible) Required Ensemble Data

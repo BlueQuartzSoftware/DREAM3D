@@ -54,6 +54,9 @@
 FindFeatureReferenceMisorientations::FindFeatureReferenceMisorientations() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
@@ -207,9 +210,8 @@ void FindFeatureReferenceMisorientations::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   int64_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
@@ -218,7 +220,7 @@ void FindFeatureReferenceMisorientations::execute()
   }
 
   float** avgmiso = new float *[m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples()];
-  for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
+  for (size_t i = 1; i <totalFeatures; i++)
   {
     avgmiso[i] = new float[2];
     for (int j = 0; j < 2; j++)
@@ -313,15 +315,14 @@ void FindFeatureReferenceMisorientations::execute()
     }
   }
 
-  size_t featuresSize = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  for (size_t i = 1; i < featuresSize; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     m_FeatureAvgMisorientations[i] = avgmiso[i][1] / avgmiso[i][0];
     if(avgmiso[i][0] == 0) { m_FeatureAvgMisorientations[i] = 0.0; }
   }
 
   // Clean up all the heap allocated memory
-  for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     delete[] avgmiso[i];
   }

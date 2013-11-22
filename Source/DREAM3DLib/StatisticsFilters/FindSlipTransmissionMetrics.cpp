@@ -49,6 +49,8 @@
 FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_F1ArrayName(DREAM3D::FeatureData::F1),
   m_F1sptArrayName(DREAM3D::FeatureData::F1spt),
   m_F7ArrayName(DREAM3D::FeatureData::F7),
@@ -207,10 +209,9 @@ void FindSlipTransmissionMetrics::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
   int64_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, 0, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -254,11 +255,6 @@ void FindSlipTransmissionMetrics::execute()
 
       QuaternionMathF::Copy(avgQuats[i], q1);
       QuaternionMathF::Copy(avgQuats[nname], q1);
-//      for (int k = 0; k < 5; k++)
-//      {
-//        q1[k] = m_AvgQuats[5 * i + k];
-//        q2[k] = m_AvgQuats[5 * nname + k];
-//      }
       if(m_CrystalStructures[m_FeaturePhases[i]] == m_CrystalStructures[m_FeaturePhases[nname]] && m_FeaturePhases[i] > 0)
       {
         m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getmPrime(q1, q2, LD, mprime);

@@ -55,6 +55,8 @@
 GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
@@ -325,10 +327,9 @@ void GenerateEnsembleStatistics::execute()
   setErrorCondition(0);
 
 
-  //  int totalPoints = m->getTotalPoints();
-  //  int totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int totalEnsembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, 0, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -365,7 +366,7 @@ void GenerateEnsembleStatistics::execute()
   m_StatsDataArray->fillArrayWithNewStatsData(totalEnsembles, m_PhaseTypes);
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, p);
 
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, 0, totalFeatures, totalEnsembles);
 
   if(m_SizeDistribution == true)
   {

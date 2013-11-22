@@ -49,6 +49,8 @@
 FindSlicetoSliceRotations::FindSlicetoSliceRotations() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
@@ -164,9 +166,9 @@ void FindSlicetoSliceRotations::execute()
     return;
   }
 
-  //int64_t totalPoints = m->getTotalPoints();
-
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
@@ -179,8 +181,6 @@ void FindSlicetoSliceRotations::execute()
   bool good = false;
 
   float w, n1, n2, n3;
-//  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-//  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)

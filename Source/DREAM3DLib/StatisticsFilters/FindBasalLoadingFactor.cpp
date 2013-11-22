@@ -15,6 +15,8 @@
 FindBasalLoadingFactor::FindBasalLoadingFactor() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_BasalLoadingFactorArrayName(DREAM3D::FeatureData::BasalLoadingFactor),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -138,10 +140,9 @@ void FindBasalLoadingFactor::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;//m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;//m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, 0, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

@@ -48,6 +48,8 @@
 FindAvgCAxes::FindAvgCAxes() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_AvgCAxesArrayName(DREAM3D::FeatureData::AvgCAxes),
@@ -133,16 +135,14 @@ void FindAvgCAxes::execute()
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, totalPoints, totalFeatures, 0);
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   //int phase;
   QuatF q1;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
@@ -151,9 +151,9 @@ void FindAvgCAxes::execute()
   float caxis[3] = {0, 0, 1};
   float c1[3];
 
-  QVector<int> counter(numfeatures, 0);
+  QVector<int> counter(totalFeatures, 0);
 
-  for (size_t i = 1; i < numfeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     m_AvgCAxes[3 * i] = 0.0;
     m_AvgCAxes[3 * i + 1] = 0.0;
@@ -188,7 +188,7 @@ void FindAvgCAxes::execute()
       m_AvgCAxes[index + 2] += c1[2];
     }
   }
-  for (size_t i = 1; i < numfeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     if(counter[i] == 0)
     {

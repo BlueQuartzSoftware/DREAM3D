@@ -33,12 +33,6 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Feature Data
-    
-    //------ Created Feature Data
-            //------ Required Ensemble Data
     
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
@@ -67,9 +61,6 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
 
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
-//    CubicOps::Pointer m_CubicOps;
-//    HexagonalOps::Pointer m_HexOps;
-//    OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, BasalLoadingFactor)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)

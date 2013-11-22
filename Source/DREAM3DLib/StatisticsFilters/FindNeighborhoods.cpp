@@ -51,6 +51,8 @@
 FindNeighborhoods::FindNeighborhoods() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -201,10 +203,9 @@ void FindNeighborhoods::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;//m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;//m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -261,16 +262,16 @@ void FindNeighborhoods::find_neighborhoods()
 
   size_t xP = dims[0];
   size_t yP = dims[1];
-  //size_t zP = dims[2];
+  size_t zP = dims[2];
   float xRes = m->getXRes();
   float yRes = m->getYRes();
-// float zRes = m->getZRes();
+  float zRes = m->getZRes();
   float sizeX = float(xP) * xRes;
   float sizeY = float(yP) * yRes;
-  //float sizeZ = float(zP)*zRes;
+  float sizeZ = float(zP) * zRes;
   int numXBins = int(sizeX / criticalDistance);
   int numYBins = int(sizeY / criticalDistance);
-//  int numZBins = int(sizeZ/criticalDistance);
+  int numZBins = int(sizeZ/criticalDistance);
 
   int xbin, ybin, zbin, bin, bin1, bin2;
   QVector<size_t> bins(totalFeatures, 0);

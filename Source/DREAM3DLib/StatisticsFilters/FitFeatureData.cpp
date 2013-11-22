@@ -12,6 +12,8 @@
 FitFeatureData::FitFeatureData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_SelectedFeatureArrayName(""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
@@ -167,8 +169,6 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   T* fPtr = featureArray->getPointer(0);
   float* ePtr = ensembleArray->getPointer(0);
 
-  //float max;
-  //float min;
   QVector<FloatArrayType::Pointer> dist;
   QVector<QVector<float > > values;
 
@@ -183,7 +183,6 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
     values[i].resize(1);
   }
 
-  //float vol;
   for (size_t i = 1; i < numfeatures; i++)
   {
     if(removeBiasedFeatures == false || biasedFeatures[i] == false)
@@ -216,10 +215,9 @@ void FitFeatureData::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t voxels = m->getTotalPoints();
   int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int64_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, voxels, features, ensembles);
+  dataCheck(false, 0, features, ensembles);
   if (getErrorCondition() < 0)
   {
     return;

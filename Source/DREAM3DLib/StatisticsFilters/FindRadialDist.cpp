@@ -58,6 +58,7 @@
 FindRadialDist::FindRadialDist() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
@@ -194,10 +195,8 @@ void FindRadialDist::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;//m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;//m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -252,10 +251,6 @@ void FindRadialDist::find_radialdist()
 #else
   typedef int64_t DimType;
 #endif
-  //  DimType dims[3] =
-  //  { static_cast<DimType>(udims[0]),
-  //    static_cast<DimType>(udims[1]),
-  //    static_cast<DimType>(udims[2]), };
 
 
   int numbins = 40;
@@ -321,10 +316,6 @@ void FindRadialDist::find_radialdist()
           {
             count[int(m_EquivalentDiameters[i] / ESDStepSize)][int(dist / binSize)]++;
           }
-          //if(dist < distToSurface[j])
-          //{
-          // count[int(m_EquivalentDiameters[j])][int(dist/m_EquivalentDiameters[j])]++;
-          //}
         }
       }
     }

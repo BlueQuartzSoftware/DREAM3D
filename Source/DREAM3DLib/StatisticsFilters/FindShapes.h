@@ -66,11 +66,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-        //------ Required Feature Data
-        //------ Created Feature Data
-                    
+                        
     DREAM3D_DECLARE_ARRAY(double, featuremoments, FeatureMoments) // N x 6 Array
     DREAM3D_DECLARE_ARRAY(double, featureeigenvals, FeatureEigenVals) // N x 3 Array
 

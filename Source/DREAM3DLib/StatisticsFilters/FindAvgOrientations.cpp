@@ -48,6 +48,9 @@
 FindAvgOrientations::FindAvgOrientations() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
@@ -156,7 +159,7 @@ void FindAvgOrientations::execute()
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
@@ -165,8 +168,7 @@ void FindAvgOrientations::execute()
     return;
   }
 
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  QVector<float> counts(numfeatures, 0.0);
+  QVector<float> counts(totalFeatures, 0.0);
 
   int phase;
   QuatF voxquat;
@@ -174,7 +176,7 @@ void FindAvgOrientations::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  for (size_t i = 1; i < numfeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     QuaternionMathF::ElementWiseAssign(avgQuats[i], 0.0);
   }
@@ -197,7 +199,7 @@ void FindAvgOrientations::execute()
     }
   }
   float ea1, ea2, ea3;
-  for (size_t i = 1; i < numfeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     if(counts[i] == 0)
     {

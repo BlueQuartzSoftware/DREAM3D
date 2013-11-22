@@ -221,6 +221,7 @@ class FindEuclideanMap
 FindEuclideanDistMap::FindEuclideanDistMap() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
@@ -330,16 +331,8 @@ void FindEuclideanDistMap::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;
-  if (m->doesAttributeMatrixExist(getCellFeatureAttributeMatrixName()) == true) {
-    totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  }
-  size_t totalEnsembles = 0;
-  if (m->doesAttributeMatrixExist(getCellEnsembleAttributeMatrixName()) == true) {
-    totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  }
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -357,7 +350,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   for (int i = 0; i < totalPoints * 3; i++)
   {

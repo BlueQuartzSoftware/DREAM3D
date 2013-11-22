@@ -12,6 +12,8 @@
 FitCorrelatedFeatureData::FitCorrelatedFeatureData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_SelectedFeatureArrayName(""),
   m_CorrelatedFeatureArrayName(""),
@@ -283,10 +285,9 @@ void FitCorrelatedFeatureData::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t voxels = m->getTotalPoints();
   int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int64_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, voxels, features, ensembles);
+  dataCheck(false, 0, features, ensembles);
   if (getErrorCondition() < 0)
   {
     return;

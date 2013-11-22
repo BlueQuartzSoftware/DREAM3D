@@ -47,6 +47,8 @@
 FindNumFeatures::FindNumFeatures() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
   m_FeaturePhases(NULL),
@@ -132,10 +134,9 @@ void FindNumFeatures::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);  if (getErrorCondition() < 0)
+  dataCheck(false, 0, totalFeatures, totalEnsembles);  if (getErrorCondition() < 0)
   {
     return;
   }

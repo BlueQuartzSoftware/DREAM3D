@@ -30,10 +30,6 @@ class DREAM3DLib_EXPORT FindFeatureClustering : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    //------ Required Cell Data
-
-    //------ Required Feature Data
-                //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
