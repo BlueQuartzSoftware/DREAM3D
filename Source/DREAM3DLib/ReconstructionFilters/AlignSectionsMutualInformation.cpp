@@ -138,9 +138,9 @@ void AlignSectionsMutualInformation::readFilterParameters(AbstractFilterParamete
 //
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
-  AlignSections::writeFilterParameters(writer);
+  writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
+  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }
 
