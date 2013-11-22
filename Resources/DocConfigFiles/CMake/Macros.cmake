@@ -132,7 +132,7 @@ function(ADD_DOXYGEN_TARGETS)
     endif()
 
         if(APPLE)
-          if(AUTO_OPEN_PDF)
+          if(DREAM3D_AUTO_OPEN_PDF)
               add_custom_command(TARGET ${DOX_PROJECT_NAME}  POST_BUILD
                 COMMAND /usr/bin/open ${LATEX_OUTPUT_PATH}/${DOX_PDF_FILENAME}.pdf
                 COMMENT "Opening PDF file with default Viewer")

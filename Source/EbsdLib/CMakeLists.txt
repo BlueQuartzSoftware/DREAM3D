@@ -26,19 +26,6 @@ if(DEFINED DREAM3DProj_BINARY_DIR)
 
     set(GENERATE_GIT_VERSION 1)
 
-elseif(DEFINED PVEbsd_BINARY_DIR)
-    message(STATUS "EbsdLib Configuring in PVEbsd Plugin")
-    set(EbsdLib_SOURCE_DIR ${PVEbsd_SOURCE_DIR}/Code/EbsdLib)
-    set(PROJECT_RESOURCES_DIR ${PVEbsd_SOURCE_DIR}/Resources)
-    set(CMP_SOURCE_DIR ${PVEbsd_SOURCE_DIR}/Support/cmp)
-    set(EbsdLib_BUILT_AS_DYNAMIC_LIB 0)
-    set(PROJECT_NAME "EbsdLib")
-    set(PROJECT_CODE_DIR ${PVEbsd_SOURCE_DIR}/Code)
-    set(EbsdLib_BINARY_DIR ${PVEbsd_BINARY_DIR}/EbsdLib)
-    set(PROJECT_INSTALL_HEADERS 0)
-    set(GENERATE_GIT_VERSION 0)
-    set(H5Support_HDF5_NAMESPACE "PVEbsd")
-
 endif()
 
 
@@ -71,12 +58,23 @@ set(CMP_GENERATE_VERSION_STRING ${GENERATE_GIT_VERSION})
 # Extra Variables that need to be set before all the configured files are generated.
 set(EbsdLib_HDF5_SUPPORT 1)
 option(EbsdLib_ENABLE_HDF5 "Enable the use of HDF5 functionality" ON)
-mark_as_advanced(EbsdLib_ENABLE_HDF5)
 
-INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
+
+
+
+#-------------------------------------------------------------------------------
+# Include the cmp project to perform all the basic configuration tests
+include(${CMP_SOURCE_DIR}/cmpProject.cmake)
+
+#-------------------------------------------------------------------------------
+# Mark some variables as advanced to hide them from the GUI
+mark_as_advanced(EbsdLib_VERSION)
+mark_as_advanced(EbsdLib_ENABLE_HDF5)
 
 configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
                ${EbsdLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
+
+
 
 # Setup the Include Directories
 include_directories(${PROJECT_CODE_DIR})

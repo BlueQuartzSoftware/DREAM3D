@@ -23,9 +23,9 @@ endif()
 set(PROJECT_PREFIX "MXA" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 set(MXA_INSTALL_FILES 0)
 #-------------------------------------------------------------------------------
-# Include the cmp project to perform all the basic configuration tests for the 
+# Include the cmp project to perform all the basic configuration tests for the
 # project.
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 set(CMP_HEADER_DIR ${MXA_BINARY_DIR})
 set(CMP_CONFIGURATION_FILE_NAME "MXAConfiguration.h")
 set(CMP_TYPES_FILE_NAME "MXATypes.h")
@@ -36,8 +36,12 @@ set(CMP_PROJECT_NAMESPACE "MXA")
 set(CMP_PROJECT_NAME "MXA")
 set(CMP_ENABLE_PLUGINS "0")
 set(CMP_LIB_SEARCH_DIRS "")
-INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
+include(${CMP_SOURCE_DIR}/cmpProject.cmake)
 
+
+#-------------------------------------------------------------------------------
+# Mark some variables as advanced to hide them from the GUI
+mark_as_advanced(MXA_VERSION)
 
 Macro(MXACompileDir DirName)
     include(${MXA_SOURCE_DIR}/${DirName}/SourceList.cmake)
@@ -47,7 +51,6 @@ endMacro()
 MXACompileDir(Common)
 MXACompileDir(Utilities)
 set(MXA_HDF5_SUPPORT "1")
-#MXACompileDir(HDF5)
 
 
 include_directories(${MXA_SOURCE_DIR}/..)
@@ -62,23 +65,23 @@ set(HDF5_VTK_BRIDGE "0")
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
-cmpVersionStringsFromGit(GENERATED_HEADER_FILE_PATH ${CMP_HEADER_DIR}/MXAVersion.h 
+cmpVersionStringsFromGit(GENERATED_HEADER_FILE_PATH ${CMP_HEADER_DIR}/MXAVersion.h
                          GENERATED_SOURCE_FILE_PATH ${CMP_HEADER_DIR}/MXAVersion.cpp
                          NAMESPACE "MXA"
                          cmpProjectName "MXA" )
-                         
+
 
 configure_file(${MXA_SOURCE_DIR}/MXAConfiguration.h.in
                ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE})
 
-cmp_IDE_GENERATED_PROPERTIES("Generated" 
+cmp_IDE_GENERATED_PROPERTIES("Generated"
                              "${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE};${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME};${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME};${CMP_HEADER_DIR}/MXAVersion.h"
                              "${CMP_HEADER_DIR}/MXAVersion.cpp")
 
 
-            
-set(Project_SRCS 
-    ${Project_SRCS} 
+
+set(Project_SRCS
+    ${Project_SRCS}
     ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE}
     ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}
     ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}
@@ -100,11 +103,11 @@ if(WIN32)
 endif()
 
 if(BUILD_SHARED_LIBS AND NOT APPLE)
-    INSTALL(TARGETS ${PROJECT_NAME} 
+    INSTALL(TARGETS ${PROJECT_NAME}
         COMPONENT Applications
         RUNTIME DESTINATION ${install_dir}
         LIBRARY DESTINATION ${lib_install_dir}
-        ARCHIVE DESTINATION ${lib_install_dir}       
+        ARCHIVE DESTINATION ${lib_install_dir}
         BUNDLE DESTINATION "."
-    ) 
-endif() 
+    )
+endif()

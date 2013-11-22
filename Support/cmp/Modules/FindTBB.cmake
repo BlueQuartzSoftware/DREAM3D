@@ -32,21 +32,21 @@ set(TBB_DEBUG 0)
 # Look for the environment variable first and TBB_ARCH_PLATFORM CMake variable are NOT set.
 # then use the environment varible
 if(NOT "$ENV{TBB_ARCH_PLATFORM}" STREQUAL "" AND "${TBB_ARCH_PLATFORM}" STREQUAL "")
-	set(TBB_ARCH_PLATFORM $ENV{TBB_ARCH_PLATFORM} )
+  set(TBB_ARCH_PLATFORM $ENV{TBB_ARCH_PLATFORM} )
 endif()
 
 if(NOT "$ENV{TBB_ARCH_TYPE}" STREQUAL "" AND "${TBB_ARCH_TYPE}" STREQUAL "")
-	set(TBB_ARCH_TYPE $ENV{TBB_ARCH_TYPE} )
+  set(TBB_ARCH_TYPE $ENV{TBB_ARCH_TYPE} )
 endif()
 
 # Figure out the TBB_ARCH_PLATFORM on Windows. Note that we only support
 # visual studio 9, 10, 11
 if(MSVC AND "${TBB_ARCH_PLATFORM}" STREQUAL "" )
-	
-	set(TBB_ARCH_TYPE "ia32")
-	if( "${CMAKE_SIZEOF_VOID_P}" EQUAL "8" )
-		set(TBB_ARCH_TYPE "intel64")
-	endif()
+
+  set(TBB_ARCH_TYPE "ia32")
+  if( "${CMAKE_SIZEOF_VOID_P}" EQUAL "8" )
+    set(TBB_ARCH_TYPE "intel64")
+  endif()
     # has intel64/vc8   intel64/vc9
     # has ia32/vc7.1  ia32/vc8   ia32/vc9
     set(_TBB_DEFAULT_INSTALL_DIR "C:/Program Files/Intel/TBB" "C:/Program Files (x86)/Intel/TBB")
@@ -61,9 +61,9 @@ if(MSVC AND "${TBB_ARCH_PLATFORM}" STREQUAL "" )
     if(MSVC10)
         set(TBB_ARCH_PLATFORM "${TBB_ARCH_TYPE}/vc10")
     endif(MSVC10)
-	if(MSVC11)
-		set(TBB_ARCH_PLATFORM "${TBB_ARCH_TYPE}/vc11")
-	endif(MSVC11)
+  if(MSVC11)
+    set(TBB_ARCH_PLATFORM "${TBB_ARCH_TYPE}/vc11")
+  endif(MSVC11)
     if(NOT TBB_ARCH_PLATFORM)
         message("ERROR: TBB supports only VC  9, 10 and 11 compilers on Windows platforms.")
     endif(NOT TBB_ARCH_PLATFORM)
@@ -176,28 +176,28 @@ mark_as_advanced(TBB_INCLUDE_DIR)
 #-- Look for libraries
 
 set(_TBB_LIBRARY_DIR
-	 ${_TBB_INSTALL_DIR}/lib/${TBB_ARCH_PLATFORM}
-	 ${_TBB_INSTALL_DIR}/${TBB_ARCH_PLATFORM}/lib
-	)
-	
+   ${_TBB_INSTALL_DIR}/lib/${TBB_ARCH_PLATFORM}
+   ${_TBB_INSTALL_DIR}/${TBB_ARCH_PLATFORM}/lib
+  )
+
 find_library(TBB_LIBRARY_RELEASE
-		${_TBB_LIB_NAME}
-		${_TBB_LIBRARY_DIR}
-	 	NO_DEFAULT_PATH)
-find_library(TBB_MALLOC_LIBRARY_RELEASE 
-		${_TBB_LIB_MALLOC_NAME} 
-		${_TBB_LIBRARY_DIR} 
-		NO_DEFAULT_PATH)
+    ${_TBB_LIB_NAME}
+    ${_TBB_LIBRARY_DIR}
+    NO_DEFAULT_PATH)
+find_library(TBB_MALLOC_LIBRARY_RELEASE
+    ${_TBB_LIB_MALLOC_NAME}
+    ${_TBB_LIBRARY_DIR}
+    NO_DEFAULT_PATH)
 
 #-- Look for debug libraries
-find_library(TBB_LIBRARY_DEBUG        
-		${_TBB_LIB_DEBUG_NAME}        
-		${_TBB_LIBRARY_DIR} 
-		NO_DEFAULT_PATH)
-find_library(TBB_MALLOC_LIBRARY_DEBUG 
-		${_TBB_LIB_MALLOC_DEBUG_NAME} 
-		${_TBB_LIBRARY_DIR} 
-		NO_DEFAULT_PATH)
+find_library(TBB_LIBRARY_DEBUG
+    ${_TBB_LIB_DEBUG_NAME}
+    ${_TBB_LIBRARY_DIR}
+    NO_DEFAULT_PATH)
+find_library(TBB_MALLOC_LIBRARY_DEBUG
+    ${_TBB_LIB_MALLOC_DEBUG_NAME}
+    ${_TBB_LIBRARY_DIR}
+    NO_DEFAULT_PATH)
 
 # Set the binary directory where the Windows DLL files are located.
 set(TBB_BIN_DIR ${TBB_INSTALL_DIR}/bin/${TBB_ARCH_PLATFORM} CACHE PATH "" FORCE )
@@ -205,29 +205,29 @@ set(TBB_MALLOC_BIN_DIR ${TBB_INSTALL_DIR}/bin/${TBB_ARCH_PLATFORM}  CACHE PATH "
 
 
 # include the macro to adjust libraries
-INCLUDE (${CMP_MODULES_SOURCE_DIR}/cmpAdjustLibVars.cmake)
+include(${CMP_MODULES_SOURCE_DIR}/cmpAdjustLibVars.cmake)
 cmp_ADJUST_LIB_VARS(TBB)
 # This line is needed to trigger the correct behavior in the next line
 set(TBB_MALLOC_INCLUDE_DIR ${TBB_INCLUDE_DIR})
 cmp_ADJUST_LIB_VARS(TBB_MALLOC)
 
 if(TBB_DEBUG)
-        message(STATUS "_TBB_LIB_NAME: ${_TBB_LIB_NAME}")
-        message(STATUS "_TBB_LIB_DEBUG_NAME: ${_TBB_LIB_DEBUG_NAME}")
-	message(STATUS "TBB_INSTALL_DIR: ${TBB_INSTALL_DIR}")
-	message(STATUS "TBB_ARCH_PLATFORM: ${TBB_ARCH_PLATFORM}")
-	message(STATUS "TBB_ARCH_TYPE: ${TBB_ARCH_TYPE}")
-	message(STATUS "TBB_BIN_DIR: ${TBB_BIN_DIR}")
-	message(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR}")
-	message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
-	message(STATUS "TBB_LIBRARY: ${TBB_LIBRARY}")
-	message(STATUS "TBB_LIBRARY_DEBUG: ${TBB_LIBRARY_DEBUG}")
-	message(STATUS "TBB_LIBRARY_RELEASE: ${TBB_LIBRARY_RELEASE}")
-	message(STATUS "TBB_MALLOC_LIBRARY: ${TBB_MALLOC_LIBRARY}")
-	message(STATUS "TBB_MALLOC_LIBRARY_DEBUG: ${TBB_MALLOC_LIBRARY_DEBUG}")
-	message(STATUS "TBB_MALLOC_LIBRARY_RELEASE: ${TBB_MALLOC_LIBRARY_RELEASE}")
-	message(STATUS "TBB_BIN_DIR: ${TBB_BIN_DIR}")
-	message(STATUS "TBB_MALLOC_BIN_DIR: ${TBB_MALLOC_BIN_DIR}")
+  message(STATUS "_TBB_LIB_NAME: ${_TBB_LIB_NAME}")
+  message(STATUS "_TBB_LIB_DEBUG_NAME: ${_TBB_LIB_DEBUG_NAME}")
+  message(STATUS "TBB_INSTALL_DIR: ${TBB_INSTALL_DIR}")
+  message(STATUS "TBB_ARCH_PLATFORM: ${TBB_ARCH_PLATFORM}")
+  message(STATUS "TBB_ARCH_TYPE: ${TBB_ARCH_TYPE}")
+  message(STATUS "TBB_BIN_DIR: ${TBB_BIN_DIR}")
+  message(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR}")
+  message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
+  message(STATUS "TBB_LIBRARY: ${TBB_LIBRARY}")
+  message(STATUS "TBB_LIBRARY_DEBUG: ${TBB_LIBRARY_DEBUG}")
+  message(STATUS "TBB_LIBRARY_RELEASE: ${TBB_LIBRARY_RELEASE}")
+  message(STATUS "TBB_MALLOC_LIBRARY: ${TBB_MALLOC_LIBRARY}")
+  message(STATUS "TBB_MALLOC_LIBRARY_DEBUG: ${TBB_MALLOC_LIBRARY_DEBUG}")
+  message(STATUS "TBB_MALLOC_LIBRARY_RELEASE: ${TBB_MALLOC_LIBRARY_RELEASE}")
+  message(STATUS "TBB_BIN_DIR: ${TBB_BIN_DIR}")
+  message(STATUS "TBB_MALLOC_BIN_DIR: ${TBB_MALLOC_BIN_DIR}")
 endif()
 
 
@@ -254,6 +254,10 @@ if(TBB_INCLUDE_DIR)
         set(TBB_IS_SHARED "TRUE")
         set(TBB_MALLOC_IS_SHARED "TRUE")
         message(STATUS "Found Intel TBB - ${_TBB_INSTALL_DIR}")
+        mark_as_advanced(TBB_LIBRARY_DIR)
+        mark_as_advanced(TBB_LIB_DIR)
+        mark_as_advanced(TBB_MALLOC_BIN_DIR)
+        mark_as_advanced(TBB_MALLOC_LIB_DIR)
     endif(TBB_LIBRARY)
 endif(TBB_INCLUDE_DIR)
 

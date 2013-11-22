@@ -16,7 +16,7 @@ project(DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.12.1)
 cmake_policy(VERSION 2.8.12.1)
 
-include (CMakeParseArguments)
+include(CMakeParseArguments)
 
 # ---------- Setup output Directories -------------------------
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
@@ -61,6 +61,8 @@ file(WRITE ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin/plugins;")
 file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
 set(CMP_LIB_SEARCH_DIRS "")
 set(CMP_MODULES_SOURCE_DIR ${CMP_SOURCE_DIR}/Modules CACHE INTERNAL "")
+
+mark_as_advanced(PROJECT_PREFIX)
 
 if(UNIX AND NOT APPLE)
     set(DREAM3D_LINUX_SYSTEM ${CMAKE_SYSTEM_NAME} CACHE STRING "The Name of the linux distrubution for packaging")
@@ -424,6 +426,7 @@ else()
 
   set(DOX_GENERATE_RTF "NO")
   option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" OFF)
+  mark_as_advanced(DREAM3D_GENERATE_RTF)
   if(DREAM3D_GENERATE_RTF STREQUAL "ON")
       set(DOX_GENERATE_RTF "YES")
   endif()
@@ -431,6 +434,7 @@ else()
 
   set(DOX_GENERATE_HTML "YES")
   option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
+  mark_as_advanced(DREAM3D_GENERATE_HTML)
   if(DREAM3D_GENERATE_HTML STREQUAL "ON")
       set(DOX_GENERATE_HTML "YES")
   endif()
@@ -438,12 +442,14 @@ else()
 
   set(DOX_GENERATE_LATEX "NO")
   option(DREAM3D_GENERATE_LATEX "Generate HTML Documentation" OFF)
+  mark_as_advanced(DREAM3D_GENERATE_LATEX)
   if(DREAM3D_GENERATE_LATEX STREQUAL "ON")
       set(DOX_GENERATE_LATEX "YES")
       # Check for existence of LaTex executable files
       INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
       if(APPLE)
-          option(AUTO_OPEN_PDF "Automatically open generated PDF files with default PDF reading application" ON)
+          option(DREAM3D_AUTO_OPEN_PDF "Automatically open generated PDF files with default PDF reading application" ON)
+          mark_as_advanced(DREAM3D_AUTO_OPEN_PDF)
       endif()
   endif()
 
