@@ -83,6 +83,7 @@ class ConvertEulerAnglesImpl
 ConvertEulerAngles::ConvertEulerAngles() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians), // We convert from Degrees to Radians by Default
   m_CellEulerAngles(NULL)
@@ -194,10 +195,8 @@ void ConvertEulerAngles::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;

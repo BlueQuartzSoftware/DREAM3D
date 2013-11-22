@@ -43,6 +43,8 @@
 CopyFeatureArrayToCellArray::CopyFeatureArrayToCellArray() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_SelectedFeatureArrayName(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
@@ -191,10 +193,8 @@ void CopyFeatureArrayToCellArray::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t voxels = m->getTotalPoints();
-  int64_t featureTuples = 0;
-  int64_t ensembleTuples = 0;
-  dataCheck(false, voxels, featureTuples, ensembleTuples);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -216,47 +216,47 @@ void CopyFeatureArrayToCellArray::execute()
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {
-    p = copyData<int8_t>(inputData, voxels, m_FeatureIds);
+    p = copyData<int8_t>(inputData, totalPoints, m_FeatureIds);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    p = copyData<uint8_t>(inputData, voxels, m_FeatureIds);
+    p = copyData<uint8_t>(inputData, totalPoints, m_FeatureIds);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    p = copyData<int16_t>(inputData, voxels, m_FeatureIds);
+    p = copyData<int16_t>(inputData, totalPoints, m_FeatureIds);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    p = copyData<uint16_t>(inputData, voxels, m_FeatureIds);
+    p = copyData<uint16_t>(inputData, totalPoints, m_FeatureIds);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    p = copyData<int32_t>(inputData, voxels, m_FeatureIds);
+    p = copyData<int32_t>(inputData, totalPoints, m_FeatureIds);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    p = copyData<uint32_t>(inputData, voxels, m_FeatureIds);
+    p = copyData<uint32_t>(inputData, totalPoints, m_FeatureIds);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    p = copyData<int64_t>(inputData, voxels, m_FeatureIds);
+    p = copyData<int64_t>(inputData, totalPoints, m_FeatureIds);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    p = copyData<uint64_t>(inputData, voxels, m_FeatureIds);
+    p = copyData<uint64_t>(inputData, totalPoints, m_FeatureIds);
   }
   else if (dType.compare("float") == 0)
   {
-    p = copyData<float>(inputData, voxels, m_FeatureIds);
+    p = copyData<float>(inputData, totalPoints, m_FeatureIds);
   }
   else if (dType.compare("double") == 0)
   {
-    p = copyData<double>(inputData, voxels, m_FeatureIds);
+    p = copyData<double>(inputData, totalPoints, m_FeatureIds);
   }
   else if (dType.compare("bool") == 0)
   {
-    p = copyData<bool>(inputData, voxels, m_FeatureIds);
+    p = copyData<bool>(inputData, totalPoints, m_FeatureIds);
   }
 
 

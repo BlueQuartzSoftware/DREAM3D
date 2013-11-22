@@ -55,6 +55,8 @@
 BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -189,8 +191,9 @@ void BadDataNeighborOrientationCheck::execute()
   }
 
 
-  int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(), 0);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, totalEnsembles);
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -213,13 +216,9 @@ void BadDataNeighborOrientationCheck::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  //size_t count = 1;
   int good = 1;
   int neighbor;
-  //float x, y, z;
   DimType column, row, plane;
-// int neighpoint;
-//  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);

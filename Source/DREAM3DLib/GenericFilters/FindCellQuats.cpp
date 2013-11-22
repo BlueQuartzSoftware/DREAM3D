@@ -49,11 +49,12 @@
 FindCellQuats::FindCellQuats() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_CellPhases(NULL),
   m_Quats(NULL),
   m_CellEulerAngles(NULL),
@@ -154,10 +155,9 @@ void FindCellQuats::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, totalPoints, 0, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

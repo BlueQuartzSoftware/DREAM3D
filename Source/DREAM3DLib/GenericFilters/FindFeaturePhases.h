@@ -61,10 +61,9 @@ class DREAM3DLib_EXPORT FindFeaturePhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
-   //------ Required Cell Data
-            //------ Created Feature Data
-    
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    //------ Required Cell Data
+    //------ Created Feature Data
+
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }

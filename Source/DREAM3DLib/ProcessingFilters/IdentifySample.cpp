@@ -53,6 +53,7 @@
 IdentifySample::IdentifySample() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_AlreadyChecked(NULL),
   m_Neighbors(NULL),
@@ -148,11 +149,8 @@ void IdentifySample::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -302,38 +300,6 @@ void IdentifySample::execute()
   Sample.clear();
   checked.clear();
 
-  /*  QVector<bool> change;
-  change.resize(totalPoints,false);
-  for (int i = 0; i < totalPoints; i++)
-  {
-    if(m_GoodVoxels[i] == false)
-    {
-        column = i % xp;
-        row = (i / xp) % yp;
-        plane = i / (xp * yp);
-        for (int j = 0; j < 6; j++)
-        {
-          good = 1;
-          neighbor = static_cast<int>( i + neighpoints[j] );
-          if(j == 0 && plane == 0) good = 0;
-          if(j == 5 && plane == (zp - 1)) good = 0;
-          if(j == 1 && row == 0) good = 0;
-          if(j == 4 && row == (yp - 1)) good = 0;
-          if(j == 2 && column == 0) good = 0;
-          if(j == 3 && column == (xp - 1)) good = 0;
-          if(good == 1 && m_GoodVoxels[neighbor] == true)
-          {
-            change[i] = true;
-          }
-        }
-  }
-  }
-  for(int j = 0; j < totalPoints; j++)
-  {
-  if(change[j] == true) m_GoodVoxels[j] = true;
-  }
-  change.clear();
-  */
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("Identifying Sample Complete");
 }

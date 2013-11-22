@@ -61,6 +61,9 @@
 GroupMicroTextureRegions::GroupMicroTextureRegions() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_MTRdensityArrayName(DREAM3D::CellData::MTRdensity),
@@ -253,7 +256,7 @@ void GroupMicroTextureRegions::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);  if (getErrorCondition() < 0)

@@ -47,6 +47,7 @@
 FindSurfaceCells::FindSurfaceCells() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
   m_FeatureIds(NULL),
@@ -134,9 +135,7 @@ void FindSurfaceCells::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;

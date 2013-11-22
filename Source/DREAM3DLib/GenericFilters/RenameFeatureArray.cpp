@@ -42,6 +42,7 @@
 // -----------------------------------------------------------------------------
 RenameFeatureArray::RenameFeatureArray() :
   AbstractFilter(),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_SelectedFeatureArrayName(""),
   m_NewFeatureArrayName("")
 {
@@ -124,7 +125,7 @@ void RenameFeatureArray::dataCheck(bool preflight, size_t voxels, size_t feature
   }
   else
   {
-    bool check = m->renameCellData(m_SelectedFeatureArrayName, m_NewFeatureArrayName);
+    bool check = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->renameAttributeArray(m_SelectedFeatureArrayName, m_NewFeatureArrayName);
     if(check == false)
     {
       QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
@@ -164,7 +165,7 @@ void RenameFeatureArray::execute()
     return;
   }
   setErrorCondition(0);
-  bool check = m->renameCellFeatureData(m_SelectedFeatureArrayName, m_NewFeatureArrayName);
+  bool check = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->renameAttributeArray(m_SelectedFeatureArrayName, m_NewFeatureArrayName);
 
   if(check == false)
   {

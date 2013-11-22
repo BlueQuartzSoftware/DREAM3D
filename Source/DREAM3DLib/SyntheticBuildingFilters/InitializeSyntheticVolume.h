@@ -63,11 +63,6 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    //------ Created Cell Data
-//    
-//    
-//    
-    //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}

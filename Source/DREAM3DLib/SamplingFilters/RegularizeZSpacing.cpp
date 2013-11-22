@@ -47,8 +47,6 @@
 
 using namespace std;
 
-//#include "DREAM3DLib/HDF5/H5VoxelReader.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -56,6 +54,7 @@ using namespace std;
 RegularizeZSpacing::RegularizeZSpacing() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_NewZRes(1.0f)
 {
   setupFilterParameters();

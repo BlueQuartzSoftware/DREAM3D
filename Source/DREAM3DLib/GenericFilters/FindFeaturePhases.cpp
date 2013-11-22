@@ -47,10 +47,11 @@
 FindFeaturePhases::FindFeaturePhases() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_FeaturePhases(NULL)
@@ -140,11 +141,10 @@ void FindFeaturePhases::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   // This makes sure we get the allocated arrays and we size the Features to 1 to avoid any errors
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, totalPoints, totalFeatures, 0);
 
   int gnum = 0;
   for(int64_t i = 0; i < totalPoints; i++)

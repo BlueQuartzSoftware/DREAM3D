@@ -85,27 +85,8 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-
-    //------ Required Cell Data
-    
-    
-    
-    //------ Created Feature Data
-    
-    
-    
-    
     
     DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
-    
-    
-    
-    
-    //------ Required Ensemble Data
-    
-    
-    //------ Created Ensemble Data
-    
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)

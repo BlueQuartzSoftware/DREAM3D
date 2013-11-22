@@ -83,23 +83,6 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    //------ Required Cell Data
-    
-    
-    //------ Created Feature Data
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //------ Required Ensemble Data
-    
-    
-
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 

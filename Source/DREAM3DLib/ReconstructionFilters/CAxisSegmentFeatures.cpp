@@ -67,6 +67,9 @@
 CAxisSegmentFeatures::CAxisSegmentFeatures() :
   SegmentFeatures(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
@@ -213,8 +216,8 @@ void CAxisSegmentFeatures::execute()
     return;
   }
 
-  m->resizeCellFeatureDataArrays(1);
-  int64_t totalPoints = m->getTotalPoints();
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
@@ -235,10 +238,10 @@ void CAxisSegmentFeatures::execute()
   if (true == m_RandomizeFeatureIds)
   {
 
-     totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+    totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+    totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+    totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+    dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
     if (getErrorCondition() < 0)
     {
       return;
@@ -325,11 +328,11 @@ int64_t CAxisSegmentFeatures::getSeed(size_t gnum)
   if (seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
-    m->resizeCellFeatureDataArrays(gnum + 1);
-    int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(gnum + 1);
+    int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+    size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+    dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   }
   return seed;
 }

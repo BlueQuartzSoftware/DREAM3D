@@ -48,6 +48,7 @@
 UpdateCellQuats::UpdateCellQuats() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL)
 {
@@ -133,7 +134,7 @@ void UpdateCellQuats::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   //getting the 5 component quaternions from the data container and down-casting them
   IDataArray::Pointer Quats5 = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(DREAM3D::CellData::Quats);

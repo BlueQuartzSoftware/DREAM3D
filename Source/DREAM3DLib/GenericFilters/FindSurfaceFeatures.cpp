@@ -45,6 +45,8 @@
 FindSurfaceFeatures::FindSurfaceFeatures() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_FeatureIds(NULL),
@@ -128,11 +130,11 @@ void FindSurfaceFeatures::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   ss = QObject::tr("FSG Points - %1, Features - %2").arg(totalPoints).arg(totalFeatures);
   notifyStatusMessage(ss);
-  dataCheck(false, totalPoints, totalFeatures, 1);
+  dataCheck(false, totalPoints, totalFeatures, 0);
   if (getErrorCondition() < 0)
   {
     return;

@@ -133,6 +133,9 @@ float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
 MergeColonies::MergeColonies() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
@@ -318,7 +321,7 @@ void MergeColonies::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);  if (getErrorCondition() < 0)
@@ -335,7 +338,7 @@ void MergeColonies::execute()
   //m_RandomizeParentIds = false;
   if (true == m_RandomizeParentIds)
   {
-    int64_t totalPoints = m->getTotalPoints();
+    int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
     // Generate all the numbers up front
     const int rangeMin = 1;
@@ -455,12 +458,6 @@ void MergeColonies::merge_colonies()
               m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
               OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
               w = w * (180.0f / DREAM3D::Constants::k_Pi);
-              //        float vecttol = 0.01f;
-              //              if (fabs(fabs(r1) - 0.0000f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
-              //              if (fabs(fabs(r1) - 0.9957f) < vecttol && fabs(fabs(r2) - 0.0917f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
-              //        if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
-              //        if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0530f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
-              //        if (fabs(fabs(r1) - 0.5870f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.1858f) < vecttol) colony = 1;
               float angdiff1 = fabs(w - 10.53f);
               float axisdiff1 = acosf(fabs(n1) * 0.0000f + fabs(n2) * 0.0000f + fabs(n3) * 1.0000f);
               if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) { colony = 1; }
@@ -608,7 +605,7 @@ void MergeColonies::identify_globAlpha()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   QVector<int> betaSize(numParents, 0);
   QVector<int> totalSize(numParents, 0);
   for (int64_t i = 0; i < totalPoints; i++)

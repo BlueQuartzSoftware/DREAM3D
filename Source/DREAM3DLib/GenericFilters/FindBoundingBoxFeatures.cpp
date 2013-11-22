@@ -38,8 +38,6 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/GenericFilters/FindSurfaceFeatures.h"
-#include "DREAM3DLib/GenericFilters/FindFeatureCentroids.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -47,6 +45,8 @@
 FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
@@ -95,34 +95,10 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
   m_CentroidsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() == -301)
-  {
-    setErrorCondition(0);
-    FindFeatureCentroids::Pointer find_featurecentroids = FindFeatureCentroids::New();
-    find_featurecentroids->setObservers(this->getObservers());
-    find_featurecentroids->setDataContainerArray(getDataContainerArray());
-    if(preflight == true) { find_featurecentroids->preflight(); }
-    if(preflight == false) { find_featurecentroids->execute(); }
-    m_CentroidsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_CentroidsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
   dims[0] = 1;
   m_SurfaceFeaturesPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() == -302)
-  {
-    setErrorCondition(0);
-    FindSurfaceFeatures::Pointer find_surfacefeatures = FindSurfaceFeatures::New();
-    find_surfacefeatures->setObservers(this->getObservers());
-    find_surfacefeatures->setDataContainerArray(getDataContainerArray());
-    if(preflight == true) { find_surfacefeatures->preflight(); }
-    if(preflight == false) { find_surfacefeatures->execute(); }
-    m_SurfaceFeaturesPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
 
   m_BiasedFeaturesPtr = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, false, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -159,13 +135,9 @@ void FindBoundingBoxFeatures::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t featureTuples = 0;
-  if (m->doesAttributeMatrixExist(getCellFeatureAttributeMatrixName()) == true) {
-    featureTuples = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  }
-  size_t ensembleTuples = 0;
-  dataCheck(false, totalPoints, featureTuples, ensembleTuples);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, 0);
   if (getErrorCondition() < 0)
   {
     return;

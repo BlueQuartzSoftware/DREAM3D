@@ -67,7 +67,6 @@ class DREAM3DLib_EXPORT CopyFeatureArrayToCellArray : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
 
-
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed

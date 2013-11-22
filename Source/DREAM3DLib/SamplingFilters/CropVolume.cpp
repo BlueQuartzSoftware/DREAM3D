@@ -50,6 +50,8 @@
 CropVolume::CropVolume() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_XMin(0),
@@ -310,10 +312,10 @@ void CropVolume::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);  if(getErrorCondition() < 0)
+  dataCheck(false, totalPoints, totalFeatures, 0);  
+  if(getErrorCondition() < 0)
   {
     return;
   }

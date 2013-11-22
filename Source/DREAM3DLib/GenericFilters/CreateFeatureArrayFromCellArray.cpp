@@ -7,6 +7,8 @@
 CreateFeatureArrayFromCellArray::CreateFeatureArrayFromCellArray() :
   AbstractFilter(),
  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_SelectedCellArrayName(""),
     m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
@@ -158,11 +160,10 @@ void CreateFeatureArrayFromCellArray::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t voxels = m->getTotalPoints();
-  int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
-  dataCheck(false, voxels, features, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, totalFeatures, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -182,47 +183,47 @@ void CreateFeatureArrayFromCellArray::execute()
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {
-    p = copyCellData<int8_t>(inputData, features, m_FeatureIds);
+    p = copyCellData<int8_t>(inputData, totalFeatures, m_FeatureIds);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    p = copyCellData<uint8_t>(inputData, features, m_FeatureIds);
+    p = copyCellData<uint8_t>(inputData, totalFeatures, m_FeatureIds);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    p = copyCellData<int16_t>(inputData, features, m_FeatureIds);
+    p = copyCellData<int16_t>(inputData, totalFeatures, m_FeatureIds);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    p = copyCellData<uint16_t>(inputData, features, m_FeatureIds);
+    p = copyCellData<uint16_t>(inputData, totalFeatures, m_FeatureIds);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    p = copyCellData<int32_t>(inputData, features, m_FeatureIds);
+    p = copyCellData<int32_t>(inputData, totalFeatures, m_FeatureIds);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    p = copyCellData<uint32_t>(inputData, features, m_FeatureIds);
+    p = copyCellData<uint32_t>(inputData, totalFeatures, m_FeatureIds);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    p = copyCellData<int64_t>(inputData, features, m_FeatureIds);
+    p = copyCellData<int64_t>(inputData, totalFeatures, m_FeatureIds);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    p = copyCellData<uint64_t>(inputData, features, m_FeatureIds);
+    p = copyCellData<uint64_t>(inputData, totalFeatures, m_FeatureIds);
   }
   else if (dType.compare("float") == 0)
   {
-    p = copyCellData<float>(inputData, features, m_FeatureIds);
+    p = copyCellData<float>(inputData, totalFeatures, m_FeatureIds);
   }
   else if (dType.compare("double") == 0)
   {
-    p = copyCellData<double>(inputData, features, m_FeatureIds);
+    p = copyCellData<double>(inputData, totalFeatures, m_FeatureIds);
   }
   else if (dType.compare("bool") == 0)
   {
-    p = copyCellData<bool>(inputData, features, m_FeatureIds);
+    p = copyCellData<bool>(inputData, totalFeatures, m_FeatureIds);
   }
 
 

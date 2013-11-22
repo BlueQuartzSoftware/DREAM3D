@@ -52,6 +52,7 @@
 // -----------------------------------------------------------------------------
 UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh() :
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_XPoints(0),

@@ -55,6 +55,7 @@
 FillBadData::FillBadData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_MinAllowedDefectSize(1),
   m_AlreadyChecked(NULL),
@@ -159,11 +160,8 @@ void FillBadData::execute()
   }
 
 
-  int64_t totalPoints = m->getTotalPoints();
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -195,13 +193,27 @@ void FillBadData::execute()
   QVector<int > neighs;
   QVector<int > remove;
   size_t count = 1;
+  size_t point;
   int good = 1;
   int neighbor;
   int index = 0;
   float x, y, z;
   DimType column, row, plane;
   int neighpoint;
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int featurename;
+  size_t numfeatures = 0;
+  for(int64_t i=0;i<totalPoints;i++)
+  {
+    featurename = m_FeatureIds[point];
+    if(featurename > numfeatures) numfeatures = featurename;
+  }
+  if (numfeatures == 0)
+  {
+    setErrorCondition(-90001);
+    notifyErrorMessage("No features have been defined in the Feature map. A filter needs to be executed before this filter that defines the number of features.", getErrorCondition());
+    notifyStatusMessage("Completed with Errors");
+    return;
+  }
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);

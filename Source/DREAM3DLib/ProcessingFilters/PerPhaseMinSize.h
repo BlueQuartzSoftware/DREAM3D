@@ -61,8 +61,6 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     DREAM3D_TYPE_MACRO_SUPER(PerPhaseMinSize, AbstractFilter)
 
     virtual ~PerPhaseMinSize();
-
-
                 
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
 

@@ -55,6 +55,7 @@
 NeighborCICorrelation::NeighborCICorrelation() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
   m_MinConfidence(0.1),
   m_Loop(false),
@@ -170,11 +171,8 @@ void NeighborCICorrelation::execute()
   }
 
 
-  int64_t totalPoints = m->getTotalPoints();
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -198,8 +196,6 @@ void NeighborCICorrelation::execute()
   int good = 1;
   int neighbor;
   DimType column, row, plane;
-  //int neighpoint;
-// size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);

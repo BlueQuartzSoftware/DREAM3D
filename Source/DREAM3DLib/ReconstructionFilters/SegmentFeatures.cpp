@@ -62,7 +62,8 @@
 // -----------------------------------------------------------------------------
 SegmentFeatures::SegmentFeatures() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName)
 {
 
 }
@@ -137,7 +138,6 @@ void SegmentFeatures::execute()
     addErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
-  // int64_t totalPoints = m->getTotalPoints();
 
   size_t udims[3] =
   { 0, 0, 0 };

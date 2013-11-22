@@ -45,6 +45,7 @@
 SingleThresholdCells::SingleThresholdCells():
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_SelectedCellArrayName(""),
   m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
   m_ComparisonOperator(2),
@@ -192,10 +193,8 @@ void SingleThresholdCells::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;

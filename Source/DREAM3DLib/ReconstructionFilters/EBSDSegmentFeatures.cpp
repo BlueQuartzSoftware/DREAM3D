@@ -64,6 +64,9 @@
 EBSDSegmentFeatures::EBSDSegmentFeatures() :
   SegmentFeatures(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
@@ -200,10 +203,10 @@ void EBSDSegmentFeatures::execute()
     return;
   }
 
-  m->resizeCellFeatureDataArrays(1);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
 
   // This runs a subfilter
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
@@ -314,7 +317,7 @@ int64_t EBSDSegmentFeatures::getSeed(size_t gnum)
   if (seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
-    m->resizeCellFeatureDataArrays(gnum + 1);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(gnum + 1);
     dataCheck(false, totalPoints, m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(), 0);
   }
   return seed;

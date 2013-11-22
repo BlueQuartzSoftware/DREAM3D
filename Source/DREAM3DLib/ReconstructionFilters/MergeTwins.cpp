@@ -66,6 +66,9 @@
 MergeTwins::MergeTwins() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
@@ -232,9 +235,9 @@ void MergeTwins::execute()
 
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;//m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;//m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
   if (getErrorCondition() < 0)
   {

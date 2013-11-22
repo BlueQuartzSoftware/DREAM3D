@@ -55,6 +55,7 @@
 OpenCloseCoordinationNumber::OpenCloseCoordinationNumber() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_Loop(false),
   m_CoordinationNumber(6),
@@ -170,11 +171,8 @@ void OpenCloseCoordinationNumber::execute()
   }
 
 
-  int64_t totalPoints = m->getTotalPoints();
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -199,14 +197,20 @@ void OpenCloseCoordinationNumber::execute()
     static_cast<DimType>(udims[2]),
   };
 
-//  size_t count = 1;
   int good = 1;
-//  int neighbor;
-//  int index = 0;
-//  float x, y, z;
-//  DimType row, plane;
+  size_t point = 0;
+  int kstride, jstride;
+  int featurename, feature;
+  int coordination = 0;
+  int current = 0;
+  int most = 0;
   int neighpoint;
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numfeatures = 0;
+  for(int64_t i=0;i<totalPoints;i++)
+  {
+    featurename = m_FeatureIds[point];
+    if(featurename > numfeatures) numfeatures = featurename;
+  }
   if (numfeatures == 0)
   {
     setErrorCondition(-90001);
@@ -222,14 +226,6 @@ void OpenCloseCoordinationNumber::execute()
   neighpoints[3] = static_cast<int>(1);
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
-// QVector<int> currentvlist;
-
-  size_t point = 0;
-  int kstride, jstride;
-  int featurename, feature;
-  int coordination = 0;
-  int current = 0;
-  int most = 0;
 
   QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
 

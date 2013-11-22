@@ -49,6 +49,7 @@
 MultiThresholdCells::MultiThresholdCells() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_OutputArrayName(DREAM3D::CellData::GoodVoxels)
 {
   setupFilterParameters();
@@ -173,8 +174,8 @@ void MultiThresholdCells::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t nPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -228,7 +229,7 @@ void MultiThresholdCells::execute()
       notifyErrorMessage("Error Executing threshold filter on array", getErrorCondition());
       return;
     }
-    for (int64_t p = 0; p < nPoints; ++p)
+    for (int64_t p = 0; p < totalPoints; ++p)
     {
       if(m_Output[p] == false || currentArray[p] == false)
       {

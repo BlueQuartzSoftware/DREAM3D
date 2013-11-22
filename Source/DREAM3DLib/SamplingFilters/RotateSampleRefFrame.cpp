@@ -156,6 +156,7 @@ class RotateSampleRefFrameImpl
 RotateSampleRefFrame::RotateSampleRefFrame() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_RotationAngle(0.0),
   m_sliceBySlice(false)
 {
@@ -358,10 +359,7 @@ void RotateSampleRefFrame::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, 0, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;

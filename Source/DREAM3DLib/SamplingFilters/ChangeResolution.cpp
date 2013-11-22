@@ -51,7 +51,8 @@
 // -----------------------------------------------------------------------------
 ChangeResolution::ChangeResolution() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;

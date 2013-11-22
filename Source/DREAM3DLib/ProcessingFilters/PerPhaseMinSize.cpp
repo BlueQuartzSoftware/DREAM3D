@@ -191,16 +191,16 @@ void PerPhaseMinSize::remove_smallfeatures()
 
   int gnum;
 
-  int numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   std::vector<int> voxcounts;
-  voxcounts.resize(numfeatures, 0);
+  voxcounts.resize(totalFeatures, 0);
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
     if(gnum >= 0) { voxcounts[gnum]++; }
   }
-  for (size_t i = 1; i <  static_cast<size_t>(numfeatures); i++)
+  for (size_t i = 1; i <  static_cast<size_t>(totalFeatures); i++)
   {
     m_Active[i] = true;
     if(voxcounts[i] >= getMinAllowedFeatureSize() || m_FeaturePhases[i] != m_PhaseNumber) { good = true; }

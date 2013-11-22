@@ -66,6 +66,7 @@ using namespace std;
 AlignSections::AlignSections() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_WriteAlignmentShifts(false),
   m_AlignmentShiftFileName("")
 {
@@ -178,8 +179,7 @@ void AlignSections::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, 0, 0);
+  dataCheck(false, 0, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;

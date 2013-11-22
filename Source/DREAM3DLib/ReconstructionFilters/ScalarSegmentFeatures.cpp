@@ -130,6 +130,8 @@ class TSpecificCompareFunctor : public CompareFunctor
 ScalarSegmentFeatures::ScalarSegmentFeatures() :
   SegmentFeatures(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_ScalarArrayName(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
@@ -270,12 +272,11 @@ void ScalarSegmentFeatures::execute()
     return;
   }
 
-  m->resizeCellFeatureDataArrays(1);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
   // This runs a subfilter
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, totalPoints, totalFeatures, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -353,7 +354,7 @@ void ScalarSegmentFeatures::execute()
 
   if (true == m_RandomizeFeatureIds)
   {
-    totalPoints = m->getTotalPoints();
+    totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
     size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
     // Generate all the numbers up front
@@ -436,11 +437,10 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
   if (seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
-    m->resizeCellFeatureDataArrays(gnum + 1);
-    int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(gnum + 1);
+    int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+    dataCheck(false, totalPoints, totalFeatures, 0);
   }
   return seed;
 }

@@ -65,6 +65,7 @@ using namespace std;
 AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() :
   AlignSections(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_ReferenceSlice(0),
   m_UseReferenceSlice(false),
@@ -205,10 +206,8 @@ void AlignSectionsFeatureCentroid::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;

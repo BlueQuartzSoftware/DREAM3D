@@ -71,11 +71,6 @@ class DREAM3DLib_EXPORT CAxisSegmentFeatures : public SegmentFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     
-   //------ Required Cell Data
-                //------ Created Cell Data
-        //------ Created Feature Data
-        //------ Required Ensemble Data
-    
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 

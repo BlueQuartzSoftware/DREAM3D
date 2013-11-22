@@ -112,9 +112,9 @@ class SampleSurfaceMeshImpl
 SampleSurfaceMesh::SampleSurfaceMesh() :
   AbstractFilter(),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName)
 {
-
   setupFilterParameters();
 }
 
@@ -181,7 +181,7 @@ void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features
   else
   {
     QVector<int> dims(1, 2);
-    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -229,9 +229,9 @@ void SampleSurfaceMesh::execute()
 
   //pull down faces
   FaceArray::Pointer faces = sm->getFaces();
-  int numFaces = faces->count();
+  int numFaces = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getNumTuples();
 
-  dataCheck(true, 0, numFaces, 0);
+  dataCheck(true, numFaces, 0, 0);
 
   //create array to hold bounding vertices for each face
   VertexArray::Vert_t ll, ur;

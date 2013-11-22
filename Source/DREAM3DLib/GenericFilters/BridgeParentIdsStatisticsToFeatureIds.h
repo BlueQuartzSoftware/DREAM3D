@@ -68,7 +68,7 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
-    int32_t* m_NumFeaturesPerParent;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, m_NumFeaturesPerParent);
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     QVector<OrientationOps::Pointer> m_OrientationOps;

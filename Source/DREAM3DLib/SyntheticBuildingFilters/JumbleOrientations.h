@@ -72,16 +72,6 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    //------ Required Cell Data
-    
-    //------ Created Cell Data
-    
-    //------ Required Feature Data
-    
-    //------ Created Feature Data
-    
-    
-
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() {return "Jumble Orientations";}

@@ -43,6 +43,7 @@
 RenameCellArray::RenameCellArray() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_SelectedCellArrayName(""),
   m_NewCellArrayName("")
 {
@@ -126,7 +127,7 @@ void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t features, 
   }
   else
   {
-    bool check = m->renameCellData(m_SelectedCellArrayName, m_NewCellArrayName);
+    bool check = m->getAttributeMatrix(getCellAttributeMatrixName())->renameAttributeArray(m_SelectedCellArrayName, m_NewCellArrayName);
     if(check == false)
     {
       QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
@@ -166,7 +167,7 @@ void RenameCellArray::execute()
     return;
   }
   setErrorCondition(0);
-  bool check = m->renameCellData(m_SelectedCellArrayName, m_NewCellArrayName);
+  bool check = m->getAttributeMatrix(getCellAttributeMatrixName())->renameAttributeArray(m_SelectedCellArrayName, m_NewCellArrayName);
 
   if(check == false)
   {

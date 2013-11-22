@@ -55,6 +55,8 @@
 GenerateMisorientationColors::GenerateMisorientationColors() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -208,10 +210,9 @@ void GenerateMisorientationColors::execute()
     notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
     return;
   }
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck(false, totalPoints, 0, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

@@ -66,8 +66,8 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-   //------ Required Feature Data
-            //------ Created Feature Data
+    //------ Required Feature Data
+    //------ Created Feature Data
 
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float)
 

@@ -29,7 +29,7 @@ class DREAM3DLib_EXPORT CreateFeatureArrayFromCellArray : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-       DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
