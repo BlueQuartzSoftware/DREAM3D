@@ -51,8 +51,9 @@
 // -----------------------------------------------------------------------------
 BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName)
-
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName)
 {
   setupFilterParameters();
 }
@@ -178,8 +179,7 @@ void BinaryNodesTrianglesReader::execute()
   }
 
   /* Make sure everything is in place */
-  dataCheck(false, 1, 1, 1);
-
+  dataCheck(false, 0, 0, 0);
 
   /* Place all your code to execute your filter here. */
   err = read();
@@ -206,9 +206,6 @@ int BinaryNodesTrianglesReader::read()
   {
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_BinaryNodesFile);
     setErrorCondition(786);
-    //    PipelineMessage em (getHumanLabel(), s.str(), -1);
-    //    addErrorMessage(em);
-    //    notifyMessage(em);
     return getErrorCondition();
   }
   ScopedFileMonitor nodesMonitor(nodesFile);
@@ -223,9 +220,6 @@ int BinaryNodesTrianglesReader::read()
   {
     QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after nodes count.'%2'").arg(getNameOfClass()).arg(m_BinaryNodesFile);
     setErrorCondition(787);
-    //    PipelineMessage em (getHumanLabel(), s.str(), -1);
-    //    addErrorMessage(em);
-    //    notifyMessage(em);
     return getErrorCondition();
   }
   {
@@ -238,9 +232,6 @@ int BinaryNodesTrianglesReader::read()
   {
     QString ss = QObject::tr("%1: Error opening Triangles file '%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
     setErrorCondition(788);
-    //    PipelineMessage em (getHumanLabel(), s.str(), -1);
-    //    addErrorMessage(em);
-    //    notifyMessage(em);
     return getErrorCondition();
   }
 
@@ -256,9 +247,6 @@ int BinaryNodesTrianglesReader::read()
 
     QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after triangles count.'%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
     setErrorCondition(789);
-    //    PipelineMessage em (getHumanLabel(), s.str(), -1);
-    //    addErrorMessage(em);
-    //    notifyMessage(em);
     return getErrorCondition();
   }
 
@@ -286,7 +274,6 @@ int BinaryNodesTrianglesReader::read()
 
   for (size_t i = 0; i < nNodes; i++)
   {
-
     nread = fread(&nRecord, SurfaceMesh::NodesFile::ByteCount, 1, nodesFile); // Read one set of positions from the nodes file
     if(nread != 1)
     {
@@ -337,8 +324,8 @@ int BinaryNodesTrianglesReader::read()
 
   sm->setVertices(m_NodeListPtr);
   sm->setFaces(m_TriangleListPtr);
-  sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
-  sm->addVertexData(nodeTypePtr->GetName(), nodeTypePtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
 
   // The ScopedFileMonitor classes will take care of closing the files
 

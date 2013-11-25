@@ -48,6 +48,7 @@
 VASPReader::VASPReader() :
   FileReader(),
   m_VertexDataContainerName(DREAM3D::HDF5::VertexDataContainerName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
   m_InputFile(""),
   m_AtomVelocitiesArrayName(DREAM3D::VertexData::AtomVelocities),
   m_AtomTypesArrayName(DREAM3D::VertexData::AtomTypes),
@@ -300,22 +301,11 @@ int VASPReader::readFile()
   // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
   // method which is performed before this function. This will cause an error -501 because the array with the name
   // m_FeatureIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
-  m->removeVertexData(m_AtomVelocitiesArrayName);
-  m->removeVertexData(m_AtomTypesArrayName);
+  m->getAttributeMatrix(getVertexAttributeMatrixName())->removeAttributeArray(m_AtomVelocitiesArrayName);
+  m->getAttributeMatrix(getVertexAttributeMatrixName())->removeAttributeArray(m_AtomTypesArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
-  //  int64_t totalPoints = m->getTotalPoints();
-  //size_t totalFeatures = 0;
-  //size_t totalEnsembles = 0;
-  //dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
-  QVector<int> dims(1, 3);
-  m_AtomVelocitiesPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0, totalAtoms, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AtomVelocitiesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 1;
-  m_AtomTypesPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_AtomTypesArrayName, 0, totalAtoms, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AtomTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
+  int64_t totalPoints = m->getAttributeMatrix(getVertexAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
 

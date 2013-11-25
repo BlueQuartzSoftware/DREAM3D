@@ -159,6 +159,10 @@ class CalculateFaceMisorientationColorsImpl
 GenerateFaceMisorientationColoring::GenerateFaceMisorientationColoring() :
   SurfaceMeshFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceMisorientationColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceMisorientationColors),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
@@ -236,11 +240,11 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, si
   else
   {
     QVector<int> dims(1, 2);
-    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 3;
-    m_SurfaceMeshFaceMisorientationColorsPtr = sm->createNonPrereqArray<float, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceMisorientationColorsArrayName, 0, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceMisorientationColorsPtr = sm->createNonPrereqArray<float, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceMisorientationColorsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceMisorientationColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_SurfaceMeshFaceMisorientationColors = m_SurfaceMeshFaceMisorientationColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -324,11 +328,11 @@ void GenerateFaceMisorientationColoring::execute()
   notifyStatusMessage("Starting");
 
   // Run the data check to allocate the memory for the centroid array
-  dataCheckSurfaceMesh(false, 0, sm->getNumFaceTuples(), 0);
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t numTriangles = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getNumTuples();
+  dataCheckSurfaceMesh(false, numTriangles, 0, 0);
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheckVoxel(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheckVoxel(false, 0, totalFeatures, totalEnsembles);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
@@ -338,14 +342,14 @@ void GenerateFaceMisorientationColoring::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, sm->getNumFaceTuples()),
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
                       CalculateFaceMisorientationColorsImpl(m_SurfaceMeshFaceLabels, m_FeaturePhases, m_AvgQuats, m_SurfaceMeshFaceMisorientationColors, m_CrystalStructures), tbb::auto_partitioner());
   }
   else
 #endif
   {
     CalculateFaceMisorientationColorsImpl serial(m_SurfaceMeshFaceLabels, m_FeaturePhases, m_AvgQuats, m_SurfaceMeshFaceMisorientationColors, m_CrystalStructures);
-    serial.generate(0, sm->getNumFaceTuples());
+    serial.generate(0, numTriangles);
   }
 
 

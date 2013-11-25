@@ -45,6 +45,9 @@
 GBCDTriangleDumper::GBCDTriangleDumper() :
   SurfaceMeshFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
@@ -139,15 +142,15 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
   else
   {
     QVector<int> dims(1, 2);
-    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 3;
-    m_SurfaceMeshFaceNormalsPtr = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceNormalsArrayName, -387, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceNormalsPtr = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceNormalsArrayName, -387, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 1;
-    m_SurfaceMeshFaceAreasPtr = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceAreasArrayName, -388, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceAreasPtr = sm->getPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceAreasArrayName, -388, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -228,10 +231,10 @@ void GBCDTriangleDumper::execute()
 
   // Run the data check to allocate the memory for the centroid array
   // Note the use of the voxel datacontainer num ensembles to set the gbcd size
-  dataCheckSurfaceMesh(false, 0, totalFaces, m->getNumCellEnsembleTuples());
+  dataCheckSurfaceMesh(false, totalFaces, 0, 0);
 
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;
+  dataCheckVoxel(false, 0, totalFeatures, 0);
 
   FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
   if (NULL == f)
@@ -241,7 +244,6 @@ void GBCDTriangleDumper::execute()
     return;
   }
 
-  dataCheckVoxel(false, 0, totalFeatures, totalEnsembles);
 
   float radToDeg = 180.0 / M_PI;
 

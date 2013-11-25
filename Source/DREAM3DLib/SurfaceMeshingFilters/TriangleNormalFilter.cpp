@@ -108,6 +108,7 @@ class CalculateNormalsImpl
 TriangleNormalFilter::TriangleNormalFilter() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
   m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshTriangleNormals(NULL)
 {
@@ -228,15 +229,15 @@ void TriangleNormalFilter::execute()
   VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
 
   FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
-  size_t totalPoints = trianglesPtr->getNumberOfTuples();
+  size_t numTriangles = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
-  dataCheck(false, trianglesPtr->getNumberOfTuples(), 0, 0);
+  dataCheck(false, numTriangles, 0, 0);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
                       CalculateNormalsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals), tbb::auto_partitioner());
 
   }
@@ -244,7 +245,7 @@ void TriangleNormalFilter::execute()
 #endif
   {
     CalculateNormalsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals);
-    serial.generate(0, totalPoints);
+    serial.generate(0, numTriangles);
   }
 
 

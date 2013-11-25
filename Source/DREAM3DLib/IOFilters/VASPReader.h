@@ -62,6 +62,7 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
 
     virtual ~VASPReader();
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 

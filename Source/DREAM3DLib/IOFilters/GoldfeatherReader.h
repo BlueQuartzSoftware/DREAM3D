@@ -61,6 +61,8 @@ class DREAM3DLib_EXPORT GoldfeatherReader : public AbstractFilter
 
     virtual ~GoldfeatherReader();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Curvature_1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Curvature_2ArrayName)

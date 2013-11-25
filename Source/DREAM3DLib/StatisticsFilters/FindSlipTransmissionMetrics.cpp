@@ -277,10 +277,9 @@ void FindSlipTransmissionMetrics::execute()
   }
 
   // We do this to create new set of List objects
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, 0, totalFeatures, totalEnsembles);
 
   for (int64_t i = 1; i < totalFeatures; i++)
   {

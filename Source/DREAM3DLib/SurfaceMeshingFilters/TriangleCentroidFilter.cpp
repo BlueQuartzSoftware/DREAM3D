@@ -93,6 +93,7 @@ class CalculateCentroidsImpl
 TriangleCentroidFilter::TriangleCentroidFilter() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
   m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
   m_SurfaceMeshTriangleCentroids(NULL)
 {
@@ -214,15 +215,15 @@ void TriangleCentroidFilter::execute()
   VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
 
   FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
-  size_t totalPoints = trianglesPtr->getNumberOfTuples();
+  size_t numTriangles = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
-  dataCheck(false, trianglesPtr->getNumberOfTuples(), 0, 0);
+  dataCheck(false, numTriangles, 0, 0);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
                       CalculateCentroidsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids), tbb::auto_partitioner());
 
   }
@@ -230,7 +231,7 @@ void TriangleCentroidFilter::execute()
 #endif
   {
     CalculateCentroidsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids);
-    serial.generate(0, totalPoints);
+    serial.generate(0, numTriangles);
   }
 
   /* Let the GUI know we are done with this filter */

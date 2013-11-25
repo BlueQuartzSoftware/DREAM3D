@@ -200,7 +200,7 @@ void FillBadData::execute()
   float x, y, z;
   DimType column, row, plane;
   int neighpoint;
-  int featurename;
+  int featurename, feature;
   size_t numfeatures = 0;
   for(int64_t i=0;i<totalPoints;i++)
   {
@@ -277,7 +277,6 @@ void FillBadData::execute()
     }
   }
 
-  int featurename, feature;
   int current = 0;
   int most = 0;
 

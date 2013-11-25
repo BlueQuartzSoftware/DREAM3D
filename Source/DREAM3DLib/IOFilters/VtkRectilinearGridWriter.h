@@ -73,10 +73,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-                                    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureReferenceRotationsArrayName)
-                                    
+                                        
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteParentIds)
@@ -253,12 +250,12 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GlobAlpha)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, ImageQuality)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, ConfidenceIndex)
-    bool*    m_GoodVoxels;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, TJEuclideanDistances)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, QPEuclideanDistances)
-    float*   m_FeatureReferenceRotations;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceRotations)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceMisorientations)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceCAxisMisorientations)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, KernelAverageMisorientations)

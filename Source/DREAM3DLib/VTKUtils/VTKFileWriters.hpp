@@ -58,7 +58,7 @@
 #define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, feature, name, typeClass, m_msgType, size, valuePtr) \
 m_msgType* valuePtr = NULL;\
 {\
-  IDataArray::Pointer iDataArray = dataContainer->get##feature##Data(name);\
+  IDataArray::Pointer iDataArray = dataContainer->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(name);\
   if (iDataArray.get() == NULL) { \
     QString s = QObject::tr(": Array %1 from the DataContainer class was not in the DataContainer").arg(name);\
     setErrorCondition(-10);\
@@ -72,7 +72,7 @@ m_msgType* valuePtr = NULL;\
     return -20;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##feature##Data(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(name).get());\
   if (NULL == valuePtr) {\
     QString s = QObject::tr(": Array %1 from the DataContainer class could not be cast to type ").arg(#m_msgType);\
     setErrorCondition(-30);\
@@ -96,6 +96,7 @@ class VtkScalarWriter : public AbstractFilter
 
     bool m_WriteBinaryFiles;
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AttributeMatrixName)
 
     virtual int writeScalars(FILE* f)
     {

@@ -105,9 +105,10 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
 
     virtual ~M3CSliceBySlice();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     //------ Required Cell Data
             DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
@@ -401,6 +402,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
     int numfeatures;
 
     float m_OriginX, m_OriginY, m_OriginZ;

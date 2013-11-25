@@ -44,6 +44,7 @@
 VtkFeatureIdReader::VtkFeatureIdReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_InputFile(""),
   m_Comment("DREAM3D Generated File"),
   m_DatasetType(""),
@@ -477,7 +478,7 @@ int VtkFeatureIdReader::readFile()
         {
           t = featureIds->GetValue(i);
           DREAM3D::Endian::FromSystemToBig::convert(t);
-          featureIds->SetValue(i, t);
+          m_FeatureIds[i] = t;
         }
       }
       else // ASCII VTK File
@@ -487,8 +488,7 @@ int VtkFeatureIdReader::readFile()
         for (size_t i = 0; i < totalVoxels; ++i)
         {
           in >> feature_index;
-          featureIds->SetValue(i, feature_index);
-          //   featureIdMap[feature_index]++;
+          m_FeatureIds[i] = feature_index;
         }
       }
       needFeatureIds = false;
@@ -499,9 +499,6 @@ int VtkFeatureIdReader::readFile()
     }
 
   }
-
-  // push our feature id data into the DataContainer map
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellData(DREAM3D::CellData::FeatureIds, featureIds);
 
   instream.close();
   return err;

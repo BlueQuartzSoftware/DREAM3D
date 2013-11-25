@@ -56,6 +56,7 @@
 VisualizeGBCD::VisualizeGBCD() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceEnsembleAttributeMatrixName(DREAM3D::HDF5::FaceEnsembleAttributeMatrixName),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCDdimensionsArrayName(DREAM3D::EnsembleData::GBCDdimensions),
@@ -188,7 +189,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
   }
   else
   {
-    IDataArray::Pointer iDataArray = sm->getFaceEnsembleData(DREAM3D::EnsembleData::GBCD);
+    IDataArray::Pointer iDataArray = sm->getAttributeMatrix(getFaceEnsembleAttributeMatrixName())->getAttributeArray(DREAM3D::EnsembleData::GBCD);
     if (NULL == iDataArray.get())
     {
       setErrorCondition(-387);
@@ -248,7 +249,8 @@ void VisualizeGBCD::execute()
   size_t totalFaces = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
-  dataCheckSurfaceMesh(false, 0, totalFaces, sm->getNumFaceEnsembleTuples());
+  int64_t totalEnsembles = sm->getAttributeMatrix(getFaceEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheckSurfaceMesh(false, 0, 0, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;

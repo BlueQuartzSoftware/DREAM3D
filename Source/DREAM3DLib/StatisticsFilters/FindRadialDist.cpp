@@ -196,7 +196,7 @@ void FindRadialDist::execute()
   setErrorCondition(0);
 
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, 0);
+  dataCheck(false, 0, totalFeatures, 0);
   if (getErrorCondition() < 0)
   {
     return;

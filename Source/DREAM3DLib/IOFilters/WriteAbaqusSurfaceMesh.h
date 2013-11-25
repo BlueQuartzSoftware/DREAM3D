@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT WriteAbaqusSurfaceMesh : public AbstractFilter
 
     virtual ~WriteAbaqusSurfaceMesh();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
@@ -126,6 +127,8 @@ class DREAM3DLib_EXPORT WriteAbaqusSurfaceMesh : public AbstractFilter
     int writeNodes(FILE* f);
     int writeTriangles(FILE* f);
     int writeFeatures(FILE* f);
+
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
 
     WriteAbaqusSurfaceMesh(const WriteAbaqusSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const WriteAbaqusSurfaceMesh&); // Operator '=' Not Implemented

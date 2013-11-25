@@ -210,6 +210,8 @@ class LabelVisitorInfo
 VerifyTriangleWinding::VerifyTriangleWinding() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_EdgeAttributeMatrixName(DREAM3D::HDF5::EdgeAttributeMatrixName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshNodeFacesArrayName(DREAM3D::VertexData::SurfaceMeshNodeFaces),
   m_DoUniqueEdgesFilter(false),
@@ -288,13 +290,13 @@ void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t feat
     setErrorCondition(-385);
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
-  if (sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels).get() == NULL)
+  if (sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels).get() == NULL)
   {
     setErrorCondition(-386);
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Face Feature Id Labels", getErrorCondition());
   }
 
-  if (sm->getEdgeData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
+  if (sm->getAttributeMatrix(getEdgeAttributeMatrixName())->getAttributeArray(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
   {
     m_DoUniqueEdgesFilter = true;
   }
@@ -336,7 +338,7 @@ void VerifyTriangleWinding::execute()
     return;
   }
   setErrorCondition(0);
-  dataCheck(false, 1, 1, 1);
+  dataCheck(false, 0, 0, 0);
 
   //  Generate the Unique Edges
   if (m_DoUniqueEdgesFilter == true)
@@ -459,8 +461,6 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
       xMax = avgX;
       seedFaceIdx = i;
     }
-    // m_Centroids[i*3 + 1] = (verts[triangles[i].verts[0]].pos[1] + verts[triangles[i].verts[1]].pos[1] + verts[triangles[i].verts[2]].pos[1])/3.0;
-    // m_Centroids[i*3 + 2]  = (verts[triangles[i].verts[0]].pos[2] + verts[triangles[i].verts[1]].pos[2] + verts[triangles[i].verts[2]].pos[2])/3.0;
   }
   // Now we have the "right most" triangle based on x component of the centroid of the triangles for this label.
   // Lets now figure out if the normal points generally in the positive or negative X direction.

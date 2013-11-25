@@ -57,6 +57,9 @@
 YSChoiAbaqusReader::YSChoiAbaqusReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
   m_InputFile(""),
   m_InputFeatureInfoFile(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
@@ -276,6 +279,7 @@ void YSChoiAbaqusReader::execute()
       xpoints = tokens[1].toInt(&ok, 10);
       ypoints = tokens[2].toInt(&ok, 10);
       zpoints = tokens[3].toInt(&ok, 10);
+      totalpoints = xpoints*ypoints*zpoints;
       size_t dims[3] = {xpoints, ypoints, zpoints};
       m->setDimensions(dims);
       m->setOrigin(0, 0, 0);
@@ -314,7 +318,6 @@ void YSChoiAbaqusReader::execute()
   buf = in2.readLine();
   QList<QByteArray> tokens = buf.split(' ');
 //  in2 >> word >> word >> word >> word >> word >> word;
-  totalpoints = m->getNumCellTuples();
   dataCheck(false, totalpoints, numfeatures + 1, 2);
   //Read data file
   int gnum = 0;
@@ -400,10 +403,6 @@ void YSChoiAbaqusReader::execute()
     q.y = static_cast<float>( (g[2][0] - g[0][2]) / (4.0 * q.w) );
     q.z = static_cast<float>( (g[0][1] - g[1][0]) / (4.0 * q.w) );
     QuaternionMathF::Copy(q, quats[i]);
-    //    m_Quats[5*i+1] = q[1];
-    //    m_Quats[5*i+2] = q[2];
-    //    m_Quats[5*i+3] = q[3];
-    //    m_Quats[5*i+4] = q[4];
     OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
     m_CellEulerAngles[3 * i] = ea1;
     m_CellEulerAngles[3 * i + 1] = ea2;

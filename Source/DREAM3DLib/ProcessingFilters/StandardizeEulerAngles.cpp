@@ -237,12 +237,12 @@ void StandardizeEulerAngles::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                      StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, numensembles), tbb::auto_partitioner());
+                      StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, totalEnsembles), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    StandardizeEulerAnglesImpl serial(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, numensembles);
+    StandardizeEulerAnglesImpl serial(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, totalEnsembles);
     serial.convert(0, totalPoints);
   }
 

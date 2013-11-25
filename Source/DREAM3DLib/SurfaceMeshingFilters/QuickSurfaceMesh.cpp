@@ -51,6 +51,9 @@ QuickSurfaceMesh::QuickSurfaceMesh() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -108,8 +111,8 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features,
 
   sm->setVertices(vertices);
   sm->setFaces(triangles);
-  sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
-  sm->addVertexData(nodeTypePtr->GetName(), nodeTypePtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
 }
 
 
@@ -163,10 +166,8 @@ void QuickSurfaceMesh::execute()
     sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;//m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;//m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, 0);
 
   float m_OriginX, m_OriginY, m_OriginZ;
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
@@ -931,9 +932,9 @@ void QuickSurfaceMesh::execute()
   }
 
   sm->setFaces(triangles);
-  sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
   sm->setVertices(vertices);
-  sm->addVertexData(nodeTypePtr->GetName(), nodeTypePtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
 
   notifyStatusMessage("Complete");
 }

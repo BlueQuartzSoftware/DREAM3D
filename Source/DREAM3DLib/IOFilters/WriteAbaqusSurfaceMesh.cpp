@@ -52,6 +52,8 @@
 WriteAbaqusSurfaceMesh::WriteAbaqusSurfaceMesh() :
   AbstractFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_OutputFile("")
 {
   setupFilterParameters();
@@ -124,6 +126,15 @@ void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fea
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
     setErrorCondition(-384);
   }
+  else
+  {
+    QVector<int> dims(1, 2);
+    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { 
+      m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); 
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   if (sm->getVertices().get() == NULL)
   {
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
@@ -163,7 +174,8 @@ void WriteAbaqusSurfaceMesh::execute()
     return;
   }
 
-  dataCheck(false, 1, 1, 1);
+  int64_t numTriangles = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getNumTuples();
+  dataCheck(false, numTriangles, 0, 0);
   if(getErrorCondition() < 0)
   {
     return;
@@ -185,17 +197,13 @@ void WriteAbaqusSurfaceMesh::execute()
   VertexArray::Pointer nodesPtr = sm->getVertices();
   FaceArray::Pointer trianglePtr = sm->getFaces();
 
-  // Get the Labels(FeatureIds or Region Ids) for the triangles
-  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
   for (int i = 0; i < trianglePtr->getNumberOfTuples(); i++)
   {
-    uniqueSpins.insert(faceLabels[i * 2]);
-    uniqueSpins.insert(faceLabels[i * 2 + 1]);
+    uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2]);
+    uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2 + 1]);
   }
 
   FILE* f = fopen(m_OutputFile.toLatin1().data(), "wb");
@@ -286,9 +294,6 @@ int WriteAbaqusSurfaceMesh::writeFeatures(FILE* f)
   VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
   FaceArray::Pointer trianglePtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   // Get the Labels(FeatureIds or Region Ids) for the triangles
-  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   int nTriangles = trianglePtr->getNumberOfTuples();
 
@@ -296,8 +301,8 @@ int WriteAbaqusSurfaceMesh::writeFeatures(FILE* f)
   QSet<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
-    uniqueSpins.insert(faceLabels[i * 2]);
-    uniqueSpins.insert(faceLabels[i * 2 + 1]);
+    uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2]);
+    uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2 + 1]);
   }
 
   int spin = 0;
@@ -319,7 +324,7 @@ int WriteAbaqusSurfaceMesh::writeFeatures(FILE* f)
     int lineCount = 0;
     for(int t = 0; t < nTriangles; ++t)
     {
-      if (faceLabels[t * 2] != spin && faceLabels[t * 2 + 1] != spin)
+      if (m_SurfaceMeshFaceLabels[t * 2] != spin && m_SurfaceMeshFaceLabels[t * 2 + 1] != spin)
       {
         continue; // We do not match either spin so move to the next triangle
       }

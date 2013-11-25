@@ -61,6 +61,8 @@ class ScopedFileMonitor
 GoldfeatherReader::GoldfeatherReader() :
   AbstractFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
   m_Principal_Curvature_1ArrayName("Principal_Curvature_1"),
   m_Principal_Curvature_2ArrayName("Principal_Curvature_2"),
   m_Principal_Direction_1ArrayName("Principal_Direction_1"),
@@ -156,33 +158,33 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t features
   QVector<int> dims(1, 3);
   DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(1, dims, DREAM3D::VertexData::SurfaceMeshNodeNormals);
   //addCreatedCellData( normalsPtr->GetName());
-  sm->addVertexData(normalsPtr->GetName(), normalsPtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(normalsPtr->GetName(), normalsPtr);
 
   DoubleArrayType::Pointer pcurv1Ptr = DoubleArrayType::CreateArray(1, "Principal_Curvature_1");
   //addCreatedCellData( pcurv1Ptr->GetName());
-  sm->addVertexData(pcurv1Ptr->GetName(), pcurv1Ptr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(pcurv1Ptr->GetName(), pcurv1Ptr);
 
   DoubleArrayType::Pointer pcurv2Ptr = DoubleArrayType::CreateArray(1, "Principal_Curvature_2");
 // addCreatedCellData( pcurv2Ptr->GetName());
-  sm->addVertexData(pcurv2Ptr->GetName(), pcurv2Ptr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(pcurv2Ptr->GetName(), pcurv2Ptr);
 
   DoubleArrayType::Pointer pDirection1Ptr = DoubleArrayType::CreateArray(1, dims, "Principal_Direction_1");
 // addCreatedCellData( pDirection1Ptr->GetName());
-  sm->addVertexData(pDirection1Ptr->GetName(), pDirection1Ptr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(pDirection1Ptr->GetName(), pDirection1Ptr);
 
   DoubleArrayType::Pointer pDirection2Ptr = DoubleArrayType::CreateArray(1, dims, "Principal_Direction_2");
 //  addCreatedCellData( pDirection2Ptr->GetName());
-  sm->addVertexData(pDirection2Ptr->GetName(), pDirection2Ptr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(pDirection2Ptr->GetName(), pDirection2Ptr);
 
   dims[0] = 2;
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
 //  addCreatedFeatureData( faceLabelPtr->GetName());
-  sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
 
   dims[0] = 3;
   DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceNormals);
 //  addCreatedFeatureData( triNormalsPtr->GetName());
-  sm->addFaceData(triNormalsPtr->GetName(), triNormalsPtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(triNormalsPtr->GetName(), triNormalsPtr);
 
 }
 
@@ -285,11 +287,11 @@ void GoldfeatherReader::execute()
   }
 
   sm->setVertices(nodesPtr);
-  sm->addVertexData(normalsPtr->GetName(), normalsPtr);
-  sm->addVertexData(pcurv1Ptr->GetName(), pcurv1Ptr);
-  sm->addVertexData(pcurv2Ptr->GetName(), pcurv2Ptr);
-  sm->addVertexData(pDirection1Ptr->GetName(), pDirection1Ptr);
-  sm->addVertexData(pDirection2Ptr->GetName(), pDirection2Ptr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(normalsPtr->GetName(), normalsPtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(pcurv1Ptr->GetName(), pcurv1Ptr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(pcurv2Ptr->GetName(), pcurv2Ptr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(pDirection1Ptr->GetName(), pDirection1Ptr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(pDirection2Ptr->GetName(), pDirection2Ptr);
 
   int nTriangles = 0;
   err = fscanf(f, "%d\n", &nTriangles);
@@ -329,8 +331,8 @@ void GoldfeatherReader::execute()
   }
 
   sm->setFaces(trianglesPtr);
-  sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
-  sm->addFaceData(triNormalsPtr->GetName(), triNormalsPtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(triNormalsPtr->GetName(), triNormalsPtr);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

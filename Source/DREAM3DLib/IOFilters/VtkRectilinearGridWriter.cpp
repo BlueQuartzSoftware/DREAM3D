@@ -513,7 +513,7 @@ void VtkRectilinearGridWriter::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembleTuples = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
@@ -526,6 +526,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelFeatureIdScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -533,6 +534,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGBEDMScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -540,6 +542,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelTJEDMScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -547,6 +550,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelQPEDMScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -554,6 +558,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelParentIdScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -561,6 +566,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -569,12 +575,14 @@ void VtkRectilinearGridWriter::execute()
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelBCScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
   }
 
   if(m_WriteImageQualities == true)
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIQScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -582,6 +590,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelCIScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -589,6 +598,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGoodVoxelScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -596,6 +606,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGlobAlphaScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -603,6 +614,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelKernelAverageMisorientationScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -610,6 +622,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelFeatureReferenceMisorientationScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -617,6 +630,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelFeatureReferenceCAxisMisorientationScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -624,6 +638,7 @@ void VtkRectilinearGridWriter::execute()
   //  {
   //    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<VolumeDataContainer>(m));
   //    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+  //    w0->setAttributeMatrixName(getCellAttributeMatrixName());
   //    scalarsToWrite.push_back(w0);
   //  }
 
@@ -632,6 +647,7 @@ void VtkRectilinearGridWriter::execute()
 
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelEulerAngleScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -639,6 +655,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new FeatureSizeScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellFeatureAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 
@@ -646,6 +663,7 @@ void VtkRectilinearGridWriter::execute()
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new SchmidFactorScalarWriter<VolumeDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    w0->setAttributeMatrixName(getCellFeatureAttributeMatrixName());
     scalarsToWrite.push_back(w0);
   }
 

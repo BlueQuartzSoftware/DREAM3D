@@ -572,7 +572,7 @@ void FindGBCD::execute()
   dims[3] = m_GBCDsizes[3];
   dims[4] = m_GBCDsizes[4];
   dims[5] = 2;
-  m_GBCDPtr = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, 0, m->getNumCellEnsembleTuples(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GBCDPtr = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, 0, totalEnsembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   for(int i = 0; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)

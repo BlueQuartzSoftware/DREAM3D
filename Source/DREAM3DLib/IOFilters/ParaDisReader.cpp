@@ -46,6 +46,8 @@
 ParaDisReader::ParaDisReader() :
   FileReader(),
   m_EdgeDataContainerName(DREAM3D::HDF5::EdgeDataContainerName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
+  m_EdgeAttributeMatrixName(DREAM3D::HDF5::EdgeAttributeMatrixName),
   m_InputFile(""),
   m_NumberOfArmsArrayName(DREAM3D::VertexData::NumberOfArms),
   m_NodeConstraintsArrayName(DREAM3D::VertexData::NodeConstraints),
@@ -358,22 +360,14 @@ int ParaDisReader::readFile()
   // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
   // method which is performed before this function. This will cause an error -501 because the array with the name
   // m_FeatureIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
-  m->removeVertexData(m_NumberOfArmsArrayName);
-  m->removeVertexData(m_NodeConstraintsArrayName);
-  m->removeEdgeData(m_BurgersVectorsArrayName);
-  m->removeEdgeData(m_SlipPlaneNormalsArrayName);
+  m->getAttributeMatrix(getVertexAttributeMatrixName())->removeAttributeArray(m_NumberOfArmsArrayName);
+  m->getAttributeMatrix(getVertexAttributeMatrixName())->removeAttributeArray(m_NodeConstraintsArrayName);
+  m->getAttributeMatrix(getEdgeAttributeMatrixName())->removeAttributeArray(m_BurgersVectorsArrayName);
+  m->getAttributeMatrix(getEdgeAttributeMatrixName())->removeAttributeArray(m_SlipPlaneNormalsArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
-  //  int64_t totalPoints = m->getTotalPoints();
-  //size_t totalFeatures = 0;
-  //size_t totalEnsembles = 0;
-  //dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
-  QVector<int> dims(1, 1);
-  m_NumberOfArmsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NumberOfArmsArrayName, 0, numVerts, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NumberOfArmsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_NumberOfArms = m_NumberOfArmsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_NodeConstraintsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_NodeConstraintsArrayName, 0, numVerts, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NodeConstraintsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_NodeConstraints = m_NodeConstraintsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  int64_t totalVerts = m->getAttributeMatrix(getVertexAttributeMatrixName())->getNumTuples();
+  int64_t totalEdges = m->getAttributeMatrix(getEdgeAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalVerts, totalEdges, 0);
 
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
@@ -484,14 +478,6 @@ int ParaDisReader::readFile()
   EdgeArray::Pointer edges = EdgeArray::CreateArray(numEdges, DREAM3D::EdgeData::SurfaceMeshEdges, verticesPtr.get());
   m->setEdges(edges);
   EdgeArray::Edge_t* edge = edges.get()->getPointer(0);
-
-  dims[0] = 3;
-  m_BurgersVectorsPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_BurgersVectorsArrayName, 0.0, numEdges, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BurgersVectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_BurgersVectors = m_BurgersVectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_SlipPlaneNormalsPtr = m->createNonPrereqArray<float, AbstractFilter>(this, m_EdgeAttributeMatrixName,  m_SlipPlaneNormalsArrayName, 0.0, numEdges, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SlipPlaneNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_SlipPlaneNormals = m_SlipPlaneNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   for(int i = 0; i < numEdges; i++)
   {

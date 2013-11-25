@@ -335,6 +335,9 @@ M3CSliceBySlice::M3CSliceBySlice() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshTriangleLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
@@ -411,14 +414,13 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t features, 
   VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
   FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
 
-  int8_t* m_SurfaceMeshNodeType;
   m_SurfaceMeshNodeTypePtr = sm->createNonPrereqArray<int8_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, 0, 1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 2;
   DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  sm->addFaceData(labels->GetName(), labels);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(labels->GetName(), labels);
   sm->setVertices(vertices);
   sm->setFaces(triangles);
 }
@@ -473,9 +475,8 @@ void M3CSliceBySlice::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0;
-  size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);  if (getErrorCondition() < 0)
+  dataCheck(false, totalPoints, 0, 0);  
+  if (getErrorCondition() < 0)
   {
     return;
   }
@@ -759,9 +760,10 @@ bool M3CSliceBySlice::volumeHasGhostLayer()
 int32_t M3CSliceBySlice::volumeHasFeatureValuesOfZero()
 {
   size_t fileDim[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getDimensions(fileDim);
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  m->getDimensions(fileDim);
 
-  IDataArray::Pointer featureIdsPtr = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getCellData(getFeatureIdsArrayName());
+  IDataArray::Pointer featureIdsPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(getFeatureIdsArrayName());
   int32_t count = featureIdsPtr->getNumberOfTuples();
 
   bool renumber = false;
@@ -802,9 +804,10 @@ int32_t M3CSliceBySlice::volumeHasFeatureValuesOfZero()
 void M3CSliceBySlice::renumberVoxelFeatureIds(int32_t gid)
 {
   size_t fileDim[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getDimensions(fileDim);
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  m->getDimensions(fileDim);
 
-  IDataArray::Pointer featureIdsPtr = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getCellData(getFeatureIdsArrayName());
+  IDataArray::Pointer featureIdsPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(getFeatureIdsArrayName());
   int32_t count = featureIdsPtr->getNumberOfTuples();
 
   for (int i = 0; i < count; ++i)

@@ -62,6 +62,8 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
 
     virtual ~ParaDisReader();
     DREAM3D_INSTANCE_STRING_PROPERTY(EdgeDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
