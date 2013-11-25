@@ -5,18 +5,35 @@ Generate Misorientation Colors {#generatemisorientationcolors}
 Generic Filters (Misc)
 
 ## Description ##
-This filter will generate colors based on the method developed by C. Schuh and S. Patala for Cubic, Hexagonal, Tetragonal, or Orthorhombic Crystal Structures (currently only cubic high is working)[1]. Orientations are colored by disorientation relative to a reference orientation. The user can enter an reference orientation (relative to the sample frame). The defualt reference orientation is the sample frame (misorientation from sample frame: 0 degrees about [001]). The user is required to run a filter that will determine if a voxel should have it's color calculated by generating the _GoodVoxels_ array or an equivalent **boolean** array. Typically the **MultiThreshold Cells** or **Single Threshold Cells** filter is run _before_ this filter with an output array set to _GoodVoxels_.
+This filter will generate colors based on the method developed by C. Schuh and S. Patala for Cubic, Hexagonal, Tetragonal, or Orthorhombic Crystal Structures (currently only cubic high is working)[1]. Orientations are colored by disorientation relative to a reference orientation. The user can enter a reference orientation which is relative to the sample reference frame. The default reference orientation is the sample frame (misorientation from sample frame: 0 degrees about [001]). 
+
+The user is required to run a filter that will determine if a voxel should have it's color calculated by generating the _GoodVoxels_ array or an equivalent **boolean** array. Typically the **MultiThreshold Cells** or **Single Threshold Cells** filter is run _before_ this filter with an output array set to _GoodVoxels_.
+
+### Color Output Notes ###
+
+Since the coloring scheme uses all possibly colors in the spectrum easily marking voxels in an image that should NOT have been colored is impossible versus a method like the IPF coloring scheme where black can be used to mark these "bad" voxels or non-indexed voxels in the case of an EBSD scan.
+
+## Crystal Symmetry Implementations ##
 
 
-|Crystal Structure | Key [1] |
-|------------------|---------|
-| Cubic (432) |![](MisorientationLegendO_432.png)|
-| Cubic (23) |![](MisorientationLegendT_23.png)|
-| Hexagonal (622) |![](MisorientationLegendD6_622.png)|
-| Tetragonal (422) |![](MisorientationLegendD4_422.png)|
-| Orthorhombic (222) |![](MisorientationLegendD2_222.png)|
+|Crystal Structure |Hermann–Mauguin  Symbol |Schoenflies Symbol | Key [1] |
+|------------------|--|-------|
+| Cubic |  (432) | O |![](MisorientationLegendO_432.png)|
+| Cubic |  (23) | T |![](MisorientationLegendT_23.png)|
+| Hexagonal  | (622) | D6 |![](MisorientationLegendD6_622.png)|
+| Tetragonal | (422)  | D4 |![](MisorientationLegendD4_422.png)|
+| Orthorhombic | (222)  | D2 |![](MisorientationLegendD2_222.png)|  
 
 [1] Patala, S., Mason J., Schuh C., 2012. Improved representations of misorientation information for grain boundary science and engineering. Prog Mater Sci. 57, 1383-1425.
+
+## Example Output Image ##
+
+![Small IN100 Slice 1 from [2]](MisoColor_Small_IN100.png)
+
+![BCC Steel from [3]](Miso_fw-ar-IF1-avtr12-corr.png)
+
+[2] Uchic, Groeber, et all
+[3] Wagner, et al Metz
 
 
 ## Input Options ##
