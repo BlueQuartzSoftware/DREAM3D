@@ -44,8 +44,8 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/SolidMeshStructs.h"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
+#include "DREAM3DLib/DataContainers/SolidMeshStructs.h"
 
 /*
  *

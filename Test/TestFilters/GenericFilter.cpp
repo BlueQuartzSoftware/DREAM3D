@@ -3,7 +3,7 @@
  */
 
 #include "GenericFilter.h"
-#include "DREAM3DLib/HDF5/H5FilterParametersConstants.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersConstants.h"
 
 #define StlFilePrefixDefaultValue "StlFilePrefixDefaultValue"
 #define MaxIterationsDefaultValue 92

@@ -47,7 +47,7 @@
 #include "MXA/Utilities/MD5.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/Common/CreatedArrayHelpIndexEntry.h"
 
 
@@ -209,7 +209,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
 
   fprintf(f, "#include \"PipelineBuilder/QFilterWidget.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
-  fprintf(f, "#include \"DREAM3DLib/Common/FilterParameter.h\"\n\n");
+  fprintf(f, "#include \"DREAM3DLib/FilterParameters/FilterParameter.h\"\n\n");
   if (FILTER_INCLUDE_PREFIX().empty() == true) {
     fprintf(f, "#include \"%s/%s.h\"\n", group.c_str(), filterName.c_str());
   }

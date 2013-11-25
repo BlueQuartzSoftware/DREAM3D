@@ -44,7 +44,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/DataContainers/SurfaceMeshDataContainer.h"
 
 /**
  * @class SurfaceMeshToNodesTrianglesEdges SurfaceMeshToNodesTrianglesEdges.h FilterCategory/Code/FilterCategoryFilters/SurfaceMeshToNodesTrianglesEdges.h

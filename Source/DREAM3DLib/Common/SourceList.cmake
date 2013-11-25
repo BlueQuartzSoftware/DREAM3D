@@ -11,22 +11,11 @@
 
 set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AppVersion.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersReader.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/VoxelDataContainer.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceMeshDataContainer.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/SolidMeshDataContainer.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/DataContainerMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DDLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/EbsdColoring.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/FilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjection.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjectionArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
@@ -34,18 +23,9 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PipelineMessage.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/SolidMeshStructs.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/StatsData.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceMeshStructs.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/PrimaryStatsData.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/PrecipitateStatsData.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/TransformationStatsData.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/MatrixStatsData.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/BoundaryStatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ScopedFileMonitor.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArrayFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ThresholdFilterHelper.h
@@ -54,31 +34,17 @@ set(DREAM3DLib_Common_HDRS
 
 set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AppVersion.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersReader.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/VoxelDataContainer.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceMeshDataContainer.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/SolidMeshDataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjection.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjectionArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/StatsData.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/PrimaryStatsData.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/PrecipitateStatsData.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/TransformationStatsData.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/MatrixStatsData.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/BoundaryStatsData.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArrayFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ThresholdFilterHelper.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/CreatedArrayHelpIndexEntry.cpp

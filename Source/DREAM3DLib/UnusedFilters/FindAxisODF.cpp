@@ -191,7 +191,7 @@ void FindAxisODF::execute()
     float ea3 = m_AxisEulerAngles[3 * i + 2];
     if(m_SurfaceFields[i] == 0)
     {
-      OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
+      OrientationMath::EulerToRod( ea1,  ea2,  ea3, r1,  r2,  r3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
       axisodf[m_FieldPhases[i]]->SetValue(bin, (axisodf[m_FieldPhases[i]]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FieldPhases[i]]))));

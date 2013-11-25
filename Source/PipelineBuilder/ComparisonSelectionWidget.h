@@ -46,10 +46,10 @@
 
 #include "ui_ComparisonSelectionWidget.h"
 
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
-#include "DREAM3DLib/Common/SolidMeshDataContainer.h"
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
+#include "DREAM3DLib/DataContainers/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/DataContainers/SolidMeshDataContainer.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
 

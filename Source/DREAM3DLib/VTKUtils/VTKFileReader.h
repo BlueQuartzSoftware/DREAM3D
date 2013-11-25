@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/FileReader.h"
+#include "DREAM3DLib/IOFilters/FileReader.h"
 
 /**
  * @class VTKFileReader VTKFileReader.h PathToHeader/VTKFileReader.h

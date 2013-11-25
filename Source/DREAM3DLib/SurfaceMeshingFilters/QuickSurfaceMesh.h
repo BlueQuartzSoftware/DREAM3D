@@ -43,7 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 
 /*

@@ -405,7 +405,7 @@ void OrientationMath::MatToEuler(float g[3][3], float &phi1, float &Phi, float &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::EulertoRod(float &r1, float &r2, float &r3, float phi1, float phi, float phi2)
+void OrientationMath::EulerToRod( const float phi1,  const float phi,  const float phi2, float &r1,  float &r2,  float &r3)
 {
   float sum, diff, csum, cdiff, sdiff, t2;
   sum = (phi1+phi2)/2.0f;

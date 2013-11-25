@@ -37,10 +37,10 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/DataContainers/SurfaceMeshDataContainer.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/DataArrays/StructArray.hpp"
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 
 #include "UnitTestSupport.hpp"

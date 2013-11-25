@@ -37,7 +37,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
-#include "DREAM3DLib/HDF5/H5FilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 
 #include "H5Support/H5Utilities.h"
 

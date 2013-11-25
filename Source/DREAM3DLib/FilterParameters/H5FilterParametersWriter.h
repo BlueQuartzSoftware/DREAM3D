@@ -33,38 +33,36 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef TEXTFilterParametersWRITER_H_
-#define TEXTFilterParametersWRITER_H_
+#ifndef _H5FilterParametersWRITER_H_
+#define _H5FilterParametersWRITER_H_
+
+#include "hdf5.h"
 
 #include <string>
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/FilterParameter.h"
-#include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-
-/**
- * @class
- * @brief
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Jan 17, 2012
- * @version 1.0
+/*
+ *
  */
-class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParametersWriter
+class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParametersWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(TextFilterParametersWriter)
-    DREAM3D_STATIC_NEW_MACRO(TextFilterParametersWriter)
-    DREAM3D_TYPE_MACRO_SUPER(TextFilterParametersWriter, AbstractFilterParametersWriter)
+    DREAM3D_SHARED_POINTERS(H5FilterParametersWriter)
+    DREAM3D_STATIC_NEW_MACRO(H5FilterParametersWriter)
+    DREAM3D_TYPE_MACRO_SUPER(H5FilterParametersWriter, AbstractFilterParametersWriter)
 
 
-    virtual ~TextFilterParametersWriter();
+    virtual ~H5FilterParametersWriter();
+
+    DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId)
 
     virtual int openOptionsGroup(AbstractFilter* filter);
     virtual int closeOptionsGroup();
+
     virtual int writeValue(const std::string name, const std::string value);
 
     virtual int writeValue(const std::string name, int8_t value);
@@ -85,13 +83,15 @@ class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParame
     virtual int writeValue(const std::string name, std::vector<AxisAngleInput_t> v);
     virtual int writeValue(const std::string name, AxisAngleInput_t v);
 
-
-  protected:
-    TextFilterParametersWriter();
+    protected:
+      H5FilterParametersWriter();
 
   private:
-    TextFilterParametersWriter(const TextFilterParametersWriter&); // Copy Constructor Not Implemented
-    void operator=(const TextFilterParametersWriter&); // Operator '=' Not Implemented
+    hid_t m_CurrentGroupId;
+
+
+    H5FilterParametersWriter(const H5FilterParametersWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5FilterParametersWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* TEXTFilterParametersWRITER_H_ */
+#endif /* _H5FilterParametersWRITER_H_ */

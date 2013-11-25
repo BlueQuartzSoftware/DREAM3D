@@ -53,14 +53,14 @@
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
 
 
 /**
- * @class VoxelDataContainer VoxelDataContainer DREAM3DLib/Common/VoxelDataContainer.h
+ * @class VoxelDataContainer VoxelDataContainer DREAM3DLib/DataContainers/VoxelDataContainer.h
  * @brief This data container holds data the represents a structured rectangular
  * grid of data typically referred to as a Voxel Volume
  * @author Michael A. Jackson for BlueQuartz Software

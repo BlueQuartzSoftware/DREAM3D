@@ -55,11 +55,11 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
-#include "DREAM3DLib/Common/TransformationStatsData.h"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/TransformationStatsData.h"
 
 
 #include "PoleFigureMaker.h"

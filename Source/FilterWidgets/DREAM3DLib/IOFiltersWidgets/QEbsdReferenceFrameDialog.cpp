@@ -50,7 +50,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
 
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/ReadOrientationData.h"
 #include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"

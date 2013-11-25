@@ -45,7 +45,7 @@
 #include "EbsdLib/EbsdConstants.h"
 
 
-#include "DREAM3DLib/HDF5/H5FilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/SolidMeshDataContainerWriter.h"

@@ -55,7 +55,8 @@
 
 /*
  * @class OrientationMath OrientationMath.h DREAM3DLib/Common/OrientationMath.h
- * @brief This class performs Crystallographic Misorientation Calculations
+ * @brief This class performs Crystallographic Misorientation Calculations using either the Bunge convention or the
+ * Rodregues Convention.
  * @author Michael A. Jackson (BlueQuartz Software)
  * @author Michael A. Groeber (US Air Force Research Laboratory)
  * @date Feb 19, 2011
@@ -108,11 +109,22 @@ class DREAM3DLib_EXPORT OrientationMath
      * @param g [OUTPUT] The [3x3] Rotation Matrix
      */
     static void EulerToMat(float phi1, float phi, float phi2, float g[3][3]);
-    static void MatToEuler(float g[3][3], float &phi1, float &Phi, float &phi2);
 
 
     /**
-     * @brief EulertoRod
+     * @brief MatToEuler The function takes in a 3x3 Rotation Matrix generated with the @see EulerToMat function and
+     * generates an equivelent Bunge convention Euler Angle. The programmer should note that the value of the Euler angle returned from this
+     * method may NOT match the input Euler Angle used to generate the Rotation Matrix if the initial Euler Angle is outside
+     * the normal range of Euler Angles
+     * @param g [INPUT] Rotation Matrix
+     * @param phi1 [OUTPUT] The Bunge phi1 angle
+     * @param Phi [OUTPUT] The Bunge PHI angle
+     * @param phi2 [OUTPUT] The Bunge phi2 angle
+     */
+    static void MatToEuler(float g[3][3], float &phi1, float &Phi, float &phi2);
+
+    /**
+     * @brief EulertoRod This function generates a Rodregues vector based on an input Bunge Euler angle.
      * @param r1 [OUTPUT]
      * @param r2 [OUTPUT]
      * @param r3 [OUTPUT]
@@ -120,10 +132,7 @@ class DREAM3DLib_EXPORT OrientationMath
      * @param phi [INPUT]
      * @param phi2 [INPUT]
      */
-    static void EulertoRod(float &r1, float &r2, float &r3, float phi1, float phi, float phi2);
-
-
-//  static void MattoEuler(float g[3][3], float &phi1, float &Phi, float &phi2);
+    static void EulerToRod( const float phi1,  const float phi,  const float phi2, float &r1,  float &r2,  float &r3);
 
     static float MatrixMisorientation(float g1[3][3], float g2[3][3]);
 

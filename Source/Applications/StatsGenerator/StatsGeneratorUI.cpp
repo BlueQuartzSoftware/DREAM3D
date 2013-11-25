@@ -53,7 +53,7 @@
 #include "H5Support/H5Lite.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"

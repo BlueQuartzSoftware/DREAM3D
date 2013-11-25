@@ -34,64 +34,66 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _AbstractFilterParametersReader_H_
-#define _AbstractFilterParametersReader_H_
+#ifndef _AbstractFilterParametersWriter_H_
+#define _AbstractFilterParametersWriter_H_
 
 #include <string>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+
 
 class AbstractFilter;
 
+
 /**
- * @class AbstractFilterParametersReader AbstractFilterParametersReader.h DREAM3DLib/Common/AbstractFilterParametersReader.h
- * @brief This class reads the various parameters of a filter
+ * @class AbstractFilterParametersWriter AbstractFilterParametersWriter.h DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h
+ * @brief This class writes the various parameters of a filter to an output file
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 17, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AbstractFilterParametersReader
+class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 {
   public:
  //   DREAM3D_SHARED_POINTERS(AbstractFilterParametersWriter)
   //  DREAM3D_STATIC_NEW_MACRO(AbstractFilterParametersWriter)
-    DREAM3D_TYPE_MACRO(AbstractFilterParametersReader)
+    DREAM3D_TYPE_MACRO(AbstractFilterParametersWriter)
 
 
-    virtual ~AbstractFilterParametersReader();
+    virtual ~AbstractFilterParametersWriter();
 
     virtual int openOptionsGroup(AbstractFilter* filter) = 0;
     virtual int closeOptionsGroup() = 0;
 
-    virtual std::string readValue(const std::string name, std::string value) = 0;
+    virtual int writeValue(const std::string name, const std::string value) = 0;
 
-    virtual int8_t readValue(const std::string name, int8_t value) = 0;
-    virtual int16_t readValue(const std::string name, int16_t value) = 0;
-    virtual int32_t readValue(const std::string name, int32_t value) = 0;
-    virtual int64_t readValue(const std::string name, int64_t value) = 0;
-    virtual uint8_t readValue(const std::string name, uint8_t value) = 0;
-    virtual uint16_t readValue(const std::string name, uint16_t value) = 0;
-    virtual uint32_t readValue(const std::string name, uint32_t value) = 0;
-    virtual uint64_t readValue(const std::string name, uint64_t value) = 0;
-    virtual float readValue(const std::string name, float value) = 0;
-    virtual double readValue(const std::string name, double value) = 0;
+    virtual int writeValue(const std::string name, int8_t value) = 0;
+    virtual int writeValue(const std::string name, int16_t value) = 0;
+    virtual int writeValue(const std::string name, int32_t value) = 0;
+    virtual int writeValue(const std::string name, int64_t value) = 0;
+    virtual int writeValue(const std::string name, uint8_t value) = 0;
+    virtual int writeValue(const std::string name, uint16_t value) = 0;
+    virtual int writeValue(const std::string name, uint32_t value) = 0;
+    virtual int writeValue(const std::string name, uint64_t value) = 0;
+    virtual int writeValue(const std::string name, float value) = 0;
+    virtual int writeValue(const std::string name, double value) = 0;
 
-    virtual IntVec3Widget_t readValue(const std::string name, IntVec3Widget_t v) = 0;
-    virtual FloatVec3Widget_t readValue(const std::string name, FloatVec3Widget_t v) = 0;
-    virtual ComparisonInput_t readValue(const std::string name, ComparisonInput_t v) = 0;
-	virtual std::vector<ComparisonInput_t> readValue(const std::string name, std::vector<ComparisonInput_t> v) = 0;
-	virtual AxisAngleInput_t readValue(const std::string name, AxisAngleInput_t v) = 0;
-	virtual std::vector<AxisAngleInput_t> readValue(const std::string name, std::vector<AxisAngleInput_t> v) = 0;
+    virtual int writeValue(const std::string name, IntVec3Widget_t v) = 0;
+    virtual int writeValue(const std::string name, FloatVec3Widget_t v) = 0;
+    virtual int writeValue(const std::string name, ComparisonInput_t v) = 0;
+    virtual int writeValue(const std::string name, std::vector<ComparisonInput_t> v) = 0;
+    virtual int writeValue(const std::string name, AxisAngleInput_t v) = 0;
+    virtual int writeValue(const std::string name, std::vector<AxisAngleInput_t> v) = 0;
 
   protected:
-    AbstractFilterParametersReader();
+    AbstractFilterParametersWriter();
 
   private:
-    AbstractFilterParametersReader(const AbstractFilterParametersReader&); // Copy Constructor Not Implemented
-    void operator=(const AbstractFilterParametersReader&); // Operator '=' Not Implemented
+    AbstractFilterParametersWriter(const AbstractFilterParametersWriter&); // Copy Constructor Not Implemented
+    void operator=(const AbstractFilterParametersWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _AbstractFilterParametersReader_H_ */
+#endif /* _AbstractFilterParametersWriter_H_ */

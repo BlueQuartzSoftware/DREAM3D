@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SOLIDMESHDATACONTAINER_H_
-#define _SOLIDMESHDATACONTAINER_H_
+#ifndef SURFACEMESHDATACONTAINER_H_
+#define SURFACEMESHDATACONTAINER_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
@@ -47,53 +47,107 @@
 #include <sstream>
 #include <list>
 
+//-- Boost includes
+#include <boost/shared_array.hpp>
+
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
-#include "DREAM3DLib/Common/SolidMeshStructs.h"
 #include "DREAM3DLib/DataArrays/StructArray.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 
+
 /**
- * @class SolidMeshDataContainer SolidMeshDataContainer.h DREAM3DLib/Common/SolidMeshDataContainer.h
+ * @class SurfaceMeshDataContainer SurfaceMeshDataContainer.h DREAM3DLib/DataContainers/SurfaceMeshDataContainer.h
  * @brief This data container holds data the represents a SurfaceMesh
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Sep 28, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
+class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS (SolidMeshDataContainer)
-    DREAM3D_STATIC_NEW_MACRO (SolidMeshDataContainer)
-    DREAM3D_TYPE_MACRO_SUPER(SolidMeshDataContainer, Observable)
+    DREAM3D_SHARED_POINTERS (SurfaceMeshDataContainer)
+    DREAM3D_STATIC_NEW_MACRO (SurfaceMeshDataContainer)
+    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshDataContainer, Observable)
 
-    virtual ~SolidMeshDataContainer();
+    virtual ~SurfaceMeshDataContainer();
 
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Vertex)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Face)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Edge)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Field)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Ensemble)
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::VertListPointer_t, Vertices)
-    DREAM3D_INSTANCE_PROPERTY(StructArray<Tetrahedron>::Pointer, Tetrahedrons)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::FaceListPointer_t, Faces)
 
 
     DOES_DATASET_EXIST_DECL(VertexData)
     DOES_DATASET_EXIST_DECL(FaceData)
     DOES_DATASET_EXIST_DECL(EdgeData)
+    DOES_DATASET_EXIST_DECL(FieldData)
+    DOES_DATASET_EXIST_DECL(EnsembleData)
+
+    /**
+     * @brief buildMeshVertLinks Creates the list of Faces for each vertex that the vertex is a part of
+     */
+    void buildMeshVertLinks();
+
+    /**
+     * @brief removeMeshVertLinks Removes the VertLinks data structures to reclaim memory
+     */
+    void removeMeshVertLinks();
+
+    /**
+     * @brief getMeshVertLinks Returns the vert Links object
+     * @return
+     */
+    MeshVertLinks::Pointer getMeshVertLinks();
+
+    /**
+     * @brief setMeshVertLinks
+     * @param vertLinks
+     */
+    void setMeshVertLinks(MeshVertLinks::Pointer vertLinks);
+
+    /**
+     * @brief buildMeshFaceNeighborLists Creates the list of Faces that share a common edge with a Face. Since
+     * we create non-manifold meshes we can have more than 3 neighbors.
+     */
+    void buildMeshFaceNeighborLists();
+
+    /**
+     * @brief removeMeshFaceNeighborLists Remove the Face neighbor lists to reclaim memory.
+     */
+    void removeMeshFaceNeighborLists();
+
+    /**
+     * @brief getMeshFaceNeighborLists Returns the Face Neighbor lists object
+     * @return
+     */
+    MeshFaceNeighbors::Pointer getMeshFaceNeighborLists();
+
+    /**
+     * @brief setMeshFaceNeighborLists
+     * @param neighbors
+     */
+    void setMeshFaceNeighborLists(MeshFaceNeighbors::Pointer neighbors);
 
 
-  /**
+    /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
@@ -226,21 +280,131 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeTuples)
 
+    /**
+     * @brief Adds/overwrites the data for a named array
+     * @param name The name that the array will be known by
+     * @param data The IDataArray::Pointer that will hold the data
+     */
+    void addFieldData(const std::string &name, IDataArray::Pointer data);
+
+    /**
+     * @brief Returns the array for a given named array or the equivelant to a
+     * null pointer if the name does not exist.
+     * @param name The name of the data array
+     */
+    IDataArray::Pointer getFieldData(const std::string &name);
+
+    /**
+     * @brief Removes the named data array from the Data Container and returns it to the calling
+     * method
+     * @param name The name of the array
+     * @return
+     */
+    IDataArray::Pointer removeFieldData(const std::string &name);
+
+    /**
+     * @brief Removes all the Field Arrays
+     */
+    void clearFieldData();
+
+    /**
+     * @brief Returns a list that contains the names of all the arrays currently stored in the
+     * Field (Formerly Grain) group
+     * @return
+     */
+    std::list<std::string> getFieldArrayNameList();
+
+    /**
+     * @brief Returns the total number of arrays that are stored in the Field group
+     * @return
+     */
+    int getNumFieldArrays();
+
+    /**
+     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * in during a set of filtering operations then the a value of '32' would be returned.
+     * @return
+     */
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumFieldTuples)
+
+    /**
+     * @brief Resizes all of the Field Arrays to have 'size' tuples
+     * @param size The number of tuples that each DataArray should contain.
+     */
+    void resizeFieldDataArrays(size_t size);
+
+    /**
+     * @brief Adds/overwrites the data for a named array
+     * @param name The name that the array will be known by
+     * @param data The IDataArray::Pointer that will hold the data
+     */
+    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+
+    /**
+     * @brief Returns the array for a given named array or the equivelant to a
+     * null pointer if the name does not exist.
+     * @param name The name of the data array
+     */
+    IDataArray::Pointer getEnsembleData(const std::string &name);
+
+    /**
+     * @brief Removes the named data array from the Data Container and returns it to the calling
+     * method
+     * @param name The name of the array
+     * @return
+     */
+    IDataArray::Pointer removeEnsembleData(const std::string &name);
+
+    /**
+     * @brief Removes all the Ensemble Arrays
+     */
+    void clearEnsembleData();
+
+    /**
+     * @brief Returns a list that contains the names of all the arrays currently stored in the
+     * Ensemble (Formerly Grain) group
+     * @return
+     */
+    std::list<std::string> getEnsembleArrayNameList();
+
+    /**
+     * @brief Returns the total number of arrays that are stored in the Ensemble group
+     * @return
+     */
+    int getNumEnsembleArrays();
+
+    /**
+     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * in during a set of filtering operations then the a value of '32' would be returned.
+     * @return
+     */
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumEnsembleTuples)
+
+    /**
+     * @brief Resizes all of the Ensemble Arrays to have 'size' tuples
+     * @param size The number of tuples that each DataArray should contain.
+     */
+    void resizeEnsembleDataArrays(size_t size);
+
+
+
   protected:
-     SolidMeshDataContainer();
+     SurfaceMeshDataContainer();
 
    private:
 
      std::map<std::string, IDataArray::Pointer> m_VertexData;
      std::map<std::string, IDataArray::Pointer> m_FaceData;
      std::map<std::string, IDataArray::Pointer> m_EdgeData;
+     std::map<std::string, IDataArray::Pointer> m_FieldData;
+     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
 
      MeshVertLinks::Pointer m_MeshVertLinks;
      MeshFaceNeighbors::Pointer m_FaceNeighbors;
 
-     SolidMeshDataContainer(const SolidMeshDataContainer&);
-     void operator =(const SolidMeshDataContainer&);
+     SurfaceMeshDataContainer(const SurfaceMeshDataContainer&);
+     void operator =(const SurfaceMeshDataContainer&);
 
 };
 
-#endif /* _SOLIDMESHDATACONTAINER_H_ */
+#endif /* SURFACEMESHDATACONTAINER_H_ */

@@ -52,7 +52,7 @@
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
 
 /**
  * @class FindSlicetoSliceRotations FindSlicetoSliceRotations.h DREAM3DLib/GenericFilters/FindSlicetoSliceRotations.h

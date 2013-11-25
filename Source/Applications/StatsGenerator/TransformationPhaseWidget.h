@@ -40,7 +40,7 @@
 #include "ui_TransformationPhaseWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 #if QWT_VERSION >= 0x060000

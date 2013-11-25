@@ -41,7 +41,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Common/FileWriter.h"
+#include "DREAM3DLib/IOFilters/FileWriter.h"
 
 /**
  * @class PhWriter PhWriter.h DREAM3DLib/IOFilters/PhWriter.h

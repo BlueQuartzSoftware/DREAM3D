@@ -48,7 +48,7 @@ typedef struct { std::string arrayName; int compOperator; double compValue; } Co
 typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
 /**
- * @class FilterParameter FilterParameter.h DREAM3DLib/Common/FilterParameter.h
+ * @class FilterParameter FilterParameter.h DREAM3DLib/FilterParameters/FilterParameter.h
  * @brief This class holds the various properties that an input parameter to a
  * filter needs to describe itself.
  * @author Michael A. Jackson for BlueQuartz Software

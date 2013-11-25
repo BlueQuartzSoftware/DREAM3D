@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "DREAM3DLib/Common/SolidMeshDataContainer.h"
+#include "DREAM3DLib/DataContainers/SolidMeshDataContainer.h"
 
 // C Includes
 

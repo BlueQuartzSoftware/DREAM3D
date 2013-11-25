@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
@@ -51,8 +51,8 @@
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/StatisticsFilters/FindNumFields.h"
 
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -583,7 +583,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
         ea1 = m_FieldEulerAngles[3 * selectedgrain1];
         ea2 = m_FieldEulerAngles[3 * selectedgrain1 + 1];
         ea3 = m_FieldEulerAngles[3 * selectedgrain1 + 2];
-        OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
+        OrientationMath::EulerToRod( ea1,  ea2,  ea3, r1,  r2,  r3);
         g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
         random = static_cast<float>( rg.genrand_res53() );
         int choose = 0;
@@ -685,14 +685,14 @@ void MatchCrystallography::matchCrystallography(int ensem)
           //          q1[2] = m_AvgQuats[4 * selectedgrain1 + 2];
           //          q1[3] = m_AvgQuats[4 * selectedgrain1 + 3];
           //          q1[4] = m_AvgQuats[4 * selectedgrain1 + 4];
-          OrientationMath::EulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
+          OrientationMath::EulerToRod( g1ea1,  g1ea2,  g1ea3, r1,  r2,  r3);
           g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
           QuaternionMathF::Copy(q1, avgQuats[selectedgrain2]);
           //          q1[1] = m_AvgQuats[4 * selectedgrain2 + 1];
           //          q1[2] = m_AvgQuats[4 * selectedgrain2 + 2];
           //          q1[3] = m_AvgQuats[4 * selectedgrain2 + 3];
           //          q1[4] = m_AvgQuats[4 * selectedgrain2 + 4];
-          OrientationMath::EulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
+          OrientationMath::EulerToRod( g2ea1,  g2ea2,  g2ea3, r1,  r2,  r3);
           g2odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
 
           odfchange = ((actualodf->GetValue(g1odfbin) - simodf->GetValue(g1odfbin)) * (actualodf->GetValue(g1odfbin) - simodf->GetValue(g1odfbin)))

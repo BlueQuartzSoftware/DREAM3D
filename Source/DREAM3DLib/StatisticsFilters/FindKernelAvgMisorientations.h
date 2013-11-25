@@ -46,7 +46,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
 
 /**
  * @class FindKernelAvgMisorientations FindKernelAvgMisorientations.h DREAM3DLib/GenericFilters/FindKernelAvgMisorientations.h
