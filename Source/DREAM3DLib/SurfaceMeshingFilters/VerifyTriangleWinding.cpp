@@ -512,7 +512,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
   qDebug() << "Face ID: " << index << "\n";\
   qDebug() << "Face.labels[0] " << triangles[index].labels[0] << "\n";\
   qDebug() << "Face.labels[1] " << triangles[index].labels[1] << "\n";\
-   
+
 #define PRINT_VERT(index)\
   qDebug() << index << " " << verts[index].pos[0] << " " << verts[index].pos[1] << " " << verts[index].pos[2] << "\n";
 
@@ -530,7 +530,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   //  FaceListType& masterFaceList = *(mesh->triangles());  // Create a reference variable for better syntax
   //  NodeVector&       masterNodeList = *(mesh->nodes());
 
-
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   // get the triangle definitions - use the pointer to the start of the Struct Array
   FaceArray::Pointer masterFaceList = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   if(NULL == masterFaceList.get())
@@ -540,7 +540,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     return getErrorCondition();
   }
   FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
-  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
@@ -680,8 +680,17 @@ int VerifyTriangleWinding::verifyTriangleWinding()
       int32_t* faceLabel = faceLabels + (triangleIndex * 2); // Here we are getting a new pointer offset from the start of the labels array
 
       //   qDebug() << " $ tIndex: " << triangleIndex << "\n";
+      FaceArray::Pointer facesPtr = sm->getFaces();
+      if(facesPtr == NULL)
+      {
+        break;
+     }
+      FaceArray::Face_t* faces = facesPtr->getPointer(0);
+      IDataArray::Pointer flPtr = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+      DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
 
-      QVector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), triangleIndex, currentLabel);
+      std::vector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(facesPtr, triangleIndex, faceLabelsPtr, currentLabel);
+
       for (FaceList_t::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri)
       {
         // qDebug() << "  ^ AdjTri index: " << *adjTri << "\n";

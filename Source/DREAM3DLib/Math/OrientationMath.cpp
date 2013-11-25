@@ -31,6 +31,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "OrientationMath.h"
 
+#include <cmath>
+
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -414,35 +417,16 @@ void OrientationMath::EulertoMat(float ea1, float ea2, float ea3, float g[3][3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::MattoEuler(float g[3][3], float& ea1, float& ea2, float& ea3)
-{
-  float g22 = g[2][2];
-  DREAM3DMath::boundF(g22, -1, 1);
-  ea2 = acos(g22);
-  float sin_ea2 = sin(ea2);
-  float oneOverSinEa2 = 1.0 / sin_ea2;
-  float cosine3 = (g[1][2] * oneOverSinEa2);
-  float sine3 = (g[0][2] * oneOverSinEa2);
-  float cosine1 = (-g[2][1] * oneOverSinEa2);
-  float sine1 = (g[2][0] * oneOverSinEa2);
-  DREAM3DMath::boundF(cosine3, -1, 1);
-  DREAM3DMath::boundF(cosine1, -1, 1);
-  ea3 = acos(cosine3);
-  ea1 = acos(cosine1);
-  if(sine3 < 0) { ea3 = (DREAM3D::Constants::k_2Pi) - ea3; }
-  if(sine1 < 0) { ea1 = (DREAM3D::Constants::k_2Pi) - ea1; }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 bool closeEnough(const float& a, const float& b,
                  const float& epsilon = std::numeric_limits<float>::epsilon())
 {
   return (epsilon > std::abs(a - b));
 }
 
-void OrientationMath::RotationMatrixToBungeEuler(float g[3][3], float &phi1, float &Phi, float &phi2)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::MattoEuler(float g[3][3], float &phi1, float &Phi, float &phi2)
 {
   if(closeEnough(g[2][2], 1.0) || closeEnough(g[2][2], -1.0))
   {

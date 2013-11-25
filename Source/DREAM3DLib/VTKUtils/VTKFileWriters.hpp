@@ -545,6 +545,7 @@ class VtkMiscFileWriter : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+    DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixName)
 
     /**
      * @brief Writes a VTK visualization file with vector arrays for the disorientation colors and feature ID.

@@ -56,20 +56,21 @@ TriangleOps::~TriangleOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm,
+QVector<int32_t> TriangleOps::findAdjacentTriangles(FaceArray::Pointer facesPtr,
                                                     int32_t triangleIndex,
+                                                    DataArray<int32_t>::Pointer faceLabelsPtr,
                                                     int32_t label)
 {
   QVector<int32_t> adjacentTris;
   // Get the master list of triangles for the mesh
-  FaceArray::Pointer facesPtr = sm->getFaces();
-  if(facesPtr == NULL)
-  {
-    return adjacentTris;
-  }
+//  FaceArray::Pointer facesPtr = sm->getFaces();
+//  if(facesPtr == NULL)
+//  {
+//    return adjacentTris;
+//  }
 //  FaceArray::Face_t* faces = facesPtr->getPointer(0);
-  IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+//  IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+ // DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   // Get the Triangle Neighbor Structure
