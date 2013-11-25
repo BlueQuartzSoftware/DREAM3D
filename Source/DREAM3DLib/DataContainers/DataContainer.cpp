@@ -35,7 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
  #include "DataContainer.h"
 
-
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -152,4 +153,42 @@ QList<QString> DataContainer::getAttributeMatrixNameList()
 int DataContainer::getNumAttributeMatrices()
 {
   return static_cast<int>(m_AttributeMatrices.size());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainer::writeAttributeMatricesToHDF5(hid_t parentId)
+{
+  int err;
+  hid_t attributeMatrixId;
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = m_AttributeMatrices.begin(); iter != m_AttributeMatrices.end(); ++iter)
+  {
+    err = QH5Utilities::createGroupsFromPath(iter.key(), parentId);
+    if(err < 0)
+    {
+//      QString ss = QObject::tr("Error creating HDF Group ").arg(iter.key());
+//      setErrorCondition(-63);
+//      addErrorMessage(getHumanLabel(), ss, err);
+      H5Gclose(parentId); // Close the Data Container Group
+      return err;
+    }
+    attributeMatrixId = H5Gopen(parentId, iter.key().toLatin1().data(), H5P_DEFAULT);
+    err = QH5Lite::writeScalarAttribute(parentId, iter.key(), DREAM3D::HDF5::AttributeMatrixType, (*iter)->getAMType());
+    if(err < 0)
+    {
+//      QString ss = QObject::tr("Error writing string attribute to HDF Group %1").arg(iter.key());
+//      setErrorCondition(-64);
+//      addErrorMessage(getHumanLabel(), ss, err);
+      H5Gclose(parentId); // Close the Data Container Group
+      return err;
+    }
+    err = (*iter)->writeAttributeArraysToHDF5(attributeMatrixId);
+    if(err < 0)
+    {
+      H5Gclose(parentId); // Close the Data Container Group
+      return err;
+    }
+  }
+  return 0;
 }

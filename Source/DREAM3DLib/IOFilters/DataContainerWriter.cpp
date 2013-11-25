@@ -313,122 +313,36 @@ void DataContainerWriter::execute()
   QList<QString> dcNames = getDataContainerArray()->getDataContainerNames();
   for(size_t iter = 0; iter < getDataContainerArray()->size(); iter++)
   {
-    dcType = DREAM3D::DataContainerType::UnknownDataContainer;
-    VolumeDataContainer* vl = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dcNames[iter]);
-    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(dcNames[iter]);
-    EdgeDataContainer* e = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(dcNames[iter]);
-    VertexDataContainer* v = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(dcNames[iter]);
-    if(vl != NULL) { dcType = DREAM3D::DataContainerType::VolumeDataContainer; }
-    else if(sm != NULL) { dcType = DREAM3D::DataContainerType::SurfaceDataContainer; }
-    else if(e != NULL) { dcType = DREAM3D::DataContainerType::EdgeDataContainer; }
-    else if(v != NULL) { dcType = DREAM3D::DataContainerType::VertexDataContainer; }
-    if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_WriteVolumeData == true) ||
-        (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_WriteSurfaceData == true) ||
-        (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_WriteEdgeData == true) ||
-        (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_WriteVertexData == true))
+    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcNames[iter]);
+    err = H5Utilities::createGroupsFromPath(dcNames[iter].toLatin1().data(), dcaGid);
+    if (err < 0)
     {
+      QString ss = QObject::tr("Error creating HDF Group %1").arg(dcNames[iter]);
+      setErrorCondition(-60);
+      addErrorMessage(getHumanLabel(), ss, err);
+      return;
+    }
 
-      err = H5Utilities::createGroupsFromPath(dcNames[iter].toLatin1().data(), dcaGid);
-      if (err < 0)
-      {
-        QString ss = QObject::tr("Error creating HDF Group %1").arg(dcNames[iter]);
-        setErrorCondition(-60);
-        addErrorMessage(getHumanLabel(), ss, err);
-        return;
-      }
+    err = QH5Lite::writeScalarAttribute(dcaGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
+    if (err < 0)
+    {
+      qDebug() << "Error Writing DataContainerType attribute for " << dcNames[iter] << "\n";
+    }
 
-      err = QH5Lite::writeScalarAttribute(dcaGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
-      if (err < 0)
-      {
-        qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << dcNames[iter] << "\n";
-      }
+    hid_t dcGid = H5Gopen(dcaGid, dcNames[iter].toLatin1().data(), H5P_DEFAULT );
+    QString ss = QObject::tr("%1 |--> Writing %2 DataContainer ").arg(getMessagePrefix().arg(dcNames[iter]));
 
-      if(dcType == 0)
-      {
-        VolumeDataContainerWriter::Pointer volWriter = VolumeDataContainerWriter::New();
-        volWriter->setHdfFileId(m_FileId);
-        volWriter->setHdfGroupId(dcaGid);
-        volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        volWriter->setdcType(dcType);
-        volWriter->setObservers(getObservers());
-        volWriter->setWriteXdmfFile(getWriteXdmfFile());
-        volWriter->setXdmfOStream(&out);
+    // Have the DataContainer write all of its Attribute Matrices
+    err = dc->writeAttributeMatricesToHDF5(dcGid);
+    if (err < 0)
+    {
+      notifyErrorMessage("Error Writing DataContainer", -803);
+      return;
+    }
 
-        QString ss = QObject::tr("%1 |--> Writing Volume Data ").arg(getMessagePrefix());
-        volWriter->setMessagePrefix(ss);
-        volWriter->execute();
-        if (volWriter->getErrorCondition() < 0)
-        {
-          notifyErrorMessage("Error Writing the Volume Data", -803);
-          return;
-        }
-      }
-      if(dcType <= 1)
-      {
-        SurfaceDataContainerWriter::Pointer surfWriter = SurfaceDataContainerWriter::New();
-        surfWriter->setHdfFileId(m_FileId);
-        surfWriter->setHdfGroupId(dcaGid);
-        surfWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        surfWriter->setdcType(dcType);
-        surfWriter->setObservers(getObservers());
-        surfWriter->setWriteXdmfFile(getWriteXdmfFile());
-        surfWriter->setXdmfOStream(&out);
-
-        QString ss = QObject::tr("%1 |--> Writing Surface Data ").arg(getMessagePrefix());
-        surfWriter->setMessagePrefix(ss);
-        surfWriter->execute();
-        if (surfWriter->getErrorCondition() < 0)
-        {
-          notifyErrorMessage("Error Writing the Surface Data", surfWriter->getErrorCondition());
-          return;
-        }
-      }
-      if(dcType <= 2)
-      {
-        EdgeDataContainerWriter::Pointer edgeWriter = EdgeDataContainerWriter::New();
-        edgeWriter->setHdfFileId(m_FileId);
-        edgeWriter->setHdfGroupId(dcaGid);
-        edgeWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        edgeWriter->setdcType(dcType);
-        edgeWriter->setObservers(getObservers());
-        edgeWriter->setWriteXdmfFile(getWriteXdmfFile());
-        edgeWriter->setXdmfOStream(&out);
-
-        QString ss = QObject::tr("%1 |--> Writing Edge Data ").arg(getMessagePrefix());
-        edgeWriter->setMessagePrefix(ss);
-        edgeWriter->execute();
-        if (edgeWriter->getErrorCondition() < 0)
-        {
-          notifyErrorMessage("Error Writing the Edge Data", edgeWriter->getErrorCondition());
-          return;
-        }
-      }
-      if(dcType <= 3)
-      {
-        VertexDataContainerWriter::Pointer vertWriter = VertexDataContainerWriter::New();
-        vertWriter->setHdfFileId(m_FileId);
-        vertWriter->setHdfGroupId(dcaGid);
-        vertWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        vertWriter->setdcType(dcType);
-        vertWriter->setObservers(getObservers());
-        vertWriter->setWriteXdmfFile(getWriteXdmfFile());
-        vertWriter->setXdmfOStream(&out);
-
-        QString ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
-        vertWriter->setMessagePrefix(ss);
-        vertWriter->execute();
-        if (vertWriter->getErrorCondition() < 0)
-        {
-          notifyErrorMessage("Error Writing the Vertex Data", vertWriter->getErrorCondition());
-          return;
-        }
-      }
-
-      if (m_WriteXdmfFile == true)
-      {
-        writeXdmfGridFooter(out, dcNames[iter]);
-      }
-
+    if (m_WriteXdmfFile == true)
+    {
+      writeXdmfGridFooter(out, dcNames[iter]);
     }
   }
 

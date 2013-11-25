@@ -238,6 +238,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     */
     DREAM3D_INSTANCE_PROPERTY(size_t, NumTuples)
 
+    virtual int writeAttributeArraysToHDF5(hid_t parentId);
 
     protected:
       AttributeMatrix();

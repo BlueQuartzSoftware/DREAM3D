@@ -260,6 +260,11 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     */
     virtual int getNumAttributeMatrices();
 
+    /**
+    * @brief Writes all the Attribute Matrices to HDF5 file
+    * @return
+    */
+    virtual int writeAttributeMatricesToHDF5(hid_t parentId);
 
   protected:
     DataContainer();
