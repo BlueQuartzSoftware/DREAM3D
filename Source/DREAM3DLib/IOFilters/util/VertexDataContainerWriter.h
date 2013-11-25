@@ -93,10 +93,6 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public IOSupport
 
     virtual int writeMeshData(hid_t dcGid);
 
-    virtual int writeVertexData(hid_t dcGid, QString groupName);
-    virtual int writeVertexFeatureData(hid_t dcGid, QString groupName);
-    virtual int writeVertexEnsembleData(hid_t dcGid, QString groupName);
-
     virtual void writeXdmfMeshStructure();
     virtual void writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering);
     virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& groupName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName);

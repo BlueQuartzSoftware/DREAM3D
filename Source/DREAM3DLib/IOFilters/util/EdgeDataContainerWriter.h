@@ -94,10 +94,6 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
 
     virtual int writeMeshData(hid_t dcGid);
 
-    virtual int writeEdgeData(hid_t dcGid, QString groupName);
-    virtual int writeEdgeFeatureData(hid_t dcGid, QString groupName);
-    virtual int writeEdgeEnsembleData(hid_t dcGid, QString groupName);
-
     virtual void writeXdmfMeshStructure();
     virtual void writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering);
     virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& groupName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName);

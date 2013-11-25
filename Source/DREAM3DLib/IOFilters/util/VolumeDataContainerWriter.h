@@ -103,9 +103,6 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
 
     virtual int writeMeshData(hid_t dcGid);
 
-    virtual int writeCellData(hid_t dcGid);
-    virtual int writeCellFeatureData(hid_t dcGid);
-    virtual int writeCellEnsembleData(hid_t dcGid);
 
     virtual void writeXdmfMeshStructure();
 
