@@ -35,6 +35,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RotateEulerRefFrame.h"
 
+
+#include <boost/math/special_functions/fpclassify.hpp> // isnan
+
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -51,6 +54,12 @@
 const static float m_pi = static_cast<float>(M_PI);
 
 
+namespace Detail
+{
+  bool closeEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon()) {
+    return (epsilon > std::abs(a - b));
+  }
+}
 class RotateEulerRefFrameImpl
 {
     float* m_CellEulerAngles;
@@ -69,8 +78,9 @@ class RotateEulerRefFrameImpl
       float rotMat[3][3];
 
       OrientationMath::AxisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
-      float ea1=0, ea2=0, ea3=0;
-      float ea1new=0, ea2new=0, ea3new=0;
+      float ea1=0.0f, ea2=0.0f, ea3=0.0f;
+      float ea1new=0.0f, ea2new=0.0f, ea3new=0.0f;
+//      float eaComp[3] = {0.0f, 0.0f, 0.0f};
       float g[3][3];
       float gNew[3][3];
       for (size_t i = start; i < end; i++)
@@ -78,13 +88,22 @@ class RotateEulerRefFrameImpl
         ea1 = m_CellEulerAngles[3*i+0];
         ea2 = m_CellEulerAngles[3*i+1];
         ea3 = m_CellEulerAngles[3*i+2];
-        OrientationMath::EulertoMat(ea1, ea2, ea3, g);
+        OrientationMath::EulerToMat(ea1, ea2, ea3, g);
         MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
         MatrixMath::Normalize3x3(gNew);
-        OrientationMath::MattoEuler(gNew, ea1new, ea2new, ea3new);
+        OrientationMath::MatToEuler(gNew, ea1new, ea2new, ea3new);
+
+//        if (boost::math::isnan(ea1new)) {
+//          std::cout << "ea1new is nan" << std::endl;
+//        }
+//        if (boost::math::isnan(ea2new)) {
+//          std::cout << "ea2new is nan" << std::endl;}
+
+//        if (boost::math::isnan(ea3new)) {
+//          std::cout << "ea3new is nan" << std::endl;}
+
         m_CellEulerAngles[3*i+0] = ea1new;
         m_CellEulerAngles[3*i+1] = ea2new;
-
         m_CellEulerAngles[3*i+2] = ea3new;
       }
     }
@@ -212,6 +231,7 @@ void RotateEulerRefFrame::execute()
     return;
   }
 
+  // Convert the Rotation Angle from Degrees to Radians
   m_RotationAngle = m_RotationAngle*m_pi/180.0;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

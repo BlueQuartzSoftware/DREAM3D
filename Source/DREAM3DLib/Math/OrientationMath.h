@@ -35,15 +35,15 @@
 
 #include <vector>
 
+#include <boost/tr1/array.hpp>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/Math/MatrixMath.h"
-
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 // Here the order of multiplication is q1*q2 not q2*q1
 #define MULT_QUAT(q1, q2, out)\
@@ -92,11 +92,38 @@ class DREAM3DLib_EXPORT OrientationMath
 
 
     static void EulertoQuat(QuatF &q, float ea1, float ea2, float ea3);
-    static void EulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
-    static void EulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3);
+
+    /**
+     * @brief EulertoMat This function creates a [3x3] Row major Rotation Matrix based on the
+     * set of rotations described by Bunge, which is the following:
+     * @li Rotation 1: rotate (counterclockwise) about the crystal z-axis through phi 1
+     * @li Rotation 2: rotate (counterclockwise) about the rotated crystal x-axis through PHI
+     * @li Rotation 3: rotate (counterclockwise) about the crystal z-axis through phi 2
+     *
+     * The rotations represent a <b>PASSIVE</b> rotation
+     *
+     * @param phi1 Radians: Valid range is 0 <= phi1 < 2Pi
+     * @param phi Radians: Valid range is 0 <= PHI < Pi
+     * @param phi2 Radians: Valid Range is 0 <= phi2 < 2Pi
+     * @param g [OUTPUT] The [3x3] Rotation Matrix
+     */
+    static void EulerToMat(float phi1, float phi, float phi2, float g[3][3]);
+    static void MatToEuler(float g[3][3], float &phi1, float &Phi, float &phi2);
 
 
-    static void MattoEuler(float g[3][3], float &ea1, float &ea2, float &ea3);
+    /**
+     * @brief EulertoRod
+     * @param r1 [OUTPUT]
+     * @param r2 [OUTPUT]
+     * @param r3 [OUTPUT]
+     * @param phi1 [INPUT]
+     * @param phi [INPUT]
+     * @param phi2 [INPUT]
+     */
+    static void EulertoRod(float &r1, float &r2, float &r3, float phi1, float phi, float phi2);
+
+
+//  static void MattoEuler(float g[3][3], float &phi1, float &Phi, float &phi2);
 
     static float MatrixMisorientation(float g1[3][3], float g2[3][3]);
 

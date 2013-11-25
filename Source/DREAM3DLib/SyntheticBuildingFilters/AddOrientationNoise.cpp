@@ -175,7 +175,7 @@ void  AddOrientationNoise::add_orientation_noise()
     float ea1 = m_CellEulerAngles[3*i+0];
     float ea2 = m_CellEulerAngles[3*i+1];
     float ea3 = m_CellEulerAngles[3*i+2];
-    OrientationMath::EulertoMat(ea1, ea2, ea3, g);
+    OrientationMath::EulerToMat(ea1, ea2, ea3, g);
     n1 = static_cast<float>( rg.genrand_res53() );
     n2 = static_cast<float>( rg.genrand_res53() );
     n3 = static_cast<float>( rg.genrand_res53() );
@@ -184,7 +184,7 @@ void  AddOrientationNoise::add_orientation_noise()
     w = (m_Magnitude*w);
     OrientationMath::AxisAngletoMat(w, n1, n2, n3, rot);
     MatrixMath::Multiply3x3with3x3(g, rot, newg);
-    OrientationMath::MattoEuler(newg, ea1, ea2, ea3);
+    OrientationMath::MatToEuler(newg, ea1, ea2, ea3);
     m_CellEulerAngles[3*i+0] = ea1;
     m_CellEulerAngles[3*i+1] = ea2;
     m_CellEulerAngles[3*i+2] = ea3;

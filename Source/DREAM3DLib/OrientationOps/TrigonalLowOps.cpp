@@ -412,7 +412,7 @@ namespace Detail
           {
             currentEuler = eulers->GetPointer(i * 3);
 
-            OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+            OrientationMath::EulerToMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------

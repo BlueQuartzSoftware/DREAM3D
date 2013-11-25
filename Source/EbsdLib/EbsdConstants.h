@@ -148,7 +148,7 @@ namespace Ebsd
     const unsigned int Tetragonal_Low = 7; //!< Tetragonal-Low 4/m
     const unsigned int Tetragonal_High = 8; //!< Tetragonal-High 4/mmm
     const unsigned int Trigonal_Low = 9; //!< Trigonal-Low -3
-    const unsigned int Trigonal_High = 10; //!< Trignal-High -3m
+    const unsigned int Trigonal_High = 10; //!< Trigonal-High -3m
 
     const unsigned int Hexagonal_Low = 2; //!< Hexagonal-Low 6/m
     const unsigned int Hexagonal_High = 0; //!< Hexagonal-High 6/mmm

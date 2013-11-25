@@ -11,7 +11,39 @@ This filter creates standard pole figure images for the microstructure that is b
 
 If the "Good Voxels" array has been created from another filter this filter will use that information to determine if a voxel's Euler Angle data should be added to the array that will be used for the calculation of the Pole Figure. Allowing the use of non-indexed EBSD data (which shows up as Bad Data) will cause errors or undefined behavior in this filter. The user is strongly cautioned to understand their data and where it comes from before running this filter.
 
+
+## Crystal Symmetry Implementations ##
+
+
+| Symmetry | Symbol   | Implemented |
+|-------------|-----|------|
+| Triclinic | -1 | Yes |  
+| Monoclinic | -2/m| Yes |  
+| Orthorhombic | mmm | Yes |  
+| Tetragonal-Low | 4/m | No |  
+| Tetragonal-High |4/mmm | No |  
+| Trigonal-Low | -3 | No |  
+| Trigonal-High  | -3m | No |  
+| Hexagonal-Low  |6/m| Yes |  
+| Hexagonal-High  | 6/mmm | Yes |  
+| Cubic-Low (Tetrahedral) |m3 | Yes |  
+| Cubic Cubic-High | m3m | Yes |
+
+## Example Output Image ##
+
+![Example Textured Pole Figure: Data courtesy of ......](images/PoleFigure_Textured.png)
+
+![Example Random Texture Pole Figure: Data Courtesey of Uchic, Groeber....](images/PoleFigure_Random.png)
+    
+## Notes  ##
+
+The implementation for the Pole Figure is to use a modified Lambert projection algorithm. This type of algorithm is new and has NOT been proven or accepted by the greater materials community. We are including it here to solicit the community for comments.
+
+
+
 ## Parameters ##
+
+
 | Name             | Type |
 |------------------|------|
 | Output Path | String |

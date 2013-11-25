@@ -135,8 +135,8 @@ class LabelVisitorInfo
  * @return
  */
     Pointer relabelFaces(Mesh::Pointer mesh,
-                             DataArray<int32_t>* masterFaceListPtr,
-                             const std::vector<bool> &masterVisited)
+                         DataArray<int32_t>* masterFaceListPtr,
+                         const std::vector<bool> &masterVisited)
     {
       size_t triangleIndex = *(m_Faces.begin());
       int32_t newLabel = mesh->getMaxLabel() + 1;

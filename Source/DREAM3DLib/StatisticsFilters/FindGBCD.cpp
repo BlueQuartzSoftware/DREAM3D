@@ -136,8 +136,8 @@ class CalculateGBCDImpl
               g2ea[m] = m_Eulers[3*grain2+m];
             }
 
-            OrientationMath::EulertoMat(g1ea[0], g1ea[1], g1ea[2], g1);
-            OrientationMath::EulertoMat(g2ea[0], g2ea[1], g2ea[2], g2);
+            OrientationMath::EulerToMat(g1ea[0], g1ea[1], g1ea[2], g1);
+            OrientationMath::EulerToMat(g2ea[0], g2ea[1], g2ea[2], g2);
 
             //get the crystal directions along the triangle normals
             MatrixMath::Multiply3x3with3x1(g1,normal,xstl1_norm0);
@@ -172,7 +172,7 @@ class CalculateGBCDImpl
                 //calculate delta g
                 MatrixMath::Multiply3x3with3x3(g1s,g2t,dg);
                 //translate matrix to euler angles
-                OrientationMath::MattoEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
+                OrientationMath::MatToEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
                 euler_mis[1] = cosf(euler_mis[1]);
 
                 //get the indexes that this point would be in the GBCD histogram

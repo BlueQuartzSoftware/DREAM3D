@@ -1237,7 +1237,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   float PHI = m_AxisEulerAngles[3*gnum+1];
   float phi2 = m_AxisEulerAngles[3*gnum+2];
   float ga[3][3];
-  OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+  OrientationMath::EulerToMat(phi1, PHI, phi2, ga);
   xc = m_Centroids[3*gnum];
   yc = m_Centroids[3*gnum+1];
   zc = m_Centroids[3*gnum+2];
@@ -1368,7 +1368,7 @@ void InsertPrecipitatePhases::assign_voxels()
     float PHI = m_AxisEulerAngles[3*i+1];
     float phi2 = m_AxisEulerAngles[3*i+2];
     float ga[3][3];
-    OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+    OrientationMath::EulerToMat(phi1, PHI, phi2, ga);
     column = static_cast<size_t>( (xc - (xRes / 2.0f)) / xRes );
     row = static_cast<size_t>( (yc - (yRes / 2.0f)) / yRes );
     plane = static_cast<size_t>( (zc - (zRes / 2.0f)) / zRes );
@@ -1549,7 +1549,7 @@ void InsertPrecipitatePhases::assign_gaps()
       float PHI = m_AxisEulerAngles[3*i+1];
       float phi2 = m_AxisEulerAngles[3*i+2];
       float ga[3][3];
-      OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+      OrientationMath::EulerToMat(phi1, PHI, phi2, ga);
       column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
       row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
       plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );

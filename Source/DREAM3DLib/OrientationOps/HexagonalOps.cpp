@@ -1000,7 +1000,7 @@ namespace Detail
 
             currentEuler = eulers->GetPointer(i * 3);
 
-            OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+            OrientationMath::EulerToMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -1107,6 +1107,36 @@ void HexagonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatA
     serial.generate(0, nOrientations);
   }
 
+#if 0
+  float* a = xyz0001->GetPointer(0);
+  for(size_t i = 0; i < nOrientations * Detail::HexagonalHigh::symSize0 * 3; i++)
+  {
+    if(isnan(a[i]))
+    {
+      std::cout << "NAN (A)" << std::endl;
+    }
+  }
+
+  float* b = xyz1010->GetPointer(0);
+  for(size_t i = 0; i < nOrientations * Detail::HexagonalHigh::symSize1 * 3; i++)
+  {
+    if(isnan(b[i]))
+    {
+      std::cout << "NAN (B)" << std::endl;
+    }
+  }
+
+
+
+  float* c = xyz1120->GetPointer(0);
+    for(size_t i = 0; i < nOrientations * Detail::HexagonalHigh::symSize2 * 3; i++)
+  {
+    if(isnan(c[i]))
+    {
+      std::cout << "NAN (C)" << std::endl;
+    }
+  }
+  #endif
 }
 
 // -----------------------------------------------------------------------------
@@ -1230,12 +1260,15 @@ std::vector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigure
   int numOrientations = config.eulers->GetNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
-  // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalHigh::symSize0, 3, label0 + std::string("xyzCoords"));
-  // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalHigh::symSize1, 3, label1 + std::string("xyzCoords"));
-  // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalHigh::symSize2, 3, label2 + std::string("xyzCoords"));
+  // this is size for
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalHigh::symSize0, 3, label0 + std::string("xyzCoords_0001"));
+  xyz001->initializeWithZeros();
+  // this is size for
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalHigh::symSize1, 3, label1 + std::string("xyzCoords_1010"));
+  xyz011->initializeWithZeros();
+  // this is size for
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalHigh::symSize2, 3, label2 + std::string("xyzCoords_1120"));
+  xyz111->initializeWithZeros();
 
   config.sphereRadius = 1.0f;
 
@@ -1308,12 +1341,12 @@ std::vector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigure
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label0);
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label1);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label2);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+
 
   poleFigures.push_back(image001);
   poleFigures.push_back(image011);
   poleFigures.push_back(image111);
-
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   g = new tbb::task_group;
 
   if(doParallel == true)

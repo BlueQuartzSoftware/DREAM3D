@@ -200,7 +200,7 @@ class EbsdColoring
       float d[3];
 
       // 1) find rotation matrix from Euler angles
-      OrientationMath::EulertoMat(phi1, phi, phi2, g);
+      OrientationMath::BungeEulerToRotationMatrix(phi1, phi, phi2, g);
 
       // 2) use rotation matrix to find which crystal direction is aligned with 001
       float refDirection[3];

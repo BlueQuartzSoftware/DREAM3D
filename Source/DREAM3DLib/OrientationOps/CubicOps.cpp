@@ -1038,8 +1038,11 @@ namespace Detail
           for(size_t i = start; i < end; ++i)
           {
             currentEuler = m_Eulers->GetPointer(i * 3);
-
-            OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+            if (i == 1154430)
+            {
+              std::cout << "GenerateSphereCoordsImpl:" << __LINE__ << std::endl;
+            }
+            OrientationMath::EulerToMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -1181,6 +1184,37 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArray
     Detail::CubicHigh::GenerateSphereCoordsImpl serial(eulers, xyz001, xyz011, xyz111);
     serial.generate(0, nOrientations);
   }
+
+#if 1
+  float* a = xyz001->GetPointer(0);
+  for(size_t i = 0; i < nOrientations * Detail::CubicHigh::symSize0 * 3; i++)
+  {
+    if(isnan(a[i]))
+    {
+      std::cout << "NAN (A)" << std::endl;
+    }
+  }
+
+  float* b = xyz011->GetPointer(0);
+  for(size_t i = 0; i < nOrientations * Detail::CubicHigh::symSize1 * 3; i++)
+  {
+    if(isnan(b[i]))
+    {
+      std::cout << "NAN (B)" << std::endl;
+    }
+  }
+
+
+
+  float* c = xyz111->GetPointer(0);
+    for(size_t i = 0; i < nOrientations * Detail::CubicHigh::symSize2 * 3; i++)
+  {
+    if(isnan(c[i]))
+    {
+      std::cout << "NAN (C)" << std::endl;
+    }
+  }
+  #endif
 
 }
 
@@ -1469,12 +1503,12 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label0);
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label1);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label2);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+
 
   poleFigures.push_back(image001);
   poleFigures.push_back(image011);
   poleFigures.push_back(image111);
-
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   g = new tbb::task_group;
 
   if(doParallel == true)
@@ -1937,7 +1971,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
       d3.push_back(tan(A)*cos(B[j]));
       d2.push_back(tan(A)*sin(B[j])*sin(C[j][i]));
       d1.push_back(tan(A)*sin(B[j])*cos(C[j][i]));
-      double d = 1 - d1[k] * d1[k] - d2[k] * d2[k] - d3[k] * d3[k];
+      //double d = 1 - d1[k] * d1[k] - d2[k] * d2[k] - d3[k] * d3[k];
       k++;
     }
   }

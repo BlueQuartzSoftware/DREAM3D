@@ -31,12 +31,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "OrientationMath.h"
 
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
-#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
+#include <cmath>
 
 #include "MXA/Common/LogTime.h"
 
@@ -205,8 +200,8 @@ void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
   x = m_OnePointThree*hmag*hmag*hmag;
   for(size_t i = 1; i < 10; i++)
   {
-  w_new = w - ((x-w+sin(w))/(-1+cos(w)));
-  w = w_new;
+    w_new = w - ((x-w+sin(w))/(-1+cos(w)));
+    w = w_new;
   }
   float const1 = tanf(w/2.0f);
   r1 = r1 * const1;
@@ -231,10 +226,10 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
   if(rmag == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
   if(w > m_pi)
   {
-  w = (2*m_pi)-w;
-  n1 = -n1;
-  n2 = -n2;
-  n3 = -n3;
+    w = (2*m_pi)-w;
+    n1 = -n1;
+    n2 = -n2;
+    n3 = -n3;
   }
 }
 
@@ -251,10 +246,10 @@ void OrientationMath::QuattoAxisAngle(QuatF &q, float &w, float &n1, float &n2, 
   if(q.w == 1.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
   if(w > m_pi)
   {
-  w = (2*m_pi)-w;
-  n1 = -n1;
-  n2 = -n2;
-  n3 = -n3;
+    w = (2*m_pi)-w;
+    n1 = -n1;
+    n2 = -n2;
+    n3 = -n3;
   }
 }
 
@@ -263,15 +258,15 @@ void OrientationMath::QuattoAxisAngle(QuatF &q, float &w, float &n1, float &n2, 
 // -----------------------------------------------------------------------------
 void OrientationMath::QuattoMat(QuatF &q, float g[3][3])
 {
-   g[0][0] = (1 - (2 * q.y * q.y) - (2 * q.z * q.z));
-   g[0][1] = ((2 * q.x * q.y) + (2 * q.z * q.w));
-   g[0][2] = ((2 * q.x * q.z) - (2 * q.y * q.w));
-   g[1][0] = ((2 * q.x * q.y) - (2 * q.z * q.w));
-   g[1][1] = (1 - (2 * q.x * q.x) - (2 * q.z * q.z));
-   g[1][2] = ((2 * q.y * q.z) + (2 * q.x * q.w));
-   g[2][0] = ((2 * q.x * q.z) + (2 * q.y * q.w));
-   g[2][1] = ((2 * q.y * q.z) - (2 * q.x * q.w));
-   g[2][2] = (1 - (2 * q.x * q.x) - (2 * q.y * q.y));
+  g[0][0] = (1 - (2 * q.y * q.y) - (2 * q.z * q.z));
+  g[0][1] = ((2 * q.x * q.y) + (2 * q.z * q.w));
+  g[0][2] = ((2 * q.x * q.z) - (2 * q.y * q.w));
+  g[1][0] = ((2 * q.x * q.y) - (2 * q.z * q.w));
+  g[1][1] = (1 - (2 * q.x * q.x) - (2 * q.z * q.z));
+  g[1][2] = ((2 * q.y * q.z) + (2 * q.x * q.w));
+  g[2][0] = ((2 * q.x * q.z) + (2 * q.y * q.w));
+  g[2][1] = ((2 * q.y * q.z) - (2 * q.x * q.w));
+  g[2][2] = (1 - (2 * q.x * q.x) - (2 * q.y * q.y));
 }
 
 // -----------------------------------------------------------------------------
@@ -322,14 +317,14 @@ void OrientationMath::QuattoRod(QuatF &q, float &r1, float &r2, float &r3)
 void OrientationMath::QuattoEuler(QuatF &q, float &ea1, float &ea2, float &ea3)
 {
   float diff, sum, tmp;
-    diff=atan2(-q.y,-q.x);
-    sum=atan2(-q.z,-q.w);
-    ea1=(diff+sum);
-    ea3=(sum-diff);
-    tmp=(q.z*q.z)+(q.w*q.w);
-    tmp = sqrt(tmp);
-    if(tmp > 1.0f) tmp=1.0f;
-    ea2=2*acos(tmp);
+  diff=atan2(-q.y,-q.x);
+  sum=atan2(-q.z,-q.w);
+  ea1=(diff+sum);
+  ea3=(sum-diff);
+  tmp=(q.z*q.z)+(q.w*q.w);
+  tmp = sqrt(tmp);
+  if(tmp > 1.0f) tmp=1.0f;
+  ea2=2*acos(tmp);
   ea1=ea1+two_pi;
   ea3=ea3+two_pi;
   ea1 = fmodf(ea1,two_pi);
@@ -356,59 +351,69 @@ void OrientationMath::EulertoQuat(QuatF &q, float e1, float e2, float e3)
 
 
 // -----------------------------------------------------------------------------
+// Based on a ZXZ Set of transforms
+// -----------------------------------------------------------------------------
+void OrientationMath::EulerToMat(float ea1, float ea2, float ea3, float g[3][3])
+{
+  // Calcuate all the values once
+  float c1 = cosf(ea1);
+  float s1 = sinf(ea1);
+  float c2 = cosf(ea2);
+  float s2 = sinf(ea2);
+  float c3 = cosf(ea3);
+  float s3 = sinf(ea3);
+
+  // Row 0
+  g[0][0] = c1*c3 - c2*s1*s3;
+  g[0][1] = c3*s1 + c1 *c2 * s3;
+  g[0][2] = s2*s3;
+  // Row 1
+  g[1][0] = -c1 * s3 - c2 * c3 * s1;
+  g[1][1] = c1 * c2 * c3 - s1 * s3;
+  g[1][2] = c3 * s2;
+  // Row 2
+  g[2][0] = s1 * s2;
+  g[2][1] = -c1 * s2;
+  g[2][2] = c2;
+}
+
+
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::EulertoMat(float ea1, float ea2, float ea3, float g[3][3])
+bool closeEnough(const float& a, const float& b,
+                 const float& epsilon = std::numeric_limits<float>::epsilon())
 {
-      // Calcuate all the values once
-      float cos_phi1 = cosf(ea1);
-      float sin_phi1 = sinf(ea1);
-      float cos_phi = cosf(ea2);
-      float sin_phi = sinf(ea2);
-      float cos_phi2 = cosf(ea3);
-      float sin_phi2 = sinf(ea3);
+  return (epsilon > std::abs(a - b));
+}
 
-      // 1) find rotation matrix from Euler angles
-      g[0][0] = cos_phi1 * cos_phi2 - sin_phi1 * sin_phi2 * cos_phi;
-      g[0][1] = sin_phi1 * cos_phi2 + cos_phi1 * sin_phi2 * cos_phi;
-      g[0][2] = sin_phi2 * sin_phi;
-      g[1][0] = -cos_phi1 * sin_phi2 - sin_phi1 * cos_phi2 * cos_phi;
-      g[1][1] = -sin_phi1 * sin_phi2 + cos_phi1 * cos_phi2 * cos_phi;
-      g[1][2] = cos_phi2 * sin_phi;
-      g[2][0] = sin_phi1 * sin_phi;
-      g[2][1] = -cos_phi1 * sin_phi;
-      g[2][2] = cos_phi;
+void OrientationMath::MatToEuler(float g[3][3], float &phi1, float &Phi, float &phi2)
+{
+  if(closeEnough(g[2][2], 1.0) || closeEnough(g[2][2], -1.0))
+  {
+    phi1 = atan(g[0][1]/g[0][0]) / 2.0f;
+    Phi = 0.0;
+    phi2 = phi1;
+  } else {
+    Phi = acos(g[2][2]);
+    double s = sin(Phi);
+    phi1 = atan2(g[2][0] / s, -g[2][1] / s );
+    phi2 = atan2(g[0][2] / s, g[1][2] / s );
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::MattoEuler(float g[3][3], float &ea1, float &ea2, float &ea3)
-{
-  ea2 = acos(g[2][2]);
-  float sin_ea2 = sin(ea2);
-  float cosine3 = (g[1][2]/sin_ea2);
-  float sine3 = (g[0][2]/sin_ea2);
-  float cosine1 = (-g[2][1]/sin_ea2);
-  float sine1 = (g[2][0]/sin_ea2);
-  ea3 = acos(cosine3);
-  ea1 = acos(cosine1);
-  if(sine3 < 0) ea3 = (2.0f * m_pi)-ea3;
-  if(sine1 < 0) ea1 = (2.0f * m_pi)-ea1;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OrientationMath::EulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3)
+void OrientationMath::EulertoRod(float &r1, float &r2, float &r3, float phi1, float phi, float phi2)
 {
   float sum, diff, csum, cdiff, sdiff, t2;
-  sum = (ea1+ea3)/2.0f;
-  diff = (ea1-ea3)/2.0f;
+  sum = (phi1+phi2)/2.0f;
+  diff = (phi1-phi2)/2.0f;
   csum = cosf(sum);
   cdiff = cosf(diff);
   sdiff = sinf(diff);
-  t2 = tanf(ea2/2.0f);
+  t2 = tanf(phi/2.0f);
   r1 = t2*cdiff/csum;
   r2 = t2*sdiff/csum;
   r3 = tanf(sum);
