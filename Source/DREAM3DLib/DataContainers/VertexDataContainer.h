@@ -77,7 +77,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
 
     DREAM3D_INSTANCE_PROPERTY(VertexArray::Pointer, Vertices)
 
-
+    virtual int writeMeshToHDF5(hid_t dcGid);
 
   protected:
      VertexDataContainer();

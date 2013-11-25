@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, MeshLinks)
 /* ************************************************************************************************* */
 
-
+    virtual int writeMeshToHDF5(hid_t dcGid);
 
   protected:
      EdgeDataContainer();

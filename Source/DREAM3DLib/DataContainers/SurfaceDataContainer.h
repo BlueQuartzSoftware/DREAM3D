@@ -80,6 +80,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
 
     DREAM3D_INSTANCE_PROPERTY(FaceArray::Pointer, Faces)
 
+    virtual int writeMeshToHDF5(hid_t dcGid);
 
   protected:
      SurfaceDataContainer();

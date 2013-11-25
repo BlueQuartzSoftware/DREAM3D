@@ -72,3 +72,27 @@ VolumeDataContainer::~VolumeDataContainer()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VolumeDataContainer::writeMeshToHDF5(hid_t dcGid)
+{
+  herr_t err = 0;
+  //first write the faces if they exist
+  VertexArray::Pointer verticesPtr = getVertices();
+  if (verticesPtr.get() != NULL)
+  {
+    int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
+    hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), 3};
+
+    float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
+
+    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
+    if (err < 0)
+    {
+//      setErrorCondition(err);
+//      notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
+    }
+  }
+  return err;
+}

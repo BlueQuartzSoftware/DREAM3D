@@ -103,6 +103,8 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     // -----------------------------------------------------------------------------
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin)
 
+    virtual int writeMeshToHDF5(hid_t dcGid);
+
   protected:
     VolumeDataContainer();
 

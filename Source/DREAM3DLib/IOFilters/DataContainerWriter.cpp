@@ -332,17 +332,27 @@ void DataContainerWriter::execute()
     hid_t dcGid = H5Gopen(dcaGid, dcNames[iter].toLatin1().data(), H5P_DEFAULT );
     QString ss = QObject::tr("%1 |--> Writing %2 DataContainer ").arg(getMessagePrefix().arg(dcNames[iter]));
 
-    // Have the DataContainer write all of its Attribute Matrices
+    // Have the DataContainer write all of its Attribute Matrices and its Mesh
     err = dc->writeAttributeMatricesToHDF5(dcGid);
     if (err < 0)
     {
-      notifyErrorMessage("Error Writing DataContainer", -803);
+      notifyErrorMessage("Error Writing DataContainer Attribute Matrices", -803);
       return;
     }
-
+    err = dc->writeMeshToHDF5(dcGid);
+    if (err < 0)
+    {
+      notifyErrorMessage("Error Writing DataContainer Mesh", -804);
+      return;
+    }
     if (m_WriteXdmfFile == true)
     {
-      writeXdmfGridFooter(out, dcNames[iter]);
+      err = dc->writeXdmf(out);
+      if (err < 0)
+      {
+        notifyErrorMessage("Error Writing Xdmf File", -805);
+        return;
+      }
     }
   }
 
