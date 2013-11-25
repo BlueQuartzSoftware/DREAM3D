@@ -436,6 +436,31 @@ void OrientationMath::MattoEuler(float g[3][3], float& ea1, float& ea2, float& e
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool closeEnough(const float& a, const float& b,
+                 const float& epsilon = std::numeric_limits<float>::epsilon())
+{
+  return (epsilon > std::abs(a - b));
+}
+
+void OrientationMath::RotationMatrixToBungeEuler(float g[3][3], float &phi1, float &Phi, float &phi2)
+{
+  if(closeEnough(g[2][2], 1.0) || closeEnough(g[2][2], -1.0))
+  {
+    phi1 = atan(g[0][1]/g[0][0]) / 2.0f;
+    Phi = 0.0;
+    phi2 = phi1;
+  } else {
+    Phi = acos(g[2][2]);
+    double s = sin(Phi);
+    phi1 = atan2(g[2][0] / s, -g[2][1] / s );
+    phi2 = atan2(g[0][2] / s, g[1][2] / s );
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void OrientationMath::EulertoRod(float& r1, float& r2, float& r3, float ea1, float ea2, float ea3)
 {
   float sum, diff, csum, cdiff, sdiff, t2;
