@@ -129,13 +129,6 @@ void VertexDataContainerWriter::execute()
 
   if(getdcType() == 3) { writeXdmfMeshStructure(); }
 
-  err = writeMeshData(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
 
@@ -243,48 +236,4 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const QString& groupName,
   QString block = writeXdmfAttributeDataHelper(numComp, attrType, groupName, array, centering, precision, xdmfTypeName);
 
   out << block << "\n";
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VertexDataContainerWriter::writeMeshData(hid_t dcGid)
-{
-  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
-
-  herr_t err = 0;
-  //first write the faces if they exist
-  VertexArray::Pointer verticesPtr = dc->getVertices();
-  if (verticesPtr.get() != NULL)
-  {
-    int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-    hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), 3};
-
-    float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
-
-    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
-    if (err < 0)
-    {
-      setErrorCondition(err);
-      notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
-    }
-    if(getWriteXdmfFile() == true)
-    {
-      QVector<int> dim(1, 3);
-      DataArray<int32_t>::Pointer vertsPtr = DataArray<int32_t>::CreateArray(verticesPtr->getNumberOfTuples(), dim, DREAM3D::HDF5::VertsName);
-      int32_t* verts = vertsPtr->getPointer(0);
-      for(int i = 0; i < verticesPtr->getNumberOfTuples(); i++)
-      {
-        verts[3 * i] = 1;
-        verts[3 * i + 1] = 1;
-        verts[3 * i + 2] = i;
-      }
-      rank = 2;
-      dims[0] = verticesPtr->getNumberOfTuples();
-      dims[1] = 3;
-      err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VertsName, rank, dims, verts);
-    }
-  }
-  return err;
 }

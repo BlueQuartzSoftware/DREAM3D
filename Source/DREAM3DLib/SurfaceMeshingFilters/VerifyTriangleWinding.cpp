@@ -390,7 +390,8 @@ void VerifyTriangleWinding::execute()
   // Clean up any arrays that were designated as temp
   if (m_DoUniqueEdgesFilter == true)
   {
-    IDataArray::Pointer removedConnectviity = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->removeEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
+    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+    IDataArray::Pointer removedConnectviity = sm->getAttributeMatrix(getEdgeAttributeMatrixName())->removeAttributeArray(m_SurfaceMeshUniqueEdgesArrayName);
     BOOST_ASSERT(removedConnectviity.get() != NULL);
   }
   if (clearMeshLinks == true)
@@ -410,7 +411,8 @@ void VerifyTriangleWinding::execute()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t& trianglesToLabelMap)
 {
-  FaceArray::Pointer masterFaceList = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  FaceArray::Pointer masterFaceList = sm->getFaces();
   if(NULL == masterFaceList.get())
   {
     setErrorCondition(-556);
@@ -418,7 +420,7 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t& trianglesToLabel
     return;
   }
 
-  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
@@ -440,11 +442,12 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t& trianglesToLabel
 // -----------------------------------------------------------------------------
 int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& triangleIndices)
 {
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
-  VertexArray::Vert_t* verts = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices()->getPointer(0);
-  FaceArray::Face_t* triangles = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->getPointer(0);
+  VertexArray::Vert_t* verts = sm->getVertices()->getPointer(0);
+  FaceArray::Face_t* triangles = sm->getFaces()->getPointer(0);
 
-  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
@@ -532,7 +535,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   // get the triangle definitions - use the pointer to the start of the Struct Array
-  FaceArray::Pointer masterFaceList = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  FaceArray::Pointer masterFaceList = sm->getFaces();
   if(NULL == masterFaceList.get())
   {
     setErrorCondition(-556);
@@ -540,13 +543,13 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     return getErrorCondition();
   }
   FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
-  IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   int numFaces = masterFaceList->getNumberOfTuples();
 
-  VertexArray::Pointer masterNodeListPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
+  VertexArray::Pointer masterNodeListPtr = sm->getVertices();
   if(NULL == masterNodeListPtr.get())
   {
     setErrorCondition(-555);

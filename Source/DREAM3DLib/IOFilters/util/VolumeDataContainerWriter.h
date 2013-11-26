@@ -101,8 +101,6 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     int writeMetaInfo(const QString& hdfPath, int64_t volDims[3],
                       float spacing[3], float origin[3]);
 
-    virtual int writeMeshData(hid_t dcGid);
-
 
     virtual void writeXdmfMeshStructure();
 
