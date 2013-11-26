@@ -22,7 +22,6 @@ set(_PublicFilters
   FlattenImage
   MinSize
   ClearData
-  PerPhaseMinSize
   FillBadData
   NeighborCICorrelation
   NeighborOrientationCorrelation

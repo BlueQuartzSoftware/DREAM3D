@@ -74,6 +74,8 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
         //------ Created Feature Data
     
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedFeatureSize)
+    DREAM3D_INSTANCE_PROPERTY(bool, ApplyToAll)
+    DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
@@ -105,6 +107,7 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;

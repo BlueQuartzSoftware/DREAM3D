@@ -159,7 +159,7 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  IDataArray::Pointer materialNamePtr = m->getCellEnsembleData(DREAM3D::EnsembleData::MaterialName);
+  IDataArray::Pointer materialNamePtr = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getAttributeArray(DREAM3D::EnsembleData::MaterialName);
   StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
   if (NULL == materialNames)
   {
@@ -265,7 +265,7 @@ int INLWriter::writeFile()
   fprintf(f, "#\r\n");
 
 // IDataArray::Pointer pDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
-  IDataArray::Pointer materialNamePtr = m->getCellEnsembleData(DREAM3D::EnsembleData::MaterialName);
+  IDataArray::Pointer materialNamePtr = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getAttributeArray(DREAM3D::EnsembleData::MaterialName);
   StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
   if (NULL == materialNames)
   {

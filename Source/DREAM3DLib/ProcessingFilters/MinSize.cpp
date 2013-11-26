@@ -60,9 +60,13 @@ MinSize::MinSize() :
   m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_MinAllowedFeatureSize(1),
   m_FeatureIds(NULL),
-  m_Active(NULL)
+  m_Active(NULL),
+  m_CellPhases(NULL),
+  m_FeaturePhases(NULL)
 {
   setupFilterParameters();
 }
@@ -89,7 +93,22 @@ void MinSize::setupFilterParameters()
     option->setUnits("Pixels");
     parameters.push_back(option);
   }
-
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Apply To All Phases");
+    option->setPropertyName("ApplyToAll");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Phase Number to Run Min Size Filter on");
+    option->setPropertyName("PhaseNumber");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -113,6 +132,8 @@ int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("MinAllowedFeatureSize", getMinAllowedFeatureSize() );
+  writer->writeValue("ApplyToAll", getApplyToAll() );
+  writer->writeValue("PhaseNumber", getPhaseNumber() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -133,6 +154,12 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
   m_ActivePtr = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_ActiveArrayName, true, features, dims);; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(m_ApplyToAll == false)
+  {
+    m_FeaturePhasesPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -354,13 +381,10 @@ void MinSize::assign_badpoints()
 void MinSize::remove_smallfeatures()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
   int64_t totalPoints = m->getTotalPoints();
 
   bool good = false;
-
   int gnum;
-
   int numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   QVector<int> voxcounts(numfeatures, 0);
@@ -373,7 +397,14 @@ void MinSize::remove_smallfeatures()
   for (size_t i = 1; i <  static_cast<size_t>(numfeatures); i++)
   {
     m_Active[i] = true;
-    if(voxcounts[i] >= m_MinAllowedFeatureSize ) { good = true; }
+    if(m_ApplyToAll == true)
+    {
+      if(voxcounts[i] >= m_MinAllowedFeatureSize ) { good = true; }
+    }
+    else
+    {
+      if(voxcounts[i] >= getMinAllowedFeatureSize() || m_FeaturePhases[i] != m_PhaseNumber) { good = true; }
+    }
   }
   if(good == false)
   {

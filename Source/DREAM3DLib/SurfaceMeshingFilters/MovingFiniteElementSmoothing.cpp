@@ -266,8 +266,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
 
   if ( getConstrainQuadPoints() == true || getSmoothTripleLines() == true )
   {
-    IDataArray::Pointer edges = sm->getVertexData(DREAM3D::EdgeData::SurfaceMeshEdges);
-    if(edges.get() == NULL)
+    if(sm->getEdges().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", -385);
       setErrorCondition(-385);

@@ -6,6 +6,7 @@
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 
 
 ModifiedLambertProjection::Pointer forwardProjectGreyScaleImage(QImage image)

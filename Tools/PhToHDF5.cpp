@@ -96,7 +96,7 @@ int  ReadPHFile(QString FileName, QVector<int> &data, int &nx, int &ny, int &nz)
     return -1;
   }
 
-  Int32ArrayType* featureIds = Int32ArrayType::SafePointerDownCast(m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(DREAM3D::CellData::FeatureIds).get());
+  Int32ArrayType* featureIds = Int32ArrayType::SafePointerDownCast(m->getAttributeMatrix(DREAM3D::HDF5::CellAttributeMatrixName)->getAttributeArray(DREAM3D::CellData::FeatureIds).get());
   size_t count = featureIds->getNumberOfTuples();
 
   data.resize(count);

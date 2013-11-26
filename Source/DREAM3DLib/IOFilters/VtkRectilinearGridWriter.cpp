@@ -45,8 +45,6 @@
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/HKL/CtfFields.h"
 
-#include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
