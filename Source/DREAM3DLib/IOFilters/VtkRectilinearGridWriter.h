@@ -227,7 +227,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
 
-    int write(const QString& file, VolumeDataContainer* r, std::vector<VtkScalarWriter*>& scalars);
+    int write(const QString& file);
 };
 
 #endif /* VTKRECTILINEARGRIDWRITER_H_ */

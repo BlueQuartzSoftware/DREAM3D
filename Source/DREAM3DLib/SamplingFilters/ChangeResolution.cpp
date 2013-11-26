@@ -43,8 +43,6 @@
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-//#include "DREAM3DLib/HDF5/H5VoxelReader.h"
-
 
 // -----------------------------------------------------------------------------
 //

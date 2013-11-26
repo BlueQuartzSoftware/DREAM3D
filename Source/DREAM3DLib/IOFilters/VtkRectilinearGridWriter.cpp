@@ -206,24 +206,10 @@ void VtkRectilinearGridWriter::execute()
 
   dataCheck(false, totalPoints, 0, 0);
 
-  // Setup all the classes that will help us write the Scalars to the VTK File
-  std::vector<VtkScalarWriter*> scalarsToWrite;
-
-  VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelFeatureIdScalarWriter<VolumeDataContainer>(m));
-  w0->m_WriteBinaryFiles = m_WriteBinaryFile;
-  w0->setAttributeMatrixName(getCellAttributeMatrixName());
-  scalarsToWrite.push_back(w0);
-
-  int err = write(m_OutputFile, m, scalarsToWrite);
-  // Now Delete all the Scalar Helpers that we just created and used.
-  for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter)
-  {
-    delete (*iter);
-  }
+  int err = write(m_OutputFile);
 
   if (err < 0)
   {
-
     QString ss = QObject::tr("Error writing output vtk file '%1'\n ").arg(m_OutputFile);
     addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
@@ -236,8 +222,10 @@ void VtkRectilinearGridWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkRectilinearGridWriter::write(const QString& file, VolumeDataContainer* r, std::vector<VtkScalarWriter*>& scalars)
+int VtkRectilinearGridWriter::write(const QString& file)
 {
+  VolumeDataContainer* r = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
   int err = 0;
   FILE* f = NULL;
   f = fopen(file.toLatin1().data(), "wb");
@@ -265,26 +253,21 @@ int VtkRectilinearGridWriter::write(const QString& file, VolumeDataContainer* r,
 
 
   int index = 0;
-  // Now loop on all of our Scalars and write those arrays as CELL_DATA
-  for (std::vector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter)
+  QString ss = QObject::tr("Writing Feature Ids");
+  notifyStatusMessage(ss);
+  if (m_WriteBinaryFile == true)
   {
-
-    QString ss = QObject::tr("Writing Scalar %1 of %2").arg(index++).arg(scalars.size());
-    notifyStatusMessage(ss);
-    if (m_WriteBinaryFile == true)
-    {
-      WRITE_VTK_FEATURE_IDS_BINARY(r, DREAM3D::CellData::FeatureIds);
-    }
-    else
-    {
-      WRITE_VTK_FEATURE_IDS_ASCII(r, DREAM3D::CellData::FeatureIds, m_FeatureIds)
-    }
-    if(err < 0)
-    {
-      setErrorCondition((*iter)->getErrorCondition());
-      setPipelineMessages((*iter)->getPipelineMessages());
-      break;
-    }
+    WRITE_VTK_FEATURE_IDS_BINARY(r, DREAM3D::CellData::FeatureIds);
+  }
+  else
+  {
+    WRITE_VTK_FEATURE_IDS_ASCII(r, DREAM3D::CellData::FeatureIds, m_FeatureIds)
+  }
+  if(err < 0)
+  {
+    QString ss = QObject::tr("Error writing vtk file '%1'\n ").arg(file);
+    addErrorMessage(getHumanLabel(), ss, err);
+    setErrorCondition(-100);
   }
   // Close the file
   fclose(f);
