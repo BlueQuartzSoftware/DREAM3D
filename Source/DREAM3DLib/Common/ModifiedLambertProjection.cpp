@@ -377,9 +377,7 @@ bool ModifiedLambertProjection::getSquareCoord(float* xyz, float* sqCoord)
     sqCoord[0] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust))) * ((DREAM3D::Constants::k_2OverSqrtPi) * atan(xyz[0] / xyz[1]));
     sqCoord[1] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust))) * (DREAM3D::Constants::k_HalfOfSqrtPi);
   }
-  if (isnan(sqCoord[0]) ) {
-    std::cout << "here" << std::endl;
-    }
+
   if (sqCoord[0] >= m_MaxCoord)
   {
     sqCoord[0] = (m_MaxCoord) - .0001;
