@@ -268,7 +268,7 @@ VectorType TriangleOps::computeNormal(VertexArray::Vert_t& n0, VertexArray::Vert
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr)
+QSet<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>::Pointer faceLabelsPtr)
 {
   QSet<int32_t> uniqueLabels;
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);

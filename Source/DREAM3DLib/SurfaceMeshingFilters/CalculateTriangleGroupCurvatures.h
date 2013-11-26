@@ -66,7 +66,9 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
                                      DoubleArrayType::Pointer principleDirection2,
                                      DoubleArrayType::Pointer gaussianCurvature,
                                      DoubleArrayType::Pointer meanCurvature,
-                                     SurfaceDataContainer* sm,
+                                     DataArray<int32_t>::Pointer surfaceMeshFaceLabels,
+                                     DataArray<double>::Pointer surfaceMeshFaceNormals,
+                                     DataArray<double>::Pointer surfaceMeshTriangleCentroids,
                                      AbstractFilter* parent);
 
     virtual ~CalculateTriangleGroupCurvatures();
@@ -97,7 +99,9 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
     DoubleArrayType::Pointer m_PrincipleDirection2;
     DoubleArrayType::Pointer m_GaussianCurvature;
     DoubleArrayType::Pointer m_MeanCurvature;
-    SurfaceDataContainer* m_SurfaceDataContainer;
+    DataArray<int32_t>::Pointer m_SurfaceMeshFaceLabels;
+    DataArray<double>::Pointer m_SurfaceMeshFaceNormals;
+    DataArray<double>::Pointer m_SurfaceMeshTriangleCentroids;
     AbstractFilter* m_ParentFilter;
 };
 

@@ -59,15 +59,13 @@ class DREAM3DLib_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 
     virtual ~FeatureFaceCurvatureFilter();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature2ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalDirection1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalDirection2ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleNormalsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleCentroidsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFeatureFaceIdArrayName)
 
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
@@ -138,6 +136,10 @@ class DREAM3DLib_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleCentroids)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceNormals)
+
     int32_t* m_SurfaceMeshUniqueEdges;
     int32_t* m_SurfaceMeshFaceEdges;
     int32_t  m_TotalFeatureFaces;

@@ -133,7 +133,7 @@ class LabelVisitorInfo
     * @return
     */
     Pointer relabelFaces(Mesh::Pointer mesh,
-                         DataArray<int32_t>* masterFaceListPtr,
+      DataArray<int32_t>::Pointer masterFaceListPtr,
                          const QVector<bool>& masterVisited)
     {
       size_t triangleIndex = *(m_Faces.begin());
@@ -166,7 +166,7 @@ class LabelVisitorInfo
      *
      * @param mesh
      */
-    void revertFaceLabels(DataArray<int32_t>* masterFaceListPtr)
+    void revertFaceLabels(DataArray<int32_t>::Pointer masterFaceListPtr)
     {
       int32_t* masterFaceList = masterFaceListPtr->getPointer(0);
 
@@ -214,6 +214,7 @@ VerifyTriangleWinding::VerifyTriangleWinding() :
   m_EdgeAttributeMatrixName(DREAM3D::HDF5::EdgeAttributeMatrixName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshNodeFacesArrayName(DREAM3D::VertexData::SurfaceMeshNodeFaces),
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_DoUniqueEdgesFilter(false),
   m_DoNodeFaceConnectivityFilter(false)
 {
@@ -290,11 +291,14 @@ void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t feat
     setErrorCondition(-385);
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
-  if (sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels).get() == NULL)
-  {
-    setErrorCondition(-386);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Face Feature Id Labels", getErrorCondition());
-  }
+
+  QVector<int> dims(1, 2);
+  m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { 
+    m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+
 
   if (sm->getAttributeMatrix(getEdgeAttributeMatrixName())->getAttributeArray(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
   {
@@ -330,8 +334,8 @@ void VerifyTriangleWinding::execute()
   int err = 0;
 
   setErrorCondition(err);
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == m)
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceDataContainer DataContainer Object was NULL", -999);
@@ -363,7 +367,7 @@ void VerifyTriangleWinding::execute()
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   bool clearMeshLinks = false;
-  FaceArray::Pointer facesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  FaceArray::Pointer facesPtr = sm->getFaces();
   if(facesPtr == NULL)
   {
     return;
@@ -371,7 +375,7 @@ void VerifyTriangleWinding::execute()
   if (NULL == facesPtr->getFacesContainingVert())
   {
     clearMeshLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
-    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFacesContainingVert();
+    sm->getFaces()->findFacesContainingVert();
   }
   if (getCancel() == true) { return; }
   bool clearFaceNeighbors = false;
@@ -390,7 +394,6 @@ void VerifyTriangleWinding::execute()
   // Clean up any arrays that were designated as temp
   if (m_DoUniqueEdgesFilter == true)
   {
-    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
     IDataArray::Pointer removedConnectviity = sm->getAttributeMatrix(getEdgeAttributeMatrixName())->removeAttributeArray(m_SurfaceMeshUniqueEdgesArrayName);
     BOOST_ASSERT(removedConnectviity.get() != NULL);
   }
@@ -420,17 +423,13 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t& trianglesToLabel
     return;
   }
 
-  IDataArray::Pointer flPtr = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
-
   int ntri = masterFaceList->getNumberOfTuples();
   //FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
 
   // Loop over all the triangles and group them according to which feature/region they are a part of
   for(int t = 0; t < ntri; ++t)
   {
-    int32_t* label = faceLabels + t * 2;
+    int32_t* label = m_SurfaceMeshFaceLabels + t * 2;
     trianglesToLabelMap[label[0]].insert(t);
     trianglesToLabelMap[label[1]].insert(t);
   }
@@ -446,10 +445,6 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
 
   VertexArray::Vert_t* verts = sm->getVertices()->getPointer(0);
   FaceArray::Face_t* triangles = sm->getFaces()->getPointer(0);
-
-  IDataArray::Pointer flPtr = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   float xMax = std::numeric_limits<float>::min();
   float avgX = 0.0f;
@@ -468,7 +463,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
   // Now we have the "right most" triangle based on x component of the centroid of the triangles for this label.
   // Lets now figure out if the normal points generally in the positive or negative X direction.
 
-  int32_t* faceLabel = faceLabels + seedFaceIdx * 2;
+  int32_t* faceLabel = m_SurfaceMeshFaceLabels + seedFaceIdx * 2;
   VectorType normal;
   if (faceLabel[0] == label)
   {
@@ -543,9 +538,6 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     return getErrorCondition();
   }
   FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
-  IDataArray::Pointer flPtr = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   int numFaces = masterFaceList->getNumberOfTuples();
 
@@ -563,10 +555,10 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   // Set the min and Max labels in the Mesh class;
   for(int n = 0; n < numFaces; ++n)
   {
-    int l = faceLabels[n * 2];
+    int l = m_SurfaceMeshFaceLabels[n * 2];
     if (l < min) { min = l;}
     if (l > max) { max = l;}
-    l = faceLabels[n * 2 + 1];
+    l = m_SurfaceMeshFaceLabels[n * 2 + 1];
     if (l < min) { min = l;}
     if (l > max) { max = l;}
   }
@@ -680,7 +672,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     {
       int32_t triangleIndex = triangleDeque.front();
       FaceArray::Face_t& triangle = triangles[triangleIndex];
-      int32_t* faceLabel = faceLabels + (triangleIndex * 2); // Here we are getting a new pointer offset from the start of the labels array
+      int32_t* faceLabel = m_SurfaceMeshFaceLabels + (triangleIndex * 2); // Here we are getting a new pointer offset from the start of the labels array
 
       //   qDebug() << " $ tIndex: " << triangleIndex << "\n";
       FaceArray::Pointer facesPtr = sm->getFaces();
@@ -689,10 +681,8 @@ int VerifyTriangleWinding::verifyTriangleWinding()
         break;
      }
       FaceArray::Face_t* faces = facesPtr->getPointer(0);
-      IDataArray::Pointer flPtr = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-      DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
 
-      std::vector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(facesPtr, triangleIndex, faceLabelsPtr, currentLabel);
+      QVector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(facesPtr, triangleIndex, m_SurfaceMeshFaceLabelsPtr.lock(), currentLabel);
 
       for (FaceList_t::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri)
       {
@@ -700,7 +690,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
         if (masterVisited[*adjTri] == false)
         {
           //    qDebug() << "   * Checking Winding: " << *adjTri << "\n";
-          if (TriangleOps::verifyWinding(triangle, triangles[*adjTri], faceLabel, faceLabels + (*adjTri * 2), currentLabel) == true)
+          if (TriangleOps::verifyWinding(triangle, triangles[*adjTri], faceLabel, m_SurfaceMeshFaceLabels + (*adjTri * 2), currentLabel) == true)
           {
             //   qDebug() << "Face winding flipped for triangle id = " << *adjTri << " Feature Id: " << currentLabel << "\n";
           }
@@ -739,7 +729,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     for (QMap<int32_t, int32_t>::iterator neigh = neighborlabels.begin(); neigh != neighborlabels.end(); ++neigh )
     {
       int32_t triangleIndex = neigh.value();
-      int32_t* triangleLabel = faceLabels + triangleIndex * 2;
+      int32_t* triangleLabel = m_SurfaceMeshFaceLabels + triangleIndex * 2;
 
       if ( labelsToVisitSet.find(triangleLabel[0]) == labelsToVisitSet.end()
            && (labelsVisitedSet.find(triangleLabel[0]) == labelsVisitedSet.end() ) )
@@ -772,7 +762,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
       //  qDebug() << "    No Faces remain to be visited for label " << "\n";
       // If this currentLabel was the result of a "relabeling" then revert back to the original
       // label for those triangles.
-      curLdo->revertFaceLabels(faceLabelsPtr);
+      curLdo->revertFaceLabels(m_SurfaceMeshFaceLabelsPtr.lock());
     }
     else
     {
@@ -782,11 +772,11 @@ int VerifyTriangleWinding::verifyTriangleWinding()
       //      if (currentLabel == 28) {
       //        qDebug() << "break" << "\n";
       //      }
-      LabelVisitorInfo::Pointer p = curLdo->relabelFaces(mesh, faceLabelsPtr, masterVisited);
+      LabelVisitorInfo::Pointer p = curLdo->relabelFaces(mesh, m_SurfaceMeshFaceLabelsPtr.lock(), masterVisited);
       labelObjectsToVisit.push_back(p);
       labelsToVisitSet.insert(p->getLabel());
       // Revert the current labelVisitorObject to its original label
-      curLdo->revertFaceLabels(faceLabelsPtr);
+      curLdo->revertFaceLabels(m_SurfaceMeshFaceLabelsPtr.lock());
       //qDebug() << "    New label " << mesh->getMaxLabel() << " added to visit" << "\n";
     }
 
@@ -805,7 +795,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   //qDebug() << "labelsVisited.size() :" << labelsVisitedSet.size() << "\n";
 
 
-  QSet<int32_t> thelabels = TriangleOps::generateUniqueLabels(faceLabelsPtr);
+  QSet<int32_t> thelabels = TriangleOps::generateUniqueLabels(m_SurfaceMeshFaceLabelsPtr.lock());
   for (STDEXT::hash_set<int32_t>::iterator iter = labelsVisitedSet.begin(); iter != labelsVisitedSet.end(); ++iter )
   {
     thelabels.remove(*iter);

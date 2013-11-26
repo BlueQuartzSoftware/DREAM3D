@@ -46,6 +46,8 @@
 SharedFeatureFaceFilter::SharedFeatureFaceFilter() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFeatureFaceIdArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId)
 {
   setupFilterParameters();
@@ -120,10 +122,15 @@ void SharedFeatureFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fe
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
+    QVector<int> dims(1, 2);
+    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   // List any arrays that are created during this filter
   QVector<int> dims(1, 1);
   Int32ArrayType::Pointer featureFaceId = Int32ArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
-  sm->addFaceData(DREAM3D::FaceData::SurfaceMeshFeatureFaceId, featureFaceId);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(DREAM3D::FaceData::SurfaceMeshFeatureFaceId, featureFaceId);
 }
 
 
@@ -150,8 +157,8 @@ void SharedFeatureFaceFilter::execute()
   int err = 0;
 
   setErrorCondition(err);
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == m)
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
@@ -162,13 +169,9 @@ void SharedFeatureFaceFilter::execute()
 
   /* Place all your code to execute your filter here. */
 
-  FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  FaceArray::Pointer trianglesPtr = sm->getFaces();
 //  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
   size_t totalPoints = trianglesPtr->getNumberOfTuples();
-
-  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   Int32ArrayType::Pointer featureFaceId = Int32ArrayType::CreateArray(trianglesPtr->getNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
   featureFaceId->initializeWithZeros();
@@ -184,8 +187,8 @@ void SharedFeatureFaceFilter::execute()
   // Loop through all the Triangles and figure out how many triangles we have in each one.
   for(size_t t = 0; t < totalPoints; ++t)
   {
-    fl0 = faceLabels[t * 2];
-    fl1 = faceLabels[t * 2 + 1];
+    fl0 = m_SurfaceMeshFaceLabels[t * 2];
+    fl1 = m_SurfaceMeshFaceLabels[t * 2 + 1];
     if (fl0 < fl1)
     {
       faceId.g = fl0;
@@ -249,7 +252,7 @@ void SharedFeatureFaceFilter::execute()
 
   m_SharedFeatureFaces = faces;
 
-  getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addFaceData(DREAM3D::FaceData::SurfaceMeshFeatureFaceId, featureFaceId);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(DREAM3D::FaceData::SurfaceMeshFeatureFaceId, featureFaceId);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

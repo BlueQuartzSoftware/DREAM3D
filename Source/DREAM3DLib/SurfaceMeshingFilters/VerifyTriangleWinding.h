@@ -153,6 +153,8 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
 
 
   private:
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+
     bool m_DoUniqueEdgesFilter;
     bool m_DoNodeFaceConnectivityFilter;
 

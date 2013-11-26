@@ -65,7 +65,7 @@ class TriangleOps
 
     static VectorType computeNormal(VertexArray::Vert_t& n0, VertexArray::Vert_t& n1, VertexArray::Vert_t& n2);
 
-    static QSet<int32_t> generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr);
+    static QSet<int32_t> generateUniqueLabels(DataArray<int32_t>::Pointer faceLabelsPtr);
 
     static QVector<int32_t> findAdjacentTriangles(FaceArray::Pointer facesPtr,
                                                     int32_t triangleIndex,

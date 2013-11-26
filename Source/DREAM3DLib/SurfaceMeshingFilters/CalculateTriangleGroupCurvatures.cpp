@@ -62,7 +62,9 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
     DoubleArrayType::Pointer principleDirection2,
     DoubleArrayType::Pointer gaussianCurvature,
     DoubleArrayType::Pointer meanCurvature,
-    SurfaceDataContainer* sm,
+    DataArray<int32_t>::Pointer surfaceMeshFaceLabels,
+    DataArray<double>::Pointer surfaceMeshFaceNormals,
+    DataArray<double>::Pointer surfaceMeshTriangleCentroids,
     AbstractFilter* parent):
   m_NRing(nring),
   m_TriangleIds(triangleIds),
@@ -73,7 +75,9 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
   m_PrincipleDirection2(principleDirection2),
   m_GaussianCurvature(gaussianCurvature),
   m_MeanCurvature(meanCurvature),
-  m_SurfaceDataContainer(sm),
+  m_SurfaceMeshFaceLabels(surfaceMeshFaceLabels),
+  m_SurfaceMeshFaceNormals(surfaceMeshFaceNormals),
+  m_SurfaceMeshTriangleCentroids(surfaceMeshTriangleCentroids),
   m_ParentFilter(parent)
 {
 
@@ -114,31 +118,10 @@ void CalculateTriangleGroupCurvatures::operator()() const
 //  FaceArray::Pointer trianglesPtr = m_SurfaceDataContainer->getFaces();
 //  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
 
-  IDataArray::Pointer flPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
-
   // Instantiate a FindNRingNeighbors class to use during the loop
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
 
-  // Make Sure we have triangle centroids calculated
-  IDataArray::Pointer centroidPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceCentroids);
-  if (NULL == centroidPtr.get())
-  {
-    qDebug() << "Triangle Centroids are required for this algorithm" << "\n";
-    return;
-  }
-  DataArray<double>* centroids = DataArray<double>::SafePointerDownCast(centroidPtr.get());
-
-  // Make sure we have triangle normals calculated
-  IDataArray::Pointer normalPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceNormals);
-  if (NULL == normalPtr.get())
-  {
-    qDebug() << "Triangle Normals are required for this algorithm" << "\n";
-    return;
-  }
-  DataArray<double>* normals = DataArray<double>::SafePointerDownCast(normalPtr.get());
-
+  int32_t* faceLabels = m_SurfaceMeshFaceLabels->getPointer(0);
 
   int32_t* fl = faceLabels + m_TriangleIds[0] * 2;
   int feature0 = 0;
@@ -175,8 +158,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
     FaceArray::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     BOOST_ASSERT(triPatch.size() > 1);
 
-    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->getPointer(0), QString("Patch_Centroids"));
-    DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->getPointer(0), QString("Patch_Normals"));
+    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, m_SurfaceMeshTriangleCentroids->getPointer(0), QString("Patch_Centroids"));
+    DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, m_SurfaceMeshFaceNormals->getPointer(0), QString("Patch_Normals"));
 
     // Translate the patch to the 0,0,0 origin
     double sub[3] = {patchCentroids->GetComponent(0, 0), patchCentroids->GetComponent(0, 1), patchCentroids->GetComponent(0, 2)};
