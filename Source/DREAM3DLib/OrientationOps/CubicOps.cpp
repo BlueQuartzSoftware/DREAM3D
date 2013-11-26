@@ -1185,7 +1185,7 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArray
     serial.generate(0, nOrientations);
   }
 
-#if 1
+#if 0
   float* a = xyz001->GetPointer(0);
   for(size_t i = 0; i < nOrientations * Detail::CubicHigh::symSize0 * 3; i++)
   {
