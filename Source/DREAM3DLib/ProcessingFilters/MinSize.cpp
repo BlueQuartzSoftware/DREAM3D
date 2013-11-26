@@ -60,12 +60,10 @@ MinSize::MinSize() :
   m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_MinAllowedFeatureSize(1),
   m_FeatureIds(NULL),
   m_Active(NULL),
-  m_CellPhases(NULL),
   m_FeaturePhases(NULL)
 {
   setupFilterParameters();
