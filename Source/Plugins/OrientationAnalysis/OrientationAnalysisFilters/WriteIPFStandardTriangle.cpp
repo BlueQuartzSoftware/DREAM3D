@@ -120,9 +120,9 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     parameter->setValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Hexagonal-High 6/mmm");
-    choices.push_back("Cubic Cubic-High m3m");
+    choices.push_back("Cubic-High m3m");
     choices.push_back("Hexagonal-Low 6/m");
-    choices.push_back("Cubic Cubic-Low m3 (Tetrahedral)");
+    choices.push_back("Cubic-Low m3 (Tetrahedral)");
     choices.push_back("TriClinic -1");
     choices.push_back("Monoclinic 2/m");
     choices.push_back("OrthoRhombic mmm");
@@ -274,7 +274,7 @@ void WriteIPFStandardTriangle::execute()
     case Ebsd::CrystalStructure::Cubic_High : // 1; //!< Cubic Cubic-High m3m
       rgbaImage = cubic->generateIPFTriangleLegend(getImageSize());
       image = convertToQImage(rgbaImage);
-      overlayText(image, "[111]", "[101]", "[001]", "Cubic m-3m");
+      image = overlayText(image, "[111]", "[101]", "[001]", "Cubic m-3m");
       break;
     case Ebsd::CrystalStructure::Hexagonal_Low : // 2; //!< Hexagonal-Low 6/m
       //   rgbaImage = cubicLow->generateIPFTriangleLegend(getImageSize());
@@ -415,7 +415,7 @@ QImage WriteIPFStandardTriangle::overlayText(QImage image, QString l0, QString l
   painter.setFont(font);
   QFontMetrics metrics = painter.fontMetrics();
 
-  // Draw the Figure into the upper left of the enlarged image so all the extra space is at the bottom
+  // Draw the Figure into the center of image so all the extra space is at the bottom
   QPoint point(yMargin / 2, 0);
   painter.drawImage(point, image);
 
@@ -439,10 +439,12 @@ QImage WriteIPFStandardTriangle::overlayText(QImage image, QString l0, QString l
   painter.drawText( 10, pImageHeight - fontHeight, label);
 
 
-  label = title; // QString("Cubic m-3m");
+  label = title;
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
   painter.drawText( 10, fontHeight * 1.10, label);
+
+  painter.end();
 
   return pImage;
 }

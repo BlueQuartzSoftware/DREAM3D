@@ -8,6 +8,7 @@ namespace UnitTest
 {
 
   const std::string DataDir("@DREAM3D_DATA_DIR@");
+  const std::string DREAM3DTest_BINARY_DIR("@DREAM3DTest_BINARY_DIR@");
 
   // -----------------------------------------------------------------------------
   //  Define where to put our temporary files for the H5Utilities Test
