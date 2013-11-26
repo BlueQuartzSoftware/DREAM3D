@@ -62,6 +62,7 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeFacesArrayName)

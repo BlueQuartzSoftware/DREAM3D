@@ -128,7 +128,7 @@ void SharedFeatureFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fe
 { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // List any arrays that are created during this filter
-  QVector<int> dims(1, 1);
+  dims[0] = 1;
   Int32ArrayType::Pointer featureFaceId = Int32ArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
   sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(DREAM3D::FaceData::SurfaceMeshFeatureFaceId, featureFaceId);
 }

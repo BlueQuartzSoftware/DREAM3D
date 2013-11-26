@@ -20,7 +20,6 @@ set(DREAM3DLib_HDF5_HDRS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrimaryStatsDataDelegate.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataDelegate.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5TransformationStatsDataDelegate.h
-  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/VTKH5Constants.h
 
 )
@@ -34,7 +33,6 @@ set(DREAM3DLib_HDF5_SRCS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrimaryStatsDataDelegate.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataDelegate.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5TransformationStatsDataDelegate.cpp
-  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelReader.cpp
 
 )
 

@@ -62,6 +62,8 @@ class DREAM3DLib_EXPORT SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
 
     virtual ~SurfaceMeshToNodesTrianglesEdges();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputNodesFile);
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputEdgesFile);
@@ -124,6 +126,8 @@ class DREAM3DLib_EXPORT SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
 
     SurfaceMeshToNodesTrianglesEdges(const SurfaceMeshToNodesTrianglesEdges&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshToNodesTrianglesEdges&); // Operator '=' Not Implemented

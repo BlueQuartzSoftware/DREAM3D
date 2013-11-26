@@ -212,6 +212,7 @@ VerifyTriangleWinding::VerifyTriangleWinding() :
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
   m_EdgeAttributeMatrixName(DREAM3D::HDF5::EdgeAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshNodeFacesArrayName(DREAM3D::VertexData::SurfaceMeshNodeFaces),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
@@ -354,6 +355,9 @@ void VerifyTriangleWinding::execute()
     conn->setObservers(getObservers());
     conn->setSurfaceMeshUniqueEdgesArrayName(getSurfaceMeshUniqueEdgesArrayName());
     conn->setDataContainerArray(getDataContainerArray());
+    conn->setSurfaceDataContainerName(getSurfaceDataContainerName());
+    conn->setEdgeAttributeMatrixName(getEdgeAttributeMatrixName());
+    conn->setVertexAttributeMatrixName(getVertexAttributeMatrixName());
     conn->execute();
     if(conn->getErrorCondition() < 0)
     {

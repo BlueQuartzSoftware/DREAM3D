@@ -54,6 +54,8 @@ typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 GenerateUniqueEdges::GenerateUniqueEdges() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_EdgeAttributeMatrixName(DREAM3D::HDF5::EdgeAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshUniqueEdges(NULL)
 {
@@ -134,7 +136,7 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t featur
   // the needed methods that will propagate these array additions to the pipeline
   QVector<int> dims(1, 2);
   DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, dims, m_SurfaceMeshUniqueEdgesArrayName);
-  sm->addEdgeData(m_SurfaceMeshUniqueEdgesArrayName, uniqueEdgesArray);
+  sm->getAttributeMatrix(getEdgeAttributeMatrixName())->addAttributeArray(m_SurfaceMeshUniqueEdgesArrayName, uniqueEdgesArray);
 }
 
 
@@ -161,8 +163,8 @@ void GenerateUniqueEdges::execute()
   int err = 0;
 
   setErrorCondition(err);
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == m)
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
@@ -244,7 +246,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
     surfaceMeshUniqueEdges[index * 2 + 1] = edge.v1;
     ++index;
   }
-  sm->addEdgeData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
+  sm->getAttributeMatrix(getEdgeAttributeMatrixName())->addAttributeArray(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
 }
 
 
@@ -261,7 +263,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
   notifyStatusMessage("Generating edge list for mesh. Stage 1 of 2");
   // Get our Reference counted Array of Triangle Structures
-  FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  FaceArray::Pointer trianglesPtr = sm->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -404,8 +407,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   }
 
   // Finally push both the arrays into the Data Container for the pipeline
-  getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addVertexData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
-  getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addVertexData(edgeTriangleArray->GetName(), edgeTriangleArray);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(edgeTriangleArray->GetName(), edgeTriangleArray);
 
   notifyStatusMessage("Complete");
   return;

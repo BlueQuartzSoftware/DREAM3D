@@ -30,7 +30,6 @@ set(_PublicFilters
   EnsembleInfoReader
   FeatureDataCSVWriter
   FeatureInfoReader
-  H5VoxelFileReader
   INLWriter
   LosAlamosFFTWriter
   NodesTrianglesToStl

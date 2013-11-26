@@ -11,7 +11,6 @@
 
 set(DREAM3DLib_VTKUtils_HDRS
   ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKFileReader.h
-  ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKFileWriters.hpp
   ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKWriterMacros.h
 )
 set(DREAM3DLib_VTKUtils_SRCS

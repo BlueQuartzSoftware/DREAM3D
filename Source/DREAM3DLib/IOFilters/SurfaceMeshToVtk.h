@@ -59,8 +59,10 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToVtk, AbstractFilter)
 
     virtual ~SurfaceMeshToVtk();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
     
    // DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 
@@ -131,7 +133,8 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 
 
   private:
-    int8_t*  m_SurfaceMeshNodeType;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
 
     SurfaceMeshToVtk(const SurfaceMeshToVtk&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshToVtk&); // Operator '=' Not Implemented

@@ -60,6 +60,8 @@ class DREAM3DLib_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
 
     virtual ~SurfaceMeshToNonconformalVtk();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     // DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 
@@ -129,6 +131,9 @@ class DREAM3DLib_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
 
 
   private:
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
+
     SurfaceMeshToNonconformalVtk(const SurfaceMeshToNonconformalVtk&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshToNonconformalVtk&); // Operator '=' Not Implemented
 };

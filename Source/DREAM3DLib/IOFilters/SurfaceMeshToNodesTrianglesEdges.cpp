@@ -49,6 +49,10 @@
 SurfaceMeshToNodesTrianglesEdges::SurfaceMeshToNodesTrianglesEdges() :
   AbstractFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
+  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_OutputNodesFile(""),
   m_OutputEdgesFile(""),
   m_OutputTrianglesFile("")
@@ -170,13 +174,14 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
     setErrorCondition(-385);
   }
 #endif
-  IDataArray::Pointer nodeKinds = sm->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
-  if (nodeKinds.get() == NULL)
-  {
-    setErrorCondition(-559);
-    notifyErrorMessage("SurfaceMesh DataContainer missing DREAM3D::VertexData::SurfaceMeshNodeType Array", -387);
-    return;
-  }
+    QVector<int> dims(1, 2);
+    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    dims[0] = 1;
+    m_SurfaceMeshNodeTypePtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 
@@ -213,15 +218,16 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  dataCheck(false, 1, 1, 1);
+  VertexArray::Pointer nodes = sm->getVertices();
+  FaceArray::Pointer triangles = sm->getFaces();
+
+  int64_t numNodes = nodes->getNumberOfTuples();
+  int64_t numTriangles = triangles->getNumberOfTuples();
+  dataCheck(false, numNodes, numTriangles, 1);
   if (getErrorCondition() < 0)
   {
     return;
   }
-
-  VertexArray::Pointer nodes = sm->getVertices();
-  FaceArray::Pointer triangles = sm->getFaces();
-  IDataArray::Pointer nodeKinds = sm->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
 
 #if WRITE_EDGES_FILE
   IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
@@ -255,13 +261,11 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  int numNodes = nodes->getNumberOfTuples();
   fprintf(nodesFile, "%d\n", numNodes);
   VertexArray::Vert_t* v = nodes->getPointer(0);
-  int8_t* nodeKind = reinterpret_cast<int8_t*>(nodeKinds->GetVoidPointer(0));
   for (int i = 0; i < numNodes; i++)
   {
-    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(nodeKind[i]), v[i].pos[0], v[i].pos[1], v[i].pos[2]);
+    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(m_SurfaceMeshNodeType[i]), v[i].pos[0], v[i].pos[1], v[i].pos[2]);
   }
   fclose(nodesFile);
 
@@ -338,15 +342,8 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  size_t numTriangles = triangles->getNumberOfTuples();
   fprintf(triFile, "%lu\n", numTriangles);
   FaceArray::Face_t* t = triangles->getPointer(0);
-
-
-  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
-
 
   int n1, n2, n3, e1 = -1, e2 = -1, e3 = -1;
   for (size_t j = 0; j < numTriangles; ++j)
@@ -362,7 +359,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     <<< <<< <<< < #error FIX THIS CODE BELOW. WE PROBABLY NEED TO GENERATE THE EDGE INFORMATION IF NEEDED
 #endif
 
-    fprintf(triFile, "%10lu    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", j, n1, n2, n3, e1, e2, e3, faceLabels[j * 2], faceLabels[j * 2 + 1]);
+    fprintf(triFile, "%10lu    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", j, n1, n2, n3, e1, e2, e3, m_SurfaceMeshFaceLabels[j * 2], m_SurfaceMeshFaceLabels[j * 2 + 1]);
   }
 
   fclose(triFile);

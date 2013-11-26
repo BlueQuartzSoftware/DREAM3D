@@ -47,6 +47,8 @@
 GenerateSurfaceMeshConnectivity::GenerateSurfaceMeshConnectivity() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_EdgeAttributeMatrixName(DREAM3D::HDF5::EdgeAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
   m_GenerateVertexTriangleLists(true),
   m_GenerateTriangleNeighbors(true),
   m_GenerateEdgeIdList(false)
@@ -208,6 +210,9 @@ void GenerateSurfaceMeshConnectivity::execute()
     conn->setMessagePrefix(ss);
     conn->setObservers(getObservers());
     conn->setDataContainerArray(getDataContainerArray());
+    conn->setSurfaceDataContainerName(getSurfaceDataContainerName());
+    conn->setEdgeAttributeMatrixName(getEdgeAttributeMatrixName());
+    conn->setVertexAttributeMatrixName(getVertexAttributeMatrixName());
     conn->execute();
     if(conn->getErrorCondition() < 0)
     {

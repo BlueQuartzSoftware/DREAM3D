@@ -65,6 +65,9 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 
     virtual ~LaplacianSmoothing();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     // We need these arrays for this filter to work correctly
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)

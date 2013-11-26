@@ -51,6 +51,8 @@
 SurfaceMeshToStl::SurfaceMeshToStl() :
   AbstractFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_OutputStlDirectory(""),
   m_OutputStlPrefix("")
 {
@@ -138,6 +140,11 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t features,
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
     setErrorCondition(-384);
   }
+    QVector<int> dims(1, 2);
+    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+{ m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
 }
 
 
@@ -172,12 +179,6 @@ void SurfaceMeshToStl::execute()
     return;
   }
 
-  dataCheck(false, 1, 1, 1);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QDir stlDir(getOutputStlDirectory());
@@ -192,19 +193,22 @@ void SurfaceMeshToStl::execute()
 
   VertexArray& nodes = *(sm->getVertices());
   FaceArray& triangles = *(sm->getFaces());
-  // Get the Labels(FeatureIds or Region Ids) for the triangles
-  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   int nTriangles = triangles.getNumberOfTuples();
+  dataCheck(false, 0, nTriangles, 0);
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+
+
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
-    uniqueSpins.insert(faceLabels[i * 2]);
-    uniqueSpins.insert(faceLabels[i * 2 + 1]);
+    uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2]);
+    uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2 + 1]);
   }
 
   unsigned char data[50];
@@ -256,11 +260,11 @@ void SurfaceMeshToStl::execute()
       vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
       vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
 
-      if (faceLabels[t * 2] == spin)
+      if (m_SurfaceMeshFaceLabels[t * 2] == spin)
       {
         winding = 0; // 0 = Write it using forward spin
       }
-      else if (faceLabels[t * 2 + 1] == spin)
+      else if (m_SurfaceMeshFaceLabels[t * 2 + 1] == spin)
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices

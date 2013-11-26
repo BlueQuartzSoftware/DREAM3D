@@ -152,6 +152,9 @@ class LaplacianSmoothingImpl
 LaplacianSmoothing::LaplacianSmoothing() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_EdgeAttributeMatrixName(DREAM3D::HDF5::EdgeAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_IterationSteps(1),
   m_Lambda(0.1),
@@ -321,7 +324,7 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t feature
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
-  if (sm->getEdgeData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
+  if (sm->getAttributeMatrix(getEdgeAttributeMatrixName())->getAttributeArray(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
   {
     m_DoConnectivityFilter = true;
   }
@@ -439,15 +442,16 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 {
   int err = 0;
 
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   //
-  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
+  VertexArray::Pointer nodesPtr = sm->getVertices();
   int nvert = nodesPtr->getNumberOfTuples();
   VertexArray::Vert_t* vsm = nodesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
-  IDataArray::Pointer iNodeTypePtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
+  IDataArray::Pointer iNodeTypePtr = sm->getAttributeMatrix(getVertexAttributeMatrixName())->getAttributeArray(DREAM3D::VertexData::SurfaceMeshNodeType);
 
   if (NULL == iNodeTypePtr.get() )
   {
@@ -484,6 +488,9 @@ int LaplacianSmoothing::edgeBasedSmoothing()
     conn->setMessagePrefix(ss);
     conn->setObservers(getObservers());
     conn->setDataContainerArray(getDataContainerArray());
+    conn->setSurfaceDataContainerName(getSurfaceDataContainerName());
+    conn->setEdgeAttributeMatrixName(getEdgeAttributeMatrixName());
+    conn->setVertexAttributeMatrixName(getVertexAttributeMatrixName());
     conn->setSurfaceMeshUniqueEdgesArrayName(getSurfaceMeshUniqueEdgesArrayName());
     conn->execute();
     if(conn->getErrorCondition() < 0)
@@ -496,7 +503,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   notifyStatusMessage("Starting to Smooth Vertices");
   // Get the unique Edges from the data container
 
-  IDataArray::Pointer uniqueEdgesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
+  IDataArray::Pointer uniqueEdgesPtr = sm->getAttributeMatrix(getEdgeAttributeMatrixName())->getAttributeArray(m_SurfaceMeshUniqueEdgesArrayName);
   DataArray<int32_t>* uniqueEdges = DataArray<int32_t>::SafePointerDownCast(uniqueEdgesPtr.get());
   if (NULL == uniqueEdges)
   {
@@ -571,7 +578,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   // This filter had to generate the edge connectivity data so delete it when we are done with it.
   if (m_DoConnectivityFilter == true)
   {
-    IDataArray::Pointer removedConnectviity = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->removeEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
+    IDataArray::Pointer removedConnectviity = sm->getAttributeMatrix(getEdgeAttributeMatrixName())->removeAttributeArray(m_SurfaceMeshUniqueEdgesArrayName);
     BOOST_ASSERT(removedConnectviity.get() != NULL);
   }
 
@@ -586,15 +593,16 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 {
   int err = 0;
 
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   // Convert the 32 bit float Nodes into 64 bit floating point nodes.
-  VertexArray::Pointer vertsPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
+  VertexArray::Pointer vertsPtr = sm->getVertices();
   int numVerts = vertsPtr->getNumberOfTuples();
   //  VertexArray::Vert_t* vertices = vertsPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  FaceArray::Pointer facesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  FaceArray::Pointer facesPtr = sm->getFaces();
   if(facesPtr == NULL)
   {
     return -1;
@@ -602,14 +610,14 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   Int32DynamicListArray::Pointer MeshLinks = facesPtr->getFacesContainingVert();
   if (NULL == MeshLinks.get())
   {
-    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFacesContainingVert();
+    sm->getFaces()->findFacesContainingVert();
   }
 
   //  FaceArray::Face_t* faces = facesPtr->getPointer(0);
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
-  IDataArray::Pointer iNodeTypePtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
+  IDataArray::Pointer iNodeTypePtr = sm->getAttributeMatrix(getVertexAttributeMatrixName())->getAttributeArray(DREAM3D::VertexData::SurfaceMeshNodeType);
 
   if (NULL == iNodeTypePtr.get() )
   {
@@ -708,13 +716,13 @@ namespace Detail
 void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
 {
 
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  /* Place all your code to execute your filter here. */
-  VertexArray& nodes = *(m->getVertices());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  /* Place all your code to execute your filter here. */
+  VertexArray& nodes = *(sm->getVertices());
   int nNodes = nodes.getNumberOfTuples();
   bool m_WriteBinaryFile = true;
 
 
-  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArray(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
@@ -774,7 +782,7 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  FaceArray& triangles = *(m->getFaces());
+  FaceArray& triangles = *(sm->getFaces());
   int triangleCount = 0;
   int end = triangles.getNumberOfTuples();
   int featureInterest = 9;

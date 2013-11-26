@@ -47,7 +47,6 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
 
 /**
@@ -71,29 +70,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
     virtual ~VtkRectilinearGridWriter();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
                                         
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteParentIds)
-    DREAM3D_INSTANCE_PROPERTY(bool, WritePhaseIds)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteBandContrasts)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteConfidenceIndicies)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteImageQualities)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteGlobAlpha)
-    //DREAM3D_INSTANCE_PROPERTY(bool, WriteRodriguesGAMColors)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureReferenceMisorientations)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureReferenceCAxisMisorientations)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteKernelAverageMisorientations)
-    //DREAM3D_INSTANCE_PROPERTY(bool, WriteIPFColors)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteGBEuclideanDistanceMap)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteTJEuclideanDistanceMap)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteQPEuclideanDistanceMap)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteSchmidFactors)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureSizes)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteEulerAngles)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
 
 
@@ -244,31 +223,11 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, ParentIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, BC)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GlobAlpha)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ImageQuality)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ConfidenceIndex)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, TJEuclideanDistances)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, QPEuclideanDistances)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceRotations)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceMisorientations)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceCAxisMisorientations)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, KernelAverageMisorientations)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Schmids)
-
 
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
 
-
     int write(const QString& file, VolumeDataContainer* r, std::vector<VtkScalarWriter*>& scalars);
-
 };
 
 #endif /* VTKRECTILINEARGRIDWRITER_H_ */

@@ -192,3 +192,12 @@ int DataContainer::writeAttributeMatricesToHDF5(hid_t parentId)
   }
   return 0;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainer::writeMeshToHDF5(hid_t dcGid)
+{
+  BOOST_ASSERT(false);
+  return -1;
+}

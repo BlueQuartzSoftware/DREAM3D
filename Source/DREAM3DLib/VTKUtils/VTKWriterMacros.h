@@ -89,24 +89,24 @@
 
 
 
-#define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName, feature_indicies)\
+#define WRITE_VTK_FEATURE_IDS_ASCII(ptr, ScalarName, m_FeatureIds)\
   fprintf(f, "SCALARS %s int 1\n", ScalarName.toLatin1().data());\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
-    fprintf(f, "%d ", feature_indicies[i]);\
+    fprintf(f, "%d ", m_FeatureIds[i]);\
   }\
   fprintf(f, "\n");\
    
 
-#define WRITE_VTK_GRAIN_IDS_BINARY(ptr, ScalarName)  \
+#define WRITE_VTK_FEATURE_IDS_BINARY(ptr, ScalarName)  \
   fprintf(f, "SCALARS %s int 1\n", ScalarName.toLatin1().data());\
   fprintf(f, "LOOKUP_TABLE default\n"); \
   { \
     int* gn = new int[totalPoints];\
     int t;\
     for (int64_t i = 0; i < totalPoints; i++) {\
-      t = feature_indicies[i];\
+      t = m_FeatureIds[i];\
       DREAM3D::Endian::FromSystemToBig::convert(t);\
       gn[i] = t; \
     }\
