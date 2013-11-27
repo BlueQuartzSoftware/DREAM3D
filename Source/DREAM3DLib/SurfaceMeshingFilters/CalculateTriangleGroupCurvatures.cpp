@@ -155,7 +155,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->setRegionId1(feature1);
     nRingNeighborAlg->setRing(m_NRing);
     nRingNeighborAlg->setSurfaceDataContainer(m_SurfaceDataContainer);
-    nRingNeighborAlg->generate();
+    nRingNeighborAlg->generate(faceLabels);
 
     FaceArray::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     BOOST_ASSERT(triPatch.size() > 1);

@@ -82,7 +82,7 @@ FaceArray::UniqueFaceIds_t& FindNRingNeighbors::getNRingTriangles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::generate()
+void FindNRingNeighbors::generate(int32_t* faceLabels)
 {
   BOOST_ASSERT(m_SurfaceDataContainer != NULL);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
@@ -105,11 +105,6 @@ void FindNRingNeighbors::generate()
     sm->getFaces()->findFacesContainingVert();
     node2TrianglePtr = sm->getFaces()->getFacesContainingVert();
   }
-
-  IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
-
 
   // Figure out these boolean values for a sanity check
   bool check0 = faceLabels[m_TriangleId * 2] == m_RegionId0 && faceLabels[m_TriangleId * 2 + 1] == m_RegionId1;
