@@ -239,7 +239,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     DREAM3D_INSTANCE_PROPERTY(size_t, NumTuples)
 
     virtual int writeAttributeArraysToHDF5(hid_t parentId);
-    virtual int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QSet<QString>& namesToRead);
+    virtual int readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QSet<QString>& namesToRead);
     virtual QString generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName);
 
     protected:

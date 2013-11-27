@@ -68,9 +68,6 @@ class WritePoleFigure : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-            DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    
-
     DREAM3D_INSTANCE_STRING_PROPERTY(ImagePrefix)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
     DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
@@ -176,9 +173,10 @@ class WritePoleFigure : public AbstractFilter
     QImage paintPoleFigureOverlay(int imageWidth, int imageHeight, QString label, QImage image);
 
   private:
-    float* m_CellEulerAngles;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     WritePoleFigure(const WritePoleFigure&); // Copy Constructor Not Implemented
     void operator=(const WritePoleFigure&); // Operator '=' Not Implemented

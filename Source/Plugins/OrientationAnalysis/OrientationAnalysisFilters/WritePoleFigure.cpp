@@ -90,18 +90,18 @@
 WritePoleFigure::WritePoleFigure() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
   m_ImageSize(512),
   m_LambertSize(32),
   m_NumColors(32),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   setupFilterParameters();
@@ -257,17 +257,29 @@ void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t features, 
   {
     QVector<int> dims(1, 3);
     m_CellEulerAnglesPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 1;
     m_CellPhasesPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     typedef DataArray<unsigned int> XTalStructArrayType;
-    m_CrystalStructuresPtr = m->getPrereqArray<unsigned int, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_CrystalStructuresPtr = m->getPrereqArray<uint32_t, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
+
+  // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
+  QVector<int> dims(1, 1);
+  m_GoodVoxelsPtr = m->getPrereqArray<bool, WritePoleFigure>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -304, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(NULL != m_GoodVoxelsPtr.lock().get()) {
+    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
+  else
+  {
+    m_GoodVoxels= NULL;
   }
 
 }
@@ -328,26 +340,23 @@ void WritePoleFigure::execute()
     return;
   }
 
-
-  bool* m_GoodVoxels;
-  BoolArrayType* goodVoxels = NULL;
-  bool missingGoodVoxels = false;
-  IDataArray::Pointer gvPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_GoodVoxelsArrayName);
-
-  if (m->getCellData(m_GoodVoxelsArrayName).get() == NULL)
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  dataCheck(false, totalPoints, 0, totalEnsembles);
+  if (getErrorCondition() < 0)
   {
-    missingGoodVoxels = true;
-  }
-  else
-  {
-    goodVoxels = BoolArrayType::SafePointerDownCast(gvPtr.get());
-    m_GoodVoxels = goodVoxels->getPointer(0);
+    return;
   }
 
+  bool missingGoodVoxels = true;
+
+  if (NULL != m_GoodVoxels)
+  {
+    missingGoodVoxels = false;
+  }
   // Find how many phases we have by getting the number of Crystal Structures
-  IDataArray::Pointer crystalStructures = m->getCellEnsembleData(m_CrystalStructuresArrayName);
   int64_t numPoints = m->getTotalPoints();
-  int numPhases = crystalStructures->getNumberOfTuples();
+  int numPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
   size_t count = 0;
   // Loop over all the voxels gathering the Eulers for a specific phase into an array
   for(int phase = 1; phase < numPhases; ++phase)
