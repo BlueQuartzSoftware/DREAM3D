@@ -43,11 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 RemoveArrays::RemoveArrays() :
-  AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_EdgeDataContainerName(DREAM3D::HDF5::EdgeDataContainerName),
-  m_VertexDataContainerName(DREAM3D::HDF5::VertexDataContainerName)
+  AbstractFilter()
 {
   setupFilterParameters();
 }
@@ -65,13 +61,6 @@ RemoveArrays::~RemoveArrays()
 void RemoveArrays::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Arrays to Delete");
-    parameter->setPropertyName("ArraysToDelete");
-    parameter->setWidgetType(FilterParameter::ArraySelectionWidget);
-    parameters.push_back(parameter);
-  }
 
   setFilterParameters(parameters);
 }
@@ -82,27 +71,6 @@ void RemoveArrays::setupFilterParameters()
 void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  READ_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-      READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-      READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
-      READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-      READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-      READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
-
-      READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-      READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-      READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-      READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-      READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
-
-      READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-      READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-      READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-      READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
-
-      READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-      READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-      READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
       reader->closeFilterGroup();
 }
 
@@ -112,27 +80,6 @@ void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, 
 int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-      WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-      WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
-      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
-
-      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
-
-      WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
-
-      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
       writer->closeFilterGroup();
   return ++index;
 }
@@ -143,111 +90,33 @@ int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  typedef QSet<QString> NameList_t;
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
+  for(MapOfAttributeMatrices_t::iterator iter = m_DataToRemove.begin(); iter != m_DataToRemove.end(); ++iter)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-  if (NULL != m)
-  {
-    AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
-    if(NULL != attrMatrix.get() ) {
-      for(NameList_t::iterator iter = m_SelectedVolumeCellArrays.begin(); iter != m_SelectedVolumeCellArrays.end(); ++iter)
-      {
-        attrMatrix->removeAttributeArray(*iter);
-      }
+    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(iter.key());
+    if(NULL == m)
+    {
+      setErrorCondition(-999);
+      notifyErrorMessage("The DataContainer Object was NULL", -999);
+      return;
     }
-    attrMatrix = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
-    if(NULL != attrMatrix.get() ) {
-      for(NameList_t::iterator iter = m_SelectedVolumeCellFeatureArrays.begin(); iter != m_SelectedVolumeCellFeatureArrays.end(); ++iter)
+    MapOfAttributeArrays_t mapOfArraysToRemove = iter.value();
+    for(MapOfAttributeArrays_t::iterator iter = mapOfArraysToRemove.begin(); iter != mapOfArraysToRemove.end(); ++iter)
+    {
+      AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(iter.key());
+      if(NULL == attrMatrix.get()) 
       {
-        attrMatrix->removeAttributeArray(*iter);
+        setErrorCondition(-999);
+        notifyErrorMessage("The AttributeMatrix Object was NULL", -999);
+        return;
       }
-    }
-    attrMatrix = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
-    if(NULL != attrMatrix.get() ) {
-      for(NameList_t::iterator iter = m_SelectedVolumeCellEnsembleArrays.begin(); iter != m_SelectedVolumeCellEnsembleArrays.end(); ++iter)
+      QSet<QString> arraysToRemove = iter.value();
+      foreach (const QString &value, arraysToRemove)
       {
-        attrMatrix->removeAttributeArray(*iter);
+        attrMatrix->removeAttributeArray(value);
       }
     }
   }
-
-
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-  if (NULL != sm)
-  {
-    for(NameList_t::iterator iter = m_SelectedSurfaceVertexArrays.begin(); iter != m_SelectedSurfaceVertexArrays.end(); ++iter)
-    {
-      sm->removeVertexData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedSurfaceFaceArrays.begin(); iter != m_SelectedSurfaceFaceArrays.end(); ++iter)
-    {
-      sm->removeFaceData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedSurfaceEdgeArrays.begin(); iter != m_SelectedSurfaceEdgeArrays.end(); ++iter)
-    {
-      sm->removeEdgeData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedSurfaceFaceFeatureArrays.begin(); iter != m_SelectedSurfaceFaceFeatureArrays.end(); ++iter)
-    {
-      sm->removeFaceFeatureData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedSurfaceFaceEnsembleArrays.begin(); iter != m_SelectedSurfaceFaceEnsembleArrays.end(); ++iter)
-    {
-      sm->removeFaceEnsembleData(*iter);
-    }
-  }
-
-  EdgeDataContainer* e = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
-  if (NULL != e)
-  {
-    for(NameList_t::iterator iter = m_SelectedEdgeVertexArrays.begin(); iter != m_SelectedEdgeVertexArrays.end(); ++iter)
-    {
-      e->removeVertexData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedEdgeEdgeArrays.begin(); iter != m_SelectedEdgeEdgeArrays.end(); ++iter)
-    {
-      e->removeEdgeData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedEdgeEdgeFeatureArrays.begin(); iter != m_SelectedEdgeEdgeFeatureArrays.end(); ++iter)
-    {
-      e->removeEdgeFeatureData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedEdgeEdgeEnsembleArrays.begin(); iter != m_SelectedEdgeEdgeEnsembleArrays.end(); ++iter)
-    {
-      e->removeEdgeEnsembleData(*iter);
-    }
-  }
-
-  VertexDataContainer* v = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
-  if (NULL != v)
-  {
-    for(NameList_t::iterator iter = m_SelectedVertexVertexArrays.begin(); iter != m_SelectedVertexVertexArrays.end(); ++iter)
-    {
-      v->removeVertexData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedVertexVertexFeatureArrays.begin(); iter != m_SelectedVertexVertexFeatureArrays.end(); ++iter)
-    {
-      v->removeVertexFeatureData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedVertexVertexEnsembleArrays.begin(); iter != m_SelectedVertexVertexEnsembleArrays.end(); ++iter)
-    {
-      v->removeVertexEnsembleData(*iter);
-    }
-  }
-
 }
 
 
@@ -269,79 +138,9 @@ void RemoveArrays::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The Volume DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
+
   // Simply running the preflight will do what we need it to.
   dataCheck(false, 0, 0, 0);
   notifyStatusMessage("Complete");
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveArrays::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                               QSet<QString> selectedEdgeArrays,
-                                               QSet<QString> selectedFaceArrays,
-                                               QSet<QString> selectedCellArrays,
-                                               QSet<QString> selectedFeatureArrays,
-                                               QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedVolumeCellArrays = selectedVertexArrays;
-  m_SelectedVolumeCellArrays = selectedEdgeArrays;
-  m_SelectedVolumeCellArrays = selectedFaceArrays;
-  m_SelectedVolumeCellArrays = selectedCellArrays;
-  m_SelectedVolumeCellFeatureArrays = selectedFeatureArrays;
-  m_SelectedVolumeCellEnsembleArrays = selectedEnsembleArrays;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveArrays::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                QSet<QString> selectedEdgeArrays,
-                                                QSet<QString> selectedFaceArrays,
-                                                QSet<QString> selectedFeatureArrays,
-                                                QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedSurfaceVertexArrays = selectedVertexArrays;
-  m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
-  m_SelectedSurfaceFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceFaceFeatureArrays = selectedFeatureArrays;
-  m_SelectedSurfaceFaceEnsembleArrays = selectedEnsembleArrays;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveArrays::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                             QSet<QString> selectedEdgeArrays,
-                                             QSet<QString> selectedFeatureArrays,
-                                             QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedEdgeVertexArrays = selectedVertexArrays;
-  m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
-  m_SelectedEdgeEdgeFeatureArrays = selectedFeatureArrays;
-  m_SelectedEdgeEdgeEnsembleArrays = selectedEnsembleArrays;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveArrays::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                               QSet<QString> selectedFeatureArrays,
-                                               QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedVertexVertexArrays = selectedVertexArrays;
-  m_SelectedVertexVertexFeatureArrays = selectedFeatureArrays;
-  m_SelectedVertexVertexEnsembleArrays = selectedEnsembleArrays;
-}
-
-
-
 

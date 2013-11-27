@@ -45,10 +45,6 @@
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 
-#include "DREAM3DLib/HDF5/VTKH5Constants.h"
-#include "DREAM3DLib/HDF5/H5DataArrayReader.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -305,12 +301,15 @@ void DataContainerReader::readData(bool preflight)
       hid_t dcGid = H5Gopen(dcaGid, dcNames[iter].toLatin1().data(), H5P_DEFAULT );
       if (dcGid < 0)
       {
-        QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);
+        QString ss = QObject::tr("Error opening Group %1").arg(dcNames[iter]);
         setErrorCondition(-61);
         addErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
-      err = gatherData(preflight, dcGid, getDataContainerArray()->getDataContainer(dcNames[iter]));
+      MapOfAttributeMatrices_t::Iterator it = m_DataToRead.find(dcNames[iter]);
+      MapOfAttributeArrays_t arraysToRead = it.value();
+      getDataContainerArray()->getDataContainer(dcNames[iter])->readMeshDataFromHDF5(dcGid, preflight);
+      err = getDataContainerArray()->getDataContainer(dcNames[iter])->readAttributeMatricesFromHDF5(preflight, dcGid, arraysToRead);
       if(err < 0)
       {
         if(preflight == true)
@@ -328,115 +327,4 @@ void DataContainerReader::readData(bool preflight)
     err = H5Gclose(dcaGid);
     dcaGid = -1;
   }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DataContainerReader::gatherData(bool preflight, hid_t dcGid, DataContainer::Pointer dc)
-{
-  int err = 0;
-  unsigned int amType = DREAM3D::AttributeMatrixType::Unknown;
-
-  dc->readMeshDataFromHDF5(dcGid, preflight);
-
-  QList<QString> amNames;
-  err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, amNames);
-  for(int iter = 0; iter < amNames.size(); iter++)
-  {
-    amType = DREAM3D::AttributeMatrixType::Unknown;
-    err = QH5Lite::readScalarAttribute(dcGid, amNames[iter], DREAM3D::HDF5::AttributeMatrixType, amType);
-    if (err < 0)
-    {
-      setErrorCondition(-109283);
-      QString ss = QObject::tr("The AttributeMatrix is missing the 'AttirbuteMatrixType' attribute on the '%1' Attribute Matrix").arg(amNames[iter]);
-      notifyErrorMessage(ss, getErrorCondition());
-      return -1;
-    }
-
-    hid_t amGid = H5Gopen(dcGid, amNames[iter].toLatin1().data(), H5P_DEFAULT );
-    if (amGid < 0)
-    {
-      QString ss = QObject::tr("Error opening AttributeMatrix %1").arg(amNames[iter]);
-      setErrorCondition(-61);
-      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return -1;
-    }
-
-    AttributeMatrix::Pointer am = AttributeMatrix::New();
-    am->setAMType(amType);
-    dc->addAttributeMatrix(amNames[iter], am);
-
-    err |= readGroupsData(amGid, amNames[iter], am, preflight, readNames, cellArraysToRead, m_ReadAllCellArrays);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-  }
-
-  err |= H5Gclose(dcGid);
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DataContainerReader::readGroupsData(hid_t amGid, const QString& groupName, AttributeMatrix::Pointer am, 
-                                              bool preflight,
-                                              QVector<QString>& namesRead,
-                                              QSet<QString>& namesToRead,
-                                              bool readAllCurrentArrays)
-{
-  int err = 0;
-
-  QList<QString> names;
-  QH5Utilities::getGroupObjects(amGid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
-  //  qDebug() << "Number of Items in " << groupName << " Group: " << names.size() << "\n";
-  QString classType;
-  for (QList<QString>::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    QSet<QString>::iterator contains = namesToRead.find(*iter);
-    if (contains == namesToRead.end() && false == preflight && readAllCurrentArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
-    namesRead.push_back(*iter);
-    classType.clear();
-    QH5Lite::readStringAttribute(amGid, *iter, DREAM3D::HDF5::ObjectType, classType);
-    //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
-    IDataArray::Pointer dPtr = IDataArray::NullPointer();
-
-    if(classType.startsWith("DataArray") == true)
-    {
-      dPtr = H5DataArrayReader::readIDataArray(amGid, *iter, preflight);
-    }
-    else if(classType.compare("StringDataArray") == 0)
-    {
-      dPtr = H5DataArrayReader::readStringDataArray(amGid, *iter, preflight);
-    }
-    else if(classType.compare("vector") == 0)
-    {
-
-    }
-    else if(classType.compare("NeighborList<T>") == 0)
-    {
-      dPtr = H5DataArrayReader::readNeighborListData(amGid, *iter, preflight);
-    }
-    else if ( (*iter).compare(DREAM3D::EnsembleData::Statistics) == 0)
-    {
-      StatsDataArray::Pointer statsData = StatsDataArray::New();
-      statsData->SetName(DREAM3D::EnsembleData::Statistics);
-      statsData->readH5Data(amGid);
-      dPtr = statsData;
-    }
-
-    if (NULL != dPtr.get())
-    {
-      am->addAttributeArray(dPtr->GetName(), dPtr);
-    }
-
-  }
-  H5Gclose(amGid); // Close the Cell Group
-  return err;
 }

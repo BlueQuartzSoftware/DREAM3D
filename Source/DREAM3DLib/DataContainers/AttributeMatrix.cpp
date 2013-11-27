@@ -42,6 +42,10 @@
 #include <iostream>
 #include <fstream>
 
+//HDF5 Includes
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
+
 // EbsdLib Includes
 #include "EbsdLib/EbsdConstants.h"
 
@@ -50,6 +54,9 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+#include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "DREAM3DLib/HDF5/H5DataArrayReader.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -206,6 +213,60 @@ int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
     }
   }
   return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QSet<QString>& namesToRead)
+{
+  int err = 0;
+
+  QList<QString> names;
+  QH5Utilities::getGroupObjects(amGid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
+  //  qDebug() << "Number of Items in " << groupName << " Group: " << names.size() << "\n";
+  QString classType;
+  for (QList<QString>::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    QSet<QString>::iterator contains = namesToRead.find(*iter);
+    if (contains == namesToRead.end()) { continue; } // Do not read this item if it is NOT in the set of arrays to read
+    classType.clear();
+    QH5Lite::readStringAttribute(amGid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
+    IDataArray::Pointer dPtr = IDataArray::NullPointer();
+
+    if(classType.startsWith("DataArray") == true)
+    {
+      dPtr = H5DataArrayReader::readIDataArray(amGid, *iter, preflight);
+    }
+    else if(classType.compare("StringDataArray") == 0)
+    {
+      dPtr = H5DataArrayReader::readStringDataArray(amGid, *iter, preflight);
+    }
+    else if(classType.compare("vector") == 0)
+    {
+
+    }
+    else if(classType.compare("NeighborList<T>") == 0)
+    {
+      dPtr = H5DataArrayReader::readNeighborListData(amGid, *iter, preflight);
+    }
+    else if ( (*iter).compare(DREAM3D::EnsembleData::Statistics) == 0)
+    {
+      StatsDataArray::Pointer statsData = StatsDataArray::New();
+      statsData->SetName(DREAM3D::EnsembleData::Statistics);
+      statsData->readH5Data(amGid);
+      dPtr = statsData;
+    }
+
+    if (NULL != dPtr.get())
+    {
+      addAttributeArray(dPtr->GetName(), dPtr);
+    }
+
+  }
+  H5Gclose(amGid); // Close the Cell Group
+  return err;
 }
 
 // -----------------------------------------------------------------------------

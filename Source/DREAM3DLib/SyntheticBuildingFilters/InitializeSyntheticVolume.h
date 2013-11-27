@@ -71,6 +71,9 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputEnsembleAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputStatsAttributeArrayName)
     DREAM3D_INSTANCE_PROPERTY(int, XVoxels)
     DREAM3D_INSTANCE_PROPERTY(int, YVoxels)
     DREAM3D_INSTANCE_PROPERTY(int, ZVoxels)

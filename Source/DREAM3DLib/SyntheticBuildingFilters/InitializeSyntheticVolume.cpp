@@ -198,13 +198,13 @@ void InitializeSyntheticVolume::preflight()
   scopedFileSentinel.addGroupId(&dcGid);
 
   DataContainerReader::Pointer read_data = DataContainerReader::New();
-  read_data->setHdfFileId(fileId);
-  read_data->setHdfGroupId(dcGid);
-  read_data->setReadCellData(false);
-  read_data->setReadCellFeatureData(false);
-  read_data->setReadCellEnsembleData(true);
-  read_data->setReadAllCellEnsembleArrays(true);
-  read_data->setDataContainer(getDataContainerArray()->getDataContainer(getDataContainerName()).get());
+  QMap<QString, QMap<QString, QSet<QString> > > inputDataToRead;
+  QMap<QString, QSet<QString> > inputArrayToRead;
+  QSet<QString> inputStatsArray;
+  inputStatsArray.insert(m_InputStatsAttributeArrayName);
+  inputArrayToRead[m_InputEnsembleAttributeMatrixName] = inputStatsArray;
+  inputDataToRead[m_InputDataContainerName] = inputArrayToRead;
+  read_data->setDataToRead(inputDataToRead);
   read_data->preflight();
   if (read_data->getErrorCondition() < 0)
   {
@@ -248,16 +248,13 @@ void InitializeSyntheticVolume::execute()
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
 
   DataContainerReader::Pointer read_data = DataContainerReader::New();
-  read_data->setHdfFileId(fileId);
-  read_data->setHdfGroupId(dcGid);
-  read_data->setReadVertexData(false);
-  read_data->setReadEdgeData(false);
-  read_data->setReadFaceData(false);
-  read_data->setReadCellData(false);
-  read_data->setReadCellFeatureData(false);
-  read_data->setReadCellEnsembleData(true);
-  read_data->setReadAllCellEnsembleArrays(true);
-  read_data->setDataContainer(getDataContainerArray()->getDataContainer(getDataContainerName()).get());
+  QMap<QString, QMap<QString, QSet<QString> > > inputDataToRead;
+  QMap<QString, QSet<QString> > inputArrayToRead;
+  QSet<QString> inputStatsArray;
+  inputStatsArray.insert(m_InputStatsAttributeArrayName);
+  inputArrayToRead[m_InputEnsembleAttributeMatrixName] = inputStatsArray;
+  inputDataToRead[m_InputDataContainerName] = inputArrayToRead;
+  read_data->setDataToRead(inputDataToRead);
   read_data->execute();
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);

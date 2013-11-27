@@ -65,6 +65,10 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(bool, OverwriteExistingDataContainers)
 
+    typedef QMap<QString, QSet<QString> > MapOfAttributeArrays_t;
+    typedef QMap<QString, MapOfAttributeArrays_t> MapOfAttributeMatrices_t;
+    DREAM3D_INSTANCE_PROPERTY(MapOfAttributeMatrices_t, DataToRead)
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read DREAM3D Data File"; }
@@ -120,11 +124,6 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     void dataCheck(bool preflight, size_t volumes, size_t features, size_t ensembles);
 
     void readData(bool preflight);
-    int gatherData(bool preflight, hid_t dcGid, DataContainer::Pointer dc);
-    int readGroupsData(hid_t dcGid, const QString& groupName, AttributeMatrix::Pointer am, bool preflight,
-                       QVector<QString>& namesRead,
-                       QSet<QString>& namesToRead,
-                       bool readAllCurrentArrays);
 
   private:
     FilterPipeline::Pointer m_PipelineFromFile;

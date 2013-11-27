@@ -43,6 +43,7 @@
 #include <list>
 
 
+#include <QtCore/QSet>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtCore/QMap>
@@ -267,6 +268,12 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     * @return
     */
     virtual int writeAttributeMatricesToHDF5(hid_t parentId);
+
+    /**
+    * @brief Writes all the Attribute Matrices to HDF5 file
+    * @return
+    */
+    virtual int readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QMap<QString, QSet<QString> > arraysToRead);
 
     virtual int writeMeshToHDF5(hid_t dcGid);
     virtual int writeXdmf(QTextStream* out, QString hdfFileName);

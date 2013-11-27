@@ -196,6 +196,58 @@ int DataContainer::writeAttributeMatricesToHDF5(hid_t parentId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QMap<QString, QSet<QString> > arraysToRead)
+{
+  int err = 0;
+  unsigned int amType = DREAM3D::AttributeMatrixType::Unknown;
+
+  QString amName;
+  for(QMap<QString, QSet<QString> >::iterator iter = arraysToRead.begin(); iter != arraysToRead.end(); ++iter)
+  {
+    amName = iter.key();
+    amType = DREAM3D::AttributeMatrixType::Unknown;
+    err = QH5Lite::readScalarAttribute(dcGid, amName, DREAM3D::HDF5::AttributeMatrixType, amType);
+    if (err < 0)
+    {
+//      setErrorCondition(-109283);
+//      QString ss = QObject::tr("The AttributeMatrix is missing the 'AttirbuteMatrixType' attribute on the '%1' Attribute Matrix").arg(amNames[iter]);
+//      notifyErrorMessage(ss, getErrorCondition());
+      return -1;
+    }
+
+    hid_t amGid = H5Gopen(dcGid, amName.toLatin1().data(), H5P_DEFAULT );
+    if (amGid < 0)
+    {
+//      QString ss = QObject::tr("Error opening AttributeMatrix %1").arg(amName);
+//      setErrorCondition(-61);
+//      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
+
+    if(getAttributeMatrix(amName) == NULL)
+    {
+      AttributeMatrix::Pointer am = AttributeMatrix::New();
+      am->setAMType(amType);
+      addAttributeMatrix(amName, am);
+    }
+
+    err = getAttributeMatrix(amName)->readAttributeArraysFromHDF5(amGid, preflight, iter.value());
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+//      setErrorCondition(err);
+      return -1;
+    }
+  }
+
+  err |= H5Gclose(dcGid);
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int DataContainer::writeMeshToHDF5(hid_t dcGid)
 {
   BOOST_ASSERT(false);
