@@ -34,7 +34,7 @@ With other coloring methods such as IPF bad voxels which result from non-indexed
 | Hexagonal  (High)| 6mm, -62m | C6v, D3h | 6/mmm | Not Implemented |
 | Cubic (Low) | 23, 2/m-3 | T, Th | m-3 | ![](MisorientationLegendT_23.png) |
 | Cubic (High) | 432, 4/m -3 2/m | O, Oh| m-3m | ![](MisorientationLegendO_432.png) |
-| Cubic (High) | -43m | O, Oh| m-3m | Not Implemented |
+| Cubic (High) | -43m | Td| m-3m | Not Implemented |
 
 ## Example Output Image ##
 
