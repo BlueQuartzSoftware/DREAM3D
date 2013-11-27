@@ -81,9 +81,15 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
     DREAM3D_INSTANCE_PROPERTY(FaceArray::Pointer, Faces)
 
     virtual int writeMeshToHDF5(hid_t dcGid);
+    virtual int writeFacesToHDF5(hid_t dcGid);
+    virtual int writeXdmf(QTextStream& out);
 
   protected:
      SurfaceDataContainer();
+
+    virtual void writeXdmfMeshStructure();
+    virtual void writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering);
+    virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& groupName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName);
 
    private:
 

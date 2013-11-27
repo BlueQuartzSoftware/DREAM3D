@@ -201,3 +201,12 @@ int DataContainer::writeMeshToHDF5(hid_t dcGid)
   BOOST_ASSERT(false);
   return -1;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainer::writeXdmf(QTextStream& out)
+{
+  BOOST_ASSERT(false);
+  return -1;
+}

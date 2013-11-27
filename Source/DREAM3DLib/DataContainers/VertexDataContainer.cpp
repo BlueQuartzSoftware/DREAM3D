@@ -70,6 +70,16 @@ VertexDataContainer::~VertexDataContainer()
 int VertexDataContainer::writeMeshToHDF5(hid_t dcGid)
 {
   herr_t err = 0;
+  writeVerticesToHDF5(dcGid);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainer::writeVerticesToHDF5(hid_t dcGid)
+{
+  herr_t err = 0;
   //first write the faces if they exist
   VertexArray::Pointer verticesPtr = getVertices();
   if (verticesPtr.get() != NULL)
@@ -87,4 +97,118 @@ int VertexDataContainer::writeMeshToHDF5(hid_t dcGid)
     }
   }
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainer::writeXdmf(QTextStream& out)
+{
+  herr_t err = 0;
+
+
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VertexDataContainer::writeXdmfMeshStructure()
+{
+
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+
+  if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
+  {
+    return;
+  }
+  VertexArray::Pointer verts = dc->getVertices();
+  if(NULL == verts.get())
+  {
+    return;
+  }
+
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
+
+  QTextStream& out = *getXdmfOStream();
+
+  out << "  <Grid Name=\"" << getDataContainer()->getName() << "\">" << "\n";
+  out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->getNumberOfTuples() << "\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->getNumberOfTuples() << " 3\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Verts" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Topology>" << "\n";
+
+  out << "    <Geometry Type=\"XYZ\">" << "\n";
+  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Vertices" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Geometry>" << "\n";
+  out << "" << "\n";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString VertexDataContainer::writeXdmfAttributeDataHelper(int numComp, const QString& attrType,
+    const QString& groupName,
+    IDataArray::Pointer array,
+    const QString& centering,
+    int precision, const QString& xdmfTypeName)
+{
+  QString buf;
+  QTextStream out(&buf);
+
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
+  QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
+
+  out << "    <Attribute Name=\"" << array->GetName() << "\" ";
+  out << "AttributeType=\"" << attrType << "\" ";
+  out << "Center=\"" << centering << "\">" << "\n";
+  // Open the <DataItem> Tag
+  out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
+  out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Attribute>" << "\n" << "\n";
+
+  return buf;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VertexDataContainer::writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering)
+{
+#if 0
+  < Attribute Name = "Node Type" Center = "Node" >
+                                          < DataItem Format = "HDF" DataType = "char" Precision = "1" Dimensions = "43029 1" >
+                                                            MC_IsoGG_50cubed_55features_Bounded_Multi.dream3d:
+                                                              / VertexDataContainer / POINT_DATA / VertexMeshNodeType
+                                                              < / DataItem >
+                                                              < / Attribute >
+#endif
+                                                              if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
+  { return; }
+
+
+
+  QTextStream& out = *getXdmfOStream();
+
+  int precision = 0;
+  QString xdmfTypeName;
+  array->GetXdmfTypeAndSize(xdmfTypeName, precision);
+  if (0 == precision)
+  {
+    out << "<!-- " << array->GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
+    return;
+  }
+  int numComp = array->GetNumberOfComponents();
+  QString attrType = "Scalar";
+  if(numComp > 2) { attrType = "Vector"; }
+
+  QString block = writeXdmfAttributeDataHelper(numComp, attrType, groupName, array, centering, precision, xdmfTypeName);
+
+  out << block << "\n";
 }

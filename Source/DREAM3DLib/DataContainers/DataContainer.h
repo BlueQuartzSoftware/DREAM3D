@@ -267,6 +267,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual int writeAttributeMatricesToHDF5(hid_t parentId);
 
     virtual int writeMeshToHDF5(hid_t dcGid);
+    virtual int writeXdmf(QTextStream& out);
 
   protected:
     DataContainer();

@@ -70,23 +70,18 @@ EdgeDataContainer::~EdgeDataContainer()
 int EdgeDataContainer::writeMeshToHDF5(hid_t dcGid)
 {
   herr_t err = 0;
-  //first write the verts if they exist
-  VertexArray::Pointer verticesPtr = getVertices();
-  if (verticesPtr.get() != NULL)
-  {
-    int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-    hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), 3};
+  writeVerticesToHDF5(dcGid);
+  writeEdgesToHDF5(dcGid);
+  return err;
+}
 
-    float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int EdgeDataContainer::writeEdgesToHDF5(hid_t dcGid)
+{
+  herr_t err = 0;
 
-    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
-    if (err < 0)
-    {
-//      setErrorCondition(err);
-//      notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
-    }
-  }
-  //next write the edges if they exist
   EdgeArray::Pointer edgesPtr = getEdges();
   if (edgesPtr.get() != NULL)
   {
@@ -189,4 +184,165 @@ int EdgeDataContainer::writeMeshToHDF5(hid_t dcGid)
     }
   }
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int EdgeDataContainer::writeXdmf(QTextStream& out)
+{
+  herr_t err = 0;
+
+
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::writeXdmfMeshStructure()
+{
+
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
+
+  if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
+  {
+    return;
+  }
+  EdgeArray::Pointer edges = dc->getEdges();
+  if (NULL == edges.get())
+  {
+    return;
+  }
+  VertexArray::Pointer verts = dc->getVertices();
+  if(NULL == verts.get())
+  {
+    return;
+  }
+
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
+
+  QTextStream& out = *getXdmfOStream();
+
+  out << "  <Grid Name=\"" << getDataContainer()->getName() << "\">" << "\n";
+  out << "    <Topology TopologyType=\"Polyline\" NodesPerElement=\"2\" NumberOfElements=\"" << edges->getNumberOfTuples() << "\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << edges->getNumberOfTuples() << " 2\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Edges" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Topology>" << "\n";
+
+  out << "    <Geometry Type=\"XYZ\">" << "\n";
+  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Vertices" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Geometry>" << "\n";
+  out << "" << "\n";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString EdgeDataContainer::writeXdmfAttributeDataHelper(int numComp, const QString& attrType,
+    const QString& groupName,
+    IDataArray::Pointer array,
+    const QString& centering,
+    int precision, const QString& xdmfTypeName)
+{
+  QString buf;
+  QTextStream out(&buf);
+
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
+
+  QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
+  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents() / 2);
+
+  if((numComp % 2) == 1)
+  {
+    out << "    <Attribute Name=\"" << array->GetName() << "\" ";
+    out << "AttributeType=\"" << attrType << "\" ";
+    out << "Center=\"" << centering << "\">" << "\n";
+    // Open the <DataItem> Tag
+    out << "      <DataItem Format=\"HDF\" Dimensions=\"" << array->getNumberOfTuples() << " " << array->GetNumberOfComponents() <<  "\" ";
+    out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
+  }
+  else
+  {
+    //First Slab
+    out << "    <Attribute Name=\"" << array->GetName() << " (Feature 0)\" ";
+    out << "AttributeType=\"" << attrType << "\" ";
+    out << "Center=\"" << centering << "\">" << "\n";
+    // Open the <DataItem> Tag
+    out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2) <<  "\" ";
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Feature 0)\" >" << "\n";
+    out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
+    out << "          0        0" << "\n";
+    out << "          1        1" << "\n";
+    out << "          " << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2) << " </DataItem>" << "\n";
+    out << "\n";
+    out << "        <DataItem Format=\"HDF\" Dimensions=\"" << array->getNumberOfTuples() << " " << array->GetNumberOfComponents() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
+    out << "        </DataItem>" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
+
+    //Second Slab
+    out << "    <Attribute Name=\"" << array->GetName() << " (Feature 1)\" ";
+    out << "AttributeType=\"" << attrType << "\" ";
+    out << "Center=\"" << centering << "\">" << "\n";
+    // Open the <DataItem> Tag
+    out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2) <<  "\" ";
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Feature 1)\" >" << "\n";
+    out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
+    out << "          0        " << (array->GetNumberOfComponents() / 2) << "\n";
+    out << "          1        1" << "\n";
+    out << "          " << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2) << " </DataItem>" << "\n";
+    out << "\n";
+    out << "        <DataItem Format=\"HDF\" Dimensions=\"" << array->getNumberOfTuples() << " " << array->GetNumberOfComponents() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
+
+    out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
+    out << "        </DataItem>" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
+  }
+  return buf;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering)
+{
+#if 0
+  < Attribute Name = "Node Type" Center = "Node" >
+                                          < DataItem Format = "HDF" DataType = "char" Precision = "1" Dimensions = "43029 1" >
+                                                            MC_IsoGG_50cubed_55features_Bounded_Multi.dream3d:
+                                                              / EdgeDataContainer / POINT_DATA / SurfaceMeshNodeType
+                                                              < / DataItem >
+                                                              < / Attribute >
+#endif
+                                                              if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
+  { return; }
+
+
+
+  QTextStream& out = *getXdmfOStream();
+  int precision = 0;
+  QString xdmfTypeName;
+  array->GetXdmfTypeAndSize(xdmfTypeName, precision);
+  if (0 == precision)
+  {
+    out << "<!-- " << array->GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
+    return;
+  }
+  int numComp = array->GetNumberOfComponents();
+  QString attrType = "Scalar";
+  if(numComp > 2) { attrType = "Vector"; }
+
+  QString block = writeXdmfAttributeDataHelper(numComp, attrType, groupName, array, centering, precision, xdmfTypeName);
+
+  out << block << "\n";
 }
