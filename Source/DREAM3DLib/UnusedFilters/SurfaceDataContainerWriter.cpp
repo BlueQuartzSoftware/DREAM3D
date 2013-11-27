@@ -33,118 +33,110 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "VertexDataContainerWriter.h"
+
+#include "SurfaceDataContainerWriter.h"
+
 
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
-#include "DREAM3DLib/DataContainers/VertexArray.h"
-#include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 #define WRITE_FIELD_XDMF 0
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexDataContainerWriter::VertexDataContainerWriter() :
-  IOSupport(),
-  m_WriteXdmfFile(false),
-  m_XdmfOStream(NULL)
+SurfaceDataContainerWriter::SurfaceDataContainerWriter() :
+  EdgeDataContainerWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexDataContainerWriter::~VertexDataContainerWriter()
+SurfaceDataContainerWriter::~SurfaceDataContainerWriter()
 {
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void SurfaceDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
 
-  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
-  if(NULL == dc)
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+  if (NULL == dc)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
+    addErrorMessage(getHumanLabel(), ss, -2);
+    setErrorCondition(-1);
     return;
   }
-
   if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
+
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::preflight()
+void SurfaceDataContainerWriter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   dataCheck(true, 1, 1, 1);
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::execute()
+void SurfaceDataContainerWriter::execute()
 {
   int err = 0;
 
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
-  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
-  if(NULL == dc)
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+  if (NULL == dc)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
+    addErrorMessage(getHumanLabel(), ss, -2);
+    setErrorCondition(-1);
     return;
   }
+
   setErrorCondition(0);
 
   hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), H5P_DEFAULT );
 
-  // Add some VTK hints into the group
-  err = createVtkObjectGroup(getDataContainer()->getName(), H5_VTK_POLYDATA);
-  if (err < 0)
-  {
-    return;
-  }
-
-  if(getdcType() == 3) { writeXdmfMeshStructure(); }
+  if(getdcType() == 1) { writeXdmfMeshStructure(); }
 
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
 
-  /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::writeXdmfMeshStructure()
+void SurfaceDataContainerWriter::writeXdmfMeshStructure()
 {
 
-  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
 
   if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
+  {
+    return;
+  }
+  FaceArray::Pointer faces = dc->getFaces();
+  if (NULL == faces.get())
   {
     return;
   }
@@ -159,9 +151,9 @@ void VertexDataContainerWriter::writeXdmfMeshStructure()
   QTextStream& out = *getXdmfOStream();
 
   out << "  <Grid Name=\"" << getDataContainer()->getName() << "\">" << "\n";
-  out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->getNumberOfTuples() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->getNumberOfTuples() << " 3\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Verts" << "\n";
+  out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->getNumberOfTuples() << "\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->getNumberOfTuples() << " 3\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Faces" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Topology>" << "\n";
 
@@ -176,7 +168,7 @@ void VertexDataContainerWriter::writeXdmfMeshStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const QString& attrType,
+QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const QString& attrType,
     const QString& groupName,
     IDataArray::Pointer array,
     const QString& centering,
@@ -186,31 +178,76 @@ QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, con
   QTextStream out(&buf);
 
   QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
+
   QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
+  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents() / 2);
 
-  out << "    <Attribute Name=\"" << array->GetName() << "\" ";
-  out << "AttributeType=\"" << attrType << "\" ";
-  out << "Center=\"" << centering << "\">" << "\n";
-  // Open the <DataItem> Tag
-  out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
-  out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
-  out << "      </DataItem>" << "\n";
-  out << "    </Attribute>" << "\n" << "\n";
+  if((numComp % 2) == 1)
+  {
+    out << "    <Attribute Name=\"" << array->GetName() << "\" ";
+    out << "AttributeType=\"" << attrType << "\" ";
+    out << "Center=\"" << centering << "\">" << "\n";
+    // Open the <DataItem> Tag
+    out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
+    out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
+  }
+  else
+  {
+    //First Slab
+    out << "    <Attribute Name=\"" << array->GetName() << " (Feature 0)\" ";
+    out << "AttributeType=\"" << attrType << "\" ";
 
+    out << "Center=\"" << centering << "\">" << "\n";
+    // Open the <DataItem> Tag
+    out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStrHalf <<  "\" ";
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Feature 0)\" >" << "\n";
+    out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
+    out << "          0        0" << "\n";
+    out << "          1        1" << "\n";
+    out << "          " << dimStrHalf << " </DataItem>" << "\n";
+    out << "\n";
+    out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
+
+    out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
+    out << "        </DataItem>" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
+
+    //Second Slab
+    out << "    <Attribute Name=\"" << array->GetName() << " (Feature 1)\" ";
+    out << "AttributeType=\"" << attrType << "\" ";
+
+    out << "Center=\"" << centering << "\">" << "\n";
+    // Open the <DataItem> Tag
+    out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStrHalf <<  "\" ";
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Feature 1)\" >" << "\n";
+    out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
+    out << "          0        " << (array->GetNumberOfComponents() / 2) << "\n";
+    out << "          1        1" << "\n";
+    out << "          " << dimStrHalf << " </DataItem>" << "\n";
+    out << "\n";
+    out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
+    out << "        </DataItem>" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
+  }
   return buf;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering)
+void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering)
 {
 #if 0
   < Attribute Name = "Node Type" Center = "Node" >
                                           < DataItem Format = "HDF" DataType = "char" Precision = "1" Dimensions = "43029 1" >
                                                             MC_IsoGG_50cubed_55features_Bounded_Multi.dream3d:
-                                                              / VertexDataContainer / POINT_DATA / VertexMeshNodeType
+                                                              / SurfaceDataContainer / POINT_DATA / SurfaceMeshNodeType
                                                               < / DataItem >
                                                               < / Attribute >
 #endif
@@ -220,7 +257,6 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const QString& groupName,
 
 
   QTextStream& out = *getXdmfOStream();
-
   int precision = 0;
   QString xdmfTypeName;
   array->GetXdmfTypeAndSize(xdmfTypeName, precision);

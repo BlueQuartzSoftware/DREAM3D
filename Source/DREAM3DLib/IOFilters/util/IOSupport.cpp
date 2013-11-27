@@ -198,25 +198,3 @@ void IOSupport::clearErrorMessages()
     iter = m_PipelineMessages.erase(iter);
   }
 }
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int IOSupport::createVtkObjectGroup(const QString& hdfGroupPath, const char* vtkDataObjectType)
-{
-  // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
-  herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, getHdfGroupId());
-  if (err < 0)
-  {
-    qDebug() << "Error creating HDF Group " << hdfGroupPath << "\n";
-  }
-  err = QH5Lite::writeStringAttribute(getHdfGroupId(), hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
-  if(err < 0)
-  {
-    qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath << "\n";
-  }
-  return err;
-}
-

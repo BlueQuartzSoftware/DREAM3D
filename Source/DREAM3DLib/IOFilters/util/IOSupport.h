@@ -88,8 +88,6 @@ class DREAM3DLib_EXPORT IOSupport : public Observable
 
     QString getHumanLabel();
 
-    virtual int createVtkObjectGroup(const QString& hdfGroupPath, const char* vtkDataObjectType);
-
 
   protected:
     IOSupport();

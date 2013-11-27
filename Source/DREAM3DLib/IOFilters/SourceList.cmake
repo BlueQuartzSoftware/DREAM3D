@@ -88,23 +88,15 @@ set(UTIL_FILES
   util/IOSupport.h
   util/IOSupport.cpp
 
-  util/VertexDataContainerWriter.h
-  util/VertexDataContainerWriter.cpp
   util/VertexDataContainerReader.h
   util/VertexDataContainerReader.cpp
 
-  util/EdgeDataContainerWriter.h
-  util/EdgeDataContainerWriter.cpp
   util/EdgeDataContainerReader.h
   util/EdgeDataContainerReader.cpp
 
-  util/SurfaceDataContainerWriter.h
-  util/SurfaceDataContainerWriter.cpp
   util/SurfaceDataContainerReader.h
   util/SurfaceDataContainerReader.cpp
 
-  util/VolumeDataContainerWriter.h
-  util/VolumeDataContainerWriter.cpp
   util/VolumeDataContainerReader.h
   util/VolumeDataContainerReader.cpp
 )

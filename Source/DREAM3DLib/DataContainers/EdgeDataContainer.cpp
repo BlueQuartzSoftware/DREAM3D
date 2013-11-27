@@ -193,7 +193,7 @@ int EdgeDataContainer::writeXdmf(QTextStream& out)
 {
   herr_t err = 0;
 
-
+  writeXdmfMeshStructure();
 
   return err;
 }
