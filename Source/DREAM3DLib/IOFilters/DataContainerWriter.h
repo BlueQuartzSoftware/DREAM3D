@@ -67,10 +67,6 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteVolumeData)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteSurfaceData)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteEdgeData)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteVertexData)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
 
@@ -120,7 +116,6 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     int writePipeline();
 
     void writeXdmfHeader(QTextStream& out);
-    virtual void writeXdmfGridFooter(QTextStream& xdmf, const QString label);
     void writeXdmfFooter(QTextStream& out);
 
   private:

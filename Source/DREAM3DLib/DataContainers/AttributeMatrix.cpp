@@ -207,3 +207,119 @@ int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
   }
   return 0;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AttributeMatrix::generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName)
+{
+  QString xdmfText;
+  QString block;
+  QTextStream out(&xdmfText);
+
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeMatrix.begin(); iter != m_AttributeMatrix.end(); ++iter)
+  {
+    IDataArray::Pointer d = iter.value();
+    block = writeXdmfAttributeData(d, centering, dataContainerName, hdfFileName);    
+    out << block << "\n";
+  }
+  return xdmfText;
+ }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString& attrType,
+    const QString& dataContainerName,
+    IDataArray::Pointer array,
+    const QString& centering,
+    int precision, const QString& xdmfTypeName, const QString& hdfFileName)
+{
+  QString buf;
+  QTextStream out(&buf);
+
+  QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
+  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents() / 2);
+
+  if((numComp % 2) == 1)
+  {
+    out << "    <Attribute Name=\"" << array->GetName() << "\" ";
+    out << "AttributeType=\"" << attrType << "\" ";
+    out << "Center=\"" << centering << "\">" << "\n";
+    // Open the <DataItem> Tag
+    out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
+    out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->GetName() << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
+  }
+  else
+  {
+    //First Slab
+    out << "    <Attribute Name=\"" << array->GetName() << " (Feature 0)\" ";
+    out << "AttributeType=\"" << attrType << "\" ";
+
+    out << "Center=\"" << centering << "\">" << "\n";
+    // Open the <DataItem> Tag
+    out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStrHalf <<  "\" ";
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Feature 0)\" >" << "\n";
+    out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
+    out << "          0        0" << "\n";
+    out << "          1        1" << "\n";
+    out << "          " << dimStrHalf << " </DataItem>" << "\n";
+    out << "\n";
+    out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
+
+    out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->GetName() << "\n";
+    out << "        </DataItem>" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
+
+    //Second Slab
+    out << "    <Attribute Name=\"" << array->GetName() << " (Feature 1)\" ";
+    out << "AttributeType=\"" << attrType << "\" ";
+
+    out << "Center=\"" << centering << "\">" << "\n";
+    // Open the <DataItem> Tag
+    out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStrHalf <<  "\" ";
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Feature 1)\" >" << "\n";
+    out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
+    out << "          0        " << (array->GetNumberOfComponents() / 2) << "\n";
+    out << "          1        1" << "\n";
+    out << "          " << dimStrHalf << " </DataItem>" << "\n";
+    out << "\n";
+    out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->GetName() << "\n";
+    out << "        </DataItem>" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
+  }
+  return buf;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName)
+{
+  QString xdmfText;
+  QTextStream out(&xdmfText);
+
+  int precision = 0;
+  QString xdmfTypeName;
+  array->GetXdmfTypeAndSize(xdmfTypeName, precision);
+  if (0 == precision)
+  {
+    out << "<!-- " << array->GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
+    return xdmfText;
+  }
+  int numComp = array->GetNumberOfComponents();
+  QString attrType = "Scalar";
+  if(numComp > 2) { attrType = "Vector"; }
+
+  QString block = writeXdmfAttributeDataHelper(numComp, attrType, dataContainerName, array, centering, precision, xdmfTypeName, hdfFileName);
+
+  out << block << "\n";
+
+  return xdmfText;
+}

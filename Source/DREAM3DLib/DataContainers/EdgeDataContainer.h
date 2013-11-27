@@ -85,16 +85,18 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, MeshLinks)
 /* ************************************************************************************************* */
 
+    virtual unsigned int getDCType() {return DREAM3D::DataContainerType::EdgeDataContainer;}
+
     virtual int writeMeshToHDF5(hid_t dcGid);
     virtual int writeEdgesToHDF5(hid_t dcGid);
-    virtual int writeXdmf(QTextStream& out);
+    virtual int writeXdmf(QTextStream* out, QString hdfFileName);
+    virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 
   protected:
      EdgeDataContainer();
 
-    virtual void writeXdmfMeshStructure();
-    virtual void writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering);
-    virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& groupName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName);
+    virtual void writeXdmfMeshStructure(QTextStream& out, QString hdfFileName);
+    virtual void writeXdmfGridFooter(QTextStream& out);
 
    private:
 

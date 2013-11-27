@@ -48,6 +48,7 @@
 // DREAM3D Includes
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 
@@ -199,12 +200,186 @@ int VolumeDataContainer::writeCellsToHDF5(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainer::writeXdmf(QTextStream& out)
+int VolumeDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
 {
   herr_t err = 0;
+  if (out == NULL)
+  {
+    return -1;
+  }
 
-  writeXdmfMeshStructure();
+  writeXdmfMeshStructure(*out, hdfFileName);
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
+  {
+    if((*iter)->getAMType() == DREAM3D::AttributeMatrixType::Cell)
+    {
+      (*iter)->generateXdmfText("Cell", getName(), hdfFileName);
+    }
+  }
+  writeXdmfGridFooter(*out);
 
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VolumeDataContainer::writeXdmfMeshStructure(QTextStream& out, QString hdfFileName)
+{
+  EdgeArray::Pointer edges = getEdges();
+  if (NULL == edges.get())
+  {
+    return;
+  }
+  VertexArray::Pointer verts = getVertices();
+  if(NULL == verts.get())
+  {
+    return;
+  }
+
+  out << "  <Grid Name=\"" << getName() << "\">" << "\n";
+  out << "    <Topology TopologyType=\"Polyline\" NodesPerElement=\"2\" NumberOfElements=\"" << edges->getNumberOfTuples() << "\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << edges->getNumberOfTuples() << " 2\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Edges" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Topology>" << "\n";
+
+  out << "    <Geometry Type=\"XYZ\">" << "\n";
+  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Geometry>" << "\n";
+  out << "" << "\n";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VolumeDataContainer::writeXdmfGridFooter(QTextStream& xdmf)
+{
+  xdmf << "  </Grid>" << "\n";
+  xdmf << "    <!-- *************** END OF " << getName() << " *************** -->" << "\n";
+  xdmf << "\n";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VolumeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
+{
+  int err = 0;
+  QVector<hsize_t> dims;
+  H5T_class_t type_class;
+  size_t type_size;
+  if (true == preflight)
+  {
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsName, dims, type_class, type_size);
+    if (err >= 0)
+    {
+      CellArray::Pointer triangles = CellArray::CreateArray(1, DREAM3D::CellData::SurfaceMeshCells, NULL);
+      setCells(triangles);
+    }
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellNeighbors, dims, type_class, type_size);
+    if(err >= 0)
+    {
+      Int32DynamicListArray::Pointer cellNeighbors = Int32DynamicListArray::New();
+      getCells()->setCellNeighbors(cellNeighbors);
+    }
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsContainingVert, dims, type_class, type_size);
+    if(err >= 0)
+    {
+      Int32DynamicListArray::Pointer cellsContainingVert = Int32DynamicListArray::New();
+      getCells()->setCellsContainingVert(cellsContainingVert);
+    }
+  }
+  else
+  {
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsName, dims, type_class, type_size);
+    if (err >= 0)
+    {
+      // Allocate the Cell_t structures
+      CellArray::Pointer cellsPtr = CellArray::CreateArray(dims[0], DREAM3D::CellData::SurfaceMeshCells, getVertices().get());
+      // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
+      int32_t* data = reinterpret_cast<int32_t*>(cellsPtr->getPointer(0));
+      // Read the data from the file
+      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::CellsName, data);
+      if (err < 0)
+      {
+//        setErrorCondition(err);
+//        notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+        return err;
+      }
+      setCells(cellsPtr);
+      size_t nCells = cellsPtr->getNumberOfTuples();
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellNeighbors, dims, type_class, type_size);
+      if (err >= 0)
+      {
+        //Read the cellNeighbors array into the buffer
+
+        std::vector<uint8_t> buffer;
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::CellNeighbors, buffer);
+        if(err < 0)
+        {
+//          setErrorCondition(err);
+//          notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+          return err;
+        }
+        Int32DynamicListArray::Pointer cellNeighbors = Int32DynamicListArray::New();
+        cellNeighbors->deserializeLinks(buffer, nCells);
+        getCells()->setCellNeighbors(cellNeighbors);
+      }
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsContainingVert, dims, type_class, type_size);
+      if (err >= 0)
+      {
+        //Read the cellNeighbors array into the buffer
+
+        std::vector<uint8_t> buffer;
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::CellsContainingVert, buffer);
+        if(err < 0)
+        {
+//          setErrorCondition(err);
+//          notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+          return err;
+        }
+        Int32DynamicListArray::Pointer cellsContainingVert = Int32DynamicListArray::New();
+        cellsContainingVert->deserializeLinks(buffer, nCells);
+        getCells()->setCellsContainingVert(cellsContainingVert);
+      }
+    }
+  }
+  return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VolumeDataContainer::gatherMetaData(hid_t dcGid, int64_t volDims[3], float spacing[3], float origin[3])
+{
+  int err = QH5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
+  if(err < 0)
+  {
+//    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Dimensions", err);
+//    addErrorMessage(em);
+//    setErrorCondition(-151);
+    return -1;
+  }
+
+  err = QH5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
+  if(err < 0)
+  {
+//    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
+//    addErrorMessage(em);
+//    setErrorCondition(-152);
+    return -1;
+  }
+
+  err = QH5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
+  if(err < 0)
+  {
+//    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Origin", err);
+//    addErrorMessage(em);
+//    setErrorCondition(-153);
+    return -1;
+  }
+  return err;
+}

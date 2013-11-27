@@ -50,10 +50,6 @@
 
 
 #include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
-#include "DREAM3DLib/IOFilters/util/VolumeDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/util/SurfaceDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/util/VertexDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/util/EdgeDataContainerWriter.h"
 
 
 #define APPEND_DATA_TRUE 1
@@ -86,10 +82,6 @@ namespace Detail
 DataContainerWriter::DataContainerWriter() :
   AbstractFilter(),
   m_WritePipeline(true),
-  m_WriteVolumeData(true),
-  m_WriteSurfaceData(true),
-  m_WriteEdgeData(false),
-  m_WriteVertexData(false),
   m_WriteXdmfFile(true),
   m_FileId(-1)
 {
@@ -122,38 +114,6 @@ void DataContainerWriter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Volume DataContainer");
-    option->setPropertyName("WriteVolumeData");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Surface DataContainer");
-    option->setPropertyName("WriteSurfaceData");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Edge DataContainer");
-    option->setPropertyName("WriteEdgeData");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Vertex DataContainer");
-    option->setPropertyName("WriteVertexData");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Xdmf File");
     option->setPropertyName("WriteXdmfFile");
     option->setWidgetType(FilterParameter::BooleanWidget);
@@ -174,10 +134,6 @@ void DataContainerWriter::readFilterParameters(AbstractFilterParametersReader* r
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
-  setWriteVolumeData( reader->readValue("WriteVolumeData", getWriteVolumeData()) );
-  setWriteEdgeData( reader->readValue("WriteEdgeData", getWriteEdgeData() ) );
-  setWriteSurfaceData( reader->readValue("WriteSurfaceData", getWriteSurfaceData() ) );
-  setWriteVertexData( reader->readValue("WriteVertexData", getWriteVertexData() ) );
   setWriteXdmfFile( reader->readValue("WriteXdmfFile", getWriteXdmfFile()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -190,10 +146,6 @@ int DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("WriteVolumeData", getWriteVolumeData() );
-  writer->writeValue("WriteEdgeData", getWriteEdgeData() );
-  writer->writeValue("WriteSurfaceData", getWriteSurfaceData() );
-  writer->writeValue("WritevertexData", getWriteVertexData() );
   writer->writeValue("WriteXdmfFile", getWriteXdmfFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -309,7 +261,7 @@ void DataContainerWriter::execute()
   hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), H5P_DEFAULT );
   scopedFileSentinel.addGroupId(&dcaGid);
 
-  int32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+  unsigned int dcType = DREAM3D::DataContainerType::UnknownDataContainer;
   QList<QString> dcNames = getDataContainerArray()->getDataContainerNames();
   for(size_t iter = 0; iter < getDataContainerArray()->size(); iter++)
   {
@@ -323,6 +275,7 @@ void DataContainerWriter::execute()
       return;
     }
 
+    dcType = dc->getDCType();
     err = QH5Lite::writeScalarAttribute(dcaGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
     if (err < 0)
     {
@@ -347,7 +300,7 @@ void DataContainerWriter::execute()
     }
     if (m_WriteXdmfFile == true)
     {
-      err = dc->writeXdmf(out);
+      err = dc->writeXdmf(&out, m_OutputFile);
       if (err < 0)
       {
         notifyErrorMessage("Error Writing Xdmf File", -805);
@@ -384,16 +337,6 @@ void DataContainerWriter::writeXdmfFooter(QTextStream& xdmf)
 {
   xdmf << " </Domain>" << "\n";
   xdmf << "</Xdmf>" << "\n";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerWriter::writeXdmfGridFooter(QTextStream& xdmf, const QString label)
-{
-  xdmf << "  </Grid>" << "\n";
-  xdmf << "    <!-- *************** END OF " << label << " *************** -->" << "\n";
-  xdmf << "\n";
 }
 
 // -----------------------------------------------------------------------------

@@ -87,18 +87,6 @@ endforeach()
 set(UTIL_FILES
   util/IOSupport.h
   util/IOSupport.cpp
-
-  util/VertexDataContainerReader.h
-  util/VertexDataContainerReader.cpp
-
-  util/EdgeDataContainerReader.h
-  util/EdgeDataContainerReader.cpp
-
-  util/SurfaceDataContainerReader.h
-  util/SurfaceDataContainerReader.cpp
-
-  util/VolumeDataContainerReader.h
-  util/VolumeDataContainerReader.cpp
 )
 
 foreach(file  ${UTIL_FILES})

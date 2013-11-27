@@ -205,7 +205,16 @@ int DataContainer::writeMeshToHDF5(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainer::writeXdmf(QTextStream& out)
+int DataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
+{
+  BOOST_ASSERT(false);
+  return -1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
 {
   BOOST_ASSERT(false);
   return -1;

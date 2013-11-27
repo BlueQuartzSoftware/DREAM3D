@@ -42,13 +42,12 @@
 #include "H5Support/QH5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
-#include "DREAM3DLib/IOFilters/util/VolumeDataContainerReader.h"
-#include "DREAM3DLib/IOFilters/util/SurfaceDataContainerReader.h"
-#include "DREAM3DLib/IOFilters/util/VertexDataContainerReader.h"
-#include "DREAM3DLib/IOFilters/util/EdgeDataContainerReader.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 
+#include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "DREAM3DLib/HDF5/H5DataArrayReader.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
 
 
 // -----------------------------------------------------------------------------
@@ -56,28 +55,7 @@
 // -----------------------------------------------------------------------------
 DataContainerReader::DataContainerReader() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_EdgeDataContainerName(DREAM3D::HDF5::EdgeDataContainerName),
-  m_VertexDataContainerName(DREAM3D::HDF5::VertexDataContainerName),
   m_InputFile(""),
-  m_ReadVolumeData(false),
-  m_ReadSurfaceData(false),
-  m_ReadVertexData(false),
-  m_ReadEdgeData(false),
-  m_ReadAllArrays(false),
-  m_ReadAllVertexArrays(false),
-  m_ReadAllEdgeArrays(false),
-  m_ReadAllFaceArrays(false),
-  m_ReadAllCellArrays(false),
-  m_ReadAllVertexFeatureArrays(false),
-  m_ReadAllVertexEnsembleArrays(false),
-  m_ReadAllEdgeFeatureArrays(false),
-  m_ReadAllEdgeEnsembleArrays(false),
-  m_ReadAllFaceFeatureArrays(false),
-  m_ReadAllFaceEnsembleArrays(false),
-  m_ReadAllCellFeatureArrays(false),
-  m_ReadAllCellEnsembleArrays(false),
   m_OverwriteExistingDataContainers(false)
 {
   m_PipelineFromFile = FilterPipeline::New();
@@ -108,33 +86,6 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile() ) );
-  setReadVolumeData( reader->readValue("ReadVolumeData", getReadVolumeData() ) );
-  setReadSurfaceData( reader->readValue("ReadSurfaceData", getReadSurfaceData() ) );
-  setReadEdgeData( reader->readValue("ReadEdgeData", getReadEdgeData() ) );
-  setReadVertexData( reader->readValue("ReadVertexData", getReadVertexData() ) );
-
-
-  READ_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
-
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
-
-  READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
-
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
 
   reader->closeFilterGroup();
 }
@@ -148,32 +99,7 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("ReadVolumeData", getReadVolumeData() );
-  writer->writeValue("ReadSurfaceData", getReadSurfaceData() );
-  writer->writeValue("ReadEdgeData", getReadEdgeData() );
-  writer->writeValue("ReadVertexData", getReadVertexData() );
 
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
-
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
-
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
-
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
 
   writer->closeFilterGroup();
   return ++index; // we want to return the index after the one we just wrote to
@@ -192,9 +118,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t featu
 // -----------------------------------------------------------------------------
 void DataContainerReader::preflight()
 {
-
   dataCheck(true, 1, 1, 1);
-
   readData(true);
 }
 
@@ -203,10 +127,7 @@ void DataContainerReader::preflight()
 // -----------------------------------------------------------------------------
 void DataContainerReader::execute()
 {
-
-
   readData(false);
-
   notifyStatusMessage("Complete");
 }
 
@@ -328,15 +249,15 @@ void DataContainerReader::readData(bool preflight)
       addErrorMessage(getHumanLabel(), ss, err);
       return;
     }
-    hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
+    hid_t dcaGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
-    scopedFileSentinel.addGroupId(&dcGid);
+    scopedFileSentinel.addGroupId(&dcaGid);
 
 
     QList<QString> dcNames;
-    err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, dcNames);
+    err = QH5Utilities::getGroupObjects(dcaGid, H5Utilities::H5Support_GROUP, dcNames);
     DataContainerArray::Pointer dca = getDataContainerArray();
 
     uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
@@ -349,7 +270,7 @@ void DataContainerReader::readData(bool preflight)
         notifyErrorMessage(ss, getErrorCondition());
         return;
       }
-      err = QH5Lite::readScalarAttribute(dcGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
+      err = QH5Lite::readScalarAttribute(dcaGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
       if (err < 0)
       {
         setErrorCondition(-109283);
@@ -357,172 +278,55 @@ void DataContainerReader::readData(bool preflight)
         notifyErrorMessage(ss, getErrorCondition());
         return;
       }
-      if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_ReadVolumeData == true) ||
-          (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_ReadSurfaceData == true) ||
-          (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_ReadEdgeData == true) ||
-          (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_ReadVertexData == true))
+      if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
       {
-        if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
+        VolumeDataContainer::Pointer dc = VolumeDataContainer::New();
+        dc->setName(dcNames[iter]);
+        getDataContainerArray()->pushBack(dc);
+      }
+      if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer)
+      {
+        SurfaceDataContainer::Pointer dc = SurfaceDataContainer::New();
+        dc->setName(dcNames[iter]);
+        getDataContainerArray()->pushBack(dc);
+      }
+      if(dcType == DREAM3D::DataContainerType::EdgeDataContainer)
+      {
+        EdgeDataContainer::Pointer dc = EdgeDataContainer::New();
+        dc->setName(dcNames[iter]);
+        getDataContainerArray()->pushBack(dc);
+      }
+      if(dcType == DREAM3D::DataContainerType::VertexDataContainer)
+      {
+        VertexDataContainer::Pointer dc = VertexDataContainer::New();
+        dc->setName(dcNames[iter]);
+        getDataContainerArray()->pushBack(dc);
+      }
+      hid_t dcGid = H5Gopen(dcaGid, dcNames[iter].toLatin1().data(), H5P_DEFAULT );
+      if (dcGid < 0)
+      {
+        QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);
+        setErrorCondition(-61);
+        addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+      err = gatherData(preflight, dcGid, getDataContainerArray()->getDataContainer(dcNames[iter]));
+      if(err < 0)
+      {
+        if(preflight == true)
         {
-          VolumeDataContainer::Pointer dc = VolumeDataContainer::New();
-          dc->setName(dcNames[iter]);
-          getDataContainerArray()->pushBack(dc);
+          addErrorMessage(getHumanLabel(), "The data was not available in the data file.", getErrorCondition());
         }
-        if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer)
+        else
         {
-          SurfaceDataContainer::Pointer dc = SurfaceDataContainer::New();
-          dc->setName(dcNames[iter]);
-          getDataContainerArray()->pushBack(dc);
-        }
-        if(dcType == DREAM3D::DataContainerType::EdgeDataContainer)
-        {
-          EdgeDataContainer::Pointer dc = EdgeDataContainer::New();
-          dc->setName(dcNames[iter]);
-          getDataContainerArray()->pushBack(dc);
-        }
-        if(dcType == DREAM3D::DataContainerType::VertexDataContainer)
-        {
-          VertexDataContainer::Pointer dc = VertexDataContainer::New();
-          dc->setName(dcNames[iter]);
-          getDataContainerArray()->pushBack(dc);
-        }
-        if(dcType <= 3)
-        {
-          VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();
-          vReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
-          vReader->setVertexFeatureArraysToRead(m_SelectedVertexVertexFeatureArrays);
-          vReader->setVertexEnsembleArraysToRead(m_SelectedVertexVertexEnsembleArrays);
-          vReader->setReadAllVertexArrays(m_ReadAllVertexArrays);
-          vReader->setReadAllVertexFeatureArrays(m_ReadAllVertexFeatureArrays);
-          vReader->setReadAllVertexEnsembleArrays(m_ReadAllVertexEnsembleArrays);
-          if (getReadAllArrays() == true) { vReader->setReadAllArrays(); }
-          vReader->setHdfFileId(fileId);
-          vReader->setHdfGroupId(dcGid);
-          vReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-          vReader->setObservers(getObservers());
-          ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
-          vReader->setMessagePrefix(ss);
-          if(preflight == true) { vReader->preflight(); }
-          else { vReader->execute(); }
-          if (vReader->getErrorCondition() < 0)
-          {
-            if(preflight == true)
-            {
-              setReadVertexData(false);
-              setErrorCondition(vReader->getErrorCondition());
-              addErrorMessage(getHumanLabel(), "The solid mesh data was not available in the data file.", getErrorCondition());
-            }
-            else
-            {
-              notifyErrorMessage("Error Reading the Vertex Data", vReader->getErrorCondition());
-              return;
-            }
-          }
-        }
-        if(dcType <= 2)
-        {
-          EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
-          eReader->setEdgeArraysToRead(m_SelectedEdgeEdgeArrays);
-          eReader->setEdgeFeatureArraysToRead(m_SelectedEdgeEdgeFeatureArrays);
-          eReader->setEdgeEnsembleArraysToRead(m_SelectedEdgeEdgeEnsembleArrays);
-          eReader->setReadAllEdgeArrays(m_ReadAllEdgeArrays);
-          eReader->setReadAllEdgeFeatureArrays(m_ReadAllEdgeFeatureArrays);
-          eReader->setReadAllEdgeEnsembleArrays(m_ReadAllEdgeEnsembleArrays);
-          if (getReadAllArrays() == true) { eReader->setReadAllArrays(); }
-          eReader->setHdfFileId(fileId);
-          eReader->setHdfGroupId(dcGid);
-          eReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-          eReader->setObservers(getObservers());
-          ss = getMessagePrefix() + " |--> Reading Surface Data ";
-          eReader->setMessagePrefix(ss);
-          if(preflight == true) { eReader->preflight(); }
-          else { eReader->execute(); }
-          if (eReader->getErrorCondition() < 0)
-          {
-            if(preflight == true)
-            {
-              setReadEdgeData(false);
-              setErrorCondition(eReader->getErrorCondition());
-              addErrorMessage(getHumanLabel(), "The edge mesh data was not available in the data file.", getErrorCondition());
-            }
-            else
-            {
-              notifyErrorMessage("Error Reading the Edge Data", eReader->getErrorCondition());
-              return;
-            }
-          }
-        }
-        if(dcType <= 1)
-        {
-          SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
-          smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
-          smReader->setFaceFeatureArraysToRead(m_SelectedSurfaceFaceFeatureArrays);
-          smReader->setFaceEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
-          smReader->setReadAllFaceArrays(m_ReadAllFaceArrays);
-          smReader->setReadAllFaceFeatureArrays(m_ReadAllFaceFeatureArrays);
-          smReader->setReadAllFaceEnsembleArrays(m_ReadAllFaceEnsembleArrays);
-          if (getReadAllArrays() == true) { smReader->setReadAllArrays(); }
-          smReader->setHdfFileId(fileId);
-          smReader->setHdfGroupId(dcGid);
-          smReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-          smReader->setObservers(getObservers());
-          ss = getMessagePrefix() + " |--> Reading Surface Data ";
-          smReader->setMessagePrefix(ss);
-          if(preflight == true) { smReader->preflight(); }
-          else { smReader->execute(); }
-          if (smReader->getErrorCondition() < 0)
-          {
-            if(preflight == true)
-            {
-              setReadSurfaceData(false);
-              setErrorCondition(smReader->getErrorCondition());
-              addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
-            }
-            else
-            {
-              notifyErrorMessage("Error Reading the Surface Data", smReader->getErrorCondition());
-              return;
-            }
-          }
-        }
-        if(dcType == 0)
-        {
-          VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
-          volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
-          volumeReader->setCellFeatureArraysToRead(m_SelectedVolumeCellFeatureArrays);
-          volumeReader->setCellEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
-          volumeReader->setReadAllCellArrays(m_ReadAllCellArrays);
-          volumeReader->setReadAllCellFeatureArrays(m_ReadAllCellFeatureArrays);
-          volumeReader->setReadAllCellEnsembleArrays(m_ReadAllCellEnsembleArrays);
-          if (getReadAllArrays() == true) { volumeReader->setReadAllArrays(); }
-          volumeReader->setHdfFileId(fileId);
-          volumeReader->setHdfGroupId(dcGid);
-          volumeReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-          volumeReader->setObservers(getObservers());
-          ss = getMessagePrefix() + " |--> Reading Volume Data ";
-          volumeReader->setMessagePrefix(ss);
-          if(preflight == true) { volumeReader->preflight(); }
-          else { volumeReader->execute(); }
-          if (volumeReader->getErrorCondition() < 0)
-          {
-            if(preflight == true)
-            {
-              setReadVolumeData(false);
-              setErrorCondition(volumeReader->getErrorCondition());
-              addErrorMessage(getHumanLabel(), "The volume data was not available in the data file.", getErrorCondition());
-            }
-            else
-            {
-              notifyErrorMessage("Error Reading the Volume Data", volumeReader->getErrorCondition());
-              return;
-            }
-          }
+          notifyErrorMessage("Error Reading Data", -100);
+          return;
         }
       }
     }
 
-    err = H5Gclose(dcGid);
-    dcGid = -1;
+    err = H5Gclose(dcaGid);
+    dcaGid = -1;
   }
 
 }
@@ -530,63 +334,109 @@ void DataContainerReader::readData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                      QSet<QString> selectedFaceArrays,
-                                                      QSet<QString> selectedEdgeArrays,
-                                                      QSet<QString> selectedCellArrays,
-                                                      QSet<QString> selectedFeatureArrays,
-                                                      QSet<QString> selectedEnsembleArrays)
+int DataContainerReader::gatherData(bool preflight, hid_t dcGid, DataContainer::Pointer dc)
 {
-  m_SelectedVolumeVertexArrays = selectedVertexArrays;
-  m_SelectedVolumeFaceArrays = selectedFaceArrays;
-  m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
-  m_SelectedVolumeCellArrays = selectedCellArrays;
-  m_SelectedVolumeCellFeatureArrays = selectedFeatureArrays;
-  m_SelectedVolumeCellEnsembleArrays = selectedEnsembleArrays;
-  m_ReadAllArrays = false;
+  int err = 0;
+  unsigned int amType = DREAM3D::AttributeMatrixType::Unknown;
+
+  dc->readMeshDataFromHDF5(dcGid, preflight);
+
+  QList<QString> amNames;
+  err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, amNames);
+  for(int iter = 0; iter < amNames.size(); iter++)
+  {
+    amType = DREAM3D::AttributeMatrixType::Unknown;
+    err = QH5Lite::readScalarAttribute(dcGid, amNames[iter], DREAM3D::HDF5::AttributeMatrixType, amType);
+    if (err < 0)
+    {
+      setErrorCondition(-109283);
+      QString ss = QObject::tr("The AttributeMatrix is missing the 'AttirbuteMatrixType' attribute on the '%1' Attribute Matrix").arg(amNames[iter]);
+      notifyErrorMessage(ss, getErrorCondition());
+      return -1;
+    }
+
+    hid_t amGid = H5Gopen(dcGid, amNames[iter].toLatin1().data(), H5P_DEFAULT );
+    if (amGid < 0)
+    {
+      QString ss = QObject::tr("Error opening AttributeMatrix %1").arg(amNames[iter]);
+      setErrorCondition(-61);
+      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
+
+    AttributeMatrix::Pointer am = AttributeMatrix::New();
+    am->setAMType(amType);
+    dc->addAttributeMatrix(amNames[iter], am);
+
+    err |= readGroupsData(amGid, amNames[iter], am, preflight, readNames, cellArraysToRead, m_ReadAllCellArrays);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+  }
+
+  err |= H5Gclose(dcGid);
+
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                       QSet<QString> selectedEdgeArrays,
-                                                       QSet<QString> selectedFaceArrays,
-                                                       QSet<QString> selectedFeatureArrays,
-                                                       QSet<QString> selectedEnsembleArrays)
+int DataContainerReader::readGroupsData(hid_t amGid, const QString& groupName, AttributeMatrix::Pointer am, 
+                                              bool preflight,
+                                              QVector<QString>& namesRead,
+                                              QSet<QString>& namesToRead,
+                                              bool readAllCurrentArrays)
 {
-  m_SelectedSurfaceVertexArrays = selectedVertexArrays;
-  m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
-  m_SelectedSurfaceFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceFaceFeatureArrays = selectedFeatureArrays;
-  m_SelectedSurfaceFaceEnsembleArrays = selectedEnsembleArrays;
-  m_ReadAllArrays = false;
-}
+  int err = 0;
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerReader::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                    QSet<QString> selectedEdgeArrays,
-                                                    QSet<QString> selectedFeatureArrays,
-                                                    QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedEdgeVertexArrays = selectedVertexArrays;
-  m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
-  m_SelectedEdgeEdgeFeatureArrays = selectedFeatureArrays;
-  m_SelectedEdgeEdgeEnsembleArrays = selectedEnsembleArrays;
-  m_ReadAllArrays = false;
-}
+  QList<QString> names;
+  QH5Utilities::getGroupObjects(amGid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
+  //  qDebug() << "Number of Items in " << groupName << " Group: " << names.size() << "\n";
+  QString classType;
+  for (QList<QString>::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    QSet<QString>::iterator contains = namesToRead.find(*iter);
+    if (contains == namesToRead.end() && false == preflight && readAllCurrentArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
+    namesRead.push_back(*iter);
+    classType.clear();
+    QH5Lite::readStringAttribute(amGid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
+    IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerReader::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                      QSet<QString> selectedFeatureArrays,
-                                                      QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedVertexVertexArrays = selectedVertexArrays;
-  m_SelectedVertexVertexFeatureArrays = selectedFeatureArrays;
-  m_SelectedVertexVertexEnsembleArrays = selectedEnsembleArrays;
-  m_ReadAllArrays = false;
+    if(classType.startsWith("DataArray") == true)
+    {
+      dPtr = H5DataArrayReader::readIDataArray(amGid, *iter, preflight);
+    }
+    else if(classType.compare("StringDataArray") == 0)
+    {
+      dPtr = H5DataArrayReader::readStringDataArray(amGid, *iter, preflight);
+    }
+    else if(classType.compare("vector") == 0)
+    {
+
+    }
+    else if(classType.compare("NeighborList<T>") == 0)
+    {
+      dPtr = H5DataArrayReader::readNeighborListData(amGid, *iter, preflight);
+    }
+    else if ( (*iter).compare(DREAM3D::EnsembleData::Statistics) == 0)
+    {
+      StatsDataArray::Pointer statsData = StatsDataArray::New();
+      statsData->SetName(DREAM3D::EnsembleData::Statistics);
+      statsData->readH5Data(amGid);
+      dPtr = statsData;
+    }
+
+    if (NULL != dPtr.get())
+    {
+      am->addAttributeArray(dPtr->GetName(), dPtr);
+    }
+
+  }
+  H5Gclose(amGid); // Close the Cell Group
+  return err;
 }

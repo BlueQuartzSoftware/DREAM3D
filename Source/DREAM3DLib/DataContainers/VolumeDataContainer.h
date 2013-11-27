@@ -77,9 +77,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
 
     virtual ~VolumeDataContainer();
 
-
     DREAM3D_INSTANCE_PROPERTY(CellArray::Pointer, Cells)
-
 
     DREAM3D_INSTANCE_VEC3_PROPERTY(size_t, Dimensions)
 
@@ -103,12 +101,19 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     // -----------------------------------------------------------------------------
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin)
 
+    virtual unsigned int getDCType() {return DREAM3D::DataContainerType::VolumeDataContainer;}
+
     virtual int writeMeshToHDF5(hid_t dcGid);
     virtual int writeCellsToHDF5(hid_t dcGid);
-    virtual int writeXdmf(QTextStream& out);
+    virtual int writeXdmf(QTextStream* out, QString hdfFileName);
+    virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 
   protected:
     VolumeDataContainer();
+
+    virtual void writeXdmfMeshStructure(QTextStream& out, QString hdfFileName);
+    virtual void writeXdmfGridFooter(QTextStream& out);
+    virtual int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:
 

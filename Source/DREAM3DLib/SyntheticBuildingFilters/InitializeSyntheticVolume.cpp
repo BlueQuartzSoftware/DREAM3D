@@ -41,7 +41,7 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 
-#include "DREAM3DLib/IOFilters/util/VolumeDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
@@ -173,7 +173,6 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
-
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(m == NULL)
   {
@@ -198,7 +197,7 @@ void InitializeSyntheticVolume::preflight()
 
   scopedFileSentinel.addGroupId(&dcGid);
 
-  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
+  DataContainerReader::Pointer read_data = DataContainerReader::New();
   read_data->setHdfFileId(fileId);
   read_data->setHdfGroupId(dcGid);
   read_data->setReadCellData(false);
@@ -248,7 +247,7 @@ void InitializeSyntheticVolume::execute()
 
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
 
-  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
+  DataContainerReader::Pointer read_data = DataContainerReader::New();
   read_data->setHdfFileId(fileId);
   read_data->setHdfGroupId(dcGid);
   read_data->setReadVertexData(false);

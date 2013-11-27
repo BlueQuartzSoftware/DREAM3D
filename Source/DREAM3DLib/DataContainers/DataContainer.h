@@ -70,6 +70,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QString, Name)
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(AttributeMatrixMap_t, AttributeMatrices)
 
+    virtual unsigned int getDCType() {return DREAM3D::DataContainerType::UnknownDataContainer;}
+
     /**
      * @brief getPrereqArray
      * @param filter
@@ -267,7 +269,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual int writeAttributeMatricesToHDF5(hid_t parentId);
 
     virtual int writeMeshToHDF5(hid_t dcGid);
-    virtual int writeXdmf(QTextStream& out);
+    virtual int writeXdmf(QTextStream* out, QString hdfFileName);
+    virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 
   protected:
     DataContainer();
