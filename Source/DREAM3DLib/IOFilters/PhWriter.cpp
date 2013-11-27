@@ -230,7 +230,7 @@ int PhWriter::writeFile()
 
   outfile << "     " << dims[0] << "     " << dims[1] << "     " << dims[2] << "\n";
   outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << "\n";
-  outfile << " 0.000 0.000 0.000          0        \n"; // << grains << endl;
+  outfile << " 0.000 0.000 0.000          0        \n"; // << grains << std::endl;
 
   for (int k = 0; k < totalpoints; k++)
   {

@@ -44,8 +44,6 @@
 #include "EbsdLib/Utilities/MXADir.h"
 #include "EbsdLib/Utilities/StringUtils.h"
 
-using namespace Ang;
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

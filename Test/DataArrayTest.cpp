@@ -39,7 +39,6 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataArrays/GbcdDataArray.hpp"
 
 #include "UnitTestSupport.hpp"
 
@@ -507,103 +506,7 @@ void TestNeighborList()
   __TestNeighborList<double>();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestGbcdDataArray()
-{
 
-  size_t dims[5] = {60,29,60,60,29};
-  size_t size = dims[0]*dims[1]*dims[2]*dims[3]*dims[4];
-  GBCDFloatArrayType::Pointer m_GBCD = GBCDFloatArrayType::CreateArray(dims, "GBCD Data", false);
-
-  size_t retDims[5];
-  m_GBCD->GetGbcdDimension(retDims);
-  DREAM3D_REQUIRE_EQUAL(retDims[0], dims[0])
-      DREAM3D_REQUIRE_EQUAL(retDims[1], dims[1])
-      DREAM3D_REQUIRE_EQUAL(retDims[2], dims[2])
-      DREAM3D_REQUIRE_EQUAL(retDims[3], dims[3])
-      DREAM3D_REQUIRE_EQUAL(retDims[4], dims[4])
-      DREAM3D_REQUIRE_EQUAL(false, m_GBCD->isAllocated())
-
-      DREAM3D_REQUIRE_EQUAL(size, m_GBCD->GetSize())
-
-      // This will test writing an array that has not been allocated which should return an
-      // negative error code.
-  {
-    hid_t fid = H5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
-    DREAM3D_REQUIRE(fid > 0)
-        int err = m_GBCD->writeH5Data(fid);
-    DREAM3D_REQUIRE(err < 0)
-        H5Utilities::closeFile(fid);
-  }
-
-  // Now allocate all the memory we need
-  m_GBCD->Allocate();
-  DREAM3D_REQUIRE_EQUAL(true, m_GBCD->isAllocated())
-      float* ptr = m_GBCD->GetPointer(0);
-  size_t idx = 0;
-  // Now dump some actual data in the arrays
-  for(size_t i = 0; i < dims[0]; ++i)
-  {
-    for(size_t j = 0; j < dims[1]; ++j)
-    {
-      for(size_t k = 0; k < dims[2]; ++k)
-      {
-        for(size_t l = 0; l < dims[3]; ++l)
-        {
-          for(size_t m = 0; m < dims[4]; ++m)
-          {
-            ptr[idx] = static_cast<float>(i+j+k+l+m);
-            idx++;
-          }
-        }
-      }
-    }
-  }
-
-
-  // This will test writing an array that has been allocated which should return an
-  // Zero or Positive error code.
-  {
-    hid_t fid = H5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
-    DREAM3D_REQUIRE(fid > 0)
-        int err = m_GBCD->writeH5Data(fid);
-    DREAM3D_REQUIRE(err >= 0)
-        H5Utilities::closeFile(fid);
-  }
-
-  {
-    hid_t fid = H5Utilities::openFile(UnitTest::DataArrayTest::TestFile, true);
-    DREAM3D_REQUIRE(fid > 0)
-        m_GBCD->initializeWithZeros();
-    int err = m_GBCD->readH5Data(fid);
-    DREAM3D_REQUIRE(err >= 0)
-        H5Utilities::closeFile(fid);
-    ptr = m_GBCD->GetPointer(0);
-    idx = 0;
-    // Now dump some actual data in the arrays
-    for(size_t i = 0; i < dims[0]; ++i)
-    {
-      for(size_t j = 0; j < dims[1]; ++j)
-      {
-        for(size_t k = 0; k < dims[2]; ++k)
-        {
-          for(size_t l = 0; l < dims[3]; ++l)
-          {
-            for(size_t m = 0; m < dims[4]; ++m)
-            {
-              DREAM3D_REQUIRE(ptr[idx] == i+j+k+l+m)
-              idx++;
-            }
-          }
-        }
-      }
-    }
-
-  }
-
-}
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
@@ -622,7 +525,6 @@ int main(int argc, char **argv)
       DREAM3D_REGISTER_TEST( TestEraseElements() )
       DREAM3D_REGISTER_TEST( TestCopyTuples() )
       DREAM3D_REGISTER_TEST( TestNeighborList() )
-      DREAM3D_REGISTER_TEST( TestGbcdDataArray() )
 
     #if REMOVE_TEST_FILES
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )

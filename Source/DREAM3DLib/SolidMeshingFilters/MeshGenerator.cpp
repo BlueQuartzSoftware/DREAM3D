@@ -50,7 +50,7 @@
 
 #include "MeshGenerator.h"
 
-using namespace std;
+
 
 namespace VolMesh {
 nodes *originalnode;
@@ -1316,55 +1316,55 @@ void clean_triangles()
    goodtriangles++;
    }
    }
-   outputFile << "# vtk DataFile Version 2.0" << endl;
-   outputFile << "data set from FFT2dx_GB" << endl;
-   outputFile << "ASCII" << endl;
-   outputFile << "DATASET UNSTRUCTURED_GRID" << endl;
-   outputFile << endl;
-   outputFile << "POINTS " << numsurfnodes << " float" << endl;
+   outputFile << "# vtk DataFile Version 2.0" << std::endl;
+   outputFile << "data set from FFT2dx_GB" << std::endl;
+   outputFile << "ASCII" << std::endl;
+   outputFile << "DATASET UNSTRUCTURED_GRID" << std::endl;
+   outputFile << std::endl;
+   outputFile << "POINTS " << numsurfnodes << " float" << std::endl;
    for(int i=0;i<numsurfnodes;i++)
    {
-   outputFile << originalnode[i].xc << " " << originalnode[i].yc << " " << originalnode[i].zc << endl;
+   outputFile << originalnode[i].xc << " " << originalnode[i].yc << " " << originalnode[i].zc << std::endl;
    }
-   outputFile << endl;
-   outputFile << "CELLS " << goodtriangles << " " << goodtriangles*4 << endl;
+   outputFile << std::endl;
+   outputFile << "CELLS " << goodtriangles << " " << goodtriangles*4 << std::endl;
    for(int i=0;i<numtriangles;i++)
    {
    if(originaltriangle[i].trianglekilled != 1)
    {
    if(originaltriangle[i].leftgrain < originaltriangle[i].rightgrain)
    {
-   outputFile << "3 " << originaltriangle[i].firstnodeleft << " " << originaltriangle[i].secondnodeleft << " " << originaltriangle[i].thirdnodeleft << endl;
+   outputFile << "3 " << originaltriangle[i].firstnodeleft << " " << originaltriangle[i].secondnodeleft << " " << originaltriangle[i].thirdnodeleft << std::endl;
    }
    if(originaltriangle[i].leftgrain > originaltriangle[i].rightgrain)
    {
-   outputFile << "3 " << originaltriangle[i].firstnoderight << " " << originaltriangle[i].secondnoderight << " " << originaltriangle[i].thirdnoderight << endl;
+   outputFile << "3 " << originaltriangle[i].firstnoderight << " " << originaltriangle[i].secondnoderight << " " << originaltriangle[i].thirdnoderight << std::endl;
    }
    }
    }
-   outputFile << endl;
-   outputFile << "CELL_TYPES " << goodtriangles << endl;
+   outputFile << std::endl;
+   outputFile << "CELL_TYPES " << goodtriangles << std::endl;
    for(int i=0;i<numtriangles;i++)
    {
    if(originaltriangle[i].trianglekilled != 1)
    {
-   outputFile << "5" << endl;
+   outputFile << "5" << std::endl;
    }
    }
-   outputFile << endl;
-   outputFile << "CELL_DATA " << goodtriangles << endl;
-   outputFile << "SCALARS TriangleID int 1" << endl;
-   outputFile << "LOOKUP_TABLE default" << endl;
+   outputFile << std::endl;
+   outputFile << "CELL_DATA " << goodtriangles << std::endl;
+   outputFile << "SCALARS TriangleID int 1" << std::endl;
+   outputFile << "LOOKUP_TABLE default" << std::endl;
    for(int i=0;i<numtriangles;i++)
    {
    if(originaltriangle[i].trianglekilled != 1)
    {
-   outputFile << i << endl;
+   outputFile << i << std::endl;
    }
    }
-   outputFile << endl;
-   outputFile << "SCALARS Dihedrals float" << endl;
-   outputFile << "LOOKUP_TABLE default" << endl;
+   outputFile << std::endl;
+   outputFile << "SCALARS Dihedrals float" << std::endl;
+   outputFile << "LOOKUP_TABLE default" << std::endl;
    for(int i=0;i<numtriangles;i++)
    {
    if(originaltriangle[i].trianglekilled != 1)
@@ -1432,7 +1432,7 @@ void clean_triangles()
    }
    }
    if(originaltriangle[i].edgetriangle == 1) minangle = minangle + 0.1;
-   outputFile << minangle << endl;
+   outputFile << minangle << std::endl;
    }
    }
    outputFile.close();*/
@@ -1582,38 +1582,38 @@ void create_finalnodesandtriangles()
   ofstream outputFile;
   outputFile.open(fileout.c_str(), std::ios_base::binary);
 //  float minangle = 10000000;
-  outputFile << "# vtk DataFile Version 2.0" << endl;
-  outputFile << "data set from FFT2dx_GB" << endl;
-  outputFile << "ASCII" << endl;
-  outputFile << "DATASET UNSTRUCTURED_GRID" << endl;
-  outputFile << endl;
-  outputFile << "POINTS " << numnodes << " float" << endl;
+  outputFile << "# vtk DataFile Version 2.0" << std::endl;
+  outputFile << "data set from FFT2dx_GB" << std::endl;
+  outputFile << "ASCII" << std::endl;
+  outputFile << "DATASET UNSTRUCTURED_GRID" << std::endl;
+  outputFile << std::endl;
+  outputFile << "POINTS " << numnodes << " float" << std::endl;
   for (int i = 0; i < numnodes; i++)
   {
-    outputFile << finalnode[i].xc << " " << finalnode[i].yc << " " << finalnode[i].zc << endl;
+    outputFile << finalnode[i].xc << " " << finalnode[i].yc << " " << finalnode[i].zc << std::endl;
   }
-  outputFile << endl;
-  outputFile << "CELLS " << numtriangles * 2 << " " << numtriangles * 2 * 4 << endl;
+  outputFile << std::endl;
+  outputFile << "CELLS " << numtriangles * 2 << " " << numtriangles * 2 * 4 << std::endl;
   for (int i = 0; i < numtriangles; i++)
   {
-    outputFile << "3 " << finaltriangle[i].firstnodeleft << " " << finaltriangle[i].secondnodeleft << " " << finaltriangle[i].thirdnodeleft << endl;
-    outputFile << "3 " << finaltriangle[i].firstnoderight << " " << finaltriangle[i].secondnoderight << " " << finaltriangle[i].thirdnoderight << endl;
+    outputFile << "3 " << finaltriangle[i].firstnodeleft << " " << finaltriangle[i].secondnodeleft << " " << finaltriangle[i].thirdnodeleft << std::endl;
+    outputFile << "3 " << finaltriangle[i].firstnoderight << " " << finaltriangle[i].secondnoderight << " " << finaltriangle[i].thirdnoderight << std::endl;
   }
-  outputFile << endl;
-  outputFile << "CELL_TYPES " << numtriangles * 2 << endl;
+  outputFile << std::endl;
+  outputFile << "CELL_TYPES " << numtriangles * 2 << std::endl;
   for (int i = 0; i < numtriangles; i++)
   {
-    outputFile << "5" << endl;
-    outputFile << "5" << endl;
+    outputFile << "5" << std::endl;
+    outputFile << "5" << std::endl;
   }
-  outputFile << endl;
-  outputFile << "CELL_DATA " << numtriangles * 2 << endl;
-  outputFile << "SCALARS GrainID float" << endl;
-  outputFile << "LOOKUP_TABLE default" << endl;
+  outputFile << std::endl;
+  outputFile << "CELL_DATA " << numtriangles * 2 << std::endl;
+  outputFile << "SCALARS GrainID float" << std::endl;
+  outputFile << "LOOKUP_TABLE default" << std::endl;
   for (int i = 0; i < numtriangles; i++)
   {
-    outputFile << finaltriangle[i].leftgrain << endl;
-    outputFile << finaltriangle[i].rightgrain << endl;
+    outputFile << finaltriangle[i].leftgrain << std::endl;
+    outputFile << finaltriangle[i].rightgrain << std::endl;
   }
   outputFile.close();
 }
@@ -2086,73 +2086,73 @@ void make_nodes(int iter)
       }
     }
   }
-  /*  outFile << "# vtk DataFile Version 2.0" << endl;
-   outFile << "data set from FFT2dx_GB" << endl;
-   outFile << "ASCII" << endl;
-   outFile << "DATASET UNSTRUCTURED_GRID" << endl;
-   outFile << endl;
-   outFile << "POINTS " << numsurfnodes+numnodes-numgoodsurfnodes << " float" << endl;
+  /*  outFile << "# vtk DataFile Version 2.0" << std::endl;
+   outFile << "data set from FFT2dx_GB" << std::endl;
+   outFile << "ASCII" << std::endl;
+   outFile << "DATASET UNSTRUCTURED_GRID" << std::endl;
+   outFile << std::endl;
+   outFile << "POINTS " << numsurfnodes+numnodes-numgoodsurfnodes << " float" << std::endl;
    for(int i=0;i<numsurfnodes;i++)
    {
-   outFile << originalnode[i].xc << " " << originalnode[i].yc << " " << originalnode[i].zc << endl;
+   outFile << originalnode[i].xc << " " << originalnode[i].yc << " " << originalnode[i].zc << std::endl;
    }
    for(int i=numgoodsurfnodes;i<numnodes;i++)
    {
-   outFile << node[i].xc << " " << node[i].yc << " " << node[i].zc << endl;
+   outFile << node[i].xc << " " << node[i].yc << " " << node[i].zc << std::endl;
    }
-   outFile << endl;
-   outFile << "CELLS " << numtriangles+(numsurfnodes+numnodes-numgoodsurfnodes) << " " << (numtriangles*4)+((numsurfnodes+numnodes-numgoodsurfnodes)*2) << endl;
+   outFile << std::endl;
+   outFile << "CELLS " << numtriangles+(numsurfnodes+numnodes-numgoodsurfnodes) << " " << (numtriangles*4)+((numsurfnodes+numnodes-numgoodsurfnodes)*2) << std::endl;
    for(int i=0;i<numsurfnodes;i++)
    {
-   outFile << "1 " << i << endl;
+   outFile << "1 " << i << std::endl;
    }
    for(int i=numgoodsurfnodes;i<numnodes;i++)
    {
-   outFile << "1 " << i+numsurfnodes-numgoodsurfnodes << endl;
+   outFile << "1 " << i+numsurfnodes-numgoodsurfnodes << std::endl;
    }
    trianglelist = grain[iter].trianglelist;
    while(!trianglelist.empty())
    {
    int firsttriangle = trianglelist.front();
-   outFile << "3 " << triangle[firsttriangle].firstnodeleft << " " << triangle[firsttriangle].secondnodeleft << " " << triangle[firsttriangle].thirdnodeleft << endl;
+   outFile << "3 " << triangle[firsttriangle].firstnodeleft << " " << triangle[firsttriangle].secondnodeleft << " " << triangle[firsttriangle].thirdnodeleft << std::endl;
    trianglelist.pop_front();
    }
-   outFile << endl;
-   outFile << "CELL_TYPES " << numtriangles+(numsurfnodes+numnodes-numgoodsurfnodes) << endl;
+   outFile << std::endl;
+   outFile << "CELL_TYPES " << numtriangles+(numsurfnodes+numnodes-numgoodsurfnodes) << std::endl;
    for(int i=0;i<numsurfnodes;i++)
    {
-   outFile << "1" << endl;
+   outFile << "1" << std::endl;
    }
    for(int i=numgoodsurfnodes;i<numnodes;i++)
    {
-   outFile << "1" << endl;
+   outFile << "1" << std::endl;
    }
    trianglelist = grain[iter].trianglelist;
    while(!trianglelist.empty())
    {
    int firsttriangle = trianglelist.front();
-   outFile << "5" << endl;
+   outFile << "5" << std::endl;
    trianglelist.pop_front();
    }
-   outFile << endl;
-   outFile << "CELL_DATA " << numtriangles+(numsurfnodes+numnodes-numgoodsurfnodes) << endl;
-   outFile << "SCALARS GrainID int 1" << endl;
-   outFile << "LOOKUP_TABLE default" << endl;
+   outFile << std::endl;
+   outFile << "CELL_DATA " << numtriangles+(numsurfnodes+numnodes-numgoodsurfnodes) << std::endl;
+   outFile << "SCALARS GrainID int 1" << std::endl;
+   outFile << "LOOKUP_TABLE default" << std::endl;
    for(int i=0;i<numsurfnodes;i++)
    {
-   outFile << "0" << endl;
+   outFile << "0" << std::endl;
    }
    for(int i=numgoodsurfnodes;i<numnodes;i++)
    {
    list<int> nglist = node[i].grainlist;
    int grainname = nglist.front();
-   outFile << grainname << endl;
+   outFile << grainname << std::endl;
    }
    trianglelist = grain[iter].trianglelist;
    while(!trianglelist.empty())
    {
    int firsttriangle = trianglelist.front();
-   outFile << iter << endl;
+   outFile << iter << std::endl;
    trianglelist.pop_front();
    }
    outFile.close();*/
@@ -2164,8 +2164,8 @@ void write_nodes()
   filename = "points.txt";
   ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
-  outFile << 3 << endl;
-  outFile << numnodes << endl;
+  outFile << 3 << std::endl;
+  outFile << numnodes << std::endl;
   for (int i = 0; i < numnodes; i++)
   {
     nnvector[i].clear();
@@ -2174,7 +2174,7 @@ void write_nodes()
       float x = finalnode[i].xc;
       float y = finalnode[i].yc;
       float z = finalnode[i].zc;
-      outFile << x << " " << y << " " << z << endl;
+      outFile << x << " " << y << " " << z << std::endl;
     }
   }
   outFile.close();
@@ -5455,18 +5455,18 @@ void write_meshdata(string outname1)
   ofstream outFile;
   outFile.open(outname1.c_str(), std::ios_base::binary);
   int edgeelement = 0;
-  outFile << "# vtk DataFile Version 2.0" << endl;
-  outFile << "data set from FFT2dx_GB" << endl;
-  outFile << "ASCII" << endl;
-  outFile << "DATASET UNSTRUCTURED_GRID" << endl;
-  outFile << endl;
-  outFile << "POINTS " << numnodes << " float" << endl;
+  outFile << "# vtk DataFile Version 2.0" << std::endl;
+  outFile << "data set from FFT2dx_GB" << std::endl;
+  outFile << "ASCII" << std::endl;
+  outFile << "DATASET UNSTRUCTURED_GRID" << std::endl;
+  outFile << std::endl;
+  outFile << "POINTS " << numnodes << " float" << std::endl;
   for (int j = 0; j < numnodes; j++)
   {
     float x = finalnode[j].xc;
     float y = finalnode[j].yc;
     float z = finalnode[j].zc;
-    outFile << x << " " << y << " " << z << endl;
+    outFile << x << " " << y << " " << z << std::endl;
   }
   int goodelementcount = 0;
   for (int i = 0; i < elementcount; i++)
@@ -5476,11 +5476,11 @@ void write_meshdata(string outname1)
       goodelementcount++;
     }
   }
-  outFile << endl;
-  outFile << "CELLS " << goodelementcount + numnodes << " " << (goodelementcount * 5) + (numnodes * 2) << endl;
+  outFile << std::endl;
+  outFile << "CELLS " << goodelementcount + numnodes << " " << (goodelementcount * 5) + (numnodes * 2) << std::endl;
   for (int j = 0; j < numnodes; j++)
   {
-    outFile << "1 " << j << endl;
+    outFile << "1 " << j << std::endl;
   }
   for (int i = 0; i < elementcount; i++)
   {
@@ -5491,32 +5491,32 @@ void write_meshdata(string outname1)
       int n2 = element[i].node2;
       int n3 = element[i].node3;
       int n4 = element[i].node4;
-      outFile << "4 " << n1 << " " << n2 << " " << n3 << " " << n4 << endl;
+      outFile << "4 " << n1 << " " << n2 << " " << n3 << " " << n4 << std::endl;
     }
   }
-  outFile << endl;
-  outFile << "CELL_TYPES " << goodelementcount + numnodes << endl;
+  outFile << std::endl;
+  outFile << "CELL_TYPES " << goodelementcount + numnodes << std::endl;
   for (int j = 0; j < numnodes; j++)
   {
-    outFile << "1" << endl;
+    outFile << "1" << std::endl;
   }
   for (int i = 0; i < elementcount; i++)
   {
     if (element[i].elementkilled != 1)
     {
-      outFile << "10" << endl;
+      outFile << "10" << std::endl;
     }
   }
-  outFile << endl;
-  outFile << "CELL_DATA " << goodelementcount + numnodes << endl;
-  outFile << "SCALARS GrainID int 1" << endl;
-  outFile << "LOOKUP_TABLE default" << endl;
+  outFile << std::endl;
+  outFile << "CELL_DATA " << goodelementcount + numnodes << std::endl;
+  outFile << "SCALARS GrainID int 1" << std::endl;
+  outFile << "LOOKUP_TABLE default" << std::endl;
   for (int j = 0; j < numnodes; j++)
   {
     int nodetype = finalnode[j].surfnode;
-    outFile << nodetype << endl;
-    //    if(gvector[j].size() == 1) outFile << gvector[j][0] << endl;
-    //    if(gvector[j].size() != 1) outFile << "0" << endl;
+    outFile << nodetype << std::endl;
+    //    if(gvector[j].size() == 1) outFile << gvector[j][0] << std::endl;
+    //    if(gvector[j].size() != 1) outFile << "0" << std::endl;
   }
   for (int i = 0; i < elementcount; i++)
   {
@@ -5524,15 +5524,15 @@ void write_meshdata(string outname1)
     {
       edgeelement = 0;
       int gname = element[i].grainname;
-      outFile << gname << endl;
+      outFile << gname << std::endl;
     }
   }
-  outFile << endl;
-  outFile << "SCALARS DihedralAngle float" << endl;
-  outFile << "LOOKUP_TABLE default" << endl;
+  outFile << std::endl;
+  outFile << "SCALARS DihedralAngle float" << std::endl;
+  outFile << "LOOKUP_TABLE default" << std::endl;
   for (int j = 0; j < numnodes; j++)
   {
-    outFile << "0" << endl;
+    outFile << "0" << std::endl;
   }
   for (int i = 0; i < elementcount; i++)
   {
@@ -5578,7 +5578,7 @@ void write_meshdata(string outname1)
         worstangle = (dihedral5);
       if ((dihedral6) < worstangle)
         worstangle = (dihedral6);
-      outFile << worstangle << endl;
+      outFile << worstangle << std::endl;
     }
   }
   outFile.close();
@@ -5592,11 +5592,11 @@ void write_dihedralangles(string outname2)
   {
     if (i < 25)
     {
-      outFile << i << " " << dihedralanglesurf[i] << "  " << dihedralanglebulk[i] << "  " << volumesurf[i] << " " << volumebulk[i] << endl;
+      outFile << i << " " << dihedralanglesurf[i] << "  " << dihedralanglebulk[i] << "  " << volumesurf[i] << " " << volumebulk[i] << std::endl;
     }
     if (i >= 25)
     {
-      outFile << i << " " << dihedralanglesurf[i] << "  " << dihedralanglebulk[i] << endl;
+      outFile << i << " " << dihedralanglesurf[i] << "  " << dihedralanglebulk[i] << std::endl;
     }
   }
   outFile.close();
@@ -5605,17 +5605,17 @@ void write_voxeldata(string outname3)
 {
   ofstream outFile;
   outFile.open(outname3.c_str(), std::ios_base::binary);
-  outFile << "# vtk DataFile Version 2.0" << endl;
-  outFile << "data set from FFT2dx_GB" << endl;
-  outFile << "ASCII" << endl;
-  outFile << "DATASET STRUCTURED_POINTS" << endl;
-  outFile << "DIMENSIONS " << (numxvoxels) << " " << (numyvoxels) << " " << (numzvoxels) << endl;
-  outFile << "ORIGIN 0.0 0.0 0.0" << endl;
-  outFile << "SPACING " << xres << " " << yres << " " << zres << endl;
-  outFile << "POINT_DATA " << (numxvoxels) * (numyvoxels) * (numzvoxels) << endl;
-  outFile << endl;
-  outFile << "SCALARS GrainID int 1" << endl;
-  outFile << "LOOKUP_TABLE default" << endl;
+  outFile << "# vtk DataFile Version 2.0" << std::endl;
+  outFile << "data set from FFT2dx_GB" << std::endl;
+  outFile << "ASCII" << std::endl;
+  outFile << "DATASET STRUCTURED_POINTS" << std::endl;
+  outFile << "DIMENSIONS " << (numxvoxels) << " " << (numyvoxels) << " " << (numzvoxels) << std::endl;
+  outFile << "ORIGIN 0.0 0.0 0.0" << std::endl;
+  outFile << "SPACING " << xres << " " << yres << " " << zres << std::endl;
+  outFile << "POINT_DATA " << (numxvoxels) * (numyvoxels) * (numzvoxels) << std::endl;
+  outFile << std::endl;
+  outFile << "SCALARS GrainID int 1" << std::endl;
+  outFile << "LOOKUP_TABLE default" << std::endl;
   int counter = 0;
   for (int i = 0; i < numzvoxels; i++)
   {
@@ -5626,7 +5626,7 @@ void write_voxeldata(string outname3)
         counter++;
         outFile << "       " << voxels[k][j][i];
         if (counter % 20 == 0)
-          outFile << endl;
+          outFile << std::endl;
       }
     }
   }

@@ -55,7 +55,6 @@
 
 const static float m_pi = static_cast<float>(M_PI);
 
-using namespace std;
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
