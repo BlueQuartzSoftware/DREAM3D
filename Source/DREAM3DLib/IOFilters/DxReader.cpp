@@ -35,8 +35,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DxReader.h"
 
+
 #include <iostream>
-#include <fstream>
+
 
 #include "MXA/Utilities/MXAFileInfo.h"
 
@@ -354,7 +355,6 @@ int DxReader::readFile()
     return -1;
   }
 
-  std::string line;
   std::string delimeters(", ;\t"); /* delimeters to split the data */
   std::vector<std::string> tokens; /* vector to store the split data */
 
@@ -382,8 +382,7 @@ int DxReader::readFile()
     return -1;
   }
 
-
-  while (getline(m_InStream, line, '\n') != NULL)
+  for (std::string line; std::getline(m_InStream, line);)
   {
 
     // Get the remaining lines of the header and ignore

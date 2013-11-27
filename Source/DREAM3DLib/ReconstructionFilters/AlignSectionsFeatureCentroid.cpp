@@ -55,7 +55,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-using namespace std;
+
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -206,7 +206,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::v
   VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
-  ofstream outFile;
+  std::ofstream outFile;
   if (getWriteAlignmentShifts() == true) {
     outFile.open(getAlignmentShiftFileName().c_str());
   }
@@ -274,7 +274,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::v
       yshifts[iter] = yshifts[iter-1] + int((yCentroid[iter]-yCentroid[iter-1])/yRes);
     }
     if (getWriteAlignmentShifts() == true) {
-      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << " " << xCentroid[iter] << " " << yCentroid[iter] << endl;
+      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << " " << xCentroid[iter] << " " << yCentroid[iter] << std::endl;
     }
   }
   if (getWriteAlignmentShifts() == true) {

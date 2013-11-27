@@ -118,8 +118,8 @@ void tokenize(const std::string& str,
  */
 int  ReadPHFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz)
 {
-  std::string line;
-  line.resize(1024);
+  
+  //line.resize(1024);
 
   std::string delimeters(", ;\t"); /* delimeters to split the data */
   std::vector<std::string> tokens; /* vector to store the split data */
@@ -136,31 +136,28 @@ int  ReadPHFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, 
     return -1;
   }
 
-  getline(InFile, line);
-
-  tokenize(line, tokens, delimeters);
-
-  // Process the header information from the PH file.
-  error = 0;
-  error += sscanf(tokens[0].c_str(), "%d", &nx);
-  error += sscanf(tokens[1].c_str(), "%d", &ny);
-  error += sscanf(tokens[2].c_str(), "%d", &nz);
-  if (error < 0)
   {
-    std::cout << "Error parsing Dimensions from ph file. The line that is being parsed was \n'" <<
-       line << "'" <<  std::endl;
-    return -1;
-  }
-  tokens.clear();
+	  std::string line;
+	  std::getline(InFile, line);
+	  tokenize(line, tokens, delimeters);
 
-  //  cout << "INFO: PH file grid size: " << nx << "\t" << ny << "\t" << nz << endl;;
-
-  //MCgrid3D* grid = new grid(nx,ny,nz);
+	  // Process the header information from the PH file.
+	  error = 0;
+	  error += sscanf(tokens[0].c_str(), "%d", &nx);
+	  error += sscanf(tokens[1].c_str(), "%d", &ny);
+	  error += sscanf(tokens[2].c_str(), "%d", &nz);
+	  if (error < 0)
+	  {
+		std::cout << "Error parsing Dimensions from ph file. The line that is being parsed was \n'" <<
+		line << "'" <<  std::endl;
+		return -1;
+	  }
+	  tokens.clear();
 
   // Get the remaining two lines of the header and ignore
-  getline(InFile, line, '\n');
-  getline(InFile, line, '\n');
-
+	  getline(InFile, line, '\n');
+	  getline(InFile, line, '\n');
+  }
   //The PH file has a unique format of 20 entries on each line. I have
   //now idea who initiated this insanity but I am about to propetuate
   //it.
@@ -168,15 +165,15 @@ int  ReadPHFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, 
   //The most simple thing todo is to read the entire dataset into one
   //long vector and then read that vector to assign values to the grid
 
-  while (getline(InFile, line, '\n') != NULL)
+  for (std::string line; std::getline(InFile, line);)
   {
     tokens.clear();
     error = 0;
     tokenize(line, tokens, delimeters);
-    //        cout << line << endl;
+    //        cout << line << std::endl;
     //        for(int i=0; i < tokens.size(); i++ )
     //              cout << setw(6) << tokens[i];
-    //        cout << endl;
+    //        cout << std::endl;
 
     for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
     {
@@ -185,7 +182,7 @@ int  ReadPHFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, 
     }
     //        if(error != 20)
     //              {
-    //                cout << "ERROR: Invalid number of line entries in PH file" << endl;
+    //                cout << "ERROR: Invalid number of line entries in PH file" << std::endl;
     //              }
   }
 

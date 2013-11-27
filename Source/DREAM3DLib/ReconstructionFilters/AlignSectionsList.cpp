@@ -55,7 +55,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-using namespace std;
+
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -178,7 +178,7 @@ void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> 
   VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
-  ifstream inFile;
+  std::ifstream inFile;
   inFile.open(m_InputFile.c_str());
 
   size_t udims[3] = {0,0,0};

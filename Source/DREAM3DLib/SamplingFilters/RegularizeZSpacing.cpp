@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-using namespace std;
+
 
 //#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
@@ -119,7 +119,7 @@ void RegularizeZSpacing::preflight()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  ifstream inFile;
+  std::ifstream inFile;
   inFile.open(m_InputFile.c_str());
 
   float zval;
@@ -160,7 +160,7 @@ void RegularizeZSpacing::execute()
   size_t dims[3];
   m->getDimensions(dims);
 
-  ifstream inFile;
+  std::ifstream inFile;
   inFile.open(m_InputFile.c_str());
 
   float zval;
