@@ -260,6 +260,7 @@
 /* Define size of long long and/or __int64 bit integer type only if the type
    exists.  */
 #if !defined(__APPLE__)
+ #define CMP_TYPE_USE_LONG_LONG 8
  #define CMP_SIZEOF_LONG_LONG @CMP_SIZEOF_LONG_LONG@
 #else
  #define CMP_SIZEOF_LONG_LONG 8

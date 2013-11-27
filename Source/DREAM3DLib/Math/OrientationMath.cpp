@@ -32,6 +32,7 @@
 #include "OrientationMath.h"
 
 #include <cmath>
+#include <limits>
 
 #include "MXA/Common/LogTime.h"
 
