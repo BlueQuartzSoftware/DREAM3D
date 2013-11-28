@@ -24,7 +24,8 @@ class GenerateFeatureIds : public AbstractFilter
     virtual ~GenerateFeatureIds(){}
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     virtual const QString getGroupName()
     {
@@ -52,9 +53,9 @@ class GenerateFeatureIds : public AbstractFilter
       m->setDimensions(nx, ny, nz);
 
       int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+      size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+      size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+      dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
       // Set the default data into the FeatureIds
       for (int i = 0; i < size; ++i)
       {
@@ -105,8 +106,8 @@ class GenerateFeatureIds : public AbstractFilter
       }
       QVector<int> dims(1, 1);
       m_FeatureIdsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  	  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+      if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
 
     GenerateFeatureIds(const GenerateFeatureIds&); // Copy Constructor Not Implemented
