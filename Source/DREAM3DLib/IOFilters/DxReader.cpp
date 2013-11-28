@@ -158,7 +158,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t 
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
@@ -337,7 +337,7 @@ int DxReader::readHeader()
   if(pos1 != 0)
   {
     error = 0;
-   // points = tokens[pos1 + 1].toInt(&ok, 10);
+    // points = tokens[pos1 + 1].toInt(&ok, 10);
   }
   m->setDimensions(nx, ny, nz);
   //  qDebug() << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz ;
@@ -353,7 +353,7 @@ int DxReader::readFile()
 
   QString line;
   QString delimeters(", ;\t"); /* delimeters to split the data */
-  
+
   int error; /* dummy variables */
 
   bool finished_header, finished_data;
@@ -375,7 +375,7 @@ int DxReader::readFile()
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, totalPoints, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 
   if (getErrorCondition() < 0)

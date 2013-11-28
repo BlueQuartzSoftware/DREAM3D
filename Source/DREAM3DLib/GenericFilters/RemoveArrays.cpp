@@ -71,7 +71,7 @@ void RemoveArrays::setupFilterParameters()
 void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-      reader->closeFilterGroup();
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -80,7 +80,7 @@ void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, 
 int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-      writer->closeFilterGroup();
+  writer->closeFilterGroup();
   return ++index;
 }
 
@@ -104,14 +104,14 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t features, siz
     for(MapOfAttributeArrays_t::iterator iter = mapOfArraysToRemove.begin(); iter != mapOfArraysToRemove.end(); ++iter)
     {
       AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(iter.key());
-      if(NULL == attrMatrix.get()) 
+      if(NULL == attrMatrix.get())
       {
         setErrorCondition(-999);
         notifyErrorMessage("The AttributeMatrix Object was NULL", -999);
         return;
       }
       QSet<QString> arraysToRemove = iter.value();
-      foreach (const QString &value, arraysToRemove)
+      foreach (const QString & value, arraysToRemove)
       {
         attrMatrix->removeAttributeArray(value);
       }

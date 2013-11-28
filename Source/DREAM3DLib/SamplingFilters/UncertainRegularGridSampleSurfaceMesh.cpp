@@ -162,7 +162,7 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck(bool preflight, size_t vox
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -209,7 +209,7 @@ void UncertainRegularGridSampleSurfaceMesh::execute()
   m->setOrigin(0.0, 0.0, 0.0);
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
-  dataCheck(true, (m_XPoints*m_YPoints*m_ZPoints), 0, 0); 
+  dataCheck(true, (m_XPoints * m_YPoints * m_ZPoints), 0, 0);
 
   SampleSurfaceMesh::execute();
 
@@ -221,25 +221,25 @@ void UncertainRegularGridSampleSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 VertexArray::Pointer UncertainRegularGridSampleSurfaceMesh::generate_points()
 {
-  VertexArray::Pointer points = VertexArray::CreateArray((m_XPoints*m_YPoints*m_ZPoints), "points");
+  VertexArray::Pointer points = VertexArray::CreateArray((m_XPoints * m_YPoints * m_ZPoints), "points");
 
   DREAM3D_RANDOMNG_NEW()
 
   int count = 0;
   float coords[3];
-  float lastX=0, lastY=0, lastZ=0;
-  for(int k=0;k<m_ZPoints;k++)
+  float lastX = 0, lastY = 0, lastZ = 0;
+  for(int k = 0; k < m_ZPoints; k++)
   {
-    float randomZ = 2*static_cast<float>(rg.genrand_res53())-1;
-    for(int j=0;j<m_YPoints;j++)
+    float randomZ = 2 * static_cast<float>(rg.genrand_res53()) - 1;
+    for(int j = 0; j < m_YPoints; j++)
     {
-      float randomY = 2*static_cast<float>(rg.genrand_res53())-1;
-      for(int i=0;i<m_XPoints;i++)
+      float randomY = 2 * static_cast<float>(rg.genrand_res53()) - 1;
+      for(int i = 0; i < m_XPoints; i++)
       {
-        float randomX = 2*static_cast<float>(rg.genrand_res53())-1;
-        coords[0] = lastX + m_Resolution.x + (m_Uncertainty.x*randomX);
-        coords[1] = lastY + m_Resolution.y + (m_Uncertainty.y*randomY);
-        coords[2] = lastZ + m_Resolution.z + (m_Uncertainty.z*randomZ);
+        float randomX = 2 * static_cast<float>(rg.genrand_res53()) - 1;
+        coords[0] = lastX + m_Resolution.x + (m_Uncertainty.x * randomX);
+        coords[1] = lastY + m_Resolution.y + (m_Uncertainty.y * randomY);
+        coords[2] = lastZ + m_Resolution.z + (m_Uncertainty.z * randomZ);
         points->setCoords(count, coords);
         lastX = coords[0];
         lastY = coords[1];
@@ -258,7 +258,7 @@ VertexArray::Pointer UncertainRegularGridSampleSurfaceMesh::generate_points()
 void UncertainRegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
 {
   int32_t* ids = iArray->getPointer(0);
-  for(int i=0;i<(m_XPoints*m_YPoints*m_ZPoints);i++)
+  for(int i = 0; i < (m_XPoints * m_YPoints * m_ZPoints); i++)
   {
     m_FeatureIds[i] = ids[i];
   }

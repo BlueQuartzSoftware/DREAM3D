@@ -13,15 +13,15 @@
 
 
 #if defined (_MSC_VER)
-  #pragma warning(disable: 4251)
-  #pragma warning(disable: 4710)
-  #pragma warning(disable: 4820)
-  #pragma warning(disable: 4668)
-  #pragma warning(disable: 4265)
-  #pragma warning(disable: 4189)
-  #pragma warning(disable: 4640)
-  #pragma warning(disable: 4996)
-  #pragma warning(disable: 4548)
+#pragma warning(disable: 4251)
+#pragma warning(disable: 4710)
+#pragma warning(disable: 4820)
+#pragma warning(disable: 4668)
+#pragma warning(disable: 4265)
+#pragma warning(disable: 4189)
+#pragma warning(disable: 4640)
+#pragma warning(disable: 4996)
+#pragma warning(disable: 4548)
 #endif
 
 /* Cmake will define PipelineBuilderLib_EXPORTS on Windows when it
@@ -33,24 +33,24 @@ building the MXADatModel DLL on windows.
 
 
 
-  #if defined (PipelineBuilderLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
-    #if defined (_MSC_VER)  /* MSVC Compiler Case */
-      #define  PipelineBuilderLib_EXPORT __declspec(dllexport)
-    #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-      #define PipelineBuilderLib_EXPORT __attribute__ ((visibility("default")))
-    #endif
-  #else  /* Importing the DLL into another project */
-    #if defined (_MSC_VER)  /* MSVC Compiler Case */
-      #define  PipelineBuilderLib_EXPORT __declspec(dllimport)
-    #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-      #define PipelineBuilderLib_EXPORT __attribute__ ((visibility("default")))
-    #endif
-  #endif
+#if defined (PipelineBuilderLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
+#if defined (_MSC_VER)  /* MSVC Compiler Case */
+#define  PipelineBuilderLib_EXPORT __declspec(dllexport)
+#elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
+#define PipelineBuilderLib_EXPORT __attribute__ ((visibility("default")))
+#endif
+#else  /* Importing the DLL into another project */
+#if defined (_MSC_VER)  /* MSVC Compiler Case */
+#define  PipelineBuilderLib_EXPORT __declspec(dllimport)
+#elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
+#define PipelineBuilderLib_EXPORT __attribute__ ((visibility("default")))
+#endif
+#endif
 
 
 /* If PipelineBuilderLib_EXPORT was never defined, define it here */
 #ifndef PipelineBuilderLib_EXPORT
-  #define PipelineBuilderLib_EXPORT
+#define PipelineBuilderLib_EXPORT
 #endif
 
 

@@ -65,10 +65,10 @@ class DREAM3DLib_EXPORT FindSurfaceFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-        //------ Created Feature Data
-    
+
+    //------ Required Cell Data
+    //------ Created Feature Data
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
     virtual const QString getHumanLabel() { return "Find Surface Features"; }

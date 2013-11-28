@@ -172,7 +172,8 @@ void PipelineViewWidget::setErrorsTextArea(QTableWidget* t)
 int PipelineViewWidget::filterCount()
 {
   int count = 0;
-  if (NULL != m_FilterWidgetLayout) {
+  if (NULL != m_FilterWidgetLayout)
+  {
     count = m_FilterWidgetLayout->count() - 1;
   }
   return count;
@@ -184,7 +185,8 @@ int PipelineViewWidget::filterCount()
 QFilterWidget* PipelineViewWidget::filterWidgetAt(int index)
 {
   QFilterWidget* fw = NULL;
-  if (m_FilterWidgetLayout != NULL) {
+  if (m_FilterWidgetLayout != NULL)
+  {
     QWidget* w = m_FilterWidgetLayout->itemAt(index)->widget();
     fw = qobject_cast<QFilterWidget*>(w);
   }
@@ -202,7 +204,8 @@ void PipelineViewWidget::resetLayout()
   {
     // Remove the current Layout
     QLayout* l = layout();
-    if (NULL != l && l == m_FilterWidgetLayout) {
+    if (NULL != l && l == m_FilterWidgetLayout)
+    {
       qDeleteAll(l->children());
       delete l;
       m_FilterWidgetLayout = NULL;
@@ -222,7 +225,8 @@ void PipelineViewWidget::clearWidgets()
   for(qint32 i = count - 1; i >= 0; --i)
   {
     QWidget* w = m_FilterWidgetLayout->itemAt(i)->widget();
-    if (NULL != w) {
+    if (NULL != w)
+    {
       m_FilterWidgetLayout->removeWidget(w);
       w->deleteLater();
     }
@@ -258,7 +262,7 @@ void PipelineViewWidget::loadPipeline(FilterPipeline::Pointer pipeline, bool app
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::savePipeline(const QString &filePath, const QString name, QSettings::Format format)
+void PipelineViewWidget::savePipeline(const QString& filePath, const QString name, QSettings::Format format)
 {
   qint32 count = filterCount();
 
@@ -303,13 +307,15 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 
   if (filterCount() <= 0)
   {
-    if (NULL != m_EmptyPipelineLabel) {
+    if (NULL != m_EmptyPipelineLabel)
+    {
       m_EmptyPipelineLabel->hide();
       delete m_EmptyPipelineLabel;
       m_EmptyPipelineLabel = NULL;
     }
     QLayout* l = layout();
-    if (NULL != l) {
+    if (NULL != l)
+    {
       qDeleteAll(l->children());
       delete l;
     }
@@ -342,16 +348,16 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 
 
 #define CONVERT_STD_LIST_TO_QLIST(dataContainer, type, filterWidget)\
-{\
-  QList<QString> theList = dataContainer->get##type##ArrayNameList();\
-  QList<QString> list;\
-  for(QList<QString>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
-  list << (*iter);\
+  {\
+    QList<QString> theList = dataContainer->get##type##ArrayNameList();\
+    QList<QString> list;\
+    for(QList<QString>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
+      list << (*iter);\
+    }\
+    PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
+    if (NULL != ptr) { ptr->setPossible##type##ArrayNames(list); }\
   }\
-  PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
-  if (NULL != ptr) { ptr->setPossible##type##ArrayNames(list); }\
-  }\
-
+   
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -360,7 +366,8 @@ void PipelineViewWidget::preflightPipeline()
   // clear all the error messages
   m_PipelineErrorList.clear();
 
-  for (int i=0; i<errorTableWidget->rowCount(); ++i) {
+  for (int i = 0; i < errorTableWidget->rowCount(); ++i)
+  {
     errorTableWidget->removeRow(i);
   }
   errorTableWidget->setRowCount(0);
@@ -455,9 +462,12 @@ void PipelineViewWidget::preflightErrorMessage(QVector<PipelineMessage> errorStr
       errorCodeWidgetItem->setTextAlignment(Qt::AlignCenter);
       PipelineMessage& msg = errorStream.at(i);
       QColor errColor(255, 255, 255);
-      if (msg.getMessageType() == PipelineMessage::Error) {
+      if (msg.getMessageType() == PipelineMessage::Error)
+      {
         errColor = QColor(255, 191, 193);
-      } else if (msg.getMessageType() == PipelineMessage::Warning) {
+      }
+      else if (msg.getMessageType() == PipelineMessage::Warning)
+      {
         errColor = QColor(251, 254, 137);
       }
       QBrush errBrush(errColor);
@@ -489,7 +499,8 @@ void PipelineViewWidget::removeFilterWidget()
     {
       m_SelectedFilterWidget = NULL;
     }
-    if (w) {
+    if (w)
+    {
       w->deleteLater();
     }
   }
@@ -619,7 +630,7 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::dropEvent(QDropEvent *event)
+void PipelineViewWidget::dropEvent(QDropEvent* event)
 {
   if (event->mimeData()->hasUrls())
   {
@@ -642,7 +653,8 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
     preflightPipeline();
   }
   else
-  {  // This path is taken if a filter is dropped from the list of filters
+  {
+    // This path is taken if a filter is dropped from the list of filters
     if(event->mimeData()->hasText())
     {
       QByteArray dropData = event->mimeData()->data("text/plain");
@@ -700,7 +712,7 @@ void PipelineViewWidget::doAutoScroll()
   int verticalStep = m_ScrollArea->verticalScrollBar()->pageStep();
   int horizontalStep = m_ScrollArea->horizontalScrollBar()->pageStep();
   if (m_autoScrollCount < qMax(verticalStep, horizontalStep))
-    m_autoScrollCount = m_autoScrollCount + 15;
+  { m_autoScrollCount = m_autoScrollCount + 15; }
 
   int margin = m_AutoScrollMargin;
   int verticalValue = m_ScrollArea->verticalScrollBar()->value();
@@ -711,9 +723,9 @@ void PipelineViewWidget::doAutoScroll()
 
   // do the scrolling if we are in the scroll margins
   if (pos.y() - area.top() < margin)
-    m_ScrollArea->verticalScrollBar()->setValue(verticalValue - m_autoScrollCount);
+  { m_ScrollArea->verticalScrollBar()->setValue(verticalValue - m_autoScrollCount); }
   else if (area.bottom() - pos.y() < margin)
-    m_ScrollArea-> verticalScrollBar()->setValue(verticalValue + m_autoScrollCount);
+  { m_ScrollArea-> verticalScrollBar()->setValue(verticalValue + m_autoScrollCount); }
   //  if (pos.x() - area.left() < margin)
   //    m_ScrollArea->horizontalScrollBar()->setValue(horizontalValue - d->m_autoScrollCount);
   //  else if (area.right() - pos.x() < margin)
@@ -721,9 +733,12 @@ void PipelineViewWidget::doAutoScroll()
   // if nothing changed, stop scrolling
   bool verticalUnchanged = (verticalValue == m_ScrollArea->verticalScrollBar()->value());
   bool horizontalUnchanged = (horizontalValue == m_ScrollArea->horizontalScrollBar()->value());
-  if (verticalUnchanged && horizontalUnchanged) {
+  if (verticalUnchanged && horizontalUnchanged)
+  {
     stopAutoScroll();
-  } else {
+  }
+  else
+  {
     m_ScrollArea->viewport()->update();
   }
 
@@ -732,7 +747,7 @@ void PipelineViewWidget::doAutoScroll()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool PipelineViewWidget::shouldAutoScroll(const QPoint &pos)
+bool PipelineViewWidget::shouldAutoScroll(const QPoint& pos)
 {
   QRect rect = m_ScrollArea->geometry();
   QPoint scpos = m_ScrollArea->viewport()->mapFromGlobal(QCursor::pos());

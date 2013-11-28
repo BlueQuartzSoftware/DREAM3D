@@ -32,10 +32,10 @@ class DREAM3DLib_EXPORT FitCorrelatedFeatureData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    
-   DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CorrelatedFeatureArrayName)
-    
+
     DREAM3D_INSTANCE_PROPERTY(unsigned int, DistributionType)
     DREAM3D_INSTANCE_PROPERTY(int, NumberOfCorrelatedBins)
     DREAM3D_INSTANCE_PROPERTY(bool, RemoveBiasedFeatures)

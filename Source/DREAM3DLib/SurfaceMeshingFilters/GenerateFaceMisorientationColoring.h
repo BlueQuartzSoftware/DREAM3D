@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-                    
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
     /**

@@ -139,8 +139,8 @@ void FitCorrelatedFeatureData::dataCheck(bool preflight, size_t voxels, size_t f
   {
     QVector<int> dims(1, 1);
     m_BiasedFeaturesPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -183,9 +183,9 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   int numComp = 1;
 
 // Determining number of components and name given distribution type
-  if (dType == DREAM3D::DistributionType::Beta) distType = "Beta", numComp = DREAM3D::HDF5::BetaColumnCount;
-  else if (dType == DREAM3D::DistributionType::LogNormal) distType = "LogNormal", numComp = DREAM3D::HDF5::LogNormalColumnCount;
-  else if (dType == DREAM3D::DistributionType::Power) distType = "PowerLaw", numComp = DREAM3D::HDF5::PowerLawColumnCount;
+  if (dType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::HDF5::BetaColumnCount; }
+  else if (dType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::HDF5::LogNormalColumnCount; }
+  else if (dType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::HDF5::PowerLawColumnCount; }
 
   ss = selectedFeatureArrayName + distType + QString("Fit");
   QVector<int> dims(2);
@@ -225,10 +225,10 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
     m_DistributionAnalysis[dType]->calculateCorrelatedParameters(values[i], dist[i]);
     for (int j = 0; j < numBins; j++)
     {
-      for(int k =0; k < numComp; k++)
+      for(int k = 0; k < numComp; k++)
       {
         VectorOfFloatArray data = dist[i];
-        ePtr[(numComp*numBins*i)+(numComp*j)+k] = data[k]->GetValue(j);
+        ePtr[(numComp * numBins * i) + (numComp * j) + k] = data[k]->GetValue(j);
       }
     }
   }
@@ -258,16 +258,16 @@ Int32ArrayType::Pointer binData(IDataArray::Pointer correlatedData, int64_t numB
 
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if(fPtr[i] < min) min = fPtr[i];
-    if(fPtr[i] > max) max = fPtr[i];
+    if(fPtr[i] < min) { min = fPtr[i]; }
+    if(fPtr[i] > max) { max = fPtr[i]; }
   }
   //to make sure the max value feature doesn't walk off the end of the array, add a small value to the max
   max += 0.000001;
 
-  float step = (max-min)/numBins;
+  float step = (max - min) / numBins;
   for (size_t i = 1; i < numfeatures; i++)
   {
-    bPtr[i] = (fPtr[i]-min)/step;
+    bPtr[i] = (fPtr[i] - min) / step;
   }
   return binArray;
 }
@@ -295,7 +295,7 @@ void FitCorrelatedFeatureData::execute()
 
   QString ss;
 
-    IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
+  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
 
   if (NULL == inputData.get())
   {

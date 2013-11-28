@@ -65,9 +65,9 @@ class DREAM3DLib_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
     virtual ~AvizoRectilinearCoordinateWriter();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-    
+
+    //------ Required Cell Data
+
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)

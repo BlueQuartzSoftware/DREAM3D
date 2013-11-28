@@ -59,36 +59,36 @@ class QGraphicsScene;
  */
 class AIMImageGraphicsDelegate : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
 
   public:
-  AIMImageGraphicsDelegate(QObject* parent = 0);
-  virtual ~AIMImageGraphicsDelegate();
+    AIMImageGraphicsDelegate(QObject* parent = 0);
+    virtual ~AIMImageGraphicsDelegate();
 
 
-  DREAM3D_INSTANCE_PROPERTY(QMainWindow*, MainWindow)
-  DREAM3D_INSTANCE_PROPERTY(QGraphicsView*, GraphicsView)
-  DREAM3D_INSTANCE_PROPERTY(QGraphicsScene*, GraphicsScene)
+    DREAM3D_INSTANCE_PROPERTY(QMainWindow*, MainWindow)
+    DREAM3D_INSTANCE_PROPERTY(QGraphicsView*, GraphicsView)
+    DREAM3D_INSTANCE_PROPERTY(QGraphicsScene*, GraphicsScene)
 
 
-  DREAM3D_INSTANCE_PROPERTY(QImage, CachedImage)
-  DREAM3D_INSTANCE_PROPERTY(QImage, OverlayImage)
-  DREAM3D_INSTANCE_PROPERTY(bool, CompositeImages)
+    DREAM3D_INSTANCE_PROPERTY(QImage, CachedImage)
+    DREAM3D_INSTANCE_PROPERTY(QImage, OverlayImage)
+    DREAM3D_INSTANCE_PROPERTY(bool, CompositeImages)
 
 
-  /**
-   * @brief Displays a Text message in the graphics view. This is typically used
-   * when there is an error. You should NOT use this to display general String
-   * data. Use an QHDFStringDataWindow instead
-   * @param message The message to display
-   */
-  void displayTextMessage(QString message);
+    /**
+     * @brief Displays a Text message in the graphics view. This is typically used
+     * when there is an error. You should NOT use this to display general String
+     * data. Use an QHDFStringDataWindow instead
+     * @param message The message to display
+     */
+    void displayTextMessage(QString message);
 
-  /**
-   * @brief sets all cached values to NULL or empty
-   */
-  void resetCaches();
+    /**
+     * @brief sets all cached values to NULL or empty
+     */
+    void resetCaches();
 
 
   public slots:
@@ -109,7 +109,7 @@ class AIMImageGraphicsDelegate : public QObject
 
     void updateGraphicsScene(bool update = true);
 
-  //  void compositeWithImage(QImage* image, bool update = true);
+    //  void compositeWithImage(QImage* image, bool update = true);
 
   public slots:
     void setClearMode() { m_composition_mode = QPainter::CompositionMode_Clear;  }
@@ -147,21 +147,21 @@ class AIMImageGraphicsDelegate : public QObject
     bool              _shouldFitToWindow;
     QPainter::CompositionMode m_composition_mode;
 
-   /**
-   * @brief Displays a Text message in the QGraphicsScene
-   * @param message The message to display
-   */
-  void _displayTextMessage(QString message);
+    /**
+    * @brief Displays a Text message in the QGraphicsScene
+    * @param message The message to display
+    */
+    void _displayTextMessage(QString message);
 
-  /**
-   * @brief Scales the image by a _zoomFactor
-   * @return Returns a QImage that is scaled copy of the cached image
-   */
-  QImage _scaleImage();
-  QImage _scaleImage(QImage image);
+    /**
+     * @brief Scales the image by a _zoomFactor
+     * @return Returns a QImage that is scaled copy of the cached image
+     */
+    QImage _scaleImage();
+    QImage _scaleImage(QImage image);
 
-  AIMImageGraphicsDelegate(const AIMImageGraphicsDelegate&); //Copy Constructor Not Implemented
-  void operator=(const AIMImageGraphicsDelegate&); //Copy Assignment Not Implemented
+    AIMImageGraphicsDelegate(const AIMImageGraphicsDelegate&); //Copy Constructor Not Implemented
+    void operator=(const AIMImageGraphicsDelegate&); //Copy Assignment Not Implemented
 };
 
 #endif /* _AIMIMAGEGRAPHICSDELEGATE_H_ */

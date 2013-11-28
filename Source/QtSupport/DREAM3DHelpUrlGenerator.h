@@ -50,31 +50,31 @@
 class DREAM3DHelpUrlGenerator
 {
 
-public:
-  DREAM3DHelpUrlGenerator();
-  virtual ~DREAM3DHelpUrlGenerator();
+  public:
+    DREAM3DHelpUrlGenerator();
+    virtual ~DREAM3DHelpUrlGenerator();
 
-  /**
-     * @brief Generates a help URL from the given lowercase name.
-     */
-  static QUrl generateHTMLUrl(QString helpName);
+    /**
+       * @brief Generates a help URL from the given lowercase name.
+       */
+    static QUrl generateHTMLUrl(QString helpName);
 
-  /**
-     * @brief Opens the URL specified in a web browser.  The variable "parent" is needed
-   * to pop-up a dialog box if the opening process fails.
-     */
-  static void openHTMLUrl(QUrl URL, QWidget* parent);
+    /**
+       * @brief Opens the URL specified in a web browser.  The variable "parent" is needed
+     * to pop-up a dialog box if the opening process fails.
+       */
+    static void openHTMLUrl(QUrl URL, QWidget* parent);
 
-  /**
-     * @brief This function both generates a URL and opens it in a browser.  It is simply
-   * a combination of the two previous functions, for convenience.
-     */
-  static void generateAndOpenHTMLUrl(QString helpName, QWidget* parent);
+    /**
+       * @brief This function both generates a URL and opens it in a browser.  It is simply
+     * a combination of the two previous functions, for convenience.
+       */
+    static void generateAndOpenHTMLUrl(QString helpName, QWidget* parent);
 
-private:
+  private:
 
-  DREAM3DHelpUrlGenerator(const DREAM3DHelpUrlGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DREAM3DHelpUrlGenerator&); // Operator '=' Not Implemented
+    DREAM3DHelpUrlGenerator(const DREAM3DHelpUrlGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DHelpUrlGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* _DREAM3DHelpUrlGenerator_H */

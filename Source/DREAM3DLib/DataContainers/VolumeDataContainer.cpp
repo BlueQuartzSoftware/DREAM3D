@@ -56,11 +56,17 @@
 //
 // -----------------------------------------------------------------------------
 VolumeDataContainer::VolumeDataContainer() :
-SurfaceDataContainer()
+  SurfaceDataContainer()
 {
-  m_Dimensions[0] = 0; m_Dimensions[1] = 0; m_Dimensions[2] = 0;
-  m_Resolution[0] = 1.0f; m_Resolution[1] = 1.0f; m_Resolution[2] = 1.0f;
-  m_Origin[0] = 0.0f; m_Origin[1] = 0.0f; m_Origin[2] = 0.0f;
+  m_Dimensions[0] = 0;
+  m_Dimensions[1] = 0;
+  m_Dimensions[2] = 0;
+  m_Resolution[0] = 1.0f;
+  m_Resolution[1] = 1.0f;
+  m_Resolution[2] = 1.0f;
+  m_Origin[0] = 0.0f;
+  m_Origin[1] = 0.0f;
+  m_Origin[2] = 0.0f;
 
   setName(DREAM3D::HDF5::VolumeDataContainerName);
 }

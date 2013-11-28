@@ -77,12 +77,12 @@ class EbsdLib_EXPORT CtfPhase
     /**
      * @brief Parses a header line into a CtfPhase class
      */
-    void parsePhase(QByteArray &line);
+    void parsePhase(QByteArray& line);
 
     /**
      * @brief Prints some debugging info about this class
      */
-    void printSelf(std::ostream &stream);
+    void printSelf(std::ostream& stream);
 
     /**
      * @brief Returns the type of crystal structure for this phase.
@@ -94,7 +94,7 @@ class EbsdLib_EXPORT CtfPhase
   protected:
     CtfPhase();
 
-    void convertEuropeanDecimals(QByteArray &line);
+    void convertEuropeanDecimals(QByteArray& line);
 
   private:
     CtfPhase(const CtfPhase&); // Copy Constructor Not Implemented

@@ -128,27 +128,27 @@
 #define EBSD_NEW_SUPERCLASS(thisClass, SuperClass)\
   typedef SuperClass::Pointer SuperClass##Type;\
   static SuperClass##Type New##SuperClass(void) \
-{ \
-  SuperClass##Type sharedPtr (new thisClass); \
-  return sharedPtr; \
-}
+  { \
+    SuperClass##Type sharedPtr (new thisClass); \
+    return sharedPtr; \
+  }
 
 /**
  * @brief Implements a Static 'New' Method for a class
  */
 #define EBSD_STATIC_NEW_MACRO(thisClass) \
-static Pointer New(void) \
-{ \
-  Pointer sharedPtr (new thisClass); \
-  return sharedPtr; \
-}
+  static Pointer New(void) \
+  { \
+    Pointer sharedPtr (new thisClass); \
+    return sharedPtr; \
+  }
 
 #define EBSD_STATIC_NEW_MACRO_WITH_ARGS(thisClass, args) \
-static Pointer New args \
-{ \
-  Pointer sharedPtr (new thisClass); \
-  return sharedPtr; \
-}
+  static Pointer New args \
+  { \
+    Pointer sharedPtr (new thisClass); \
+    return sharedPtr; \
+  }
 
 /** Macro used to add standard methods to all classes, mainly type
  * information. */
@@ -158,9 +158,9 @@ static Pointer New args \
   static int IsTypeOf(const char *m_msgType) \
   { \
     if ( !strcmp(#thisClass,m_msgType) ) \
-      { \
+    { \
       return 1; \
-      } \
+    } \
     return 0; \
   } \
   virtual int IsA(const char *m_msgType) \
@@ -169,10 +169,10 @@ static Pointer New args \
   } \
   template <class Target, class Source>\
   inline Target polymorphic_downcast(Source* x) { \
-      if( dynamic_cast<Target>(x) != x ) { \
-        return NULL;\
-      }\
-      return static_cast<Target>(x);\
+    if( dynamic_cast<Target>(x) != x ) { \
+      return NULL;\
+    }\
+    return static_cast<Target>(x);\
   }
 
 
@@ -182,9 +182,9 @@ static Pointer New args \
   static int IsTypeOf(const char *m_msgType) \
   { \
     if ( !strcmp(#thisClass,m_msgType) ) \
-      { \
+    { \
       return 1; \
-      } \
+    } \
     return superclass::IsTypeOf(m_msgType); \
   } \
   virtual int IsA(const char *m_msgType) \
@@ -193,10 +193,10 @@ static Pointer New args \
   } \
   template <class Target, class Source>\
   static Target polymorphic_downcast(Source* x) { \
-      if( dynamic_cast<Target>(x) != x ) { \
-        return NULL;\
-      }\
-      return static_cast<Target>(x);\
+    if( dynamic_cast<Target>(x) != x ) { \
+      return NULL;\
+    }\
+    return static_cast<Target>(x);\
   }
 
 
@@ -225,40 +225,40 @@ static Pointer New args \
 
 #define EBSD_VIRTUAL_INSTANCE_PROPERTY(m_msgType, prpty)\
   private:\
-      m_msgType   m_##prpty;\
+  m_msgType   m_##prpty;\
   public:\
-    virtual EBSD_SET_PROPERTY(m_msgType, prpty)\
-    virtual EBSD_GET_PROPERTY(m_msgType, prpty)
+  virtual EBSD_SET_PROPERTY(m_msgType, prpty)\
+  virtual EBSD_GET_PROPERTY(m_msgType, prpty)
 
 
 #define EBSD_INSTANCE_PROPERTY(m_msgType, prpty)\
   private:\
-      m_msgType   m_##prpty;\
+  m_msgType   m_##prpty;\
   public:\
-    EBSD_SET_PROPERTY(m_msgType, prpty)\
-    EBSD_GET_PROPERTY(m_msgType, prpty)
+  EBSD_SET_PROPERTY(m_msgType, prpty)\
+  EBSD_GET_PROPERTY(m_msgType, prpty)
 
 
 
 #define EBSD_SET_2DVECTOR_PROPERTY(m_msgType, prpty, varname)\
   void set##prpty(m_msgType value[2]) {\
-      varname[0] = value[0]; varname[1] = value[1]; }\
+    varname[0] = value[0]; varname[1] = value[1]; }\
   void set##prpty(m_msgType value_0, m_msgType value_1) {\
-      varname[0] = value_0; varname[1] = value_1; }
+    varname[0] = value_0; varname[1] = value_1; }
 
 #define EBSD_GET_2DVECTOR_PROPERTY(m_msgType, prpty, varname)\
   void get##prpty(m_msgType value[2]) {\
-      value[0] = varname[0]; value[1] = varname[1]; }\
+    value[0] = varname[0]; value[1] = varname[1]; }\
   void get##prpty(m_msgType &value_0, m_msgType &value_1) {\
-      value_0 = varname[0]; value_1 = varname[1]; }
+    value_0 = varname[0]; value_1 = varname[1]; }
 
 
 #define EBSD_INSTANCE_2DVECTOR_PROPERTY(m_msgType, prpty)\
   private:\
-    m_msgType   m_##prpty[2];\
+  m_msgType   m_##prpty[2];\
   public:\
-    EBSD_SET_2DVECTOR_PROPERTY(m_msgType, prpty, m_##prpty)\
-    EBSD_GET_2DVECTOR_PROPERTY(m_msgType, prpty, m_##prpty)
+  EBSD_SET_2DVECTOR_PROPERTY(m_msgType, prpty, m_##prpty)\
+  EBSD_GET_2DVECTOR_PROPERTY(m_msgType, prpty, m_##prpty)
 
 /**
 * @brief Creates a "setter" method to set the property.
@@ -288,8 +288,8 @@ static Pointer New args \
   private:\
   QString      m_##prpty;\
   public:\
-    virtual EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
-    virtual EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
+  virtual EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
+  virtual EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
 
 // -----------------------------------------------------------------------------
 //
@@ -315,16 +315,16 @@ static Pointer New args \
 
 #define EbsdHeader_INSTANCE_PROPERTY(HeaderType, m_msgType, prpty, key)\
   public:\
-    EbsdHeader_SET_PROPERTY(HeaderType, m_msgType, prpty, key)\
-    EbsdHeader_GET_PROPERTY(HeaderType, m_msgType, prpty, key)
+  EbsdHeader_SET_PROPERTY(HeaderType, m_msgType, prpty, key)\
+  EbsdHeader_GET_PROPERTY(HeaderType, m_msgType, prpty, key)
 
 
 #define EBSD_POINTER_PROPERTY(name, var, m_msgType)\
-private:\
+  private:\
   m_msgType* m_##var;\
-public:\
-m_msgType* get##name##Pointer() { return m_##var; }\
-void set##name##Pointer(m_msgType* f)\
+  public:\
+  m_msgType* get##name##Pointer() { return m_##var; }\
+  void set##name##Pointer(m_msgType* f)\
   {\
     if (m_##var != NULL && m_##var != f)\
     {\
@@ -335,11 +335,11 @@ void set##name##Pointer(m_msgType* f)\
   }
 
 #define EBSD_POINTER_PROP(name, var, m_msgType)\
-public:\
-m_msgType* get##name##Pointer() { return static_cast<m_msgType*>(getPointerByName(#var)); }\
-void set##name##Pointer(m_msgType* p) { \
-  setPointerByName(#name,p);\
-}
+  public:\
+  m_msgType* get##name##Pointer() { return static_cast<m_msgType*>(getPointerByName(#var)); }\
+  void set##name##Pointer(m_msgType* p) { \
+    setPointerByName(#name,p);\
+  }
 
 
 
@@ -352,27 +352,29 @@ void set##name##Pointer(m_msgType* p) { \
 // for a few boost headers
 namespace Ebsd
 {
-  class bad_lexical_cast : public std::runtime_error {
-  public:
-    bad_lexical_cast(const QString& s)
-      : std::runtime_error(s.toStdString())
-    { }
+  class bad_lexical_cast : public std::runtime_error
+  {
+    public:
+      bad_lexical_cast(const QString& s)
+        : std::runtime_error(s.toStdString())
+      { }
   };
 
-  class bad_any_cast : public std::runtime_error {
-  public:
-    bad_any_cast(const QString& s)
-      : std::runtime_error(s.toStdString())
-    { }
+  class bad_any_cast : public std::runtime_error
+  {
+    public:
+      bad_any_cast(const QString& s)
+        : std::runtime_error(s.toStdString())
+      { }
   };
 
   template<typename T>
-  T lexical_cast(const QString &s)
+  T lexical_cast(const QString& s)
   {
     std::istringstream i(s.toStdString());
     T x;
     if (!(i >> x))
-      throw bad_lexical_cast("convertToDouble(\"" + s + "\")");
+    { throw bad_lexical_cast("convertToDouble(\"" + s + "\")"); }
 
     return x;
   }

@@ -43,7 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 QRecentFileList::QRecentFileList(QObject* parent) :
-QObject(parent)
+  QObject(parent)
 {
   //qDebug() << "QRecentFileList()" << "\n";
 }
@@ -53,7 +53,7 @@ QObject(parent)
 // -----------------------------------------------------------------------------
 QRecentFileList::~QRecentFileList()
 {
- // qDebug() << "~QRecentFileList()" << "\n";
+// qDebug() << "~QRecentFileList()" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ QRecentFileList::~QRecentFileList()
 // -----------------------------------------------------------------------------
 QRecentFileList* QRecentFileList::instance()
 {
- // qDebug() << "QRecentFileList::instance()" << "\n";
+// qDebug() << "QRecentFileList::instance()" << "\n";
   static QRecentFileList* singleton;
 
   if (singleton == NULL)
@@ -75,7 +75,7 @@ QRecentFileList* QRecentFileList::instance()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool QRecentFileList::contains(const QString &file)
+bool QRecentFileList::contains(const QString& file)
 {
   return this->recentFiles.contains(file);
 }
@@ -84,7 +84,7 @@ bool QRecentFileList::contains(const QString &file)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QRecentFileList::addFile(const QString &file)
+void QRecentFileList::addFile(const QString& file)
 {
   //qDebug() << "QRecentFileList::addFile()" << "\n";
   //qDebug() << "recentFiles.count: " << recentFiles.count() << "\n";
@@ -110,7 +110,7 @@ QStringList QRecentFileList::fileList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QRecentFileList::removeFile(const QString &file)
+void QRecentFileList::removeFile(const QString& file)
 {
   //qDebug() << "QRecentFileList::removeFile()" << "\n";
   this->recentFiles.removeAll(file);
@@ -119,7 +119,7 @@ void QRecentFileList::removeFile(const QString &file)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QRecentFileList::writeList(QSettings &prefs)
+void QRecentFileList::writeList(QSettings& prefs)
 {
   //qDebug() << "QRecentFileList::writeList()" << "\n";
   prefs.beginGroup("RecentFiles");
@@ -130,7 +130,7 @@ void QRecentFileList::writeList(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QRecentFileList::readList(QSettings &prefs)
+void QRecentFileList::readList(QSettings& prefs)
 {
   //qDebug() << "QRecentFileList::readList()" << "\n";
   prefs.beginGroup("RecentFiles");
@@ -141,19 +141,19 @@ void QRecentFileList::readList(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString QRecentFileList::strippedName(const QString &fullFileName)
+QString QRecentFileList::strippedName(const QString& fullFileName)
 {
-    return QFileInfo(fullFileName).fileName();
+  return QFileInfo(fullFileName).fileName();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString QRecentFileList::parentAndFileName(const QString &file)
+QString QRecentFileList::parentAndFileName(const QString& file)
 {
   QFileInfo fileinfo(file);
 
   QDir parent = fileinfo.dir();
-  return parent.dirName() + QDir::separator() +fileinfo.fileName();
+  return parent.dirName() + QDir::separator() + fileinfo.fileName();
 }
 

@@ -55,7 +55,8 @@ VertexArray::~VertexArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexArray::resizeArray(int32_t newSize) {
+void VertexArray::resizeArray(int32_t newSize)
+{
   m_Array->Resize(newSize);
 }
 
@@ -78,7 +79,7 @@ int32_t VertexArray::count()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::Pointer VertexArray::CreateArray(int32_t numElements, const QString &name)
+VertexArray::Pointer VertexArray::CreateArray(int32_t numElements, const QString& name)
 {
   if (name.isEmpty() == true)
   {

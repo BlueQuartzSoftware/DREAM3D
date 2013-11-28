@@ -75,7 +75,7 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
      * @param name The name of the filter
      * @param factory An instance of the factory
      */
-    static void RegisterFilterWidgetFactory(const QString &name, IFilterWidgetFactory::Pointer factory);
+    static void RegisterFilterWidgetFactory(const QString& name, IFilterWidgetFactory::Pointer factory);
 
     static void RegisterKnownQFilterWidgets();
 
@@ -92,21 +92,21 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
      * @param groupName The name of the group.
      * @return
      */
-    Collection getFactories(const QString &groupName);
+    Collection getFactories(const QString& groupName);
 
     /**
      * @brief Returns the mapping of names to the Factory instances for a given filter subgroup
      * @param subGroupName The name of the subgroup.
      * @return
      */
-    Collection getFactories(const QString &groupName, const QString &subGroupName);
+    Collection getFactories(const QString& groupName, const QString& subGroupName);
 
-  /**
-     * @brief Adds a Factory that creates QFilterWidgets
-     * @param name
-     * @param factory
-     */
-    void addFilterWidgetFactory(const QString &name, IFilterWidgetFactory::Pointer factory);
+    /**
+       * @brief Adds a Factory that creates QFilterWidgets
+       * @param name
+       * @param factory
+       */
+    void addFilterWidgetFactory(const QString& name, IFilterWidgetFactory::Pointer factory);
 
     /**
      * @brief getGroupNames Returns the uniqe set of group names for all the filters
@@ -119,7 +119,7 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
      * @param groupName The name of the Filter group
      * @return
      */
-    QSet<QString> getSubGroupNames(const QString &groupName);
+    QSet<QString> getSubGroupNames(const QString& groupName);
 
 
     /**
@@ -127,14 +127,14 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
      * @param filterName
      * @return
      */
-    IFilterWidgetFactory::Pointer getFactoryForFilter(const QString &filterName);
+    IFilterWidgetFactory::Pointer getFactoryForFilter(const QString& filterName);
 
     /**
      * @brief getFactoryForFilterHumanName For a given human label, the FilterWidgetFactory is given
      * @param humanName
      * @return
      */
-    IFilterWidgetFactory::Pointer getFactoryForFilterHumanName(const QString &humanName);
+    IFilterWidgetFactory::Pointer getFactoryForFilterHumanName(const QString& humanName);
 
 
   protected:

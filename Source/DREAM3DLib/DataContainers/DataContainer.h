@@ -98,14 +98,14 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       // here and send back nice error messages to ther user/programmer.
       if (attributeMatrixName.isEmpty() == true)
       {
-        filter->setErrorCondition(err*1000);
+        filter->setErrorCondition(err * 1000);
         ss = QObject::tr("The name of the AttributeMatrix - '%1' was empty. Please provide a name for this AttributeMatrix").arg(attributeArrayName);
         filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         return attributeArray;
       }
       if (attributeArrayName.isEmpty() == true)
       {
-        filter->setErrorCondition(err*1000);
+        filter->setErrorCondition(err * 1000);
         ss = QObject::tr("The name of the Attribute Array - '%1' was empty. Please provide a name for this array").arg(attributeArrayName);
         filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
@@ -114,7 +114,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       AttributeMatrix::Pointer matrix = getAttributeMatrix(attributeMatrixName);
       if(NULL == matrix.get())
       {
-        filter->setErrorCondition(err*1000);
+        filter->setErrorCondition(err * 1000);
         ss = QObject::tr("An AttributeMatrix with name '%1' does not exist and is required for this filter to execute.").arg(attributeMatrixName);
         filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         return attributeArray;
@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       // Now ask for the actual AttributeArray from the AttributeMatrix
       if (matrix->doesAttributeArrayExist(attributeArrayName) == false)
       {
-        filter->setErrorCondition(err*1000+1);
+        filter->setErrorCondition(err * 1000 + 1);
         ss = QObject::tr("An array with name '%1' does not exist in the AttributeMatrix and is required for this filter to execute.").arg(attributeArrayName);
         filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         return attributeArray;
@@ -132,14 +132,14 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       else
       {
         int NumComp = dims[0];
-        for(int i=1;i<dims.size();i++)
+        for(int i = 1; i < dims.size(); i++)
         {
           NumComp *= dims[i];
         }
         // Check to make sure the AttributeArray we have is of the proper type, size and number of components
         if(false == matrix->dataArrayCompatibility<T, Filter>(attributeArrayName, size, NumComp, filter) )
         {
-        return attributeArray;
+          return attributeArray;
         }
         else
         {
@@ -164,8 +164,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      */
     template<typename T, class Filter>
     typename DataArray<T>::Pointer createNonPrereqArray(Filter* filter,
-                                                        const QString &attributeMatrixName,
-                                                        const QString &attributeArrayName,
+                                                        const QString& attributeMatrixName,
+                                                        const QString& attributeArrayName,
                                                         T initValue,
                                                         int size,
                                                         QVector<int> dims)
@@ -189,7 +189,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       }
       /* QString _s(#Name);*/
       int NumComp = dims[0];
-      for(int i=1;i<dims.size();i++)
+      for(int i = 1; i < dims.size(); i++)
       {
         NumComp *= dims[i];
       }
@@ -215,21 +215,21 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @brief Returns bool of whether a named array exists
      * @param name The name of the data array
      */
-    virtual bool doesAttributeMatrixExist(const QString &name);
+    virtual bool doesAttributeMatrixExist(const QString& name);
 
     /**
-   * @brief Adds/overwrites the data for a named array
-   * @param name The name that the array will be known by
-   * @param data The IDataArray::Pointer that will hold the data
-   */
-    virtual void addAttributeMatrix(const QString &name, AttributeMatrix::Pointer matrix);
+    * @brief Adds/overwrites the data for a named array
+    * @param name The name that the array will be known by
+    * @param data The IDataArray::Pointer that will hold the data
+    */
+    virtual void addAttributeMatrix(const QString& name, AttributeMatrix::Pointer matrix);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual AttributeMatrix::Pointer getAttributeMatrix(const QString &name);
+    virtual AttributeMatrix::Pointer getAttributeMatrix(const QString& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -237,13 +237,13 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual AttributeMatrix::Pointer removeAttributeMatrix(const QString &name);
+    virtual AttributeMatrix::Pointer removeAttributeMatrix(const QString& name);
 
     /**
     * @brief Renames a cell data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameAttributeMatrix(const QString &oldname, const QString &newname);
+    virtual bool renameAttributeMatrix(const QString& oldname, const QString& newname);
 
     /**
      * @brief Removes all the Cell Arrays

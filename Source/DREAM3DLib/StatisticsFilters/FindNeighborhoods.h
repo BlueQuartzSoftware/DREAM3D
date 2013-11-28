@@ -65,12 +65,12 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
+
+    //------ Required Cell Data
 
     //------ Required Feature Data
-                //------ Created Feature Data
-        DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodListArrayName)
+    //------ Created Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MultiplesOfAverage)

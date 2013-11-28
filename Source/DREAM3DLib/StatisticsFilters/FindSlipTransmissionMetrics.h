@@ -82,15 +82,15 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    
-   //------ Created Cell Data
+
+    //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
     //------ Required Feature Data
-            //------ Required Ensemble Data
-    
+    //------ Required Ensemble Data
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Neighbor Slip Transmission Metrics"; }

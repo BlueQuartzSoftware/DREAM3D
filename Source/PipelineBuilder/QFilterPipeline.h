@@ -46,7 +46,7 @@
 */
 class QFilterPipeline : public QObject, public FilterPipeline
 {
-  Q_OBJECT
+    Q_OBJECT
   public:
 
     QFilterPipeline(QObject* parent = 0);
@@ -57,7 +57,7 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * on a GUI or printed to a console or possibly saved to a log file
      * @param message
      */
-    virtual void sendPipelineMessage(PipelineMessage &msg);
+    virtual void sendPipelineMessage(PipelineMessage& msg);
 
     /**
      * @brief Sends a Vector of PipelineMessage to the observers
@@ -76,11 +76,11 @@ class QFilterPipeline : public QObject, public FilterPipeline
     /**
      * Qt Signals for connections
      */
-     signals:
+  signals:
 //       void progressMessage(const QString &message);
-       void firePipelineMessage(PipelineMessage errMsg);
+    void firePipelineMessage(PipelineMessage errMsg);
 //       void updateProgress(int value);
-       void finished();
+    void finished();
 
   public slots:
     /**

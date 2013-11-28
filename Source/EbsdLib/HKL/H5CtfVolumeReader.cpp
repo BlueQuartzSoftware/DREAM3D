@@ -52,7 +52,7 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5CtfVolumeReader::H5CtfVolumeReader() :
-H5EbsdVolumeReader()
+  H5EbsdVolumeReader()
 {
   m_Phase = NULL;
   m_X = NULL;
@@ -79,12 +79,12 @@ H5CtfVolumeReader::~H5CtfVolumeReader()
 
 #define H5CTFREADER_ALLOCATE_ARRAY(name, type)\
   if (readAllArrays == true || arrayNames.find(Ebsd::Ctf::name) != arrayNames.end()) {\
-  type* _##name = allocateArray<type>(numElements);\
-  if (NULL != _##name) {\
-  ::memset(_##name, 0, numBytes);\
-  }\
-  set##name##Pointer(_##name);\
- }
+    type* _##name = allocateArray<type>(numElements);\
+    if (NULL != _##name) {\
+      ::memset(_##name, 0, numBytes);\
+    }\
+    set##name##Pointer(_##name);\
+  }
 
 
 // -----------------------------------------------------------------------------
@@ -132,7 +132,7 @@ void H5CtfVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5CtfVolumeReader::getPointerByName(const QString &featureName)
+void* H5CtfVolumeReader::getPointerByName(const QString& featureName)
 {
   if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return static_cast<void*>(m_Phase);}
   if (featureName.compare(Ebsd::Ctf::X) == 0) { return static_cast<void*>(m_X);}
@@ -151,8 +151,8 @@ void* H5CtfVolumeReader::getPointerByName(const QString &featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5CtfVolumeReader::getPointerType(const QString &featureName)
-  {
+Ebsd::NumType H5CtfVolumeReader::getPointerType(const QString& featureName)
+{
   if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
   if (featureName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
   if (featureName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
@@ -276,8 +276,8 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
     {
       ZDir = getStackingOrder();
     }
-    if (ZDir == 0) zval = slice;
-    if (ZDir == 1) zval = static_cast<int>( (zpoints - 1) - slice );
+    if (ZDir == 0) { zval = slice; }
+    if (ZDir == 1) { zval = static_cast<int>( (zpoints - 1) - slice ); }
 
     // Copy the data from the current storage into the Storage Location
     for (int j = 0; j < ypointsslice; j++)

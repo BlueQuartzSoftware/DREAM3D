@@ -69,10 +69,10 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-                //------ Required Ensemble Data
-    
+
+    //------ Required Cell Data
+    //------ Required Ensemble Data
+
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }

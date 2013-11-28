@@ -85,15 +85,15 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
     virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 
   protected:
-     VertexDataContainer();
+    VertexDataContainer();
 
     virtual void writeXdmfMeshStructure(QTextStream& out, QString hdfFileName);
     virtual void writeXdmfGridFooter(QTextStream& out);
 
-   private:
+  private:
 
-     VertexDataContainer(const VertexDataContainer&);
-     void operator =(const VertexDataContainer&);
+    VertexDataContainer(const VertexDataContainer&);
+    void operator =(const VertexDataContainer&);
 
 };
 

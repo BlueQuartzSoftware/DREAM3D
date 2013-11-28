@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT GBCDTriangleDumper : public SurfaceMeshFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
-                
+
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 

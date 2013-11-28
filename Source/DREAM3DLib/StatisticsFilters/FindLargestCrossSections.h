@@ -65,10 +65,10 @@ class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-        //------ Created Feature Data
-    
+
+    //------ Required Cell Data
+    //------ Created Feature Data
+
     DREAM3D_INSTANCE_PROPERTY(unsigned int, Plane)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

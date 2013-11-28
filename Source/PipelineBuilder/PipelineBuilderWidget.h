@@ -64,25 +64,25 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     Q_OBJECT
 
   public:
-    PipelineBuilderWidget(QMenu* pipelineMenu, FilterManager* fm, QWidget *parent = 0);
+    PipelineBuilderWidget(QMenu* pipelineMenu, FilterManager* fm, QWidget* parent = 0);
     virtual ~PipelineBuilderWidget();
 
     /**
       * @brief Reads the Preferences from the users pref file
       */
-    virtual void readGeometrySettings(QSettings &prefs);
+    virtual void readGeometrySettings(QSettings& prefs);
 
     /**
       * @brief Writes the preferences to the users pref file
       */
-    virtual void writeGeometrySettings(QSettings &prefs);
+    virtual void writeGeometrySettings(QSettings& prefs);
 
 
     /**
      * @brief savePipeline
      * @param filePath
      */
-   // virtual void savePipeline(const QString &filePath);
+    // virtual void savePipeline(const QString &filePath);
 
     /**
       * @brief Reads the Preferences from the users pref file
@@ -136,7 +136,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      * @brief
      * @param factories
      */
-    virtual void updateFilterGroupList(FilterWidgetManager::Collection &factories);
+    virtual void updateFilterGroupList(FilterWidgetManager::Collection& factories);
 
     /**
      * @brief Reads favorite pipelines from the file system and loads them into the GUI
@@ -167,28 +167,28 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     /**
      * @brief Checks the QString "newFavoriteTitle" for illegal characters
-   * and to see if the title chosen matches any favorite titles already in the list.
-   * This function returns true if there are illegal characters or duplicates, and
-   * returns false otherwise.
+    * and to see if the title chosen matches any favorite titles already in the list.
+    * This function returns true if there are illegal characters or duplicates, and
+    * returns false otherwise.
      */
     bool checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
 
     /**
      * @brief Helper function of the checkFavoriteTitle method that checks the new favorite
-   * name specified by the user against the other existing favorite names and detects if
-   * the new name already exists in the existing favorites list.
+    * name specified by the user against the other existing favorite names and detects if
+    * the new name already exists in the existing favorites list.
      */
     bool hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
 
     /**
      * @brief Helper function of the checkFavoriteTitle method that checks the new favorite
-   * name specified by the user for illegal characters.
+    * name specified by the user for illegal characters.
      */
     bool hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
 
     /**
      * @brief Creates the new favorite file path according to the new favorite name and writes
-   * to that path.  This function returns the new path.
+    * to that path.  This function returns the new path.
      */
     QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
 
@@ -212,7 +212,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
   public slots:
 
-    void acceptPipelineFileDrop(const QString &filePath);
+    void acceptPipelineFileDrop(const QString& filePath);
 
 
     /**
@@ -237,11 +237,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem * current, QTreeWidgetItem * previous );
+    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
     void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
 
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
-    void on_filterList_currentItemChanged( QListWidgetItem * item, QListWidgetItem * previous );
+    void on_filterList_currentItemChanged( QListWidgetItem* item, QListWidgetItem* previous );
 
     void on_filterSearch_textChanged (const QString& text);
 
@@ -254,7 +254,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void clearMessagesTable();
 
-    void addDREAM3DReaderFilter(const QString &filePath);
+    void addDREAM3DReaderFilter(const QString& filePath);
 
     virtual void addMessage(PipelineMessage msg);
     virtual void addProgressMessage(QString message);

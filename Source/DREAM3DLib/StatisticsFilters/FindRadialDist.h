@@ -64,9 +64,9 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
     virtual ~FindRadialDist();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    
-   //------ Required Feature Data
-                    
+
+    //------ Required Feature Data
+
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT FindTwinBoundarySchmidFactors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-                
+
     DREAM3D_INSTANCE_STRING_PROPERTY(TwinBoundarySchmidFactorsFile)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, LoadingDir)
 

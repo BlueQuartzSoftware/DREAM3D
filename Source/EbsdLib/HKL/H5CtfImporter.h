@@ -71,7 +71,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
      * @param index The slice index for the file
      * @param angFile The absolute path to the input .ang file
      */
-    int importFile(hid_t fileId, int64_t index, const QString &angFile);
+    int importFile(hid_t fileId, int64_t index, const QString& angFile);
 
     /**
      * @brief Writes the phase data into the HDF5 file
@@ -79,21 +79,21 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
      * @param gid Valid HDF5 Group ID for the phases.
      * @return error condition
      */
-    int writePhaseData(CtfReader &reader, hid_t gid);
+    int writePhaseData(CtfReader& reader, hid_t gid);
 
     /**
      * @brief Returns the dimensions for the EBSD Data set
      * @param x Number of X Voxels (out)
      * @param y Number of Y Voxels (out)
      */
-    virtual void getDims(int64_t &x, int64_t &y);
+    virtual void getDims(int64_t& x, int64_t& y);
 
     /**
      * @brief Returns the x and y resolution of the voxels
      * @param x The x resolution (out)
      * @param y The y resolution (out)
      */
-    virtual void getResolution(float &x, float &y);
+    virtual void getResolution(float& x, float& y);
 
     /**
      * @brief Return the number of slices imported
@@ -111,7 +111,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
   protected:
     H5CtfImporter();
 
-    int writeSliceData(hid_t fileId, CtfReader &reader, int z, int actualSlice);
+    int writeSliceData(hid_t fileId, CtfReader& reader, int z, int actualSlice);
 
   private:
     int64_t xDim;

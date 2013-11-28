@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AxisAngleWidget::AxisAngleWidget(QWidget *parent) :
+AxisAngleWidget::AxisAngleWidget(QWidget* parent) :
   QWidget(parent),
   m_TableModel(NULL)
 {
@@ -83,7 +83,7 @@ void AxisAngleWidget::setupGui()
 // -----------------------------------------------------------------------------
 void AxisAngleWidget::on_addRow_clicked()
 {
-  if (!m_TableModel->insertRow(m_TableModel->rowCount())) return;
+  if (!m_TableModel->insertRow(m_TableModel->rowCount())) { return; }
   m_TableView->resizeColumnsToContents();
   m_TableView->scrollToBottom();
   m_TableView->setFocus();
@@ -96,10 +96,10 @@ void AxisAngleWidget::on_addRow_clicked()
 // -----------------------------------------------------------------------------
 void AxisAngleWidget::on_deleteRow_clicked()
 {
-  QItemSelectionModel *selectionModel = m_TableView->selectionModel();
-  if (!selectionModel->hasSelection()) return;
+  QItemSelectionModel* selectionModel = m_TableView->selectionModel();
+  if (!selectionModel->hasSelection()) { return; }
   QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) return;
+  if (!index.isValid()) { return; }
   m_TableModel->removeRow(index.row(), index.parent());
   if (m_TableModel->rowCount() > 0)
   {
@@ -123,9 +123,9 @@ QVector<AxisAngleInput_t> AxisAngleWidget::getAxisAngleRotations()
   {
     AxisAngleInput_t comp;
     comp.angle = angles[i];
-    comp.h = axis[i*3 + 0];
-    comp.k = axis[i*3 + 1];
-    comp.l = axis[i*3 + 2];
+    comp.h = axis[i * 3 + 0];
+    comp.k = axis[i * 3 + 1];
+    comp.l = axis[i * 3 + 2];
     comps.push_back(comp);
   }
   return comps;
@@ -168,7 +168,7 @@ void AxisAngleWidget::on_loadData_clicked()
 
       axis = QString("<" + n1 + "," + n2 + "," + n3 + ">");
 
-      if (!m_TableModel->insertRow(m_TableModel->rowCount())) return;
+      if (!m_TableModel->insertRow(m_TableModel->rowCount())) { return; }
       int row = m_TableModel->rowCount() - 1;
       m_TableModel->setRowData(row, angle, axis);
 
@@ -185,7 +185,7 @@ void AxisAngleWidget::on_loadData_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::readOptions(QSettings &prefs, QString name)
+void AxisAngleWidget::readOptions(QSettings& prefs, QString name)
 {
   int count = prefs.beginReadArray(name);
 
@@ -196,9 +196,9 @@ void AxisAngleWidget::readOptions(QSettings &prefs, QString name)
   {
     prefs.setArrayIndex(i);
     angles[i] = prefs.value("Angle").toFloat(&ok);
-    axis[i*3 + 0] = prefs.value("H").toFloat(&ok);
-    axis[i*3 + 1] = prefs.value("K").toFloat(&ok);
-    axis[i*3 + 2] = prefs.value("L").toFloat(&ok);
+    axis[i * 3 + 0] = prefs.value("H").toFloat(&ok);
+    axis[i * 3 + 1] = prefs.value("K").toFloat(&ok);
+    axis[i * 3 + 2] = prefs.value("L").toFloat(&ok);
   }
   prefs.endArray();
 
@@ -208,7 +208,7 @@ void AxisAngleWidget::readOptions(QSettings &prefs, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::writeOptions(QSettings &prefs, QString name)
+void AxisAngleWidget::writeOptions(QSettings& prefs, QString name)
 {
   int count = m_TableModel->rowCount();
   QVector<float> angles = m_TableModel->getData(AxisAngleTableModel::Angle);
@@ -218,9 +218,9 @@ void AxisAngleWidget::writeOptions(QSettings &prefs, QString name)
   {
     prefs.setArrayIndex(i);
     prefs.setValue("Angle", QString::number(angles[i]));
-    prefs.setValue("H", QString::number(axis[i*3 + 0]));
-    prefs.setValue("K", QString::number(axis[i*3 + 1]));
-    prefs.setValue("L", QString::number(axis[i*3 + 2]));
+    prefs.setValue("H", QString::number(axis[i * 3 + 0]));
+    prefs.setValue("K", QString::number(axis[i * 3 + 1]));
+    prefs.setValue("L", QString::number(axis[i * 3 + 2]));
   }
   prefs.endArray();
 }

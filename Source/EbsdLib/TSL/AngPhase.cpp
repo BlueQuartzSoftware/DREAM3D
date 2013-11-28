@@ -45,7 +45,7 @@
 //
 // -----------------------------------------------------------------------------
 AngPhase::AngPhase() :
-m_PhaseIndex(-1)
+  m_PhaseIndex(-1)
 {
 }
 
@@ -190,7 +190,7 @@ void AngPhase::parseCategories(QList<QByteArray> tokens)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::printSelf(QTextStream &stream)
+void AngPhase::printSelf(QTextStream& stream)
 {
   stream << Ebsd::Ang::Phase << ": " << m_PhaseIndex << QString("\n");
   stream << Ebsd::Ang::MaterialName << ": " << m_MaterialName << QString("\n");
@@ -210,7 +210,7 @@ void AngPhase::printSelf(QTextStream &stream)
 
   for (QVector<HKLFamily::Pointer>::iterator iter = m_HKLFamilies.begin(); iter != m_HKLFamilies.end(); ++iter )
   {
-   (*iter)->printSelf(stream);
+    (*iter)->printSelf(stream);
   }
 
 

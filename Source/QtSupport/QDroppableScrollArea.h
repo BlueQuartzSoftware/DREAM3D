@@ -46,14 +46,14 @@ class QDroppableScrollArea : public QScrollArea
     Q_OBJECT
 
   public:
-    QDroppableScrollArea(QWidget *parent = NULL);
+    QDroppableScrollArea(QWidget* parent = NULL);
 
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dropEvent(QDropEvent *event);
+    void dragEnterEvent(QDragEnterEvent* event);
+    void dropEvent(QDropEvent* event);
     void dragMoveEvent( QDragMoveEvent* event);
 
   signals:
-     void filterDropped(QString filter);
+    void filterDropped(QString filter);
 
   private:
 

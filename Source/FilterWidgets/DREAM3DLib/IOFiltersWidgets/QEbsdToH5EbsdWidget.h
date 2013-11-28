@@ -76,13 +76,13 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     Q_OBJECT
 
   public:
-    QEbsdToH5EbsdWidget(QWidget *parent = 0);
+    QEbsdToH5EbsdWidget(QWidget* parent = 0);
     virtual ~QEbsdToH5EbsdWidget();
 
     virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
-    virtual void writeOptions(QSettings &prefs);
-    virtual void readOptions(QSettings &prefs);
+    virtual void writeOptions(QSettings& prefs);
+    virtual void readOptions(QSettings& prefs);
 
 
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
@@ -113,8 +113,8 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     Ebsd::RefFrameZDir getRefFrameZDir();
     void setRefFrameZDir(Ebsd::RefFrameZDir ref);
 
-    QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles,
-                                              bool stackLowToHigh, QString filename);
+    QVector<QString> generateFileList(int start, int end, bool& hasMissingFiles,
+                                      bool stackLowToHigh, QString filename);
 
     virtual void openHtmlHelpFile();
     virtual void getGuiParametersFromFilter(AbstractFilter* filt);
@@ -128,16 +128,16 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     void on_m_OutputFileBtn_clicked();
     void on_m_RefFrameOptionsBtn_clicked();
 
-    void on_m_FilePrefix_textChanged(const QString &string);
-    void on_m_FileSuffix_textChanged(const QString &string);
-    void on_m_FileExt_textChanged(const QString &string);
+    void on_m_FilePrefix_textChanged(const QString& string);
+    void on_m_FileSuffix_textChanged(const QString& string);
+    void on_m_FileExt_textChanged(const QString& string);
     void on_m_TotalDigits_valueChanged(int value);
     void on_m_ZStartIndex_valueChanged(int value);
     void on_m_ZEndIndex_valueChanged(int value);
 
     // slots to catch signals emittd by the various QLineEdit widgets
-    void on_m_InputDir_textChanged(const QString & text);
-    void on_m_OutputFile_textChanged(const QString & text);
+    void on_m_InputDir_textChanged(const QString& text);
+    void on_m_OutputFile_textChanged(const QString& text);
 
   private slots:
     void stackingOrderChanged(bool checked);

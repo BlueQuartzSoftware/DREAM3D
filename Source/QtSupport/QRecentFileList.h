@@ -50,7 +50,7 @@ class QMenu;
 class QRecentFileList: public QObject
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     QRecentFileList(QObject* parent = 0);
@@ -66,14 +66,14 @@ class QRecentFileList: public QObject
      * @param fullfilepath The filename to extract
      * @return File name
      */
-    static QString strippedName(const QString &fullfilepath);
+    static QString strippedName(const QString& fullfilepath);
 
     /**
      * @brief Returns the Filename plus it's parent folder name
      * @param file The path to the file including its filename
      * @return
      */
-    static QString parentAndFileName(const QString &file);
+    static QString parentAndFileName(const QString& file);
 
     /**
      * @brief Returns the current list of 'Recent Files' for this application
@@ -85,19 +85,19 @@ class QRecentFileList: public QObject
      * @brief Adds a file to the recent files
      * @param file The file to add to the list
      */
-    void addFile(const QString &file);
+    void addFile(const QString& file);
 
     /**
      * @brief Writes the list of files to a preference file.
      * @param prefs The QSettings object to use.
      */
-    void writeList(QSettings &prefs);
+    void writeList(QSettings& prefs);
 
     /**
      * @brief Reads the list of Recent Files from the preferences file
      * @param prefs The QSettins object to use
      */
-    void readList(QSettings &prefs);
+    void readList(QSettings& prefs);
 
     /* ******************* Begin Qt Signals ********************************* */
   signals:
@@ -106,7 +106,7 @@ class QRecentFileList: public QObject
      * @brief Qt Signal emitted when the list of files has changed.
      * @param file The newly added file
      */
-    void fileListChanged(const QString &file);
+    void fileListChanged(const QString& file);
 
   protected:
 
@@ -114,13 +114,13 @@ class QRecentFileList: public QObject
      * @brief Removes a file from the list of recent files.
      * @param file The file to remove
      */
-    void removeFile(const QString &file);
+    void removeFile(const QString& file);
 
     /**
      * @brief Returns true if the list already contains the file.
      * @param file The file to check.
      */
-    bool contains(const QString &file);
+    bool contains(const QString& file);
 
   private:
     ~QRecentFileList();

@@ -59,7 +59,7 @@ class EbsdLib_EXPORT EbsdImporter
     EBSD_SHARED_POINTERS(EbsdImporter)
     EBSD_TYPE_MACRO(EbsdImporter)
 
-    virtual ~EbsdImporter(){}
+    virtual ~EbsdImporter() {}
 
     /**
      * @brief Sets an Error Message
@@ -81,7 +81,7 @@ class EbsdLib_EXPORT EbsdImporter
      * @param message The message to print
      * @param progress The progress of the Reconstruction normalized to a value between 0 and 100
      */
-    virtual void progressMessage(const QString &message, int progress)
+    virtual void progressMessage(const QString& message, int progress)
     {
       qDebug() << progress << "% " << message;
     }
@@ -104,21 +104,21 @@ class EbsdLib_EXPORT EbsdImporter
      * @param index The integer index value of this EBSD data file
      * @param ebsdFile The raw data file from the manufacturere (.ang, .ctf)
      */
-    virtual int importFile(hid_t fileId, int64_t index, const QString &ebsd) = 0;
+    virtual int importFile(hid_t fileId, int64_t index, const QString& ebsd) = 0;
 
     /**
      * @brief Returns the dimensions for the EBSD Data set
      * @param x Number of X Voxels (out)
      * @param y Number of Y Voxels (out)
      */
-    virtual void getDims(int64_t &x, int64_t &y) = 0;
+    virtual void getDims(int64_t& x, int64_t& y) = 0;
 
     /**
      * @brief Returns the x and y resolution of the voxels
      * @param x The x resolution (out)
      * @param y The y resolution (out)
      */
-    virtual void getResolution(float &x, float &y) = 0;
+    virtual void getResolution(float& x, float& y) = 0;
 
     /**
      * @brief Return the number of slices imported

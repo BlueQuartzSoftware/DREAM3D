@@ -254,7 +254,7 @@
 
 
 #define DREAM3D_CLASS_VERSION(vers)\
-virtual int getClassVersion() { return vers; }
+  virtual int getClassVersion() { return vers; }
 
 
 //------------------------------------------------------------------------------
@@ -437,7 +437,7 @@ virtual int getClassVersion() { return vers; }
 // -----------------------------------------------------------------------------
 #define DEFINE_PTR_WEAKPTR_DATAARRAY(type, name)\
   DREAM3D_INSTANCE_STRING_PROPERTY(name##ArrayName);\
-private:\
+  private:\
   DataArray<type>::WeakPointer m_##name##Ptr;\
   type* m_##name;
 
@@ -460,7 +460,7 @@ private:\
     updatePipelineProgress(0);\
     pipelineFinished();\
     return;}\
-
+   
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
   if(err < 0) {\

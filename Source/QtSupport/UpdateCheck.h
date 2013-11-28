@@ -49,13 +49,13 @@
 
 class UpdateCheck : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-  UpdateCheck(QObject* parent = 0);
-  virtual ~UpdateCheck();
+    UpdateCheck(QObject* parent = 0);
+    virtual ~UpdateCheck();
 
-  void checkVersion(QUrl website);
+    void checkVersion(QUrl website);
 
   protected slots:
     void networkReplied(QNetworkReply* reply);
@@ -67,10 +67,10 @@ class UpdateCheck : public QObject
     void writeUpdateCheckDate();
 
   private:
-  QNetworkAccessManager*				m_Nam;
+    QNetworkAccessManager*        m_Nam;
 
-  UpdateCheck(const UpdateCheck&);    // Copy Constructor Not Implemented
-  void operator=(const UpdateCheck&);  // Operator '=' Not Implemented
+    UpdateCheck(const UpdateCheck&);    // Copy Constructor Not Implemented
+    void operator=(const UpdateCheck&);  // Operator '=' Not Implemented
 };
 
 #endif /* _UPDATECHECK_H_ */

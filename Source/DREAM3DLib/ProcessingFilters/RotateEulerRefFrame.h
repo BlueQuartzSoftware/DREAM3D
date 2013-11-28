@@ -58,9 +58,9 @@ class DREAM3DLib_EXPORT RotateEulerRefFrame : public AbstractFilter
     virtual ~RotateEulerRefFrame();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-    
+
+    //------ Required Cell Data
+
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, RotationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, RotationAngle)
 

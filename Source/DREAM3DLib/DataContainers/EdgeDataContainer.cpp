@@ -51,7 +51,7 @@
 //
 // -----------------------------------------------------------------------------
 EdgeDataContainer::EdgeDataContainer() :
-VertexDataContainer()
+  VertexDataContainer()
 {
   setName(DREAM3D::HDF5::EdgeDataContainerName);
 }

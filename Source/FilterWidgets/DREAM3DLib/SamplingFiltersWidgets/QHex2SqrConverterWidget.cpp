@@ -63,8 +63,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QHex2SqrConverterWidget::QHex2SqrConverterWidget(QWidget *parent) :
-QFilterWidget(parent)
+QHex2SqrConverterWidget::QHex2SqrConverterWidget(QWidget* parent) :
+  QFilterWidget(parent)
 {
 
   if ( getOpenDialogLastDirectory().isEmpty() )
@@ -92,7 +92,7 @@ QHex2SqrConverterWidget::~QHex2SqrConverterWidget()
 // -----------------------------------------------------------------------------
 QString QHex2SqrConverterWidget::getFilterGroup()
 {
-    return (DREAM3D::FilterGroups::GenericFilters);
+  return (DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -126,8 +126,8 @@ AbstractFilter::Pointer QHex2SqrConverterWidget::getFilter(bool defaultValues)
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -157,7 +157,7 @@ AbstractFilter::Pointer QHex2SqrConverterWidget::getFilter(bool defaultValues)
 // -----------------------------------------------------------------------------
 QFilterWidget* QHex2SqrConverterWidget::createDeepCopy()
 {
-  #if 0
+#if 0
   QFilterWidget* w = new QFilterWidget();
 
   bool ok = false;
@@ -165,8 +165,8 @@ QFilterWidget* QHex2SqrConverterWidget::createDeepCopy()
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-    .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-    .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -179,7 +179,7 @@ QFilterWidget* QHex2SqrConverterWidget::createDeepCopy()
   w->setEbsdFileList(fileList);
 
   return w;
-  #endif
+#endif
   return NULL;
 }
 
@@ -188,7 +188,8 @@ QFilterWidget* QHex2SqrConverterWidget::createDeepCopy()
 // -----------------------------------------------------------------------------
 void QHex2SqrConverterWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList) {
+  foreach (QWidget * w, m_WidgetList)
+  {
     w->setEnabled(b);
   }
 }
@@ -205,8 +206,8 @@ void QHex2SqrConverterWidget::setupGui()
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
   m_InputDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_InputDir_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_InputDir_textChanged(const QString&)));
 
   m_WidgetList << m_InputDir << m_InputDirBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
@@ -219,7 +220,7 @@ void QHex2SqrConverterWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QHex2SqrConverterWidget::readOptions(QSettings &prefs)
+void QHex2SqrConverterWidget::readOptions(QSettings& prefs)
 {
   QString val;
   bool ok;
@@ -244,7 +245,7 @@ void QHex2SqrConverterWidget::readOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QHex2SqrConverterWidget::writeOptions(QSettings &prefs)
+void QHex2SqrConverterWidget::writeOptions(QSettings& prefs)
 {
   prefs.setValue("Filter_Name", "Hex2SqrConverter");
   WRITE_STRING_SETTING(prefs, m_, InputDir)
@@ -281,9 +282,9 @@ bool QHex2SqrConverterWidget::verifyPathExists(QString outFilePath, QLineEdit* l
 void QHex2SqrConverterWidget::checkIOFiles()
 {
   if (true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
-   {
-     m_findEbsdMaxSliceAndPrefix();
-   }
+  {
+    m_findEbsdMaxSliceAndPrefix();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -308,7 +309,7 @@ void QHex2SqrConverterWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QHex2SqrConverterWidget::on_m_InputDir_textChanged(const QString & text)
+void QHex2SqrConverterWidget::on_m_InputDir_textChanged(const QString& text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
@@ -335,7 +336,7 @@ void QHex2SqrConverterWidget::on_m_InputDir_textChanged(const QString & text)
 void QHex2SqrConverterWidget::on_m_ZEndIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
-    emit parametersChanged();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -344,7 +345,7 @@ void QHex2SqrConverterWidget::on_m_ZEndIndex_valueChanged(int value)
 void QHex2SqrConverterWidget::on_m_ZStartIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
-    emit parametersChanged();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -352,14 +353,14 @@ void QHex2SqrConverterWidget::on_m_ZStartIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 void QHex2SqrConverterWidget::on_m_TotalDigits_valueChanged(int value)
 {
-    m_generateExampleEbsdInputFile();
-      emit parametersChanged();
+  m_generateExampleEbsdInputFile();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QHex2SqrConverterWidget::on_m_FileExt_textChanged(const QString &string)
+void QHex2SqrConverterWidget::on_m_FileExt_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -368,7 +369,7 @@ void QHex2SqrConverterWidget::on_m_FileExt_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QHex2SqrConverterWidget::on_m_FileSuffix_textChanged(const QString &string)
+void QHex2SqrConverterWidget::on_m_FileSuffix_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -377,7 +378,7 @@ void QHex2SqrConverterWidget::on_m_FileSuffix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QHex2SqrConverterWidget::on_m_FilePrefix_textChanged(const QString &string)
+void QHex2SqrConverterWidget::on_m_FilePrefix_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -386,21 +387,21 @@ void QHex2SqrConverterWidget::on_m_FilePrefix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<QString> QHex2SqrConverterWidget::generateFileList(int start, int end, bool &hasMissingFiles,
-                                               QString filename)
+QVector<QString> QHex2SqrConverterWidget::generateFileList(int start, int end, bool& hasMissingFiles,
+                                                           QString filename)
 {
   int index = 0;
   QVector<QString> fileList;
 
-  for (int i = 0; i < (end-start)+1; ++i)
+  for (int i = 0; i < (end - start) + 1; ++i)
   {
-      index = start + i;
-      filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-          .arg(QString::number(index), m_TotalDigits->value(), '0')
-          .arg(m_FileSuffix->text()).arg(m_FileExt->text());
-      QString filePath = m_InputDir->text() + QDir::separator() + filename;
-      filePath = QDir::toNativeSeparators(filePath);
-      fileList.push_back(filePath);
+    index = start + i;
+    filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+               .arg(QString::number(index), m_TotalDigits->value(), '0')
+               .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+    QString filePath = m_InputDir->text() + QDir::separator() + filename;
+    filePath = QDir::toNativeSeparators(filePath);
+    fileList.push_back(filePath);
   }
   return fileList;
 }
@@ -414,8 +415,8 @@ void QHex2SqrConverterWidget::m_generateExampleEbsdInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -493,9 +494,9 @@ void QHex2SqrConverterWidget::m_findEbsdMaxSliceAndPrefix()
 
   // Final check to make sure we have a valid file extension
   if (m_FileExt->text().isEmpty() == true)
-   {
+  {
     return;
-   }
+  }
 
   QString ext = "." + m_FileExt->text();
   QStringList filters;
@@ -525,8 +526,8 @@ void QHex2SqrConverterWidget::m_findEbsdMaxSliceAndPrefix()
       QString fn = fi.baseName();
       QString fns = fn;
       int length =  fn.length();
-      digitEnd = length-1;
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      digitEnd = length - 1;
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         --digitEnd;
       }
@@ -540,14 +541,15 @@ void QHex2SqrConverterWidget::m_findEbsdMaxSliceAndPrefix()
         fPrefix = fn.left(pos);
         pos += rx.matchedLength();
       }
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         ++digitEnd;
       }
 
       if ( digitEnd - digitStart < minTotalDigits) { minTotalDigits = digitEnd - digitStart; }
       m_TotalDigits->setValue(minTotalDigits);
-      if (list.size() > 0) {
+      if (list.size() > 0)
+      {
         currValue = list.front().toInt(&ok);
         if (false == flag) { minSlice = currValue; flag = true;}
         if (currValue > maxSlice) { maxSlice = currValue; }

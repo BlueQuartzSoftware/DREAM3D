@@ -33,7 +33,7 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
- #include "DataContainer.h"
+#include "DataContainer.h"
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
@@ -42,7 +42,7 @@
 //
 // -----------------------------------------------------------------------------
 DataContainer::DataContainer() :
-Observable()
+  Observable()
 {
 
 }
@@ -58,15 +58,15 @@ DataContainer::~DataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataContainer::doesAttributeMatrixExist(const QString &name)
+bool DataContainer::doesAttributeMatrixExist(const QString& name)
 {
   return  m_AttributeMatrices.contains(name);
 }
-  
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::addAttributeMatrix(const QString &name, AttributeMatrix::Pointer data)
+void DataContainer::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer data)
 {
   if (data->getName().compare(name) != 0)
   {
@@ -81,7 +81,7 @@ void DataContainer::addAttributeMatrix(const QString &name, AttributeMatrix::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrix::Pointer DataContainer::getAttributeMatrix(const QString &name)
+AttributeMatrix::Pointer DataContainer::getAttributeMatrix(const QString& name)
 {
   QMap<QString, AttributeMatrix::Pointer>::iterator it;
   it =  m_AttributeMatrices.find(name);
@@ -95,7 +95,7 @@ AttributeMatrix::Pointer DataContainer::getAttributeMatrix(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrix::Pointer DataContainer::removeAttributeMatrix(const QString &name)
+AttributeMatrix::Pointer DataContainer::removeAttributeMatrix(const QString& name)
 {
   QMap<QString, AttributeMatrix::Pointer>::iterator it;
   it =  m_AttributeMatrices.find(name);
@@ -111,7 +111,7 @@ AttributeMatrix::Pointer DataContainer::removeAttributeMatrix(const QString &nam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataContainer::renameAttributeMatrix(const QString &oldname, const QString &newname)
+bool DataContainer::renameAttributeMatrix(const QString& oldname, const QString& newname)
 {
   QMap<QString, AttributeMatrix::Pointer>::iterator it;
   it =  m_AttributeMatrices.find(oldname);

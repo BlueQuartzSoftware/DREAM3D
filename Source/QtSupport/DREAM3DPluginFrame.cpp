@@ -45,7 +45,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DPluginFrame::DREAM3DPluginFrame(QWidget *parent) :
+DREAM3DPluginFrame::DREAM3DPluginFrame(QWidget* parent) :
   QFrame(parent),
   m_StatusBar(NULL)
 {
@@ -183,9 +183,9 @@ void DREAM3DPluginFrame::displayDialogBox(QString title, QString text, QMessageB
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DPluginFrame::writeSettings(QSettings &prefs){}
+void DREAM3DPluginFrame::writeSettings(QSettings& prefs) {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DPluginFrame::readSettings(QSettings &prefs, bool shouldClear){}
+void DREAM3DPluginFrame::readSettings(QSettings& prefs, bool shouldClear) {}

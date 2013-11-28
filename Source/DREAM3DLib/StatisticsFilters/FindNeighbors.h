@@ -66,11 +66,11 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-        //------ Created Cell Data
-        //------ Created Feature Data
-            DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
+
+    //------ Required Cell Data
+    //------ Created Cell Data
+    //------ Created Feature Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
 
     /**

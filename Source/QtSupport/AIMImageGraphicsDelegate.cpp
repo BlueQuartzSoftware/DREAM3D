@@ -199,12 +199,12 @@ void AIMImageGraphicsDelegate::fitToWindow()
   gvHeight -= 4;
   if (imageSize.width() > imageSize.height() )
   {
-    double zf = (double)(gvWidth)/(double)(imageSize.width());
+    double zf = (double)(gvWidth) / (double)(imageSize.width());
     this->setZoomFactor(zf);
   }
   else
   {
-    double zf = (double)(gvHeight)/(double)(imageSize.height());
+    double zf = (double)(gvHeight) / (double)(imageSize.height());
     this->setZoomFactor(zf);
   }
   updateGraphicsScene();
@@ -227,13 +227,13 @@ QImage AIMImageGraphicsDelegate::_scaleImage()
 {
   //qDebug() << "  AIMImageGraphicsDelegate::_scaleImage()" << "\n";
   QSize imageSize = this->m_CachedImage.size();
- // qDebug() << "    imageSize (W x H) :" << imageSize.width() << " x " << imageSize.height() << "\n";
+// qDebug() << "    imageSize (W x H) :" << imageSize.width() << " x " << imageSize.height() << "\n";
 //  int gvWidth = m_GraphicsView->size().width();
 //  int gvHeight = m_GraphicsView->size().height();
- // qDebug() << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << "\n";
+// qDebug() << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << "\n";
   if (_zoomFactor > -1.0)
   {
-   // qDebug() << "  _zoomFactor: " << _zoomFactor << "\n";
+    // qDebug() << "  _zoomFactor: " << _zoomFactor << "\n";
     imageSize *= _zoomFactor;
   }
 
@@ -247,13 +247,13 @@ QImage AIMImageGraphicsDelegate::_scaleImage(QImage image)
 {
   //qDebug() << "  AIMImageGraphicsDelegate::_scaleImage()" << "\n";
   QSize imageSize = image.size();
- // qDebug() << "    imageSize (W x H) :" << imageSize.width() << " x " << imageSize.height() << "\n";
+// qDebug() << "    imageSize (W x H) :" << imageSize.width() << " x " << imageSize.height() << "\n";
 //  int gvWidth = m_GraphicsView->size().width();
 //  int gvHeight = m_GraphicsView->size().height();
- // qDebug() << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << "\n";
+// qDebug() << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << "\n";
   if (_zoomFactor > -1.0)
   {
-   // qDebug() << "  _zoomFactor: " << _zoomFactor << "\n";
+    // qDebug() << "  _zoomFactor: " << _zoomFactor << "\n";
     imageSize *= _zoomFactor;
   }
 
@@ -268,7 +268,7 @@ void AIMImageGraphicsDelegate::on_parentResized()
   //qDebug() << "  AIMImageGraphicsDelegate::on_parentResized" << "\n";
 //  int gvWidth = m_GraphicsView->size().width();
 //  int gvHeight = m_GraphicsView->size().height();
- // qDebug() << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << "\n";
+// qDebug() << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << "\n";
   if (_shouldFitToWindow == true)
   {
     fitToWindow();
@@ -324,7 +324,8 @@ void AIMImageGraphicsDelegate::updateGraphicsScene(bool update)
   m_GraphicsScene->setSceneRect(rect);
   m_GraphicsView->setScene(m_GraphicsScene);
   m_GraphicsView->centerOn(m_CurrentGraphicsItem);
-  if (update) {
+  if (update)
+  {
     m_GraphicsScene->update(rect);
   }
 }

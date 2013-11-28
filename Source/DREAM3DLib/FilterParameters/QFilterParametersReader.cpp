@@ -601,7 +601,9 @@ IntVec3Widget_t QFilterParametersReader::readIntVec3(const QString name, IntVec3
   //QVariant var = m_Prefs->value(name);
   bool ok = false;
   IntVec3Widget_t v3;
-  v3.x = 0; v3.y = 0; v3.z = 0;
+  v3.x = 0;
+  v3.y = 0;
+  v3.z = 0;
 
   m_Prefs->beginReadArray(name);
   m_Prefs->setArrayIndex(0);

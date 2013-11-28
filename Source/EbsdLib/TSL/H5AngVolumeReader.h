@@ -98,14 +98,14 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
       * @brief Returns the pointer to the data for a given feature
       * @param featureName The name of the feature to return the pointer to.
       */
-    void* getPointerByName(const QString &featureName);
+    void* getPointerByName(const QString& featureName);
 
     /**
       * @brief Returns an enumeration value that depicts the numerical
       * primitive type that the data is stored as (Int, Float, etc).
       * @param featureName The name of the feature.
       */
-    Ebsd::NumType getPointerType(const QString &featureName);
+    Ebsd::NumType getPointerType(const QString& featureName);
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
      * and then splats '0' across all the bytes of the memory allocation
@@ -149,7 +149,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
      * @param ptr The pointer to be freed.
      */
     template<typename T>
-    void deallocateArrayData(T* &ptr)
+    void deallocateArrayData(T*& ptr)
     {
       if (ptr != NULL && getManageMemory() == true)
       {

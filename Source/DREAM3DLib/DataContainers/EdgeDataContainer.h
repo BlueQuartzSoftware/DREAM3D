@@ -81,9 +81,9 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
 
     DREAM3D_INSTANCE_PROPERTY(EdgeArray::Pointer, Edges)
 
-/* ************ THESE ARE GOING TO GO AWAY I THINK. THEY ARE HERE TO GET THINGS TO COMPILE ******* */
+    /* ************ THESE ARE GOING TO GO AWAY I THINK. THEY ARE HERE TO GET THINGS TO COMPILE ******* */
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, MeshLinks)
-/* ************************************************************************************************* */
+    /* ************************************************************************************************* */
 
     virtual unsigned int getDCType() {return DREAM3D::DataContainerType::EdgeDataContainer;}
 
@@ -93,15 +93,15 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
     virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 
   protected:
-     EdgeDataContainer();
+    EdgeDataContainer();
 
     virtual void writeXdmfMeshStructure(QTextStream& out, QString hdfFileName);
     virtual void writeXdmfGridFooter(QTextStream& out);
 
-   private:
+  private:
 
-     EdgeDataContainer(const EdgeDataContainer&);
-     void operator =(const EdgeDataContainer&);
+    EdgeDataContainer(const EdgeDataContainer&);
+    void operator =(const EdgeDataContainer&);
 
 };
 

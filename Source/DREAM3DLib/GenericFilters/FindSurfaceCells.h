@@ -59,10 +59,10 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
     virtual ~FindSurfaceCells();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
+
     //------ Required Cell Data
     //------ Created Cell Data
-    
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
     virtual const QString getHumanLabel() { return "Find Boundary Cells"; }

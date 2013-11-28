@@ -61,7 +61,7 @@ class DREAM3DLib_EXPORT TriangleAreaFilter : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
 
-    
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
 

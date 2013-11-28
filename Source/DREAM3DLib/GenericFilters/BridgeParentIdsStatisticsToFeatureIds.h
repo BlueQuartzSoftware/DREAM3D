@@ -36,9 +36,9 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     //------ Required Cell Data
-            //------ Created Cell Data
+    //------ Created Cell Data
     //------ Required Feature Data
-        //------ Created Feature Data
+    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NumFeaturesPerParentArrayName)
     //------ Required Ensemble Data
 

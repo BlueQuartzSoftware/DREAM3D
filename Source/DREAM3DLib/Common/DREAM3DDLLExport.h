@@ -39,8 +39,8 @@
 
 
 #if defined (_MSC_VER)
-  #pragma warning(disable: 4267)
-  #pragma warning(disable: 4800) /*  warning C4800: 'double' : forcing value to bool 'true' or 'false' */
+#pragma warning(disable: 4267)
+#pragma warning(disable: 4800) /*  warning C4800: 'double' : forcing value to bool 'true' or 'false' */
 #endif
 
 

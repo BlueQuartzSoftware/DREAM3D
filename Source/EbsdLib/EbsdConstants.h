@@ -56,7 +56,8 @@ namespace Ebsd
   };
 
 
-  namespace H5 {
+  namespace H5
+  {
     const QString OriginalHeader("OriginalHeader");
     const QString ZStartIndex("ZStartIndex");
     const QString ZEndIndex("ZEndIndex");
@@ -95,9 +96,9 @@ namespace Ebsd
 
   enum RefFrameZDir
   {
-     LowtoHigh = 0,
-     HightoLow = 1,
-     UnknownRefFrameZDirection
+    LowtoHigh = 0,
+    HightoLow = 1,
+    UnknownRefFrameZDirection
   };
 
   enum EbsdToSampleCoordinateMapping
@@ -108,7 +109,8 @@ namespace Ebsd
     UnknownCoordinateMapping = 3
   };
 
-  namespace StackingOrder {
+  namespace StackingOrder
+  {
     const QString LowToHigh("Low To High");
     const QString HighToLow("High To Low");
     const QString UnknownStackingOrder("Unknown Stacking Order");
@@ -118,15 +120,15 @@ namespace Ebsd
       public:
         static QString getStringForEnum(RefFrameZDir v)
         {
-          if (LowtoHigh == v) return Ebsd::StackingOrder::LowToHigh;
-          if (HightoLow == v) return Ebsd::StackingOrder::HighToLow;
+          if (LowtoHigh == v) { return Ebsd::StackingOrder::LowToHigh; }
+          if (HightoLow == v) { return Ebsd::StackingOrder::HighToLow; }
           return Ebsd::StackingOrder::UnknownStackingOrder;
         }
 
-        static RefFrameZDir getEnumForString(const QString &v)
+        static RefFrameZDir getEnumForString(const QString& v)
         {
-          if (Ebsd::StackingOrder::LowToHigh.compare(v) == 0) return LowtoHigh;
-          if (Ebsd::StackingOrder::HighToLow.compare(v) == 0) return HightoLow;
+          if (Ebsd::StackingOrder::LowToHigh.compare(v) == 0) { return LowtoHigh; }
+          if (Ebsd::StackingOrder::HighToLow.compare(v) == 0) { return HightoLow; }
           return Ebsd::UnknownRefFrameZDirection;
         }
     };
@@ -166,7 +168,8 @@ namespace Ebsd
     const QString Hexagonal("Hexagonal");
   }
 
-  enum NumType {
+  enum NumType
+  {
     Int8 = 0,
     UInt8,
     Int16,

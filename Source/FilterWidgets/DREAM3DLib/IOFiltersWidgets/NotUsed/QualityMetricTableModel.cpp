@@ -50,9 +50,9 @@
 //
 // -----------------------------------------------------------------------------
 QualityMetricTableModel::QualityMetricTableModel(QObject* parent) :
-QAbstractTableModel(parent),
-m_RowCount(0),
-m_NumberOfPhases(1)
+  QAbstractTableModel(parent),
+  m_RowCount(0),
+  m_NumberOfPhases(1)
 {
   m_ColumnCount = ColumnCount;
 }
@@ -68,7 +68,7 @@ QualityMetricTableModel::~QualityMetricTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags QualityMetricTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags QualityMetricTableModel::flags(const QModelIndex& index) const
 {
   //  qDebug() << "QualityMetricTableModel::flags" << "\n";
   if (!index.isValid())
@@ -87,7 +87,8 @@ Qt::ItemFlags QualityMetricTableModel::flags(const QModelIndex &index) const
     }
     else if ( col == FeaturePhaseValue)
     {
-      if (m_NumberOfPhases > 1) {
+      if (m_NumberOfPhases > 1)
+      {
         theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
       }
     }
@@ -98,7 +99,7 @@ Qt::ItemFlags QualityMetricTableModel::flags(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant QualityMetricTableModel::data(const QModelIndex &index, qint32 role) const
+QVariant QualityMetricTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
   if (!index.isValid())
@@ -127,7 +128,7 @@ QVariant QualityMetricTableModel::data(const QModelIndex &index, qint32 role) co
         comboBox.currentText = QString("0.005");
         const QString header = headerData(FeatureName, Qt::Horizontal, Qt::DisplayRole).toString();
         if (header.length() > comboBox.currentText.length())
-          {comboBox.currentText = header;}
+        {comboBox.currentText = header;}
         break;
       }
       case FeatureOperator:
@@ -218,7 +219,7 @@ QVariant QualityMetricTableModel::headerData(int section, Qt::Orientation orient
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QualityMetricTableModel::rowCount(const QModelIndex &index) const
+int QualityMetricTableModel::rowCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_RowCount;
 }
@@ -226,7 +227,7 @@ int QualityMetricTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QualityMetricTableModel::columnCount(const QModelIndex &index) const
+int QualityMetricTableModel::columnCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_ColumnCount;
 }
@@ -243,7 +244,7 @@ bool QualityMetricTableModel::setHeaderData(int col, Qt::Orientation o, const QV
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool QualityMetricTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool QualityMetricTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   // qDebug() << "QualityMetricTableModel::setData " << value.toString().toStdString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_FeatureNames.count() || index.column() < 0 || index.column()
@@ -338,11 +339,14 @@ QVector<float > QualityMetricTableModel::getData(int col)
   switch(col)
   {
     case FeatureName:
-      return m_FeatureValues;break;
+      return m_FeatureValues;
+      break;
     case FeatureValue:
-      return m_K;break;
+      return m_K;
+      break;
     case FeatureOperator:
-      return m_Beta;break;
+      return m_Beta;
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -358,11 +362,14 @@ float QualityMetricTableModel::getDataValue(int col, int row)
   switch(col)
   {
     case FeatureName:
-      return m_FeatureValues[row];break;
+      return m_FeatureValues[row];
+      break;
     case FeatureValue:
-      return m_K[row];break;
+      return m_K[row];
+      break;
     case FeatureOperator:
-      return m_Beta[row];break;
+      return m_Beta[row];
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -372,16 +379,19 @@ float QualityMetricTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QualityMetricTableModel::setColumnData(int col, QVector<float> &data)
+void QualityMetricTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
     case FeatureName:
-      m_FeatureValues = data;break;
+      m_FeatureValues = data;
+      break;
     case FeatureValue:
-      m_K = data;break;
+      m_K = data;
+      break;
     case FeatureOperator:
-      m_Beta = data;break;
+      m_Beta = data;
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -408,14 +418,14 @@ void QualityMetricTableModel::setTableData( QVector<QString> featureNames, QVect
   m_RowCount = count;
   endInsertRows();
   QModelIndex topLeft = createIndex(0, 0);
-  QModelIndex botRight = createIndex(count-1, ColumnCount);
+  QModelIndex botRight = createIndex(count - 1, ColumnCount);
   emit dataChanged(topLeft, botRight);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QualityMetricTableModel::getTableData( QVector<QString> &featureNames, QVector<float> &featureValues,  QVector<QString> &featureOperators, QVector<int> &featurePhaseValues)
+void QualityMetricTableModel::getTableData( QVector<QString>& featureNames, QVector<float>& featureValues,  QVector<QString>& featureOperators, QVector<int>& featurePhaseValues)
 {
   featureNames = m_FeatureNames;
   featureValues = m_FeatureValues;

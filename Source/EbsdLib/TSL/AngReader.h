@@ -106,14 +106,14 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
      * @brief Returns the pointer to the data for a given feature
      * @param featureName The name of the feature to return the pointer to.
      */
-    void* getPointerByName(const QString &featureName);
+    void* getPointerByName(const QString& featureName);
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
      * @param featureName The name of the feature.
      */
-    Ebsd::NumType getPointerType(const QString &featureName);
+    Ebsd::NumType getPointerType(const QString& featureName);
 
     /**
     * @brief Reads the complete TSL .ang file.
@@ -127,9 +127,9 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     */
     virtual int readHeaderOnly();
 
-  /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
-    * and then splats '0' across all the bytes of the memory allocation
-    */
+    /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
+      * and then splats '0' across all the bytes of the memory allocation
+      */
     virtual void initPointers(size_t numElements);
 
     /** @brief 'free's the allocated memory and sets the pointer to NULL
@@ -141,24 +141,24 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     virtual int getYDimension();
     virtual void setYDimension(int ydim);
 
-protected:
+  protected:
 
 
-private:
+  private:
     AngPhase::Pointer   m_CurrentPhase;
 
 
-    void readData(QFile &in, QByteArray &buf);
+    void readData(QFile& in, QByteArray& buf);
 
     /** @brief Parses the value from a single line of the header section of the TSL .ang file
     * @param line The line to parse
     */
-    void parseHeaderLine(QByteArray &buf);
+    void parseHeaderLine(QByteArray& buf);
 
-  /** @brief Parses the data from a line of data from the TSL .ang file
-    * @param line The line of data to parse
-    */
-    void parseDataLine(QByteArray &line, size_t i);
+    /** @brief Parses the data from a line of data from the TSL .ang file
+      * @param line The line of data to parse
+      */
+    void parseDataLine(QByteArray& line, size_t i);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented
     void operator=(const AngReader&);  // Operator '=' Not Implemented

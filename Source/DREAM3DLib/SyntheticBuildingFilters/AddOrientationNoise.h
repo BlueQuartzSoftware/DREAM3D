@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     //------ Required Cell Data
-    
+
 
     DREAM3D_INSTANCE_PROPERTY(float, Magnitude)
 

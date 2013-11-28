@@ -48,9 +48,9 @@
 //
 // -----------------------------------------------------------------------------
 ComparisonSelectionTableModel::ComparisonSelectionTableModel(bool showOperators, QObject* parent) :
-QAbstractTableModel(parent),
-m_RowCount(0),
-m_NumberOfPhases(1)
+  QAbstractTableModel(parent),
+  m_RowCount(0),
+  m_NumberOfPhases(1)
 {
   if (showOperators)
   {
@@ -74,7 +74,7 @@ ComparisonSelectionTableModel::~ComparisonSelectionTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags ComparisonSelectionTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags ComparisonSelectionTableModel::flags(const QModelIndex& index) const
 {
   //  qDebug() << "ComparisonSelectionTableModel::flags" << "\n";
   if (!index.isValid())
@@ -104,7 +104,7 @@ Qt::ItemFlags ComparisonSelectionTableModel::flags(const QModelIndex &index) con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant ComparisonSelectionTableModel::data(const QModelIndex &index, qint32 role) const
+QVariant ComparisonSelectionTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
   if (!index.isValid())
@@ -133,7 +133,7 @@ QVariant ComparisonSelectionTableModel::data(const QModelIndex &index, qint32 ro
         comboBox.currentText = QString("0.005");
         const QString header = headerData(FeatureName, Qt::Horizontal, Qt::DisplayRole).toString();
         if (header.length() > comboBox.currentText.length())
-          {comboBox.currentText = header;}
+        {comboBox.currentText = header;}
         break;
       }
       case FeatureOperator:
@@ -224,7 +224,7 @@ QVariant ComparisonSelectionTableModel::headerData(int section, Qt::Orientation 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ComparisonSelectionTableModel::rowCount(const QModelIndex &index) const
+int ComparisonSelectionTableModel::rowCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_RowCount;
 }
@@ -232,7 +232,7 @@ int ComparisonSelectionTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ComparisonSelectionTableModel::columnCount(const QModelIndex &index) const
+int ComparisonSelectionTableModel::columnCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_ColumnCount;
 }
@@ -249,7 +249,7 @@ bool ComparisonSelectionTableModel::setHeaderData(int col, Qt::Orientation o, co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ComparisonSelectionTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool ComparisonSelectionTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   // qDebug() << "ComparisonSelectionTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_FeatureNames.count() || index.column() < 0 || index.column()
@@ -325,7 +325,7 @@ bool ComparisonSelectionTableModel::removeRows(int row, int count, const QModelI
     m_FeatureNames.remove(row);
     m_FeatureValues.remove(row);
     m_FeatureOperators.remove(row);
-  //  m_FeaturePhaseValues.remove(row);
+    //  m_FeaturePhaseValues.remove(row);
     m_RowCount = m_FeatureNames.count();
   }
   endRemoveRows();
@@ -355,31 +355,31 @@ void ComparisonSelectionTableModel::setTableData(QVector<QString> featureNames,
   m_FeatureOperators.resize(featureOperators.size());
   for(int i = 0; i < m_FeatureOperators.size(); ++i)
   {
-    if (featureOperators[i] == DREAM3D::Comparison::Operator_LessThan) m_FeatureOperators[i] = (DREAM3D::Comparison::Strings::LessThan);
-    if (featureOperators[i] == DREAM3D::Comparison::Operator_GreaterThan) m_FeatureOperators[i] = (DREAM3D::Comparison::Strings::GreaterThan);
-    if (featureOperators[i] == DREAM3D::Comparison::Operator_Equal) m_FeatureOperators[i] = (DREAM3D::Comparison::Strings::Equal);
+    if (featureOperators[i] == DREAM3D::Comparison::Operator_LessThan) { m_FeatureOperators[i] = (DREAM3D::Comparison::Strings::LessThan); }
+    if (featureOperators[i] == DREAM3D::Comparison::Operator_GreaterThan) { m_FeatureOperators[i] = (DREAM3D::Comparison::Strings::GreaterThan); }
+    if (featureOperators[i] == DREAM3D::Comparison::Operator_Equal) { m_FeatureOperators[i] = (DREAM3D::Comparison::Strings::Equal); }
   }
   m_RowCount = count;
   endInsertRows();
   QModelIndex topLeft = createIndex(0, 0);
-  QModelIndex botRight = createIndex(count-1, ColumnCount);
+  QModelIndex botRight = createIndex(count - 1, ColumnCount);
   emit dataChanged(topLeft, botRight);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionTableModel::getTableData( QVector<QString> &featureNames, QVector<float> &featureValues,  QVector<int> &featureOperators)
+void ComparisonSelectionTableModel::getTableData( QVector<QString>& featureNames, QVector<float>& featureValues,  QVector<int>& featureOperators)
 {
   featureNames = m_FeatureNames;
   featureValues = m_FeatureValues;
   featureOperators.resize(m_FeatureOperators.size());
   for(int i = 0; i < m_FeatureOperators.size(); ++i)
   {
-    if (m_FeatureOperators[i].compare((DREAM3D::Comparison::Strings::LessThan)) == 0) featureOperators[i] = DREAM3D::Comparison::Operator_LessThan;
-    else if (m_FeatureOperators[i].compare((DREAM3D::Comparison::Strings::GreaterThan)) == 0) featureOperators[i] = DREAM3D::Comparison::Operator_GreaterThan;
-    else if (m_FeatureOperators[i].compare((DREAM3D::Comparison::Strings::Equal)) == 0) featureOperators[i] = DREAM3D::Comparison::Operator_Equal;
-    else featureOperators[i] = DREAM3D::Comparison::Operator_Unknown;
+    if (m_FeatureOperators[i].compare((DREAM3D::Comparison::Strings::LessThan)) == 0) { featureOperators[i] = DREAM3D::Comparison::Operator_LessThan; }
+    else if (m_FeatureOperators[i].compare((DREAM3D::Comparison::Strings::GreaterThan)) == 0) { featureOperators[i] = DREAM3D::Comparison::Operator_GreaterThan; }
+    else if (m_FeatureOperators[i].compare((DREAM3D::Comparison::Strings::Equal)) == 0) { featureOperators[i] = DREAM3D::Comparison::Operator_Equal; }
+    else { featureOperators[i] = DREAM3D::Comparison::Operator_Unknown; }
   }
 }
 
@@ -431,7 +431,7 @@ void ComparisonSelectionTableModel::setPossibleFeatures(QStringList features)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionTableModel::setPossibleFeatures(QList<QString> &features)
+void ComparisonSelectionTableModel::setPossibleFeatures(QList<QString>& features)
 {
   m_PossibleFeatures.clear();
   for(QList<QString>::iterator iter = features.begin(); iter != features.end(); ++iter)

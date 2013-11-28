@@ -70,18 +70,18 @@
  */
 class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConverterWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    QHex2SqrConverterWidget(QWidget *parent = 0);
+    QHex2SqrConverterWidget(QWidget* parent = 0);
     virtual ~QHex2SqrConverterWidget();
 
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
 
     virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
-    virtual void writeOptions(QSettings &prefs);
-    virtual void readOptions(QSettings &prefs);
+    virtual void writeOptions(QSettings& prefs);
+    virtual void readOptions(QSettings& prefs);
 
     /**
      * @brief Enables or Disables all the widgets in a list
@@ -106,8 +106,8 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
     void m_findEbsdMaxSliceAndPrefix();
     void m_generateExampleEbsdInputFile();
 
-    QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles,
-                                                   QString filename);
+    QVector<QString> generateFileList(int start, int end, bool& hasMissingFiles,
+                                      QString filename);
 
     virtual void openHtmlHelpFile();
     virtual void getGuiParametersFromFilter(AbstractFilter* filt);
@@ -116,15 +116,15 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
     /* OIM Data Import Slots */
     void on_m_InputDirBtn_clicked();
 
-    void on_m_FilePrefix_textChanged(const QString &string);
-    void on_m_FileSuffix_textChanged(const QString &string);
-    void on_m_FileExt_textChanged(const QString &string);
+    void on_m_FilePrefix_textChanged(const QString& string);
+    void on_m_FileSuffix_textChanged(const QString& string);
+    void on_m_FileExt_textChanged(const QString& string);
     void on_m_TotalDigits_valueChanged(int value);
     void on_m_ZStartIndex_valueChanged(int value);
     void on_m_ZEndIndex_valueChanged(int value);
 
     // slots to catch signals emittd by the various QLineEdit widgets
-    void on_m_InputDir_textChanged(const QString & text);
+    void on_m_InputDir_textChanged(const QString& text);
 
   private slots:
 

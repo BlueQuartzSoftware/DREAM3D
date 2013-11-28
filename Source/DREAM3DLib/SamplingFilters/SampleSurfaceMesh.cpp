@@ -53,11 +53,11 @@
 
 class SampleSurfaceMeshImpl
 {
-  FaceArray::Pointer m_Faces;
-  Int32DynamicListArray::Pointer m_FaceIds;
-  VertexArray::Pointer m_FaceBBs;
-  VertexArray::Pointer m_Points;
-  int32_t* m_PolyIds;
+    FaceArray::Pointer m_Faces;
+    Int32DynamicListArray::Pointer m_FaceIds;
+    VertexArray::Pointer m_FaceBBs;
+    VertexArray::Pointer m_Points;
+    int32_t* m_PolyIds;
 
   public:
     SampleSurfaceMeshImpl(FaceArray::Pointer faces, Int32DynamicListArray::Pointer faceIds, VertexArray::Pointer faceBBs, VertexArray::Pointer points, int32_t* polyIds) :
@@ -77,20 +77,20 @@ class SampleSurfaceMeshImpl
       VertexArray::Vert_t point;
       char code;
 
-      for(int iter=start;iter<end;iter++)
+      for(int iter = start; iter < end; iter++)
       {
         //find bounding box for current feature
         GeometryMath::FindBoundingBoxOfFaces(m_Faces, m_FaceIds->getElementList(iter), ll, ur);
         GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
 
         //check points in vertex array to see if they are in the bounding box of the feature
-        for(int i=0;i<numPoints;i++)
+        for(int i = 0; i < numPoints; i++)
         {
           point = m_Points->getVert(i);
           if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur) == true)
           {
             code = GeometryMath::PointInPolyhedron(m_Faces, m_FaceIds->getElementList(iter), m_FaceBBs, point, ll, ur, radius);
-            if(code == 'i' || code == 'V' || code == 'E' || code == 'F') m_PolyIds[i] = iter;
+            if(code == 'i' || code == 'V' || code == 'E' || code == 'F') { m_PolyIds[i] = iter; }
           }
         }
       }
@@ -182,8 +182,8 @@ void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features
   {
     QVector<int> dims(1, 2);
     m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -236,20 +236,20 @@ void SampleSurfaceMesh::execute()
   //create array to hold bounding vertices for each face
   VertexArray::Vert_t ll, ur;
   VertexArray::Vert_t point;
-  VertexArray::Pointer faceBBs = VertexArray::CreateArray(2*numFaces, "faceBBs");
+  VertexArray::Pointer faceBBs = VertexArray::CreateArray(2 * numFaces, "faceBBs");
 
   //walk through faces to see how many features there are
   int g1, g2;
   int maxFeatureId = 0;
-  for(int i=0;i<numFaces;i++)
+  for(int i = 0; i < numFaces; i++)
   {
-    g1 = m_SurfaceMeshFaceLabels[2*i];
-    g2 = m_SurfaceMeshFaceLabels[2*i+1];
-    if(g1 > maxFeatureId) maxFeatureId = g1;
-    if(g2 > maxFeatureId) maxFeatureId = g2;
+    g1 = m_SurfaceMeshFaceLabels[2 * i];
+    g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
+    if(g1 > maxFeatureId) { maxFeatureId = g1; }
+    if(g2 > maxFeatureId) { maxFeatureId = g2; }
   }
   //add one to account for feature 0
-  int numFeatures = maxFeatureId+1;
+  int numFeatures = maxFeatureId + 1;
 
   //create a dynamic list array to hold face lists
   Int32DynamicListArray::Pointer faceLists = Int32DynamicListArray::New();
@@ -261,31 +261,31 @@ void SampleSurfaceMesh::execute()
   SharedShortArray_t linkLocPtr(new unsigned short[numFaces]);
   linkLoc = linkLocPtr.get();
 
-  ::memset(linkLoc, 0, numFaces*sizeof(unsigned short));
+  ::memset(linkLoc, 0, numFaces * sizeof(unsigned short));
 
   // traverse data to determine number of faces belonging to each feature
-  for (int i=0; i < numFaces; i++)
+  for (int i = 0; i < numFaces; i++)
   {
-    g1 = m_SurfaceMeshFaceLabels[2*i];
-    g2 = m_SurfaceMeshFaceLabels[2*i+1];
-    if(g1 > 0) linkCount[g1]++;
-    if(g2 > 0) linkCount[g2]++;
+    g1 = m_SurfaceMeshFaceLabels[2 * i];
+    g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
+    if(g1 > 0) { linkCount[g1]++; }
+    if(g2 > 0) { linkCount[g2]++; }
   }
 
   // now allocate storage for the faces
   faceLists->allocateLists(linkCount);
 
   // traverse data again to get the faces belonging to each feature
-  for (int i=0; i < numFaces; i++)
+  for (int i = 0; i < numFaces; i++)
   {
-    g1 = m_SurfaceMeshFaceLabels[2*i];
-    g2 = m_SurfaceMeshFaceLabels[2*i+1];
-    if(g1 > 0) faceLists->insertCellReference(g1, (linkLoc[g1])++, i);
-    if(g2 > 0) faceLists->insertCellReference(g2, (linkLoc[g2])++, i);
+    g1 = m_SurfaceMeshFaceLabels[2 * i];
+    g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
+    if(g1 > 0) { faceLists->insertCellReference(g1, (linkLoc[g1])++, i); }
+    if(g2 > 0) { faceLists->insertCellReference(g2, (linkLoc[g2])++, i); }
     //find bounding box for each face
     GeometryMath::FindBoundingBoxOfFace(faces, i, ll, ur);
-    faceBBs->setCoords(2*i, ll.pos);
-    faceBBs->setCoords(2*i+1, ur.pos);
+    faceBBs->setCoords(2 * i, ll.pos);
+    faceBBs->setCoords(2 * i + 1, ur.pos);
   }
 
   //generate the list of sampling points fom subclass
@@ -310,7 +310,7 @@ void SampleSurfaceMesh::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures),
-      SampleSurfaceMeshImpl(faces, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
+                      SampleSurfaceMeshImpl(faces, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
 
   }
   else

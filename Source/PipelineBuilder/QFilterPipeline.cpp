@@ -43,7 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 QFilterPipeline::QFilterPipeline(QObject* parent) :
-    QObject(parent), FilterPipeline()
+  QObject(parent), FilterPipeline()
 {
 }
 
@@ -57,7 +57,7 @@ QFilterPipeline::~QFilterPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::sendPipelineMessage(PipelineMessage &msg)
+void QFilterPipeline::sendPipelineMessage(PipelineMessage& msg)
 {
   emit firePipelineMessage(msg);
 }

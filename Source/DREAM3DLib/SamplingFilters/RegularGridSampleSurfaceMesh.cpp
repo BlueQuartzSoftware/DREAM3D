@@ -150,7 +150,7 @@ void RegularGridSampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -197,7 +197,7 @@ void RegularGridSampleSurfaceMesh::execute()
   m->setOrigin(0.0, 0.0, 0.0);
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
-  dataCheck(true, (m_XPoints*m_YPoints*m_ZPoints), 0, 0); 
+  dataCheck(true, (m_XPoints * m_YPoints * m_ZPoints), 0, 0);
 
   SampleSurfaceMesh::execute();
 
@@ -209,19 +209,19 @@ void RegularGridSampleSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 VertexArray::Pointer RegularGridSampleSurfaceMesh::generate_points()
 {
-  VertexArray::Pointer points = VertexArray::CreateArray((m_XPoints*m_YPoints*m_ZPoints), "points");
+  VertexArray::Pointer points = VertexArray::CreateArray((m_XPoints * m_YPoints * m_ZPoints), "points");
 
   int count = 0;
   float coords[3];
-  for(int k=0;k<m_ZPoints;k++)
+  for(int k = 0; k < m_ZPoints; k++)
   {
-    for(int j=0;j<m_YPoints;j++)
+    for(int j = 0; j < m_YPoints; j++)
     {
-      for(int i=0;i<m_XPoints;i++)
+      for(int i = 0; i < m_XPoints; i++)
       {
-        coords[0] = (float(i)+0.5)*m_Resolution.x;
-        coords[1] = (float(j)+0.5)*m_Resolution.y;
-        coords[2] = (float(k)+0.5)*m_Resolution.z;
+        coords[0] = (float(i) + 0.5) * m_Resolution.x;
+        coords[1] = (float(j) + 0.5) * m_Resolution.y;
+        coords[2] = (float(k) + 0.5) * m_Resolution.z;
         points->setCoords(count, coords);
         count++;
       }
@@ -237,7 +237,7 @@ VertexArray::Pointer RegularGridSampleSurfaceMesh::generate_points()
 void RegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
 {
   int32_t* ids = iArray->getPointer(0);
-  for(int i=0;i<(m_XPoints*m_YPoints*m_ZPoints);i++)
+  for(int i = 0; i < (m_XPoints * m_YPoints * m_ZPoints); i++)
   {
     m_FeatureIds[i] = ids[i];
   }

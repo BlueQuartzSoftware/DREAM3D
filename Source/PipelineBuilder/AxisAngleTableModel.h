@@ -71,7 +71,7 @@ class AxisAngleTableModel : public QAbstractTableModel
       * @param index
       * @return
       */
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const;
 
     /**
       *
@@ -79,7 +79,7 @@ class AxisAngleTableModel : public QAbstractTableModel
       * @param role
       * @return
       */
-    virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     /**
       *
@@ -88,21 +88,21 @@ class AxisAngleTableModel : public QAbstractTableModel
       * @param role
       * @return
       */
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     /**
       *
       * @param parent
       * @return
       */
-    virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
     /**
       *
       * @param parent
       * @return
       */
-    virtual int columnCount(const QModelIndex &parent=QModelIndex()) const;
+    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
     /**
       *
@@ -111,7 +111,7 @@ class AxisAngleTableModel : public QAbstractTableModel
       * @param role
       * @return
       */
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
     /**
      *
@@ -121,7 +121,7 @@ class AxisAngleTableModel : public QAbstractTableModel
      * @param role
      * @return
      */
-    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role=Qt::EditRole);
+    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole);
 
     /**
       *
@@ -130,7 +130,7 @@ class AxisAngleTableModel : public QAbstractTableModel
       * @param parent
       * @return
       */
-    virtual bool insertRows(int row, int count, const QModelIndex &parent=QModelIndex());
+    virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
     /**
       *
@@ -139,7 +139,7 @@ class AxisAngleTableModel : public QAbstractTableModel
       * @param parent
       * @return
       */
-    virtual bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex());
+    virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
     /**
       *
@@ -154,9 +154,9 @@ class AxisAngleTableModel : public QAbstractTableModel
       */
     virtual QVector<float> getData(int col);
 
-    int parseHKLRow(int row, float &h, float &k, float &l);
+    int parseHKLRow(int row, float& h, float& k, float& l);
 
-    virtual void setColumnData(int col, QVector<float> &data);
+    virtual void setColumnData(int col, QVector<float>& data);
 
     virtual void setRowData(int row, float angle, QString axis);
 

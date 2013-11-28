@@ -124,7 +124,7 @@ void FillBadData::dataCheck(bool preflight, size_t voxels, size_t features, size
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 
@@ -202,10 +202,10 @@ void FillBadData::execute()
   int neighpoint;
   int featurename, feature;
   size_t numfeatures = 0;
-  for(int64_t i=0;i<totalPoints;i++)
+  for(int64_t i = 0; i < totalPoints; i++)
   {
     featurename = m_FeatureIds[point];
-    if(featurename > numfeatures) numfeatures = featurename;
+    if(featurename > numfeatures) { numfeatures = featurename; }
   }
   if (numfeatures == 0)
   {

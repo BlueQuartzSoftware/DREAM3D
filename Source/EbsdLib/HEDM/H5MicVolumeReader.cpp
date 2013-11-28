@@ -55,7 +55,7 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5MicVolumeReader::H5MicVolumeReader() :
-    H5EbsdVolumeReader()
+  H5EbsdVolumeReader()
 {
   // Init all the arrays to NULL
   m_Euler1 = NULL;
@@ -78,12 +78,12 @@ H5MicVolumeReader::~H5MicVolumeReader()
 
 #define H5MICREADER_ALLOCATE_ARRAY(name, type)\
   if (readAllArrays == true || arrayNames.find(Ebsd::Mic::name) != arrayNames.end()) {\
-  type* _##name = allocateArray<type>(numElements);\
-  if (NULL != _##name) {\
-  ::memset(_##name, 0, numBytes);\
-  }\
-  set##name##Pointer(_##name);\
- }
+    type* _##name = allocateArray<type>(numElements);\
+    if (NULL != _##name) {\
+      ::memset(_##name, 0, numBytes);\
+    }\
+    set##name##Pointer(_##name);\
+  }
 
 
 // -----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ void H5MicVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5MicVolumeReader::getPointerByName(const QString &featureName)
+void* H5MicVolumeReader::getPointerByName(const QString& featureName)
 {
   if (featureName.compare(Ebsd::Mic::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
   if (featureName.compare(Ebsd::Mic::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
@@ -138,7 +138,7 @@ void* H5MicVolumeReader::getPointerByName(const QString &featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5MicVolumeReader::getPointerType(const QString &featureName)
+Ebsd::NumType H5MicVolumeReader::getPointerType(const QString& featureName)
 {
   if (featureName.compare(Ebsd::Mic::Euler1) == 0) { return Ebsd::Float;}
   if (featureName.compare(Ebsd::Mic::Euler2) == 0) { return Ebsd::Float;}
@@ -255,8 +255,8 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
     {
       ZDir = getStackingOrder();
     }
-    if(ZDir == Ebsd::LowtoHigh) zval = slice;
-    if(ZDir == Ebsd::HightoLow) zval = static_cast<int>( (zpoints - 1) - slice );
+    if(ZDir == Ebsd::LowtoHigh) { zval = slice; }
+    if(ZDir == Ebsd::HightoLow) { zval = static_cast<int>( (zpoints - 1) - slice ); }
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
     for (int j = 0; j < ystop; j++)

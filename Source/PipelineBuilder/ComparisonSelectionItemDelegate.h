@@ -55,10 +55,10 @@
 
 class ComparisonSelectionItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    explicit ComparisonSelectionItemDelegate(QStringList possibleFeatures, int numPhases, QObject *parent = 0) :
+    explicit ComparisonSelectionItemDelegate(QStringList possibleFeatures, int numPhases, QObject* parent = 0) :
       QStyledItemDelegate(parent),
       m_FeatureList(possibleFeatures),
       m_NumberOfPhases(numPhases)
@@ -73,7 +73,7 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QStyledItemDelegate::paint(painter, option, index);
     }
@@ -81,14 +81,15 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setFeatureList(QStringList features) {
+    void setFeatureList(QStringList features)
+    {
       m_FeatureList = features;
     }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QLineEdit* featureValue = NULL;
       QDoubleValidator* featureValueValidator = NULL;
@@ -143,10 +144,10 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setEditorData(QWidget *editor, const QModelIndex &index) const
+    void setEditorData(QWidget* editor, const QModelIndex& index) const
     {
       qint32 col = index.column();
-     // bool ok = false;
+      // bool ok = false;
       if (col == ComparisonSelectionTableModel::FeatureName)
       {
         QString state = index.model()->data(index).toString();
@@ -175,20 +176,20 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
 //        comboBox->setCurrentIndex(comboBox->findText(state));
 //      }
 
-      else QStyledItemDelegate::setEditorData(editor, index);
+      else { QStyledItemDelegate::setEditorData(editor, index); }
     }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
     {
       //  qDebug() << "ComparisonSelectionItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
       //  bool ok = false;
       if (col == ComparisonSelectionTableModel::FeatureName)
       {
-        QComboBox *comboBox = qobject_cast<QComboBox* > (editor);
+        QComboBox* comboBox = qobject_cast<QComboBox* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
@@ -202,7 +203,7 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
       }
       else if (col == ComparisonSelectionTableModel::FeatureOperator)
       {
-        QComboBox *comboBox = qobject_cast<QComboBox* > (editor);
+        QComboBox* comboBox = qobject_cast<QComboBox* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
@@ -212,7 +213,7 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
 //        Q_ASSERT(comboBox);
 //        model->setData(index, comboBox->currentText());
 //      }
-      else QStyledItemDelegate::setModelData(editor, model, index);
+      else { QStyledItemDelegate::setModelData(editor, model, index); }
     }
 
   private:

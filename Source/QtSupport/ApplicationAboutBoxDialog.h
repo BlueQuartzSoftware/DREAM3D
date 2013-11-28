@@ -53,10 +53,10 @@
  */
 class ApplicationAboutBoxDialog: public QDialog, private Ui::ApplicationAboutBoxDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    ApplicationAboutBoxDialog(QStringList files, QWidget *parent = 0);
+    ApplicationAboutBoxDialog(QStringList files, QWidget* parent = 0);
     virtual ~ApplicationAboutBoxDialog();
 
     /**

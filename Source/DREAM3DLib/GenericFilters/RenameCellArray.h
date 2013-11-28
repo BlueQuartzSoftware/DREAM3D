@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT RenameCellArray : public AbstractFilter
     virtual ~RenameCellArray();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
+
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NewCellArrayName)
 

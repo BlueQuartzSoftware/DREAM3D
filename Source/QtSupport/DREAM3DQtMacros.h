@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -40,9 +40,9 @@
 
 #define READ_CHECKBOX_SETTING(prefs, prefix, tag, emptyValue)\
   { QString s = prefs.value(#tag).toString();\
-  if (s.isEmpty() == false) {\
-    bool bb = prefs.value(#tag).toBool();\
-  prefix##tag->setChecked(bb); } else { prefix##tag->setChecked(emptyValue); } }
+    if (s.isEmpty() == false) {\
+      bool bb = prefs.value(#tag).toBool();\
+      prefix##tag->setChecked(bb); } else { prefix##tag->setChecked(emptyValue); } }
 
 
 
@@ -67,12 +67,12 @@
 
 #define READ_BOOL_SETTING(prefs, prefix, tag, emptyValue)\
   { QString s = prefs.value(#tag).toString();\
-  if (s.isEmpty() == false) {\
-    bool bb = prefs.value(#tag).toBool();\
-  prefix##tag = (bb); } else { prefix##tag = (emptyValue); } }
+    if (s.isEmpty() == false) {\
+      bool bb = prefs.value(#tag).toBool();\
+      prefix##tag = (bb); } else { prefix##tag = (emptyValue); } }
 
 #define WRITE_BOOL_SETTING(prefs, prefix, tag,  b)\
-    prefs.setValue(#tag, (b) );
+  prefs.setValue(#tag, (b) );
 
 #define WRITE_STRING_SETTING(prefs, prefix, var)\
   prefs.setValue(#var , this->prefix##var->text());
@@ -82,23 +82,23 @@
 
 
 #define WRITE_CHECKBOX_SETTING(prefs, prefix, o)\
-    prefs.setValue( #o, prefix##o->isChecked() );
+  prefs.setValue( #o, prefix##o->isChecked() );
 
 #define WRITE_COMBO_BOX(prefs, prefix, combobox)\
   prefs.setValue(#combobox, this->prefix##combobox->currentIndex());
 
 
 #define READ_COMBO_BOX(prefs, prefix, combobox)\
-    { bool ok = false;\
+  { bool ok = false;\
     int i = prefs.value(#combobox).toInt(&ok);\
     if (false == ok) {i=0;}\
     prefix##combobox->setCurrentIndex(i); }
 
 #define WRITE_INT_SETTING(prefs, var)\
-    prefs.setValue(#var, var);
+  prefs.setValue(#var, var);
 
 #define READ_INT_SETTING(prefs, var, def)\
-    { bool ok = false;\
+  { bool ok = false;\
     var = prefs.value(#var).toInt(&ok);\
     if (false == ok) {i=def;} }
 
@@ -106,7 +106,7 @@
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS_ICON_BODY1(ns, prefixname, name)\
   prefixname->setText(m_OutputFilePrefix->text() + ns::name.c_str());\
   prefixname##Icon->setPixmap(QPixmap(iconFile));\
-
+   
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefixname, name)\
   prefixname->setText(m_OutputFilePrefix->text() + ns::name.c_str());
 
@@ -114,84 +114,84 @@
 
 #define CHECK_QLINEEDIT_FILE_EXISTS(name) \
   { \
-  QString absPath = QDir::toNativeSeparators(name->text());\
-  QFileInfo fi ( absPath );\
-  QString iconFile;\
-  if ( fi.exists() && fi.isFile() )  {\
-    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-  } else {\
-    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-  }\
-  name##Icon->setPixmap(QPixmap(iconFile));\
- }
+    QString absPath = QDir::toNativeSeparators(name->text());\
+    QFileInfo fi ( absPath );\
+    QString iconFile;\
+    if ( fi.exists() && fi.isFile() )  {\
+      iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+    } else {\
+      iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+    }\
+    name##Icon->setPixmap(QPixmap(iconFile));\
+  }
 
 
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS(ns, prefix, name) \
-{ \
-  QString absPath = prefix##OutputDir->text() + QDir::separator() + m_OutputFilePrefix->text() + ns::name.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefix##name, name)\
-}
+  { \
+    QString absPath = prefix##OutputDir->text() + QDir::separator() + m_OutputFilePrefix->text() + ns::name.c_str();\
+    absPath = QDir::toNativeSeparators(absPath);\
+    QFileInfo fi ( absPath );\
+    CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefix##name, name)\
+  }
 
 
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS_ICON(ns, prefix, name) \
-{ \
-  QString absPath = prefix##OutputDir->text() + QDir::separator() + m_OutputFilePrefix->text() + ns::name.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS_ICON_BODY1(ns, prefix##name, name)\
-}
+  { \
+    QString absPath = prefix##OutputDir->text() + QDir::separator() + m_OutputFilePrefix->text() + ns::name.c_str();\
+    absPath = QDir::toNativeSeparators(absPath);\
+    QFileInfo fi ( absPath );\
+    CHECK_QLABEL_OUTPUT_FILE_EXISTS_ICON_BODY1(ns, prefix##name, name)\
+  }
 
 
 #define CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(ns, prefix, name) \
-{ \
-  QString absPath = prefix##OutputDir->text() + QDir::separator() + m_OutputFilePrefix->text() + ns::name.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefix##name, name)\
-}
+  { \
+    QString absPath = prefix##OutputDir->text() + QDir::separator() + m_OutputFilePrefix->text() + ns::name.c_str();\
+    absPath = QDir::toNativeSeparators(absPath);\
+    QFileInfo fi ( absPath );\
+    CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefix##name, name)\
+  }
 
 
 #define SANITY_CHECK_INPUT(prefix, input)\
   if (verifyPathExists(prefix##input->text(), prefix##input) == false) {\
-  QMessageBox::critical(this, tr("DREAM.3D"),\
-  tr("The input " #input " does not exist. Please ensure the file or folder exists before starting the operation"),\
-  QMessageBox::Ok,\
-  QMessageBox::Ok);\
-  return;\
+    QMessageBox::critical(this, tr("DREAM.3D"),\
+                          tr("The input " #input " does not exist. Please ensure the file or folder exists before starting the operation"),\
+                          QMessageBox::Ok,\
+                          QMessageBox::Ok);\
+    return;\
   }
 
 
 #define SANITY_CHECK_QLABEL_FILE(ns, prefix, input) \
   { \
-  QString absPath = prefix##InputDir->text() + QDir::separator() + ns::input.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  QString theMessage = QString("The input ") + QString(ns::input.c_str()) + \
-  QString(" does not exist. Please ensure the file or folder exists before starting the operation");\
-  if ( fi.exists() == false)  {\
-  QMessageBox::critical(this, tr("DREAM.3D"),\
-  theMessage,\
-  QMessageBox::Ok,\
-  QMessageBox::Ok);\
-  return;\
-  }\
- }
+    QString absPath = prefix##InputDir->text() + QDir::separator() + ns::input.c_str();\
+    absPath = QDir::toNativeSeparators(absPath);\
+    QFileInfo fi ( absPath );\
+    QString theMessage = QString("The input ") + QString(ns::input.c_str()) + \
+                         QString(" does not exist. Please ensure the file or folder exists before starting the operation");\
+    if ( fi.exists() == false)  {\
+      QMessageBox::critical(this, tr("DREAM.3D"),\
+                            theMessage,\
+                            QMessageBox::Ok,\
+                            QMessageBox::Ok);\
+      return;\
+    }\
+  }
 
 #define CHECK_QLABEL_INPUT_FILE_EXISTS(ns, prefix, name) \
-{ \
-  QString absPath = prefix##InputDir->text() + QDir::separator() + ns::name.c_str();\
-  absPath = QDir::toNativeSeparators(absPath);\
-  QFileInfo fi ( absPath );\
-  QString iconFile;\
-  if ( fi.exists() )  {\
-    iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
-  } else {\
-    iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
-  }\
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefix##name, name)\
-}
+  { \
+    QString absPath = prefix##InputDir->text() + QDir::separator() + ns::name.c_str();\
+    absPath = QDir::toNativeSeparators(absPath);\
+    QFileInfo fi ( absPath );\
+    QString iconFile;\
+    if ( fi.exists() )  {\
+      iconFile = QString(":/") + QString("Check") + QString("-16x16.png");\
+    } else {\
+      iconFile = QString(":/") + QString("Delete") + QString("-16x16.png");\
+    }\
+    CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefix##name, name)\
+  }
 
 
 

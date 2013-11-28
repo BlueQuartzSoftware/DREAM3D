@@ -62,8 +62,8 @@ class DREAM3DLib_EXPORT ThresholdExample : public AbstractFilter
     virtual ~ThresholdExample();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
     // -----------------------------------------------------------------------------
     /* Each Filter can ONLY have ONE of each of these types of widgets */

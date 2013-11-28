@@ -40,12 +40,12 @@
 //
 // -----------------------------------------------------------------------------
 UpdateCheckData::UpdateCheckData(QObject* parent) :
-QObject(parent),
-m_HasUpdate(false),
-m_HasError(false),
-m_MessageDescription(""),
-m_AppString(""),
-m_ServerString("")
+  QObject(parent),
+  m_HasUpdate(false),
+  m_HasError(false),
+  m_MessageDescription(""),
+  m_AppString(""),
+  m_ServerString("")
 {
 
 }
@@ -88,10 +88,10 @@ void UpdateCheckData::operator=(const UpdateCheckData& rhs)
 bool UpdateCheckData::operator==(const UpdateCheckData& rhs)
 {
   return (m_AppString == rhs.m_AppString &&
-    m_HasUpdate == rhs.m_HasUpdate &&
-    m_HasError == rhs.m_HasError &&
-    m_MessageDescription == rhs.m_MessageDescription &&
-    m_ServerString == rhs.m_ServerString);
+          m_HasUpdate == rhs.m_HasUpdate &&
+          m_HasError == rhs.m_HasError &&
+          m_MessageDescription == rhs.m_MessageDescription &&
+          m_ServerString == rhs.m_ServerString);
 }
 
 // -----------------------------------------------------------------------------

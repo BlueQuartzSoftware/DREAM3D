@@ -157,8 +157,8 @@ void QReadH5EbsdWidget::setupGui()
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   m_InputFile->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_InputFile_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_InputFile_textChanged(const QString&)));
 
   connect(arraySelectionWidget, SIGNAL(arrayListsChanged()),
           this, SLOT(arraySelectionWidgetChanged()));
@@ -181,7 +181,7 @@ void QReadH5EbsdWidget::arraySelectionWidgetChanged()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::setInputFile(const QString &v)
+void QReadH5EbsdWidget::setInputFile(const QString& v)
 {
   QString natPath = QDir::toNativeSeparators(v);
   m_InputFile->setText(natPath);
@@ -199,20 +199,20 @@ QString  QReadH5EbsdWidget::getInputFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::writeOptions(QSettings &prefs)
+void QReadH5EbsdWidget::writeOptions(QSettings& prefs)
 {
   prefs.setValue("Filter_Name", "ReadH5Ebsd" );
   prefs.setValue("InputFile", QDir::toNativeSeparators(getInputFile()) );
   prefs.setValue("ZStartIndex", m_ZStartIndex->value());
   prefs.setValue("ZEndIndex", m_ZEndIndex->value() );
-  prefs.setValue("UseTransformations",m_UseTransformations->isChecked());
+  prefs.setValue("UseTransformations", m_UseTransformations->isChecked());
   arraySelectionWidget->writeOptions(prefs, "ArraySelections");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::readOptions(QSettings &prefs)
+void QReadH5EbsdWidget::readOptions(QSettings& prefs)
 {
   QString val;
   bool ok;
@@ -269,7 +269,7 @@ void QReadH5EbsdWidget::on_m_InputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
+void QReadH5EbsdWidget::on_m_InputFile_textChanged(const QString& text)
 {
 
   if (verifyPathExists(m_InputFile->text(), m_InputFile) )

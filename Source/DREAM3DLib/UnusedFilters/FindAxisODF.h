@@ -70,8 +70,8 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     virtual ~FindAxisODF();
 
     //------ Required Feature Data
-                //------ Required Ensemble Data
-    
+    //------ Required Ensemble Data
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Axis ODF"; }

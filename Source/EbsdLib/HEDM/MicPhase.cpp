@@ -45,8 +45,8 @@
 //
 // -----------------------------------------------------------------------------
 MicPhase::MicPhase() :
-m_PhaseName(""),
-m_PhaseIndex(1)
+  m_PhaseName(""),
+  m_PhaseIndex(1)
 {
 }
 
@@ -60,7 +60,7 @@ MicPhase::~MicPhase()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicPhase::printSelf(std::ostream &stream)
+void MicPhase::printSelf(std::ostream& stream)
 {
 
 
@@ -69,7 +69,7 @@ void MicPhase::printSelf(std::ostream &stream)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicPhase::parseLatticeConstants(QByteArray &data)
+void MicPhase::parseLatticeConstants(QByteArray& data)
 {
   bool ok = false;
   QList<QByteArray> tokens = data.split(',');
@@ -81,7 +81,7 @@ void MicPhase::parseLatticeConstants(QByteArray &data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicPhase::parseLatticeAngles(QByteArray &data)
+void MicPhase::parseLatticeAngles(QByteArray& data)
 {
   bool ok = false;
   QList<QByteArray> tokens = data.split(',');
@@ -93,7 +93,7 @@ void MicPhase::parseLatticeAngles(QByteArray &data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicPhase::parseBasisAtoms(QByteArray &data)
+void MicPhase::parseBasisAtoms(QByteArray& data)
 {
   bool ok = false;
   QList<QByteArray> tokens = data.split(' ');
@@ -102,7 +102,7 @@ void MicPhase::parseBasisAtoms(QByteArray &data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicPhase::parseZandCoordinates(QByteArray &data)
+void MicPhase::parseZandCoordinates(QByteArray& data)
 {
   m_ZandCoordinates.push_back(QString::fromAscii(data));
 }
@@ -112,11 +112,11 @@ void MicPhase::parseZandCoordinates(QByteArray &data)
 unsigned int MicPhase::determineCrystalStructure()
 {
   unsigned int crystal_structure;
-  if(m_Symmetry.compare(Ebsd::Mic::Cubic) == 0) crystal_structure = Ebsd::CrystalStructure::Cubic_High;
-  else if(m_Symmetry.compare(Ebsd::Mic::Hexagonal) == 0) crystal_structure = Ebsd::CrystalStructure::Hexagonal_High;
-  else if(m_Symmetry.compare(Ebsd::Mic::OrthoRhombic) == 0) crystal_structure = Ebsd::CrystalStructure::OrthoRhombic;
-  else if(m_Symmetry.compare(Ebsd::Mic::Tetragonal) == 0) crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  else crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  if(m_Symmetry.compare(Ebsd::Mic::Cubic) == 0) { crystal_structure = Ebsd::CrystalStructure::Cubic_High; }
+  else if(m_Symmetry.compare(Ebsd::Mic::Hexagonal) == 0) { crystal_structure = Ebsd::CrystalStructure::Hexagonal_High; }
+  else if(m_Symmetry.compare(Ebsd::Mic::OrthoRhombic) == 0) { crystal_structure = Ebsd::CrystalStructure::OrthoRhombic; }
+  else if(m_Symmetry.compare(Ebsd::Mic::Tetragonal) == 0) { crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure; }
+  else { crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure; }
 
   return crystal_structure;
 }

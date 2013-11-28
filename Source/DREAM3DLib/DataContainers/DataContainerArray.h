@@ -82,15 +82,15 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
     /**
      * @brief
      */
-    virtual DataContainer::Pointer removeDataContainer(const QString &name);
-    virtual DataContainer::Pointer getDataContainer(const QString &name);
+    virtual DataContainer::Pointer removeDataContainer(const QString& name);
+    virtual DataContainer::Pointer getDataContainer(const QString& name);
     QList<QString> getDataContainerNames();
     QList<DataContainer::Pointer>& getDataContainerArray();
 
-    virtual void printDataContainerNames(QTextStream &out);
+    virtual void printDataContainerNames(QTextStream& out);
 
     template<typename T>
-    T* getDataContainerAs(const QString &name)
+    T* getDataContainerAs(const QString& name)
     {
       DataContainer::Pointer dc = getDataContainer(name);
       if(NULL == dc.get()) { return NULL; }
@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
       return m;
     }
 
-    bool containsDataContainer(const QString &name);
+    bool containsDataContainer(const QString& name);
 
   protected:
     DataContainerArray();

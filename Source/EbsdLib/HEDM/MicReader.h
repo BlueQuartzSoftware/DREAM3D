@@ -153,14 +153,14 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
      * @brief Returns the pointer to the data for a given feature
      * @param featureName The name of the feature to return the pointer to.
      */
-    void* getPointerByName(const QString &featureName);
+    void* getPointerByName(const QString& featureName);
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
      * @param featureName The name of the feature.
      */
-    Ebsd::NumType getPointerType(const QString &featureName);
+    Ebsd::NumType getPointerType(const QString& featureName);
 
     /**
     * @brief Reads the complete HEDM .Mic file.
@@ -208,12 +208,12 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
     /** @brief Parses the value from a single line of the header section of the HEDM .Mic file
     * @param line The line to parse
     */
-    void parseHeaderLine(QByteArray &line);
+    void parseHeaderLine(QByteArray& line);
 
-  /** @brief Parses the data from a line of data from the HEDM .Mic file
-    * @param line The line of data to parse
-    */
-    void parseDataLine(QByteArray &line, size_t i);
+    /** @brief Parses the data from a line of data from the HEDM .Mic file
+      * @param line The line of data to parse
+      */
+    void parseDataLine(QByteArray& line, size_t i);
 
     MicReader(const MicReader&);    // Copy Constructor Not Implemented
     void operator=(const MicReader&);  // Operator '=' Not Implemented

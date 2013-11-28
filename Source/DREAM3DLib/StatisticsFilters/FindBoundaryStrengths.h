@@ -83,7 +83,7 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-                    
+
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Loading)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

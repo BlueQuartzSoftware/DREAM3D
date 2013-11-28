@@ -65,7 +65,7 @@ HDF5ScopedFileSentinel::~HDF5ScopedFileSentinel()
   for(std::vector<hid_t*>::size_type i = 0; i < m_Groups.size(); ++i)
   {
     hid_t* temp = m_Groups[i];
-    if (*temp>0) { H5Gclose(*temp); *temp = -1; }
+    if (*temp > 0) { H5Gclose(*temp); *temp = -1; }
   }
 
   if (*m_FileId > 0)

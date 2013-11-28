@@ -44,11 +44,11 @@ class QWidget;
 
 class ColorComboPicker : public QComboBox
 {
-  Q_OBJECT
-  Q_PROPERTY(QColor color READ color WRITE setColor USER true)
+    Q_OBJECT
+    Q_PROPERTY(QColor color READ color WRITE setColor USER true)
 
   public:
-    ColorComboPicker(QWidget *widget = 0);
+    ColorComboPicker(QWidget* widget = 0);
 
   public:
     QColor color() const;

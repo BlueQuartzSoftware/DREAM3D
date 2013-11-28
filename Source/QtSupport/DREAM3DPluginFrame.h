@@ -65,19 +65,19 @@ class DREAM3DPluginFrame : public QFrame
     Q_OBJECT
 
   public:
-    DREAM3DPluginFrame(QWidget *parent = NULL);
+    DREAM3DPluginFrame(QWidget* parent = NULL);
     virtual ~DREAM3DPluginFrame();
 
 
     /**
       * @brief Reads the Preferences from the users pref file
       */
-    virtual void readSettings(QSettings &prefs, bool shouldClear);
+    virtual void readSettings(QSettings& prefs, bool shouldClear);
 
-     /**
-      * @brief Writes the preferences to the users pref file
-      */
-    virtual void writeSettings(QSettings &prefs);
+    /**
+     * @brief Writes the preferences to the users pref file
+     */
+    virtual void writeSettings(QSettings& prefs);
 
     /**
      * @brief Enables or Disables all the widgets in a list
@@ -139,59 +139,59 @@ class DREAM3DPluginFrame : public QFrame
      */
     virtual void displayDialogBox(QString title, QString text, QMessageBox::Icon icon);
 
-    signals:
+  signals:
 
     /**
      * @brief Signal emitted when a process is started
      */
-      void pipelineStarted();
+    void pipelineStarted();
 
-      /**
-       * @brief Signal Emitted when a process has ended.
-       */
-      void pipelineEnded();
+    /**
+     * @brief Signal Emitted when a process has ended.
+     */
+    void pipelineEnded();
 
-      /**
-       * @brief Signal Emitted when the process has been canceled.
-       */
-      void cancelPipeline();
+    /**
+     * @brief Signal Emitted when the process has been canceled.
+     */
+    void cancelPipeline();
 
-      /**
-       * @brief Signal emitted when a message is available for display to the user
-       * @param
-       */
-      void pipelineWarningMessage(const QString &);
-      void pipelineErrorMessage(const QString &);
+    /**
+     * @brief Signal emitted when a message is available for display to the user
+     * @param
+     */
+    void pipelineWarningMessage(const QString&);
+    void pipelineErrorMessage(const QString&);
 
-    private slots:
-      /**
-       * @brief Slot to add a message to display to the user
-       * @param message
-       */
-      virtual void addMessage(PipelineMessage msg) = 0;
+  private slots:
+    /**
+     * @brief Slot to add a message to display to the user
+     * @param message
+     */
+    virtual void addMessage(PipelineMessage msg) = 0;
 
-      /**
-       * @brief Slot to add a Progress message to display to the user
-       * @param message
-       */
-      virtual void addProgressMessage(QString message) = 0;
+    /**
+     * @brief Slot to add a Progress message to display to the user
+     * @param message
+     */
+    virtual void addProgressMessage(QString message) = 0;
 
-      /**
-       * @brief Slot to catch signals when the processing thread is finished.
-       */
-      virtual void pipelineComplete() = 0;
+    /**
+     * @brief Slot to catch signals when the processing thread is finished.
+     */
+    virtual void pipelineComplete() = 0;
 
-      /**
-       * @brief Slot to catch signals when a processing thread has made progress
-       * @param value The value of the progress, Typically between 0 and 100.
-       */
-      virtual void pipelineProgress(int value) = 0;
+    /**
+     * @brief Slot to catch signals when a processing thread has made progress
+     * @param value The value of the progress, Typically between 0 and 100.
+     */
+    virtual void pipelineProgress(int value) = 0;
 
-    private:
-      QStatusBar*    m_StatusBar;
+  private:
+    QStatusBar*    m_StatusBar;
 
-      DREAM3DPluginFrame(const DREAM3DPluginFrame&); // Copy Constructor Not Implemented
-      void operator=(const DREAM3DPluginFrame&); // Operator '=' Not Implemented
+    DREAM3DPluginFrame(const DREAM3DPluginFrame&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DPluginFrame&); // Operator '=' Not Implemented
 };
 
 #endif /* _AIM_PLUGIN_FRAME_H_ */

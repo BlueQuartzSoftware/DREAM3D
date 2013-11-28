@@ -55,8 +55,8 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
 
     virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
-    virtual void writeOptions(QSettings &prefs);
-    virtual void readOptions(QSettings &prefs);
+    virtual void writeOptions(QSettings& prefs);
+    virtual void readOptions(QSettings& prefs);
 
     QFilterWidget* createDeepCopy();
 
@@ -88,12 +88,12 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
   public slots:
-    void setInputFile(const QString &v);
+    void setInputFile(const QString& v);
     void arraySelectionWidgetChanged();
 
   protected slots:
     void on_m_InputFileBtn_clicked();
-    void on_m_InputFile_textChanged(const QString & text);
+    void on_m_InputFile_textChanged(const QString& text);
 
   protected:
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);

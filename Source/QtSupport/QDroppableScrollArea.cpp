@@ -51,8 +51,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QDroppableScrollArea::QDroppableScrollArea(QWidget *parent)
-: QScrollArea(parent)
+QDroppableScrollArea::QDroppableScrollArea(QWidget* parent)
+  : QScrollArea(parent)
 {
 //  setAcceptDrops(true);
 //  setFrameShape(QFrame::Box);
@@ -66,10 +66,10 @@ QDroppableScrollArea::QDroppableScrollArea(QWidget *parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDroppableScrollArea::dragEnterEvent(QDragEnterEvent *event)
+void QDroppableScrollArea::dragEnterEvent(QDragEnterEvent* event)
 {
   // accept just text/uri-list mime format
- // if (event->mimeData()->hasFormat("text/uri-list"))
+// if (event->mimeData()->hasFormat("text/uri-list"))
   {
     event->acceptProposedAction();
   }
@@ -78,14 +78,14 @@ void QDroppableScrollArea::dragEnterEvent(QDragEnterEvent *event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDroppableScrollArea::dropEvent(QDropEvent *event)
+void QDroppableScrollArea::dropEvent(QDropEvent* event)
 {
   qDebug() << "QDroppableScrollArea::dropEvent" << "\n";
   if (event->mimeData()->hasText())
   {
     QByteArray dropData =  event->mimeData()->data("text/plain");
     QString name(dropData);
-  //  qDebug() << "name: " << name() << "\n";
+    //  qDebug() << "name: " << name() << "\n";
     emit filterDropped(name);
   }
 
@@ -99,11 +99,11 @@ void QDroppableScrollArea::dropEvent(QDropEvent *event)
 // -----------------------------------------------------------------------------
 void QDroppableScrollArea::dragMoveEvent( QDragMoveEvent* event)
 {
- // qDebug() << "QScrollContentsWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << "\n";
- // QObject* w = qobject_cast<QObject*>(childAt(event->pos()));
- // if (w != NULL)
+// qDebug() << "QScrollContentsWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << "\n";
+// QObject* w = qobject_cast<QObject*>(childAt(event->pos()));
+// if (w != NULL)
   {
- //   qDebug() << "--- Child at Pos: " << w->objectName() << "\n";
+//   qDebug() << "--- Child at Pos: " << w->objectName() << "\n";
   }
 }
 

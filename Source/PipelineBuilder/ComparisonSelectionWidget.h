@@ -108,13 +108,13 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
      * @brief writeOptions
      * @param prefs
      */
-    virtual void readOptions(QSettings &prefs, QString name);
+    virtual void readOptions(QSettings& prefs, QString name);
 
-        /**
-     * @brief writeOptions
-     * @param prefs
-     */
-    virtual void writeOptions(QSettings &prefs, QString name);
+    /**
+    * @brief writeOptions
+    * @param prefs
+    */
+    virtual void writeOptions(QSettings& prefs, QString name);
 
     /**
      * @brief getComparisonInputs

@@ -61,9 +61,9 @@ class DREAM3DLib_EXPORT MultiThresholdFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    
+
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, ComparisonInputs)
 
 

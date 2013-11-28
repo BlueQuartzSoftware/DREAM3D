@@ -111,7 +111,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     //------ Required Cell Data
-            DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles)
 
@@ -230,10 +230,10 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param neighborsPtr
      */
     void arrange_featurenames(int numT, int zID, int NSP, int* wrappedDims, float* res,
-                            StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                            VertexArray::Pointer cVertexPtr,
-                            DataArray<int32_t>::Pointer voxelsPtr,
-                            StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
+                              StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
+                              VertexArray::Pointer cVertexPtr,
+                              DataArray<int32_t>::Pointer voxelsPtr,
+                              StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
 
     /**
      * @brief find_xcoord
@@ -296,8 +296,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param voxelsPtr
      */
     void get_featurenames(int cst, int ord, int pID[2], int* pfeaturename, int NSP,
-                        int* wrappedDims,
-                        DataArray<int32_t>::Pointer voxelsPtr);
+                          int* wrappedDims,
+                          DataArray<int32_t>::Pointer voxelsPtr);
 
 
 

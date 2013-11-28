@@ -88,15 +88,15 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
     virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 
   protected:
-     SurfaceDataContainer();
+    SurfaceDataContainer();
 
     virtual void writeXdmfMeshStructure(QTextStream& out, QString hdfFileName);
     virtual void writeXdmfGridFooter(QTextStream& out);
 
-   private:
+  private:
 
-     SurfaceDataContainer(const SurfaceDataContainer&);
-     void operator =(const SurfaceDataContainer&);
+    SurfaceDataContainer(const SurfaceDataContainer&);
+    void operator =(const SurfaceDataContainer&);
 
 };
 

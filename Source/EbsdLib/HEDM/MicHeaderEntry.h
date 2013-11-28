@@ -68,7 +68,7 @@ class EbsdLib_EXPORT MicHeaderEntry : public EbsdHeaderEntry
     QString getKey() { return m_key; }
     QString getHDFType() { T value = static_cast<T>(0); return QH5Lite::HDFTypeForPrimitiveAsStr(value); }
 
-    void parseValue(QByteArray &value)
+    void parseValue(QByteArray& value)
     {
       value = value.trimmed();
       value = value.simplified();
@@ -76,7 +76,8 @@ class EbsdLib_EXPORT MicHeaderEntry : public EbsdHeaderEntry
       ss >> m_value;
     }
 
-    void print(std::ostream &out) {
+    void print(std::ostream& out)
+    {
       out << m_key.toStdString() << "  " << m_value << std::endl;
     }
 
@@ -84,7 +85,7 @@ class EbsdLib_EXPORT MicHeaderEntry : public EbsdHeaderEntry
     void setValue(T value) { m_value = value;}
 
   protected:
-    MicHeaderEntry(const QString &key) :
+    MicHeaderEntry(const QString& key) :
       m_value(0),
       m_key(key)
     {
@@ -118,23 +119,24 @@ class MicStringHeaderEntry : public EbsdHeaderEntry
     QString getKey() { return m_key; }
     QString getHDFType() { return "H5T_STRING"; }
 
-    void parseValue(QByteArray &value)
+    void parseValue(QByteArray& value)
     {
       m_value = QString(value.trimmed());
     }
 
-    void print(std::ostream &out) {
+    void print(std::ostream& out)
+    {
       out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
     }
 
     QString getValue() { return m_value; }
-    void setValue(const QString &value)
+    void setValue(const QString& value)
     {
       m_value = value;
     }
 
   protected:
-    MicStringHeaderEntry(const QString &key) :
+    MicStringHeaderEntry(const QString& key) :
       m_key(key)
     {
     }

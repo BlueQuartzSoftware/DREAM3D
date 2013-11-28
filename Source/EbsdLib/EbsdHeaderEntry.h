@@ -49,21 +49,21 @@
 #define HEADERENTRY_NEW_SUPERCLASS(thisClass, SuperClass)\
   typedef SuperClass::Pointer SuperClass##Type;\
   static SuperClass##Type New##SuperClass(const QString &key) \
-{ \
-  SuperClass##Type sharedPtr (new thisClass(key)); \
-  return sharedPtr; \
-}
+  { \
+    SuperClass##Type sharedPtr (new thisClass(key)); \
+    return sharedPtr; \
+  }
 
 
 #define HEADERENTRY_NEW_SUPERCLASS_VALUE(thisClass, SuperClass)\
-static SuperClass##Type New##SuperClass(const QString &key, T value) \
-{ \
-  thisClass* object = new thisClass(key);\
-  object->setValue(value);\
-  SuperClass##Type sharedPtr(object); \
-  return sharedPtr; \
-}\
-
+  static SuperClass##Type New##SuperClass(const QString &key, T value) \
+  { \
+    thisClass* object = new thisClass(key);\
+    object->setValue(value);\
+    SuperClass##Type sharedPtr(object); \
+    return sharedPtr; \
+  }\
+   
 
 /**
  * @class EbsdHeaderEntry EbsdHeaderEntry.h EbsdLib/EbsdHeaderEntry.h
@@ -94,13 +94,13 @@ class EbsdLib_EXPORT EbsdHeaderEntry
      * @param start The starting position to look for the value
      * @param length The ending position to look for the value
      */
-    virtual void parseValue(QByteArray &value) = 0;
+    virtual void parseValue(QByteArray& value) = 0;
 
     /**
      * @brief prints out the key and value for this header entry
      * @param out The output stream to printe the key/value pair
      */
-    virtual void print(std::ostream &out) = 0;
+    virtual void print(std::ostream& out) = 0;
 
   protected:
     EbsdHeaderEntry() {}

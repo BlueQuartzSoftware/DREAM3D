@@ -66,17 +66,19 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
     virtual ~AngHeaderEntry() {}
 
     QString getKey() { return m_key; }
-    QString getHDFType() {
+    QString getHDFType()
+    {
       T value = static_cast<T>(0);
       return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr(value));
     }
-    void parseValue(QByteArray &value)
+    void parseValue(QByteArray& value)
     {
       if (value[0] == ':') { value = value.mid(1); } // move past the ":" character
       QTextStream ss(&value);
       ss >> m_value;
     }
-    void print(std::ostream &out) {
+    void print(std::ostream& out)
+    {
       out << m_key.toStdString() << "  " << m_value << std::endl;
     }
 
@@ -84,7 +86,7 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
     void setValue(T value) { m_value = value;}
 
   protected:
-    AngHeaderEntry(const QString &key) :
+    AngHeaderEntry(const QString& key) :
       m_value(0),
       m_key(key)
     {
@@ -118,24 +120,25 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
     QString getKey() { return m_key; }
     QString getHDFType() { return "H5T_STRING"; }
 
-    void parseValue(QByteArray &value)
+    void parseValue(QByteArray& value)
     {
       if (value[0] == ':') { value = value.mid(1); } // move past the ":" character
       value = value.trimmed(); // remove leading/trailing white space
       m_value = QString(value);
     }
-    void print(std::ostream &out) {
+    void print(std::ostream& out)
+    {
       out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
     }
 
     QString getValue() { return m_value; }
-    void setValue(const QString &value)
+    void setValue(const QString& value)
     {
       m_value = value;
     }
 
   protected:
-    AngStringHeaderEntry(const QString &key) :
+    AngStringHeaderEntry(const QString& key) :
       m_key(key)
     {
     }

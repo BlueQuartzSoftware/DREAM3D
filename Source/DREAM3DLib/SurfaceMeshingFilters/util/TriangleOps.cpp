@@ -70,7 +70,7 @@ QVector<int32_t> TriangleOps::findAdjacentTriangles(FaceArray::Pointer facesPtr,
 //  }
 //  FaceArray::Face_t* faces = facesPtr->getPointer(0);
 //  IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
- // DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+// DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   // Get the Triangle Neighbor Structure

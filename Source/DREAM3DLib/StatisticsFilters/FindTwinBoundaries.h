@@ -73,9 +73,9 @@ class DREAM3DLib_EXPORT FindTwinBoundaries : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-            //------ Required Ensemble Data
-    
-                
+    //------ Required Ensemble Data
+
+
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
 

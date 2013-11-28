@@ -40,19 +40,19 @@
 
 
 
- #include <QtCore/QObject>
+#include <QtCore/QObject>
 
- #include <QtGui/QWidget>
+#include <QtGui/QWidget>
 
 
- #include "ui_DistributionTypeWidget.h"
+#include "ui_DistributionTypeWidget.h"
 
 /**
   * @brief The DistributionTypeWidget class
   */
- class DistributionTypeWidget : public QWidget, private Ui::DistributionTypeWidget
- {
-  Q_OBJECT
+class DistributionTypeWidget : public QWidget, private Ui::DistributionTypeWidget
+{
+    Q_OBJECT
   public:
     DistributionTypeWidget(QString distributionName, QWidget* parent = NULL);
     virtual ~DistributionTypeWidget();
@@ -69,7 +69,7 @@
   private:
     DistributionTypeWidget(const DistributionTypeWidget&); // Copy Constructor Not Implemented
     void operator=(const DistributionTypeWidget&); // Operator '=' Not Implemented
- };
+};
 
 
 #endif /* _DistributionTypeWidget_H_ */

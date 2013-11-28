@@ -175,13 +175,14 @@ void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   dims[0] = 1;
   m_GoodVoxelsPtr = m->getPrereqArray<bool, GenerateMisorientationColors>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -304, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(NULL != m_GoodVoxelsPtr.lock().get()) {
+  if(NULL != m_GoodVoxelsPtr.lock().get())
+  {
     if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else
   {
-    m_GoodVoxels= NULL;
+    m_GoodVoxels = NULL;
   }
 }
 
@@ -248,7 +249,8 @@ void GenerateMisorientationColors::execute()
   QuatF refQuat = {m_ReferenceAxis.x * sin(m_ReferenceAngle),
                    m_ReferenceAxis.y * sin(m_ReferenceAngle),
                    m_ReferenceAxis.z * sin(m_ReferenceAngle),
-                   cos(m_ReferenceAngle) };
+                   cos(m_ReferenceAngle)
+                  };
   QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 

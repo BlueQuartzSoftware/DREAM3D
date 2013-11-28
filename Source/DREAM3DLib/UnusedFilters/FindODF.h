@@ -70,8 +70,8 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     virtual ~FindODF();
 
     //------ Required Feature Data
-                    //------ Required Ensemble Data
-        
+    //------ Required Ensemble Data
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find ODF"; }

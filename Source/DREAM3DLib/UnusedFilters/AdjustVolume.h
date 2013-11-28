@@ -66,8 +66,8 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
     virtual ~AdjustVolume();
 
     //------ Required Cell Data
-        //------ Created Feature Data
-    
+    //------ Created Feature Data
+
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }

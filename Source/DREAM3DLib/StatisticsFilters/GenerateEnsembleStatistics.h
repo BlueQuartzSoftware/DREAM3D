@@ -73,11 +73,11 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    
-   //------ (Possible) Required Feature Data
-                                                //------ (Possible) Required Ensemble Data
-        DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
-    
+
+    //------ (Possible) Required Feature Data
+    //------ (Possible) Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
     virtual const QString getHumanLabel() { return "Generate Ensemble Statistics"; }

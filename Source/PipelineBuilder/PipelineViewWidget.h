@@ -69,10 +69,10 @@ class PipelineViewWidget : public QFrame
     int filterCount();
     QFilterWidget* filterWidgetAt(int index);
     void clearWidgets();
-    QFilterWidget* addFilter(QString filterName, int index =-1);
+    QFilterWidget* addFilter(QString filterName, int index = -1);
 
     void loadPipeline(FilterPipeline::Pointer pipeline, bool append = false);
-    void savePipeline(const QString &filePath, const QString name, QSettings::Format = QSettings::IniFormat);
+    void savePipeline(const QString& filePath, const QString name, QSettings::Format = QSettings::IniFormat);
 
     QStringList getPipelineErrorList() {return m_PipelineErrorList;}
     QTableWidget* getTableWidget() {return errorTableWidget;}
@@ -101,7 +101,7 @@ class PipelineViewWidget : public QFrame
      * @param pos
      * @return
      */
-    bool shouldAutoScroll(const QPoint &pos);
+    bool shouldAutoScroll(const QPoint& pos);
 
 
 
@@ -134,10 +134,10 @@ class PipelineViewWidget : public QFrame
 
   protected:
     void setupGui();
-    void dragEnterEvent(QDragEnterEvent *event);
+    void dragEnterEvent(QDragEnterEvent* event);
     //  void dragLeaveEvent(QDragLeaveEvent* event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void dropEvent(QDropEvent *event);
+    void dragMoveEvent(QDragMoveEvent* event);
+    void dropEvent(QDropEvent* event);
 
   private:
     QFilterWidget*            m_SelectedFilterWidget;
@@ -150,10 +150,10 @@ class PipelineViewWidget : public QFrame
     QVector<PipelineMessage>       errorStream;
     QPoint                    m_LastDragPoint;
     QScrollArea*              m_ScrollArea;
-    QTimer					  m_autoScrollTimer;
-    bool					  m_AutoScroll;
-    int						  m_AutoScrollMargin;
-    int							m_autoScrollCount;
+    QTimer            m_autoScrollTimer;
+    bool            m_AutoScroll;
+    int             m_AutoScrollMargin;
+    int             m_autoScrollCount;
 
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented

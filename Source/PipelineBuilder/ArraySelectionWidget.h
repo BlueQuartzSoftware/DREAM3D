@@ -101,23 +101,23 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     void getArraySelections(Filter* filter)
     {
       filter->setVolumeSelectedArrayNames( getSelectedArrays(volumeVertexArrayList),
-                                                getSelectedArrays(volumeFaceArrayList),
-                                                getSelectedArrays(volumeEdgeArrayList),
-                                                getSelectedArrays(volumeCellArrayList),
-                                                getSelectedArrays(volumeCellFeatureArrayList),
-                                                getSelectedArrays(volumeCellEnsembleArrayList));
+                                           getSelectedArrays(volumeFaceArrayList),
+                                           getSelectedArrays(volumeEdgeArrayList),
+                                           getSelectedArrays(volumeCellArrayList),
+                                           getSelectedArrays(volumeCellFeatureArrayList),
+                                           getSelectedArrays(volumeCellEnsembleArrayList));
       filter->setSurfaceSelectedArrayNames( getSelectedArrays(surfaceVertexArrayList),
-                                                getSelectedArrays(surfaceFaceArrayList),
-                                                getSelectedArrays(surfaceEdgeArrayList),
-                                                getSelectedArrays(surfaceFaceFeatureArrayList),
-                                                getSelectedArrays(surfaceFaceEnsembleArrayList));
+                                            getSelectedArrays(surfaceFaceArrayList),
+                                            getSelectedArrays(surfaceEdgeArrayList),
+                                            getSelectedArrays(surfaceFaceFeatureArrayList),
+                                            getSelectedArrays(surfaceFaceEnsembleArrayList));
       filter->setEdgeSelectedArrayNames( getSelectedArrays(edgeVertexArrayList),
-                                                getSelectedArrays(edgeEdgeArrayList),
-                                                getSelectedArrays(edgeEdgeFeatureArrayList),
-                                                getSelectedArrays(edgeEdgeEnsembleArrayList));
+                                         getSelectedArrays(edgeEdgeArrayList),
+                                         getSelectedArrays(edgeEdgeFeatureArrayList),
+                                         getSelectedArrays(edgeEdgeEnsembleArrayList));
       filter->setVertexSelectedArrayNames( getSelectedArrays(vertexVertexArrayList),
-                                                getSelectedArrays(vertexVertexFeatureArrayList),
-                                                getSelectedArrays(vertexVertexEnsembleArrayList));
+                                           getSelectedArrays(vertexVertexFeatureArrayList),
+                                           getSelectedArrays(vertexVertexEnsembleArrayList));
     }
 
     template<typename Filter>
@@ -147,13 +147,13 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      * @brief writeOptions
      * @param prefs
      */
-    virtual void readOptions(QSettings &prefs, QString name);
+    virtual void readOptions(QSettings& prefs, QString name);
 
     /**
      * @brief writeOptions
      * @param prefs
      */
-    virtual void writeOptions(QSettings &prefs, QString name);
+    virtual void writeOptions(QSettings& prefs, QString name);
 
     /**
      * @brief setVoxelDataEnabled Enable/Disable the Voxel Tab
@@ -240,9 +240,9 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     virtual void populateEdgeArrayNames(EdgeDataContainer::Pointer edc);
     virtual void populateVertexArrayNames(VertexDataContainer::Pointer vdc);
 
-    virtual void populateArrayList(QListWidget* listWidget, QStringList &arrayNames, QCheckBox *cb = NULL);
+    virtual void populateArrayList(QListWidget* listWidget, QStringList& arrayNames, QCheckBox* cb = NULL);
     virtual void populateArrayList(QListWidget* listWidget,
-                                    QList<QString> &arrayNames, QCheckBox *cb = NULL);
+                                   QList<QString>& arrayNames, QCheckBox* cb = NULL);
 
     /**
      * @brief Returns the list of selected Array Names
@@ -252,9 +252,9 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     virtual QSet<QString> getNonSelectedArrays(QListWidget* listWidget);
     virtual void clearArraySelectionLists();
 
-    void writeSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget);
-    void readSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget);
-    void setSelections(QListWidget* listWidget, QStringList &selections);
+    void writeSelections(QSettings& prefs, QString name, QString prefix, QListWidget* widget);
+    void readSelections(QSettings& prefs, QString name, QString prefix, QListWidget* widget);
+    void setSelections(QListWidget* listWidget, QStringList& selections);
 
   private:
     ArraySelectionWidget(const ArraySelectionWidget&); // Copy Constructor Not Implemented

@@ -26,8 +26,8 @@ class DREAM3DLib_EXPORT Filt0 : public AbstractFilter
     virtual ~Filt0();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   DREAM3D_INSTANCE_PROPERTY(float, Filt0_Float)
+
+    DREAM3D_INSTANCE_PROPERTY(float, Filt0_Float)
     DREAM3D_INSTANCE_PROPERTY(int32_t, Filt0_Integer)
 
 

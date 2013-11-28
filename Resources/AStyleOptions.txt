@@ -13,10 +13,10 @@
 --suffix=none
 --recursive
 --lineend=linux
-#--exclude=Applications
+--exclude=Applications
 #--exclude=FilterWidgets
 #--exclude=EbsdLib
 #--exclude=MXA
 #--exclude=PipelineBuilder
 #--exclude=QtSupport
-#--exclude=tclap
+--exclude=tclap

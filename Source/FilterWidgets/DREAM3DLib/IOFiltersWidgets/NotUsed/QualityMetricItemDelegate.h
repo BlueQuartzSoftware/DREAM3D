@@ -53,10 +53,10 @@
 
 class QualityMetricItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    explicit QualityMetricItemDelegate(QStringList possibleFeatures, int numPhases, QObject *parent = 0) :
+    explicit QualityMetricItemDelegate(QStringList possibleFeatures, int numPhases, QObject* parent = 0) :
       QStyledItemDelegate(parent),
       m_FeatureList(possibleFeatures),
       m_NumberOfPhases(numPhases)
@@ -71,7 +71,7 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QStyledItemDelegate::paint(painter, option, index);
     }
@@ -79,14 +79,15 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setFeatureList(QStringList features) {
+    void setFeatureList(QStringList features)
+    {
       m_FeatureList = features;
     }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QLineEdit* featureValue = NULL;
       QDoubleValidator* featureValueValidator = NULL;
@@ -139,10 +140,10 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setEditorData(QWidget *editor, const QModelIndex &index) const
+    void setEditorData(QWidget* editor, const QModelIndex& index) const
     {
       qint32 col = index.column();
-     // bool ok = false;
+      // bool ok = false;
       if (col == QualityMetricTableModel::FeatureName)
       {
         QString state = index.model()->data(index).toString();
@@ -171,20 +172,20 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
         comboBox->setCurrentIndex(comboBox->findText(state));
       }
 
-      else QStyledItemDelegate::setEditorData(editor, index);
+      else { QStyledItemDelegate::setEditorData(editor, index); }
     }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
     {
       //  qDebug() << "QualityMetricItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
       //  bool ok = false;
       if (col == QualityMetricTableModel::FeatureName)
       {
-        QComboBox *comboBox = qobject_cast<QComboBox* > (editor);
+        QComboBox* comboBox = qobject_cast<QComboBox* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
@@ -198,17 +199,17 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
       }
       else if (col == QualityMetricTableModel::FeatureOperator)
       {
-        QComboBox *comboBox = qobject_cast<QComboBox* > (editor);
+        QComboBox* comboBox = qobject_cast<QComboBox* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
       else if (col == QualityMetricTableModel::FeaturePhaseValue)
       {
-        QComboBox *comboBox = qobject_cast<QComboBox* > (editor);
+        QComboBox* comboBox = qobject_cast<QComboBox* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
-      else QStyledItemDelegate::setModelData(editor, model, index);
+      else { QStyledItemDelegate::setModelData(editor, model, index); }
     }
 
   private:

@@ -52,7 +52,7 @@ class H5Support_EXPORT HDF5ScopedFileSentinel
 
     void setFileId(hid_t* fileId);
     hid_t* getFileId();
-    void addGroupId(hid_t *gid);
+    void addGroupId(hid_t* gid);
 
   private:
     hid_t* m_FileId;

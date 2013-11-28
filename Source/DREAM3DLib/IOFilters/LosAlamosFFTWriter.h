@@ -63,9 +63,9 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
     virtual ~LosAlamosFFTWriter();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-            
+
+    //------ Required Cell Data
+
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }

@@ -48,8 +48,8 @@
 //
 // -----------------------------------------------------------------------------
 AxisAngleTableModel::AxisAngleTableModel(QObject* parent) :
-QAbstractTableModel(parent),
-m_RowCount(0)
+  QAbstractTableModel(parent),
+  m_RowCount(0)
 {
   m_ColumnCount = ColumnCount;
 }
@@ -65,7 +65,7 @@ AxisAngleTableModel::~AxisAngleTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags AxisAngleTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags AxisAngleTableModel::flags(const QModelIndex& index) const
 {
   //  qDebug() << "AxisAngleTableModel::flags" << "\n";
   if (!index.isValid())
@@ -75,7 +75,7 @@ Qt::ItemFlags AxisAngleTableModel::flags(const QModelIndex &index) const
   Qt::ItemFlags theFlags = QAbstractTableModel::flags(index);
   if (index.isValid())
   {
-  //  theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    //  theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
     int col = index.column();
     if (col == Angle)
@@ -94,7 +94,7 @@ Qt::ItemFlags AxisAngleTableModel::flags(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant AxisAngleTableModel::data(const QModelIndex &index, qint32 role) const
+QVariant AxisAngleTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
   if (!index.isValid())
@@ -112,14 +112,14 @@ QVariant AxisAngleTableModel::data(const QModelIndex &index, qint32 role) const
       {
         contents.setText( QString("11.") );
         const QString header = headerData(Angle, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > contents.text().length()) contents.text() = header;
+        if (header.length() > contents.text().length()) { contents.text() = header; }
         break;
       }
       case Axis:
       {
         contents.setText( QString("1,1,1") );
         const QString header = headerData(Axis, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > contents.text().length()) contents.text() = header;
+        if (header.length() > contents.text().length()) { contents.text() = header; }
         break;
       }
       default:
@@ -176,7 +176,7 @@ QVariant AxisAngleTableModel::headerData(int section, Qt::Orientation orientatio
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AxisAngleTableModel::rowCount(const QModelIndex &index) const
+int AxisAngleTableModel::rowCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_RowCount;
 }
@@ -184,7 +184,7 @@ int AxisAngleTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AxisAngleTableModel::columnCount(const QModelIndex &index) const
+int AxisAngleTableModel::columnCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_ColumnCount;
 }
@@ -201,7 +201,7 @@ bool AxisAngleTableModel::setHeaderData(int col, Qt::Orientation o, const QVaria
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AxisAngleTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool AxisAngleTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   // qDebug() << "AxisAngleTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Angles.count() || index.column() < 0 || index.column()
@@ -276,10 +276,12 @@ bool AxisAngleTableModel::removeRows(int row, int count, const QModelIndex& inde
 // -----------------------------------------------------------------------------
 QVector<float > AxisAngleTableModel::getData(int col)
 {
-  if (col == Angle) {
-      return m_Angles;
+  if (col == Angle)
+  {
+    return m_Angles;
   }
-  else if (col == Axis) {
+  else if (col == Axis)
+  {
     int count = rowCount();
     QVector<float> values;
     float h = 0.0;
@@ -288,8 +290,9 @@ QVector<float > AxisAngleTableModel::getData(int col)
     int err = 0;
     for (int r = 0; r < count; ++r)
     {
-      err = parseHKLRow(r, h,k,l);
-      if (err >= 0) {
+      err = parseHKLRow(r, h, k, l);
+      if (err >= 0)
+      {
         values.push_back(h);
         values.push_back(k);
         values.push_back(l);
@@ -303,15 +306,15 @@ QVector<float > AxisAngleTableModel::getData(int col)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AxisAngleTableModel::parseHKLRow(int row, float &h, float &k, float &l)
+int AxisAngleTableModel::parseHKLRow(int row, float& h, float& k, float& l)
 {
   QString hklStr = m_Axis[row];
   hklStr.chop(1); // remove the ">" charater from the end;
   hklStr.remove(0, 1); // Remove the front "<" character
   bool ok = false;
-  h = hklStr.section(',', 0,0).toFloat(&ok);
-  k = hklStr.section(',', 1,1).toFloat(&ok);
-  l = hklStr.section(',', 2,2).toFloat(&ok);
+  h = hklStr.section(',', 0, 0).toFloat(&ok);
+  k = hklStr.section(',', 1, 1).toFloat(&ok);
+  l = hklStr.section(',', 2, 2).toFloat(&ok);
   if (ok) { return 0; }
   return -1;
 }
@@ -340,12 +343,13 @@ float AxisAngleTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleTableModel::setColumnData(int col, QVector<float> &data)
+void AxisAngleTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
     case Angle:
-      m_Angles = data; break;
+      m_Angles = data;
+      break;
     case Axis:
 //      m_Axis = data; break;
     default:
@@ -366,12 +370,13 @@ void AxisAngleTableModel::setTableData(QVector<float> angles, QVector<float> axi
   QModelIndex topLeft;
   QModelIndex botRight;
 
-  if (count > 0) {
+  if (count > 0)
+  {
     // Now mass insert the data to the table then emit that the data has changed
     beginInsertRows(QModelIndex(), row, row + count - 1);
     m_Angles = angles;
     m_Axis.clear();
-    int h,k,l;
+    int h, k, l;
     for (int i = 0; i < axis.size(); ++i)
     {
       h = axis[i];
@@ -384,7 +389,7 @@ void AxisAngleTableModel::setTableData(QVector<float> angles, QVector<float> axi
     m_RowCount = count;
     endInsertRows();
     QModelIndex topLeft = createIndex(0, 0);
-    QModelIndex botRight = createIndex(count-1, ColumnCount);
+    QModelIndex botRight = createIndex(count - 1, ColumnCount);
   }
   emit dataChanged(topLeft, botRight);
 }
@@ -394,8 +399,8 @@ void AxisAngleTableModel::setTableData(QVector<float> angles, QVector<float> axi
 // -----------------------------------------------------------------------------
 void AxisAngleTableModel::setRowData(int row, float angle, QString axis)
 {
-   m_Angles[row] = angle;
-   m_Axis[row] = (axis);
+  m_Angles[row] = angle;
+  m_Axis[row] = (axis);
 }
 
 // -----------------------------------------------------------------------------

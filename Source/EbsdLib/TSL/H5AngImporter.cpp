@@ -56,7 +56,7 @@ using namespace H5Support_NAMESPACE;
 
 #define CHECK_FOR_CANCELED(AClass)\
   if (m_Cancel == true){\
-  break; }
+    break; }
 
 
 // -----------------------------------------------------------------------------
@@ -81,50 +81,50 @@ H5AngImporter::~H5AngImporter()
 
 
 #define WRITE_ANG_HEADER_DATA(reader, m_msgType, prpty, key)\
-{\
-  m_msgType t = reader.get##prpty();\
-  err = QH5Lite::writeScalarDataset(gid, key, t);\
-  if (err < 0) {\
-  ss.string()->clear();\
-  ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
-  <<  "' to the HDF5 file with data set name '" << key << "'\n";\
-  progressMessage(ss.string(), 100);\
-  err = H5Gclose(gid); err = H5Gclose(angGroup);\
-  return -1; }\
+  {\
+    m_msgType t = reader.get##prpty();\
+    err = QH5Lite::writeScalarDataset(gid, key, t);\
+    if (err < 0) {\
+      ss.string()->clear();\
+      ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+         <<  "' to the HDF5 file with data set name '" << key << "'\n";\
+      progressMessage(ss.string(), 100);\
+      err = H5Gclose(gid); err = H5Gclose(angGroup);\
+      return -1; }\
   }
 
 #define WRITE_ANG_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
-{\
-  m_msgType t = reader.get##prpty();\
-  err = QH5Lite::writeStringDataset(gid, key, t);\
-  if (err < 0) {\
-  ss.string()->clear();\
-  ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
-  <<  "' to the HDF5 file with data set name '" << key << "'\n";\
-  progressMessage(ss.string(), 100);\
-  err = H5Gclose(gid); err = H5Gclose(angGroup);\
-  return -1; }\
+  {\
+    m_msgType t = reader.get##prpty();\
+    err = QH5Lite::writeStringDataset(gid, key, t);\
+    if (err < 0) {\
+      ss.string()->clear();\
+      ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+         <<  "' to the HDF5 file with data set name '" << key << "'\n";\
+      progressMessage(ss.string(), 100);\
+      err = H5Gclose(gid); err = H5Gclose(angGroup);\
+      return -1; }\
   }
 
 #define WRITE_ANG_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
-{\
-  m_msgType* dataPtr = reader.get##prpty##Pointer();\
-  if (NULL != dataPtr) {\
-  err = QH5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
-  if (err < 0) {\
-  ss.string()->clear();\
-  ss << "H5AngImporter Error: Could not write Ang Data array for '" << key\
-  <<  "' to the HDF5 file with data set name '" << key << "'\n";\
-  progressMessage(ss.string(), 100);\
-  err = H5Gclose(gid); err = H5Gclose(angGroup);\
-  return -1; }\
-  }\
+  {\
+    m_msgType* dataPtr = reader.get##prpty##Pointer();\
+    if (NULL != dataPtr) {\
+      err = QH5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
+      if (err < 0) {\
+        ss.string()->clear();\
+        ss << "H5AngImporter Error: Could not write Ang Data array for '" << key\
+           <<  "' to the HDF5 file with data set name '" << key << "'\n";\
+        progressMessage(ss.string(), 100);\
+        err = H5Gclose(gid); err = H5Gclose(angGroup);\
+        return -1; }\
+    }\
   }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5AngImporter::getDims(int64_t &x, int64_t &y)
+void H5AngImporter::getDims(int64_t& x, int64_t& y)
 {
   x = xDim;
   y = yDim;
@@ -133,7 +133,7 @@ void H5AngImporter::getDims(int64_t &x, int64_t &y)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5AngImporter::getResolution(float &x, float &y)
+void H5AngImporter::getResolution(float& x, float& y)
 {
   x = xRes;
   y = yRes;
@@ -151,7 +151,7 @@ int H5AngImporter::numberOfSlicesImported()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString &angFile)
+int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
 {
   herr_t err = -1;
   setCancel(false);
@@ -170,7 +170,8 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString &angFile)
   // Check for errors
   if (err < 0)
   {
-    if (err == -400) {
+    if (err == -400)
+    {
       ss << "H5AngImporter Error: HexGrid Files are not currently supported.";
     }
     else if (err == -300)
@@ -306,7 +307,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString &angFile)
   }
 
   int32_t rank = 1;
-  hsize_t dims[1] = { reader.getNumEvenCols() * reader.getNumRows() };
+  hsize_t dims[1] = { reader.getNumEvenCols()* reader.getNumRows() };
 
   WRITE_ANG_DATA_ARRAY(reader, float, gid, Phi1, Ebsd::Ang::Phi1);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, Phi, Ebsd::Ang::Phi);
@@ -329,46 +330,46 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString &angFile)
 
 
 #define WRITE_PHASE_HEADER_DATA(reader, m_msgType, prpty, key)\
-{\
-  m_msgType t = reader->get##prpty();\
-  err = QH5Lite::writeScalarDataset(pid, key, t);\
-  if (err < 0) {\
-  ss.string()->clear();\
-  ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
-  <<  "' to the HDF5 file with data set name '" << key << "'\n";\
-  progressMessage(ss.string(), 100);\
-  err = H5Gclose(pid);\
-  return -1; }\
+  {\
+    m_msgType t = reader->get##prpty();\
+    err = QH5Lite::writeScalarDataset(pid, key, t);\
+    if (err < 0) {\
+      ss.string()->clear();\
+      ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+         <<  "' to the HDF5 file with data set name '" << key << "'\n";\
+      progressMessage(ss.string(), 100);\
+      err = H5Gclose(pid);\
+      return -1; }\
   }
 
 #define WRITE_PHASE_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
-{\
-  m_msgType t = reader->get##prpty();\
-  err = QH5Lite::writeStringDataset(pid, key, t);\
-  if (err < 0) {\
-  ss.string()->clear();\
-  ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
-  <<  "' to the HDF5 file with data set name '" << key << "'\n";\
-  progressMessage(ss.string(), 100);\
-  err = H5Gclose(pid);\
-  return -1; }\
+  {\
+    m_msgType t = reader->get##prpty();\
+    err = QH5Lite::writeStringDataset(pid, key, t);\
+    if (err < 0) {\
+      ss.string()->clear();\
+      ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+         <<  "' to the HDF5 file with data set name '" << key << "'\n";\
+      progressMessage(ss.string(), 100);\
+      err = H5Gclose(pid);\
+      return -1; }\
   }
 
 #define WRITE_PHASE_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
-{\
-  QVector<m_msgType> tempVar = reader->get##prpty();\
-  dims[0] = tempVar.size();\
-  m_msgType* dataPtr = tempVar.data();\
-  if (NULL != dataPtr) {\
-  err = QH5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
-  if (err < 0) {\
-  ss.string()->clear();\
-  ss << "H5AngImporter Error: Could not write Ang Data array for '" << key\
-  <<  "' to the HDF5 file with data set name '" << key << "'\n";\
-  progressMessage(ss.string(), 100);\
-  err = H5Gclose(pid); \
-  return -1; }\
-  }\
+  {\
+    QVector<m_msgType> tempVar = reader->get##prpty();\
+    dims[0] = tempVar.size();\
+    m_msgType* dataPtr = tempVar.data();\
+    if (NULL != dataPtr) {\
+      err = QH5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
+      if (err < 0) {\
+        ss.string()->clear();\
+        ss << "H5AngImporter Error: Could not write Ang Data array for '" << key\
+           <<  "' to the HDF5 file with data set name '" << key << "'\n";\
+        progressMessage(ss.string(), 100);\
+        err = H5Gclose(pid); \
+        return -1; }\
+    }\
   }
 
 
@@ -376,7 +377,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString &angFile)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
+int H5AngImporter::writePhaseData(AngReader& reader, hid_t phasesGid)
 {
   QString sBuf;
   QTextStream ss(&sBuf);
@@ -398,10 +399,12 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
     WRITE_PHASE_HEADER_DATA((*phase), int, NumberFamilies, Ebsd::Ang::NumberFamilies)
 
     // Create a Group for the HKLFamilies
-    if (p->getNumberFamilies() > 0) {
+    if (p->getNumberFamilies() > 0)
+    {
       hid_t hklGid = QH5Utilities::createGroup(pid, Ebsd::Ang::HKLFamilies);
       err = writeHKLFamilies(p, hklGid);
-      if (err < 0) {
+      if (err < 0)
+      {
         ss.string()->clear();
         ss << "H5AngImporter Error: Could not write Ang HKL Families to the HDF5 file with data set name '"
            << Ebsd::Ang::HKLFamilies << "'";
@@ -412,7 +415,7 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
       err = H5Gclose(hklGid);
     }
     WRITE_PHASE_DATA_ARRAY( (*phase), int, pid, Categories, Ebsd::Ang::Categories)
-        err = H5Gclose(pid);
+    err = H5Gclose(pid);
   }
   return err;
 }

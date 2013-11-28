@@ -133,7 +133,7 @@ class LabelVisitorInfo
     * @return
     */
     Pointer relabelFaces(Mesh::Pointer mesh,
-      DataArray<int32_t>::Pointer masterFaceListPtr,
+                         DataArray<int32_t>::Pointer masterFaceListPtr,
                          const QVector<bool>& masterVisited)
     {
       size_t triangleIndex = *(m_Faces.begin());
@@ -296,7 +296,7 @@ void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t feat
   QVector<int> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { 
+  {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -514,7 +514,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
   qDebug() << "Face ID: " << index << "\n";\
   qDebug() << "Face.labels[0] " << triangles[index].labels[0] << "\n";\
   qDebug() << "Face.labels[1] " << triangles[index].labels[1] << "\n";\
-
+   
 #define PRINT_VERT(index)\
   qDebug() << index << " " << verts[index].pos[0] << " " << verts[index].pos[1] << " " << verts[index].pos[2] << "\n";
 
@@ -683,7 +683,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
       if(facesPtr == NULL)
       {
         break;
-     }
+      }
       FaceArray::Face_t* faces = facesPtr->getPointer(0);
 
       QVector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(facesPtr, triangleIndex, m_SurfaceMeshFaceLabelsPtr.lock(), currentLabel);

@@ -71,8 +71,8 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 
 
     //------ Created Cell Data
-            //------ Created Ensemble Data
-            DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+    //------ Created Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
 

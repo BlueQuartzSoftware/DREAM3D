@@ -122,14 +122,14 @@ void CtfReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfReader::setPointerByName(const QString &name, void* p)
+void CtfReader::setPointerByName(const QString& name, void* p)
 {
   // First we need to see if the pointer already exists
   QMap<QString, DataParser::Pointer>::iterator iter = m_NamePointerMap.find(name);
   if (iter == m_NamePointerMap.end())
   {
     // Data does not exist in Map
-    DataParser::Pointer dparser = getParser(name, NULL, getXCells()*getYCells());
+    DataParser::Pointer dparser = getParser(name, NULL, getXCells() * getYCells());
     dparser->setVoidPointer(p);
     m_NamePointerMap[name] = dparser;
   }
@@ -147,7 +147,7 @@ void CtfReader::setPointerByName(const QString &name, void* p)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* CtfReader::getPointerByName(const QString &featureName)
+void* CtfReader::getPointerByName(const QString& featureName)
 {
   void* ptr = NULL;
   if(m_NamePointerMap.contains(featureName) == true)
@@ -160,7 +160,7 @@ void* CtfReader::getPointerByName(const QString &featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType CtfReader::getPointerType(const QString &featureName)
+Ebsd::NumType CtfReader::getPointerType(const QString& featureName)
 {
   // std::cout << "featureName: " << featureName << std::endl;
   if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
@@ -186,7 +186,7 @@ Ebsd::NumType CtfReader::getPointerType(const QString &featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::getTypeSize(const QString &featureName)
+int CtfReader::getTypeSize(const QString& featureName)
 {
   if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return 4;}
   if (featureName.compare(Ebsd::Ctf::X) == 0) { return 4;}
@@ -210,7 +210,7 @@ int CtfReader::getTypeSize(const QString &featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataParser::Pointer CtfReader::getParser(const QString &featureName, void* ptr, size_t size)
+DataParser::Pointer CtfReader::getParser(const QString& featureName, void* ptr, size_t size)
 {
   // These are defaulted to a "3D" CTF file with Feature IDS already determined and their colors
   if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 0);}
@@ -303,7 +303,8 @@ int CtfReader::readFile()
   }
 
   err = readData(in);
-  if (err < 0) {
+  if (err < 0)
+  {
     return err;
   }
 
@@ -321,7 +322,7 @@ void CtfReader::readOnlySliceIndex(int slice)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::readData(QFile &in)
+int CtfReader::readData(QFile& in)
 {
   // Delete any currently existing pointers
   deletePointers();
@@ -410,7 +411,8 @@ int CtfReader::readData(QFile &in)
           //          idx = 0;
           //          while (buf[idx] != 0 && idx < kBufferSize) { ++idx; }
           //          if(buf[idx - 1] < 32) { buf[idx - 1] = 0; } // Replaces the last non printable with a Zero (NULL Term)
-          if(in.atEnd() == true) {
+          if(in.atEnd() == true)
+          {
             break;
           }
           parseDataLine(buf, row, col, counter, xCells, yCells);
@@ -453,7 +455,7 @@ int CtfReader::readData(QFile &in)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::parseHeaderLines(QList<QByteArray> &headerLines)
+int CtfReader::parseHeaderLines(QList<QByteArray>& headerLines)
 {
   int err = 0;
   qint32 size = headerLines.size();
@@ -549,7 +551,8 @@ int CtfReader::parseHeaderLines(QList<QByteArray> &headerLines)
       }
       else
       {
-        if (line.size() > 1) {
+        if (line.size() > 1)
+        {
           p->parseValue(tabTokens[1]);
           PRINT_HTML_TABLE_ROW(p)
         }
@@ -565,7 +568,7 @@ int CtfReader::parseHeaderLines(QList<QByteArray> &headerLines)
 // -----------------------------------------------------------------------------
 //  Read the data part of the .ctf file
 // -----------------------------------------------------------------------------
-void CtfReader::parseDataLine(QByteArray &line, size_t row, size_t col, size_t offset, size_t xCells, size_t yCells )
+void CtfReader::parseDataLine(QByteArray& line, size_t row, size_t col, size_t offset, size_t xCells, size_t yCells )
 {
   /* When reading the data there should be at least 11 cols of data.
    */
@@ -588,7 +591,8 @@ void CtfReader::parseDataLine(QByteArray &line, size_t row, size_t col, size_t o
   BOOST_ASSERT(tokens.size() == m_NamePointerMap.size());
 
   QMapIterator<QString, DataParser::Pointer> iter(m_NamePointerMap);
-  while (iter.hasNext()) {
+  while (iter.hasNext())
+  {
     iter.next();
 
     DataParser::Pointer dparser = iter.value();
@@ -611,7 +615,7 @@ QVector<QString> CtfReader::tokenize(char* buf, char delimiter)
   while(pos != QString::npos && pos != values.size() - 1)
   {
     pos = values.find(delimiter, start);
-    output.push_back(values.substr(start, pos-start));
+    output.push_back(values.substr(start, pos - start));
     //   std::cout << "Adding: " << output.back() << std::endl;
     if (pos != QString::npos)
     {
@@ -626,7 +630,7 @@ QVector<QString> CtfReader::tokenize(char* buf, char delimiter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::getHeaderLines(QFile &reader, QList<QByteArray> &headerLines)
+int CtfReader::getHeaderLines(QFile& reader, QList<QByteArray>& headerLines)
 {
   int err = 0;
   QByteArray buf;
@@ -665,14 +669,14 @@ int CtfReader::getHeaderLines(QFile &reader, QList<QByteArray> &headerLines)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool CtfReader::isDataHeaderLine(QVector<QString> &columns)
+bool CtfReader::isDataHeaderLine(QVector<QString>& columns)
 {
   if (columns.size() != 11)
-    return false;
+  { return false; }
   if (columns[0].compare("Phase") != 0)
-    return false;
+  { return false; }
   if (columns[9].compare("BC") != 0)
-    return false;
+  { return false; }
 
   return true;
 }
@@ -712,8 +716,8 @@ void CtfReader::setYDimension(int ydim)
 
 #define CTF_SHUFFLE_ARRAY(tempPtr, var, m_msgType, numRows)\
   for (size_t i = 0; i < numRows; ++i) {\
-  size_t nIdx = shuffleTable[i];\
-  tempPtr[nIdx] = var[i];\
+    size_t nIdx = shuffleTable[i];\
+    tempPtr[nIdx] = var[i];\
   }\
   /* Copy the values back into the array over writing the original values*/\
   ::memcpy(var, tempPtr, numRows * sizeof(m_msgType));
@@ -736,7 +740,7 @@ QList<QString> CtfReader::getColumnNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfReader::printHeader(std::ostream &out)
+void CtfReader::printHeader(std::ostream& out)
 {
   std::cout << "-------------------- CtfReader Header Values --------------------" << std::endl;
   CTF_PRINT_QSTRING(Channel, out);

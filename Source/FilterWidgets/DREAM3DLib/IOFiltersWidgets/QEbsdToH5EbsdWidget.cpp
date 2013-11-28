@@ -65,7 +65,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
+QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget* parent) :
   QFilterWidget(parent),
   m_SampleTransformationAngle(0.0),
   m_EulerTransformationAngle(0.0),
@@ -155,8 +155,8 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter(bool defaultValues)
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -194,8 +194,8 @@ QFilterWidget* QEbsdToH5EbsdWidget::createDeepCopy()
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -217,7 +217,8 @@ QFilterWidget* QEbsdToH5EbsdWidget::createDeepCopy()
 // -----------------------------------------------------------------------------
 void QEbsdToH5EbsdWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList) {
+  foreach (QWidget * w, m_WidgetList)
+  {
     w->setEnabled(b);
   }
 }
@@ -234,13 +235,13 @@ void QEbsdToH5EbsdWidget::setupGui()
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
   m_InputDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_InputDir_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_InputDir_textChanged(const QString&)));
 
   QR3DFileCompleter* com1 = new QR3DFileCompleter(this, false);
   m_OutputFile->setCompleter(com1);
-  QObject::connect( com1, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_OutputFile_textChanged(const QString &)));
+  QObject::connect( com1, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_OutputFile_textChanged(const QString&)));
 
   m_WidgetList << m_InputDir << m_InputDirBtn << m_OutputFile << m_OutputFileBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
@@ -263,7 +264,7 @@ void QEbsdToH5EbsdWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdToH5EbsdWidget::readOptions(QSettings &prefs)
+void QEbsdToH5EbsdWidget::readOptions(QSettings& prefs)
 {
   QString val;
   bool ok;
@@ -305,7 +306,7 @@ void QEbsdToH5EbsdWidget::readOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
+void QEbsdToH5EbsdWidget::writeOptions(QSettings& prefs)
 {
   prefs.setValue("Filter_Name", "EbsdToH5Ebsd");
   WRITE_STRING_SETTING(prefs, m_, InputDir)
@@ -329,7 +330,7 @@ void QEbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
+void QEbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
 {
   if (verifyPathExists(text, m_OutputFile) == true )
   {
@@ -376,7 +377,7 @@ void QEbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
   QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"),
                                               getOpenDialogLastDirectory(),
                                               tr("HDF5 EBSD Files (*.h5ebsd)") );
-  if ( true == file.isEmpty() ){ return;  }
+  if ( true == file.isEmpty() ) { return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
   m_OutputFile->setText(fi.absoluteFilePath());
@@ -405,7 +406,7 @@ void QEbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString & text)
+void QEbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString& text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
@@ -436,8 +437,8 @@ void QEbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 Ebsd::RefFrameZDir QEbsdToH5EbsdWidget::getRefFrameZDir()
 {
-  if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
-  if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
+  if (m_StackLowToHigh->isChecked()) { return Ebsd::LowtoHigh; }
+  if (m_StackHighToLow->isChecked()) { return Ebsd::HightoLow; }
   return Ebsd::UnknownRefFrameZDirection;
 }
 
@@ -496,7 +497,7 @@ void QEbsdToH5EbsdWidget::on_m_TotalDigits_valueChanged(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString &string)
+void QEbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -505,7 +506,7 @@ void QEbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString &string)
+void QEbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -514,7 +515,7 @@ void QEbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString &string)
+void QEbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -523,13 +524,13 @@ void QEbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<QString> QEbsdToH5EbsdWidget::generateFileList(int start, int end, bool &hasMissingFiles,
-                                                               bool stackLowToHigh, QString filename)
+QVector<QString> QEbsdToH5EbsdWidget::generateFileList(int start, int end, bool& hasMissingFiles,
+                                                       bool stackLowToHigh, QString filename)
 {
   int index = 0;
   QVector<QString> fileList;
 
-  for (int i = 0; i < (end-start)+1; ++i)
+  for (int i = 0; i < (end - start) + 1; ++i)
   {
     if (stackLowToHigh)
     {
@@ -540,8 +541,8 @@ QVector<QString> QEbsdToH5EbsdWidget::generateFileList(int start, int end, bool 
       index = end - i;
     }
     filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-        .arg(QString::number(index), m_TotalDigits->value(), '0')
-        .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+               .arg(QString::number(index), m_TotalDigits->value(), '0')
+               .arg(m_FileSuffix->text()).arg(m_FileExt->text());
     QString filePath = m_InputDir->text() + QDir::separator() + filename;
     filePath = QDir::toNativeSeparators(filePath);
     fileList.push_back(filePath);
@@ -558,8 +559,8 @@ void QEbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -607,8 +608,8 @@ void QEbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
 void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
 {
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   //m_GeneratedFileNameExample->setText(filename);
 
 
@@ -713,8 +714,8 @@ void QEbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
       QString fn = fi.baseName();
       QString fns = fn;
       int length =  fn.length();
-      digitEnd = length-1;
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      digitEnd = length - 1;
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         --digitEnd;
       }
@@ -728,14 +729,15 @@ void QEbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
         fPrefix = fn.left(pos);
         pos += rx.matchedLength();
       }
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         ++digitEnd;
       }
 
       if ( digitEnd - digitStart < minTotalDigits) { minTotalDigits = digitEnd - digitStart; }
       m_TotalDigits->setValue(minTotalDigits);
-      if (list.size() > 0) {
+      if (list.size() > 0)
+      {
         currValue = list.front().toInt(&ok);
         if (false == flag) { minSlice = currValue; flag = true;}
         if (currValue > maxSlice) { maxSlice = currValue; }

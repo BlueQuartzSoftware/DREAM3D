@@ -64,7 +64,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QEbsdReferenceFrameDialog::QEbsdReferenceFrameDialog(QString filename, QWidget *parent) :
+QEbsdReferenceFrameDialog::QEbsdReferenceFrameDialog(QString filename, QWidget* parent) :
   QDialog(parent),
   m_EbsdFileName(filename),
   m_OriginGroup(NULL)
@@ -270,7 +270,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   IDataArray::Pointer arrayPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(ipfColorFilter->getCellIPFColorsArrayName());
   if (NULL == arrayPtr.get())
   {
-      ipfLabel->setText("Error Generating IPF Colors from Array in Voxel Data Container" );
+    ipfLabel->setText("Error Generating IPF Colors from Array in Voxel Data Container" );
     m_BaseImage = QImage();
     m_DisplayedImage = QImage();
     return;
@@ -287,11 +287,11 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 #if defined (CMP_WORDS_BIGENDIAN)
 #error
 #else
-      scanLine[x*4 + 3] = 0xFF;
+      scanLine[x * 4 + 3] = 0xFF;
       index = y * dims[0] * 3 + x * 3;
-      scanLine[x*4 + 2] = ipfColors[index + 0];
-      scanLine[x*4 + 1] = ipfColors[index + 1];
-      scanLine[x*4 + 0] = ipfColors[index + 2];
+      scanLine[x * 4 + 2] = ipfColors[index + 0];
+      scanLine[x * 4 + 1] = ipfColors[index + 1];
+      scanLine[x * 4 + 0] = ipfColors[index + 2];
 #endif
     }
 
@@ -309,7 +309,8 @@ void QEbsdReferenceFrameDialog::originChanged(bool checked)
 
   updateGraphicsView();
 
-  if (checked == true) {
+  if (checked == true)
+  {
     updateDisplay();
   }
 
@@ -332,7 +333,7 @@ void QEbsdReferenceFrameDialog::originChanged(bool checked)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdReferenceFrameDialog::getSampleTranformation(float &sampleTransAngle, float &dir0, float &dir1, float &dir2)
+void QEbsdReferenceFrameDialog::getSampleTranformation(float& sampleTransAngle, float& dir0, float& dir1, float& dir2)
 {
   // Initialize to "No Transform"
   sampleTransAngle = 0.0f;
@@ -367,7 +368,7 @@ void QEbsdReferenceFrameDialog::getSampleTranformation(float &sampleTransAngle, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdReferenceFrameDialog::getEulerTranformation(float &eulerTransAngle, float &dir0, float &dir1, float &dir2)
+void QEbsdReferenceFrameDialog::getEulerTranformation(float& eulerTransAngle, float& dir0, float& dir1, float& dir2)
 {
   eulerTransAngle = 0.0f;
   dir0 = 0.0f;
@@ -404,16 +405,20 @@ void QEbsdReferenceFrameDialog::getEulerTranformation(float &eulerTransAngle, fl
 // -----------------------------------------------------------------------------
 void QEbsdReferenceFrameDialog::updateGraphicsView()
 {
-  if (m_TSLdefaultBtn->isChecked()) {
+  if (m_TSLdefaultBtn->isChecked())
+  {
     m_DisplayedImage = m_BaseImage.mirrored(true, false);
   }
-  else if (m_HKLdefaultBtn->isChecked()) {
+  else if (m_HKLdefaultBtn->isChecked())
+  {
     m_DisplayedImage = m_BaseImage.mirrored(true, false);
   }
-  else if (m_HEDMdefaultBtn->isChecked()) {
+  else if (m_HEDMdefaultBtn->isChecked())
+  {
     m_DisplayedImage = m_BaseImage;
   }
-  else if (m_NoTransBtn->isChecked()) {
+  else if (m_NoTransBtn->isChecked())
+  {
     m_DisplayedImage = m_BaseImage;
   }
 
@@ -423,7 +428,7 @@ void QEbsdReferenceFrameDialog::updateGraphicsView()
   // back to 1024 pixels
   if (size.width() > 1024 || size.height() > 1024)
   {
-    QSize gvSize(1024,1024);
+    QSize gvSize(1024, 1024);
     m_DisplayedImage = m_DisplayedImage.scaled(gvSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
   }
 
@@ -494,12 +499,12 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
 //  circle.addEllipse(center, imageWidth / 2, imageHeight / 2);
 //  painter.drawPath(circle);
 
-  painter.drawText(pxOffset/2, pImageHeight / 2 + pxHigh / 3, "Y");
+  painter.drawText(pxOffset / 2, pImageHeight / 2 + pxHigh / 3, "Y");
 
   pxWide = metrics.width(QString("X"));
   painter.drawText(pImageWidth / 2 - pxWide / 2, pImageHeight - pyOffset + pxHigh + 2, "X");
 
-  painter.drawText(pxOffset/2, pImageHeight - pyOffset + pxHigh + 2, "(0,0)");
+  painter.drawText(pxOffset / 2, pImageHeight - pyOffset + pxHigh + 2, "(0,0)");
 
 //  pxWide = metrics.width(config.label);
 //  painter.drawText(2, pxHigh, config.label);
@@ -508,9 +513,9 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
   penWidth = 3;
   painter.setPen(QPen(QColor(0, 0, 0, 180), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
   // Draw the X-Axis
-  painter.drawLine(pxOffset-3, pImageHeight-pyOffset + 3, pImageWidth  / 2, pImageHeight-pyOffset + 3);
+  painter.drawLine(pxOffset - 3, pImageHeight - pyOffset + 3, pImageWidth  / 2, pImageHeight - pyOffset + 3);
   // Draw the Y-Axis
-  painter.drawLine(pxOffset-3, pImageHeight-pyOffset + 3, pxOffset-3, pImageHeight / 2);
+  painter.drawLine(pxOffset - 3, pImageHeight - pyOffset + 3, pxOffset - 3, pImageHeight / 2);
 
 //    painter.drawLine(pxOffset, pImageHeight / 2, pImageWidth - pxOffset, pImageHeight / 2);
 //  painter.drawLine(pImageWidth / 2, pyOffset, pImageWidth / 2, pImageHeight - pyOffset);

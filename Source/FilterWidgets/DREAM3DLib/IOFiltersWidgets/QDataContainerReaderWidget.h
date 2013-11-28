@@ -57,8 +57,8 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
 
     virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
-    void writeOptions(QSettings &prefs);
-    void readOptions(QSettings &prefs);
+    void writeOptions(QSettings& prefs);
+    void readOptions(QSettings& prefs);
 
     QFilterWidget* createDeepCopy();
 
@@ -91,13 +91,13 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
     virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
   public slots:
-    void setInputFile(const QString &v);
+    void setInputFile(const QString& v);
     void arraySelectionWidgetChanged();
 
 
   protected slots:
     void on_InputFileBtn_clicked();
-    void on_InputFile_textChanged(const QString & text);
+    void on_InputFile_textChanged(const QString& text);
     void on_ReadVolumeData_stateChanged(int state);
     void on_ReadSurfaceData_stateChanged(int state);
     void on_ReadVertexData_stateChanged(int state);

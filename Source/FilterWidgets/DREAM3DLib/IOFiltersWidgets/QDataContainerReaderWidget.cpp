@@ -139,8 +139,8 @@ void QDataContainerReaderWidget::setupGui()
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   InputFile->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_InputFile_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_InputFile_textChanged(const QString&)));
 
   connect(arraySelectionWidget, SIGNAL(arrayListsChanged()),
           this, SLOT(arraySelectionWidgetChanged()));
@@ -191,7 +191,7 @@ void QDataContainerReaderWidget::on_ReadEdgeData_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::setInputFile(const QString &v)
+void QDataContainerReaderWidget::setInputFile(const QString& v)
 {
   QString natPath = QDir::toNativeSeparators(v);
   InputFile->setText(natPath);
@@ -209,7 +209,7 @@ QString  QDataContainerReaderWidget::getInputFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::writeOptions(QSettings &prefs)
+void QDataContainerReaderWidget::writeOptions(QSettings& prefs)
 {
   prefs.setValue("Filter_Name", "DataContainerReader" );
   prefs.setValue("InputFile", QDir::toNativeSeparators(getInputFile()) );
@@ -223,7 +223,7 @@ void QDataContainerReaderWidget::writeOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::readOptions(QSettings &prefs)
+void QDataContainerReaderWidget::readOptions(QSettings& prefs)
 {
   {
     QVariant p_InputFile = prefs.value("InputFile");
@@ -240,8 +240,9 @@ void QDataContainerReaderWidget::readOptions(QSettings &prefs)
   {
     QVariant p_ReadSurfaceData = prefs.value("ReadSurfaceData");
     QCheckBox* le = findChild<QCheckBox*>("ReadSurfaceData");
-    if (le) {
-     le->setChecked(p_ReadSurfaceData.toBool());
+    if (le)
+    {
+      le->setChecked(p_ReadSurfaceData.toBool());
     }
   }
   {
@@ -290,7 +291,7 @@ void QDataContainerReaderWidget::on_InputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::on_InputFile_textChanged(const QString & text)
+void QDataContainerReaderWidget::on_InputFile_textChanged(const QString& text)
 {
   if (verifyPathExists(InputFile->text(), InputFile) )
   {
@@ -358,7 +359,8 @@ void QDataContainerReaderWidget::preflightDoneExecuting(DataContainerArray::Poin
 
     hid_t fileId = -1;
     fileId = QH5Utilities::openFile(InputFile->text(), true);
-    if (fileId < 0) {
+    if (fileId < 0)
+    {
       return;
     }
 
@@ -369,7 +371,8 @@ void QDataContainerReaderWidget::preflightDoneExecuting(DataContainerArray::Poin
     reader->setHdfFileId(fileId);
     int err = reader->getSizeResolutionOrigin(fileId, dims, res, origin);
 
-    if (err < 0) {
+    if (err < 0)
+    {
       err = QH5Utilities::closeFile(fileId);
       return;
     }

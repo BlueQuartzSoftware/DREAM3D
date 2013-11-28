@@ -222,7 +222,8 @@ void AdjustVolumeOrigin::preflight()
       addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
     }
   }
-  if(NULL != sm && NULL != m) {
+  if(NULL != sm && NULL != m)
+  {
     dataCheck(true, 1, 1, 1);
   }
 }
@@ -271,7 +272,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   int err = 0;
 
   setErrorCondition(err);
- // SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+// SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   setErrorCondition(0);
   notifyStatusMessage("Starting");

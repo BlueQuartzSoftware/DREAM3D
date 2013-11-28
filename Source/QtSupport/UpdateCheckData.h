@@ -46,40 +46,40 @@
 
 class UpdateCheckData : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-  UpdateCheckData(QObject* parent = 0);
-  UpdateCheckData(const UpdateCheckData&);
-  void operator=(const UpdateCheckData&);
-  bool operator==(const UpdateCheckData&);
+    UpdateCheckData(QObject* parent = 0);
+    UpdateCheckData(const UpdateCheckData&);
+    void operator=(const UpdateCheckData&);
+    bool operator==(const UpdateCheckData&);
 
-  virtual ~UpdateCheckData();
+    virtual ~UpdateCheckData();
 
-  bool hasUpdate();
-  bool hasError();
-  QString getMessageDescription();
-  QString getAppString();
-  QString getServerString();
+    bool hasUpdate();
+    bool hasError();
+    QString getMessageDescription();
+    QString getAppString();
+    QString getServerString();
 
-  void setHasUpdate(bool val);
-  void setHasError(bool val);
-  void setMessageDescription(QString msg);
-  void setAppString(QString str);
-  void setServerString(QString str);
+    void setHasUpdate(bool val);
+    void setHasError(bool val);
+    void setMessageDescription(QString msg);
+    void setAppString(QString str);
+    void setServerString(QString str);
 
   private:
-    bool					m_HasUpdate;
-    bool					m_HasError;
-    QString				m_MessageDescription;
-    QString				m_AppString;
-    QString				m_ServerString;
+    bool          m_HasUpdate;
+    bool          m_HasError;
+    QString       m_MessageDescription;
+    QString       m_AppString;
+    QString       m_ServerString;
 
 
 };
 
 #if defined (QT_CORE_LIB)
-  Q_DECLARE_METATYPE(UpdateCheckData);
+Q_DECLARE_METATYPE(UpdateCheckData);
 #endif
 
 #endif /* _UPDATECHECKDATA_H_ */

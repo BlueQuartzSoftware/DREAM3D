@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     //------ Required Cell Data
     //------ Created Cell Data
-    
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() { return "Update Cell Quaternions"; }

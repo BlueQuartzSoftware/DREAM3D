@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-   //------ Required Cell Data
+    //------ Required Cell Data
 
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

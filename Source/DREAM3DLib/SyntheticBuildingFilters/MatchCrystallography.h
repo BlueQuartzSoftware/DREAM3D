@@ -76,7 +76,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    
+
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(StatsDataArrayName)

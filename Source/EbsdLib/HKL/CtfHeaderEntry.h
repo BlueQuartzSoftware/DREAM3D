@@ -72,7 +72,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     QString getKey() { return m_key; }
     QString getHDFType() { T value = static_cast<T>(0); return QH5Lite::HDFTypeForPrimitiveAsStr(value); }
 
-    void parseValue(QByteArray &value)
+    void parseValue(QByteArray& value)
     {
       // Simple Naieve filter to remove European style decimals that use a comma
       for (int c = 0; c < value.size(); ++c)
@@ -82,7 +82,8 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
       QTextStream ss(&value);
       ss >> m_value;
     }
-    void print(std::ostream &out) {
+    void print(std::ostream& out)
+    {
       out << m_key.toStdString() << "  " << m_value << std::endl;
     }
 
@@ -90,7 +91,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     void setValue(T value) { m_value = value;}
 
   protected:
-    CtfHeaderEntry(const QString &key) :
+    CtfHeaderEntry(const QString& key) :
       m_value(0),
       m_key(key)
     {
@@ -124,23 +125,24 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     QString getKey() { return m_key; }
     QString getHDFType() { return "H5T_STRING"; }
 
-    void parseValue(QByteArray &value)
+    void parseValue(QByteArray& value)
     {
       m_value = QString(value);
     }
 
-    void print(std::ostream &out) {
+    void print(std::ostream& out)
+    {
       out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
     }
 
     QString getValue() { return m_value; }
-    void setValue(const QString &value)
+    void setValue(const QString& value)
     {
       m_value = value;
     }
 
   protected:
-    CtfStringHeaderEntry(const QString &key) :
+    CtfStringHeaderEntry(const QString& key) :
       m_key(key)
     {
     }

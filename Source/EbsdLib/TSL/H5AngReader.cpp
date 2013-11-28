@@ -216,7 +216,7 @@ int H5AngReader::readHeader(hid_t parId)
 
       err = readHKLFamilies(hklGid, m_CurrentPhase);
       err = H5Gclose(hklGid);
-      if (getErrorCode() < 0) { err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid); return -1; }
+      if (getErrorCode() < 0) { err = H5Gclose(pid); H5Gclose(phasesGid); H5Gclose(gid); return -1; }
     }
     /* The 'Categories' header may actually be missing from certain types of .ang files */
     if (QH5Lite::datasetExists(pid, Ebsd::Ang::Categories) == true)
@@ -285,20 +285,20 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
 
 #define ANG_READER_ALLOCATE_AND_READ(name, type)\
   if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ang::name) != m_ArrayNames.end()) {\
-  type* _##name = allocateArray<type>(totalDataRows);\
-  if (NULL != _##name) {\
-    ::memset(_##name, 0, numBytes);\
-    err = QH5Lite::readPointerDataset(gid, Ebsd::Ang::name, _##name);\
-    if (err < 0) {\
-      setErrorCode(-90020);\
-      ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
-      "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
-      setErrorMessage(ss.string());\
-      err = H5Gclose(gid);\
-      return -90020;\
+    type* _##name = allocateArray<type>(totalDataRows);\
+    if (NULL != _##name) {\
+      ::memset(_##name, 0, numBytes);\
+      err = QH5Lite::readPointerDataset(gid, Ebsd::Ang::name, _##name);\
+      if (err < 0) {\
+        setErrorCode(-90020);\
+        ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
+           "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
+        setErrorMessage(ss.string());\
+        err = H5Gclose(gid);\
+        return -90020;\
       }\
-  }\
-  set##name##Pointer(_##name);\
+    }\
+    set##name##Pointer(_##name);\
   }
 
 // -----------------------------------------------------------------------------

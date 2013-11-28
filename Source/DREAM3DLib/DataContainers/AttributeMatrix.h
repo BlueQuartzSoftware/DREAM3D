@@ -37,7 +37,7 @@
 #define _AttributeMatrix_H_
 
 #if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
 
@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 #if 0
     //Initalize Array Func Here
     template<typename T, class Filter>
-    typename DataArray<T>::Pointer createAttributeArray(const QString &arrayName, size_t size, QVector<int> dims, Filter* obv)
+    typename DataArray<T>::Pointer createAttributeArray(const QString& arrayName, size_t size, QVector<int> dims, Filter* obv)
     {
       typename DataArray<T>::Pointer valuePtr = DataArray<T>::NullPointer();
       IDataArray::Pointer iDataArray = getAttributeArray(arrayName);
@@ -90,7 +90,9 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         if (NULL == valuePtr.get())
         {
           QString s = QObject::tr(": Array '%1' could not allocate %2 elements.").arg(arrayName).arg(size);
-          if (NULL != obv) {obv->setErrorCondition(-25);
+          if (NULL != obv)
+          {
+            obv->setErrorCondition(-25);
             obv->addErrorMessage(getNameOfClass(), s, -25);
           }
           return valuePtr;
@@ -104,7 +106,9 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       if (NULL == valuePtr)
       {
         QString s = QObject::tr(": Array '%1' could not be cast to proper type").arg(arrayName);
-        if (NULL != obv) {obv->setErrorCondition(-12);
+        if (NULL != obv)
+        {
+          obv->setErrorCondition(-12);
           obv->addErrorMessage(getNameOfClass(), s, -12);
         }
         return valuePtr;
@@ -115,7 +119,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     //Get Array Size Check Func Here
     template<typename T, class AbstractFilter>
-    bool dataArrayCompatibility(const QString &arrayName, size_t size, int numComp, AbstractFilter* filter)
+    bool dataArrayCompatibility(const QString& arrayName, size_t size, int numComp, AbstractFilter* filter)
     {
       // First try checking by name
       IDataArray::Pointer iDataArray = getAttributeArray(arrayName);
@@ -130,12 +134,12 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         return false;
       }
       // Make sure the sizes are equal to what is being asked for
-      if (size*numComp != iDataArray->GetSize())
+      if (size * numComp != iDataArray->GetSize())
       {
         if (NULL != filter)
         {
           QString s = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Compoenets = %3. The currently available array "
-          " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((size*numComp)).arg(iDataArray->GetSize());
+                                  " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((size * numComp)).arg(iDataArray->GetSize());
           filter->setErrorCondition(-501);
           filter->addErrorMessage(filter->getHumanLabel(), s, -501);
         }
@@ -159,7 +163,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         typename DataArray<T>::Pointer dat = DataArray<T>::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
         QString s = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"
                                 "An Array with name '%4' is stored in the %5 but is of type %6\n")
-            .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
+                    .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
         if (NULL != filter)
         {
           filter->setErrorCondition(-502);
@@ -177,21 +181,21 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      * @brief Returns bool of whether a named array exists
      * @param name The name of the data array
      */
-    virtual bool doesAttributeArrayExist(const QString &name);
+    virtual bool doesAttributeArrayExist(const QString& name);
 
     /**
-   * @brief Adds/overwrites the data for a named array
-   * @param name The name that the array will be known by
-   * @param data The IDataArray::Pointer that will hold the data
-   */
-    virtual void addAttributeArray(const QString &name, IDataArray::Pointer data);
+    * @brief Adds/overwrites the data for a named array
+    * @param name The name that the array will be known by
+    * @param data The IDataArray::Pointer that will hold the data
+    */
+    virtual void addAttributeArray(const QString& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getAttributeArray(const QString &name);
+    virtual IDataArray::Pointer getAttributeArray(const QString& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -199,13 +203,13 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeAttributeArray(const QString &name);
+    virtual IDataArray::Pointer removeAttributeArray(const QString& name);
 
     /**
     * @brief Renames a cell data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameAttributeArray(const QString &oldname, const QString &newname);
+    virtual bool renameAttributeArray(const QString& oldname, const QString& newname);
 
     /**
     * @brief Resizes an array from the Data Container
@@ -242,11 +246,11 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     virtual int readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QSet<QString>& namesToRead);
     virtual QString generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName);
 
-    protected:
-      AttributeMatrix();
+  protected:
+    AttributeMatrix();
 
-      virtual QString writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName);
-      virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& dataContainerName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName, const QString& hdfFileName);
+    virtual QString writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName);
+    virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& dataContainerName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName, const QString& hdfFileName);
 
   private:
 

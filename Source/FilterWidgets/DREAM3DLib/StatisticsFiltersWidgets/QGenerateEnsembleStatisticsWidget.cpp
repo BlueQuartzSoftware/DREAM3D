@@ -97,7 +97,7 @@ void QGenerateEnsembleStatisticsWidget::getGuiParametersFromFilter(AbstractFilte
   else
   {
     int count = phaseTypes.size();
-    for (int i=0; i < count; ++i)
+    for (int i = 0; i < count; ++i)
     {
       QComboBox* cb = new QComboBox(this);
       cb->setCurrentIndex(phaseTypes[i]);
@@ -114,7 +114,7 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter(bool defaul
 {
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
   if (defaultValues == true) { return filter; }
-/* Copy all the settings from this instance into the new instance */
+  /* Copy all the settings from this instance into the new instance */
 
   filter->setSizeDistribution(calcSizeDistribution->isChecked());
   filter->setSizeDistributionFitType(m_SizeDistributionFitType->currentIndex());
@@ -135,7 +135,7 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter(bool defaul
 
     int count = phaseTypeTableWidget->rowCount();
     QVector<unsigned int> phaseTypes;
-  phaseTypes.push_back(DREAM3D::PhaseType::UnknownPhaseType);
+    phaseTypes.push_back(DREAM3D::PhaseType::UnknownPhaseType);
     for(int r = 0; r < count; ++r)
     {
       QWidget* w = phaseTypeTableWidget->cellWidget(r, 0);
@@ -153,7 +153,7 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter(bool defaul
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings &prefs)
+void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings& prefs)
 {
   prefs.setValue("Filter_Name", "GenerateEnsembleStatistics" );
   // Need to figure out how to write out the values for the DistributionTypeWidgets
@@ -198,7 +198,7 @@ void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QGenerateEnsembleStatisticsWidget::readOptions(QSettings &prefs)
+void QGenerateEnsembleStatisticsWidget::readOptions(QSettings& prefs)
 {
   bool ok;
   qint32 i;
@@ -226,7 +226,8 @@ void QGenerateEnsembleStatisticsWidget::readOptions(QSettings &prefs)
 
   ok = false;
   int size = prefs.beginReadArray("PhaseTypes");
-  for (int r = 0; r < size; ++r) {
+  for (int r = 0; r < size; ++r)
+  {
     prefs.setArrayIndex(r);
     on_addPhaseType_clicked();
     unsigned int value = prefs.value("PhaseType").toUInt(&ok);
@@ -349,7 +350,7 @@ void QGenerateEnsembleStatisticsWidget::on_addPhaseType_clicked()
     cb->setItemData(i, phaseTypeEnums[i], Qt::UserRole);
   }
   cb->setMinimumHeight(25);
-  phaseTypeTableWidget->setCellWidget(phaseTypeTableWidget->rowCount()-1, 0, cb);
+  phaseTypeTableWidget->setCellWidget(phaseTypeTableWidget->rowCount() - 1, 0, cb);
   emit parametersChanged();
 }
 
@@ -358,10 +359,10 @@ void QGenerateEnsembleStatisticsWidget::on_addPhaseType_clicked()
 // -----------------------------------------------------------------------------
 void QGenerateEnsembleStatisticsWidget::on_removePhaseType_clicked()
 {
-  QItemSelectionModel *selectionModel = phaseTypeTableWidget->selectionModel();
-  if (!selectionModel->hasSelection()) return;
+  QItemSelectionModel* selectionModel = phaseTypeTableWidget->selectionModel();
+  if (!selectionModel->hasSelection()) { return; }
   QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) return;
+  if (!index.isValid()) { return; }
   phaseTypeTableWidget->model()->removeRow(index.row(), index.parent());
   emit parametersChanged();
 }

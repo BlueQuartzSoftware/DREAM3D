@@ -157,7 +157,7 @@ void AngReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* AngReader::getPointerByName(const QString &featureName)
+void* AngReader::getPointerByName(const QString& featureName)
 {
   if (featureName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
   if (featureName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
@@ -175,7 +175,7 @@ void* AngReader::getPointerByName(const QString &featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType AngReader::getPointerType(const QString &featureName)
+Ebsd::NumType AngReader::getPointerType(const QString& featureName)
 {
   if (featureName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
   if (featureName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
@@ -215,7 +215,8 @@ int AngReader::readHeaderOnly()
     //::memset(buf, 0, kBufferSize);
     buf = in.readLine();
     parseHeaderLine(buf);
-    if (getHeaderIsComplete() == false) {
+    if (getHeaderIsComplete() == false)
+    {
       origHeader.append(buf);
     }
   }
@@ -289,7 +290,7 @@ int AngReader::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngReader::readData(QFile &in, QByteArray &buf)
+void AngReader::readData(QFile& in, QByteArray& buf)
 {
   QString streamBuf;
   QTextStream ss(&streamBuf);
@@ -326,8 +327,8 @@ void AngReader::readData(QFile &in, QByteArray &buf)
   }
   else if (grid.startsWith(Ebsd::Ang::HexGrid) == true && m_ReadHexGrid == true)
   {
-    if (yCells%2 == 0) { totalDataRows = ((yCells/2) * nOddCols) + ((yCells/2) * nEvexCells);/* xCells = nOddCols;*/ }
-    else if (yCells%2 == 1) { totalDataRows = (((yCells/2)+1) * nOddCols) + ((yCells/2) * nEvexCells); /* xCells = nEvexCells; */ }
+    if (yCells % 2 == 0) { totalDataRows = ((yCells / 2) * nOddCols) + ((yCells / 2) * nEvexCells);/* xCells = nOddCols;*/ }
+    else if (yCells % 2 == 1) { totalDataRows = (((yCells / 2) + 1) * nOddCols) + ((yCells / 2) * nEvexCells); /* xCells = nEvexCells; */ }
   }
   else // Grid was not set
   {
@@ -354,10 +355,10 @@ void AngReader::readData(QFile &in, QByteArray &buf)
   for(size_t i = 0; i < totalDataRows; ++i)
   {
     this->parseDataLine(buf, i);
-   // ::memset(buf, 0, bufSize); // Clear the buffer
+    // ::memset(buf, 0, bufSize); // Clear the buffer
     buf = in.readLine();
     ++counter;
-    if (in.atEnd() == true) break;
+    if (in.atEnd() == true) { break; }
   }
 
   if (getNumFeatures() < 10)
@@ -387,7 +388,7 @@ void AngReader::readData(QFile &in, QByteArray &buf)
 // -----------------------------------------------------------------------------
 //  Read the Header part of the ANG file
 // -----------------------------------------------------------------------------
-void AngReader::parseHeaderLine(QByteArray &buf)
+void AngReader::parseHeaderLine(QByteArray& buf)
 {
   bool ok = false;
 
@@ -414,35 +415,35 @@ void AngReader::parseHeaderLine(QByteArray &buf)
   }
   else if (word.compare(Ebsd::Ang::MaterialName) == 0 && m_CurrentPhase.get() != NULL)
   {
-    if (tokens.size() > 1) m_CurrentPhase->parseMaterialName(tokens);
+    if (tokens.size() > 1) { m_CurrentPhase->parseMaterialName(tokens); }
   }
   else if (word.compare(Ebsd::Ang::Formula) == 0 && m_CurrentPhase.get() != NULL)
   {
-    if (tokens.size() > 1) m_CurrentPhase->parseFormula(tokens);
+    if (tokens.size() > 1) { m_CurrentPhase->parseFormula(tokens); }
   }
   else if (word.compare(Ebsd::Ang::Info) == 0 && m_CurrentPhase.get() != NULL)
   {
-    if (tokens.size() > 1) m_CurrentPhase->parseInfo(tokens);
+    if (tokens.size() > 1) { m_CurrentPhase->parseInfo(tokens); }
   }
   else if (word.compare(Ebsd::Ang::Symmetry) == 0 && m_CurrentPhase.get() != NULL)
   {
-    if (tokens.size() > 1) m_CurrentPhase->setSymmetry(tokens.at(1).toUInt(&ok, 10));
+    if (tokens.size() > 1) { m_CurrentPhase->setSymmetry(tokens.at(1).toUInt(&ok, 10)); }
   }
   else if (word.compare(Ebsd::Ang::LatticeConstants) == 0 && m_CurrentPhase.get() != NULL)
   {
-    if (tokens.size() > 1) m_CurrentPhase->parseLatticeConstants(tokens);
+    if (tokens.size() > 1) { m_CurrentPhase->parseLatticeConstants(tokens); }
   }
   else if (word.compare(Ebsd::Ang::NumberFamilies) == 0 && m_CurrentPhase.get() != NULL)
   {
-    if (tokens.size() > 1) m_CurrentPhase->setNumberFamilies(tokens.at(1).toInt(&ok, 10));
+    if (tokens.size() > 1) { m_CurrentPhase->setNumberFamilies(tokens.at(1).toInt(&ok, 10)); }
   }
   else if (word.compare(Ebsd::Ang::HKLFamilies) == 0 && m_CurrentPhase.get() != NULL)
   {
-    if (tokens.size() > 1) m_CurrentPhase->parseHKLFamilies(tokens);
+    if (tokens.size() > 1) { m_CurrentPhase->parseHKLFamilies(tokens); }
   }
   else if (word.compare(Ebsd::Ang::Categories) == 0 && m_CurrentPhase.get() != NULL)
   {
-    if (tokens.size() > 1) m_CurrentPhase->parseCategories(tokens);
+    if (tokens.size() > 1) { m_CurrentPhase->parseCategories(tokens); }
   }
   else
   {
@@ -482,7 +483,7 @@ void AngReader::parseHeaderLine(QByteArray &buf)
 // -----------------------------------------------------------------------------
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
-void AngReader::parseDataLine(QByteArray &line, size_t i)
+void AngReader::parseDataLine(QByteArray& line, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:
@@ -500,11 +501,11 @@ void AngReader::parseDataLine(QByteArray &line, size_t i)
    * Some TSL ang files do NOT have all 10 columns. Assume these are lacking the last
    * 2 columns and all the other columns are the same as above.
    */
-  float p1 = 0.0f, p=0.0f, p2=0.0f, x=-1.0f, y=-1.0f, iqual=-1.0f, conf=-1.0f, semSignal=-1.0f, fit=-1.0f;
+  float p1 = 0.0f, p = 0.0f, p2 = 0.0f, x = -1.0f, y = -1.0f, iqual = -1.0f, conf = -1.0f, semSignal = -1.0f, fit = -1.0f;
   int ph = -1;
   size_t offset = 0;
   size_t featuresRead = 0;
-  featuresRead = sscanf(line.data(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
+  featuresRead = sscanf(line.data(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p, &p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
 
   offset = i;
 
@@ -516,7 +517,8 @@ void AngReader::parseDataLine(QByteArray &line, size_t i)
   m_PhaseData[offset] = ph;
   m_X[offset] = x;
   m_Y[offset] = y;
-  if (featuresRead > 8) {
+  if (featuresRead > 8)
+  {
     m_SEMSignal[offset] = semSignal;
   }
   if (featuresRead > 9)

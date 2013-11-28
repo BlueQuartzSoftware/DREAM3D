@@ -73,12 +73,12 @@ class EbsdLib_EXPORT MicPhase
     EBSD_INSTANCE_PROPERTY(QVector<QString>, ZandCoordinates)
     EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
 
-    void parseLatticeConstants(QByteArray &data);
-    void parseLatticeAngles(QByteArray &data);
-    void parseBasisAtoms(QByteArray &data);
-    void parseZandCoordinates(QByteArray &data);
+    void parseLatticeConstants(QByteArray& data);
+    void parseLatticeAngles(QByteArray& data);
+    void parseBasisAtoms(QByteArray& data);
+    void parseZandCoordinates(QByteArray& data);
 
-    void printSelf(std::ostream &stream);
+    void printSelf(std::ostream& stream);
 
     /**
      * @brief Returns the type of crystal structure for this phase.

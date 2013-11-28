@@ -213,7 +213,7 @@ void EbsdToH5Ebsd::execute()
   if(m_OutputFile.isEmpty() == true)
   {
     QString ss = QObject::tr("EbsdToH5Ebsd Error: The output file was not set correctly or is empty. The current value is '%1'"
-                     ". Please set the output file before running the importer. ").arg(m_OutputFile);
+                             ". Please set the output file before running the importer. ").arg(m_OutputFile);
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

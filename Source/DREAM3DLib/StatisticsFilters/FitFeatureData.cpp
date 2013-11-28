@@ -114,8 +114,8 @@ void FitFeatureData::dataCheck(bool preflight, size_t voxels, size_t features, s
   {
     QVector<int> dims(1, 1);
     m_BiasedFeaturesPtr = m->getPrereqArray<bool, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -158,9 +158,9 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   int numComp = 1;
 
 // Determining number of components and name given distribution type
-  if (dType == DREAM3D::DistributionType::Beta) distType = "Beta", numComp = DREAM3D::HDF5::BetaColumnCount;
-  else if (dType == DREAM3D::DistributionType::LogNormal) distType = "LogNormal", numComp = DREAM3D::HDF5::LogNormalColumnCount;
-  else if (dType == DREAM3D::DistributionType::Power) distType = "PowerLaw", numComp = DREAM3D::HDF5::PowerLawColumnCount;
+  if (dType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::HDF5::BetaColumnCount; }
+  else if (dType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::HDF5::LogNormalColumnCount; }
+  else if (dType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::HDF5::PowerLawColumnCount; }
 
   ss = selectedFeatureArrayName + distType + QString("Fit");
   QVector<int> dims(1, numComp);
@@ -196,7 +196,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
     for (int j = 0; j < numComp; j++)
     {
       FloatArrayType::Pointer data = dist[i];
-      ePtr[numComp*i+j] = data->GetValue(j);
+      ePtr[numComp * i + j] = data->GetValue(j);
     }
   }
   return ensembleArray;
@@ -225,7 +225,7 @@ void FitFeatureData::execute()
 
   QString ss;
 
-    IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
+  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
 
   if (NULL == inputData.get())
   {

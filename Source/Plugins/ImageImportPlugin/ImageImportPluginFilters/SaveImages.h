@@ -61,12 +61,12 @@ class SaveImages : public AbstractFilter
     virtual ~SaveImages();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(ImagePrefix)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
     DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
-    
+
     enum ImageFormatType
     {
       TifImageType = 0,

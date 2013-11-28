@@ -70,7 +70,7 @@
 //
 // -----------------------------------------------------------------------------
 QInitializeSyntheticVolumeWidget::QInitializeSyntheticVolumeWidget(QWidget* parent) :
-QFilterWidget(parent)
+  QFilterWidget(parent)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
@@ -93,7 +93,7 @@ QInitializeSyntheticVolumeWidget::~QInitializeSyntheticVolumeWidget()
 // -----------------------------------------------------------------------------
 QString QInitializeSyntheticVolumeWidget::getFilterGroup()
 {
-    return (DREAM3D::FilterGroups::SyntheticBuildingFilters);
+  return (DREAM3D::FilterGroups::SyntheticBuildingFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -112,10 +112,10 @@ void QInitializeSyntheticVolumeWidget::getGuiParametersFromFilter(AbstractFilter
 
   QVector<uint32_t> shapeTypes = filter->getShapeTypes();
   int count = shapeTypes.size();
-  for (int i=0; i < count; ++i)
+  for (int i = 0; i < count; ++i)
   {
     QComboBox* cb = new QComboBox(this);
-    cb->setItemData(cb->currentIndex(), shapeTypes[i+1], Qt::UserRole);
+    cb->setItemData(cb->currentIndex(), shapeTypes[i + 1], Qt::UserRole);
     m_ShapeTypeCombos.push_back(cb);
   }
 }
@@ -138,13 +138,13 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter(bool default
   filter->setZRes(m_ZResolution->value());
 
   int count = m_ShapeTypeCombos.count();
-  QVector<uint32_t> shapeTypes(count+1, DREAM3D::ShapeType::UnknownShapeType);
+  QVector<uint32_t> shapeTypes(count + 1, DREAM3D::ShapeType::UnknownShapeType);
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
-   QComboBox* cb = m_ShapeTypeCombos.at(i);
-   unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-   shapeTypes[i+1]= sType;
+    QComboBox* cb = m_ShapeTypeCombos.at(i);
+    unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    shapeTypes[i + 1] = sType;
   }
   filter->setShapeTypes(shapeTypes);
 
@@ -223,8 +223,8 @@ void QInitializeSyntheticVolumeWidget::setupGui()
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   m_InputFile->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_InputFile_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_InputFile_textChanged(const QString&)));
 
 
 
@@ -237,9 +237,9 @@ void QInitializeSyntheticVolumeWidget::setupGui()
 void QInitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
-                                                 m_OpenDialogLastDirectory,
-                                                 tr("DREAM3D Stats Files (*.dream3d *.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)") );
-  if ( true == file.isEmpty() ){ return; }
+                                              m_OpenDialogLastDirectory,
+                                              tr("DREAM3D Stats Files (*.dream3d *.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)") );
+  if ( true == file.isEmpty() ) { return; }
   QFileInfo fi (file);
   m_InputFile->blockSignals(true);
   QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
@@ -254,7 +254,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString &text)
+void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& text)
 {
   if (m_InputFile->text().isEmpty())
   {
@@ -311,7 +311,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       ShapeType::getShapeTypeEnums(shapeTypeEnums);
 
       // Remove all the items from the GUI and from the internal tracking Lists
-      QLayoutItem *child;
+      QLayoutItem* child;
       while ((formLayout_2->count() > 0) && (child = formLayout_2->takeAt(0)) != 0)
       {
         delete child;
@@ -331,7 +331,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       m_ShapeTypeScrollArea->setWidget(m_ShapeTypeScrollContents);
 
       // We skip the first Ensemble as it is always a dummy
-      for (int i = 0; i < size-1; i++)
+      for (int i = 0; i < size - 1; i++)
       {
         QLabel* shapeTypeLabel = new QLabel(m_ShapeTypeScrollContents);
         QString str("Phase ");
@@ -517,8 +517,8 @@ int QInitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoi
           float sddiam = pp->getFeatureSizeDistribution().at(1)->GetValue(0);
           diam = rg.genrand_norm(avgdiam, sddiam);
           diam = exp(diam);
-          if(diam >= pp->getMaxFeatureDiameter()) volgood = 0;
-          if(diam < pp->getMinFeatureDiameter()) volgood = 0;
+          if(diam >= pp->getMaxFeatureDiameter()) { volgood = 0; }
+          if(diam < pp->getMinFeatureDiameter()) { volgood = 0; }
           vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
         }
       }
@@ -553,7 +553,7 @@ void QInitializeSyntheticVolumeWidget::estimateNumFeaturesSetup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QInitializeSyntheticVolumeWidget::readOptions(QSettings &prefs)
+void QInitializeSyntheticVolumeWidget::readOptions(QSettings& prefs)
 {
   QString val;
   bool ok;
@@ -578,7 +578,7 @@ void QInitializeSyntheticVolumeWidget::readOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QInitializeSyntheticVolumeWidget::writeOptions(QSettings &prefs)
+void QInitializeSyntheticVolumeWidget::writeOptions(QSettings& prefs)
 {
   prefs.setValue("Filter_Name", "InitializeSyntheticVolume" );
   WRITE_STRING_SETTING(prefs, m_, InputFile)

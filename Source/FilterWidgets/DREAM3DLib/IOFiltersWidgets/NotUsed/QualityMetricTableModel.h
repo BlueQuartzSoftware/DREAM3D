@@ -70,7 +70,7 @@ class QualityMetricTableModel : public QAbstractTableModel
      * @param index
      * @return
      */
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const ;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const ;
 
     /**
      *
@@ -78,7 +78,7 @@ class QualityMetricTableModel : public QAbstractTableModel
      * @param role
      * @return
      */
-    virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const ;
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const ;
 
     /**
      *
@@ -87,21 +87,21 @@ class QualityMetricTableModel : public QAbstractTableModel
      * @param role
      * @return
      */
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const ;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const ;
 
     /**
      *
      * @param parent
      * @return
      */
-    virtual int rowCount(const QModelIndex &parent=QModelIndex()) const ;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const ;
 
     /**
      *
      * @param parent
      * @return
      */
-    virtual int columnCount(const QModelIndex &parent=QModelIndex()) const ;
+    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const ;
 
     /**
      *
@@ -110,7 +110,7 @@ class QualityMetricTableModel : public QAbstractTableModel
      * @param role
      * @return
      */
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole) ;
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) ;
 
     /**
      *
@@ -120,7 +120,7 @@ class QualityMetricTableModel : public QAbstractTableModel
      * @param role
      * @return
      */
-    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role=Qt::EditRole) ;
+    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole) ;
 
     /**
      *
@@ -129,7 +129,7 @@ class QualityMetricTableModel : public QAbstractTableModel
      * @param parent
      * @return
      */
-    virtual bool insertRows(int row, int count, const QModelIndex &parent=QModelIndex()) ;
+    virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) ;
 
     /**
      *
@@ -138,7 +138,7 @@ class QualityMetricTableModel : public QAbstractTableModel
      * @param parent
      * @return
      */
-    virtual bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex()) ;
+    virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) ;
 
     /**
      *
@@ -153,7 +153,7 @@ class QualityMetricTableModel : public QAbstractTableModel
 
     virtual void setTableData( QVector<QString> featureNames, QVector<float> featureValues,  QVector<QString> featureOperators, QVector<int> featurePhaseValues) ;
 
-    void getTableData( QVector<QString> &featureNames, QVector<float> &featureValues,  QVector<QString> &featureOperators, QVector<int> &featurePhaseValues);
+    void getTableData( QVector<QString>& featureNames, QVector<float>& featureValues,  QVector<QString>& featureOperators, QVector<int>& featurePhaseValues);
 
     void setNumberOfPhases(int n);
 

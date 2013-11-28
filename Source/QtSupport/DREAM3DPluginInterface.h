@@ -49,7 +49,7 @@
 #ifdef NDEBUG
 
 #define DREAM3D_PLUGIN_2(name)\
-    #name
+  #name
 
 #define DREAM3D_PLUGIN_3(name)\
   #name
@@ -71,15 +71,15 @@
 
 
 #define DREAM3D_PLUGIN_CONSTANTS(libName, human)\
-namespace DREAM3D\
-{\
-  namespace UIPlugins\
+  namespace DREAM3D\
   {\
-   const std::string libName##File(DREAM3D_PLUGIN_2(libName##Plugin));\
-   const std::string libName##DisplayName(DREAM3D_PLUGIN_3(human));\
-   const std::string libName##BaseName(#libName);\
-  }\
-}
+    namespace UIPlugins\
+    {\
+      const std::string libName##File(DREAM3D_PLUGIN_2(libName##Plugin));\
+      const std::string libName##DisplayName(DREAM3D_PLUGIN_3(human));\
+      const std::string libName##BaseName(#libName);\
+    }\
+  }
 
 
 
@@ -148,7 +148,7 @@ class FilterManager;
 class DREAM3DPluginInterface
 {
   public:
-    virtual ~DREAM3DPluginInterface(){}
+    virtual ~DREAM3DPluginInterface() {}
 
     /**
      * @brief Returns the name of the plugin
@@ -169,14 +169,14 @@ class DREAM3DPluginInterface
      * @brief Writes the settings in the input gui to the Application's preference file
      * @param prefs A valid QSettings pointer.
      */
-    virtual void writeSettings(QSettings &prefs) = 0;
+    virtual void writeSettings(QSettings& prefs) = 0;
 
     /**
      * @brief Reads the settings from the Application's preference file and sets
      * the input GUI widgets accordingly.
      * @param prefs
      */
-    virtual void readSettings(QSettings &prefs) = 0;
+    virtual void readSettings(QSettings& prefs) = 0;
 
 };
 

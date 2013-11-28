@@ -49,8 +49,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HelpDialog::HelpDialog(QWidget *parent) :
-QDialog(parent)
+HelpDialog::HelpDialog(QWidget* parent) :
+  QDialog(parent)
 {
   this->setupUi(this);
 }

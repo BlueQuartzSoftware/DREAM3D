@@ -77,13 +77,15 @@
 #define IMAGE_HEIGHT 17
 
 // These Streams need to be implemented so that our 3 Element Vectors can be read/write to disk/prefs files
-QDataStream &operator<<( QDataStream &out, const IntVec3Widget_t& v) {
-  out << v.x << v.y << v.z; return out;
+QDataStream& operator<<( QDataStream& out, const IntVec3Widget_t& v)
+{
+  out << v.x << v.y << v.z;
+  return out;
 }
-QDataStream &operator>>( QDataStream &in, IntVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
+QDataStream& operator>>( QDataStream& in, IntVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
 
-QDataStream &operator<<( QDataStream &out, const FloatVec3Widget_t& v) { out << v.x << v.y << v.z; return out; }
-QDataStream &operator>>( QDataStream &in, FloatVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
+QDataStream& operator<<( QDataStream& out, const FloatVec3Widget_t& v) { out << v.x << v.y << v.z; return out; }
+QDataStream& operator>>( QDataStream& in, FloatVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
 
 // Initialize private static member variable
 QString QFilterWidget::m_OpenDialogLastDirectory = "";
@@ -476,7 +478,7 @@ void QFilterWidget::setupGui()
 
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
-      connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditStringValue(const QString &)));
+      connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditStringValue(const QString&)));
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setText(v.toString());
     }
@@ -508,7 +510,7 @@ void QFilterWidget::setupGui()
     else if (wType == FilterParameter::InputFileWidget)
     {
       QGridLayout* gridLayout = new QGridLayout();
-      gridLayout->setContentsMargins(0,0,0,0);
+      gridLayout->setContentsMargins(0, 0, 0, 0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
       fp->setObjectName((option->getPropertyName()));
@@ -519,9 +521,9 @@ void QFilterWidget::setupGui()
       theSlot.append((option->getPropertyName()));
       theSlot.append("(const QString &)");
       // qDebug() << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot() << "\n";
-      QObject::connect( com, SIGNAL(activated(const QString &)),
+      QObject::connect( com, SIGNAL(activated(const QString&)),
                         this, theSlot.toAscii());
-      QObject::connect( fp, SIGNAL(textChanged(const QString &)),
+      QObject::connect( fp, SIGNAL(textChanged(const QString&)),
                         this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
@@ -537,7 +539,7 @@ void QFilterWidget::setupGui()
     else if (wType == FilterParameter::InputPathWidget)
     {
       QGridLayout* gridLayout = new QGridLayout();
-      gridLayout->setContentsMargins(0,0,0,0);
+      gridLayout->setContentsMargins(0, 0, 0, 0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
       fp->setObjectName((option->getPropertyName()));
@@ -548,9 +550,9 @@ void QFilterWidget::setupGui()
       theSlot.append((option->getPropertyName()));
       theSlot.append("(const QString &)");
       // qDebug() << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot() << "\n";
-      QObject::connect( com, SIGNAL(activated(const QString &)),
+      QObject::connect( com, SIGNAL(activated(const QString&)),
                         this, theSlot.toAscii());
-      QObject::connect( fp, SIGNAL(textChanged(const QString &)),
+      QObject::connect( fp, SIGNAL(textChanged(const QString&)),
                         this, theSlot.toAscii());
       //      connect(fp, SIGNAL(textChanged(const QString &)),
       //              this, SLOT(updateLineEdit(const QString &)));
@@ -569,7 +571,7 @@ void QFilterWidget::setupGui()
     else if (wType == FilterParameter::OutputFileWidget)
     {
       QGridLayout* gridLayout = new QGridLayout();
-      gridLayout->setContentsMargins(0,0,0,0);
+      gridLayout->setContentsMargins(0, 0, 0, 0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
@@ -580,7 +582,7 @@ void QFilterWidget::setupGui()
       theSlot.append("set");
       theSlot.append((option->getPropertyName()));
       theSlot.append("(const QString &)");
-      QObject::connect( fp, SIGNAL(textChanged(const QString &)),
+      QObject::connect( fp, SIGNAL(textChanged(const QString&)),
                         this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
       QPushButton* btn = new QPushButton("Save As...");
@@ -595,7 +597,7 @@ void QFilterWidget::setupGui()
     else if (wType == FilterParameter::OutputPathWidget)
     {
       QGridLayout* gridLayout = new QGridLayout();
-      gridLayout->setContentsMargins(0,0,0,0);
+      gridLayout->setContentsMargins(0, 0, 0, 0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
       fp->setObjectName((option->getPropertyName()));
@@ -606,7 +608,7 @@ void QFilterWidget::setupGui()
       theSlot.append((option->getPropertyName()));
       theSlot.append("(const QString &)");
 
-      QObject::connect( fp, SIGNAL(textChanged(const QString &)),
+      QObject::connect( fp, SIGNAL(textChanged(const QString&)),
                         this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
@@ -850,9 +852,9 @@ void QFilterWidget::setupIntVec3Widget(QFormLayout* frmLayout, int optIndex,
   horizontalLayout->addWidget(Dimensions_2);
 
   frmLayout->setLayout(optIndex, QFormLayout::FieldRole, horizontalLayout);
-  connect(Dimensions_0, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
-  connect(Dimensions_1, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
-  connect(Dimensions_2, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
+  connect(Dimensions_0, SIGNAL( textChanged(const QString&)), this, SLOT(updateIntVec3Widget(const QString&)));
+  connect(Dimensions_1, SIGNAL( textChanged(const QString&)), this, SLOT(updateIntVec3Widget(const QString&)));
+  connect(Dimensions_2, SIGNAL( textChanged(const QString&)), this, SLOT(updateIntVec3Widget(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -895,9 +897,9 @@ void QFilterWidget::setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex,
   horizontalLayout->addWidget(Dimensions_2);
 
   frmLayout->setLayout(optIndex, QFormLayout::FieldRole, horizontalLayout);
-  connect(Dimensions_0, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
-  connect(Dimensions_1, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
-  connect(Dimensions_2, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
+  connect(Dimensions_0, SIGNAL( textChanged(const QString&)), this, SLOT(updateFloatVec3Widget(const QString&)));
+  connect(Dimensions_1, SIGNAL( textChanged(const QString&)), this, SLOT(updateFloatVec3Widget(const QString&)));
+  connect(Dimensions_2, SIGNAL( textChanged(const QString&)), this, SLOT(updateFloatVec3Widget(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -918,7 +920,7 @@ void QFilterWidget::setupAxisAngleWidget(QFormLayout* frmLayout, int optIndex,
 //
 // -----------------------------------------------------------------------------
 void QFilterWidget::setupVertexArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex,
-                                                   FilterParameter* option, QLabel* label )
+                                                     FilterParameter* option, QLabel* label )
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
@@ -974,7 +976,7 @@ void QFilterWidget::setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int o
 //
 // -----------------------------------------------------------------------------
 void QFilterWidget::setupFeatureArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex,
-                                                    FilterParameter* option, QLabel* label )
+                                                      FilterParameter* option, QLabel* label )
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
@@ -1056,7 +1058,7 @@ void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optI
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateIntVec3Widget(const QString &v)
+void QFilterWidget::updateIntVec3Widget(const QString& v)
 {
   QObject* whoSent = sender();
   QString baseName = whoSent->objectName();
@@ -1071,9 +1073,11 @@ void QFilterWidget::updateIntVec3Widget(const QString &v)
 
   QString name = QString::fromUtf8("0_") + baseName;
   QLineEdit* le = qFindChild<QLineEdit*>(this, name);
-  if(le) {
+  if(le)
+  {
     value.x = le->text().toInt(&ok);
-    if (false == ok) {
+    if (false == ok)
+    {
       value.x = 0;
       le->setText("0");
     }
@@ -1081,9 +1085,11 @@ void QFilterWidget::updateIntVec3Widget(const QString &v)
 
   name = QString::fromUtf8("1_") + baseName;
   le = qFindChild<QLineEdit*>(this, name);
-  if(le) {
+  if(le)
+  {
     value.y = le->text().toInt(&ok);
-    if (false == ok) {
+    if (false == ok)
+    {
       value.y = 0;
       le->setText("0");
     }
@@ -1091,9 +1097,11 @@ void QFilterWidget::updateIntVec3Widget(const QString &v)
 
   name = QString::fromUtf8("2_") + baseName;
   le = qFindChild<QLineEdit*>(this, name);
-  if(le) {
+  if(le)
+  {
     value.z = le->text().toInt(&ok);
-    if (false == ok) {
+    if (false == ok)
+    {
       value.z = 0;
       le->setText("0");
     }
@@ -1108,7 +1116,7 @@ void QFilterWidget::updateIntVec3Widget(const QString &v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateFloatVec3Widget(const QString &v)
+void QFilterWidget::updateFloatVec3Widget(const QString& v)
 {
   QObject* whoSent = sender();
   QString baseName = whoSent->objectName();
@@ -1123,9 +1131,11 @@ void QFilterWidget::updateFloatVec3Widget(const QString &v)
 
   QString name = QString::fromUtf8("0_") + baseName;
   QLineEdit* le = qFindChild<QLineEdit*>(this, name);
-  if(le) {
+  if(le)
+  {
     value.x = le->text().toFloat(&ok);
-    if (false == ok) {
+    if (false == ok)
+    {
       value.x = 0;
       le->setText("0");
     }
@@ -1133,9 +1143,11 @@ void QFilterWidget::updateFloatVec3Widget(const QString &v)
 
   name = QString::fromUtf8("1_") + baseName;
   le = qFindChild<QLineEdit*>(this, name);
-  if(le) {
+  if(le)
+  {
     value.y = le->text().toFloat(&ok);
-    if (false == ok) {
+    if (false == ok)
+    {
       value.y = 0;
       le->setText("0");
     }
@@ -1143,9 +1155,11 @@ void QFilterWidget::updateFloatVec3Widget(const QString &v)
 
   name = QString::fromUtf8("2_") + baseName;
   le = qFindChild<QLineEdit*>(this, name);
-  if(le) {
+  if(le)
+  {
     value.z = le->text().toFloat(&ok);
-    if (false == ok) {
+    if (false == ok)
+    {
       value.z = 0;
       le->setText("0");
     }
@@ -1197,10 +1211,12 @@ void QFilterWidget::updateQLineEditIntValue()
   //  qDebug() << "Filter: " << title() << " Getting updated from whoSent Name: "
   //      << whoSent->objectName() << "\n";
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
-  if(le) {
+  if(le)
+  {
     bool ok = false;
     int value = le->text().toInt(&ok);
-    if (false == ok) {
+    if (false == ok)
+    {
       value = 0;
       le->setText("0");
     }
@@ -1217,10 +1233,12 @@ void QFilterWidget::updateQLineEditDoubleValue()
   //  qDebug() << "Filter: " << title() << " Getting updated from whoSent Name: "
   //     << whoSent->objectName() << "\n";
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
-  if(le) {
+  if(le)
+  {
     bool ok = false;
     double value = le->text().toDouble(&ok);
-    if (false == ok) {
+    if (false == ok)
+    {
       value = 0;
       le->setText("0");
     }
@@ -1478,7 +1496,7 @@ void QFilterWidget::updateArrayNameComboBoxValue(int v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateArrayNameComboBoxValue(const QString &text)
+void QFilterWidget::updateArrayNameComboBoxValue(const QString& text)
 {
   QObject* whoSent = sender();
   //qDebug() << "Filter: " << title() << " Getting updated from whoSent Name: " << whoSent->objectName() << "\n";
@@ -1498,7 +1516,7 @@ void QFilterWidget::updateArrayNameComboBoxValue(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateQLineEditStringValue(const QString &v)
+void QFilterWidget::updateQLineEditStringValue(const QString& v)
 {
   QObject* whoSent = sender();
   //  qDebug() << "Filter: " << title() << " Getting updated from whoSent Name: "
@@ -1545,7 +1563,7 @@ void QFilterWidget::updateQCheckBoxValue(int v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateLineEdit(const QString &v)
+void QFilterWidget::updateLineEdit(const QString& v)
 {
   QObject* whoSent = sender();
   qDebug() << "Filter: " << title() << "->Property: " << whoSent->objectName() << " via QLineEdit.";
@@ -1608,7 +1626,7 @@ void  QFilterWidget::mousePressEvent ( QMouseEvent* event )
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::mouseReleaseEvent(QMouseEvent *event)
+void QFilterWidget::mouseReleaseEvent(QMouseEvent* event)
 {
   if(event->button() != Qt::LeftButton)
   {
@@ -1631,7 +1649,7 @@ void QFilterWidget::mouseReleaseEvent(QMouseEvent *event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
+void QFilterWidget::mouseMoveEvent(QMouseEvent* event)
 {
   if(!(event->buttons() & Qt::LeftButton))
   {
@@ -1670,10 +1688,10 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
   QDataStream dataStream(&itemData, QIODevice::WriteOnly);
   dataStream << transparent << QPoint(event->pos());
 
-  QMimeData *mimeData = new QMimeData;
+  QMimeData* mimeData = new QMimeData;
   mimeData->setData("application/x-dnditemdata", itemData);
 
-  QDrag *drag = new QDrag(this);
+  QDrag* drag = new QDrag(this);
   drag->setMimeData(mimeData);
   drag->setPixmap(transparent);
   drag->setHotSpot(event->pos());
@@ -1742,7 +1760,7 @@ void QFilterWidget::preflightAboutToExecute(DataContainerArray::Pointer dca)
 
     switch(wType)
     {
-      #if 0
+#if 0
       case FilterParameter::VolumeVertexArrayNameSelectionWidget:
         updateArrayNameComboBox(vldc->getVertexArrayNameList(), propertyName);
         break;
@@ -1800,7 +1818,7 @@ void QFilterWidget::preflightAboutToExecute(DataContainerArray::Pointer dca)
       case FilterParameter::ArraySelectionWidget:
         //     updateArraySelectionWidget(vdc, smdc, sdc, propertyName);
         break;
-        #endif
+#endif
       default:
         break;
     }
@@ -1818,7 +1836,7 @@ void QFilterWidget::preflightDoneExecuting(DataContainerArray::Pointer dca)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateArrayNameComboBox(const QList<QString> &arrayNames, QString propertyName)
+void QFilterWidget::updateArrayNameComboBox(const QList<QString>& arrayNames, QString propertyName)
 {
   //if (arrayNames.size() == 0) { return; }
   QComboBox* cb = qFindChild<QComboBox*>(this, propertyName);
@@ -1833,7 +1851,7 @@ void QFilterWidget::updateArrayNameComboBox(const QList<QString> &arrayNames, QS
     cb->addItem(name);
     if (name.compare(selectedName) == 0)
     {
-      index = cb->count()-1;
+      index = cb->count() - 1;
     }
   }
   cb->setCurrentIndex(index);

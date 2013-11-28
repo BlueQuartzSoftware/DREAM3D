@@ -70,14 +70,14 @@ void PoleFigureImageUtilities::generateKernelWeigths(int kernelWidth, int kernel
   //  int pY = 0;
   int index = 0;
   float delta = 0;
-  m_KernelWeights.resize((kernelWidth+1) * (kernelHeight+1) * 4);
+  m_KernelWeights.resize((kernelWidth + 1) * (kernelHeight + 1) * 4);
 
 
   float sigma = 1.0;
   float mu = 0.0;
-  float root2Pi = sqrt(2.0* M_PI);
-  float OneOverSigmaRoot2Pi = 1.0/(sigma * root2Pi);
-  float TwoSigmaSqrd = 2.0*sigma*sigma;
+  float root2Pi = sqrt(2.0 * M_PI);
+  float OneOverSigmaRoot2Pi = 1.0 / (sigma * root2Pi);
+  float TwoSigmaSqrd = 2.0 * sigma * sigma;
 
 
   for (int ky = -kernelHeight; ky <= kernelHeight; ++ky)
@@ -85,7 +85,7 @@ void PoleFigureImageUtilities::generateKernelWeigths(int kernelWidth, int kernel
     for (int kx = -kernelWidth; kx <= kernelWidth; ++kx)
     {
       delta = (kx) * (kx) + (ky) * (ky) + 1;
-      m_KernelWeights[index] = OneOverSigmaRoot2Pi*exp(-(delta-mu)*(delta-mu)/TwoSigmaSqrd );
+      m_KernelWeights[index] = OneOverSigmaRoot2Pi * exp(-(delta - mu) * (delta - mu) / TwoSigmaSqrd );
       ++index;
     }
     //  printf("\n");
@@ -98,8 +98,8 @@ void PoleFigureImageUtilities::generateKernelWeigths(int kernelWidth, int kernel
 // -----------------------------------------------------------------------------
 int PoleFigureImageUtilities::countPixelNeighbors(int imageWidth, int imageHeight,
                                                   int pX, int pY,
-                                                  QVector<qint32> &data,
-                                                  QVector<qint32> &counts,
+                                                  QVector<qint32>& data,
+                                                  QVector<qint32>& counts,
                                                   int kernelWidth, int kernelHeight, bool genmask)
 {
   int xCoord, yCoord;
@@ -107,11 +107,11 @@ int PoleFigureImageUtilities::countPixelNeighbors(int imageWidth, int imageHeigh
 
 
   // This figures out if we are "inside" the circle or not
-  float radSqrd = (float)(imageWidth/2.0f) * (imageWidth/2.0f);
-  float cX = imageWidth/2.0f;  // Center x
-  float cY = imageHeight/2.0f; // Center y
+  float radSqrd = (float)(imageWidth / 2.0f) * (imageWidth / 2.0f);
+  float cX = imageWidth / 2.0f; // Center x
+  float cY = imageHeight / 2.0f; // Center y
   int targetIndex = (imageWidth * pY) + pX;
-  float delta = (pX-cX)*(pX-cX) + (pY-cY)*(pY-cY);
+  float delta = (pX - cX) * (pX - cX) + (pY - cY) * (pY - cY);
 
   if (genmask == true)
   {
@@ -138,8 +138,9 @@ int PoleFigureImageUtilities::countPixelNeighbors(int imageWidth, int imageHeigh
       if (data[index] > 0) // If the pixel is "on" it has a point in it
       {
         // Increment the neighbor count for this pixel only if it is within the circle
-        delta = (xCoord-cX)*(xCoord-cX) + (yCoord-cY)*(yCoord-cY);
-        if (delta <= radSqrd) {
+        delta = (xCoord - cX) * (xCoord - cX) + (yCoord - cY) * (yCoord - cY);
+        if (delta <= radSqrd)
+        {
           counts[targetIndex] += ( data[index] /* m_KernelWeights[kernelWeightIndex] */ );
         }
       }
@@ -152,7 +153,7 @@ int PoleFigureImageUtilities::countPixelNeighbors(int imageWidth, int imageHeigh
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage PoleFigureImageUtilities::generateColorPoleFigureImage(const PoleFigureData &config)
+QImage PoleFigureImageUtilities::generateColorPoleFigureImage(const PoleFigureData& config)
 {
 
   int kernelWidth = config.kernelRadius[0];
@@ -181,8 +182,8 @@ QImage PoleFigureImageUtilities::generateColorPoleFigureImage(const PoleFigureDa
   // Loop over all the data and get the x,y coords (scaled) and increment the value (intensity) in that grid square
   for (int i = 0; i < size; ++i)
   {
-    int xCoord = (xPoints[i] + 1) * imageWidth/2;
-    int yCoord = (yPoints[i] + 1) * imageHeight/2;
+    int xCoord = (xPoints[i] + 1) * imageWidth / 2;
+    int yCoord = (yPoints[i] + 1) * imageHeight / 2;
     data[ yCoord * imageWidth + xCoord]++;
     if (data[ yCoord * imageWidth + xCoord] > max) { max = data[ yCoord * imageWidth + xCoord];}
     if (data[ yCoord * imageWidth + xCoord] < min) { min = data[ yCoord * imageWidth + xCoord];}
@@ -226,7 +227,7 @@ QImage PoleFigureImageUtilities::generateColorPoleFigureImage(const PoleFigureDa
   {
     int val = min + ((float)i / numColors) * range;
     ColorTable::GetColorCorrespondingToValue(val, r, g, b, max, min);
-    colorTable[i] = QColor(r*255, g*255, b*255, 255);
+    colorTable[i] = QColor(r * 255, g * 255, b * 255, 255);
   }
   // Index 0 is all white which is every pixel outside of the ODF circle
   colorTable[0] = QColor(255, 255, 255, 255);
@@ -249,7 +250,7 @@ QImage PoleFigureImageUtilities::generateColorPoleFigureImage(const PoleFigureDa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage PoleFigureImageUtilities::generatePoleFigureImage(const PoleFigureData &config)
+QImage PoleFigureImageUtilities::generatePoleFigureImage(const PoleFigureData& config)
 {
   int imageWidth = config.imageSize[0];
   int imageHeight = config.imageSize[1];
@@ -262,7 +263,7 @@ QImage PoleFigureImageUtilities::generatePoleFigureImage(const PoleFigureData &c
   int size = yPoints.size();
 
   QColor white(255, 255, 255, 255);
-  QColor black(0.25*255, 0.2549*255, 0.7961*255, 255);
+  QColor black(0.25 * 255, 0.2549 * 255, 0.7961 * 255, 255);
   image.fill(white.rgba()); // Fill all white
   QRgb black_Rgba = black.rgba();
 
@@ -271,8 +272,8 @@ QImage PoleFigureImageUtilities::generatePoleFigureImage(const PoleFigureData &c
   {
     //    float xp = xPoints[i];
     //    float yp = yPoints[i];
-    int xCoord = (xPoints[i] + 1) * imageWidth/2;
-    int yCoord = (yPoints[i] + 1) * imageHeight/2;
+    int xCoord = (xPoints[i] + 1) * imageWidth / 2;
+    int yCoord = (yPoints[i] + 1) * imageHeight / 2;
     if (xCoord > imageWidth || yCoord > imageHeight)
     {
       qDebug() << "This is bad";
@@ -292,13 +293,13 @@ QImage PoleFigureImageUtilities::generatePoleFigureImage(const PoleFigureData &c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigureConfiguration_t &config)
+void drawScaleBar(QPainter& painter, int imageWidth, int imageHeight, PoleFigureConfiguration_t& config)
 {
   int numColors = config.numColors;
   int scaleHeight = imageHeight * 0.25;
   int scaleWidth = 50;
-  int colorWidth = int(scaleHeight/numColors);
-  scaleHeight = colorWidth*numColors;
+  int colorWidth = int(scaleHeight / numColors);
+  scaleHeight = colorWidth * numColors;
 
   QPointF topLeft(imageWidth * .625, imageHeight * .625);
 
@@ -307,17 +308,17 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
   //Get all the colors that we will need
 
   QVector<DREAM3D::Rgb> colorTable(numColors);
-  QVector<float> colors(3*numColors, 0.0);
+  QVector<float> colors(3 * numColors, 0.0);
   ColorTable::GetColorTable(numColors, colors);
 
-  float r=0.0, g=0.0, b=0.0;
+  float r = 0.0, g = 0.0, b = 0.0;
 
   for (int i = 0; i < numColors; i++)
   {
-    r = colors[3*i];
-    g = colors[3*i+1];
-    b = colors[3*i+2];
-    colorTable[i] = RgbColor::dRgb(r*255, g*255, b*255, 255);
+    r = colors[3 * i];
+    g = colors[3 * i + 1];
+    b = colors[3 * i + 2];
+    colorTable[i] = RgbColor::dRgb(r * 255, g * 255, b * 255, 255);
   }
 
   int penWidth = 1;
@@ -370,7 +371,7 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
   painter.drawText(statsPoint, label);
 
   label = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
-  statsPoint.setY( statsPoint.y() + fontHigh*1.5);
+  statsPoint.setY( statsPoint.y() + fontHigh * 1.5);
   painter.drawText(statsPoint, label);
 
 }
@@ -434,14 +435,14 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   painter.drawPath(circle);
 
   // Label the X Axis
-  painter.drawText(pImageWidth - 2*pxWide +4, pImageHeight / 2 + pxHigh / 3, "X");
+  painter.drawText(pImageWidth - 2 * pxWide + 4, pImageHeight / 2 + pxHigh / 3, "X");
   // Label the Y Axis
   pxWide = metrics.width(QString("Y"));
-  painter.drawText(pImageWidth / 2 - pxWide/2, pyOffset - 4, "Y");
+  painter.drawText(pImageWidth / 2 - pxWide / 2, pyOffset - 4, "Y");
 
   // Draw the name of the Pole Figure
   pxWide = metrics.width(label);
-  painter.drawText(pImageWidth/4, pxHigh, label);
+  painter.drawText(pImageWidth / 4, pxHigh, label);
 
   // Draw slightly transparent lines
   penWidth = 1;
@@ -492,7 +493,7 @@ QImage PoleFigureImageUtilities::CreateQImageFromRgbaArray(UInt8ArrayType* poleF
 //
 // -----------------------------------------------------------------------------
 QImage PoleFigureImageUtilities::Create3ImagePoleFigure(UInt8ArrayType* i0, UInt8ArrayType* i1, UInt8ArrayType* i2,
-                                                        PoleFigureConfiguration_t &config)
+                                                        PoleFigureConfiguration_t& config)
 {
 
   // Create a QImage that is the width of the first 2 images and the height of the first and third
@@ -519,8 +520,8 @@ QImage PoleFigureImageUtilities::Create3ImagePoleFigure(UInt8ArrayType* i0, UInt
 //  int pxWide = metrics.width(QString("Y"));
 
   painter.drawImage(QPoint(0, 0), img0); // Draw the first image in the upper Left
-  painter.drawImage(QPoint(pImageWidth/2, 0), img1); // Draw the first image in the upper Left
-  painter.drawImage(QPoint(0, pImageHeight/2), img2); // Draw the first image in the upper Left
+  painter.drawImage(QPoint(pImageWidth / 2, 0), img1); // Draw the first image in the upper Left
+  painter.drawImage(QPoint(0, pImageHeight / 2), img2); // Draw the first image in the upper Left
 
   drawScaleBar(painter, pImageWidth, pImageHeight, config);
 

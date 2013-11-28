@@ -125,7 +125,7 @@ FilterPipeline::Pointer H5FilterParametersReader::ReadPipelineFromFile(QString f
 
   // Loop over the items getting the "ClassName" attribute from each group
   QString classNameStr = "";
-  for (int i=0; i<groupList.size(); i++)
+  for (int i = 0; i < groupList.size(); i++)
   {
 
     QString iStr = QString::number(i);

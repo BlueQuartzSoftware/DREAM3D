@@ -54,12 +54,12 @@ class DREAM3DLib_EXPORT VertexArray
 
     typedef struct
     {
-        float pos[3];
+      float pos[3];
     } Vert_t;
 
     typedef struct
     {
-        double pos[3];
+      double pos[3];
     } VertD_t;
 
     typedef StructArray<Vert_t> VertexContainerType;
@@ -76,7 +76,7 @@ class DREAM3DLib_EXPORT VertexArray
      * @param name
      * @return
      */
-    static Pointer CreateArray(int32_t numElements, const QString &name);
+    static Pointer CreateArray(int32_t numElements, const QString& name);
 
     /**
      * @brief resizeArray
@@ -122,18 +122,18 @@ class DREAM3DLib_EXPORT VertexArray
      */
     Vert_t* getPointer(int32_t i);
 
-     /**
-     * @brief Returns reference to the Face_t at the index i
-     * @param i
-     * @return
-     */
+    /**
+    * @brief Returns reference to the Face_t at the index i
+    * @param i
+    * @return
+    */
     Vert_t& operator[](int32_t i);
 
-     /**
-     * @brief Returns reference to the Face_t at the index i
-     * @param i
-     * @return
-     */
+    /**
+    * @brief Returns reference to the Face_t at the index i
+    * @param i
+    * @return
+    */
     Vert_t& getVert(int32_t i);
 
 

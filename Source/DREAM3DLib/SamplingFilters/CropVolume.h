@@ -65,8 +65,8 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     //------ Required Cell Data
-        //------ Created Feature Data
-    
+    //------ Created Feature Data
+
     DREAM3D_INSTANCE_PROPERTY(int, XMin)
     DREAM3D_INSTANCE_PROPERTY(int, YMin)
     DREAM3D_INSTANCE_PROPERTY(int, ZMin)

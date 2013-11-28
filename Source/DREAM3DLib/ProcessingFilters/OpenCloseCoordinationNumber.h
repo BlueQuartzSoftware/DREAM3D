@@ -68,9 +68,9 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
     virtual ~OpenCloseCoordinationNumber();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-    
+
+    //------ Required Cell Data
+
     DREAM3D_INSTANCE_PROPERTY(bool, Loop)
     DREAM3D_INSTANCE_PROPERTY(int, CoordinationNumber)
 

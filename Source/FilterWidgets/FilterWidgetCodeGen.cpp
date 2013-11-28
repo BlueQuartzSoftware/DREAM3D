@@ -80,7 +80,7 @@ QMap<QString, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void copyFile(const QString &src, const QString &dest)
+void copyFile(const QString& src, const QString& dest)
 {
   if (src.isEmpty() == true || dest.isEmpty() == true)
   {
@@ -188,7 +188,7 @@ void createMarkdownCreatedArrayIndex()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createHeaderFile(const QString &group, const QString &filterName, AbstractFilter* filterPtr, const QString &outputPath)
+void createHeaderFile(const QString& group, const QString& filterName, AbstractFilter* filterPtr, const QString& outputPath)
 {
   extractHelpIndexEntries(filterPtr);
 
@@ -217,7 +217,8 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
   fprintf(f, "  This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "  If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
   fprintf(f, "  The code generated is based off values from the filter located at\n");
-  if (FILTER_INCLUDE_PREFIX().isEmpty() == true) {
+  if (FILTER_INCLUDE_PREFIX().isEmpty() == true)
+  {
     fprintf(f, "  %s/%s.h\n*/\n", group.toLatin1().data(), filterName.toLatin1().data());
   }
   else
@@ -235,7 +236,8 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
   fprintf(f, "#include \"PipelineBuilder/QFilterWidget.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/FilterParameters/FilterParameter.h\"\n\n");
-  if (FILTER_INCLUDE_PREFIX().isEmpty() == true) {
+  if (FILTER_INCLUDE_PREFIX().isEmpty() == true)
+  {
     fprintf(f, "#include \"%s/%s.h\"\n", group.toLatin1().data(), filterName.toLatin1().data());
   }
   else
@@ -408,21 +410,22 @@ size_t nonPrintables(char* buf, size_t bufSize)
 }
 
 
-int readLine(std::istream &in, char* buf, int bufSize)
+int readLine(std::istream& in, char* buf, int bufSize)
 {
 
   bool readAnotherLine = true;
   size_t gcount = 0;
-  while ( readAnotherLine == true && in.gcount() != 0 && in) {
+  while ( readAnotherLine == true && in.gcount() != 0 && in)
+  {
     // Zero out the buffer
     ::memset(buf, 0, bufSize);
     // Read a line up to a '\n' which will catch windows and unix line endings but
     // will leave a trailing '\r' at the end of the string
     in.getline(buf, bufSize, '\n');
     gcount = in.gcount();
-    if (gcount > 1 && buf[in.gcount()-2] == '\r')
+    if (gcount > 1 && buf[in.gcount() - 2] == '\r')
     {
-      buf[in.gcount()-2] = 0;
+      buf[in.gcount() - 2] = 0;
     }
     size_t len = strlen(buf);
     size_t np = nonPrintables(buf, bufSize);
@@ -438,7 +441,7 @@ int readLine(std::istream &in, char* buf, int bufSize)
 
 
 #define kBufferSize 1024
-void parseSourceFileForMarker(const QString filename, const QString marker, const QString &replace)
+void parseSourceFileForMarker(const QString filename, const QString marker, const QString& replace)
 {
 
   QString tempfile = filename + "_tmp";
@@ -460,9 +463,9 @@ void parseSourceFileForMarker(const QString filename, const QString marker, cons
     while( instream.getline(buf, kBufferSize, '\n') )
     {
       gcount = instream.gcount();
-      if (gcount > 1 && buf[instream.gcount()-2] == '\r')
+      if (gcount > 1 && buf[instream.gcount() - 2] == '\r')
       {
-        buf[instream.gcount()-2] = 0;
+        buf[instream.gcount() - 2] = 0;
       }
       if (marker.compare(buf) == 0)
       {
@@ -489,10 +492,10 @@ void parseSourceFileForMarker(const QString filename, const QString marker, cons
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createSourceFile( const QString &group,
-                       const QString &filter,
+void createSourceFile( const QString& group,
+                       const QString& filter,
                        QVector<FilterParameter::Pointer> options,
-                       const QString &outputPath)
+                       const QString& outputPath)
 {
 
   QString completePath = QDir::toNativeSeparators(outputPath);
@@ -585,8 +588,8 @@ void createSourceFile( const QString &group,
     QString typ = opt->getValueType();
 
     if(opt->getWidgetType() == FilterParameter::StringWidget || opt->getWidgetType() == FilterParameter::InputFileWidget
-       || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget
-       || opt->getWidgetType() == FilterParameter::OutputPathWidget)
+        || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget
+        || opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
       fprintf(f, "     { \n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
@@ -600,8 +603,8 @@ void createSourceFile( const QString &group,
       fprintf(f, "     {\n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-    //  fprintf(f, "           \n");
-    //  fprintf(f, "           ss << filter->get%s();\n", prop.toLatin1().data());
+      //  fprintf(f, "           \n");
+      //  fprintf(f, "           ss << filter->get%s();\n", prop.toLatin1().data());
       fprintf(f, "           w->setText( QString::number(filter->get%s()) );\n", prop.toLatin1().data());
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
@@ -856,7 +859,8 @@ void createSourceFile( const QString &group,
       QString typ = opt->getValueType();
       QString hl = opt->getHumanLabel();
       if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
-          && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget ) {
+          && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget )
+      {
         fprintf(f, "  if(cb->objectName().compare(\"%s\") == 0) {\n", prop.toLatin1().data());
         fprintf(f, "    m_%s = cb->currentText();\n  }\n", prop.toLatin1().data());
       }
@@ -875,7 +879,8 @@ void createSourceFile( const QString &group,
       QString prop = opt->getPropertyName();
       QString typ = opt->getValueType();
       QString hl = opt->getHumanLabel();
-      if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget ) {
+      if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget )
+      {
         fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data()); // Make sure we have a non null QWidget to deal with
 
         fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(dca);\n    }\n  }\n");
@@ -947,7 +952,7 @@ void createSourceFile( const QString &group,
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void createPreflightTestCode( const QString &group, const QString &filter)
+void createPreflightTestCode( const QString& group, const QString& filter)
 {
   QString s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Preflight_Test_Code_Fragment_1.h");
@@ -972,7 +977,7 @@ void createPreflightTestCode( const QString &group, const QString &filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   // if (true) return 0;
 

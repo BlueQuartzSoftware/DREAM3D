@@ -56,7 +56,7 @@
 */
 #define QFILTERWIDGET_SET_PROPERTY(type, prpty) \
   void set##prpty(type value, bool emitChanged = true) { this->m_##prpty = value;\
-  if (true == emitChanged) { emit parametersChanged();} }
+    if (true == emitChanged) { emit parametersChanged();} }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
@@ -73,14 +73,14 @@
 
 #define QFILTERWIDGET_INSTANCE_QPROPERTY(type, prpty)\
   private:\
-    type m_##prpty;\
+  type m_##prpty;\
   public:\
-    Q_PROPERTY(type ##prpty READ get##prpty WRITE set##prpty)\
+  Q_PROPERTY(type ##prpty READ get##prpty WRITE set##prpty)\
   public slots:\
-    QFILTERWIDGET_SET_PROPERTY(type, prpty)\
+  QFILTERWIDGET_SET_PROPERTY(type, prpty)\
   public:\
-    QFILTERWIDGET_GET_PROPERTY(type, prpty)\
-
+  QFILTERWIDGET_GET_PROPERTY(type, prpty)\
+   
 #endif
 
 
@@ -124,7 +124,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual void emitParametersChanged();
 
-   // virtual QFilterWidget* createDeepCopy();
+    // virtual QFilterWidget* createDeepCopy();
 
     virtual QString  getFilterGroup();
     virtual QString  getFilterSubGroup();
@@ -143,7 +143,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     /**
      * @brief This method updates a combo box that is holding a list of Array Names from the data container
      */
-    virtual void updateArrayNameComboBox(const QList<QString> &arrayNames, QString propertyName);
+    virtual void updateArrayNameComboBox(const QList<QString>& arrayNames, QString propertyName);
 
     /**
      * @brief updateArraySelectionWidget This method allows the ArraySelectionWidget to update it's lists of arrays
@@ -178,23 +178,23 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual void selectOutputPath();
     virtual void updateComboBoxValue(int v);
     virtual void updateArrayNameComboBoxValue(int v);
-    virtual void updateArrayNameComboBoxValue(const QString &text);
+    virtual void updateArrayNameComboBoxValue(const QString& text);
     virtual void updateQSpinBoxValue(int v);
     virtual void updateQDoubleSpinBoxValue(double v);
     virtual void updateQCheckBoxValue(int v);
-    virtual void updateQLineEditStringValue(const QString &v);
-    virtual void updateLineEdit(const QString &v);
+    virtual void updateQLineEditStringValue(const QString& v);
+    virtual void updateLineEdit(const QString& v);
     virtual void updateArraySelectionWidget();
-    virtual void updateIntVec3Widget(const QString &v);
-    virtual void updateFloatVec3Widget(const QString &v);
+    virtual void updateIntVec3Widget(const QString& v);
+    virtual void updateFloatVec3Widget(const QString& v);
     virtual void updateComparisonSelectionWidget();
     virtual void updateAxisAngleWidget();
     virtual void setIsSelected(bool b);
 
-   /**
-      *@brief This function initializes the right-click menu for each filter
-      */
-  void initFilterMenu();
+    /**
+       *@brief This function initializes the right-click menu for each filter
+       */
+    void initFilterMenu();
 
     /**
       * @brief Sets the style of the Widget to indicate a selected or non-selected
@@ -232,34 +232,34 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual QString getFileExtension(QString propName);
     virtual QString getFileType(QString propName);
 
-    void setupVertexArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
-    void setupEdgeArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
-    void setupFaceArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
-    void setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
-    void setupFeatureArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
-    void setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
+    void setupVertexArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label);
+    void setupEdgeArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label);
+    void setupFaceArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label);
+    void setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label);
+    void setupFeatureArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label);
+    void setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label);
     void setupArraySelectionWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
     void setupIntVec3Widget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
     void setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
     void setupComparisonArraysWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label ,
                                      FilterParameter::WidgetType arrayListType);
     void setupAxisAngleWidget(QFormLayout* frmLayout, int optIndex,
-                                         FilterParameter* option, QLabel* label );
+                              FilterParameter* option, QLabel* label );
 
   private:
-    QRect										m_DeleteRect;
-    QPoint										dragStartPosition;
-    QTimer*										m_timer;
-    unsigned char								m_CurrentBorderColorFactor;
-    unsigned char								m_BorderIncrement;
-    QString										m_BorderColorStyle;
-    bool										m_IsSelected;
-    bool										m_HasPreflightErrors;
-    bool										m_HasPreflightWarnings;
-    static QString								m_OpenDialogLastDirectory;
-  QMenu										m_FilterMenu;
-  QAction*									m_actionFilterHelp;
-  QAction*									m_actionRemoveFilter;
+    QRect                   m_DeleteRect;
+    QPoint                    dragStartPosition;
+    QTimer*                   m_timer;
+    unsigned char               m_CurrentBorderColorFactor;
+    unsigned char               m_BorderIncrement;
+    QString                   m_BorderColorStyle;
+    bool                    m_IsSelected;
+    bool                    m_HasPreflightErrors;
+    bool                    m_HasPreflightWarnings;
+    static QString                m_OpenDialogLastDirectory;
+    QMenu                   m_FilterMenu;
+    QAction*                  m_actionFilterHelp;
+    QAction*                  m_actionRemoveFilter;
 
 
 

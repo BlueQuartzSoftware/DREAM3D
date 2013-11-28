@@ -407,7 +407,7 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t features, 
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = m->getPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
@@ -416,7 +416,7 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t features, 
 
   m_SurfaceMeshNodeTypePtr = sm->createNonPrereqArray<int8_t, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, 0, 1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-{ m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 2;
   DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
@@ -475,7 +475,7 @@ void M3CSliceBySlice::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, 0, 0);  
+  dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -1440,8 +1440,8 @@ void M3CSliceBySlice::get_nodes(int cst, int ord, int nidx[2], int* nid, int NSP
 //
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::get_featurenames(int cst, int ord, int pID[2], int* pfeaturename,
-                                     int NSP, int* wrappedDims,
-                                     DataArray<int32_t>::Pointer voxelsPtr)
+                                       int NSP, int* wrappedDims,
+                                       DataArray<int32_t>::Pointer voxelsPtr)
 {
   int i;
   int pixTemp, tempfeaturename;
@@ -1719,12 +1719,12 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
       }\
       cTrianglePtr->Resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
     }\
-  StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
-  cTriangle[ctid].node_id[0] = n0;\
-  cTriangle[ctid].node_id[1] = n1;\
-  cTriangle[ctid].node_id[2] = n2;\
-  cTriangle[ctid].nSpin[0] = label0;\
-  cTriangle[ctid].nSpin[1] = label1;\
+    StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
+    cTriangle[ctid].node_id[0] = n0;\
+    cTriangle[ctid].node_id[1] = n1;\
+    cTriangle[ctid].node_id[2] = n2;\
+    cTriangle[ctid].nSpin[0] = label0;\
+    cTriangle[ctid].nSpin[1] = label1;\
   }
 
 
@@ -2531,10 +2531,10 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc
 //
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::arrange_featurenames(int numT, int zID, int NSP, int* wrappedDims, float* res,
-                                         StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                                         VertexArray::Pointer cVertexPtr,
-                                         DataArray<int32_t>::Pointer voxelsPtr,
-                                         StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
+                                           StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
+                                           VertexArray::Pointer cVertexPtr,
+                                           DataArray<int32_t>::Pointer voxelsPtr,
+                                           StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
 {
   //int i, j;
   int cnode;

@@ -69,10 +69,10 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-        //------ Created Feature Data
-    
+
+    //------ Required Cell Data
+    //------ Created Feature Data
+
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedFeatureSize)
     DREAM3D_INSTANCE_PROPERTY(bool, ApplyToAll)
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)

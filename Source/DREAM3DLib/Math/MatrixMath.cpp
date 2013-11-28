@@ -259,9 +259,9 @@ int MatrixMath::FindIndexOfMaxVal3x1(float g[3])
   float a = fabs(g[0]);
   float b = fabs(g[1]);
   float c = fabs(g[2]);
-  if(a >= b && a >= c) return 0;
-  else if(b >= a && b >= c) return 1;
-  else return 2;
+  if(a >= b && a >= c) { return 0; }
+  else if(b >= a && b >= c) { return 1; }
+  else { return 2; }
 }
 
 // -----------------------------------------------------------------------------

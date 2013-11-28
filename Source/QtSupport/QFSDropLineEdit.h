@@ -43,15 +43,15 @@
 */
 class QFSDropLineEdit : public QLineEdit
 {
-	Q_OBJECT
+    Q_OBJECT
 
-public:
-	QFSDropLineEdit(QWidget *parent = NULL);
+  public:
+    QFSDropLineEdit(QWidget* parent = NULL);
 
-	void dragEnterEvent(QDragEnterEvent *event);
-	void dropEvent(QDropEvent *event);
+    void dragEnterEvent(QDragEnterEvent* event);
+    void dropEvent(QDropEvent* event);
 
-private:
+  private:
 
 };
 

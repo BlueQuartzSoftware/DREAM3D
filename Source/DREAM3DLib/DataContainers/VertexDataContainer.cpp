@@ -51,7 +51,7 @@
 //
 // -----------------------------------------------------------------------------
 VertexDataContainer::VertexDataContainer() :
-DataContainer()
+  DataContainer()
 {
   setName(DREAM3D::HDF5::VertexDataContainerName);
 }

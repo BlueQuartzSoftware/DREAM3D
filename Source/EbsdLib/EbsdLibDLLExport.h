@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -42,15 +42,15 @@
 
 
 #if defined (_MSC_VER)
-  #pragma warning(disable: 4251)
-  #pragma warning(disable: 4710)
-  #pragma warning(disable: 4820)
-  #pragma warning(disable: 4668)
-  #pragma warning(disable: 4265)
-  #pragma warning(disable: 4189)
-  #pragma warning(disable: 4640)
-  #pragma warning(disable: 4996)
-  #pragma warning(disable: 4548)
+#pragma warning(disable: 4251)
+#pragma warning(disable: 4710)
+#pragma warning(disable: 4820)
+#pragma warning(disable: 4668)
+#pragma warning(disable: 4265)
+#pragma warning(disable: 4189)
+#pragma warning(disable: 4640)
+#pragma warning(disable: 4996)
+#pragma warning(disable: 4548)
 #endif
 
 /* Cmake will define EbsdLib_EXPORTS on Windows when it
@@ -62,24 +62,24 @@ building the MXADatModel DLL on windows.
 
 #if defined (EbsdLib_BUILT_AS_DYNAMIC_LIB)
 
-  #if defined (EbsdLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
-    #if defined (_MSC_VER)  /* MSVC Compiler Case */
-      #define  EbsdLib_EXPORT __declspec(dllexport)
-    #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-      #define EbsdLib_EXPORT __attribute__ ((visibility("default")))
-    #endif
-  #else  /* Importing the DLL into another project */
-    #if defined (_MSC_VER)  /* MSVC Compiler Case */
-      #define  EbsdLib_EXPORT __declspec(dllimport)
-    #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
-      #define EbsdLib_EXPORT __attribute__ ((visibility("default")))
-    #endif
-  #endif
+#if defined (EbsdLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
+#if defined (_MSC_VER)  /* MSVC Compiler Case */
+#define  EbsdLib_EXPORT __declspec(dllexport)
+#elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
+#define EbsdLib_EXPORT __attribute__ ((visibility("default")))
+#endif
+#else  /* Importing the DLL into another project */
+#if defined (_MSC_VER)  /* MSVC Compiler Case */
+#define  EbsdLib_EXPORT __declspec(dllimport)
+#elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
+#define EbsdLib_EXPORT __attribute__ ((visibility("default")))
+#endif
+#endif
 #endif
 
 /* If EbsdLib_EXPORT was never defined, define it here */
 #ifndef EbsdLib_EXPORT
-  #define EbsdLib_EXPORT
+#define EbsdLib_EXPORT
 #endif
 
 

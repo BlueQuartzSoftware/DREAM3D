@@ -63,8 +63,8 @@ class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGen
     ~QGenerateEnsembleStatisticsWidget();
 
     virtual AbstractFilter::Pointer getFilter(bool defaultValues);
-    void writeOptions(QSettings &prefs);
-    void readOptions(QSettings &prefs);
+    void writeOptions(QSettings& prefs);
+    void readOptions(QSettings& prefs);
 
     QFilterWidget* createDeepCopy();
 

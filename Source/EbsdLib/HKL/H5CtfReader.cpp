@@ -52,7 +52,7 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5CtfReader::H5CtfReader() :
-CtfReader(),
+  CtfReader(),
   m_ReadAllArrays(true)
 {
 }
@@ -126,11 +126,11 @@ int H5CtfReader::readFile()
   }
 
   // Read all the header information
- // qDebug() << "H5CtfReader:: reading Header .. ";
+// qDebug() << "H5CtfReader:: reading Header .. ";
   err = readHeader(gid);
 
   // Read and transform data
- // qDebug() << "H5CtfReader:: Reading Data .. ";
+// qDebug() << "H5CtfReader:: Reading Data .. ";
   err = readData(gid);
 
   err = H5Gclose(gid);

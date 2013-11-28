@@ -60,7 +60,7 @@ class QComboBox;
  */
 class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInitializeSyntheticVolumeWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     QInitializeSyntheticVolumeWidget(QWidget* parent = NULL);
@@ -68,11 +68,11 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
 
     virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
-    virtual void writeOptions(QSettings &prefs);
-    virtual void readOptions(QSettings &prefs);
+    virtual void writeOptions(QSettings& prefs);
+    virtual void readOptions(QSettings& prefs);
 
     int estimate_numFeatures(int xpoints, int ypoints, int zpoints,
-                           float xres, float yres, float zres);
+                             float xres, float yres, float zres);
     void estimateNumFeaturesSetup();
 
     QFilterWidget* createDeepCopy();
@@ -87,7 +87,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
   protected slots:
     // Auto Hookup Slots
     void on_m_InputFileBtn_clicked();
-    void on_m_InputFile_textChanged(const QString &text);
+    void on_m_InputFile_textChanged(const QString& text);
     void on_m_XPoints_valueChanged(int v);
     void on_m_YPoints_valueChanged(int v);
     void on_m_ZPoints_valueChanged(int v);
@@ -96,7 +96,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
     void on_m_ZResolution_valueChanged(double v);
 
   private:
-  //  InitializeSyntheticVolume::Pointer m_Filter;
+    //  InitializeSyntheticVolume::Pointer m_Filter;
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 

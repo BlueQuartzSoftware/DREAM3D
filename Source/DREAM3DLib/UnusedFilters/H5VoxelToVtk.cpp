@@ -56,23 +56,26 @@
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
-typedef struct {
-    int xpoints;
-    int ypoints;
-    int zpoints;
-    float resx; float resy; float resz;
-    int* feature_indicies;
-    int* phases;
-    float* euler1s;
-    float* euler2s;
-    float* euler3s;
-    float* quats;
-    unsigned int* crystruct;
+typedef struct
+{
+  int xpoints;
+  int ypoints;
+  int zpoints;
+  float resx;
+  float resy;
+  float resz;
+  int* feature_indicies;
+  int* phases;
+  float* euler1s;
+  float* euler2s;
+  float* euler3s;
+  float* quats;
+  unsigned int* crystruct;
 } Test;
 
 
 
-void updateProgressAndMessage(const std::string &msg, int prog)
+void updateProgressAndMessage(const std::string& msg, int prog)
 {
   std::cout << prog << "% - " << msg << std::endl;
 }
@@ -84,7 +87,7 @@ void pipelineProgress(int value)
   std::cout << value << "%" << std::endl;
 }
 
-void pipelineProgressMessage(const std::string &msg)
+void pipelineProgressMessage(const std::string& msg)
 {
   std::cout << msg << std::endl;
 }
@@ -94,7 +97,8 @@ void pipelineErrorMessage(const char* message)
   std::cout << "Error Message: " << message << std::endl;
 }
 
-void setErrorCondition(int err) {
+void setErrorCondition(int err)
+{
   std::cout << "Error Condition: " << err << std::endl;
 }
 
@@ -103,7 +107,7 @@ void pipelineFinished()
   std::cout << "Pipeline Complete." << std::endl;
 }
 
-void setErrorMessage(const std::string &msg)
+void setErrorMessage(const std::string& msg)
 {
   std::cout << msg << std::endl;
 }
@@ -116,7 +120,7 @@ std::string getNameOfClass()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   std::cout << "Starting Conversion of H5Voxel to VTK with Feature ID and IPF Colors" << std::endl;
   if (argc < 3)
@@ -145,7 +149,7 @@ int main(int argc, char **argv)
   if (err < 0)
   {
     setErrorCondition(err);
- //   addErrorMessages(h5Reader->getErrorMessages());
+//   addErrorMessages(h5Reader->getErrorMessages());
     return EXIT_FAILURE;
   }
   m->getDimensions(dcDims);
@@ -159,16 +163,16 @@ int main(int argc, char **argv)
    * size of the volume can fit in the address space of the program
    */
 #if   (CMP_SIZEOF_SSIZE_T==4)
-    int64_t max = std::numeric_limits<size_t>::max();
+  int64_t max = std::numeric_limits<size_t>::max();
 #else
-    int64_t max = std::numeric_limits<int64_t>::max();
+  int64_t max = std::numeric_limits<int64_t>::max();
 #endif
   if (dims[0] * dims[1] * dims[2] > max )
   {
     err = -1;
     std::stringstream s;
     s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
-                << "' is greater than this program can hold. Try the 64 bit version.";
+      << "' is greater than this program can hold. Try the 64 bit version.";
     setErrorCondition(err);
     setErrorMessage(s.str());
     return EXIT_FAILURE;
@@ -179,7 +183,7 @@ int main(int argc, char **argv)
     err = -1;
     std::stringstream s;
     s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
-    s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+    s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
     setErrorCondition(err);
     setErrorMessage(s.str());
     return EXIT_FAILURE;
@@ -204,11 +208,12 @@ int main(int argc, char **argv)
   int64_t totalPoints = m->getTotalPoints();
   int32_t* m_FeatureIds = NULL;
   m_FeatureIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::FeatureIds, totalPoints, 1, NULL);
-    if (0 == m_FeatureIds ) {
-      ss << "Filter " << getNameOfClass() << " requires the data array '" <<
-      "DREAM3D" << "::" << "CellData" << "::" <<  "FeatureIds" << "' to already be created prior to execution." << std::endl;
-      setErrorCondition(-300);
-    }
+  if (0 == m_FeatureIds )
+  {
+    ss << "Filter " << getNameOfClass() << " requires the data array '" <<
+       "DREAM3D" << "::" << "CellData" << "::" <<  "FeatureIds" << "' to already be created prior to execution." << std::endl;
+    setErrorCondition(-300);
+  }
 
   WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::FeatureIds, m_FeatureIds)
 

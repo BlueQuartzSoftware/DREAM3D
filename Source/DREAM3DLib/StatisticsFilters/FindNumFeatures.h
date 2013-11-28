@@ -60,10 +60,10 @@ class DREAM3DLib_EXPORT FindNumFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    
-   //------ Required Feature Data
-        //------ Created Ensemble Data
-    
+
+    //------ Required Feature Data
+    //------ Created Ensemble Data
+
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

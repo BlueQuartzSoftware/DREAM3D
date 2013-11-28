@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceEnsembleAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-            DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
+    DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, MisAxis)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 

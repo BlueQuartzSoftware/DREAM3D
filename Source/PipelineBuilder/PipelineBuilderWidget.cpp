@@ -88,7 +88,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, FilterManager *fm, QWidget *parent) :
+PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, FilterManager* fm, QWidget* parent) :
   DREAM3DPluginFrame(parent),
   m_FilterPipeline(NULL),
   m_MenuPipeline(NULL),
@@ -280,7 +280,7 @@ PipelineViewWidget* PipelineBuilderWidget::getPipelineViewWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::openPipelineFile(const QString &filePath, QSettings::Format format)
+void PipelineBuilderWidget::openPipelineFile(const QString& filePath, QSettings::Format format)
 {
   //m_PipelineFromFile->clear();
 
@@ -302,9 +302,9 @@ void PipelineBuilderWidget::openPipelineFile(const QString &filePath, QSettings:
   }
   else
   {
-        QMessageBox::critical(this, "Unrecognized Pipeline File",
-                            QString("The pipeline file is of an unrecognized format or file extension (.ini, .txt or .dream3d"),
-                            QMessageBox::Ok, QMessageBox::Ok);
+    QMessageBox::critical(this, "Unrecognized Pipeline File",
+                          QString("The pipeline file is of an unrecognized format or file extension (.ini, .txt or .dream3d"),
+                          QMessageBox::Ok, QMessageBox::Ok);
   }
 
   // Load the pipeline into the View widget, clearing out any existing pipeline
@@ -316,7 +316,7 @@ void PipelineBuilderWidget::openPipelineFile(const QString &filePath, QSettings:
 // The user dropped a file onto the Pipeline View Widget. We now have to figure
 // out how to load the pipeline, or even if we can.
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::acceptPipelineFileDrop(const QString &filePath)
+void PipelineBuilderWidget::acceptPipelineFileDrop(const QString& filePath)
 {
   QFileInfo fi (filePath);
   QString extension = fi.suffix();
@@ -330,8 +330,8 @@ void PipelineBuilderWidget::acceptPipelineFileDrop(const QString &filePath)
     // so setup that Message Box to get from the user what they want to do.
     DREAM3DFileDragMessageBox* msgBox = new DREAM3DFileDragMessageBox(this);
     msgBox->setFilePath(filePath);
-    connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString &)), this, SLOT(extractPipelineFromDREAM3DFile(const QString &)));
-    connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString &)), this, SLOT(openPipelineFile(const QString &)));
+    connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString&)), this, SLOT(extractPipelineFromDREAM3DFile(const QString&)));
+    connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString&)), this, SLOT(openPipelineFile(const QString&)));
     // We could figure out how to get the return code from the button that was clicked instead of using Signals/Slots
     msgBox->exec();
 
@@ -341,7 +341,7 @@ void PipelineBuilderWidget::acceptPipelineFileDrop(const QString &filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::addDREAM3DReaderFilter(const QString &filePath)
+void PipelineBuilderWidget::addDREAM3DReaderFilter(const QString& filePath)
 {
 
 }
@@ -349,7 +349,7 @@ void PipelineBuilderWidget::addDREAM3DReaderFilter(const QString &filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readGeometrySettings(QSettings &prefs)
+void PipelineBuilderWidget::readGeometrySettings(QSettings& prefs)
 {
   prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGeomertry);
   splitter_1->restoreState(prefs.value("splitter_1").toByteArray());
@@ -499,7 +499,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::writeGeometrySettings(QSettings &prefs)
+void PipelineBuilderWidget::writeGeometrySettings(QSettings& prefs)
 {
   prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGeomertry);
   prefs.setValue("splitter_1", splitter_1->saveState());
@@ -512,7 +512,8 @@ void PipelineBuilderWidget::writeGeometrySettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList) {
+  foreach (QWidget * w, m_WidgetList)
+  {
     w->setEnabled(b);
   }
 }
@@ -654,7 +655,8 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
     }
     parent = parent->parent();
   }
-  if (parent == NULL) {
+  if (parent == NULL)
+  {
     return;
   }
 
@@ -719,7 +721,7 @@ bool PipelineBuilderWidget::checkFavoriteTitle(QString favoritePath, QString new
   // Put all children (favorites) in a list
   QList<QTreeWidgetItem*> favoritesList;
   int numOfChildren = item->parent()->childCount();
-  for (int i=0; i<numOfChildren; i++)
+  for (int i = 0; i < numOfChildren; i++)
   {
     favoritesList.append( item->parent()->child(i) );
   }
@@ -744,7 +746,7 @@ bool PipelineBuilderWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favori
   QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
   QString displayText = "";
 
-  for (int i=0; i<favoritesList.size(); i++)
+  for (int i = 0; i < favoritesList.size(); i++)
   {
     QSettings currentItemPrefs(favoritesList[i]->data(0, Qt::UserRole).toString(), QSettings::IniFormat);
     currentItemPrefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
@@ -810,7 +812,7 @@ QString PipelineBuilderWidget::writeNewFavoriteFilePath(QString newFavoriteTitle
   QFileInfo original(favoritePath);
   QString newPath = original.canonicalPath() + QDir::separator() + newFavoriteTitle;
   if (!original.completeSuffix().isEmpty())
-    newPath += "." + original.completeSuffix();
+  { newPath += "." + original.completeSuffix(); }
 
   newPath = QDir::toNativeSeparators(newPath);
 
@@ -875,7 +877,8 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
     }
     parent = parent->parent();
   }
-  if (parent == NULL) {
+  if (parent == NULL)
+  {
     return;
   }
 
@@ -897,7 +900,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collection &factories)
+void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collection& factories)
 {
   // Clear all the current items from the list
   filterList->clear();
@@ -906,7 +909,8 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     IFilterWidgetFactory::Pointer wigFactory = factory.value();
-    if (NULL == wigFactory.get() ) {
+    if (NULL == wigFactory.get() )
+    {
       continue;
     }
     QString humanName = (wigFactory->getFilterHumanLabel());
@@ -936,7 +940,7 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem * item, QListWidgetItem * previous )
+void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem* item, QListWidgetItem* previous )
 {
 
 }
@@ -975,7 +979,8 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     IFilterWidgetFactory::Pointer wigFactory = factory.value();
-    if (NULL == wigFactory.get() ) {
+    if (NULL == wigFactory.get() )
+    {
       continue;
     }
     QString humanName = (wigFactory->getFilterHumanLabel());
@@ -1085,7 +1090,8 @@ void PipelineBuilderWidget::clearMessagesTable()
   // clear all the error messages
   m_PipelineErrorList.clear();
 
-  for (int i=0; i<errorTableWidget->rowCount(); ++i) {
+  for (int i = 0; i < errorTableWidget->rowCount(); ++i)
+  {
     errorTableWidget->removeRow(i);
   }
   errorTableWidget->setRowCount(0);
@@ -1107,7 +1113,7 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
 
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
-    if(m_FilterPipeline!= NULL)
+    if(m_FilterPipeline != NULL)
     {
       //qDebug() << "canceling from GUI...." << "\n";
       emit cancelPipeline();
@@ -1188,7 +1194,8 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
 void PipelineBuilderWidget::pipelineComplete()
 {
   // qDebug() << "PipelineBuilderWidget::PipelineBuilder_Finished()" << "\n";
-  if (m_hasErrors) {
+  if (m_hasErrors)
+  {
     displayDialogBox(("Pipeline Errors"),
                      ("Errors occurred during processing.\nPlease check the error table for more information."),
                      QMessageBox::Critical);
@@ -1227,38 +1234,38 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       msgColor.setRed(255);
       msgColor.setGreen(191);
       msgColor.setBlue(193);
-    {
-      QBrush msgBrush(msgColor);
-
-      QString msgDesc = (msg.getMessageText());
-      int msgCode = msg.getMessageCode();
-
-      int rc = errorTableWidget->rowCount();
-
-      errorTableWidget->insertRow(rc);
-
-      QString msgPrefix = (msg.getMessagePrefix());
-      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
-      filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
-      QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
-      QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
-      codeWidgetItem->setTextAlignment(Qt::AlignCenter);
-
-      filterNameWidgetItem->setBackground(msgBrush);
-      descriptionWidgetItem->setBackground(msgBrush);
-      codeWidgetItem->setBackground(msgBrush);
-
-      if (hyperlinkLabel == NULL)
       {
-        errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+        QBrush msgBrush(msgColor);
+
+        QString msgDesc = (msg.getMessageText());
+        int msgCode = msg.getMessageCode();
+
+        int rc = errorTableWidget->rowCount();
+
+        errorTableWidget->insertRow(rc);
+
+        QString msgPrefix = (msg.getMessagePrefix());
+        QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
+        filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+        QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
+        QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
+        codeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+        filterNameWidgetItem->setBackground(msgBrush);
+        descriptionWidgetItem->setBackground(msgBrush);
+        codeWidgetItem->setBackground(msgBrush);
+
+        if (hyperlinkLabel == NULL)
+        {
+          errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+        }
+        else
+        {
+          errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+        }
+        errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
+        errorTableWidget->setItem(rc, 2, codeWidgetItem);
       }
-      else
-      {
-        errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-      }
-      errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
-      errorTableWidget->setItem(rc, 2, codeWidgetItem);
-    }
       break;
 
     case PipelineMessage::Warning:
@@ -1267,40 +1274,40 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       msgColor.setGreen(254);
       msgColor.setBlue(137);
 
-    {
-      QBrush msgBrush(msgColor);
-
-      QString msgName = (msg.getMessagePrefix());
-      QString msgDesc = (msg.getMessageText());
-      int msgCode = msg.getMessageCode();
-
-      QTableWidget* msgTableWidget = m_PipelineViewWidget->getTableWidget();
-
-      int rc = msgTableWidget->rowCount();
-
-      msgTableWidget->insertRow(rc);
-
-      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
-      filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
-      QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
-      QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
-      codeWidgetItem->setTextAlignment(Qt::AlignCenter);
-
-      filterNameWidgetItem->setBackground(msgBrush);
-      descriptionWidgetItem->setBackground(msgBrush);
-      codeWidgetItem->setBackground(msgBrush);
-
-      if (hyperlinkLabel == NULL)
       {
-        msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
+        QBrush msgBrush(msgColor);
+
+        QString msgName = (msg.getMessagePrefix());
+        QString msgDesc = (msg.getMessageText());
+        int msgCode = msg.getMessageCode();
+
+        QTableWidget* msgTableWidget = m_PipelineViewWidget->getTableWidget();
+
+        int rc = msgTableWidget->rowCount();
+
+        msgTableWidget->insertRow(rc);
+
+        QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
+        filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+        QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
+        QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
+        codeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+        filterNameWidgetItem->setBackground(msgBrush);
+        descriptionWidgetItem->setBackground(msgBrush);
+        codeWidgetItem->setBackground(msgBrush);
+
+        if (hyperlinkLabel == NULL)
+        {
+          msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
+        }
+        else
+        {
+          msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+        }
+        msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
+        msgTableWidget->setItem(rc, 2, codeWidgetItem);
       }
-      else
-      {
-        msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-      }
-      msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
-      msgTableWidget->setItem(rc, 2, codeWidgetItem);
-    }
       break;
 
     case PipelineMessage::StatusValue:
@@ -1333,7 +1340,8 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::addProgressMessage(QString message)
 {
-  if (NULL != this->statusBar()) {
+  if (NULL != this->statusBar())
+  {
     this->statusBar()->showMessage(message);
   }
 }
@@ -1394,7 +1402,8 @@ void PipelineBuilderWidget::addFavorite(QString favoriteTitle)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::actionAddFavorite_triggered() {
+void PipelineBuilderWidget::actionAddFavorite_triggered()
+{
   AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget(this);
   addfavoriteDialog->exec();
 

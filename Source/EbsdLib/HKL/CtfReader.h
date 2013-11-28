@@ -109,8 +109,8 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * @brief Returns the pointer to the data for a given feature
      * @param featureName The name of the feature to return the pointer to.
      */
-    void* getPointerByName(const QString &featureName);
-    void setPointerByName(const QString &name, void* p);
+    void* getPointerByName(const QString& featureName);
+    void setPointerByName(const QString& name, void* p);
 
 
 
@@ -119,9 +119,9 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * primitive type that the data is stored as (Int, Float, etc).
      * @param featureName The name of the feature.
      */
-    Ebsd::NumType getPointerType(const QString &featureName);
-    int getTypeSize(const QString &featureName);
-    DataParser::Pointer getParser(const QString &featureName, void* ptr, size_t size);
+    Ebsd::NumType getPointerType(const QString& featureName);
+    int getTypeSize(const QString& featureName);
+    DataParser::Pointer getParser(const QString& featureName, void* ptr, size_t size);
 
     QList<QString> getColumnNames();
 
@@ -154,7 +154,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     virtual int getYDimension();
     virtual void setYDimension(int ydim);
 
-    virtual void printHeader(std::ostream &out);
+    virtual void printHeader(std::ostream& out);
 
   protected:
 
@@ -168,7 +168,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * @param headerLines
      * @return
      */
-    int getHeaderLines(QFile &reader, QList<QByteArray> &headerLines);
+    int getHeaderLines(QFile& reader, QList<QByteArray>& headerLines);
 
     /**
     * Checks that the line is the header of the columns for the data.
@@ -178,18 +178,18 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     * @return <code>true</code> if the line is the columns header line,
     *         <code>false</code> otherwise
     */
-    bool isDataHeaderLine(QVector<QString> &columns);
+    bool isDataHeaderLine(QVector<QString>& columns);
 
     /**
     *
     */
-    int parseHeaderLines(QList<QByteArray> &headerLines);
+    int parseHeaderLines(QList<QByteArray>& headerLines);
 
-  /**
-     * @brief
-     * @param in The input file stream to read from
-     */
-    int readData(QFile &in);
+    /**
+       * @brief
+       * @param in The input file stream to read from
+       */
+    int readData(QFile& in);
 
     /**
     * @brief Reads a line of Data from the ASCII based file
@@ -200,7 +200,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     * @param yCells Number of Y Data Points
     * @param col The current Column of Data
     */
-    void parseDataLine(QByteArray &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
+    void parseDataLine(QByteArray& line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented

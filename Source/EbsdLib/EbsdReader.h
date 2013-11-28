@@ -90,7 +90,7 @@ class EbsdLib_EXPORT EbsdReader
      * @brief Appends text to the current Original Header Text
      * @param more The text to be appended
      */
-    void appendOriginalHeader(const QString &more);
+    void appendOriginalHeader(const QString& more);
 
 
     /* These variables pertain to the memory that this class or subclass will allocate
@@ -132,14 +132,14 @@ class EbsdLib_EXPORT EbsdReader
      * @brief Returns the pointer to the data for a given feature
      * @param featureName The name of the feature to return the pointer to.
      */
-    virtual void* getPointerByName(const QString &featureName) = 0;
+    virtual void* getPointerByName(const QString& featureName) = 0;
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
      * @param featureName The name of the feature.
      */
-    virtual Ebsd::NumType getPointerType(const QString &featureName) = 0;
+    virtual Ebsd::NumType getPointerType(const QString& featureName) = 0;
 
     /**
     * @brief Reads the complete EBSD data file storing all columns of data and the
@@ -170,36 +170,36 @@ class EbsdLib_EXPORT EbsdReader
      * also optionally produce SSE aligned memory for use with SSE intrinsics
      * @return Pointer to allocated memory
      */
-      template<typename T>
-      T* allocateArray(size_t numberOfElements)
-      {
-  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-        T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-  #else
-        //T*  m_buffer = new T[numberOfElements];
-        T* m_buffer = static_cast<T*>(malloc(sizeof(T) * numberOfElements));
-  #endif
-        return m_buffer;
-      }
+    template<typename T>
+    T* allocateArray(size_t numberOfElements)
+    {
+#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+      T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
+#else
+      //T*  m_buffer = new T[numberOfElements];
+      T* m_buffer = static_cast<T*>(malloc(sizeof(T) * numberOfElements));
+#endif
+      return m_buffer;
+    }
 
     /**
      * @brief Deallocates memory that has been previously allocated. This will set the
      * value of the pointer passed in as the argument to NULL.
      * @param ptr The pointer to be freed.
      */
-      template<typename T>
-      void deallocateArrayData(T* &ptr)
+    template<typename T>
+    void deallocateArrayData(T*& ptr)
+    {
+      if (ptr != NULL && this->m_ManageMemory == true)
       {
-        if (ptr != NULL && this->m_ManageMemory == true)
-        {
-  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-          _mm_free(ptr );
-  #else
-          free(ptr);
-  #endif
-          ptr = NULL;
-        }
+#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+        _mm_free(ptr );
+#else
+        free(ptr);
+#endif
+        ptr = NULL;
       }
+    }
 
   protected:
     QMap<QString, EbsdHeaderEntry::Pointer> m_HeaderMap;

@@ -70,13 +70,13 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-        //------ Created Cell Data
-        //------ Required Feature Data
-            //------ Created Feature Data
-            //------ Required Ensemble Data
-    
+
+    //------ Required Cell Data
+    //------ Created Cell Data
+    //------ Required Feature Data
+    //------ Created Feature Data
+    //------ Required Ensemble Data
+
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)

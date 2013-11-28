@@ -72,10 +72,10 @@ class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-   //------ Required Cell Data
+    //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ScalarArrayName)
     //------ Created Cell Data
-        //------ Created Feature Data
+    //------ Created Feature Data
 
     DREAM3D_INSTANCE_PROPERTY(float, ScalarTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)

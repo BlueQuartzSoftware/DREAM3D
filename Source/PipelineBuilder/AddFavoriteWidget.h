@@ -42,7 +42,7 @@
 
 class AddFavoriteWidget : public QDialog, public Ui::Dialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     AddFavoriteWidget(QWidget* parent = 0);
@@ -52,7 +52,7 @@ class AddFavoriteWidget : public QDialog, public Ui::Dialog
   protected slots:
     void on_addfavoriteOKButton_clicked();
     void on_addfavoriteCancelButton_clicked();
-    void on_favoriteName_textChanged(const QString & text);
+    void on_favoriteName_textChanged(const QString& text);
 
   private:
     bool BtnClicked;

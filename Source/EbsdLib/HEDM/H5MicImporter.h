@@ -79,7 +79,7 @@ class EbsdLib_EXPORT H5MicImporter : public EbsdImporter
      * @param index The slice index for the file
      * @param MicFile The absolute path to the input .Mic file
      */
-    int importFile(hid_t fileId, int64_t index, const QString &MicFile);
+    int importFile(hid_t fileId, int64_t index, const QString& MicFile);
 
     /**
      * @brief Writes the phase data into the HDF5 file
@@ -87,7 +87,7 @@ class EbsdLib_EXPORT H5MicImporter : public EbsdImporter
      * @param gid Valid HDF5 Group ID for the phases.
      * @return error condition
      */
-    int writePhaseData(MicReader &reader, hid_t gid);
+    int writePhaseData(MicReader& reader, hid_t gid);
     int writeZandCoordinates(MicPhase* p, hid_t ZandCGid);
 
     /**
@@ -95,14 +95,14 @@ class EbsdLib_EXPORT H5MicImporter : public EbsdImporter
      * @param x Number of X Voxels (out)
      * @param y Number of Y Voxels (out)
      */
-    virtual void getDims(int64_t &x, int64_t &y);
+    virtual void getDims(int64_t& x, int64_t& y);
 
     /**
      * @brief Returns the x and y resolution of the voxels
      * @param x The x resolution (out)
      * @param y The y resolution (out)
      */
-    virtual void getResolution(float &x, float &y);
+    virtual void getResolution(float& x, float& y);
 
     /**
      * @brief Return the number of slices imported

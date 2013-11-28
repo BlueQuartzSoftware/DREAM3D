@@ -71,8 +71,8 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     virtual ~FindMDF();
 
     //------ Required Feature Data
-                //------ Required Ensemble Data
-            
+    //------ Required Ensemble Data
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find MDF"; }
@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-   DEFINE_PTR_WEAKPTR_DATAARRAY( float, TotalSurfaceAreas)
+    DEFINE_PTR_WEAKPTR_DATAARRAY( float, TotalSurfaceAreas)
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 

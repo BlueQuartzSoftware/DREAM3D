@@ -44,7 +44,7 @@
 
 class DREAM3DFileDragMessageBox : public QDialog, public Ui::Form
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     DREAM3DFileDragMessageBox(QWidget* parent = 0);
@@ -57,8 +57,8 @@ class DREAM3DFileDragMessageBox : public QDialog, public Ui::Form
     void on_addFilterBtn_clicked();
 
   signals:
-    void fireExtractPipelineFromFile(const QString &filePath);
-    void fireAddDREAM3DReaderFilter(const QString &filePath);
+    void fireExtractPipelineFromFile(const QString& filePath);
+    void fireAddDREAM3DReaderFilter(const QString& filePath);
 
   private:
     QString filePath;

@@ -57,12 +57,12 @@
  */
 typedef struct
 {
-    int h;
-    int k;
-    int l;
-    int s1;
-    float diffractionIntensity;
-    int s2;
+  int h;
+  int k;
+  int l;
+  int s1;
+  float diffractionIntensity;
+  int s2;
 } HKLFamily_t;
 
 
@@ -93,7 +93,7 @@ class EbsdLib_EXPORT HKLFamily
      * @brief Prints this class to the output stream. Useful for debuggin
      * @param stream The stream to print to
      */
-    void printSelf(QTextStream &stream)
+    void printSelf(QTextStream& stream)
     {
       stream << Ebsd::Ang::HKLFamilies;
       stream << " " << h << " " << k << " " << l << " " << s1 << " " << diffractionIntensity << " " << s2 << "\n";
@@ -167,17 +167,17 @@ class EbsdLib_EXPORT AngPhase
     EBSD_INSTANCE_PROPERTY(QVector<int>, Categories)
 
 
-  //  void parsePhase(char* value, size_t start, size_t length);
+    //  void parsePhase(char* value, size_t start, size_t length);
     void parseMaterialName(QList<QByteArray> tokens);
     void parseFormula(QList<QByteArray> tokens);
     void parseInfo(QList<QByteArray> tokens);
-  //  void parseSymmetry(char* value, size_t start, size_t length);
+    //  void parseSymmetry(char* value, size_t start, size_t length);
     void parseLatticeConstants(QList<QByteArray> tokens);
-  //  void parseNumberFamilies(char* value, size_t start, size_t length);
+    //  void parseNumberFamilies(char* value, size_t start, size_t length);
     void parseHKLFamilies(QList<QByteArray> tokens);
     void parseCategories(QList<QByteArray> tokens);
 
-    void printSelf(QTextStream &stream);
+    void printSelf(QTextStream& stream);
 
     /**
      * @brief Returns the type of crystal structure for this phase.

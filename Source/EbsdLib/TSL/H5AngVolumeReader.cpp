@@ -54,7 +54,7 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5AngVolumeReader::H5AngVolumeReader() :
-    H5EbsdVolumeReader()
+  H5EbsdVolumeReader()
 {
   // Init all the arrays to NULL
   m_Phi1 = NULL;
@@ -80,12 +80,12 @@ H5AngVolumeReader::~H5AngVolumeReader()
 
 #define H5ANGREADER_ALLOCATE_ARRAY(name, type)\
   if (readAllArrays == true || arrayNames.find(Ebsd::Ang::name) != arrayNames.end()) {\
-  type* _##name = allocateArray<type>(numElements);\
-  if (NULL != _##name) {\
-  ::memset(_##name, 0, numBytes);\
-  }\
-  set##name##Pointer(_##name);\
- }
+    type* _##name = allocateArray<type>(numElements);\
+    if (NULL != _##name) {\
+      ::memset(_##name, 0, numBytes);\
+    }\
+    set##name##Pointer(_##name);\
+  }
 
 // -----------------------------------------------------------------------------
 //
@@ -129,7 +129,7 @@ void H5AngVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5AngVolumeReader::getPointerByName(const QString &featureName)
+void* H5AngVolumeReader::getPointerByName(const QString& featureName)
 {
   if (featureName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
   if (featureName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
@@ -147,7 +147,7 @@ void* H5AngVolumeReader::getPointerByName(const QString &featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5AngVolumeReader::getPointerType(const QString &featureName)
+Ebsd::NumType H5AngVolumeReader::getPointerType(const QString& featureName)
 {
   if (featureName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
   if (featureName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
@@ -276,8 +276,8 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     {
       ZDir = getStackingOrder();
     }
-    if(ZDir == Ebsd::LowtoHigh) zval = slice;
-    if(ZDir == Ebsd::HightoLow) zval = static_cast<int>( (zpoints - 1) - slice );
+    if(ZDir == Ebsd::LowtoHigh) { zval = slice; }
+    if(ZDir == Ebsd::HightoLow) { zval = static_cast<int>( (zpoints - 1) - slice ); }
 
     // Copy the data from the current storage into the new memory Location
     for (int j = 0; j < ystop; j++)

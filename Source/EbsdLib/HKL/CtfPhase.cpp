@@ -61,7 +61,7 @@ CtfPhase::~CtfPhase()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfPhase::convertEuropeanDecimals(QByteArray &line)
+void CtfPhase::convertEuropeanDecimals(QByteArray& line)
 {
   // Filter the line to convert European command style decimals to US/UK style points
   //  QVector<char> cLine(line.size()+1);
@@ -80,7 +80,7 @@ void CtfPhase::convertEuropeanDecimals(QByteArray &line)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfPhase::parsePhase(QByteArray &line)
+void CtfPhase::parsePhase(QByteArray& line)
 {
   bool ok = false;
   QList<QByteArray> tokens = line.split('\t'); // the line is segmented by Tabs
@@ -123,10 +123,10 @@ void CtfPhase::parsePhase(QByteArray &line)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfPhase::printSelf(std::ostream &stream)
+void CtfPhase::printSelf(std::ostream& stream)
 {
   stream << Ebsd::Ctf::LatticeConstants.toStdString() << " " << m_LatticeConstants[0] << ", " << m_LatticeConstants[1] << ", " << m_LatticeConstants[2] << " "
-  << m_LatticeConstants[3] << ", " << m_LatticeConstants[4] << ", " << m_LatticeConstants[5] << std::endl;
+         << m_LatticeConstants[3] << ", " << m_LatticeConstants[4] << ", " << m_LatticeConstants[5] << std::endl;
   stream << Ebsd::Ctf::PhaseName.toStdString() << " " << m_PhaseName.toStdString() << std::endl;
   stream << Ebsd::Ctf::LaueGroup.toStdString() << " " << m_LaueGroup << std::endl;
   stream << Ebsd::Ctf::SpaceGroup.toStdString() << " " << m_SpaceGroup << std::endl;
@@ -165,7 +165,7 @@ unsigned int CtfPhase::determineCrystalStructure()
     case Ebsd::Ctf::LG_Cubic_Low:
       return Ebsd::CrystalStructure::Cubic_Low;
     case Ebsd::Ctf::LG_Cubic_High:
-    return Ebsd::CrystalStructure::Cubic_High;
+      return Ebsd::CrystalStructure::Cubic_High;
     case Ebsd::Ctf::UnknownSymmetry:
       return Ebsd::CrystalStructure::UnknownCrystalStructure;
     default:

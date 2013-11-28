@@ -920,7 +920,7 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
         MatrixMath::Normalize3x1(uvw2);
         directionComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
         planeComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
-       // schmidFactor2 = directionComponent2 * planeComponent2;
+        // schmidFactor2 = directionComponent2 * planeComponent2;
         directionMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
         planeMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(hkl1, hkl2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
@@ -1570,7 +1570,7 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 //      blue2 = 0;
       x = xIndex * indexConst1 + indexConst2;
       y = yIndex * indexConst1 + indexConst2;
- //     z = -1.0;
+//     z = -1.0;
       a = (x * x + y * y + 1);
       b = (2 * x * x + 2 * y * y);
       c = (x * x + y * y - 1);
@@ -1861,8 +1861,8 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   ///create image, fill with empty pixels, setup painter
   int width = 1000;
   double scale = width / tan(M_PI / 8);
-   /*
-    int height = ceil(0.349159 * scale);
+  /*
+   int height = ceil(0.349159 * scale);
   QPainter painter;
   image = QImage(width, height, QImage::Format_ARGB32_Premultiplied);
   image.fill(0x00000000);

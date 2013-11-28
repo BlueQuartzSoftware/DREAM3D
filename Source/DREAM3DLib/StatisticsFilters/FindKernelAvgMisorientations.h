@@ -66,11 +66,11 @@ class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   //------ Required Cell Data
-                //------ Created Cell Data
-        //------ Required Ensemble Data
-    
+
+    //------ Required Cell Data
+    //------ Created Cell Data
+    //------ Required Ensemble Data
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Kernel Average Misorientations"; }

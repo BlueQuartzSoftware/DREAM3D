@@ -68,10 +68,10 @@ class DREAM3DLib_EXPORT SegmentBetaGrains : public SegmentGrains
     virtual ~SegmentBetaGrains();
 
     //------ Required Cell Data
-                //------ Created Cell Data
-        //------ Created Feature Data
-        //------ Required Ensemble Data
-    
+    //------ Created Cell Data
+    //------ Created Feature Data
+    //------ Required Ensemble Data
+
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)

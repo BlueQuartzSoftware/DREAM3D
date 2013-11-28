@@ -44,7 +44,7 @@
 
 namespace Detail
 {
-	QString Dream3DHelpPath = "/Help/DREAM3D/";
+  QString Dream3DHelpPath = "/Help/DREAM3D/";
 }
 
 // -----------------------------------------------------------------------------
@@ -68,45 +68,45 @@ DREAM3DHelpUrlGenerator::~DREAM3DHelpUrlGenerator()
 // -----------------------------------------------------------------------------
 QUrl DREAM3DHelpUrlGenerator::generateHTMLUrl(QString htmlName)
 {
-	QString appPath = qApp->applicationDirPath();
+  QString appPath = qApp->applicationDirPath();
 
-	QDir helpDir = QDir(appPath);
-	QString s("file://");
+  QDir helpDir = QDir(appPath);
+  QString s("file://");
 
 #if defined(Q_OS_WIN)
-	s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
+  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
 #elif defined(Q_OS_MAC)
-	if (helpDir.dirName() == "MacOS")
-	{
-		helpDir.cdUp();
-		helpDir.cdUp();
-		helpDir.cdUp();
-	}
+  if (helpDir.dirName() == "MacOS")
+  {
+    helpDir.cdUp();
+    helpDir.cdUp();
+    helpDir.cdUp();
+  }
 #else
-	// We are on Linux - I think
-    QFileInfo fi( helpDir.absolutePath() + Detail::Dream3DHelpPath + htmlName + ".html");
-    if (fi.exists() == false)
-    {
-        // The help file does not exist at the default location because we are probably running from the build tree.
-        // Try up one more directory
-        helpDir.cdUp();
-    }
+  // We are on Linux - I think
+  QFileInfo fi( helpDir.absolutePath() + Detail::Dream3DHelpPath + htmlName + ".html");
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from the build tree.
+    // Try up one more directory
+    helpDir.cdUp();
+  }
 #endif
 
 
 
 #if defined(Q_OS_WIN)
-	QFileInfo fi( helpDir.absolutePath() + Detail::Dream3DHelpPath + htmlName + ".html");
-	if (fi.exists() == false)
-	{
-		// The help file does not exist at the default location because we are probably running from visual studio.
-		// Try up one more directory
-		helpDir.cdUp();
-	}
+  QFileInfo fi( helpDir.absolutePath() + Detail::Dream3DHelpPath + htmlName + ".html");
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    helpDir.cdUp();
+  }
 #endif
 
-	s = s + helpDir.absolutePath() + Detail::Dream3DHelpPath + htmlName + ".html";
-	return QUrl(s);
+  s = s + helpDir.absolutePath() + Detail::Dream3DHelpPath + htmlName + ".html";
+  return QUrl(s);
 }
 
 // -----------------------------------------------------------------------------
@@ -114,13 +114,13 @@ QUrl DREAM3DHelpUrlGenerator::generateHTMLUrl(QString htmlName)
 // -----------------------------------------------------------------------------
 void DREAM3DHelpUrlGenerator::openHTMLUrl(QUrl URL, QWidget* parent)
 {
-	bool didOpen = QDesktopServices::openUrl(URL);
-	if(false == didOpen)
-	{
-		QMessageBox::critical(parent, "Error Opening Help File",
-			QString::fromAscii("DREAM3D could not open the help file path ") + URL.path(),
-			QMessageBox::Ok, QMessageBox::Ok);
-	}
+  bool didOpen = QDesktopServices::openUrl(URL);
+  if(false == didOpen)
+  {
+    QMessageBox::critical(parent, "Error Opening Help File",
+                          QString::fromAscii("DREAM3D could not open the help file path ") + URL.path(),
+                          QMessageBox::Ok, QMessageBox::Ok);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -128,7 +128,7 @@ void DREAM3DHelpUrlGenerator::openHTMLUrl(QUrl URL, QWidget* parent)
 // -----------------------------------------------------------------------------
 void DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(QString helpName, QWidget* parent)
 {
-	QUrl URL = generateHTMLUrl(helpName);
-	openHTMLUrl(URL, parent);
+  QUrl URL = generateHTMLUrl(helpName);
+  openHTMLUrl(URL, parent);
 }
 

@@ -110,14 +110,14 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
     * @brief Returns the pointer to the data for a given feature
     * @param featureName The name of the feature to return the pointer to.
     */
-    virtual void* getPointerByName(const QString &featureName);
+    virtual void* getPointerByName(const QString& featureName);
 
     /**
     * @brief Returns an enumeration value that depicts the numerical
     * primitive type that the data is stored as (Int, Float, etc).
     * @param featureName The name of the feature.
     */
-    virtual Ebsd::NumType getPointerType(const QString &featureName);
+    virtual Ebsd::NumType getPointerType(const QString& featureName);
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
     * and then splats '0' across all the bytes of the memory allocation

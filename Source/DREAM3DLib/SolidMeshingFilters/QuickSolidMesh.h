@@ -60,7 +60,7 @@ class DREAM3DLib_EXPORT QuickSolidMesh : public AbstractFilter
     virtual ~QuickSolidMesh();
 
     //------ Required Cell Data
-    
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
     virtual const QString getHumanLabel() { return "Quick Solid Mesh"; }
 

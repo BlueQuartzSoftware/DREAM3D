@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
-    
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
     DREAM3D_INSTANCE_PROPERTY(bool, NodeConstraints)

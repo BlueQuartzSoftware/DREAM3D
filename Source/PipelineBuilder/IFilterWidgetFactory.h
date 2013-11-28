@@ -62,7 +62,7 @@ class IFilterWidgetFactory
     virtual AbstractFilter::Pointer getFilterInstance() { BOOST_ASSERT(false); return AbstractFilter::NullPointer(); }
 
   protected:
-    IFilterWidgetFactory(){}
+    IFilterWidgetFactory() {}
   private:
     IFilterWidgetFactory(const IFilterWidgetFactory&); // Copy Constructor Not Implemented
     void operator=(const IFilterWidgetFactory&); // Operator '=' Not Implemented

@@ -56,8 +56,8 @@
 //
 // -----------------------------------------------------------------------------
 UpdateCheck::UpdateCheck(QObject* parent) :
-QObject(parent),
-m_Nam(NULL)
+  QObject(parent),
+  m_Nam(NULL)
 {
 
 }
@@ -84,7 +84,7 @@ void UpdateCheck::checkVersion(QUrl website)
   m_Nam = new QNetworkAccessManager(this);
 
   QObject::connect(m_Nam, SIGNAL(finished(QNetworkReply*)),
-    this, SLOT(networkReplied(QNetworkReply*)));
+                   this, SLOT(networkReplied(QNetworkReply*)));
 
   QNetworkRequest request;
   request.setUrl(website);

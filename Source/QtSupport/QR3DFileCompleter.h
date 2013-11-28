@@ -41,10 +41,10 @@
 
 class QR3DFileCompleter : public QCompleter
 {
-  Q_OBJECT
-public:
-  QR3DFileCompleter(QObject* o, bool dirs);
-  virtual QString pathFromIndex(const QModelIndex& idx) const;
+    Q_OBJECT
+  public:
+    QR3DFileCompleter(QObject* o, bool dirs);
+    virtual QString pathFromIndex(const QModelIndex& idx) const;
 };
 
 #endif /* R3DFILECOMPLETER_H_ */

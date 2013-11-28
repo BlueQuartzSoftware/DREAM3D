@@ -18,18 +18,18 @@ class QFilterListWidget: public QListWidget
 {
     Q_OBJECT
 
-public:
-    QFilterListWidget(QWidget *parent = 0);
+  public:
+    QFilterListWidget(QWidget* parent = 0);
     virtual ~QFilterListWidget();
 
-protected:
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void dropEvent(QDropEvent *event);
+  protected:
+    void mousePressEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
+    void dragEnterEvent(QDragEnterEvent* event);
+    void dragMoveEvent(QDragMoveEvent* event);
+    void dropEvent(QDropEvent* event);
 
-private:
+  private:
     void performDrag();
 
     QPoint startPos;

@@ -73,12 +73,12 @@ class DREAM3DLib_EXPORT FindFeatureReferenceMisorientations : public AbstractFil
 
 
     //------ Required Cell Data
-                    //------ Created Cell Data
-        //------ Required Feature Data
-        //------ Created Feature Data
-    
+    //------ Created Cell Data
+    //------ Required Feature Data
+    //------ Created Feature Data
+
     //------ Required Ensemble Data
-    
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Reference Misorientations"; }

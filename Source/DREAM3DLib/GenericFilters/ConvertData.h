@@ -63,8 +63,8 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
     virtual ~ConvertData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    
-   typedef struct { int x; int y; int z; } Dimensions_t;
+
+    typedef struct { int x; int y; int z; } Dimensions_t;
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, ScalarType)

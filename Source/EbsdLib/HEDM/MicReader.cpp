@@ -208,7 +208,7 @@ void MicReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* MicReader::getPointerByName(const QString &featureName)
+void* MicReader::getPointerByName(const QString& featureName)
 {
   if (featureName.compare(Ebsd::Mic::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
   if (featureName.compare(Ebsd::Mic::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
@@ -225,7 +225,7 @@ void* MicReader::getPointerByName(const QString &featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType MicReader::getPointerType(const QString &featureName)
+Ebsd::NumType MicReader::getPointerType(const QString& featureName)
 {
   if (featureName.compare(Ebsd::Mic::Euler1) == 0) { return Ebsd::Float;}
   if (featureName.compare(Ebsd::Mic::Euler2) == 0) { return Ebsd::Float;}
@@ -258,8 +258,8 @@ int MicReader::readHeaderOnly()
 
   QString parentPath(fi.path());
   QString name = fi.baseName();
-  if(QDir::toNativeSeparators(parentPath).isEmpty() == true) name = name + ".config";
-  else name = parentPath + QDir::separator() + name + ".config";
+  if(QDir::toNativeSeparators(parentPath).isEmpty() == true) { name = name + ".config"; }
+  else { name = parentPath + QDir::separator() + name + ".config"; }
 
   QFile inHeader(getFileName());
   if (!inHeader.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -294,8 +294,8 @@ int MicReader::readDatFile()
   QFileInfo fi(getFileName());
   QString parentPath(fi.path());
   QString name = fi.baseName();
-  if(QDir::toNativeSeparators(parentPath).isEmpty() == true) name = name + ".dat";
-  else name = parentPath + QDir::separator() + name + ".dat";
+  if(QDir::toNativeSeparators(parentPath).isEmpty() == true) { name = name + ".dat"; }
+  else { name = parentPath + QDir::separator() + name + ".dat"; }
 
   QFile inHeader(name);
   if (!inHeader.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -319,7 +319,7 @@ int MicReader::readDatFile()
   m_CurrentPhase->parseBasisAtoms(buf);
   int numAtoms;
   sscanf(buf, "%d", &numAtoms);
-  for(int iter=0;iter<numAtoms;iter++)
+  for(int iter = 0; iter < numAtoms; iter++)
   {
     buf = inHeader.readLine();
 
@@ -385,7 +385,7 @@ int MicReader::readMicFile()
   bool ok = false;
   QByteArray buf;
 
-    // Read the First line in the file which is the edge length
+  // Read the First line in the file which is the edge length
   buf = in.readLine();
   origEdgeLength = buf.toFloat(&ok);
 
@@ -404,8 +404,8 @@ int MicReader::readMicFile()
   parseDataLine(buf, 0);
 
   int level = m_Level[0];
-  float newEdgeLength = origEdgeLength/powf(2.0,float(level));
-  totalPossibleDataRows = static_cast<size_t>(6.0f*powf(4.0f,float(level)));
+  float newEdgeLength = origEdgeLength / powf(2.0, float(level));
+  totalPossibleDataRows = static_cast<size_t>(6.0f * powf(4.0f, float(level)));
 
   // Reinitialize the pointers that hold the data to the proper size
   initPointers(totalPossibleDataRows);
@@ -420,36 +420,36 @@ int MicReader::readMicFile()
     buf = in.readLine();
 
     ++counter;
-    if (in.atEnd() == true) break;
+    if (in.atEnd() == true) { break; }
   }
   totalDataRows = counter;
 
-  QVector<float> EA1(totalDataRows,0.0);
-  QVector<float> EA2(totalDataRows,0.0);
-  QVector<float> EA3(totalDataRows,0.0);
-  QVector<float> confidence(totalDataRows,0.0);
-  QVector<int> phase(totalDataRows,0);
-  QVector<int> up(totalDataRows,0);
-  QVector<float> xVal(totalDataRows,0.0);
-  QVector<float> yVal(totalDataRows,0.0);
-  float constant = static_cast<float>(1.0f/(2.0*sqrt(3.0)));
+  QVector<float> EA1(totalDataRows, 0.0);
+  QVector<float> EA2(totalDataRows, 0.0);
+  QVector<float> EA3(totalDataRows, 0.0);
+  QVector<float> confidence(totalDataRows, 0.0);
+  QVector<int> phase(totalDataRows, 0);
+  QVector<int> up(totalDataRows, 0);
+  QVector<float> xVal(totalDataRows, 0.0);
+  QVector<float> yVal(totalDataRows, 0.0);
+  float constant = static_cast<float>(1.0f / (2.0 * sqrt(3.0)));
   float x, y;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
     if(m_Up[i] == 1)
     {
-      x = m_X[i] + (newEdgeLength/2.0f);
-      y = m_Y[i] + (constant*newEdgeLength);
+      x = m_X[i] + (newEdgeLength / 2.0f);
+      y = m_Y[i] + (constant * newEdgeLength);
     }
     if(m_Up[i] == 2)
     {
-      x = m_X[i] + (newEdgeLength/2.0f);
-      y = m_Y[i] - (constant*newEdgeLength);
+      x = m_X[i] + (newEdgeLength / 2.0f);
+      y = m_Y[i] - (constant * newEdgeLength);
     }
-    if(x > xMax) xMax = x;
-    if(y > yMax) yMax = y;
-    if(x < xMin) xMin = x;
-    if(y < yMin) yMin = y;
+    if(x > xMax) { xMax = x; }
+    if(y > yMax) { yMax = y; }
+    if(x < xMin) { xMin = x; }
+    if(y < yMin) { yMin = y; }
     EA1[i] = m_Euler1[i];
     EA2[i] = m_Euler2[i];
     EA3[i] = m_Euler3[i];
@@ -459,16 +459,16 @@ int MicReader::readMicFile()
     xVal[i] = m_X[i];
     yVal[i] = m_Y[i];
   }
-  xMin = xMin - (2.0*newEdgeLength);
-  xMax = xMax + (2.0*newEdgeLength);
-  yMin = yMin - (2.0*newEdgeLength);
-  yMax = yMax + (2.0*newEdgeLength);
-  xDim = int((xMax-xMin)/newEdgeLength)+1;
-  yDim = int((yMax-yMin)/newEdgeLength)+1;
-  xRes = newEdgeLength*1000.0f;
-  yRes = newEdgeLength*1000.0f;
-  xMinUM = xMin*1000.0f;
-  yMinUM = xMin*1000.0f;
+  xMin = xMin - (2.0 * newEdgeLength);
+  xMax = xMax + (2.0 * newEdgeLength);
+  yMin = yMin - (2.0 * newEdgeLength);
+  yMax = yMax + (2.0 * newEdgeLength);
+  xDim = int((xMax - xMin) / newEdgeLength) + 1;
+  yDim = int((yMax - yMin) / newEdgeLength) + 1;
+  xRes = newEdgeLength * 1000.0f;
+  yRes = newEdgeLength * 1000.0f;
+  xMinUM = xMin * 1000.0f;
+  yMinUM = xMin * 1000.0f;
 
   EbsdHeaderEntry::Pointer xDimHeader = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::XDim, xDim);
   m_HeaderMap[Ebsd::Mic::XDim] = xDimHeader;
@@ -486,49 +486,49 @@ int MicReader::readMicFile()
   // Delete any currently existing pointers
   deletePointers();
   // Resize pointers
-  initPointers(xDim*yDim);
+  initPointers(xDim * yDim);
 
 
   float xA, xB, xC, yA, yB, yC;
   int point;
-  float root3over2 = sqrtf(3.0f)/2.0f;
+  float root3over2 = sqrtf(3.0f) / 2.0f;
   int check1, check2, check3;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
-    xA = xVal[i]-xMin;
+    xA = xVal[i] - xMin;
     xB = xA + newEdgeLength;
-    xC = xA + (newEdgeLength/2.0f);
+    xC = xA + (newEdgeLength / 2.0f);
     if(up[i] == 1)
     {
-      yA = yVal[i]-yMin;
+      yA = yVal[i] - yMin;
       yB = yA;
-      yC = yA+(root3over2*newEdgeLength);
+      yC = yA + (root3over2 * newEdgeLength);
     }
     if(up[i] == 2)
     {
-      yB = yVal[i]-yMin;
+      yB = yVal[i] - yMin;
       yC = yB;
-      yA = yB-(root3over2*newEdgeLength);
+      yA = yB - (root3over2 * newEdgeLength);
     }
-    for(int j = int(xA/newEdgeLength); j < int(xB/newEdgeLength)+1; j++)
+    for(int j = int(xA / newEdgeLength); j < int(xB / newEdgeLength) + 1; j++)
     {
-      for(int k = int(yA/newEdgeLength); k < int(yC/newEdgeLength)+1; k++)
+      for(int k = int(yA / newEdgeLength); k < int(yC / newEdgeLength) + 1; k++)
       {
-        x = float(j)*newEdgeLength;
-        y = float(k)*newEdgeLength;
-        check1 = static_cast<int>((x-xB)*(yA-yB)-(xA-xB)*(y-yB));
-        check2 = static_cast<int>((x-xC)*(yB-yC)-(xB-xC)*(y-yC));
-        check3 = static_cast<int>((x-xA)*(yC-yA)-(xC-xA)*(y-yA));
-        if((check1<=0 && check2<=0 && check3<=0) || (check1>=0 && check2>=0 && check3>=0))
+        x = float(j) * newEdgeLength;
+        y = float(k) * newEdgeLength;
+        check1 = static_cast<int>((x - xB) * (yA - yB) - (xA - xB) * (y - yB));
+        check2 = static_cast<int>((x - xC) * (yB - yC) - (xB - xC) * (y - yC));
+        check3 = static_cast<int>((x - xA) * (yC - yA) - (xC - xA) * (y - yA));
+        if((check1 <= 0 && check2 <= 0 && check3 <= 0) || (check1 >= 0 && check2 >= 0 && check3 >= 0))
         {
-          point = (k*xDim) + j;
+          point = (k * xDim) + j;
           m_Euler1[point] = EA1[i];
           m_Euler2[point] = EA2[i];
           m_Euler3[point] = EA3[i];
           m_Conf[point] = confidence[i];
           m_Phase[point] = phase[i];
-          m_X[point] = float(j)*xRes+xMinUM;
-          m_Y[point] = float(k)*yRes+yMinUM;
+          m_X[point] = float(j) * xRes + xMinUM;
+          m_Y[point] = float(k) * yRes + yMinUM;
         }
       }
     }
@@ -541,7 +541,7 @@ int MicReader::readMicFile()
 // -----------------------------------------------------------------------------
 //  Read the Matching Config file to the .mic file
 // -----------------------------------------------------------------------------
-void MicReader::parseHeaderLine(QByteArray &line)
+void MicReader::parseHeaderLine(QByteArray& line)
 {
   if (line[0] == '#')
   {
@@ -590,7 +590,7 @@ void MicReader::parseHeaderLine(QByteArray &line)
 // -----------------------------------------------------------------------------
 //  Read the data part of the Mic file
 // -----------------------------------------------------------------------------
-void MicReader::parseDataLine(QByteArray &line, size_t i)
+void MicReader::parseDataLine(QByteArray& line, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:
@@ -608,16 +608,16 @@ void MicReader::parseDataLine(QByteArray &line, size_t i)
    * Some HEDM Mic files do NOT have all 10 columns. Assume these are lacking the last
    * 2 columns and all the other columns are the same as above.
    */
-  float p1 = 0.0f, p=0.0f, p2=0.0f, x=-1.0f, y=-1.0f, z=-1.0f, conf=-1.0f, junk1, junk2, junk3;
+  float p1 = 0.0f, p = 0.0f, p2 = 0.0f, x = -1.0f, y = -1.0f, z = -1.0f, conf = -1.0f, junk1, junk2, junk3;
   int up = 0, level = 0, good = 0, junk4, junk5, junk6, junk7, junk8, junk9;
   size_t offset = 0;
   size_t featuresRead = 0;
-  featuresRead = sscanf(line.data(), "%f %f %f %d %d %d %f %f %f %f %f %f %f %d %d %d %d %d %d", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf, &junk1, &junk2, &junk3, &junk4, &junk5, &junk6, &junk7, &junk8, &junk9);
+  featuresRead = sscanf(line.data(), "%f %f %f %d %d %d %f %f %f %f %f %f %f %d %d %d %d %d %d", &x, &y, &z, &up, &level, &good, &p1, &p, &p2, &conf, &junk1, &junk2, &junk3, &junk4, &junk5, &junk6, &junk7, &junk8, &junk9);
 
   offset = i;
 
-  if(good > 0) good = 1;
-  else good = 0;
+  if(good > 0) { good = 1; }
+  else { good = 0; }
 
   m_Euler1[offset] = p1;
   m_Euler2[offset] = p;

@@ -199,11 +199,11 @@ int H5MicReader::readHeader(hid_t parId)
     MicPhase::Pointer m_CurrentPhase = MicPhase::New();
 
     READ_PHASE_HEADER_DATA("H5MicReader", pid, int, Ebsd::Mic::Phase, PhaseIndex, m_CurrentPhase)
-        READ_PHASE_HEADER_ARRAY("H5MicReader", pid, float, Ebsd::Mic::LatticeConstants, LatticeConstants, m_CurrentPhase)
-        READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::BasisAtoms, BasisAtoms, m_CurrentPhase)
-        READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::Symmetry, Symmetry, m_CurrentPhase)
+    READ_PHASE_HEADER_ARRAY("H5MicReader", pid, float, Ebsd::Mic::LatticeConstants, LatticeConstants, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::BasisAtoms, BasisAtoms, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::Symmetry, Symmetry, m_CurrentPhase)
 
-        m_Phases.push_back(m_CurrentPhase);
+    m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
   }
 
@@ -218,12 +218,12 @@ int H5MicReader::readHeader(hid_t parId)
 
 #define MIC_READER_ALLOCATE_AND_READ(name, type)\
   if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Mic::name) != m_ArrayNames.end()) {\
-  type* _##name = allocateArray<type>(totalDataRows);\
-  if (NULL != _##name) {\
-  ::memset(_##name, 0, numBytes);\
-  err = QH5Lite::readPointerDataset(gid, Ebsd::Mic::name, _##name);\
-  }\
-  set##name##Pointer(_##name);\
+    type* _##name = allocateArray<type>(totalDataRows);\
+    if (NULL != _##name) {\
+      ::memset(_##name, 0, numBytes);\
+      err = QH5Lite::readPointerDataset(gid, Ebsd::Mic::name, _##name);\
+    }\
+    set##name##Pointer(_##name);\
   }
 
 
@@ -247,7 +247,7 @@ int H5MicReader::readData(hid_t parId)
     return -200;
   }
 
-  totalDataRows = xDim*yDim;
+  totalDataRows = xDim * yDim;
 
   hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)

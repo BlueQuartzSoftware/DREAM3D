@@ -46,12 +46,12 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5EbsdVolumeReader::H5EbsdVolumeReader() :
-    m_Cancel(false),
-    m_SliceStart(0),
-    m_SliceEnd(0),
-    m_ManageMemory(true),
-    m_NumberOfElements(0),
-    m_ReadAllArrays(true)
+  m_Cancel(false),
+  m_SliceStart(0),
+  m_SliceEnd(0),
+  m_ManageMemory(true),
+  m_NumberOfElements(0),
+  m_ReadAllArrays(true)
 {
 
 }
@@ -81,7 +81,7 @@ void H5EbsdVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5EbsdVolumeReader::getPointerByName(const QString &featureName)
+void* H5EbsdVolumeReader::getPointerByName(const QString& featureName)
 {
   return NULL;
 }
@@ -89,7 +89,7 @@ void* H5EbsdVolumeReader::getPointerByName(const QString &featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5EbsdVolumeReader::getPointerType(const QString &featureName)
+Ebsd::NumType H5EbsdVolumeReader::getPointerType(const QString& featureName)
 {
   return Ebsd::UnknownNumType;
 }

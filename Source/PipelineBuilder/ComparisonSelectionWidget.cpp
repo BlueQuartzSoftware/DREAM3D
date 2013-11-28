@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComparisonSelectionWidget::ComparisonSelectionWidget(bool showOperators, QWidget *parent) :
+ComparisonSelectionWidget::ComparisonSelectionWidget(bool showOperators, QWidget* parent) :
   QWidget(parent),
   m_ArrayListType(CellListType),
   m_ShowOperators(showOperators),
@@ -118,7 +118,7 @@ void ComparisonSelectionWidget::setHumanLabel(QString title)
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_addComparison_clicked()
 {
-  if (!m_ComparisonSelectionTableModel->insertRow(m_ComparisonSelectionTableModel->rowCount())) return;
+  if (!m_ComparisonSelectionTableModel->insertRow(m_ComparisonSelectionTableModel->rowCount())) { return; }
 
   QModelIndex index = m_ComparisonSelectionTableModel->index(m_ComparisonSelectionTableModel->rowCount() - 1, 0);
   m_ComparisonSelectionTableView->setCurrentIndex(index);
@@ -135,10 +135,10 @@ void ComparisonSelectionWidget::on_addComparison_clicked()
 void ComparisonSelectionWidget::on_removeComparison_clicked()
 {
   //qDebug() << "on_removeComparisonSelection_clicked" << "\n";
-  QItemSelectionModel *selectionModel = m_ComparisonSelectionTableView->selectionModel();
-  if (!selectionModel->hasSelection()) return;
+  QItemSelectionModel* selectionModel = m_ComparisonSelectionTableView->selectionModel();
+  if (!selectionModel->hasSelection()) { return; }
   QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) return;
+  if (!index.isValid()) { return; }
   m_ComparisonSelectionTableModel->removeRow(index.row(), index.parent());
   if (m_ComparisonSelectionTableModel->rowCount() > 0)
   {
@@ -167,11 +167,11 @@ void ComparisonSelectionWidget::populateArrayNames(DataContainerArray::Pointer d
   }
   else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= EdgeListType)
   {
-  //  populateEdgeArrayNames(edc);
+    //  populateEdgeArrayNames(edc);
   }
   else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= VertexListType)
   {
-  //  populateVertexArrayNames(vdc);
+    //  populateVertexArrayNames(vdc);
   }
 
 
@@ -314,7 +314,7 @@ void ComparisonSelectionWidget::populateVertexArrayNames(VertexDataContainer::Po
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::readOptions(QSettings &prefs, QString name)
+void ComparisonSelectionWidget::readOptions(QSettings& prefs, QString name)
 {
   int count = prefs.beginReadArray(name);
   QVector<QString> arrayNames(count);
@@ -336,7 +336,7 @@ void ComparisonSelectionWidget::readOptions(QSettings &prefs, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::writeOptions(QSettings &prefs, QString name)
+void ComparisonSelectionWidget::writeOptions(QSettings& prefs, QString name)
 {
   QVector<QString> arrayNames;
   QVector<int>   compOperators;

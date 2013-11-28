@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ArraySelectionWidget::ArraySelectionWidget(QWidget *parent) :
+ArraySelectionWidget::ArraySelectionWidget(QWidget* parent) :
   QTabWidget(parent)
 {
   setupUi(this);
@@ -60,44 +60,44 @@ ArraySelectionWidget::~ArraySelectionWidget()
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::setupGui()
 {
-  connect(volumeVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(volumeVertexArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(volumeEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(volumeEdgeArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(volumeFaceArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(volumeFaceArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(volumeCellArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(volumeCellArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(volumeCellFeatureArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(volumeCellFeatureArrayList, SIGNAL( itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(volumeCellEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
-
-  connect(surfaceVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(surfaceFaceArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(surfaceEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(surfaceFaceFeatureArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(surfaceFaceEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(volumeCellEnsembleArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
 
-  connect(edgeVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(surfaceVertexArrayList, SIGNAL( itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(edgeEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(surfaceFaceArrayList, SIGNAL( itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(edgeEdgeFeatureArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(surfaceEdgeArrayList, SIGNAL( itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(edgeEdgeEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(surfaceFaceFeatureArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(surfaceFaceEnsembleArrayList, SIGNAL( itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
 
-  connect(vertexVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(edgeVertexArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(vertexVertexFeatureArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(edgeEdgeArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(vertexVertexEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(edgeEdgeFeatureArrayList, SIGNAL( itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(edgeEdgeEnsembleArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+
+  connect(vertexVertexArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(vertexVertexFeatureArrayList, SIGNAL( itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(vertexVertexEnsembleArrayList, SIGNAL(  itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
 
 }
@@ -106,7 +106,7 @@ void ArraySelectionWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::arrayListUpdated(QListWidgetItem *item)
+void ArraySelectionWidget::arrayListUpdated(QListWidgetItem* item)
 {
   emit arrayListsChanged();
 }
@@ -208,7 +208,7 @@ void ArraySelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QList<QString> &arrayNames, QCheckBox* cb)
+void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QList<QString>& arrayNames, QCheckBox* cb)
 {
   // Convert from STL container to Qt Container then pass through to the next method.
   QStringList qArrayNames;
@@ -222,7 +222,7 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QList<QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringList &arrayNames, QCheckBox* cb)
+void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringList& arrayNames, QCheckBox* cb)
 {
   QStringList selectedArrays;
   int listWidgetCount = listWidget->count();
@@ -243,7 +243,8 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringLis
   {
     listWidget->addItem(name);
     Qt::CheckState checked = Qt::Unchecked;
-    if (selectedArrays.contains(name) == true) {
+    if (selectedArrays.contains(name) == true)
+    {
       checked = Qt::Checked;
       selectedCount++;
     }
@@ -271,7 +272,8 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringLis
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_vertexVertexCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     vertexVertexCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -283,7 +285,8 @@ void ArraySelectionWidget::on_vertexVertexCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_vertexVertexFeatureCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     vertexVertexFeatureCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -295,7 +298,8 @@ void ArraySelectionWidget::on_vertexVertexFeatureCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_vertexVertexEnsembleCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     vertexVertexEnsembleCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -307,7 +311,8 @@ void ArraySelectionWidget::on_vertexVertexEnsembleCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_edgeVertexCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     edgeVertexCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -319,7 +324,8 @@ void ArraySelectionWidget::on_edgeVertexCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_edgeEdgeCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     edgeEdgeCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -331,7 +337,8 @@ void ArraySelectionWidget::on_edgeEdgeCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_edgeEdgeFeatureCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     edgeEdgeFeatureCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -343,7 +350,8 @@ void ArraySelectionWidget::on_edgeEdgeFeatureCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_edgeEdgeEnsembleCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     edgeEdgeEnsembleCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -355,7 +363,8 @@ void ArraySelectionWidget::on_edgeEdgeEnsembleCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_surfaceVertexArraysCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     surfaceVertexArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -367,7 +376,8 @@ void ArraySelectionWidget::on_surfaceVertexArraysCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_surfaceEdgeArraysCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     surfaceEdgeArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -379,7 +389,8 @@ void ArraySelectionWidget::on_surfaceEdgeArraysCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_surfaceFaceArraysCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     surfaceFaceArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -391,7 +402,8 @@ void ArraySelectionWidget::on_surfaceFaceArraysCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_surfaceFaceFeatureArraysCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     surfaceFaceFeatureArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -403,7 +415,8 @@ void ArraySelectionWidget::on_surfaceFaceFeatureArraysCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_surfaceFaceEnsembleArraysCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     surfaceFaceEnsembleArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -415,7 +428,8 @@ void ArraySelectionWidget::on_surfaceFaceEnsembleArraysCB_stateChanged(int state
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_volumeVertexCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     volumeVertexCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -427,7 +441,8 @@ void ArraySelectionWidget::on_volumeVertexCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_volumeEdgeCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     volumeEdgeCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -439,7 +454,8 @@ void ArraySelectionWidget::on_volumeEdgeCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_volumeFaceCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     volumeFaceCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -451,7 +467,8 @@ void ArraySelectionWidget::on_volumeFaceCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_volumeCellCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     volumeCellCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -463,7 +480,8 @@ void ArraySelectionWidget::on_volumeCellCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_volumeCellFeatureCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     volumeCellFeatureCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -475,7 +493,8 @@ void ArraySelectionWidget::on_volumeCellFeatureCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::on_volumeCellEnsembleCB_stateChanged(int state)
 {
-  if (state == Qt::PartiallyChecked) {
+  if (state == Qt::PartiallyChecked)
+  {
     volumeCellEnsembleCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
@@ -492,7 +511,7 @@ void ArraySelectionWidget::toggleListSelections(QListWidget* w, int state)
   int count = w->count();
   for(int i = 0; i < count; ++i)
   {
-      w->item(i)->setCheckState(static_cast<Qt::CheckState>(state));
+    w->item(i)->setCheckState(static_cast<Qt::CheckState>(state));
   }
   w->blockSignals(false);
   // Emit this signal so the preflight runs which will update all the guis after this one
@@ -503,14 +522,15 @@ void ArraySelectionWidget::toggleListSelections(QListWidget* w, int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::setSelections(QListWidget* listWidget, QStringList &selections)
+void ArraySelectionWidget::setSelections(QListWidget* listWidget, QStringList& selections)
 {
   listWidget->blockSignals(true);
   int count = listWidget->count();
   for(int i = 0; i < count; ++i)
   {
     QString name = listWidget->item(i)->text();
-    if (selections.contains(name) == true) {
+    if (selections.contains(name) == true)
+    {
       listWidget->item(i)->setCheckState(Qt::Checked);
     }
   }
@@ -520,10 +540,10 @@ void ArraySelectionWidget::setSelections(QListWidget* listWidget, QStringList &s
 
 
 #define REMOVE_ARRAYS_HELPER(dtype, dataContainer, grouping, op)\
-{QSet<QString> arrays = get##op##Arrays(dtype##grouping##ArrayList);\
-  for(QSet<QString>::iterator iter = arrays.begin(); iter != arrays.end(); ++iter) {\
-  dataContainer->remove##grouping##Data(*iter);\
-  }}
+  {QSet<QString> arrays = get##op##Arrays(dtype##grouping##ArrayList);\
+    for(QSet<QString>::iterator iter = arrays.begin(); iter != arrays.end(); ++iter) {\
+      dataContainer->remove##grouping##Data(*iter);\
+    }}
 
 // -----------------------------------------------------------------------------
 //
@@ -539,10 +559,10 @@ void ArraySelectionWidget::removeSelectionsFromDataContainers(DataContainerArray
     SurfaceDataContainer* sm = dca->getDataContainerAs<SurfaceDataContainer>(dcNames[i]);
     EdgeDataContainer* e = dca->getDataContainerAs<EdgeDataContainer>(dcNames[i]);
     VertexDataContainer* v = dca->getDataContainerAs<VertexDataContainer>(dcNames[i]);
-    if(vl != NULL) dcType = DREAM3D::DataContainerType::VolumeDataContainer;
-    else if(sm != NULL) dcType = DREAM3D::DataContainerType::SurfaceDataContainer;
-    else if(e != NULL) dcType = DREAM3D::DataContainerType::EdgeDataContainer;
-    else if(v != NULL) dcType = DREAM3D::DataContainerType::VertexDataContainer;
+    if(vl != NULL) { dcType = DREAM3D::DataContainerType::VolumeDataContainer; }
+    else if(sm != NULL) { dcType = DREAM3D::DataContainerType::SurfaceDataContainer; }
+    else if(e != NULL) { dcType = DREAM3D::DataContainerType::EdgeDataContainer; }
+    else if(v != NULL) { dcType = DREAM3D::DataContainerType::VertexDataContainer; }
     if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
     {
       REMOVE_ARRAYS_HELPER(volume, vl, Vertex, Selected)
@@ -590,10 +610,10 @@ void ArraySelectionWidget::removeNonSelectionsFromDataContainers(DataContainerAr
     SurfaceDataContainer* sm = dca->getDataContainerAs<SurfaceDataContainer>(dcNames[i]);
     EdgeDataContainer* e = dca->getDataContainerAs<EdgeDataContainer>(dcNames[i]);
     VertexDataContainer* v = dca->getDataContainerAs<VertexDataContainer>(dcNames[i]);
-    if(vl != NULL) dcType = DREAM3D::DataContainerType::VolumeDataContainer;
-    else if(sm != NULL) dcType = DREAM3D::DataContainerType::SurfaceDataContainer;
-    else if(e != NULL) dcType = DREAM3D::DataContainerType::EdgeDataContainer;
-    else if(v != NULL) dcType = DREAM3D::DataContainerType::VertexDataContainer;
+    if(vl != NULL) { dcType = DREAM3D::DataContainerType::VolumeDataContainer; }
+    else if(sm != NULL) { dcType = DREAM3D::DataContainerType::SurfaceDataContainer; }
+    else if(e != NULL) { dcType = DREAM3D::DataContainerType::EdgeDataContainer; }
+    else if(v != NULL) { dcType = DREAM3D::DataContainerType::VertexDataContainer; }
     if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
     {
       REMOVE_ARRAYS_HELPER(volume, vl, Vertex, NonSelected)
@@ -632,7 +652,7 @@ void ArraySelectionWidget::removeNonSelectionsFromDataContainers(DataContainerAr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<QString> ArraySelectionWidget::getSelectedArrays(QListWidget*listWidget)
+QSet<QString> ArraySelectionWidget::getSelectedArrays(QListWidget* listWidget)
 {
   QSet<QString> selectedArrays;
   for(qint32 i = 0; i < listWidget->count(); ++i)
@@ -648,7 +668,7 @@ QSet<QString> ArraySelectionWidget::getSelectedArrays(QListWidget*listWidget)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::setSelectedArrays(QSet<QString> names, QListWidget*listWidget)
+void ArraySelectionWidget::setSelectedArrays(QSet<QString> names, QListWidget* listWidget)
 {
   if (names.isEmpty() == true)
   {
@@ -670,7 +690,7 @@ void ArraySelectionWidget::setSelectedArrays(QSet<QString> names, QListWidget*li
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<QString> ArraySelectionWidget::getNonSelectedArrays(QListWidget*listWidget)
+QSet<QString> ArraySelectionWidget::getNonSelectedArrays(QListWidget* listWidget)
 {
   QSet<QString> non_selectedArrays;
   for(qint32 i = 0; i < listWidget->count(); ++i)
@@ -715,7 +735,7 @@ void ArraySelectionWidget::clearArraySelectionLists()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::readOptions(QSettings &prefs, QString name)
+void ArraySelectionWidget::readOptions(QSettings& prefs, QString name)
 {
   readSelections(prefs, name, "VolumeVertex", volumeVertexArrayList);
   readSelections(prefs, name, "VolumeEdge", volumeEdgeArrayList);
@@ -742,7 +762,7 @@ void ArraySelectionWidget::readOptions(QSettings &prefs, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
+void ArraySelectionWidget::writeOptions(QSettings& prefs, QString name)
 {
   writeSelections(prefs, name, "VolumeVertex", volumeVertexArrayList);
   writeSelections(prefs, name, "VolumeEdge", volumeEdgeArrayList);
@@ -771,7 +791,7 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::writeSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget)
+void ArraySelectionWidget::writeSelections(QSettings& prefs, QString name, QString prefix, QListWidget* widget)
 {
 
   QSet<QString> selections = getSelectedArrays(widget);
@@ -791,7 +811,7 @@ void ArraySelectionWidget::writeSelections(QSettings &prefs, QString name, QStri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::readSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget)
+void ArraySelectionWidget::readSelections(QSettings& prefs, QString name, QString prefix, QListWidget* widget)
 {
   int count = prefs.beginReadArray(name + "_" + prefix);
   QStringList selections;
