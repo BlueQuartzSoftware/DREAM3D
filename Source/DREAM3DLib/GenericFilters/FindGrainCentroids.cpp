@@ -198,8 +198,8 @@ void FindGrainCentroids::find_centroids2D()
   m_GrainCenters->Resize(numgrains);
   graincenters = m_GrainCenters->GetPointer(0);
 
-  int xPoints, yPoints;
-  float xRes, yRes;
+  int xPoints = 0, yPoints = 0;
+  float xRes = 0.0f, yRes = 0.0f;
 
   if(m->getXPoints() == 1)
   {
