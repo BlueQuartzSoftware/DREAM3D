@@ -363,6 +363,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
 
     MD5 md5;
     md5.update(tempContents, tempFileSize);
+	free(tempContents);
     md5.finalize();
     std::string tempHexDigest = md5.hexdigest();
 
@@ -943,6 +944,7 @@ void createSourceFile( const std::string &group,
 
     MD5 md5;
     md5.update(tempContents, tempFileSize);
+	free(tempContents);
     md5.finalize();
     std::string tempHexDigest = md5.hexdigest();
 

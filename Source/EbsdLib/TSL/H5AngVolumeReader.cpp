@@ -223,7 +223,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
   int ypointstemp;
   int xstop;
   int ystop;
-  int zval;
+  int zval = 0;
 
   int xstartspot;
   int ystartspot;
@@ -274,8 +274,8 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     {
       ZDir = getStackingOrder();
     }
-    if(ZDir == Ebsd::LowtoHigh) zval = slice;
-    if(ZDir == Ebsd::HightoLow) zval = static_cast<int>( (zpoints - 1) - slice );
+	if (ZDir == Ebsd::LowtoHigh) { zval = slice; }
+	else if (ZDir == Ebsd::HightoLow) { zval = static_cast<int>((zpoints - 1) - slice); }
 
     // Copy the data from the current storage into the new memory Location
     for (int j = 0; j < ystop; j++)

@@ -448,15 +448,15 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   std::vector<float> xVal(totalDataRows,0.0);
   std::vector<float> yVal(totalDataRows,0.0);
   float constant = static_cast<float>(1.0f/(2.0*sqrt(3.0)));
-  float x, y;
+  float x = 0, y = 0;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
     if(m_Up[i] == 1)
     {
       x = m_X[i] + (newEdgeLength/2.0f);
       y = m_Y[i] + (constant*newEdgeLength);
-    }
-    if(m_Up[i] == 2)
+    } 
+	else if(m_Up[i] == 2)
     {
       x = m_X[i] + (newEdgeLength/2.0f);
       y = m_Y[i] - (constant*newEdgeLength);
@@ -500,7 +500,7 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   initPointers(xDim*yDim);
 
 
-  float xA, xB, xC, yA, yB, yC;
+  float xA = 0.0f, xB = 0.0f, xC = 0.0f, yA = 0.0f, yB=0.0f, yC=0.0f;
   int point;
   float root3over2 = sqrtf(3.0f)/2.0f;
   int check1, check2, check3;

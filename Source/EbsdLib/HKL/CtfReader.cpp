@@ -363,8 +363,8 @@ int CtfReader::readData(std::ifstream &in)
   ::memset(buf, 0, kBufferSize);
   in.getline(buf, kBufferSize);
   // over write the newline at the end of the line with a NULL character
-  int idx = 0;
-  while (buf[idx] != 0 && idx < kBufferSize) { ++idx; }
+  uint32_t idx = 0;
+  while (idx < kBufferSize && buf[idx] != 0 ) { ++idx; }
   if(buf[idx - 1] < 32) { buf[idx - 1] = 0; }
 
   std::vector<std::string> tokens = tokenize(buf, '\t');
@@ -627,7 +627,7 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
 
     // Replace the newline at the end of the line with a NULL character
     int i = 0;
-    while (buf[i] != 0 && i < kBufferSize) { ++i; }
+	while (i < kBufferSize && buf[i] != 0) { ++i; }
     if(buf[i - 1] < 32) { buf[i - 1] = 0; }
 
     std::vector<std::string> tokens = tokenize(buf, '\t');

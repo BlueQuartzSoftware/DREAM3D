@@ -217,8 +217,8 @@ void FindBoundingBoxGrains::find_boundingboxgrains2D()
   float mindist;
   int sidetomove, move;
 
-  int xPoints, yPoints;
-  float xRes, yRes;
+  int xPoints = 0, yPoints = 0;
+  float xRes=0.0f, yRes = 0.0f;
 
   if(m->getXPoints() == 1)
   {

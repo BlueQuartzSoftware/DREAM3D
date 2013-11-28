@@ -182,15 +182,9 @@ void FindGrainReferenceMisorientations::execute()
     return;
   }
 
-  float** avgmiso = new float *[m->getNumFieldTuples()];
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
-  {
-    avgmiso[i] = new float[2];
-    for (int j = 0; j < 2; j++)
-    {
-      avgmiso[i][j] = 0.0;
-    }
-  }
+  FloatArrayType::Pointer avgMisoPtr = FloatArrayType::CreateArray(m->getNumFieldTuples(), 2, "Average Misorientation");
+  avgMisoPtr->initializeWithZeros();
+  float* avgmiso = avgMisoPtr->GetPointer(0);
 
   QuatF q1;
   QuatF q2;
@@ -269,8 +263,9 @@ void FindGrainReferenceMisorientations::execute()
           m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
           w = w *(180.0f/m_pi);
           m_GrainReferenceMisorientations[point] = w;
-          avgmiso[m_GrainIds[point]][0]++;
-          avgmiso[m_GrainIds[point]][1] = avgmiso[m_GrainIds[point]][1] + w;
+		  float val = 
+          avgmiso[m_GrainIds[point]*2]++;
+          avgmiso[m_GrainIds[point]*2 + 1] = avgmiso[m_GrainIds[point]*2+1] + w;
         }
         if (m_GrainIds[point] == 0 || m_CellPhases[point] == 0)
         {
@@ -283,16 +278,9 @@ void FindGrainReferenceMisorientations::execute()
   size_t grainsSize = m->getNumFieldTuples();
   for (size_t i = 1; i < grainsSize; i++)
   {
-    m_GrainAvgMisorientations[i] = avgmiso[i][1] / avgmiso[i][0];
-    if(avgmiso[i][0] == 0) { m_GrainAvgMisorientations[i] = 0.0; }
+    m_GrainAvgMisorientations[i] = avgmiso[i*2+1] / avgmiso[i*2];
+    if(avgmiso[i*2] == 0) { m_GrainAvgMisorientations[i] = 0.0; }
   }
-
-  // Clean up all the heap allocated memory
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
-  {
-    delete[] avgmiso[i];
-  }
-  delete avgmiso;
 
   notifyStatusMessage("FindGrainReferenceMisorientations Completed");
 }

@@ -401,6 +401,10 @@ class DataArray : public IDataArray
 
       // Create a new Array to copy into
       T* newArray = (T*)malloc(newSize * sizeof(T));
+	  if (NULL == newArray)
+	  {
+		  return -1000;
+	  }
       // Splat AB across the array so we know if we are copying the values or not
       ::memset(newArray, 0xAB, newSize * sizeof(T));
 

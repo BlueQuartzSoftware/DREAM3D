@@ -154,7 +154,7 @@ protected:
 
 private:
     std::string m_FileName;
-    size_t m_NumberOfElements;
+    int64_t m_NumberOfElements;
     int    m_NumFields;
 
     int*   m_GrainId;

@@ -226,7 +226,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
   int64_t ypointstemp;
 //  int xstop;
 //  int ystop;
-  int zval;
+  int zval = 0;
 
 
   int xstartspot;
@@ -278,8 +278,9 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
     {
       ZDir = getStackingOrder();
     }
-    if (ZDir == 0) zval = slice;
-    if (ZDir == 1) zval = static_cast<int>( (zpoints - 1) - slice );
+
+	if (ZDir == Ebsd::LowtoHigh) { zval = slice; }
+	else if (ZDir == Ebsd::HightoLow) { zval = static_cast<int>((zpoints - 1) - slice); }
 
     // Copy the data from the current storage into the Storage Location
     for (int j = 0; j < ypointsslice; j++)
