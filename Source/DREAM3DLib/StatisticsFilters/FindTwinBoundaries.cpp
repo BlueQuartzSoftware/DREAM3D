@@ -310,23 +310,11 @@ void FindTwinBoundaries::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
 // -----------------------------------------------------------------------------
 void FindTwinBoundaries::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheckVoxel(true, 1, 1, 1);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   dataCheckSurfaceMesh(true, 1, 1, 1);
 }
@@ -335,13 +323,8 @@ void FindTwinBoundaries::preflight()
 // -----------------------------------------------------------------------------
 void FindTwinBoundaries::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());

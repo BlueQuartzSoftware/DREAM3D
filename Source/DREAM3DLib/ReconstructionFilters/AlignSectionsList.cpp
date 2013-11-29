@@ -141,13 +141,6 @@ void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t features
 // -----------------------------------------------------------------------------
 void AlignSectionsList::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -158,13 +151,8 @@ void AlignSectionsList::preflight()
 void AlignSectionsList::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   dataCheck(false, 0, 0, 0);
   if (getErrorCondition() < 0)

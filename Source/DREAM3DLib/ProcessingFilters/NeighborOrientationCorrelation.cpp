@@ -150,7 +150,8 @@ void NeighborOrientationCorrelation::dataCheck(bool preflight, size_t voxels, si
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, NeighborOrientationCorrelation>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   m_ConfidenceIndexPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ConfidenceIndexArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -175,13 +176,6 @@ void NeighborOrientationCorrelation::dataCheck(bool preflight, size_t voxels, si
 // -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -193,13 +187,8 @@ void NeighborOrientationCorrelation::execute()
 {
   setErrorCondition(0);
 // int err = 0;
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();

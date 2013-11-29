@@ -541,7 +541,8 @@ void GenericExample::dataCheck(bool preflight, size_t voxels, size_t features, s
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, GenericExample>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   // Require the following Cell Data

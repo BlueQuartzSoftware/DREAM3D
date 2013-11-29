@@ -116,7 +116,8 @@ void RenameFeatureArray::dataCheck(bool preflight, size_t voxels, size_t feature
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, RenameFeatureArray>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   if(m_SelectedFeatureArrayName.isEmpty() == true)
   {
@@ -140,13 +141,6 @@ void RenameFeatureArray::dataCheck(bool preflight, size_t voxels, size_t feature
 // -----------------------------------------------------------------------------
 void RenameFeatureArray::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -157,13 +151,8 @@ void RenameFeatureArray::preflight()
 // -----------------------------------------------------------------------------
 void RenameFeatureArray::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
   bool check = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->renameAttributeArray(m_SelectedFeatureArrayName, m_NewFeatureArrayName);
 

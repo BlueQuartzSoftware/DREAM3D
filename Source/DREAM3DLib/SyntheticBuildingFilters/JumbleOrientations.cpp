@@ -112,7 +112,8 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t feature
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, JumbleOrientations>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   // Cell Data
@@ -144,13 +145,6 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t feature
 // -----------------------------------------------------------------------------
 void JumbleOrientations::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -162,13 +156,8 @@ void JumbleOrientations::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
   int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();

@@ -124,7 +124,9 @@ int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void DxWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   if (getOutputFile().isEmpty() == true)
   {

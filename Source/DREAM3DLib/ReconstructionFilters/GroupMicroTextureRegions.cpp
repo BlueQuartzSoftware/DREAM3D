@@ -164,7 +164,8 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, GroupMicroTextureRegions>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
   if(NULL == m)
   {
     QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
@@ -248,13 +249,8 @@ void GroupMicroTextureRegions::preflight()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();

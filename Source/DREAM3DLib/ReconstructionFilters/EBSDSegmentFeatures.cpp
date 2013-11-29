@@ -145,7 +145,9 @@ int EBSDSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* w
 void EBSDSegmentFeatures::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   m_GoodVoxelsPtr = m->createNonPrereqArray<bool, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName,  true, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -178,13 +180,6 @@ void EBSDSegmentFeatures::dataCheck(bool preflight, size_t voxels, size_t featur
 // -----------------------------------------------------------------------------
 void EBSDSegmentFeatures::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -195,13 +190,8 @@ void EBSDSegmentFeatures::preflight()
 void EBSDSegmentFeatures::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
 

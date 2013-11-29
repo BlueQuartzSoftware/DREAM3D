@@ -221,16 +221,9 @@ int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
-  setErrorCondition(0);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    QString ss = QObject::tr("The Surface Data Container with name '%1'' was not found in the Data Container Array.").arg(getSurfaceDataContainerName());
-    setErrorCondition(-1001);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
   // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {
@@ -252,13 +245,6 @@ void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fea
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::preflight()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
-
   dataCheck(true, 1, 1, 1);
 }
 

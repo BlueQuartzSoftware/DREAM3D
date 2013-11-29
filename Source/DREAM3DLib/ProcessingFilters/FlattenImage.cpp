@@ -162,7 +162,8 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t features, siz
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FlattenImage>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   int numImageComp = 1;
   IDataArray::Pointer iDataArray = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_ImageDataArrayName);
@@ -190,13 +191,6 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t features, siz
 // -----------------------------------------------------------------------------
 void FlattenImage::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -206,13 +200,8 @@ void FlattenImage::preflight()
 // -----------------------------------------------------------------------------
 void FlattenImage::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   dataCheck(false, totalPoints, 0, 0);

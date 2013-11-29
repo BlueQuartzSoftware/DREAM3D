@@ -128,7 +128,8 @@ void MultiThresholdFeatures::dataCheck(bool preflight, size_t voxels, size_t fea
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, MultiThresholdFeatures>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   if (m_ComparisonInputs.size() == 0)
   {
@@ -148,13 +149,6 @@ void MultiThresholdFeatures::dataCheck(bool preflight, size_t voxels, size_t fea
 // -----------------------------------------------------------------------------
 void MultiThresholdFeatures::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -167,13 +161,10 @@ void MultiThresholdFeatures::execute()
   int err = 0;
 
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
+
   setErrorCondition(0);
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();

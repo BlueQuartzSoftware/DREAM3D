@@ -245,13 +245,8 @@ void RotateSampleRefFrame::preflight()
   dataCheck(true, 1, 1, 1);
 
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
 
   m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
@@ -351,13 +346,8 @@ void RotateSampleRefFrame::preflight()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
   dataCheck(false, 0, 0, 0);
   if (getErrorCondition() < 0)

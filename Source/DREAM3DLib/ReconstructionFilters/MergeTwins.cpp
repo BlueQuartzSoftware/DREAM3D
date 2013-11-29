@@ -162,7 +162,9 @@ int MergeTwins::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   // Cell Data
@@ -209,13 +211,6 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t features, size_
 // -----------------------------------------------------------------------------
 void MergeTwins::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -225,13 +220,8 @@ void MergeTwins::preflight()
 // -----------------------------------------------------------------------------
 void MergeTwins::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   setErrorCondition(0);
 

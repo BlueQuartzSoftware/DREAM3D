@@ -103,7 +103,8 @@ void FitFeatureData::dataCheck(bool preflight, size_t voxels, size_t features, s
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FitFeatureData>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   if(m_SelectedFeatureArrayName.isEmpty() == true)
   {
@@ -124,13 +125,6 @@ void FitFeatureData::dataCheck(bool preflight, size_t voxels, size_t features, s
 // -----------------------------------------------------------------------------
 void FitFeatureData::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -207,13 +201,8 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
 // -----------------------------------------------------------------------------
 void FitFeatureData::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
   int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int64_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();

@@ -123,7 +123,9 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
 void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   if(m_OutputFile.isEmpty() == true)
   {
@@ -161,13 +163,6 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -177,13 +172,8 @@ void VtkRectilinearGridWriter::preflight()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
 
   // Make sure any directory path is also available as the user may have just typed

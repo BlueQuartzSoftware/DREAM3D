@@ -113,7 +113,9 @@ int H5VoxelFileReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -199,13 +201,10 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t features
 // -----------------------------------------------------------------------------
 void H5VoxelFileReader::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
   if(NULL == m)
   {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+    m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
   }
 
   dataCheck(true, 1, 1, 1);

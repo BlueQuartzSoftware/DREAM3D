@@ -126,14 +126,10 @@ int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
-    setErrorCondition(-1001);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  setErrorCondition(0);
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
@@ -158,13 +154,8 @@ void RegularizeZSpacing::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   setErrorCondition(0);
 

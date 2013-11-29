@@ -225,7 +225,9 @@ int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter*
 void ScalarSegmentFeatures::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   if(m_ScalarArrayName.isEmpty() == true)
   {
@@ -247,13 +249,6 @@ void ScalarSegmentFeatures::dataCheck(bool preflight, size_t voxels, size_t feat
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
 
   dataCheck(true, 1, 1, 1);
 }
@@ -264,13 +259,8 @@ void ScalarSegmentFeatures::preflight()
 void ScalarSegmentFeatures::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
   // This runs a subfilter

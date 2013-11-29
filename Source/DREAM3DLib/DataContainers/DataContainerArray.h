@@ -116,8 +116,8 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
     template<typename DataContainerType, typename Filter>
     DataContainerType* getPrereqDataContainer(const QString& name, bool createIfNotExists = false, Filter* filter = NULL)
     {
-      typename DataContainerType* dc = getDataContainer(name);
-      if(NULL == dc.get() && createIfNotExists == false)
+      DataContainerType* dc = getDataContainerAs<DataContainerType>(name);
+      if(NULL == dc && createIfNotExists == false)
       {
         if (filter) {
           filter->setErrorCondition(-999);
@@ -125,14 +125,14 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
         }
         return NULL;
       }
-      else
+      else if(NULL != dc && createIfNotExists == true)
       {
         typename DataContainerType::Pointer dataContainer = DataContainerType::New(name); // Create a new Data Container
         pushBack(dataContainer); // Put the new DataContainer into the array
-        dc = getDataContainer(name); // Assign it to the local variable
+        return dataContainer.get(); // Return the wrapped pointer
       }
-      DataContainerType* m = DataContainerType::SafePointerDownCast(dc.get());
-      return m;
+      // The DataContainer we asked for was present and NON Null so return that.
+      return dc;
     }
 
     /**

@@ -240,7 +240,13 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
 void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
+  if(NULL == m)
+  {
+    m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
+  }
+
 
   QFileInfo fi(m_InputFile);
   if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
@@ -397,15 +403,6 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, size_
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  }
-
   dataCheck(true, 1, 1, 1);
 }
 

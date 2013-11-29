@@ -231,7 +231,9 @@ int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* write
 void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/

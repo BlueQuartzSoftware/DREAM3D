@@ -215,13 +215,10 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 void VisualizeGBCD::preflight()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getSurfaceDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
+  setErrorCondition(0);
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   dataCheckSurfaceMesh(true, 1, 1, 1);
 }

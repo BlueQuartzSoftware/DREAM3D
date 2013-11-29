@@ -126,8 +126,9 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
     setErrorCondition(-387);
   }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  // We MUST have Nodes
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
+    // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
@@ -162,15 +163,9 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
 void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
-    setErrorCondition(-1001);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
   QVector<int> dims(1, 3);
   m_FeatureEulerAnglesPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureEulerAnglesArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -182,22 +177,7 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fe
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::preflight()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-383);
-  }
-
   dataCheckSurfaceMesh(true, 1, 1, 1);
-
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
-    setErrorCondition(-383);
-  }
-
   dataCheckVoxel(true, 1, 1, 1);
 }
 

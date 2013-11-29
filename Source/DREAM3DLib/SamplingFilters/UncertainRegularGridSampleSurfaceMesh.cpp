@@ -157,7 +157,8 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck(bool preflight, size_t vox
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, UncertainRegularGridSampleSurfaceMesh>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = m->createNonPrereqArray<int32_t, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -170,13 +171,10 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck(bool preflight, size_t vox
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
   if(NULL == m)
   {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+    m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
   }
 
   dataCheck(false, 1, 1, 1);

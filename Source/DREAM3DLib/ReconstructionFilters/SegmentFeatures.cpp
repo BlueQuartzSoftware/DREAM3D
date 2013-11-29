@@ -102,7 +102,9 @@ int SegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* write
 void SegmentFeatures::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
 }
 
@@ -111,15 +113,6 @@ void SegmentFeatures::dataCheck(bool preflight, size_t voxels, size_t features, 
 // -----------------------------------------------------------------------------
 void SegmentFeatures::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-1);
-    QString ss = QObject::tr(" DataContainer was NULL");
-    addErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
-
   dataCheck(true, 1, 1, 1);
 }
 
@@ -130,14 +123,10 @@ void SegmentFeatures::execute()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-1);
-    QString ss = QObject::tr(" DataContainer was NULL");
-    addErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
+
+  setErrorCondition(0);
 
   size_t udims[3] =
   { 0, 0, 0 };
