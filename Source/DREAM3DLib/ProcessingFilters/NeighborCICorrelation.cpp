@@ -54,8 +54,8 @@
 // -----------------------------------------------------------------------------
 NeighborCICorrelation::NeighborCICorrelation() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
   m_MinConfidence(0.1),
   m_Loop(false),

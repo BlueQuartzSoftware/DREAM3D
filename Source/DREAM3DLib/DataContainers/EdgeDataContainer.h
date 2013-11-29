@@ -79,6 +79,18 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
 
     virtual ~EdgeDataContainer();
 
+    /**
+     * @brief New Creates a new data container with the give name
+     * @param name The name of the data container
+     * @return
+     */
+    static Pointer New(const QString &name)
+    {
+      Pointer sharedPtr(new EdgeDataContainer());
+      sharedPtr->setName(name);
+      return sharedPtr;
+    }
+
     DREAM3D_INSTANCE_PROPERTY(EdgeArray::Pointer, Edges)
 
     /* ************ THESE ARE GOING TO GO AWAY I THINK. THEY ARE HERE TO GET THINGS TO COMPILE ******* */

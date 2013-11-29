@@ -232,8 +232,8 @@ void DataContainerReader::readData(bool preflight)
     {
       QH5Utilities::closeFile(fileId);
       fileId = QH5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
-      err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
-      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
+      err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::Defaults::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
+      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::Defaults::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
       err = QH5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, "5.0");
       QH5Utilities::closeFile(fileId);
       fileId = QH5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
@@ -245,7 +245,7 @@ void DataContainerReader::readData(bool preflight)
       addErrorMessage(getHumanLabel(), ss, err);
       return;
     }
-    hid_t dcaGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
+    hid_t dcaGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerGroupName.toLatin1().data(), 0);
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);

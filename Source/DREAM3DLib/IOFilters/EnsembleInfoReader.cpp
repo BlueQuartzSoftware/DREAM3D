@@ -50,7 +50,7 @@
 // -----------------------------------------------------------------------------
 EnsembleInfoReader::EnsembleInfoReader() :
   FileReader(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_InputFile(""),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),

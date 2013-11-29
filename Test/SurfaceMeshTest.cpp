@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 
   int err = 0;
   SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
-  sm->setName(DREAM3D::HDF5::SurfaceDataContainerName);
+  sm->setName(DREAM3D::Defaults::SurfaceDataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(sm);
 

@@ -78,6 +78,18 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
 
     virtual ~SurfaceDataContainer();
 
+    /**
+     * @brief New Creates a new data container with the give name
+     * @param name The name of the data container
+     * @return
+     */
+    static Pointer New(const QString &name)
+    {
+      Pointer sharedPtr(new SurfaceDataContainer());
+      sharedPtr->setName(name);
+      return sharedPtr;
+    }
+
     DREAM3D_INSTANCE_PROPERTY(FaceArray::Pointer, Faces)
 
     virtual unsigned int getDCType() {return DREAM3D::DataContainerType::SurfaceDataContainer;}

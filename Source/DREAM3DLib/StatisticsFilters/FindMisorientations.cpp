@@ -50,9 +50,9 @@
 // -----------------------------------------------------------------------------
 FindMisorientations::FindMisorientations()  :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),

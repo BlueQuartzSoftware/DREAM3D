@@ -119,7 +119,7 @@ int TestPhWriter()
 int TestPhReader()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(m);
 
@@ -139,7 +139,7 @@ int TestPhReader()
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
 
-  IDataArray::Pointer mdata = reader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName)->getCellData(DREAM3D::CellData::FeatureIds);
+  IDataArray::Pointer mdata = reader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName)->getCellData(DREAM3D::CellData::FeatureIds);
 
   int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
   int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());

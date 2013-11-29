@@ -46,9 +46,9 @@
 // -----------------------------------------------------------------------------
 FindVolFractions::FindVolFractions() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
   m_CellPhases(NULL),

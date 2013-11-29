@@ -11,9 +11,9 @@
 // -----------------------------------------------------------------------------
 FitCorrelatedFeatureData::FitCorrelatedFeatureData() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::HDF5::CellEnsembleAttributeMatrixName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_SelectedFeatureArrayName(""),
   m_CorrelatedFeatureArrayName(""),

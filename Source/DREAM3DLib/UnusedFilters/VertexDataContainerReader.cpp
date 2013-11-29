@@ -179,7 +179,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
   hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
-    QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);
+    QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::Defaults::VertexDataContainerName);
     setErrorCondition(-61);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -61;

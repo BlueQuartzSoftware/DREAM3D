@@ -56,7 +56,7 @@
 // -----------------------------------------------------------------------------
 VTKFileReader::VTKFileReader() :
   FileReader(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_InputFile("")
 {
 }

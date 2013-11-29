@@ -333,11 +333,11 @@ class FeatureChecker
 // -----------------------------------------------------------------------------
 M3CSliceBySlice::M3CSliceBySlice() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
-  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshTriangleLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),

@@ -49,9 +49,9 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshToVtk::SurfaceMeshToVtk() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
-  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_WriteBinaryFile(false),

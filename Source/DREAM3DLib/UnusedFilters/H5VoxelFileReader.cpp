@@ -45,7 +45,7 @@
 // -----------------------------------------------------------------------------
 H5VoxelFileReader::H5VoxelFileReader() :
   FileReader(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_InputFile(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),

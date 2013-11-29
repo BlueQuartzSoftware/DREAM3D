@@ -52,7 +52,7 @@
 // -----------------------------------------------------------------------------
 FeatureDataCSVWriter::FeatureDataCSVWriter() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_FeatureDataFile(""),
   m_Delimiter(','),
   m_WriteNeighborListData(false)

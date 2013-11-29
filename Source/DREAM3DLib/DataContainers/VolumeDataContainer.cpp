@@ -68,7 +68,7 @@ VolumeDataContainer::VolumeDataContainer() :
   m_Origin[1] = 0.0f;
   m_Origin[2] = 0.0f;
 
-  setName(DREAM3D::HDF5::VolumeDataContainerName);
+  setName(DREAM3D::Defaults::VolumeDataContainerName);
 }
 
 // -----------------------------------------------------------------------------
@@ -217,7 +217,7 @@ int VolumeDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
   writeXdmfMeshStructure(*out, hdfFileName);
   for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
   {
-    if((*iter)->getAMType() == DREAM3D::AttributeMatrixType::Cell)
+    if((*iter)->getType() == DREAM3D::AttributeMatrixType::Cell)
     {
       (*iter)->generateXdmfText("Cell", getName(), hdfFileName);
     }

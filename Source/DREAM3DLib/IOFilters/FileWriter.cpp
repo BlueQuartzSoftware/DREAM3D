@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 FileWriter::FileWriter() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName)
 {
 
 }
@@ -91,10 +91,9 @@ void FileWriter::execute()
 {
   if (getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()) == NULL)
   {
-    setErrorCondition(-1);
-    PipelineMessage em (getHumanLabel(), "The DataContainer Object was NOT set correctly.", -1);
-    addErrorMessage(em);
-    notifyMessage(em);
+    setErrorCondition(-100);
+    QString ss = QObject::tr("The DataContainer Object was NOT set correctly.");
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
   setErrorCondition(0);
@@ -106,29 +105,26 @@ void FileWriter::execute()
   QDir dir;
   if(!dir.mkpath(parentPath))
   {
+    setErrorCondition(-200);
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(ss, -1);
-    setErrorCondition(-1);
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
-
-
 
   int err = writeHeader();
   if (err < 0)
   {
-    PipelineMessage em (getHumanLabel(), "Error Writing the Header portion of the file", err);
+    QString ss = QObject::tr("Error Writing the Header portion of the file");
     setErrorCondition(err);
-    notifyMessage(em);
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
   err = writeFile();
   if (err < 0)
   {
-    PipelineMessage em (getHumanLabel(), "Error Writing the file", err);
-    addErrorMessage(em);
+    QString ss = QObject::tr("Error Writing the data to the file");
     setErrorCondition(err);
-    notifyMessage(em);
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 }

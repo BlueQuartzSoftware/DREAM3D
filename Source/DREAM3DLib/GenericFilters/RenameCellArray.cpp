@@ -42,8 +42,8 @@
 // -----------------------------------------------------------------------------
 RenameCellArray::RenameCellArray() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_SelectedCellArrayName(""),
   m_NewCellArrayName("")
 {

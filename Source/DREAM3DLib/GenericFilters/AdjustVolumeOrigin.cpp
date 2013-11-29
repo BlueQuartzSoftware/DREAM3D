@@ -97,8 +97,8 @@ namespace Detail
 // -----------------------------------------------------------------------------
 AdjustVolumeOrigin::AdjustVolumeOrigin() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_ApplyToVoxelVolume(true),
   m_ApplyToSurfaceMesh(true)
 {

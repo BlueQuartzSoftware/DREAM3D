@@ -178,8 +178,8 @@ namespace Detail
 // -----------------------------------------------------------------------------
 ConvertData::ConvertData() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ScalarType(0),
   m_OutputArrayName(""),
   m_SelectedCellArrayName("")

@@ -77,6 +77,18 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
 
     virtual ~VolumeDataContainer();
 
+    /**
+     * @brief New Creates a new data container with the give name
+     * @param name The name of the data container
+     * @return
+     */
+    static Pointer New(const QString &name)
+    {
+      Pointer sharedPtr(new VolumeDataContainer());
+      sharedPtr->setName(name);
+      return sharedPtr;
+    }
+
     DREAM3D_INSTANCE_PROPERTY(CellArray::Pointer, Cells)
 
     DREAM3D_INSTANCE_VEC3_PROPERTY(size_t, Dimensions)

@@ -201,7 +201,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), H5P_DEFAULT );
   if(dcGid < 0)
   {
-    QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::HDF5::EdgeDataContainerName);
+    QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::Defaults::EdgeDataContainerName);
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;

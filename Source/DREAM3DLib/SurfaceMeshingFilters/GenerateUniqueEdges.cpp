@@ -53,9 +53,9 @@ typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 // -----------------------------------------------------------------------------
 GenerateUniqueEdges::GenerateUniqueEdges() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_EdgeAttributeMatrixName(DREAM3D::HDF5::EdgeAttributeMatrixName),
-  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshUniqueEdges(NULL)
 {

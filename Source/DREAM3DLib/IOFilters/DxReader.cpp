@@ -45,7 +45,8 @@
 // -----------------------------------------------------------------------------
 DxReader::DxReader() :
   FileReader(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
@@ -140,7 +141,15 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t 
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
+  if(NULL == m)
+  {
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+    AttributeMatrix::Pointer attrMat = AttributeMatrix::New(getCellAttributeMatrixName());
+    m->addAttributeMatrix(attrMat->getName(), attrMat);
+  }
   QFileInfo fi(getInputFile());
 
   if (getInputFile().isEmpty() == true)
@@ -196,15 +205,6 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t 
 // -----------------------------------------------------------------------------
 void DxReader::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  }
-
   dataCheck(true, 1, 1, 1);
 }
 
@@ -215,14 +215,8 @@ void DxReader::execute()
 {
   int err = 0;
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  }
+  dataCheck(false, 0, 0, 0);
+
 
   m_InStream.setFileName(getInputFile());
   if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))

@@ -90,8 +90,8 @@ class FlattenImageImpl
 // -----------------------------------------------------------------------------
 FlattenImage::FlattenImage() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
   m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity), // We convert from Degrees to Radians by Default

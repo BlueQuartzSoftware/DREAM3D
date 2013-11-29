@@ -122,7 +122,7 @@ void TestDataContainerWriter()
 {
 
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(m);
   size_t nx = UnitTest::DataContainerIOTest::XSize;
@@ -200,7 +200,7 @@ void TestDataContainerReader()
 
 
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(m);
 
@@ -222,7 +222,7 @@ void TestDataContainerReader()
   DREAM3D_REQUIRE(err >= 0)
 
 
-  VolumeDataContainer* mPtr = dca->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName);
+  VolumeDataContainer* mPtr = dca->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
   mPtr->getDimensions(nx, ny, nz);
 
   DREAM3D_REQUIRE_EQUAL(mPtr->getNumCellArrays(), 2);
@@ -301,7 +301,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
 void TestInsertDelete()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
   QList<QString> nameList;
 
   insertDeleteArray<Int8ArrayType> (m);
@@ -450,7 +450,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 void TestArrayCreation()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
   QList<QString> nameList;
 
   _arrayCreation<int8_t, Int8ArrayType>(m);
@@ -511,7 +511,7 @@ void TestDataContainer()
   std::cout << "Value for [5][3]: " << neighborList->getValue(5, 3, ok) << std::endl;
 
   VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New();
-  dataContainer->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  dataContainer->setName(DREAM3D::Defaults::VolumeDataContainerName);
   dataContainer->addCellData("NeighborList", iDataArray);
   {
     MAKE_ARRAY(int8_t, "int8_t_Array" );

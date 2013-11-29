@@ -42,7 +42,7 @@
 // -----------------------------------------------------------------------------
 RenameFeatureArray::RenameFeatureArray() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_SelectedFeatureArrayName(""),
   m_NewFeatureArrayName("")
 {

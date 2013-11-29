@@ -53,7 +53,7 @@
 EdgeDataContainer::EdgeDataContainer() :
   VertexDataContainer()
 {
-  setName(DREAM3D::HDF5::EdgeDataContainerName);
+  setName(DREAM3D::Defaults::EdgeDataContainerName);
 }
 
 // -----------------------------------------------------------------------------
@@ -200,7 +200,7 @@ int EdgeDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
   writeXdmfMeshStructure(*out, hdfFileName);
   for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
   {
-    if((*iter)->getAMType() == DREAM3D::AttributeMatrixType::Edge)
+    if((*iter)->getType() == DREAM3D::AttributeMatrixType::Edge)
     {
       (*iter)->generateXdmfText("Cell", getName(), hdfFileName);
     }

@@ -53,7 +53,7 @@
 VertexDataContainer::VertexDataContainer() :
   DataContainer()
 {
-  setName(DREAM3D::HDF5::VertexDataContainerName);
+  setName(DREAM3D::Defaults::VertexDataContainerName);
 }
 
 // -----------------------------------------------------------------------------
@@ -113,7 +113,7 @@ int VertexDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
   writeXdmfMeshStructure(*out, hdfFileName);
   for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
   {
-    if((*iter)->getAMType() == DREAM3D::AttributeMatrixType::Vertex)
+    if((*iter)->getType() == DREAM3D::AttributeMatrixType::Vertex)
     {
       (*iter)->generateXdmfText("Node", getName(), hdfFileName);
     }

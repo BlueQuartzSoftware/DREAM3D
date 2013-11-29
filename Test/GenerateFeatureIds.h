@@ -24,6 +24,7 @@ class GenerateFeatureIds : public AbstractFilter
     virtual ~GenerateFeatureIds(){}
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
@@ -38,7 +39,7 @@ class GenerateFeatureIds : public AbstractFilter
     virtual void execute()
     {
       setErrorCondition(0);
-      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName);
+      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
       if(NULL == m)
       {
         setErrorCondition(-1);
@@ -47,15 +48,7 @@ class GenerateFeatureIds : public AbstractFilter
       }
       int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
 
-      int64_t nx = UnitTest::FeatureIdsTest::XSize;
-      int64_t ny = UnitTest::FeatureIdsTest::YSize;
-      int64_t nz = UnitTest::FeatureIdsTest::ZSize;
-      m->setDimensions(nx, ny, nz);
-
-      int64_t totalPoints = m->getTotalPoints();
-      size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-      size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-      dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+      dataCheck(false, size, 0, 0);
       // Set the default data into the FeatureIds
       for (int i = 0; i < size; ++i)
       {
@@ -84,7 +77,9 @@ class GenerateFeatureIds : public AbstractFilter
   protected:
     GenerateFeatureIds() :
       AbstractFilter(),
-      m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+      m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+      m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+      m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
       m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
       m_FeatureIds(NULL)
     {
@@ -96,7 +91,7 @@ class GenerateFeatureIds : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
     {
       setErrorCondition(0);
-      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName);
+      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
       if (NULL == m)
       {
         QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
@@ -189,8 +184,14 @@ class CreateVolumeDataContainer : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
     {
       VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-      m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+      m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+      int64_t nx = UnitTest::FeatureIdsTest::XSize;
+      int64_t ny = UnitTest::FeatureIdsTest::YSize;
+      int64_t nz = UnitTest::FeatureIdsTest::ZSize;
+      m->setDimensions(nx, ny, nz);
       getDataContainerArray()->pushBack(m);
+      AttributeMatrix::Pointer attrMat = AttributeMatrix::New(DREAM3D::Defaults::CellAttributeMatrixName);
+      m->addAttributeMatrix(attrMat->getName(), attrMat);
     }
 
   private:

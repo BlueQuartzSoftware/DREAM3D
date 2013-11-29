@@ -49,7 +49,7 @@
 // -----------------------------------------------------------------------------
 ImportImageStack::ImportImageStack() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_ZStartIndex(0),
   m_ZEndIndex(0),

@@ -158,7 +158,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, in
 // -----------------------------------------------------------------------------
 RawBinaryReader::RawBinaryReader() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_ScalarType(0),
   m_Endian(0),
   m_Dimensionality(0),

@@ -51,9 +51,9 @@
 // -----------------------------------------------------------------------------
 BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
-  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName)
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName)
 {
   setupFilterParameters();
 }

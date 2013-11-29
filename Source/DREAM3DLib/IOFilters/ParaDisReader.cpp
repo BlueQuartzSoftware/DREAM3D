@@ -45,9 +45,9 @@
 // -----------------------------------------------------------------------------
 ParaDisReader::ParaDisReader() :
   FileReader(),
-  m_EdgeDataContainerName(DREAM3D::HDF5::EdgeDataContainerName),
-  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
-  m_EdgeAttributeMatrixName(DREAM3D::HDF5::EdgeAttributeMatrixName),
+  m_EdgeDataContainerName(DREAM3D::Defaults::EdgeDataContainerName),
+  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
+  m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
   m_InputFile(""),
   m_NumberOfArmsArrayName(DREAM3D::VertexData::NumberOfArms),
   m_NodeConstraintsArrayName(DREAM3D::VertexData::NodeConstraints),

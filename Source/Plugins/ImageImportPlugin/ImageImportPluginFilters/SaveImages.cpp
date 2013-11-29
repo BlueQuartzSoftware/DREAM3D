@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 SaveImages::SaveImages() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),

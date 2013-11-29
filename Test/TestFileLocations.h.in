@@ -18,6 +18,7 @@ namespace UnitTest
 {
 
   const QString DataDir("@DREAM3D_DATA_DIR@");
+  const QString TestTempDir("@TEST_TEMP_DIR@");
 
   // -----------------------------------------------------------------------------
   //  Define where to put our temporary files for the H5Utilities Test
@@ -51,11 +52,6 @@ namespace UnitTest
     static const size_t YSize = 4;
     static const size_t ZSize = 5;
     static const size_t Offset = 200;
-  }
-
-  namespace DxIOTest
-  {
-    static const QString TestFile("@TEST_TEMP_DIR@/DxIOTest.dx");
   }
 
   namespace PhIOTest

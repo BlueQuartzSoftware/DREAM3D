@@ -195,7 +195,7 @@ class PipelineMessage
      */
     QString generateErrorString()
     {
-      QString ss = QObject::tr("Error (%1):%2 :%3").arg(m_Code).arg(m_MessagePrefix).arg(m_Msg);
+      QString ss = QObject::tr("Error (%1): %2: %3").arg(m_Code).arg(m_MessagePrefix).arg(m_Msg);
       return ss;
     }
 
@@ -204,7 +204,7 @@ class PipelineMessage
      */
     QString generateWarningString()
     {
-      QString ss = QObject::tr("Warning (%1):%2 :%3").arg(m_Code).arg(m_MessagePrefix).arg(m_Msg);
+      QString ss = QObject::tr("Warning (%1): %2: %3").arg(m_Code).arg(m_MessagePrefix).arg(m_Msg);
       return ss;
     }
 
@@ -213,7 +213,7 @@ class PipelineMessage
      */
     QString generateStatusString()
     {
-      QString ss = QObject::tr("%1:%2").arg(m_MessagePrefix).arg(m_Msg);
+      QString ss = QObject::tr("%1: %2").arg(m_MessagePrefix).arg(m_Msg);
       return ss;
     }
 

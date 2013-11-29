@@ -75,6 +75,20 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
 
     virtual ~VertexDataContainer();
 
+
+    /**
+     * @brief New Creates a new data container with the give name
+     * @param name The name of the data container
+     * @return
+     */
+    static Pointer New(const QString &name)
+    {
+      Pointer sharedPtr(new VertexDataContainer());
+      sharedPtr->setName(name);
+      return sharedPtr;
+    }
+
+
     DREAM3D_INSTANCE_PROPERTY(VertexArray::Pointer, Vertices)
 
     virtual unsigned int getDCType() {return DREAM3D::DataContainerType::VertexDataContainer;}

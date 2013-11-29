@@ -112,8 +112,8 @@ class SampleSurfaceMeshImpl
 SampleSurfaceMesh::SampleSurfaceMesh() :
   AbstractFilter(),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName)
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName)
 {
   setupFilterParameters();
 }

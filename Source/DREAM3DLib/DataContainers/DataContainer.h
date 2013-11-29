@@ -66,6 +66,12 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     virtual ~DataContainer();
 
+    static Pointer New(const QString &name)
+    {
+      Pointer sharedPtr(new DataContainer(name));
+      return sharedPtr;
+    }
+
     typedef QMap<QString, AttributeMatrix::Pointer> AttributeMatrixMap_t;
 
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QString, Name)
@@ -99,14 +105,14 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       if (attributeMatrixName.isEmpty() == true)
       {
         filter->setErrorCondition(err * 1000);
-        ss = QObject::tr("The name of the AttributeMatrix - '%1' was empty. Please provide a name for this AttributeMatrix").arg(attributeArrayName);
+        ss = QObject::tr("DataContainer:'%1' The name of the AttributeMatrix was empty. Please provide a name for this AttributeMatrix").arg(getName());
         filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         return attributeArray;
       }
       if (attributeArrayName.isEmpty() == true)
       {
-        filter->setErrorCondition(err * 1000);
-        ss = QObject::tr("The name of the Attribute Array - '%1' was empty. Please provide a name for this array").arg(attributeArrayName);
+        filter->setErrorCondition(err * 1010);
+        ss = QObject::tr("DataContainer:'%1' AttributeMatrix:'%2' The name of the Attribute Array was empty. Please provide a name for this array").arg(getName()).arg(attributeMatrixName);
         filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
 
@@ -114,8 +120,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       AttributeMatrix::Pointer matrix = getAttributeMatrix(attributeMatrixName);
       if(NULL == matrix.get())
       {
-        filter->setErrorCondition(err * 1000);
-        ss = QObject::tr("An AttributeMatrix with name '%1' does not exist and is required for this filter to execute.").arg(attributeMatrixName);
+        filter->setErrorCondition(err * 1020);
+        ss = QObject::tr("DataContainer:'%1' An AttributeMatrix with name '%2' does not exist and is required for this filter to execute.").arg(getName()).arg(attributeMatrixName);
         filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         return attributeArray;
       }
@@ -124,8 +130,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       // Now ask for the actual AttributeArray from the AttributeMatrix
       if (matrix->doesAttributeArrayExist(attributeArrayName) == false)
       {
-        filter->setErrorCondition(err * 1000 + 1);
-        ss = QObject::tr("An array with name '%1' does not exist in the AttributeMatrix and is required for this filter to execute.").arg(attributeArrayName);
+        filter->setErrorCondition(err * 1030);
+        ss = QObject::tr("DataContainer:'%1' AttributeMatrix:'%2' An array with name '%3' does not exist in the AttributeMatrix and is required for this filter to execute.").arg(getName()).arg(attributeMatrixName).arg(attributeArrayName);
         filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         return attributeArray;
       }
@@ -281,6 +287,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
   protected:
     DataContainer();
+    explicit DataContainer(const QString name);
 
   private:
     DataContainer(const DataContainer&); // Copy Constructor Not Implemented

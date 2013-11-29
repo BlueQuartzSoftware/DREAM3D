@@ -151,10 +151,10 @@ class LaplacianSmoothingImpl
 // -----------------------------------------------------------------------------
 LaplacianSmoothing::LaplacianSmoothing() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
-  m_EdgeAttributeMatrixName(DREAM3D::HDF5::EdgeAttributeMatrixName),
-  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
+  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_IterationSteps(1),
   m_Lambda(0.1),

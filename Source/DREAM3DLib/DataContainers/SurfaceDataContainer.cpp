@@ -53,7 +53,7 @@
 SurfaceDataContainer::SurfaceDataContainer() :
   EdgeDataContainer()
 {
-  setName(DREAM3D::HDF5::SurfaceDataContainerName);
+  setName(DREAM3D::Defaults::SurfaceDataContainerName);
 }
 
 // -----------------------------------------------------------------------------
@@ -201,7 +201,7 @@ int SurfaceDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
   writeXdmfMeshStructure(*out, hdfFileName);
   for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
   {
-    if((*iter)->getAMType() == DREAM3D::AttributeMatrixType::Face)
+    if((*iter)->getType() == DREAM3D::AttributeMatrixType::Face)
     {
       (*iter)->generateXdmfText("Cell", getName(), hdfFileName);
     }

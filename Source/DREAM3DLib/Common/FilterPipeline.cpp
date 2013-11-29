@@ -299,21 +299,6 @@ void FilterPipeline::execute()
 {
   int err = 0;
 
-  // Run the preflight first to make sure we can run this combination of filters
-  // Inside the function we create a new DataContainer object so we don't mess
-  // with any currently set DataContainer
-  // err = preflightPipeline();
-//  if(err < 0)
-//  {
-//    return;
-//  }
-
-  // Create the DataContainer object
-//  if(NULL == m_DataContainer.get())
-//  {
-//    m_DataContainer = DataContainer::New();
-//  }
-
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
   // Start looping through the Pipeline
@@ -321,8 +306,6 @@ void FilterPipeline::execute()
 
 
 // Start a Benchmark Clock so we can keep track of each filter's execution time
-  DEFINE_CLOCK;
-  START_CLOCK;
   PipelineMessage progValue("", "", 0, PipelineMessage::StatusValue, -1);
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
@@ -342,7 +325,6 @@ void FilterPipeline::execute()
     setCurrentFilter(*iter);
     (*iter)->execute();
     (*iter)->removeObserver(static_cast<Observer*>(this));
-    (*iter)->setDataContainerArray(DataContainerArray::NullPointer());
 
     err = (*iter)->getErrorCondition();
     if(err < 0)
@@ -360,7 +342,6 @@ void FilterPipeline::execute()
       break;
     }
     ss = QObject::tr("%1 Filter Complete").arg((*iter)->getNameOfClass());
-    END_CLOCK(ss);
   }
 
   PipelineMessage completMessage("", "Pipeline Complete", 0, PipelineMessage::StatusMessage, -1);

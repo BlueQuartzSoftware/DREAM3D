@@ -44,6 +44,8 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 #include "DREAM3DLib/IOFilters/DxWriter.h"
 #include "DREAM3DLib/IOFilters/DxReader.h"
 
@@ -55,10 +57,19 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
+  QString getTestFile()
+  {
+    return UnitTest::TestTempDir + "/DxIOTest.dx";
+  }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::DxIOTest::TestFile);
+  QFile::remove(getTestFile());
 #endif
 }
 
@@ -68,11 +79,10 @@ void RemoveTestFiles()
 int TestDxWriter()
 {
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-
+  std::cout << "Test 1 ------------------------------------------------" << std::endl;
   // This should FAIL because there is no Volume Data Container for the filter to get.
   DxWriter::Pointer writer = DxWriter::New();
-  writer->setOutputFile(UnitTest::DxIOTest::TestFile);
+  writer->setOutputFile(getTestFile());
   pipeline->pushBack(writer);
   int err = pipeline->preflightPipeline();
   DREAM3D_REQUIRE(err < 0);
@@ -81,6 +91,7 @@ int TestDxWriter()
   DREAM3D_REQUIRE(err < 0);
   pipeline->popFront();
 
+  std::cout << "Test 2 ------------------------------------------------" << std::endl;
   // Now have a VolumeDataContainer created but NO feature Ids. This pipeline should still fail
   CreateVolumeDataContainer::Pointer createVolumeDC = CreateVolumeDataContainer::New();
   pipeline->pushBack(createVolumeDC);
@@ -91,6 +102,7 @@ int TestDxWriter()
   err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE(err < 0);
 
+  std::cout << "Test 3 ------------------------------------------------" << std::endl;
   // Now create some FeatureIds and lets setup a real pipeline that should work
   pipeline->clear(); // Remove any filters from the pipeline first
   // Put a filter that will just create an empty VolumeDataContainer
@@ -100,7 +112,7 @@ int TestDxWriter()
   pipeline->pushBack(generateFeatureIds);
 
   writer = DxWriter::New();
-  writer->setOutputFile(UnitTest::DxIOTest::TestFile);
+  writer->setOutputFile(getTestFile());
   pipeline->pushBack(writer);
   err = pipeline->preflightPipeline();
   DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -117,35 +129,55 @@ int TestDxWriter()
 int TestDxReader()
 {
 
+  // Create the pipeline
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  // Create the Dx Reader
   DxReader::Pointer reader = DxReader::New();
-  reader->setInputFile(UnitTest::DxIOTest::TestFile);
+  reader->setInputFile(getTestFile());
+  // Put the Filter into the pipeline
+  pipeline->pushBack(reader);
+  // Preflight the pipeline
+  int err = pipeline->preflightPipeline();
+  DREAM3D_REQUIRE(err >= 0)
+
+  // Now execute the filter
+  pipeline->execute();
+
+  // The Pipeline should have executed without any issues
+  DREAM3D_REQUIRE(pipeline->getErrorCondition() >= 0)
+
+  // Get the Volume Data Container from the Pipeline
+  VolumeDataContainer* mFromFile = reader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
+  DREAM3D_REQUIRE(NULL != mFromFile );
+
   size_t nx = 0;
   size_t ny = 0;
   size_t nz = 0;
-
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
-  DataContainerArray::Pointer dca = DataContainerArray::New();
-  dca->pushBack(m);
-  reader->setDataContainerArray(dca);
-  reader->preflight();
-  int err = reader->getErrorCondition();
-  DREAM3D_REQUIRE(err >= 0);
-
-  m->clearCellData(); // We MUST clear out the dummy data that was put in the Cell Data of the Voxel Data container
-  // Now execute the filter
-  reader->execute( );
-  err = reader->getErrorCondition();
-  m->getDimensions(nx, ny, nz);
-
-  IDataArray::Pointer mdata = reader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName)->getCellData(DREAM3D::CellData::FeatureIds);
-
-  DREAM3D_REQUIRE_EQUAL(err, 0);
+  mFromFile->getDimensions(nx, ny, nz);
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
-  int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
-  int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
+
+
+  AttributeMatrix::Pointer attrMat = mFromFile->getAttributeMatrix(reader->getCellAttributeMatrixName());
+  DREAM3D_REQUIRE(NULL != attrMat.get() )
+
+  bool exists = attrMat->doesAttributeArrayExist(reader->getFeatureIdsArrayName() );
+  DREAM3D_REQUIRED(exists, ==, true)
+
+  // Now get the actual DataArray from the Attribute Matrix
+  Int32ArrayType::Pointer featureIds = attrMat->getArray<Int32ArrayType>(reader->getFeatureIdsArrayName());
+  DREAM3D_REQUIRED(NULL, !=, featureIds.get());
+
+  // Get the Raw Pointer
+  int32_t* data = featureIds->getPointer(0);
+
+  int size = nx * ny * nz;
+
+  // Make sure all the sizes match up
+  size_t nTuples = featureIds->getNumberOfTuples();
+  DREAM3D_REQUIRED(nTuples, ==, size);
 
   for (int i = 0; i < size; ++i)
   {

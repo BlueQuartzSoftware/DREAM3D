@@ -60,9 +60,9 @@ class ScopedFileMonitor
 // -----------------------------------------------------------------------------
 GoldfeatherReader::GoldfeatherReader() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_VertexAttributeMatrixName(DREAM3D::HDF5::VertexAttributeMatrixName),
-  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_Principal_Curvature_1ArrayName("Principal_Curvature_1"),
   m_Principal_Curvature_2ArrayName("Principal_Curvature_2"),
   m_Principal_Direction_1ArrayName("Principal_Direction_1"),

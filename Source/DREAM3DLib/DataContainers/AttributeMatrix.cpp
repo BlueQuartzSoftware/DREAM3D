@@ -64,7 +64,8 @@
 AttributeMatrix::AttributeMatrix() :
   m_NumTuples(0)
 {
-  setName(DREAM3D::HDF5::AttributeMatrixName);
+  setName(DREAM3D::Defaults::AttributeMatrixName);
+  setType(DREAM3D::AttributeMatrixType::Unknown);
 }
 
 // -----------------------------------------------------------------------------
@@ -80,8 +81,7 @@ AttributeMatrix::~AttributeMatrix()
 // -----------------------------------------------------------------------------
 bool AttributeMatrix::doesAttributeArrayExist(const QString& name)
 {
-  return  m_AttributeMatrix.contains(name);
-  \
+  return  m_AttributeArrays.contains(name);
 }
 
 // -----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ void AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer
     qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
-  m_AttributeMatrix[name] = data;
+  m_AttributeArrays[name] = data;
   m_NumTuples = data->getNumberOfTuples();
 }
 
@@ -106,8 +106,8 @@ void AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer
 IDataArray::Pointer AttributeMatrix::getAttributeArray(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_AttributeMatrix.find(name);
-  if ( it == m_AttributeMatrix.end() )
+  it =  m_AttributeArrays.find(name);
+  if ( it == m_AttributeArrays.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -120,13 +120,13 @@ IDataArray::Pointer AttributeMatrix::getAttributeArray(const QString& name)
 IDataArray::Pointer AttributeMatrix::removeAttributeArray(const QString& name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_AttributeMatrix.find(name);
-  if ( it == m_AttributeMatrix.end() )
+  it =  m_AttributeArrays.find(name);
+  if ( it == m_AttributeArrays.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = it.value();
-  m_AttributeMatrix.erase(it);
+  m_AttributeArrays.erase(it);
   return p;
 }
 
@@ -136,8 +136,8 @@ IDataArray::Pointer AttributeMatrix::removeAttributeArray(const QString& name)
 bool AttributeMatrix::renameAttributeArray(const QString& oldname, const QString& newname)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_AttributeMatrix.find(oldname);
-  if ( it == m_AttributeMatrix.end() )
+  it =  m_AttributeArrays.find(oldname);
+  if ( it == m_AttributeArrays.end() )
   {
     return false;
   }
@@ -154,7 +154,7 @@ bool AttributeMatrix::renameAttributeArray(const QString& oldname, const QString
 void AttributeMatrix::resizeAttributeArrays(size_t size)
 {
 // int success = 0;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeMatrix.begin(); iter != m_AttributeMatrix.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
     IDataArray::Pointer d = iter.value();
@@ -168,7 +168,7 @@ void AttributeMatrix::resizeAttributeArrays(size_t size)
 // -----------------------------------------------------------------------------
 void AttributeMatrix::clearAttributeArrays()
 {
-  m_AttributeMatrix.clear();
+  m_AttributeArrays.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -177,7 +177,7 @@ void AttributeMatrix::clearAttributeArrays()
 QList<QString> AttributeMatrix::getAttributeArrayNameList()
 {
   QList<QString> keys;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeMatrix.begin(); iter != m_AttributeMatrix.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
     keys.push_back( iter.key() );
   }
@@ -189,7 +189,7 @@ QList<QString> AttributeMatrix::getAttributeArrayNameList()
 // -----------------------------------------------------------------------------
 int AttributeMatrix::getNumAttributeArrays()
 {
-  return static_cast<int>(m_AttributeMatrix.size());
+  return static_cast<int>(m_AttributeArrays.size());
 }
 
 // -----------------------------------------------------------------------------
@@ -198,7 +198,7 @@ int AttributeMatrix::getNumAttributeArrays()
 int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
 {
   int err;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeMatrix.begin(); iter != m_AttributeMatrix.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
 //    QString ss = QObject::tr("Writing Data '%1' to HDF5 File").arg(*iter);
 //    notifyStatusMessage(ss);
@@ -279,7 +279,7 @@ QString AttributeMatrix::generateXdmfText(const QString& centering, const QStrin
   QString block;
   QTextStream out(&xdmfText);
 
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeMatrix.begin(); iter != m_AttributeMatrix.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
     IDataArray::Pointer d = iter.value();
     block = writeXdmfAttributeData(d, centering, dataContainerName, hdfFileName);

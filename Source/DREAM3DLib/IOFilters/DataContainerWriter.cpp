@@ -250,15 +250,15 @@ void DataContainerWriter::execute()
   // Write the Pipeline to the File
   err = writePipeline();
 
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::DataContainerName.toLatin1().data(), m_FileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::DataContainerGroupName.toLatin1().data(), m_FileId);
   if (err < 0)
   {
-    QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::HDF5::DataContainerName);
+    QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::HDF5::DataContainerGroupName);
     setErrorCondition(-60);
     addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
-  hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerGroupName.toLatin1().data(), H5P_DEFAULT );
   scopedFileSentinel.addGroupId(&dcaGid);
 
   unsigned int dcType = DREAM3D::DataContainerType::UnknownDataContainer;

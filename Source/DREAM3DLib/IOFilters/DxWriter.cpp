@@ -48,9 +48,10 @@
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter() :
   FileWriter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_AddSurfaceLayer(false),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -158,7 +159,7 @@ void DxWriter::preflight()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
-    QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
+    QString ss = QObject::tr("The Volume Data Container with name '%1' was not found in the Data Container Array.").arg(getDataContainerName());
     setErrorCondition(-1001);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

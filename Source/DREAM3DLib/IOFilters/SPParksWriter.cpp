@@ -55,7 +55,7 @@
 // -----------------------------------------------------------------------------
 SPParksWriter::SPParksWriter() :
   FileWriter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {

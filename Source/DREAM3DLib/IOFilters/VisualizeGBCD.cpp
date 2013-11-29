@@ -55,8 +55,8 @@
 // -----------------------------------------------------------------------------
 VisualizeGBCD::VisualizeGBCD() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_FaceEnsembleAttributeMatrixName(DREAM3D::HDF5::FaceEnsembleAttributeMatrixName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_FaceEnsembleAttributeMatrixName(DREAM3D::Defaults::FaceEnsembleAttributeMatrixName),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCDdimensionsArrayName(DREAM3D::EnsembleData::GBCDdimensions),

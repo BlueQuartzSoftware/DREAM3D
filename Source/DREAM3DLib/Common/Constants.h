@@ -58,6 +58,33 @@ namespace DREAM3D
   typedef uint32_t Rgb;
   const Rgb  RGB_MASK    = 0x00ffffff;                // masks RGB values
 
+  namespace Defaults
+  {
+    const DREAM3D_STRING AttributeMatrixName("AttributeMatrix");
+
+    const DREAM3D_STRING VertexDataContainerName("VertexDataContainer");
+    const DREAM3D_STRING VertexAttributeMatrixName("VertexData");
+    const DREAM3D_STRING VertexFeatureAttributeMatrixName("VertexFeatureData");
+    const DREAM3D_STRING VertexEnsembleAttributeMatrixName("VertexEnsembleData");
+
+    const DREAM3D_STRING EdgeDataContainerName("EdgeDataContainer");
+    const DREAM3D_STRING EdgeAttributeMatrixName("EdgeData");
+    const DREAM3D_STRING EdgeFeatureAttributeMatrixName("EdgeFeatureData");
+    const DREAM3D_STRING EdgeEnsembleAttributeMatrixName("EdgeEnsembleData");
+
+    const DREAM3D_STRING SurfaceDataContainerName("SurfaceDataContainer");
+    const DREAM3D_STRING FaceAttributeMatrixName("FaceData");
+    const DREAM3D_STRING FaceFeatureAttributeMatrixName("FaceFeatureData");
+    const DREAM3D_STRING FaceEnsembleAttributeMatrixName("FaceEnsembleData");
+
+    const DREAM3D_STRING VolumeDataContainerName("VolumeDataContainer");
+    const DREAM3D_STRING CellAttributeMatrixName("CellData");
+    const DREAM3D_STRING CellFeatureAttributeMatrixName("CellFeatureData");
+    const DREAM3D_STRING CellEnsembleAttributeMatrixName("CellEnsembleData");
+
+    const DREAM3D_STRING VoxelDataName("VoxelData");
+  }
+
   namespace FilterGroups
   {
     const DREAM3D_STRING GenericFilters("Generic");
@@ -286,9 +313,13 @@ namespace DREAM3D
 
   namespace HDF5
   {
+    const DREAM3D_STRING FileVersion("6.0");
+    const DREAM3D_STRING FileVersionName("FileVersion");
+    const DREAM3D_STRING ObjectType("ObjectType");
+    const DREAM3D_STRING Rank("Rank");
+
     const DREAM3D_STRING Alpha("Alpha");
     const DREAM3D_STRING Angle("Angle");
-    const DREAM3D_STRING AttributeMatrixName("AttributeMatrix");
     const DREAM3D_STRING AttributeMatrixType("AttributeMatrixType");
     const DREAM3D_STRING Average("Average");
     const DREAM3D_STRING Axis("Axis");
@@ -300,21 +331,16 @@ namespace DREAM3D
     const DREAM3D_STRING BoundaryArea("BoundaryArea");
     const DREAM3D_STRING BoundaryStatsData("BoundaryStatsData");
     const DREAM3D_STRING CellNeighbors("CellNeighbors");
-    const DREAM3D_STRING CellAttributeMatrixName("CellData");
-    const DREAM3D_STRING CellFeatureAttributeMatrixName("CellFeatureData");
-    const DREAM3D_STRING CellEnsembleAttributeMatrixName("CellEnsembleData");
+
     const DREAM3D_STRING CellsContainingVert("CellsContainingVert");
     const DREAM3D_STRING CellsName("Cells");
     const DREAM3D_STRING CrystalStructure("CrystalStructure");
-    const DREAM3D_STRING DataContainerName("DataContainers");
+    const DREAM3D_STRING DataContainerGroupName("DataContainers");
     const DREAM3D_STRING DataContainerType("DataContainerType");
     const DREAM3D_STRING DataArrayVersion("DataArrayVersion");
     const DREAM3D_STRING Dims("Dims");
     const DREAM3D_STRING DistributionType("Distribution Type");
-    const DREAM3D_STRING EdgeDataContainerName("EdgeDataContainer");
-    const DREAM3D_STRING EdgeAttributeMatrixName("EdgeData");
-    const DREAM3D_STRING EdgeFeatureAttributeMatrixName("EdgeFeatureData");
-    const DREAM3D_STRING EdgeEnsembleAttributeMatrixName("EdgeEnsembleData");
+
     const DREAM3D_STRING EdgeNeighbors("EdgeNeighbors");
     const DREAM3D_STRING EdgesContainingVert("EdgesContainingVert");
     const DREAM3D_STRING EdgesName("Edges");
@@ -322,14 +348,11 @@ namespace DREAM3D
     const DREAM3D_STRING Euler2("Euler 2");
     const DREAM3D_STRING Euler3("Euler 3");
     const DREAM3D_STRING Exp_k("K");
-    const DREAM3D_STRING FaceAttributeMatrixName("FaceData");
-    const DREAM3D_STRING FaceFeatureAttributeMatrixName("FaceFeatureData");
-    const DREAM3D_STRING FaceEnsembleAttributeMatrixName("FaceEnsembleData");
+
     const DREAM3D_STRING FaceNeighbors("FaceNeighbors");
     const DREAM3D_STRING FacesContainingVert("FacesContainingVert");
     const DREAM3D_STRING FacesName("Faces");
-    const DREAM3D_STRING FileVersion("6.0");
-    const DREAM3D_STRING FileVersionName("FileVersion");
+
     const DREAM3D_STRING GBCD("GBCD");
     const DREAM3D_STRING FeatureAvgDisorientation ("FeatureAvgDisorientation");
     const DREAM3D_STRING Feature_Diameter_Info("Feature_Diameter_Info");
@@ -351,7 +374,7 @@ namespace DREAM3D
     const DREAM3D_STRING NumComponents("NumComponents");
     const DREAM3D_STRING ODF("ODF");
     const DREAM3D_STRING ODFWeights("ODF-Weights");
-    const DREAM3D_STRING ObjectType("ObjectType");
+
     const DREAM3D_STRING ParentPhase("Parent Phase");
     const DREAM3D_STRING PhaseFraction("PhaseFraction");
     const DREAM3D_STRING PhaseType("PhaseType");
@@ -360,24 +383,20 @@ namespace DREAM3D
     const DREAM3D_STRING PrecipitateBoundaryFraction("Precipitate Boundary Fraction");
     const DREAM3D_STRING PrecipitateStatsData("PrecipitateStatsData");
     const DREAM3D_STRING PrimaryStatsData("PrimaryStatsData");
-    const DREAM3D_STRING Rank("Rank");
+
     const DREAM3D_STRING Sigma("Sigma");
     const DREAM3D_STRING StandardDeviation("Standard Deviation");
     const DREAM3D_STRING Statistics("Statistics");
     const DREAM3D_STRING Stats("Stats");
     const DREAM3D_STRING StatsData("StatsData");
     const DREAM3D_STRING StatsType("StatsType");
-    const DREAM3D_STRING SurfaceDataContainerName("SurfaceDataContainer");
+
     const DREAM3D_STRING TransformationStatsData("TransformationStatsData");
     const DREAM3D_STRING UnknownDistribution("Unknown Distribution");
-    const DREAM3D_STRING VertexDataContainerName("VertexDataContainer");
-    const DREAM3D_STRING VertexAttributeMatrixName("VertexData");
-    const DREAM3D_STRING VertexFeatureAttributeMatrixName("VertexFeatureData");
-    const DREAM3D_STRING VertexEnsembleAttributeMatrixName("VertexEnsembleData");
+
     const DREAM3D_STRING VerticesName("Vertices");
     const DREAM3D_STRING VertsName("Verts");
-    const DREAM3D_STRING VolumeDataContainerName("VolumeDataContainer");
-    const DREAM3D_STRING VoxelDataName("VoxelData");
+
     const DREAM3D_STRING Weight("Weight");
 
     enum ColumnCount

@@ -76,6 +76,19 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     virtual ~AttributeMatrix();
 
+
+    /**
+     * @brief New Creates an AttributeMatrix with the give name
+     * @param name The name of the AttributeMatrix
+     * @return
+     */
+    static Pointer New(const QString name)
+    {
+      Pointer sharedPtr(new AttributeMatrix);
+      sharedPtr->setName(name);
+      return sharedPtr;
+    }
+
 #if 0
     //Initalize Array Func Here
     template<typename T, class Filter>
@@ -163,7 +176,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         typename DataArray<T>::Pointer dat = DataArray<T>::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
         QString s = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"
                                 "An Array with name '%4' is stored in the %5 but is of type %6\n")
-                    .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
+            .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
         if (NULL != filter)
         {
           filter->setErrorCondition(-502);
@@ -174,7 +187,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       return true;
     }
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, AMType)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, Type)
     DREAM3D_INSTANCE_PROPERTY(QString, Name)
 
     /**
@@ -197,6 +210,12 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      */
     virtual IDataArray::Pointer getAttributeArray(const QString& name);
 
+    template<class ArrayType>
+    typename ArrayType::Pointer getArray(const QString& name)
+    {
+      IDataArray::Pointer iDataArray = getAttributeArray(name);
+      return boost::dynamic_pointer_cast< ArrayType >(iDataArray);
+    }
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
     * method.
@@ -254,7 +273,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
   private:
 
-    QMap<QString, IDataArray::Pointer> m_AttributeMatrix;
+    QMap<QString, IDataArray::Pointer> m_AttributeArrays;
 
     AttributeMatrix(const AttributeMatrix&);
     void operator =(const AttributeMatrix&);

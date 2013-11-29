@@ -122,8 +122,8 @@ class CalculateDihedralAnglesImpl
 // -----------------------------------------------------------------------------
 TriangleDihedralAngleFilter::TriangleDihedralAngleFilter() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::HDF5::FaceAttributeMatrixName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_SurfaceMeshTriangleDihedralAnglesArrayName(DREAM3D::FaceData::SurfaceMeshFaceDihedralAngles),
   m_SurfaceMeshTriangleDihedralAngles(NULL)
 {

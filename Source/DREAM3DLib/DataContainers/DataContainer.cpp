@@ -44,7 +44,15 @@
 DataContainer::DataContainer() :
   Observable()
 {
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainer::DataContainer(const QString name) :
+  Observable(),
+  m_Name(name)
+{
 }
 
 // -----------------------------------------------------------------------------
@@ -174,7 +182,7 @@ int DataContainer::writeAttributeMatricesToHDF5(hid_t parentId)
       return err;
     }
     attributeMatrixId = H5Gopen(parentId, iter.key().toLatin1().data(), H5P_DEFAULT);
-    err = QH5Lite::writeScalarAttribute(parentId, iter.key(), DREAM3D::HDF5::AttributeMatrixType, (*iter)->getAMType());
+    err = QH5Lite::writeScalarAttribute(parentId, iter.key(), DREAM3D::HDF5::AttributeMatrixType, (*iter)->getType());
     if(err < 0)
     {
 //      QString ss = QObject::tr("Error writing string attribute to HDF Group %1").arg(iter.key());
@@ -227,7 +235,7 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QM
     if(getAttributeMatrix(amName) == NULL)
     {
       AttributeMatrix::Pointer am = AttributeMatrix::New();
-      am->setAMType(amType);
+      am->setType(amType);
       addAttributeMatrix(amName, am);
     }
 

@@ -96,7 +96,7 @@ int  ReadPHFile(QString FileName, QVector<int> &data, int &nx, int &ny, int &nz)
     return -1;
   }
 
-  Int32ArrayType* featureIds = Int32ArrayType::SafePointerDownCast(m->getAttributeMatrix(DREAM3D::HDF5::CellAttributeMatrixName)->getAttributeArray(DREAM3D::CellData::FeatureIds).get());
+  Int32ArrayType* featureIds = Int32ArrayType::SafePointerDownCast(m->getAttributeMatrix(DREAM3D::Defaults::CellAttributeMatrixName)->getAttributeArray(DREAM3D::CellData::FeatureIds).get());
   size_t count = featureIds->getNumberOfTuples();
 
   data.resize(count);
@@ -211,10 +211,10 @@ int writePhDataToHDF5File(const QString &h5File, QVector<int> &data, int &nx, in
   { totalPoints };
 
   int numComp = 1;
-  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::FeatureIds, numComp, rank, dims);
+  err = writeScalarData(DREAM3D::Defaults::VolumeDataContainerName, data, DREAM3D::CellData::FeatureIds, numComp, rank, dims);
   if (err < 0)
   {
-    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::FeatureIds << "' to " << DREAM3D::HDF5::VolumeDataContainerName;
+    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::FeatureIds << "' to " << DREAM3D::Defaults::VolumeDataContainerName;
     return err;
   }
   // Close the file when we are done with it.
@@ -230,10 +230,10 @@ int writeEulerDataToHDF5File(const QString &h5File, QVector<float> &data, int nu
   int err = 0;
   err = openHDF5File(h5File, true);
 
-  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::EulerAngles, numComp, rank, dims);
+  err = writeScalarData(DREAM3D::Defaults::VolumeDataContainerName, data, DREAM3D::CellData::EulerAngles, numComp, rank, dims);
   if (err < 0)
   {
-    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles << "' to " << DREAM3D::HDF5::VolumeDataContainerName;
+    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles << "' to " << DREAM3D::Defaults::VolumeDataContainerName;
     return err;
   }
   // Close the file when we are done with it.

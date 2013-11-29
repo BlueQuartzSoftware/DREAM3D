@@ -130,7 +130,7 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 // -----------------------------------------------------------------------------
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_IterationSteps(1),
   m_NodeConstraints(true),

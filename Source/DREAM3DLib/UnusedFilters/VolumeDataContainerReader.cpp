@@ -175,15 +175,15 @@ int VolumeDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t vol
   int err = 0;
 
 
-  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), 0);
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::Defaults::VolumeDataContainerName.toLatin1().data(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
   {
-    dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
+    dcGid = H5Gopen(fileId, DREAM3D::Defaults::DataContainerName.toLatin1().data(), 0);
   }
   if(dcGid < 0)
   {
     err = QH5Utilities::closeFile(fileId);
-    QString ss = QObject::tr(": Error opening group '%1'").arg(DREAM3D::HDF5::VolumeDataContainerName);
+    QString ss = QObject::tr(": Error opening group '%1'").arg(DREAM3D::Defaults::VolumeDataContainerName);
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), ss, -150);
     return -1;

@@ -89,7 +89,7 @@
 // -----------------------------------------------------------------------------
 WritePoleFigure::WritePoleFigure() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_ImagePrefix(""),
   m_OutputPath(""),

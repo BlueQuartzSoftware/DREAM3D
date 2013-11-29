@@ -57,8 +57,8 @@
 // -----------------------------------------------------------------------------
 FindRadialDist::FindRadialDist() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::HDF5::CellFeatureAttributeMatrixName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),

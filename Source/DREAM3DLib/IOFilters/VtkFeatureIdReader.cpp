@@ -43,8 +43,8 @@
 // -----------------------------------------------------------------------------
 VtkFeatureIdReader::VtkFeatureIdReader() :
   FileReader(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::HDF5::CellAttributeMatrixName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_Comment("DREAM3D Generated File"),
   m_DatasetType(""),
