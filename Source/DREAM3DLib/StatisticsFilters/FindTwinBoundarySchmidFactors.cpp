@@ -303,8 +303,8 @@ int FindTwinBoundarySchmidFactors::writeFilterParameters(AbstractFilterParameter
 void FindTwinBoundarySchmidFactors::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 4);
   m_AvgQuatsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgQuatsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -327,7 +327,8 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh(bool preflight, size_t 
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<int32_t, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -351,12 +352,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh(bool preflight, size_t 
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::preflight()
 {
-
   dataCheckVoxel(true, 1, 1, 1);
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
-  if(getErrorCondition() < 0) { return; }
-
   dataCheckSurfaceMesh(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------

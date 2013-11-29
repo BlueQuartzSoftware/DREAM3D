@@ -89,7 +89,7 @@ int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
-  setErrorCondition(0);
+  setErrorCondition(-1);
 
   for(MapOfAttributeMatrices_t::iterator iter = m_DataToRemove.begin(); iter != m_DataToRemove.end(); ++iter)
   {

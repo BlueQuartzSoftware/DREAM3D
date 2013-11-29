@@ -136,8 +136,8 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, 
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
   // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {
@@ -179,7 +179,8 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FindBoundaryStrengths>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 4);
   m_AvgQuatsPtr = m->getPrereqArray<float, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgQuatsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -202,12 +203,7 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::preflight()
 {
-
   dataCheckVoxel(true, 1, 1 , 1);
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
-  if(getErrorCondition() < 0) { return; }
-
   dataCheckSurfaceMesh(true, 1, 1 , 1);
 }
 

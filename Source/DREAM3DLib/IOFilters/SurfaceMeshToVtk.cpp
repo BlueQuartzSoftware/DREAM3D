@@ -136,20 +136,15 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t features,
 {
   setErrorCondition(0);
 
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
+
   if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-
-
-  if (sm->getFaces().get() == NULL)
-  {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-    setErrorCondition(-384);
-  }
 
   if (sm->getVertices().get() == NULL)
   {
@@ -172,13 +167,6 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t features,
 // -----------------------------------------------------------------------------
 void SurfaceMeshToVtk::preflight()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
-  {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-384);
-  }
-
   dataCheck(true, 1, 1, 1);
 }
 

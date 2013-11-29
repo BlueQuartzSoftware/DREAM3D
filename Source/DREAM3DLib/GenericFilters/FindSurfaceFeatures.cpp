@@ -85,7 +85,9 @@ int FindSurfaceFeatures::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void FindSurfaceFeatures::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  setErrorCondition(0);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FindSurfaceFeatures>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   // Cell Data
@@ -104,7 +106,6 @@ void FindSurfaceFeatures::dataCheck(bool preflight, size_t voxels, size_t featur
 // -----------------------------------------------------------------------------
 void FindSurfaceFeatures::preflight()
 {
-
   dataCheck(true, 1, 1, 1);
 }
 

@@ -52,6 +52,8 @@
 FeatureInfoReader::FeatureInfoReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),

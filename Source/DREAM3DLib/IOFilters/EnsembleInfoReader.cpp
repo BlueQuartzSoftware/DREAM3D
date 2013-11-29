@@ -51,10 +51,12 @@
 EnsembleInfoReader::EnsembleInfoReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_InputFile(""),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_CrystalStructures(NULL),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL)
 {
   setupFilterParameters();
@@ -118,7 +120,7 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t feature
 {
 
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, EnsembleInfoReader>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());

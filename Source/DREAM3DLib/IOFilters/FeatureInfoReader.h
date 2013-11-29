@@ -62,9 +62,8 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
 
     virtual ~FeatureInfoReader();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     /* Input Parameters */
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)

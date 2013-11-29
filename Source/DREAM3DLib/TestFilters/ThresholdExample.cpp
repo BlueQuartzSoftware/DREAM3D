@@ -44,9 +44,9 @@
 // -----------------------------------------------------------------------------
 ThresholdExample::ThresholdExample() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName)
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName)
 {
-
   setupFilterParameters();
 }
 
@@ -176,6 +176,8 @@ void ThresholdExample::dataCheck(bool preflight, size_t voxels, size_t features,
 {
   setErrorCondition(0);
 
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  if(getErrorCondition() < 0) { return; }
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
@@ -198,7 +200,6 @@ void ThresholdExample::dataCheck(bool preflight, size_t voxels, size_t features,
 // -----------------------------------------------------------------------------
 void ThresholdExample::preflight()
 {
-
   dataCheck(true, 1, 1, 1);
 }
 
@@ -207,18 +208,7 @@ void ThresholdExample::preflight()
 // -----------------------------------------------------------------------------
 void ThresholdExample::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-    setErrorCondition(-1);
-    QString ss = QObject::tr(" DataContainer was NULL");
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), -1);
-    return;
-  }
-
-
+  dataCheck(false, 0,0,0);
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
