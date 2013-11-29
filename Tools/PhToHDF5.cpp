@@ -180,7 +180,7 @@ int writeScalarData(const QString &hdfPath,
   {
     qDebug() << "Error writing array with name: " << name;
   }
-  err = QH5Lite::writeScalarAttribute(cellGroupId, name, QString(H5_NUMCOMPONENTS), numComp);
+  err = QH5Lite::writeScalarAttribute(cellGroupId, name, DREAM3D::HDF5::NumComponents, numComp);
   if (err < 0)
   {
     qDebug() << "Error writing dataset " << name;

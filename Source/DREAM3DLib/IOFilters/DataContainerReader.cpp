@@ -138,7 +138,7 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   // HDF5: Open the "Pipeline" Group
-  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::StringConstants::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setPipelineGroupId(pipelineGroupId);
 
   // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
@@ -245,7 +245,7 @@ void DataContainerReader::readData(bool preflight)
       addErrorMessage(getHumanLabel(), ss, err);
       return;
     }
-    hid_t dcaGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerGroupName.toLatin1().data(), 0);
+    hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
@@ -259,14 +259,14 @@ void DataContainerReader::readData(bool preflight)
     uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
     for(int iter = 0; iter < dcNames.size(); iter++)
     {
-      if (dca->containsDataContainer(dcNames[iter]) == true )
+      if (dca->contains(dcNames[iter]) == true )
       {
         setErrorCondition(-10987);
         QString ss = QObject::tr("A Data Container with name %1 already exists in Memory. Reading a Data Container with the same name would over write the one in memory. Currently this is not allowed.").arg(dcNames[iter]);
         notifyErrorMessage(ss, getErrorCondition());
         return;
       }
-      err = QH5Lite::readScalarAttribute(dcaGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
+      err = QH5Lite::readScalarAttribute(dcaGid, dcNames[iter], DREAM3D::StringConstants::DataContainerType, dcType);
       if (err < 0)
       {
         setErrorCondition(-109283);

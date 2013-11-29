@@ -193,7 +193,7 @@ void InitializeSyntheticVolume::preflight()
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
-  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerGroupName.toLatin1().data(), 0);
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
 
   scopedFileSentinel.addGroupId(&dcGid);
 
@@ -245,7 +245,7 @@ void InitializeSyntheticVolume::execute()
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
-  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerGroupName.toLatin1().data(), 0);
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
 
   DataContainerReader::Pointer read_data = DataContainerReader::New();
   QMap<QString, QMap<QString, QSet<QString> > > inputDataToRead;

@@ -111,7 +111,7 @@ int H5BoundaryStatsDataDelegate::writeBoundaryStatsData(BoundaryStatsData* data,
 int H5BoundaryStatsDataDelegate::writeBoundaryArea(BoundaryStatsData* data, hid_t pid)
 {
   float BoundaryArea = data->getBoundaryArea();
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+  return QH5Lite::writeScalarDataset(pid, DREAM3D::StringConstants::BoundaryArea, BoundaryArea);
 }
 
 // -----------------------------------------------------------------------------
@@ -120,7 +120,7 @@ int H5BoundaryStatsDataDelegate::writeBoundaryArea(BoundaryStatsData* data, hid_
 int H5BoundaryStatsDataDelegate::readBoundaryArea(BoundaryStatsData* data, hid_t pid)
 {
   float BoundaryArea = 0.0f;
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+  int err = QH5Lite::readScalarDataset(pid, DREAM3D::StringConstants::BoundaryArea, BoundaryArea);
   data->setBoundaryArea(BoundaryArea);
   return err;
 }
@@ -130,7 +130,7 @@ int H5BoundaryStatsDataDelegate::readBoundaryArea(BoundaryStatsData* data, hid_t
 int H5BoundaryStatsDataDelegate::writePhaseFraction(BoundaryStatsData* data, hid_t pid)
 {
   float phaseFraction = data->getPhaseFraction();
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  return QH5Lite::writeScalarDataset(pid, DREAM3D::StringConstants::PhaseFraction, phaseFraction);
 }
 
 // -----------------------------------------------------------------------------
@@ -139,7 +139,7 @@ int H5BoundaryStatsDataDelegate::writePhaseFraction(BoundaryStatsData* data, hid
 int H5BoundaryStatsDataDelegate::readPhaseFraction(BoundaryStatsData* data, hid_t pid)
 {
   float phaseFraction = 0.0f;
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  int err = QH5Lite::readScalarDataset(pid, DREAM3D::StringConstants::PhaseFraction, phaseFraction);
   data->setPhaseFraction(phaseFraction);
   return err;
 }
@@ -149,7 +149,7 @@ int H5BoundaryStatsDataDelegate::readPhaseFraction(BoundaryStatsData* data, hid_
 int H5BoundaryStatsDataDelegate::writeParentPhase(BoundaryStatsData* data, hid_t pid)
 {
   unsigned int var = static_cast<unsigned int>( data->getParentPhase() );
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::ParentPhase, var);
+  return QH5Lite::writeScalarDataset(pid, DREAM3D::StringConstants::ParentPhase, var);
 }
 
 // -----------------------------------------------------------------------------
@@ -158,7 +158,7 @@ int H5BoundaryStatsDataDelegate::writeParentPhase(BoundaryStatsData* data, hid_t
 int H5BoundaryStatsDataDelegate::readParentPhase(BoundaryStatsData* data, hid_t pid)
 {
   unsigned int parentPhase = static_cast<unsigned int>(0.0f);
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::ParentPhase, parentPhase);
+  int err = QH5Lite::readScalarDataset(pid, DREAM3D::StringConstants::ParentPhase, parentPhase);
   data->setParentPhase( static_cast<float>(parentPhase) );
   return err;
 }

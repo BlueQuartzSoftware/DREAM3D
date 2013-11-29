@@ -90,7 +90,7 @@ int EdgeDataContainer::writeEdgesToHDF5(hid_t dcGid)
 
     int32_t* data = reinterpret_cast<int32_t*>(edgesPtr->getPointer(0));
 
-    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::EdgesName, rank, dims, data);
+    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::EdgesName, rank, dims, data);
     if (err < 0)
     {
 //      setErrorCondition(err);
@@ -128,7 +128,7 @@ int EdgeDataContainer::writeEdgesToHDF5(hid_t dcGid)
       rank = 1;
       dims[0] = totalBytes;
 
-      err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::EdgeNeighbors, rank, dims, bufPtr);
+      err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::EdgeNeighbors, rank, dims, bufPtr);
       if (err < 0)
       {
         notifyErrorMessage("Error writing the Edge Neighbors", -998);
@@ -176,7 +176,7 @@ int EdgeDataContainer::writeEdgesToHDF5(hid_t dcGid)
     rank = 1;
     dims[0] = totalBytes;
 
-    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::EdgesContainingVert, rank, dims, bufPtr);
+    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::EdgesContainingVert, rank, dims, bufPtr);
     if (err < 0)
     {
       notifyErrorMessage("Error writing the Edges Containing Verts", -999);
@@ -262,19 +262,19 @@ int EdgeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
   size_t type_size;
   if (true == preflight)
   {
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::EdgesName, dims, type_class, type_size);
     if (err >= 0)
     {
       EdgeArray::Pointer edges = EdgeArray::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges, NULL);
       setEdges(edges);
     }
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgeNeighbors, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::EdgeNeighbors, dims, type_class, type_size);
     if(err >= 0)
     {
       Int32DynamicListArray::Pointer edgeNeighbors = Int32DynamicListArray::New();
       getEdges()->setEdgeNeighbors(edgeNeighbors);
     }
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesContainingVert, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::EdgesContainingVert, dims, type_class, type_size);
     if(err >= 0)
     {
       Int32DynamicListArray::Pointer edgesContainingVert = Int32DynamicListArray::New();
@@ -283,7 +283,7 @@ int EdgeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
   }
   else
   {
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::EdgesName, dims, type_class, type_size);
     if (err >= 0)
     {
       // Allocate the Edge_t structures
@@ -291,7 +291,7 @@ int EdgeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
       // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
       int32_t* data = reinterpret_cast<int32_t*>(edgesPtr->getPointer(0));
       // Read the data from the file
-      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::EdgesName, data);
+      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::StringConstants::EdgesName, data);
       if (err < 0)
       {
 //        setErrorCondition(err);
@@ -300,13 +300,13 @@ int EdgeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
       }
       setEdges(edgesPtr);
       size_t nEdges = edgesPtr->getNumberOfTuples();
-      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgeNeighbors, dims, type_class, type_size);
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::EdgeNeighbors, dims, type_class, type_size);
       if (err >= 0)
       {
         //Read the edgeNeighbors array into the buffer
 
         std::vector<uint8_t> buffer;
-        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::EdgeNeighbors, buffer);
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::EdgeNeighbors, buffer);
         if(err < 0)
         {
 //          setErrorCondition(err);
@@ -317,13 +317,13 @@ int EdgeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
         edgeNeighbors->deserializeLinks(buffer, nEdges);
         getEdges()->setEdgeNeighbors(edgeNeighbors);
       }
-      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesContainingVert, dims, type_class, type_size);
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::EdgesContainingVert, dims, type_class, type_size);
       if (err >= 0)
       {
         //Read the edgeNeighbors array into the buffer
 
         std::vector<uint8_t> buffer;
-        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::EdgesContainingVert, buffer);
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::EdgesContainingVert, buffer);
         if(err < 0)
         {
 //          setErrorCondition(err);

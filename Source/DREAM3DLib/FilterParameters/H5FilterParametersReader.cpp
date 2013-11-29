@@ -76,7 +76,7 @@ H5FilterParametersReader::Pointer H5FilterParametersReader::OpenDREAM3DFileForRe
   if(fid < 0) { return H5FilterParametersReader::NullPointer(); }
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
-  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::StringConstants::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   if (pipelineGroupId < 0)
   {
     H5Fclose(fid);
@@ -100,7 +100,7 @@ FilterPipeline::Pointer H5FilterParametersReader::ReadPipelineFromFile(QString f
 
 
   // Open the Pipeline Group
-  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::StringConstants::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   if (pipelineGroupId < 0)
   {
     H5Fclose(fid);

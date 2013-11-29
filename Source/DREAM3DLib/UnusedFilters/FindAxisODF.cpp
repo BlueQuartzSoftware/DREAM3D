@@ -185,7 +185,7 @@ void FindAxisODF::execute()
   for (size_t i = 1; i < numXTals; i++)
   {
     totalaxes[i] = 0.0;
-    axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::HDF5::AxisOrientation);
+    axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::StringConstants::AxisOrientation);
     for (int j = 0; j < (36 * 36 * 36); j++)
     {
       axisodf[i]->SetValue(j, 0.0);

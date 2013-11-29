@@ -250,15 +250,15 @@ void DataContainerWriter::execute()
   // Write the Pipeline to the File
   err = writePipeline();
 
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::DataContainerGroupName.toLatin1().data(), m_FileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), m_FileId);
   if (err < 0)
   {
-    QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::HDF5::DataContainerGroupName);
+    QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::StringConstants::DataContainerGroupName);
     setErrorCondition(-60);
     addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
-  hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerGroupName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), H5P_DEFAULT );
   scopedFileSentinel.addGroupId(&dcaGid);
 
   unsigned int dcType = DREAM3D::DataContainerType::UnknownDataContainer;
@@ -276,7 +276,7 @@ void DataContainerWriter::execute()
     }
 
     dcType = dc->getDCType();
-    err = QH5Lite::writeScalarAttribute(dcaGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
+    err = QH5Lite::writeScalarAttribute(dcaGid, dcNames[iter], DREAM3D::StringConstants::DataContainerType, dcType);
     if (err < 0)
     {
       qDebug() << "Error Writing DataContainerType attribute for " << dcNames[iter] << "\n";
@@ -347,7 +347,7 @@ int DataContainerWriter::writePipeline()
 
   // WRITE THE PIPELINE TO THE HDF5 FILE
   H5FilterParametersWriter::Pointer parametersWriter = H5FilterParametersWriter::New();
-  hid_t pipelineGroupId = QH5Utilities::createGroup(m_FileId, DREAM3D::HDF5::PipelineGroupName);
+  hid_t pipelineGroupId = QH5Utilities::createGroup(m_FileId, DREAM3D::StringConstants::PipelineGroupName);
   parametersWriter->setGroupId(pipelineGroupId);
 
 
@@ -375,7 +375,7 @@ int DataContainerWriter::writePipeline()
     currentFilter = currentFilter->getNextFilter();
   }
 
-  int err = QH5Lite::writeScalarAttribute(m_FileId, DREAM3D::HDF5::PipelineGroupName, DREAM3D::Settings::NumFilters, index);
+  int err = QH5Lite::writeScalarAttribute(m_FileId, DREAM3D::StringConstants::PipelineGroupName, DREAM3D::Settings::NumFilters, index);
   H5Gclose(pipelineGroupId);
   return 1;
 }

@@ -316,8 +316,8 @@ int  PhReader::readFile()
   VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == vdc) { return -1; }
 
-  AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellAttributeMatrixName());
-  if (NULL == attrMatrix.get() ) { return -2; }
+  AttributeMatrix* attrMatrix = vdc->getAttributeMatrix(getCellAttributeMatrixName());
+  if (NULL == attrMatrix ) { return -2; }
 
   attrMatrix->addAttributeArray(DREAM3D::CellData::FeatureIds, m_FeatureIdData);
 

@@ -158,9 +158,9 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   int numComp = 1;
 
 // Determining number of components and name given distribution type
-  if (dType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::HDF5::BetaColumnCount; }
-  else if (dType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::HDF5::LogNormalColumnCount; }
-  else if (dType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::HDF5::PowerLawColumnCount; }
+  if (dType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::DistributionType::BetaColumnCount; }
+  else if (dType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
+  else if (dType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
 
   ss = selectedFeatureArrayName + distType + QString("Fit");
   QVector<int> dims(1, numComp);

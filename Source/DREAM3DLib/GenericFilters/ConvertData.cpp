@@ -279,9 +279,10 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void ConvertData::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
+  QString ss;
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
     ss = QObject::tr("The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");

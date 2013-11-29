@@ -74,6 +74,16 @@ bool DataContainer::doesAttributeMatrixExist(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+AttributeMatrix* DataContainer::createAttributeMatrix(const QString& attrMatName)
+{
+  AttributeMatrix::Pointer attrMat = AttributeMatrix::New(attrMatName);
+  addAttributeMatrix(attrMatName, attrMat);
+  return attrMat.get(); // Return the wrapped pointer
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataContainer::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer data)
 {
   if (data->getName().compare(name) != 0)
@@ -89,15 +99,15 @@ void DataContainer::addAttributeMatrix(const QString& name, AttributeMatrix::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrix::Pointer DataContainer::getAttributeMatrix(const QString& name)
+AttributeMatrix* DataContainer::getAttributeMatrix(const QString& name)
 {
   QMap<QString, AttributeMatrix::Pointer>::iterator it;
   it =  m_AttributeMatrices.find(name);
   if ( it == m_AttributeMatrices.end() )
   {
-    return AttributeMatrix::NullPointer();
+    return NULL;
   }
-  return it.value();
+  return it.value().get();
 }
 
 // -----------------------------------------------------------------------------
@@ -119,7 +129,7 @@ AttributeMatrix::Pointer DataContainer::removeAttributeMatrix(const QString& nam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataContainer::renameAttributeMatrix(const QString& oldname, const QString& newname)
+bool DataContainer::renameAttributeMatrix(const QString& oldname, const QString& newname, bool overwrite)
 {
   QMap<QString, AttributeMatrix::Pointer>::iterator it;
   it =  m_AttributeMatrices.find(oldname);
@@ -130,7 +140,20 @@ bool DataContainer::renameAttributeMatrix(const QString& oldname, const QString&
   AttributeMatrix::Pointer p = it.value();
   p->setName(newname);
   removeAttributeMatrix(oldname);
-  addAttributeMatrix(newname, p);
+
+  // Now check to make sure there isn't one with the same name
+  it =  m_AttributeMatrices.find(newname);
+  if ( it == m_AttributeMatrices.end() ) // Didn't find another AttributeMatrix with the new name
+  {
+    addAttributeMatrix(newname, p);
+  }
+  else if(overwrite == true) // We are here because we found another attribute matrix with the new name
+  {
+    AttributeMatrix::Pointer removedAttributeMatrix = removeAttributeMatrix(newname); // Remove the existing one
+    addAttributeMatrix(newname, p);
+  } else {
+    return false;
+  }
   return true;
 }
 

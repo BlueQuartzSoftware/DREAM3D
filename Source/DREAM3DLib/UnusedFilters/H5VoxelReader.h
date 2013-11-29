@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
         OPEN_HDF5_FILE(fileId, m_FileName);
         m_FileId = fileId;
       }
-      OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.toLatin1().data(), m_FileId);
+      OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::StringConstants::VoxelDataName.toLatin1().data(), m_FileId);
       OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
 
       // Read in the Feature ID data
@@ -149,7 +149,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
         OPEN_HDF5_FILE(fileId, m_FileName);
         m_FileId = fileId;
       }
-      OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.toLatin1().data(), m_FileId);
+      OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::StringConstants::VoxelDataName.toLatin1().data(), m_FileId);
       OPEN_RECONSTRUCTION_GROUP(featureGid, H5_FIELD_DATA_GROUP_NAME, reconGid);
 
       std::vector<NativeType> nativeData;

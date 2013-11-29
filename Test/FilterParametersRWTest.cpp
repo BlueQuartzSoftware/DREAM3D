@@ -998,7 +998,7 @@ FilterPipeline::Pointer readPipelineFromHDF5File(hid_t fileId)
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   // HDF5: Open the "Pipeline" Group
-  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::StringConstants::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setPipelineGroupId(pipelineGroupId);
 
   // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"

@@ -162,9 +162,9 @@ AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* mi
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setupGui()
 {
-  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::BetaDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::LogNormalDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::PowerLawDistribution.toLatin1().data());
   distributionTypeCombo->setCurrentIndex(DREAM3D::DistributionType::LogNormal);
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
@@ -786,8 +786,8 @@ int PrimaryPhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
   // Feature Size Distribution
   {
     VectorOfFloatArray data;
-    FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Average);
-    FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::StandardDeviation);
+    FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::Average);
+    FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::StandardDeviation);
     data.push_back(d1);
     data.push_back(d2);
     d1->SetValue(0, avglogdiam);
@@ -797,28 +797,28 @@ int PrimaryPhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
   }
   // Now that we have bins and feature sizes, push those to the other plot widgets
 
-  //err = m_Omega3Plot->writeDataToHDF5(m, DREAM3D::HDF5::Feature_SizeVOmega3_Distributions);
+  //err = m_Omega3Plot->writeDataToHDF5(m, DREAM3D::StringConstants::Feature_SizeVOmega3_Distributions);
   {
     VectorOfFloatArray data = m_Omega3Plot->getStatisticsData();
     primaryStatsData->setFeatureSize_Omegas(data);
     primaryStatsData->setOmegas_DistType(m_Omega3Plot->getDistributionType());
   }
 
-  //err = m_BOverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Feature_SizeVBoverA_Distributions);
+  //err = m_BOverAPlot->writeDataToHDF5(writer, DREAM3D::StringConstants::Feature_SizeVBoverA_Distributions);
   {
     VectorOfFloatArray data = m_BOverAPlot->getStatisticsData();
     primaryStatsData->setFeatureSize_BOverA(data);
     primaryStatsData->setBOverA_DistType(m_BOverAPlot->getDistributionType());
   }
 
-  //err = m_COverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Feature_SizeVCoverA_Distributions);
+  //err = m_COverAPlot->writeDataToHDF5(writer, DREAM3D::StringConstants::Feature_SizeVCoverA_Distributions);
   {
     VectorOfFloatArray data = m_COverAPlot->getStatisticsData();
     primaryStatsData->setFeatureSize_COverA(data);
     primaryStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
   }
 
-  // err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Feature_SizeVNeighbors_Distributions);
+  // err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::StringConstants::Feature_SizeVNeighbors_Distributions);
   {
     VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
     primaryStatsData->setFeatureSize_Neighbors(data);

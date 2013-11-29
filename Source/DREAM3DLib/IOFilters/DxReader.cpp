@@ -140,15 +140,10 @@ int DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void DxReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
   if(NULL == m)
   {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-    AttributeMatrix::Pointer attrMat = AttributeMatrix::New(getCellAttributeMatrixName());
-    m->addAttributeMatrix(attrMat->getName(), attrMat);
+    m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
   }
   QFileInfo fi(getInputFile());
 

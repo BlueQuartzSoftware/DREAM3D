@@ -412,7 +412,7 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
   }
   if (mdf.size() > 0)
   {
-    FloatArrayType::Pointer p = FloatArrayType::FromPointer(mdf.data(), mdf.size(), DREAM3D::HDF5::MisorientationBins);
+    FloatArrayType::Pointer p = FloatArrayType::FromPointer(mdf.data(), mdf.size(), DREAM3D::StringConstants::MisorientationBins);
     if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
@@ -431,13 +431,13 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
 
     if(angles.size() > 0)
     {
-      FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), DREAM3D::HDF5::Angle);
+      FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), DREAM3D::StringConstants::Angle);
 
       QVector<int> dims(1,3); // Initialize the dimensions to a 1x3 or 3 element vector
-      FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), DREAM3D::HDF5::Axis);
+      FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), DREAM3D::StringConstants::Axis);
       axisArray->SetDims(dims);
 
-      FloatArrayType::Pointer weightArray = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::HDF5::Weight);
+      FloatArrayType::Pointer weightArray = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::StringConstants::Weight);
 
       VectorOfFloatArray mdfWeights;
       mdfWeights.push_back(anglesArray);

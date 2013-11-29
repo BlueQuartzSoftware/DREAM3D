@@ -451,7 +451,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
-      binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
+      binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
       DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
       pp->setBinNumbers(binnumbers);
     }
@@ -464,7 +464,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
-      binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
+      binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
       DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
 
       pp->setBinNumbers(binnumbers);
@@ -478,7 +478,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       tp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
-      binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
+      binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
       DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
 
       tp->setBinNumbers(binnumbers);
@@ -763,7 +763,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
     if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal_High)
     {
       dims = 36 * 36 * 12;
-      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
+      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::StringConstants::ODF);
       for (unsigned long long j = 0; j < dims; j++)
       {
         eulerodf[i]->SetValue(j, 0.0);
@@ -772,7 +772,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
     else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic_High)
     {
       dims = 18 * 18 * 18;
-      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
+      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::StringConstants::ODF);
       for (unsigned long long j = 0; j < dims; j++)
       {
         eulerodf[i]->SetValue(j, 0.0);
@@ -861,12 +861,12 @@ void GenerateEnsembleStatistics::gatherMDFStats()
     if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[i] )
     {
       numbins = 36 * 36 * 12;
-      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
+      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::MisorientationBins);
     }
     else if (Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[i] )
     {
       numbins = 18 * 18 * 18;
-      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
+      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::MisorientationBins);
     }
     // Now initialize all bins to 0.0
     for (int j = 0; j < numbins; j++)
@@ -950,7 +950,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
   for (size_t i = 1; i < numXTals; i++)
   {
     totalaxes[i] = 0.0;
-    axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::HDF5::AxisOrientation);
+    axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::StringConstants::AxisOrientation);
     for (int j = 0; j < (36 * 36 * 36); j++)
     {
       axisodf[i]->SetValue(j, 0.0);

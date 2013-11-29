@@ -184,7 +184,7 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
                                         aodf.data(), numEntries);
   if (aodf.size() > 0)
   {
-    FloatArrayType::Pointer aodfData = FloatArrayType::FromPointer(aodf.data(), aodf.size(), DREAM3D::HDF5::AxisOrientation);
+    FloatArrayType::Pointer aodfData = FloatArrayType::FromPointer(aodf.data(), aodf.size(), DREAM3D::StringConstants::AxisOrientation);
     if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
@@ -203,11 +203,11 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
 
     if(e1s.size() > 0)
     {
-      FloatArrayType::Pointer euler1 = FloatArrayType::FromPointer(e1s.data(), e1s.size(), DREAM3D::HDF5::Euler1);
-      FloatArrayType::Pointer euler2 = FloatArrayType::FromPointer(e2s.data(), e2s.size(), DREAM3D::HDF5::Euler2);
-      FloatArrayType::Pointer euler3 = FloatArrayType::FromPointer(e3s.data(), e3s.size(), DREAM3D::HDF5::Euler3);
-      FloatArrayType::Pointer sigma = FloatArrayType::FromPointer(sigmas.data(), sigmas.size(), DREAM3D::HDF5::Sigma);
-      FloatArrayType::Pointer weight = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::HDF5::Weight);
+      FloatArrayType::Pointer euler1 = FloatArrayType::FromPointer(e1s.data(), e1s.size(), DREAM3D::StringConstants::Euler1);
+      FloatArrayType::Pointer euler2 = FloatArrayType::FromPointer(e2s.data(), e2s.size(), DREAM3D::StringConstants::Euler2);
+      FloatArrayType::Pointer euler3 = FloatArrayType::FromPointer(e3s.data(), e3s.size(), DREAM3D::StringConstants::Euler3);
+      FloatArrayType::Pointer sigma = FloatArrayType::FromPointer(sigmas.data(), sigmas.size(), DREAM3D::StringConstants::Sigma);
+      FloatArrayType::Pointer weight = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::StringConstants::Weight);
 
       VectorOfFloatArray aodfWeights;
       aodfWeights.push_back(euler1);

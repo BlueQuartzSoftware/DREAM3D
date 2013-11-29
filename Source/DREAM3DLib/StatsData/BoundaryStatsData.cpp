@@ -73,7 +73,7 @@ void BoundaryStatsData::initialize()
 // -----------------------------------------------------------------------------
 QString BoundaryStatsData::getStatsType()
 {
-  return DREAM3D::HDF5::BoundaryStatsData;
+  return DREAM3D::StringConstants::BoundaryStatsData;
 }
 
 

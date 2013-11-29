@@ -160,8 +160,8 @@ int TestDxReader()
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
 
 
-  AttributeMatrix::Pointer attrMat = mFromFile->getAttributeMatrix(reader->getCellAttributeMatrixName());
-  DREAM3D_REQUIRE(NULL != attrMat.get() )
+  AttributeMatrix* attrMat = mFromFile->getAttributeMatrix(reader->getCellAttributeMatrixName());
+  DREAM3D_REQUIRE(NULL != attrMat)
 
   bool exists = attrMat->doesAttributeArrayExist(reader->getFeatureIdsArrayName() );
   DREAM3D_REQUIRED(exists, ==, true)

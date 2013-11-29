@@ -232,8 +232,8 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       }
       VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
       if(NULL == vdc) { return -1;}
-      AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
-      if(NULL == attrMatrix.get() ) { return -2; }
+      AttributeMatrix* attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
+      if(NULL == attrMatrix ) { return -2; }
 
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);

@@ -253,12 +253,12 @@ void FindMDF::execute()
     if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
     {
       numbins = 36 * 36 * 12;
-      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
+      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::MisorientationBins);
     }
     else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
     {
       numbins = 18 * 18 * 18;
-      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
+      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::MisorientationBins);
     }
     // Now initialize all bins to 0.0
     for (int j = 0; j < numbins; j++)

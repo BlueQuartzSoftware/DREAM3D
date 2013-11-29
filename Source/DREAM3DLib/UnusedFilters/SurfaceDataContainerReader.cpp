@@ -268,19 +268,19 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
   size_t type_size;
   if (true == preflight)
   {
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::FacesName, dims, type_class, type_size);
     if (err >= 0)
     {
       FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, NULL);
       dc->setFaces(triangles);
     }
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FaceNeighbors, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::FaceNeighbors, dims, type_class, type_size);
     if(err >= 0)
     {
       Int32DynamicListArray::Pointer faceNeighbors = Int32DynamicListArray::New();
       dc->getFaces()->setFaceNeighbors(faceNeighbors);
     }
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesContainingVert, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::FacesContainingVert, dims, type_class, type_size);
     if(err >= 0)
     {
       Int32DynamicListArray::Pointer facesContainingVert = Int32DynamicListArray::New();
@@ -289,7 +289,7 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
   }
   else
   {
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::FacesName, dims, type_class, type_size);
     if (err >= 0)
     {
       // Allocate the Face_t structures
@@ -297,7 +297,7 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
       // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
       int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
       // Read the data from the file
-      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::FacesName, data);
+      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::StringConstants::FacesName, data);
       if (err < 0)
       {
         setErrorCondition(err);
@@ -306,13 +306,13 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
       }
       dc->setFaces(facesPtr);
       size_t nFaces = facesPtr->getNumberOfTuples();
-      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FaceNeighbors, dims, type_class, type_size);
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::FaceNeighbors, dims, type_class, type_size);
       if (err >= 0)
       {
         //Read the faceNeighbors array into the buffer
 
         std::vector<uint8_t> buffer;
-        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::FaceNeighbors, buffer);
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::FaceNeighbors, buffer);
         if(err < 0)
         {
           setErrorCondition(err);
@@ -323,13 +323,13 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         faceNeighbors->deserializeLinks(buffer, nFaces);
         dc->getFaces()->setFaceNeighbors(faceNeighbors);
       }
-      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesContainingVert, dims, type_class, type_size);
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::FacesContainingVert, dims, type_class, type_size);
       if (err >= 0)
       {
         //Read the faceNeighbors array into the buffer
 
         std::vector<uint8_t> buffer;
-        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::FacesContainingVert, buffer);
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::FacesContainingVert, buffer);
         if(err < 0)
         {
           setErrorCondition(err);

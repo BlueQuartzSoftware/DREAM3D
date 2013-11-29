@@ -117,8 +117,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       }
 
       // Now attempt to get the AttributeMatrix which could still come back NULL because the name does not match.
-      AttributeMatrix::Pointer matrix = getAttributeMatrix(attributeMatrixName);
-      if(NULL == matrix.get())
+      AttributeMatrix* matrix = getAttributeMatrix(attributeMatrixName);
+      if(NULL == matrix)
       {
         filter->setErrorCondition(err * 1020);
         ss = QObject::tr("DataContainer:'%1' An AttributeMatrix with name '%2' does not exist and is required for this filter to execute.").arg(getName()).arg(attributeMatrixName);
@@ -199,8 +199,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       {
         NumComp *= dims[i];
       }
-      AttributeMatrix::Pointer matrix = getAttributeMatrix(attributeMatrixName);
-      if(NULL == matrix.get())
+      AttributeMatrix* matrix = getAttributeMatrix(attributeMatrixName);
+      if(NULL == matrix)
       {
         filter->setErrorCondition(-10003);
         QString ss = QObject::tr("An AttributeMatrix with name '%1' does not exist and is required for this filter to execute.").arg(attributeMatrixName);
@@ -216,6 +216,13 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       }
       return attributeArray;
     }
+
+    /**
+     * @brief Creates an AttributeMatrix and automatically adds it to the DataContainer
+     * @param attrMatName
+     * @return
+     */
+    virtual AttributeMatrix* createAttributeMatrix(const QString& attrMatName);
 
     /**
      * @brief Returns bool of whether a named array exists
@@ -235,7 +242,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual AttributeMatrix::Pointer getAttributeMatrix(const QString& name);
+    virtual AttributeMatrix* getAttributeMatrix(const QString& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -249,7 +256,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     * @brief Renames a cell data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameAttributeMatrix(const QString& oldname, const QString& newname);
+    virtual bool renameAttributeMatrix(const QString& oldname, const QString& newname, bool overwrite = false);
 
     /**
      * @brief Removes all the Cell Arrays

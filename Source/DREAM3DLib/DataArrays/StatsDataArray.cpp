@@ -285,7 +285,7 @@ void StatsDataArray::printComponent(QTextStream& out, size_t i, int j)
 int StatsDataArray::writeH5Data(hid_t parentId)
 {
   herr_t err = 0;
-  hid_t gid = QH5Utilities::createGroup(parentId, DREAM3D::HDF5::Statistics);
+  hid_t gid = QH5Utilities::createGroup(parentId, DREAM3D::StringConstants::Statistics);
   if (gid < 0)
   {
     return -1;
@@ -297,8 +297,8 @@ int StatsDataArray::writeH5Data(hid_t parentId)
     {
       QString indexString = QString::number(i);
       hid_t tupleId = QH5Utilities::createGroup(gid, indexString);
-      err |= QH5Lite::writeStringAttribute(gid, indexString, DREAM3D::HDF5::StatsType, m_StatsDataArray[i]->getStatsType() );
-      err |= QH5Lite::writeScalarAttribute(gid, indexString, DREAM3D::HDF5::PhaseType, m_StatsDataArray[i]->getPhaseType() );
+      err |= QH5Lite::writeStringAttribute(gid, indexString, DREAM3D::StringConstants::StatsType, m_StatsDataArray[i]->getStatsType() );
+      err |= QH5Lite::writeScalarAttribute(gid, indexString, DREAM3D::StringConstants::PhaseType, m_StatsDataArray[i]->getPhaseType() );
       err |= m_StatsDataArray[i]->writeHDF5Data(tupleId);
       err |= QH5Utilities::closeHDF5Object(tupleId);
     }
@@ -314,7 +314,7 @@ int StatsDataArray::readH5Data(hid_t parentId)
   bool ok = false;
   int err = 0;
   QString statsType;
-  hid_t gid = QH5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
+  hid_t gid = QH5Utilities::openHDF5Object(parentId, DREAM3D::StringConstants::Statistics);
   if(gid < 0)
   {
     return err;
@@ -334,38 +334,38 @@ int StatsDataArray::readH5Data(hid_t parentId)
     statsType = "";
 
     index = QString(*iter).toInt(&ok, 10);
-    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::StatsType, statsType);
+    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::StringConstants::StatsType, statsType);
     hid_t statId = QH5Utilities::openHDF5Object(gid, *iter);
     if(statId < 0)
     {
       continue;
       err |= -1;
     }
-    if(statsType.compare(DREAM3D::HDF5::PrimaryStatsData) == 0)
+    if(statsType.compare(DREAM3D::StringConstants::PrimaryStatsData) == 0)
     {
       PrimaryStatsData::Pointer data = PrimaryStatsData::New();
       data->readHDF5Data(statId);
       setStatsData(index, data);
     }
-    else if(statsType.compare(DREAM3D::HDF5::PrecipitateStatsData) == 0)
+    else if(statsType.compare(DREAM3D::StringConstants::PrecipitateStatsData) == 0)
     {
       PrecipitateStatsData::Pointer data = PrecipitateStatsData::New();
       data->readHDF5Data(statId);
       setStatsData(index, data);
     }
-    else if(statsType.compare(DREAM3D::HDF5::TransformationStatsData) == 0)
+    else if(statsType.compare(DREAM3D::StringConstants::TransformationStatsData) == 0)
     {
       TransformationStatsData::Pointer data = TransformationStatsData::New();
       data->readHDF5Data(statId);
       setStatsData(index, data);
     }
-    else if(statsType.compare(DREAM3D::HDF5::MatrixStatsData) == 0)
+    else if(statsType.compare(DREAM3D::StringConstants::MatrixStatsData) == 0)
     {
       MatrixStatsData::Pointer data = MatrixStatsData::New();
       data->readHDF5Data(statId);
       setStatsData(index, data);
     }
-    else if(statsType.compare(DREAM3D::HDF5::BoundaryStatsData) == 0)
+    else if(statsType.compare(DREAM3D::StringConstants::BoundaryStatsData) == 0)
     {
       BoundaryStatsData::Pointer data = BoundaryStatsData::New();
       data->readHDF5Data(statId);

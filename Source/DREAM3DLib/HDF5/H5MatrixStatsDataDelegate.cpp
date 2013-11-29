@@ -95,7 +95,7 @@ int H5MatrixStatsDataDelegate::writeMatrixStatsData(MatrixStatsData* data, hid_t
 int H5MatrixStatsDataDelegate::writePhaseFraction(MatrixStatsData* data, hid_t pid)
 {
   float phaseFraction = data->getPhaseFraction();
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  return QH5Lite::writeScalarDataset(pid, DREAM3D::StringConstants::PhaseFraction, phaseFraction);
 }
 
 // -----------------------------------------------------------------------------
@@ -104,7 +104,7 @@ int H5MatrixStatsDataDelegate::writePhaseFraction(MatrixStatsData* data, hid_t p
 int H5MatrixStatsDataDelegate::readPhaseFraction(MatrixStatsData* data, hid_t pid)
 {
   float phaseFraction = 0.0f;
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  int err = QH5Lite::readScalarDataset(pid, DREAM3D::StringConstants::PhaseFraction, phaseFraction);
   data->setPhaseFraction(phaseFraction);
   return err;
 }

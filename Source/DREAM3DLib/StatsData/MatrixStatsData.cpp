@@ -72,7 +72,7 @@ void MatrixStatsData::initialize()
 // -----------------------------------------------------------------------------
 QString MatrixStatsData::getStatsType()
 {
-  return DREAM3D::HDF5::MatrixStatsData;
+  return DREAM3D::StringConstants::MatrixStatsData;
 }
 
 // -----------------------------------------------------------------------------

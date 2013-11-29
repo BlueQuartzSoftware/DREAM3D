@@ -295,7 +295,7 @@ void ArraySelectionExampleTest()
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
-  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::StringConstants::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
   int index = 0;
 
@@ -517,7 +517,7 @@ void GenericExampleTest()
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
-  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::StringConstants::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
   int index = 0;
 
@@ -647,7 +647,7 @@ void ThresholdExampleTest()
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
-  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::StringConstants::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
   int index = 0;
 
@@ -737,7 +737,7 @@ int readPipelineFromFile(hid_t fileId)
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   // HDF5: Open the "Pipeline" Group
-  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::StringConstants::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
   // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"

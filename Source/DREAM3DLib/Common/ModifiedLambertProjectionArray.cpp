@@ -452,7 +452,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
   {
     return -2;
   }
-  hid_t gid = QH5Utilities::createGroup(parentId, DREAM3D::HDF5::GBCD);
+  hid_t gid = QH5Utilities::createGroup(parentId, DREAM3D::StringConstants::GBCD);
   if (gid < 0)
   {
     return -1;
@@ -496,7 +496,7 @@ int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
   bool ok = false;
   int err = 0;
   QString statsType;
-  hid_t gid = QH5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
+  hid_t gid = QH5Utilities::openHDF5Object(parentId, DREAM3D::StringConstants::Statistics);
   if(gid < 0)
   {
     return err;
@@ -515,7 +515,7 @@ int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
     int index = 0;
     statsType = "";
     index = QString( *iter ).toInt(&ok, 10);
-    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::StatsType, statsType);
+    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::StringConstants::StatsType, statsType);
     hid_t statId = QH5Utilities::openHDF5Object(gid, *iter);
     if(statId < 0)
     {

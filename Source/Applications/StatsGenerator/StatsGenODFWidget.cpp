@@ -208,7 +208,7 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   }
   if (odf.size() > 0)
   {
-    FloatArrayType::Pointer p = FloatArrayType::FromQVector(odf, DREAM3D::HDF5::ODF);
+    FloatArrayType::Pointer p = FloatArrayType::FromQVector(odf, DREAM3D::StringConstants::ODF);
     if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
@@ -226,11 +226,11 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
     }
     if (e1s.size() > 0)
     {
-      FloatArrayType::Pointer euler1 = FloatArrayType::FromQVector(e1s, DREAM3D::HDF5::Euler1);
-      FloatArrayType::Pointer euler2 = FloatArrayType::FromQVector(e2s, DREAM3D::HDF5::Euler2);
-      FloatArrayType::Pointer euler3 = FloatArrayType::FromQVector(e3s, DREAM3D::HDF5::Euler3);
-      FloatArrayType::Pointer sigma = FloatArrayType::FromQVector(sigmas, DREAM3D::HDF5::Sigma);
-      FloatArrayType::Pointer weight = FloatArrayType::FromQVector(weights, DREAM3D::HDF5::Weight);
+      FloatArrayType::Pointer euler1 = FloatArrayType::FromQVector(e1s, DREAM3D::StringConstants::Euler1);
+      FloatArrayType::Pointer euler2 = FloatArrayType::FromQVector(e2s, DREAM3D::StringConstants::Euler2);
+      FloatArrayType::Pointer euler3 = FloatArrayType::FromQVector(e3s, DREAM3D::StringConstants::Euler3);
+      FloatArrayType::Pointer sigma = FloatArrayType::FromQVector(sigmas, DREAM3D::StringConstants::Sigma);
+      FloatArrayType::Pointer weight = FloatArrayType::FromQVector(weights, DREAM3D::StringConstants::Weight);
 
       VectorOfFloatArray odfWeights;
       odfWeights.push_back(euler1);

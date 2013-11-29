@@ -183,7 +183,7 @@ void LinkFeatureMapToCellArray::execute()
   }
 
   // We get the attribute maxtrix here but no need to check it as that should have been done in the "dataCheck()" function
-  AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  AttributeMatrix* attrMatrix = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
   attrMatrix->clearAttributeArrays();
 
   int maxIndex = 0;

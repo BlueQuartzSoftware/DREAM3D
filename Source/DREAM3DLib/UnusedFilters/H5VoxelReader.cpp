@@ -74,7 +74,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   }
 
   OPEN_HDF5_FILE(fileId, m_FileName);
-  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.toLatin1().data(), fileId);
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::StringConstants::VoxelDataName.toLatin1().data(), fileId);
 
   err = QH5Lite::readPointerDataset(reconGid, H5_DIMENSIONS, volDims);
   if(err < 0)

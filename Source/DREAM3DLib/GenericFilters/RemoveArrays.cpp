@@ -103,8 +103,8 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t features, siz
     MapOfAttributeArrays_t mapOfArraysToRemove = iter.value();
     for(MapOfAttributeArrays_t::iterator iter = mapOfArraysToRemove.begin(); iter != mapOfArraysToRemove.end(); ++iter)
     {
-      AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(iter.key());
-      if(NULL == attrMatrix.get())
+      AttributeMatrix* attrMatrix = m->getAttributeMatrix(iter.key());
+      if(NULL == attrMatrix)
       {
         setErrorCondition(-999);
         notifyErrorMessage("The AttributeMatrix Object was NULL", -999);

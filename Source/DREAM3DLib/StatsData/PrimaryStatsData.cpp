@@ -65,7 +65,7 @@ PrimaryStatsData::~PrimaryStatsData()
 // -----------------------------------------------------------------------------
 QString PrimaryStatsData::getStatsType()
 {
-  return DREAM3D::HDF5::PrimaryStatsData;
+  return DREAM3D::StringConstants::PrimaryStatsData;
 }
 
 // -----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ FloatArrayType::Pointer PrimaryStatsData::generateBinNumbers()
     d = d + featureDiameterInfo[0];
   }
   // Copy this into the DataArray<float>
-  m_BinNumbers = FloatArrayType::CreateArray(bins.size(), DREAM3D::HDF5::BinNumber );
+  m_BinNumbers = FloatArrayType::CreateArray(bins.size(), DREAM3D::StringConstants::BinNumber );
   ::memcpy(m_BinNumbers->GetVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
   return m_BinNumbers;
 }

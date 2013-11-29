@@ -60,8 +60,8 @@ H5PrecipitateStatsDataDelegate::~H5PrecipitateStatsDataDelegate()
 // -----------------------------------------------------------------------------
 VectorOfFloatArray H5PrecipitateStatsDataDelegate::createBetaDistributionArrays()
 {
-  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Alpha);
-  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Beta);
+  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Alpha);
+  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Beta);
   QVector<FloatArrayType::Pointer> vect;
   vect.push_back(alphas);
   vect.push_back(betas);
@@ -70,9 +70,9 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createBetaDistributionArrays(
 
 VectorOfFloatArray H5PrecipitateStatsDataDelegate::createPowerDistributionArrays()
 {
-  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Alpha);
-  FloatArrayType::Pointer ks = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Exp_k);
-  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Beta);
+  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Alpha);
+  FloatArrayType::Pointer ks = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Exp_k);
+  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Beta);
   QVector<FloatArrayType::Pointer> vect;
   vect.push_back(alphas);
   vect.push_back(ks);
@@ -82,8 +82,8 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createPowerDistributionArrays
 
 VectorOfFloatArray H5PrecipitateStatsDataDelegate::createLogNormalDistributionArrays()
 {
-  FloatArrayType::Pointer avgs = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Average);
-  FloatArrayType::Pointer sd = FloatArrayType::CreateArray(0, DREAM3D::HDF5::StandardDeviation);
+  FloatArrayType::Pointer avgs = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Average);
+  FloatArrayType::Pointer sd = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::StandardDeviation);
   QVector<FloatArrayType::Pointer> vect;
   vect.push_back(avgs);
   vect.push_back(sd);
@@ -132,50 +132,50 @@ int H5PrecipitateStatsDataDelegate::readPrecipitateStatsData(PrecipitateStatsDat
   err = readFeatureDiameterInfo(data, groupId);
 
   // Read the Feature Size Distribution
-  uint32_t dType = readDistributionType(groupId, DREAM3D::HDF5::Feature_Size_Distribution);
+  uint32_t dType = readDistributionType(groupId, DREAM3D::StringConstants::Feature_Size_Distribution);
   data->setFeatureSize_DistType(dType);
   data->setFeatureSizeDistribution(createDistributionVector(data->getFeatureSize_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Feature_Size_Distribution,
+                             DREAM3D::StringConstants::Feature_Size_Distribution,
                              data->getFeatureSizeDistribution());
 
   // Read the Bin Numbers
   err = readBinNumbers(data, groupId);
 
   // Read the B Over A
-  dType = readDistributionType(groupId, DREAM3D::HDF5::Feature_SizeVBoverA_Distributions);
+  dType = readDistributionType(groupId, DREAM3D::StringConstants::Feature_SizeVBoverA_Distributions);
   data->setBOverA_DistType(dType);
   data->setFeatureSize_BOverA( createDistributionVector(data->getBOverA_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Feature_SizeVBoverA_Distributions,
+                             DREAM3D::StringConstants::Feature_SizeVBoverA_Distributions,
                              data->getFeatureSize_BOverA());
 
   // Read the C Over A
-  dType = readDistributionType(groupId, DREAM3D::HDF5::Feature_SizeVCoverA_Distributions);
+  dType = readDistributionType(groupId, DREAM3D::StringConstants::Feature_SizeVCoverA_Distributions);
   data->setCOverA_DistType(dType);
   data->setFeatureSize_COverA( createDistributionVector(data->getCOverA_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Feature_SizeVCoverA_Distributions,
+                             DREAM3D::StringConstants::Feature_SizeVCoverA_Distributions,
                              data->getFeatureSize_COverA());
 
   // Read the Clustering
-  dType = readDistributionType(groupId, DREAM3D::HDF5::Feature_SizeVClustering_Distributions);
+  dType = readDistributionType(groupId, DREAM3D::StringConstants::Feature_SizeVClustering_Distributions);
   data->setClustering_DistType(dType);
   data->setFeatureSize_Clustering( createDistributionVector(data->getClustering_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Feature_SizeVClustering_Distributions,
+                             DREAM3D::StringConstants::Feature_SizeVClustering_Distributions,
                              data->getFeatureSize_Clustering());
 
   // Read the Omegas
-  dType = readDistributionType(groupId, DREAM3D::HDF5::Feature_SizeVOmega3_Distributions);
+  dType = readDistributionType(groupId, DREAM3D::StringConstants::Feature_SizeVOmega3_Distributions);
   data->setOmegas_DistType(dType);
   data->setFeatureSize_Omegas( createDistributionVector(data->getOmegas_DistType()));
   err = readDistributionData(groupId,
-                             DREAM3D::HDF5::Feature_SizeVOmega3_Distributions,
+                             DREAM3D::StringConstants::Feature_SizeVOmega3_Distributions,
                              data->getFeatureSize_Omegas());
 
   // Read the Misorientation Bins
-  FloatArrayType::Pointer misoBins = FloatArrayType::CreateArray(0, DREAM3D::HDF5::MisorientationBins);
+  FloatArrayType::Pointer misoBins = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::MisorientationBins);
   err = misoBins->readH5Data(groupId);
   if (err < 0)
   {
@@ -185,7 +185,7 @@ int H5PrecipitateStatsDataDelegate::readPrecipitateStatsData(PrecipitateStatsDat
   err = readMDFWeights(groupId, data);
 
   // Read the ODF Data
-  FloatArrayType::Pointer odfBins = FloatArrayType::CreateArray(0, DREAM3D::HDF5::ODF);
+  FloatArrayType::Pointer odfBins = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::ODF);
   err = odfBins->readH5Data(groupId);
   if (err < 0)
   {
@@ -195,7 +195,7 @@ int H5PrecipitateStatsDataDelegate::readPrecipitateStatsData(PrecipitateStatsDat
   err = readODFWeights(groupId, data);
 
   // Read the Axis ODF Data
-  FloatArrayType::Pointer axisOdfBins = FloatArrayType::CreateArray(0, DREAM3D::HDF5::AxisOrientation);
+  FloatArrayType::Pointer axisOdfBins = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::AxisOrientation);
   err = axisOdfBins->readH5Data(groupId);
   if (err < 0)
   {
@@ -242,7 +242,7 @@ int H5PrecipitateStatsDataDelegate::writePrecipitateStatsData(PrecipitateStatsDa
   // Write the Feature Size Distribution
   err = writeDistributionData(groupId,
                               data->getFeatureSize_DistType(),
-                              DREAM3D::HDF5::Feature_Size_Distribution,
+                              DREAM3D::StringConstants::Feature_Size_Distribution,
                               data->getFeatureSizeDistribution());
 
   // Write the Bin Numbers
@@ -251,25 +251,25 @@ int H5PrecipitateStatsDataDelegate::writePrecipitateStatsData(PrecipitateStatsDa
   // Write the B Over A
   err = writeDistributionData(groupId,
                               data->getBOverA_DistType(),
-                              DREAM3D::HDF5::Feature_SizeVBoverA_Distributions,
+                              DREAM3D::StringConstants::Feature_SizeVBoverA_Distributions,
                               data->getFeatureSize_BOverA());
 
   // Write the C Over A
   err = writeDistributionData(groupId,
                               data->getCOverA_DistType(),
-                              DREAM3D::HDF5::Feature_SizeVCoverA_Distributions,
+                              DREAM3D::StringConstants::Feature_SizeVCoverA_Distributions,
                               data->getFeatureSize_COverA());
 
   // Write the Clustering
   err = writeDistributionData(groupId,
                               data->getClustering_DistType(),
-                              DREAM3D::HDF5::Feature_SizeVClustering_Distributions,
+                              DREAM3D::StringConstants::Feature_SizeVClustering_Distributions,
                               data->getFeatureSize_Clustering());
 
   // Write the Omegas
   err = writeDistributionData(groupId,
                               data->getOmegas_DistType(),
-                              DREAM3D::HDF5::Feature_SizeVOmega3_Distributions,
+                              DREAM3D::StringConstants::Feature_SizeVOmega3_Distributions,
                               data->getFeatureSize_Omegas());
 
   // Write the Misorientation Bins
@@ -278,7 +278,7 @@ int H5PrecipitateStatsDataDelegate::writePrecipitateStatsData(PrecipitateStatsDa
     err = data->getMisorientationBins()->writeH5Data(groupId);
   }
 
-  err = writeWeightsData(groupId, DREAM3D::HDF5::MDFWeights, data->getMDF_Weights());
+  err = writeWeightsData(groupId, DREAM3D::StringConstants::MDFWeights, data->getMDF_Weights());
 
 
   // Write the ODF
@@ -286,7 +286,7 @@ int H5PrecipitateStatsDataDelegate::writePrecipitateStatsData(PrecipitateStatsDa
   {
     err = data->getODF()->writeH5Data(groupId);
   }
-  err = writeWeightsData(groupId, DREAM3D::HDF5::ODFWeights, data->getODF_Weights());
+  err = writeWeightsData(groupId, DREAM3D::StringConstants::ODFWeights, data->getODF_Weights());
 
 
   // Write the Axis ODF
@@ -294,7 +294,7 @@ int H5PrecipitateStatsDataDelegate::writePrecipitateStatsData(PrecipitateStatsDa
   {
     err = data->getAxisOrientation()->writeH5Data(groupId);
   }
-  err = writeWeightsData(groupId, DREAM3D::HDF5::AxisODFWeights, data->getAxisODF_Weights());
+  err = writeWeightsData(groupId, DREAM3D::StringConstants::AxisODFWeights, data->getAxisODF_Weights());
 
   return err;
 }
@@ -359,17 +359,17 @@ int H5PrecipitateStatsDataDelegate::readMDFWeights(hid_t pid, PrecipitateStatsDa
 {
   int err = 0;
   QVector<int> dims(1, 1);
-  FloatArrayType::Pointer angles = FloatArrayType::CreateArray(1, dims, DREAM3D::HDF5::Angle);
-  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Weight);
+  FloatArrayType::Pointer angles = FloatArrayType::CreateArray(1, dims, DREAM3D::StringConstants::Angle);
+  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::Weight);
   dims[0] = 3;
-  FloatArrayType::Pointer axis = FloatArrayType::CreateArray(3, dims, DREAM3D::HDF5::Axis);
+  FloatArrayType::Pointer axis = FloatArrayType::CreateArray(3, dims, DREAM3D::StringConstants::Axis);
 
   VectorOfFloatArray mdfWeights;
   mdfWeights.push_back(angles);
   mdfWeights.push_back(axis);
   mdfWeights.push_back(weight);
 
-  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::HDF5::MDFWeights);
+  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::StringConstants::MDFWeights);
 
   err = readVectorOfArrays(groupId, mdfWeights);
   if (err >= 0)
@@ -389,11 +389,11 @@ int H5PrecipitateStatsDataDelegate::readODFWeights(hid_t pid, PrecipitateStatsDa
 
   int err = 0;
 
-  FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler1);
-  FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler2);
-  FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler3);
-  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Weight);
-  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Sigma);
+  FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Euler1);
+  FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Euler2);
+  FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Euler3);
+  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Weight);
+  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Sigma);
 
   VectorOfFloatArray odfWeights;
   odfWeights.push_back(euler1);
@@ -402,7 +402,7 @@ int H5PrecipitateStatsDataDelegate::readODFWeights(hid_t pid, PrecipitateStatsDa
   odfWeights.push_back(weight);
   odfWeights.push_back(sigma);
 
-  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::HDF5::ODFWeights);
+  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::StringConstants::ODFWeights);
 
   err = readVectorOfArrays(groupId, odfWeights);
   if(err >= 0)
@@ -424,11 +424,11 @@ int H5PrecipitateStatsDataDelegate::readAxisODFWeights(hid_t pid, PrecipitateSta
 
   int err = 0;
 
-  FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler1);
-  FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler2);
-  FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler3);
-  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Sigma);
-  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Weight);
+  FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Euler1);
+  FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Euler2);
+  FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Euler3);
+  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Sigma);
+  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Weight);
 
   VectorOfFloatArray odfWeights;
   odfWeights.push_back(euler1);
@@ -437,7 +437,7 @@ int H5PrecipitateStatsDataDelegate::readAxisODFWeights(hid_t pid, PrecipitateSta
   odfWeights.push_back(sigma);
   odfWeights.push_back(weight);
 
-  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::HDF5::AxisODFWeights);
+  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::StringConstants::AxisODFWeights);
 
   err = readVectorOfArrays(groupId, odfWeights);
   if(err >= 0)
@@ -485,26 +485,26 @@ int H5PrecipitateStatsDataDelegate::writeDistributionData(hid_t pid,
   switch(disType)
   {
     case DREAM3D::DistributionType::Beta:
-      disTypeStr = DREAM3D::HDF5::BetaDistribution;
+      disTypeStr = DREAM3D::StringConstants::BetaDistribution;
       break;
     case DREAM3D::DistributionType::LogNormal:
-      disTypeStr = DREAM3D::HDF5::LogNormalDistribution;
+      disTypeStr = DREAM3D::StringConstants::LogNormalDistribution;
       break;
     case DREAM3D::DistributionType::Power:
-      disTypeStr = DREAM3D::HDF5::PowerLawDistribution;
+      disTypeStr = DREAM3D::StringConstants::PowerLawDistribution;
       break;
     case DREAM3D::DistributionType::UnknownDistributionType:
-      disTypeStr = DREAM3D::HDF5::UnknownDistribution;
+      disTypeStr = DREAM3D::StringConstants::UnknownDistribution;
       break;
     default:
-      disTypeStr = DREAM3D::HDF5::UnknownDistribution;
+      disTypeStr = DREAM3D::StringConstants::UnknownDistribution;
   }
 
   // Create the Group Folder
   hid_t disId = QH5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)
   {
-    err = QH5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
+    err = QH5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::StringConstants::DistributionType, disTypeStr);
     if(err >= 0)
     {
       err |= writeVectorOfArrays(disId, colData);
@@ -533,17 +533,17 @@ uint32_t H5PrecipitateStatsDataDelegate::readDistributionType(hid_t pid, const Q
   uint32_t dType = DREAM3D::DistributionType::UnknownDistributionType;
 
   QString disTypeStr;
-  err = QH5Lite::readStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
+  err = QH5Lite::readStringAttribute(pid, hdf5GroupName, DREAM3D::StringConstants::DistributionType, disTypeStr);
 
-  if (disTypeStr.compare(DREAM3D::HDF5::BetaDistribution) == 0)
+  if (disTypeStr.compare(DREAM3D::StringConstants::BetaDistribution) == 0)
   {
     dType = DREAM3D::DistributionType::Beta;
   }
-  else   if (disTypeStr.compare(DREAM3D::HDF5::LogNormalDistribution) == 0)
+  else   if (disTypeStr.compare(DREAM3D::StringConstants::LogNormalDistribution) == 0)
   {
     dType = DREAM3D::DistributionType::LogNormal;
   }
-  else   if (disTypeStr.compare(DREAM3D::HDF5::PowerLawDistribution) == 0)
+  else   if (disTypeStr.compare(DREAM3D::StringConstants::PowerLawDistribution) == 0)
   {
     dType = DREAM3D::DistributionType::Power;
   }
@@ -581,7 +581,7 @@ int H5PrecipitateStatsDataDelegate::readDistributionData(hid_t pid,
 int H5PrecipitateStatsDataDelegate::writeBoundaryArea(PrecipitateStatsData* data, hid_t pid)
 {
   float BoundaryArea = data->getBoundaryArea();
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+  return QH5Lite::writeScalarDataset(pid, DREAM3D::StringConstants::BoundaryArea, BoundaryArea);
 }
 
 // -----------------------------------------------------------------------------
@@ -590,7 +590,7 @@ int H5PrecipitateStatsDataDelegate::writeBoundaryArea(PrecipitateStatsData* data
 int H5PrecipitateStatsDataDelegate::readBoundaryArea(PrecipitateStatsData* data, hid_t pid)
 {
   float BoundaryArea = 0.0f;
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+  int err = QH5Lite::readScalarDataset(pid, DREAM3D::StringConstants::BoundaryArea, BoundaryArea);
   data->setBoundaryArea(BoundaryArea);
   return err;
 }
@@ -600,7 +600,7 @@ int H5PrecipitateStatsDataDelegate::readBoundaryArea(PrecipitateStatsData* data,
 int H5PrecipitateStatsDataDelegate::writePhaseFraction(PrecipitateStatsData* data, hid_t pid)
 {
   float phaseFraction = data->getPhaseFraction();
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  return QH5Lite::writeScalarDataset(pid, DREAM3D::StringConstants::PhaseFraction, phaseFraction);
 }
 
 // -----------------------------------------------------------------------------
@@ -609,7 +609,7 @@ int H5PrecipitateStatsDataDelegate::writePhaseFraction(PrecipitateStatsData* dat
 int H5PrecipitateStatsDataDelegate::readPhaseFraction(PrecipitateStatsData* data, hid_t pid)
 {
   float phaseFraction = 0.0f;
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  int err = QH5Lite::readScalarDataset(pid, DREAM3D::StringConstants::PhaseFraction, phaseFraction);
   data->setPhaseFraction(phaseFraction);
   return err;
 }
@@ -619,7 +619,7 @@ int H5PrecipitateStatsDataDelegate::readPhaseFraction(PrecipitateStatsData* data
 int H5PrecipitateStatsDataDelegate::writePrecipBoundaryFraction(PrecipitateStatsData* data, hid_t pid)
 {
   float var = data->getPrecipBoundaryFraction();
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PrecipitateBoundaryFraction, var);
+  return QH5Lite::writeScalarDataset(pid, DREAM3D::StringConstants::PrecipitateBoundaryFraction, var);
 }
 
 // -----------------------------------------------------------------------------
@@ -628,7 +628,7 @@ int H5PrecipitateStatsDataDelegate::writePrecipBoundaryFraction(PrecipitateStats
 int H5PrecipitateStatsDataDelegate::readPrecipBoundaryFraction(PrecipitateStatsData* data, hid_t pid)
 {
   float precipBoundaryFraction = 0.0f;
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::PrecipitateBoundaryFraction, precipBoundaryFraction);
+  int err = QH5Lite::readScalarDataset(pid, DREAM3D::StringConstants::PrecipitateBoundaryFraction, precipBoundaryFraction);
   data->setPrecipBoundaryFraction(precipBoundaryFraction);
   return err;
 }
@@ -648,7 +648,7 @@ int H5PrecipitateStatsDataDelegate::writeFeatureDiameterInfo(PrecipitateStatsDat
   float featureDiameterInfo[3];
   data->getFeatureDiameterInfo(featureDiameterInfo);
 
-  return QH5Lite::writePointerDataset(pid, DREAM3D::HDF5::Feature_Diameter_Info, rank, dims, featureDiameterInfo);
+  return QH5Lite::writePointerDataset(pid, DREAM3D::StringConstants::Feature_Diameter_Info, rank, dims, featureDiameterInfo);
 }
 
 // -----------------------------------------------------------------------------
@@ -663,7 +663,7 @@ int H5PrecipitateStatsDataDelegate::readFeatureDiameterInfo(PrecipitateStatsData
   float featureDiameterInfo[3] =
   { 0.0f, 0.0f, 0.0f };
 
-  err = QH5Lite::readPointerDataset(groupId, DREAM3D::HDF5::Feature_Diameter_Info, featureDiameterInfo);
+  err = QH5Lite::readPointerDataset(groupId, DREAM3D::StringConstants::Feature_Diameter_Info, featureDiameterInfo);
   data->setFeatureDiameterInfo(featureDiameterInfo);
   return err;
 }
@@ -687,7 +687,7 @@ int H5PrecipitateStatsDataDelegate::writeBinNumbers(PrecipitateStatsData* data, 
 int H5PrecipitateStatsDataDelegate::readBinNumbers(PrecipitateStatsData* data, hid_t groupId)
 {
   int err = 0;
-  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1, DREAM3D::HDF5::BinNumber);
+  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::BinNumber);
   err = p->readH5Data(groupId);
   data->setBinNumbers(p);
   return err;

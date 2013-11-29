@@ -76,8 +76,12 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
     virtual void clear();
     virtual size_t size();
     virtual bool empty();
-
-    //virtual FilterContainerType& getFilterContainer();
+    /**
+     * @brief contains Returns if a DataContainer with the give name is in the array
+     * @param name The name of the DataContiner to find
+     * @return
+     */
+    bool contains(const QString& name);
 
     /**
      * @brief
@@ -89,17 +93,65 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
 
     virtual void printDataContainerNames(QTextStream& out);
 
+    /**
+     * @brief getDataContainerAs
+     * @param name
+     * @return
+     */
     template<typename T>
     T* getDataContainerAs(const QString& name)
     {
       DataContainer::Pointer dc = getDataContainer(name);
       if(NULL == dc.get()) { return NULL; }
-
       T* m = T::SafePointerDownCast(dc.get());
       return m;
     }
 
-    bool containsDataContainer(const QString& name);
+    /**
+     * @brief getPrereqDataContainer
+     * @param name
+     * @param createIfNotExists
+     * @return
+     */
+    template<typename DataContainerType, typename Filter>
+    DataContainerType* getPrereqDataContainer(const QString& name, bool createIfNotExists = false, Filter* filter = NULL)
+    {
+      typename DataContainerType* dc = getDataContainer(name);
+      if(NULL == dc.get() && createIfNotExists == false)
+      {
+        if (filter) {
+          filter->setErrorCondition(-999);
+          filter->addErrorMessage(filter->getHumanLabel(), "The VolumeDataContainer Object with the specific name " + name + " was not available.", -999);
+        }
+        return NULL;
+      }
+      else
+      {
+        typename DataContainerType::Pointer dataContainer = DataContainerType::New(name); // Create a new Data Container
+        pushBack(dataContainer); // Put the new DataContainer into the array
+        dc = getDataContainer(name); // Assign it to the local variable
+      }
+      DataContainerType* m = DataContainerType::SafePointerDownCast(dc.get());
+      return m;
+    }
+
+    /**
+     * @brief This function will create a new DataContainer of type <T> with an AttributeMatrix
+     * @param dataContainerName The name of the DataContainer. Must not be empty or this method will ASSERT()
+     * @param attributeMatrixName The name of the AttributeMatrix. Must not be empty or this method will ASSERT()
+     * @return
+     */
+    template<class DataContainerType>
+    DataContainerType* createDataContainerWithAttributeMatrix(const QString& dataContainerName, const QString& attributeMatrixName)
+    {
+      Q_ASSERT(dataContainerName.isEmpty() == false);
+      Q_ASSERT(attributeMatrixName.isEmpty() == false);
+      typename DataContainerType::Pointer dataContainer = DataContainerType::New(dataContainerName);
+      AttributeMatrix* attrMat = dataContainer->createAttributeMatrix(attributeMatrixName); attrMat=NULL; /* THis is just here to quiet the compiler */
+      pushBack(dataContainer);
+      return dataContainer.get();
+    }
+
 
   protected:
     DataContainerArray();

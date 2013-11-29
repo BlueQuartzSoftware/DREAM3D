@@ -209,7 +209,7 @@ void FindODF::execute()
     if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
     {
       dims = 36 * 36 * 12;
-      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
+      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::StringConstants::ODF);
       for (unsigned long long j = 0; j < dims; j++)
       {
         eulerodf[i]->SetValue(j, 0.0);
@@ -218,7 +218,7 @@ void FindODF::execute()
     else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
     {
       dims = 18 * 18 * 18;
-      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
+      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::StringConstants::ODF);
       for (unsigned long long j = 0; j < dims; j++)
       {
         eulerodf[i]->SetValue(j, 0.0);

@@ -240,16 +240,16 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   case DREAM3D::DistributionType::Beta:
     v0 = m_TableModel->getData(SGBetaTableModel::Alpha);
     v1 = m_TableModel->getData(SGBetaTableModel::Beta);
-    col0 = FloatArrayType::FromQVector(v0, DREAM3D::HDF5::Alpha);
-    col1 = FloatArrayType::FromQVector(v1, DREAM3D::HDF5::Beta);
+    col0 = FloatArrayType::FromQVector(v0, DREAM3D::StringConstants::Alpha);
+    col1 = FloatArrayType::FromQVector(v1, DREAM3D::StringConstants::Beta);
     data.push_back(col0);
     data.push_back(col1);
     break;
   case DREAM3D::DistributionType::LogNormal:
     v0 = m_TableModel->getData(SGLogNormalTableModel::Average);
     v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev);
-    col0 = FloatArrayType::FromQVector(v0, DREAM3D::HDF5::Average);
-    col1 = FloatArrayType::FromQVector(v1, DREAM3D::HDF5::StandardDeviation);
+    col0 = FloatArrayType::FromQVector(v0, DREAM3D::StringConstants::Average);
+    col1 = FloatArrayType::FromQVector(v1, DREAM3D::StringConstants::StandardDeviation);
     data.push_back(col0);
     data.push_back(col1);
     break;
@@ -257,9 +257,9 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
     v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha);
     v1 = m_TableModel->getData(SGPowerLawTableModel::K);
     v2 = m_TableModel->getData(SGPowerLawTableModel::Beta);
-    col0 = FloatArrayType::FromQVector(v0, DREAM3D::HDF5::Alpha);
-    col1 = FloatArrayType::FromQVector(v1, DREAM3D::HDF5::Exp_k);
-    col2 = FloatArrayType::FromQVector(v2, DREAM3D::HDF5::Beta);
+    col0 = FloatArrayType::FromQVector(v0, DREAM3D::StringConstants::Alpha);
+    col1 = FloatArrayType::FromQVector(v1, DREAM3D::StringConstants::Exp_k);
+    col2 = FloatArrayType::FromQVector(v2, DREAM3D::StringConstants::Beta);
     data.push_back(col0);
     data.push_back(col1);
     data.push_back(col2);
@@ -380,9 +380,9 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 void StatsGenPlotWidget::setupGui()
 {
   distributionTypeCombo->blockSignals(true);
-  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::BetaDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::LogNormalDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::PowerLawDistribution.toLatin1().data());
   distributionTypeCombo->blockSignals(false);
 
 
@@ -644,16 +644,16 @@ void StatsGenPlotWidget::setBins(QVector<float> &binNumbers)
     switch(m_StatsType)
     {
       case DREAM3D::Reconstruction::Feature_SizeVBoverA:
-        msg.append(DREAM3D::HDF5::Feature_SizeVBoverA_Distributions.toLatin1().data());
+        msg.append(DREAM3D::StringConstants::Feature_SizeVBoverA_Distributions.toLatin1().data());
         break;
       case DREAM3D::Reconstruction::Feature_SizeVCoverA:
-        msg.append(DREAM3D::HDF5::Feature_SizeVCoverA_Distributions.toLatin1().data());
+        msg.append(DREAM3D::StringConstants::Feature_SizeVCoverA_Distributions.toLatin1().data());
         break;
       case DREAM3D::Reconstruction::Feature_SizeVNeighbors:
-        msg.append(DREAM3D::HDF5::Feature_SizeVNeighbors_Distributions.toLatin1().data());
+        msg.append(DREAM3D::StringConstants::Feature_SizeVNeighbors_Distributions.toLatin1().data());
         break;
       case DREAM3D::Reconstruction::Feature_SizeVOmega3:
-        msg.append(DREAM3D::HDF5::Feature_SizeVOmega3_Distributions.toLatin1().data());
+        msg.append(DREAM3D::StringConstants::Feature_SizeVOmega3_Distributions.toLatin1().data());
         break;
       default:
         msg.append("Unknown");

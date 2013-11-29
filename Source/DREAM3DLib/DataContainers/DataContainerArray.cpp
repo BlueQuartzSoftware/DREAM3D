@@ -195,7 +195,7 @@ void DataContainerArray::printDataContainerNames(QTextStream& out)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataContainerArray::containsDataContainer(const QString& name)
+bool DataContainerArray::contains(const QString& name)
 {
   for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
   {

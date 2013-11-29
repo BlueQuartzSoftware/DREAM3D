@@ -249,7 +249,7 @@ int VertexDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
   size_t type_size;
   if (true == preflight)
   {
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::VerticesName, dims, type_class, type_size);
     if (err >= 0)
     {
       VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
@@ -258,7 +258,7 @@ int VertexDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
   }
   else
   {
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::VerticesName, dims, type_class, type_size);
     if (err >= 0)
     {
       // Allocate the Vertex_t structures
@@ -266,7 +266,7 @@ int VertexDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
       // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
       float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
       // Read the data from the file
-      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
+      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::StringConstants::VerticesName, data);
       if (err < 0)
       {
         setErrorCondition(err);

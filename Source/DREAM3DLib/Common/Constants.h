@@ -317,10 +317,16 @@ namespace DREAM3D
     const DREAM3D_STRING FileVersionName("FileVersion");
     const DREAM3D_STRING ObjectType("ObjectType");
     const DREAM3D_STRING Rank("Rank");
+    const DREAM3D_STRING NumComponents("NumComponents");
+    const DREAM3D_STRING AttributeMatrixType("AttributeMatrixType");
+    const DREAM3D_STRING DataArrayVersion("DataArrayVersion");
+  }
 
+  namespace StringConstants
+  {
     const DREAM3D_STRING Alpha("Alpha");
     const DREAM3D_STRING Angle("Angle");
-    const DREAM3D_STRING AttributeMatrixType("AttributeMatrixType");
+
     const DREAM3D_STRING Average("Average");
     const DREAM3D_STRING Axis("Axis");
     const DREAM3D_STRING AxisODFWeights("AxisODF-Weights");
@@ -337,7 +343,7 @@ namespace DREAM3D
     const DREAM3D_STRING CrystalStructure("CrystalStructure");
     const DREAM3D_STRING DataContainerGroupName("DataContainers");
     const DREAM3D_STRING DataContainerType("DataContainerType");
-    const DREAM3D_STRING DataArrayVersion("DataArrayVersion");
+
     const DREAM3D_STRING Dims("Dims");
     const DREAM3D_STRING DistributionType("Distribution Type");
 
@@ -371,7 +377,7 @@ namespace DREAM3D
     const DREAM3D_STRING MinimumValue("Minimum Value");
     const DREAM3D_STRING MisorientationBins("MisorientationBins");
     const DREAM3D_STRING Neighbor_Feature_ID_List( "Neighbor_Feature_ID_List");
-    const DREAM3D_STRING NumComponents("NumComponents");
+
     const DREAM3D_STRING ODF("ODF");
     const DREAM3D_STRING ODFWeights("ODF-Weights");
 
@@ -398,14 +404,6 @@ namespace DREAM3D
     const DREAM3D_STRING VertsName("Verts");
 
     const DREAM3D_STRING Weight("Weight");
-
-    enum ColumnCount
-    {
-      BetaColumnCount = 2,       //!<
-      LogNormalColumnCount = 2,  //!<
-      PowerLawColumnCount = 2,   //!<
-      UnknownColumCount = 0      //!<
-    };
   }
 
   namespace PhaseType
@@ -441,6 +439,7 @@ namespace DREAM3D
     const unsigned int Feature_SizeVOmega3 = 3;        //!<
     const unsigned int Feature_SizeVClustering = 4;        //!<
     const unsigned int UnknownStatisticsGroup = 999;    //!<
+
   }
 
   namespace DistributionType
@@ -450,6 +449,15 @@ namespace DREAM3D
     const unsigned int Power = 2;        //!<
     const unsigned int UnknownDistributionType = 3;    //!<
     const unsigned int Count = 3; //!<
+
+    enum ColumnCount
+    {
+      BetaColumnCount = 2,       //!<
+      LogNormalColumnCount = 2,  //!<
+      PowerLawColumnCount = 2,   //!<
+      UnknownColumCount = 0      //!<
+    };
+
   }
 
   namespace EulerAngleConversionType
@@ -562,14 +570,14 @@ namespace DREAM3D
     const DREAM3D_STRING VtkFile("Test.vtk");
   }
 
-  namespace MicroStats
-  {
-    const DREAM3D_STRING H5StatisticsFile("Results.h5stats");
-    const DREAM3D_STRING FeatureDataFile("FeatureData.csv");//14
-    const DREAM3D_STRING DeformationStatsFile("Deformation_Stats.txt");
-    const DREAM3D_STRING IPFDeformVTKFile("IPF_DeformationData.vtk");
-    const DREAM3D_STRING VoxelDataName("VoxelData");
-  }
+  //  namespace MicroStats
+  //  {
+  //    const DREAM3D_STRING H5StatisticsFile("Results.h5stats");
+  //    const DREAM3D_STRING FeatureDataFile("FeatureData.csv");//14
+  //    const DREAM3D_STRING DeformationStatsFile("Deformation_Stats.txt");
+  //    const DREAM3D_STRING IPFDeformVTKFile("IPF_DeformationData.vtk");
+  //    const DREAM3D_STRING VoxelDataName("VoxelData");
+  //  }
 
   /*   Surface Meshing Related   */
   namespace SurfaceMesh

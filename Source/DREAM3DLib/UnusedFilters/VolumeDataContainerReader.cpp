@@ -245,19 +245,19 @@ int VolumeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
   size_t type_size;
   if (true == preflight)
   {
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsName, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellsName, dims, type_class, type_size);
     if (err >= 0)
     {
       CellArray::Pointer triangles = CellArray::CreateArray(1, DREAM3D::CellData::SurfaceMeshCells, NULL);
       dc->setCells(triangles);
     }
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellNeighbors, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellNeighbors, dims, type_class, type_size);
     if(err >= 0)
     {
       Int32DynamicListArray::Pointer cellNeighbors = Int32DynamicListArray::New();
       dc->getCells()->setCellNeighbors(cellNeighbors);
     }
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsContainingVert, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellsContainingVert, dims, type_class, type_size);
     if(err >= 0)
     {
       Int32DynamicListArray::Pointer cellsContainingVert = Int32DynamicListArray::New();
@@ -266,7 +266,7 @@ int VolumeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
   }
   else
   {
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsName, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellsName, dims, type_class, type_size);
     if (err >= 0)
     {
       // Allocate the Cell_t structures
@@ -274,7 +274,7 @@ int VolumeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
       // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
       int32_t* data = reinterpret_cast<int32_t*>(cellsPtr->getPointer(0));
       // Read the data from the file
-      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::CellsName, data);
+      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::StringConstants::CellsName, data);
       if (err < 0)
       {
         setErrorCondition(err);
@@ -283,13 +283,13 @@ int VolumeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
       }
       dc->setCells(cellsPtr);
       size_t nCells = cellsPtr->getNumberOfTuples();
-      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellNeighbors, dims, type_class, type_size);
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellNeighbors, dims, type_class, type_size);
       if (err >= 0)
       {
         //Read the cellNeighbors array into the buffer
 
         std::vector<uint8_t> buffer;
-        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::CellNeighbors, buffer);
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::CellNeighbors, buffer);
         if(err < 0)
         {
           setErrorCondition(err);
@@ -300,13 +300,13 @@ int VolumeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         cellNeighbors->deserializeLinks(buffer, nCells);
         dc->getCells()->setCellNeighbors(cellNeighbors);
       }
-      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsContainingVert, dims, type_class, type_size);
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellsContainingVert, dims, type_class, type_size);
       if (err >= 0)
       {
         //Read the cellNeighbors array into the buffer
 
         std::vector<uint8_t> buffer;
-        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::CellsContainingVert, buffer);
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::CellsContainingVert, buffer);
         if(err < 0)
         {
           setErrorCondition(err);

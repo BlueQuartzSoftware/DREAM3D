@@ -325,7 +325,7 @@ class NeighborList : public IDataArray
         {
           return -603;
         }
-        err = QH5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, QString(H5_NUMCOMPONENTS), 1);
+        err = QH5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::NumComponents, 1);
         if(err < 0)
         {
           return -605;
@@ -373,7 +373,7 @@ class NeighborList : public IDataArray
         {
           return -603;
         }
-        err = QH5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, QString(H5_NUMCOMPONENTS), 1);
+        err = QH5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::NumComponents, 1);
         if(err < 0)
         {
           return -605;
@@ -412,7 +412,7 @@ class NeighborList : public IDataArray
         {
           return -605;
         }
-        err = QH5Lite::writeScalarAttribute(parentId, GetName(), QString(H5_NUMCOMPONENTS), 1);
+        err = QH5Lite::writeScalarAttribute(parentId, GetName(), DREAM3D::HDF5::NumComponents, 1);
         if(err < 0)
         {
           return -606;

@@ -345,8 +345,8 @@ void MatchCrystallography::initializeArrays(int ensem)
     return;
   }
 
-  simodf = FloatArrayType::CreateArray(actualodf->GetSize(), DREAM3D::HDF5::ODF);
-  simmdf = FloatArrayType::CreateArray(actualmdf->GetSize(), DREAM3D::HDF5::MisorientationBins);
+  simodf = FloatArrayType::CreateArray(actualodf->GetSize(), DREAM3D::StringConstants::ODF);
+  simmdf = FloatArrayType::CreateArray(actualmdf->GetSize(), DREAM3D::StringConstants::MisorientationBins);
   for (size_t j = 0; j < simodf->GetSize(); j++)
   {
     simodf->SetValue(j, 0.0);

@@ -128,7 +128,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
         { (hsize_t)num* (hsize_t)numComp };
 
         err |= QH5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
-        err |= QH5Lite::writeScalarAttribute(ensembleGid, label, QString(H5_NUMCOMPONENTS), numComp);
+        err |= QH5Lite::writeScalarAttribute(ensembleGid, label, DREAM3D::HDF5::NumComponents, numComp);
         err |= QH5Lite::writeStringAttribute(ensembleGid, label, DREAM3D::HDF5::ObjectType, "vector");
 
         if(err < 0)
