@@ -195,7 +195,7 @@ void TriangleDihedralAngleFilter::dataCheck(bool preflight, size_t voxels, size_
   else
   {
     QVector<int> dims(1, 1);
-    m_SurfaceMeshTriangleDihedralAnglesPtr = sm->createNonPrereqArray<double, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTriangleDihedralAnglesArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshTriangleDihedralAnglesPtr = sm->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTriangleDihedralAnglesArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshTriangleDihedralAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshTriangleDihedralAngles = m_SurfaceMeshTriangleDihedralAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }

@@ -131,7 +131,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 #endif
 
     //Get Array Size Check Func Here
-    template<typename T, class AbstractFilter>
+    template<class ArrayType, class AbstractFilter>
     bool dataArrayCompatibility(const QString& arrayName, size_t size, int numComp, AbstractFilter* filter)
     {
       // First try checking by name
@@ -170,10 +170,10 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         return false;
       }
       // Make sure we can downcast to the proper type
-      DataArray<T>* array = DataArray<T>::SafePointerDownCast(iDataArray.get());
+      ArrayType* array = ArrayType::SafePointerDownCast(iDataArray.get());
       if (NULL == array)
       {
-        typename DataArray<T>::Pointer dat = DataArray<T>::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
+        typename ArrayType::Pointer dat = ArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
         QString s = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"
                                 "An Array with name '%4' is stored in the %5 but is of type %6\n")
             .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
