@@ -48,7 +48,11 @@ endif()
 
 # Figure out the TBB_ARCH_PLATFORM on Windows. Note that we only support
 # visual studio 9, 10, 11
-if(WIN32 AND "${TBB_ARCH_PLATFORM}" STREQUAL "" )
+if(WIN32 )
+	set(TBB_ARCH_TYPE "ia32")
+	if( "${CMAKE_SIZEOF_VOID_P}" EQUAL "8" )
+		set(TBB_ARCH_TYPE "intel64")
+	endif()
     if(MSVC90)
          set(TBB_ARCH_PLATFORM "${TBB_ARCH_TYPE}/vc9")
     endif(MSVC90)

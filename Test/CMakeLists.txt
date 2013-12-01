@@ -60,6 +60,7 @@ endmacro()
 
 macro(ADD_DREAM3D_TEST testname LIBRARIES)
   add_executable( ${testname} "${DREAM3DTest_SOURCE_DIR}/${testname}.cpp")
+message(STATUS "LIBRARIES: ${LIBRARIES}")
   target_link_libraries( ${testname} "${LIBRARIES}")
   set_target_properties( ${testname} PROPERTIES FOLDER Test)
   add_test(${testname} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${testname})
@@ -67,8 +68,10 @@ endmacro()
 
 
 
-ADD_DREAM3D_TEST(H5LiteTest "H5Support;${QT_QTCORE_LIBRARY}")
-ADD_DREAM3D_TEST(H5UtilitiesTest "H5Support;${QT_QTCORE_LIBRARY}")
+ADD_DREAM3D_TEST(H5LiteTest "H5Support")
+ADD_DREAM3D_TEST(H5UtilitiesTest "H5Support")
+
+
 ADD_DREAM3D_TEST(QuaternionMathTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(OrientationMathTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(StructArrayTest  "DREAM3DLib")
