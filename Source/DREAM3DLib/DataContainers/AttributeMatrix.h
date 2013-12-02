@@ -113,7 +113,8 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       // here and send back nice error messages to ther user/programmer.
       if (attributeArrayName.isEmpty() == true)
       {
-        if(filter) {
+        if(filter)
+        {
           filter->setErrorCondition(err * 1010);
           ss = QObject::tr("AttributeMatrix:'%1' The name of the Attribute Array was empty. Please provide a name for this array").arg(getName());
           filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
@@ -124,29 +125,35 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       {
         if(filter) 
         {
-          filter->setErrorCondition(err * 1030);
+          filter->setErrorCondition(err * 1020);
           ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' does not exist in the AttributeMatrix and is required for this filter to execute.").arg(getName()).arg(attributeArrayName);
           filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeArray;
       }
-      else
+      int NumComp = dims[0];
+      for(int i = 1; i < dims.size(); i++)
       {
-        int NumComp = dims[0];
-        for(int i = 1; i < dims.size(); i++)
+        NumComp *= dims[i];
+      }
+      // Check to make sure the AttributeArray we have is of the proper type, size and number of components
+      if(false == dataArrayCompatibility<ArrayType, Filter>(attributeArrayName, size, NumComp, filter) )
+      {
+        if(filter) 
         {
-          NumComp *= dims[i];
+          filter->setErrorCondition(err * 1030);
+          ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' is not compatible with desired dimensions.").arg(getName()).arg(attributeArrayName);
+          filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
-        // Check to make sure the AttributeArray we have is of the proper type, size and number of components
-        if(false == dataArrayCompatibility<ArrayType, Filter>(attributeArrayName, size, NumComp, filter) )
-        {
-          return attributeArray;
-        }
-        else
-        {
-          IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
-          attributeArray = boost::dynamic_pointer_cast< ArrayType >(iDataArray);
-        }
+        return attributeArray;
+      }
+      IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
+      attributeArray = boost::dynamic_pointer_cast< ArrayType >(iDataArray);
+      if(NULL == attributeArray.get() && filter) 
+      {
+        filter->setErrorCondition(err * 1040);
+        ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' could not be downcast using boost::dynamic_pointer_cast<T>.").arg(getName()).arg(attributeArrayName);
+        filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
       return attributeArray;
     }
@@ -173,9 +180,12 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       QString ss;
       if (attributeArrayName.isEmpty() == true)
       {
-        filter->setErrorCondition(-10002);
-        ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
-        filter->addErrorMessage(filter->getHumanLabel(), ss, -10000);
+        if(filter) 
+        {
+          filter->setErrorCondition(-10002);
+          ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
+          filter->addErrorMessage(filter->getHumanLabel(), ss, -10000);
+        }
         return attributeArray;
       }
       attributeArray = ArrayType::CreateArray(size, dims, attributeArrayName);

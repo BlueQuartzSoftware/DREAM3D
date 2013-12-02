@@ -90,7 +90,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @return
      */
     template<class Filter>
-    typename AttributeMatrix* getPrereqAttributeMatrix(Filter* filter,
+    AttributeMatrix* getPrereqAttributeMatrix(Filter* filter,
                                                QString attributeMatrixName,
                                                int err)
     {
@@ -137,7 +137,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @return A Shared Pointer to the newly created array
      */
     template<class Filter>
-    typename AttributeMatrix* createNonPrereqAttributeMatrix(Filter* filter,
+    AttributeMatrix* createNonPrereqAttributeMatrix(Filter* filter,
                                                      const QString& attributeMatrixName,
                                                      unsigned int amType)
     {
@@ -146,9 +146,12 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       QString ss;
       if (attributeMatrixName.isEmpty() == true)
       {
-        filter->setErrorCondition(-10001);
-        ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
-        filter->addErrorMessage(filter->getHumanLabel(), ss, -10001);
+        if(filter) 
+        {
+          filter->setErrorCondition(-10001);
+          ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
+          filter->addErrorMessage(filter->getHumanLabel(), ss, -10001);
+        }
         return attributeMatrix.get();
       }
       attributeMatrix = getAttributeMatrix(attributeMatrixName);
@@ -157,13 +160,13 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
         AttributeMatrix* attrMat = createAttributeMatrix(attributeMatrixName);
         return attrMat;
       }
-      else
+      if(filter) 
       {
         filter->setErrorCondition(-10002);
         ss = QObject::tr("An Attribute Matrix already exists with the name %1").arg(attributeMatrixName);
         filter->addErrorMessage(filter->getHumanLabel(), ss, -10002);
-        return attributeMatrix.get();
       }
+      return attributeMatrix.get();
     }
 
     /**

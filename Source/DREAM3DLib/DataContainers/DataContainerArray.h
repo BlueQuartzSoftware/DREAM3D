@@ -114,7 +114,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
      * @return
      */
     template<typename DataContainerType, typename Filter>
-    DataContainerType* getPrereqDataContainer(const QString& name, bool createIfNotExists = false, Filter* filter = NULL)
+    DataContainerType* getPrereqDataContainer(Filter* filter, const QString& name, bool createIfNotExists = false)
     {
       DataContainerType* dc = getDataContainerAs<DataContainerType>(name);
       if(NULL == dc && createIfNotExists == false)
@@ -140,13 +140,14 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
      * @param dataContainerName The name of the DataContainer. Must not be empty or this method will ASSERT()
      * @return
      */
-    template<class DataContainerType>
-    DataContainerType* createNonPrereqDataContainer(const QString& dataContainerName)
+    template<class DataContainerType, typename Filter>
+    DataContainerType* createNonPrereqDataContainer(Filter* filter, const QString& dataContainerName)
     {
       Q_ASSERT(dataContainerName.isEmpty() == false);
-      if(m_Array.contains(dataContainername) == true)
+      if(contains(dataContainerName) == true)
       {
-        if (filter) {
+        if (filter) 
+        {
           filter->setErrorCondition(-888);
           filter->addErrorMessage(filter->getHumanLabel(), "The DataContainer Object with the specific name " + dataContainerName + " already exists.", -888);
         }
