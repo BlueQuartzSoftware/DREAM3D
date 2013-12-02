@@ -175,11 +175,11 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
   }
 #endif
   QVector<int> dims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFaceLabelsPtr = sattrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  m_SurfaceMeshNodeTypePtr = sm->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshNodeTypePtr = sattrMat->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -192,7 +192,7 @@ void SurfaceMeshToNodesTrianglesEdges::preflight()
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   dataCheck(true, 1, 1, 1);
@@ -207,7 +207,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   setErrorCondition(err);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   VertexArray::Pointer nodes = sm->getVertices();

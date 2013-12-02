@@ -193,7 +193,7 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fe
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, InsertPrecipitatePhases>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, InsertPrecipitatePhases>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* amC = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
@@ -291,7 +291,7 @@ void InsertPrecipitatePhases::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();

@@ -123,7 +123,7 @@ void FitCorrelatedFeatureData::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FitCorrelatedFeatureData>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FitCorrelatedFeatureData>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   if(m_SelectedFeatureArrayName.isEmpty() == true)
@@ -139,7 +139,7 @@ void FitCorrelatedFeatureData::dataCheck(bool preflight, size_t voxels, size_t f
   if(m_RemoveBiasedFeatures == true)
   {
     QVector<int> dims(1, 1);
-    m_BiasedFeaturesPtr = m->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_BiasedFeaturesPtr = attrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_BiasedFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -271,7 +271,7 @@ Int32ArrayType::Pointer binData(IDataArray::Pointer correlatedData, int64_t numB
 // -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
   int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();

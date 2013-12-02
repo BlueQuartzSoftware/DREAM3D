@@ -360,7 +360,7 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t features
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, PackPrimaryPhases>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, PackPrimaryPhases>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* amC = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
@@ -442,7 +442,7 @@ void PackPrimaryPhases::preflight()
     setErrorCondition(-387);
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   dataCheck(true, 1, 1, 1);
@@ -454,7 +454,7 @@ void PackPrimaryPhases::preflight()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   bool writeErrorFile = true;

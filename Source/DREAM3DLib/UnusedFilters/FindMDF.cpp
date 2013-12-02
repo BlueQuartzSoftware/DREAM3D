@@ -106,7 +106,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
 
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
-  m_AvgQuatsPtr = m->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_AvgQuatsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AvgQuatsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_AvgQuatsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   TEST_PREREQ_DATA(m, DREAM3D, FeatureData, SurfaceFeatures, err, -302, bool, BoolArrayType, features, 1)
@@ -119,7 +119,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
     if(preflight == true) { find_surfacefeatures->preflight(); }
     if(preflight == false) { find_surfacefeatures->execute(); }
   }
-  m_SurfaceFeaturesPtr = m->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceFeaturesPtr = attrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_SurfaceFeaturesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -134,7 +134,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
     if(preflight == true) { find_grainphases->preflight(); }
     if(preflight == false) { find_grainphases->execute(); }
   }
-  m_FeaturePhasesPtr = m->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -303, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -303, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -178,14 +178,14 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = m->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -305, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructuresPtr = attrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -305, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_TotalSurfaceAreasPtr = m->getPrereqArray<DataArray< float>, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_TotalSurfaceAreasArrayName, -303, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_TotalSurfaceAreasPtr = attrMat->getPrereqArray<DataArray< float>, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_TotalSurfaceAreasArrayName, -303, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_TotalSurfaceAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_TotalSurfaceAreas = m_TotalSurfaceAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  m_PhaseTypesPtr = m->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_PhaseTypesArrayName, -307, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_PhaseTypesPtr = attrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_EnsembleAttributeMatrixName,  m_PhaseTypesArrayName, -307, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());

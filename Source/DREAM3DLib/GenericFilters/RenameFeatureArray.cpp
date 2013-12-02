@@ -116,7 +116,7 @@ void RenameFeatureArray::dataCheck(bool preflight, size_t voxels, size_t feature
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, RenameFeatureArray>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, RenameFeatureArray>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   if(m_SelectedFeatureArrayName.isEmpty() == true)
@@ -151,7 +151,7 @@ void RenameFeatureArray::preflight()
 // -----------------------------------------------------------------------------
 void RenameFeatureArray::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
   bool check = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->renameAttributeArray(m_SelectedFeatureArrayName, m_NewFeatureArrayName);

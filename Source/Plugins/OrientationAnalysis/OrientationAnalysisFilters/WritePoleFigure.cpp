@@ -232,7 +232,7 @@ void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t features, 
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
@@ -258,23 +258,23 @@ void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t features, 
   else
   {
     QVector<int> dims(1, 3);
-    m_CellEulerAnglesPtr = m->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellEulerAnglesPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 1;
-    m_CellPhasesPtr = m->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellPhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     typedef DataArray<unsigned int> XTalStructArrayType;
-    m_CrystalStructuresPtr = m->getPrereqArray<DataArray<uint32_t>, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CrystalStructuresPtr = attrMat->getPrereqArray<DataArray<uint32_t>, AbstractFilter>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, -304, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   QVector<int> dims(1, 1);
-  m_GoodVoxelsPtr = m->getPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -304, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = attrMat->getPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -304, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(NULL != m_GoodVoxelsPtr.lock().get())
   {
     if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */

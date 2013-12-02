@@ -112,7 +112,7 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 void ChangeResolution::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   size_t dims[3];
   m->getDimensions(dims);
@@ -136,7 +136,7 @@ void ChangeResolution::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   setErrorCondition(0);

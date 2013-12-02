@@ -128,7 +128,7 @@ void MultiThresholdFeatures::dataCheck(bool preflight, size_t voxels, size_t fea
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, MultiThresholdFeatures>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, MultiThresholdFeatures>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   if (m_ComparisonInputs.size() == 0)
@@ -138,7 +138,7 @@ void MultiThresholdFeatures::dataCheck(bool preflight, size_t voxels, size_t fea
   }
 
   QVector<int> dims(1, 1);
-  m_OutputPtr = m->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_CellFeatureAttributeMatrixName,  m_OutputArrayName, true, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_OutputPtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_CellFeatureAttributeMatrixName,  m_OutputArrayName, true, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_OutputPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Output = m_OutputPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -162,7 +162,7 @@ void MultiThresholdFeatures::execute()
 
   setErrorCondition(err);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   setErrorCondition(0);

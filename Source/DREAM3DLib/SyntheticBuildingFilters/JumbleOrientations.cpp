@@ -112,7 +112,7 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t feature
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, JumbleOrientations>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, JumbleOrientations>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* amC = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
@@ -160,7 +160,7 @@ void JumbleOrientations::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();

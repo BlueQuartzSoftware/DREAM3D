@@ -122,7 +122,7 @@ int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   if (getBinaryNodesFile().isEmpty() == true)

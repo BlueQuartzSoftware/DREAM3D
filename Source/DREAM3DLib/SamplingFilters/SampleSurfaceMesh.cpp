@@ -161,7 +161,7 @@ int SampleSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
@@ -180,7 +180,7 @@ void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features
   else
   {
     QVector<int> dims(1, 2);
-    m_SurfaceMeshFaceLabelsPtr = sm->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceLabelsPtr = sattrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -193,7 +193,7 @@ void SampleSurfaceMesh::preflight()
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   dataCheck(false, 1, 1, 1);

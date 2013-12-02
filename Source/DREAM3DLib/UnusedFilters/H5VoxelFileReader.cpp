@@ -114,7 +114,7 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t features
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -132,23 +132,23 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t features
   }
 
   QVector<int> dim(1, 3);
-  m_CellEulerAnglesPtr = m->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, 0, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellEulerAnglesPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, 0, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dim[0] = 1;
-  m_CellPhasesPtr = m->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, 1, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellPhasesPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, 1, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_FeatureIdsPtr = m->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PTypeArrayType;
-  m_CrystalStructuresPtr = m->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructuresPtr = attrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_PhaseTypesPtr = m->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_CellEnsembleAttributeMatrixName,  m_PhaseTypesArrayName, DREAM3D::PhaseType::PrimaryPhase, ensembles, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_PhaseTypesPtr = attrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_CellEnsembleAttributeMatrixName,  m_PhaseTypesArrayName, DREAM3D::PhaseType::PrimaryPhase, ensembles, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 

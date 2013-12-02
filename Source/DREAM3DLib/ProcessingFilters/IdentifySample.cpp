@@ -103,7 +103,7 @@ void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t features, s
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, IdentifySample>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, IdentifySample>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   if(NULL == m)
   {
@@ -113,7 +113,7 @@ void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t features, s
     return;
   }
   QVector<int> dims(1, 1);
-  m_GoodVoxelsPtr = m->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = attrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GoodVoxelsArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -135,7 +135,7 @@ void IdentifySample::execute()
 {
   setErrorCondition(0);
   // int err = 0;
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
