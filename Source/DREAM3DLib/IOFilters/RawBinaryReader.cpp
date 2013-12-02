@@ -496,7 +496,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t features, 
 // -----------------------------------------------------------------------------
 void RawBinaryReader::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName(), false);
   if(NULL == m)
   {
     m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );

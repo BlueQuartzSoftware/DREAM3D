@@ -94,7 +94,7 @@ void FindVolFractions::dataCheck(bool preflight, size_t voxels, size_t features,
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
-  m_CellPhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellPhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_VolFractionsPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_CellEnsembleAttributeMatrixName,  m_VolFractionsArrayName, 0, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

@@ -242,7 +242,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, size_
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName(), false);
   if(NULL == m)
   {
     m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );

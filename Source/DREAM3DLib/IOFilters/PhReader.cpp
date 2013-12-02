@@ -207,7 +207,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t 
 // -----------------------------------------------------------------------------
 void PhReader::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName(), false);
   if(NULL == m)
   {
     m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
@@ -315,8 +315,8 @@ int  PhReader::readFile()
   VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == vdc) { return -1; }
 
-  AttributeMatrix* attrMatrix = vdc->getAttributeMatrix(getCellAttributeMatrixName());
-  if (NULL == attrMatrix ) { return -2; }
+  AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellAttributeMatrixName());
+  if (NULL == attrMatrix.get() ) { return -2; }
 
   attrMatrix->addAttributeArray(DREAM3D::CellData::FeatureIds, m_FeatureIdData);
 

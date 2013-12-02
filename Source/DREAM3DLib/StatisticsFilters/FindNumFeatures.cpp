@@ -94,7 +94,7 @@ void FindNumFeatures::dataCheck(bool preflight, size_t voxels, size_t features, 
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
-  m_FeaturePhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_NumFeaturesPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellEnsembleAttributeMatrixName,  m_NumFeaturesArrayName, 0, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

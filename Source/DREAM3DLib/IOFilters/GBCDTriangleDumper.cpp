@@ -143,15 +143,15 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
   else
   {
     QVector<int> dims(1, 2);
-    m_SurfaceMeshFaceLabelsPtr = sattrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceLabelsPtr = sattrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 3;
-    m_SurfaceMeshFaceNormalsPtr = sattrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceNormalsArrayName, -387, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceNormalsPtr = sattrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_SurfaceMeshFaceNormalsArrayName, -387, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 1;
-    m_SurfaceMeshFaceAreasPtr = sattrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshFaceAreasArrayName, -388, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceAreasPtr = sattrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_SurfaceMeshFaceAreasArrayName, -388, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -167,7 +167,7 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fe
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 3);
-  m_FeatureEulerAnglesPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureEulerAnglesArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureEulerAnglesPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_FeatureEulerAnglesArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

@@ -153,7 +153,7 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t feature
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(NULL == m)
   {
     m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );

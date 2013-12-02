@@ -284,7 +284,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
 // -----------------------------------------------------------------------------
 void ReadOrientationData::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName(), false);
   if(NULL == m)
   {
     m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );

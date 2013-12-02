@@ -153,46 +153,46 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
-  m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_KernelAverageMisorientationsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_KernelAverageMisorientationsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_KernelAverageMisorientationsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_KernelAverageMisorientationsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_KernelAverageMisorientationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_KernelAverageMisorientations = m_KernelAverageMisorientationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_FeatureReferenceMisorientationsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_FeatureReferenceMisorientationsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureReferenceMisorientationsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_FeatureReferenceMisorientationsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureReferenceMisorientationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureReferenceMisorientations = m_FeatureReferenceMisorientationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_GBEuclideanDistancesPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GBEuclideanDistancesArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GBEuclideanDistancesPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_GBEuclideanDistancesArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GBEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_TJEuclideanDistancesPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_TJEuclideanDistancesArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_TJEuclideanDistancesPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_TJEuclideanDistancesArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_TJEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_TJEuclideanDistances = m_TJEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_QPEuclideanDistancesPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_QPEuclideanDistancesArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_QPEuclideanDistancesPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_QPEuclideanDistancesArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_QPEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_QPEuclideanDistances = m_QPEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_SchmidsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_SchmidsArrayName, -305, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SchmidsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_SchmidsArrayName, -305, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SchmidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Schmids = m_SchmidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_FeaturePhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeaturePhasesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -302, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_FeatureAvgMisorientationsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_FeatureAvgMisorientationsArrayName, -306, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureAvgMisorientationsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_FeatureAvgMisorientationsArrayName, -306, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureAvgMisorientationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureAvgMisorientations = m_FeatureAvgMisorientationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_F1Ptr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_F1ArrayName, -307, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_F1Ptr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_F1ArrayName, -307, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_F1Ptr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_F1 = m_F1Ptr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_F1sptPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_F1sptArrayName, -308, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_F1sptPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_F1sptArrayName, -308, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_F1sptPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_F1spt = m_F1sptPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_F7Ptr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_F7ArrayName, -309, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_F7Ptr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_F7ArrayName, -309, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_F7Ptr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_F7 = m_F7Ptr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_mPrimePtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_mPrimeArrayName, -310, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_mPrimePtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_mPrimeArrayName, -310, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_mPrimePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_mPrime = m_mPrimePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -202,15 +202,15 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
-  m_NearestNeighborsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_NearestNeighborsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NearestNeighborsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_NearestNeighborsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NearestNeighborsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NearestNeighbors = m_NearestNeighborsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_PolesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_PolesArrayName, -306, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_PolesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_PolesArrayName, -306, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PolesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Poles = m_PolesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 4;
-  m_AvgQuatsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellFeatureAttributeMatrixName,  m_AvgQuatsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AvgQuatsPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgQuatsArrayName, -301, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

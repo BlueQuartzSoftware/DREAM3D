@@ -214,8 +214,8 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
       }
       VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
       if(NULL == vdc) { return -1;}
-      AttributeMatrix* attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
-      if(NULL == attrMatrix ) { return -2; }
+      AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
+      if(NULL == attrMatrix.get() ) { return -2; }
 
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
