@@ -237,7 +237,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
@@ -259,7 +259,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
     // Check for Node Type Array
     int size = sm->getVertices()->getNumberOfTuples();
     QVector<int> dims(1, 1);
-    m_SurfaceMeshNodeTypePtr = sm->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, -390, size, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshNodeTypePtr = sattrMat->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceMeshNodeTypeArrayName, -390, size, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }

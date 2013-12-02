@@ -128,7 +128,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, InitializeSyntheticVolume>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, InitializeSyntheticVolume>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* amC = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }

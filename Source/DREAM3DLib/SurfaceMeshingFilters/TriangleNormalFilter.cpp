@@ -161,7 +161,7 @@ int TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(getSurfaceDataContainerName(), false, this);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
@@ -180,7 +180,7 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t featu
   else
   {
     QVector<int> dims(1, 3);
-    m_SurfaceMeshTriangleNormalsPtr = sm->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTriangleNormalsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshTriangleNormalsPtr = sattrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTriangleNormalsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshTriangleNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }

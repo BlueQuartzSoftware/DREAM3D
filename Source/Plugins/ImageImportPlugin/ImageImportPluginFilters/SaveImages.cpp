@@ -152,7 +152,7 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t features, size_
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, this);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   QDir dir(getOutputPath());
@@ -176,7 +176,7 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t features, size_
   else
   {
     QVector<int> dims(1, 3);
-    m_ColorsPtr = m->getPrereqArray<DataArray<uint8_t>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_ColorsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_ColorsPtr = attrMat->getPrereqArray<DataArray<uint8_t>, AbstractFilter>(this, m_ColorsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_ColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }

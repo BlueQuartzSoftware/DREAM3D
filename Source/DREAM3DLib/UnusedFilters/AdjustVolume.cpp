@@ -115,11 +115,11 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t features, siz
 
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  m_GrainIdsPtr = m->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellAttributeMatrixName,  m_GrainIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GrainIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_GrainIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GrainIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GrainIds = m_GrainIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_EquivalentDiametersPtr = m->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_FeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, 0, features, 1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_EquivalentDiametersPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_FeatureAttributeMatrixName,  m_EquivalentDiametersArrayName, 0, features, 1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

@@ -128,11 +128,11 @@ void VASPReader::dataCheck(bool preflight, size_t voxels, size_t features, size_
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QVector<int> dims(1, 3);
-  m_AtomVelocitiesPtr = m->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0.0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AtomVelocitiesPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0.0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AtomVelocitiesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  m_AtomTypesPtr = m->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_VertexAttributeMatrixName,  m_AtomTypesArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AtomTypesPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_VertexAttributeMatrixName,  m_AtomTypesArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AtomTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 

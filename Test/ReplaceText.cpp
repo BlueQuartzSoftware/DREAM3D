@@ -94,7 +94,7 @@ void replaceText(QString hFile, QString cppFile)
   QStringList varNames;
   QStringList typeNames;
 
-  int index = cpp.indexOf("m->getPrereqArray<");
+  int index = cpp.indexOf("attrMat->getPrereqArray<");
   int endIdx = 0;
   bool doReplace = false;
   while (index > 0)
@@ -108,7 +108,7 @@ void replaceText(QString hFile, QString cppFile)
     sub = sub.mid(2, endIdx-2);
     varNames << sub;
     doReplace = true;
-    index = cpp.indexOf("m->getPrereqArray<", index + 1);
+    index = cpp.indexOf("attrMat->getPrereqArray<", index + 1);
     //break;
   }
 
