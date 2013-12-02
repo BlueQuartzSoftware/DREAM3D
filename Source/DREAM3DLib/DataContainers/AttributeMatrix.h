@@ -262,6 +262,12 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     virtual bool doesAttributeArrayExist(const QString& name);
 
     /**
+     * @brief Returns bool of whether a named array exists
+     * @param name The name of the data array
+     */
+    virtual bool validateAttributeArraySizes();
+
+    /**
     * @brief Adds/overwrites the data for a named array
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data

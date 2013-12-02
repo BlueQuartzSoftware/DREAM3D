@@ -87,6 +87,25 @@ bool AttributeMatrix::doesAttributeArrayExist(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool AttributeMatrix::validateAttributeArraySizes()
+{
+  int64_t arraySize;
+  int64_t matrixSize = getNumTuples();
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
+  {
+    IDataArray::Pointer d = iter.value();
+    arraySize = d->getNumberOfTuples();
+    if(arraySize != matrixSize)
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)

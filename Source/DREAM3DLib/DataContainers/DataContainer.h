@@ -121,6 +121,16 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
         }
         return attributeMatrix.get();
       }
+      if(false == attributeMatrix->validateAttributeArraySizes())
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(err * 1030);
+          ss = QObject::tr("DataContainer:'%1' AttributeMatrix: '%2' Attribute Matrix has Attribute Arrays with mismatched number of objects.").arg(getName()).arg(attributeMatrixName);
+          filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return attributeMatrix.get();
+      }
       return attributeMatrix.get();
     }
 
