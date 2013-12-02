@@ -89,79 +89,39 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @param dims
      * @return
      */
-    template<class ArrayType, class Filter>
-    typename ArrayType::Pointer getPrereqArray(Filter* filter,
+    template<class Filter>
+    typename AttributeMatrix* getPrereqAttributeMatrix(Filter* filter,
                                                QString attributeMatrixName,
-                                               QString attributeArrayName,
-                                               int err,
-                                               int size,
-                                               QVector<int> dims)
+                                               int err)
     {
       QString ss;
-      typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
+      typename AttributeMatrix::Pointer attributeMatrix = AttributeMatrix::NullPointer();
       //Make sure the name is not empty for teh AttributeMatrix and the AttributeArray Name. This would be detected below
       // in the call to get either one BUT the reason for the failure would not be evident so we make these explicit checks
       // here and send back nice error messages to ther user/programmer.
       if (attributeMatrixName.isEmpty() == true)
       {
-        if(filter) {
+        if(filter) 
+        {
           filter->setErrorCondition(err * 1000);
           ss = QObject::tr("DataContainer:'%1' The name of the AttributeMatrix was empty. Please provide a name for this AttributeMatrix").arg(getName());
           filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
-        return attributeArray;
+        return attributeMatrix.get();
       }
-      if (attributeArrayName.isEmpty() == true)
-      {
-        if(filter) {
-          filter->setErrorCondition(err * 1010);
-          ss = QObject::tr("DataContainer:'%1' AttributeMatrix:'%2' The name of the Attribute Array was empty. Please provide a name for this array").arg(getName()).arg(attributeMatrixName);
-          filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
-        }
-      }
-
       // Now attempt to get the AttributeMatrix which could still come back NULL because the name does not match.
-      AttributeMatrix* matrix = getAttributeMatrix(attributeMatrixName);
-      if(NULL == matrix)
+      attributeMatrix = getAttributeMatrix(attributeMatrixName);
+      if(NULL == attributeMatrix)
       {
-        if(filter) {
+        if(filter)
+        {
           filter->setErrorCondition(err * 1020);
           ss = QObject::tr("DataContainer:'%1' An AttributeMatrix with name '%2' does not exist and is required for this filter to execute.").arg(getName()).arg(attributeMatrixName);
           filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
-        return attributeArray;
+        return attributeMatrix.get();
       }
-
-
-      // Now ask for the actual AttributeArray from the AttributeMatrix
-      if (matrix->doesAttributeArrayExist(attributeArrayName) == false)
-      {
-        if(filter) {
-          filter->setErrorCondition(err * 1030);
-          ss = QObject::tr("DataContainer:'%1' AttributeMatrix:'%2' An array with name '%3' does not exist in the AttributeMatrix and is required for this filter to execute.").arg(getName()).arg(attributeMatrixName).arg(attributeArrayName);
-          filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
-        }
-        return attributeArray;
-      }
-      else
-      {
-        int NumComp = dims[0];
-        for(int i = 1; i < dims.size(); i++)
-        {
-          NumComp *= dims[i];
-        }
-        // Check to make sure the AttributeArray we have is of the proper type, size and number of components
-        if(false == matrix->dataArrayCompatibility<ArrayType, Filter>(attributeArrayName, size, NumComp, filter) )
-        {
-          return attributeArray;
-        }
-        else
-        {
-          IDataArray::Pointer iDataArray = matrix->getAttributeArray(attributeArrayName);
-          attributeArray = boost::dynamic_pointer_cast< ArrayType >(iDataArray);
-        }
-      }
-      return attributeArray;
+      return attributeMatrix.get();
     }
 
     /**
@@ -176,53 +136,34 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @param dims The dimensions of the components of the AttributeArray
      * @return A Shared Pointer to the newly created array
      */
-    template<class ArrayType, class Filter, typename T>
-    typename ArrayType::Pointer createNonPrereqArray(Filter* filter,
+    template<class Filter>
+    typename AttributeMatrix* createNonPrereqAttributeMatrix(Filter* filter,
                                                      const QString& attributeMatrixName,
-                                                     const QString& attributeArrayName,
-                                                     T initValue,
-                                                     int size,
-                                                     QVector<int> dims)
+                                                     unsigned int amType)
     {
-      typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
+      typename AttributeMatrix::Pointer attributeMatrix = AttributeMatrix::NullPointer();
 
       QString ss;
       if (attributeMatrixName.isEmpty() == true)
       {
         filter->setErrorCondition(-10001);
         ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
-        filter->addErrorMessage(filter->getHumanLabel(), ss, -10000);
-        return attributeArray;
+        filter->addErrorMessage(filter->getHumanLabel(), ss, -10001);
+        return attributeMatrix.get();
       }
-      if (attributeArrayName.isEmpty() == true)
+      attributeMatrix = getAttributeMatrix(attributeMatrixName);
+      if(NULL == attributeMatrix)
       {
-        filter->setErrorCondition(-10002);
-        ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
-        filter->addErrorMessage(filter->getHumanLabel(), ss, -10000);
-        return attributeArray;
-      }
-      /* QString _s(#Name);*/
-      int NumComp = dims[0];
-      for(int i = 1; i < dims.size(); i++)
-      {
-        NumComp *= dims[i];
-      }
-      AttributeMatrix* matrix = getAttributeMatrix(attributeMatrixName);
-      if(NULL == matrix)
-      {
-        filter->setErrorCondition(-10003);
-        QString ss = QObject::tr("An AttributeMatrix with name '%1' does not exist and is required for this filter to execute.").arg(attributeMatrixName);
-        filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
-        return attributeArray;
+        AttributeMatrix* attrMat = createAttributeMatrix(attributeMatrixName);
+        return attrMat;
       }
       else
       {
-        attributeArray = ArrayType::CreateArray(size, dims, attributeArrayName);
-        attributeArray->initializeWithValues(initValue);
-        attributeArray->SetName(attributeArrayName);
-        matrix->addAttributeArray(attributeArrayName, attributeArray);
+        filter->setErrorCondition(-10002);
+        ss = QObject::tr("An Attribute Matrix already exists with the name %1").arg(attributeMatrixName);
+        filter->addErrorMessage(filter->getHumanLabel(), ss, -10002);
+        return attributeMatrix.get();
       }
-      return attributeArray;
     }
 
     /**
@@ -250,7 +191,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual AttributeMatrix* getAttributeMatrix(const QString& name);
+    virtual AttributeMatrix::Pointer getAttributeMatrix(const QString& name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling

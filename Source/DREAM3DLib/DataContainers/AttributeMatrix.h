@@ -89,46 +89,101 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       return sharedPtr;
     }
 
-#if 0
-    //Initalize Array Func Here
-    template<typename T, class Filter>
-    typename DataArray<T>::Pointer createAttributeArray(const QString& arrayName, size_t size, QVector<int> dims, Filter* obv)
+    /**
+     * @brief getPrereqArray
+     * @param filter
+     * @param attributeMatrixName
+     * @param attributeArrayName
+     * @param err
+     * @param size
+     * @param dims
+     * @return
+     */
+    template<class ArrayType, class Filter>
+    typename ArrayType::Pointer getPrereqArray(Filter* filter,
+                                               QString attributeArrayName,
+                                               int err,
+                                               int size,
+                                               QVector<int> dims)
     {
-      typename DataArray<T>::Pointer valuePtr = DataArray<T>::NullPointer();
-      IDataArray::Pointer iDataArray = getAttributeArray(arrayName);
-      if (iDataArray.get() == NULL) // There was NO AttributeArray with the given name in the AttributeMatrix
+      QString ss;
+      typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
+      //Make sure the name is not empty for the AttributeArrayName. This would be detected below
+      // in the call to get either one BUT the reason for the failure would not be evident so we make these explicit checks
+      // here and send back nice error messages to ther user/programmer.
+      if (attributeArrayName.isEmpty() == true)
       {
-        valuePtr = DataArray<T>::CreateArray(size, dims, arrayName);
-
-        if (NULL == valuePtr.get())
-        {
-          QString s = QObject::tr(": Array '%1' could not allocate %2 elements.").arg(arrayName).arg(size);
-          if (NULL != obv)
-          {
-            obv->setErrorCondition(-25);
-            obv->addErrorMessage(getNameOfClass(), s, -25);
-          }
-          return valuePtr;
+        if(filter) {
+          filter->setErrorCondition(err * 1010);
+          ss = QObject::tr("AttributeMatrix:'%1' The name of the Attribute Array was empty. Please provide a name for this array").arg(getName());
+          filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
-        valuePtr->initializeWithZeros();
-        addAttributeArray(arrayName, valuePtr);
-        return valuePtr;
       }
-
-      valuePtr = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());
-      if (NULL == valuePtr)
+      // Now ask for the actual AttributeArray from the AttributeMatrix
+      if (doesAttributeArrayExist(attributeArrayName) == false)
       {
-        QString s = QObject::tr(": Array '%1' could not be cast to proper type").arg(arrayName);
-        if (NULL != obv)
+        if(filter) 
         {
-          obv->setErrorCondition(-12);
-          obv->addErrorMessage(getNameOfClass(), s, -12);
+          filter->setErrorCondition(err * 1030);
+          ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' does not exist in the AttributeMatrix and is required for this filter to execute.").arg(getName()).arg(attributeArrayName);
+          filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
-        return valuePtr;
+        return attributeArray;
       }
-      return valuePtr;
+      else
+      {
+        int NumComp = dims[0];
+        for(int i = 1; i < dims.size(); i++)
+        {
+          NumComp *= dims[i];
+        }
+        // Check to make sure the AttributeArray we have is of the proper type, size and number of components
+        if(false == dataArrayCompatibility<ArrayType, Filter>(attributeArrayName, size, NumComp, filter) )
+        {
+          return attributeArray;
+        }
+        else
+        {
+          IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
+          attributeArray = boost::dynamic_pointer_cast< ArrayType >(iDataArray);
+        }
+      }
+      return attributeArray;
     }
-#endif
+
+    /**
+     * @brief createNonPrereqArray This method will create a new DataArray in the AttributeMatrix. The condition for this
+     * method to work properly is the name of the attribute array is not empty
+     * @param filter The instance of the filter the filter that is requesting the new array
+     * @param attributeArrayName The name of the AttributeArray to create
+     * @param initValue The initial value of all the elements of the array
+     * @param size The number of tuples in the Array
+     * @param dims The dimensions of the components of the AttributeArray
+     * @return A Shared Pointer to the newly created array
+     */
+    template<class ArrayType, class Filter, typename T>
+    typename ArrayType::Pointer createNonPrereqArray(Filter* filter,
+                                                     const QString& attributeArrayName,
+                                                     T initValue,
+                                                     int size,
+                                                     QVector<int> dims)
+    {
+      typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
+
+      QString ss;
+      if (attributeArrayName.isEmpty() == true)
+      {
+        filter->setErrorCondition(-10002);
+        ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
+        filter->addErrorMessage(filter->getHumanLabel(), ss, -10000);
+        return attributeArray;
+      }
+      attributeArray = ArrayType::CreateArray(size, dims, attributeArrayName);
+      attributeArray->initializeWithValues(initValue);
+      attributeArray->SetName(attributeArrayName);
+      addAttributeArray(attributeArrayName, attributeArray);
+      return attributeArray;
+    }
 
     //Get Array Size Check Func Here
     template<class ArrayType, class AbstractFilter>

@@ -121,7 +121,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
       {
         if (filter) {
           filter->setErrorCondition(-999);
-          filter->addErrorMessage(filter->getHumanLabel(), "The VolumeDataContainer Object with the specific name " + name + " was not available.", -999);
+          filter->addErrorMessage(filter->getHumanLabel(), "The DataContainer Object with the specific name " + name + " was not available.", -999);
         }
         return NULL;
       }
@@ -133,6 +133,27 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
       }
       // The DataContainer we asked for was present and NON Null so return that.
       return dc;
+    }
+
+    /**
+     * @brief This function will create a new DataContainer of type <T> 
+     * @param dataContainerName The name of the DataContainer. Must not be empty or this method will ASSERT()
+     * @return
+     */
+    template<class DataContainerType>
+    DataContainerType* createNonPrereqDataContainer(const QString& dataContainerName)
+    {
+      Q_ASSERT(dataContainerName.isEmpty() == false);
+      if(m_Array.contains(dataContainername) == true)
+      {
+        if (filter) {
+          filter->setErrorCondition(-888);
+          filter->addErrorMessage(filter->getHumanLabel(), "The DataContainer Object with the specific name " + dataContainerName + " already exists.", -888);
+        }
+      }
+      typename DataContainerType::Pointer dataContainer = DataContainerType::New(dataContainerName);
+      pushBack(dataContainer);
+      return dataContainer.get();
     }
 
     /**

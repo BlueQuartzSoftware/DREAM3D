@@ -99,15 +99,15 @@ void DataContainer::addAttributeMatrix(const QString& name, AttributeMatrix::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrix* DataContainer::getAttributeMatrix(const QString& name)
+AttributeMatrix::Pointer DataContainer::getAttributeMatrix(const QString& name)
 {
   QMap<QString, AttributeMatrix::Pointer>::iterator it;
   it =  m_AttributeMatrices.find(name);
   if ( it == m_AttributeMatrices.end() )
   {
-    return NULL;
+    return AttributeMatrix::NullPointer();
   }
-  return it.value().get();
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
