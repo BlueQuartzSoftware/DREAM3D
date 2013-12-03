@@ -134,19 +134,21 @@ float burgersCrystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
 // -----------------------------------------------------------------------------
 SegmentBetaGrains::SegmentBetaGrains() :
   SegmentGrains(),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_MisorientationTolerance(5.0f),
+  m_AxisTolerance(FIX_ME<<<<<<<<),
+  m_AngleTolerance(FIX_ME<<<<<<<<),
   m_RandomizeGrainIds(true),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_GrainIds(NULL),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();

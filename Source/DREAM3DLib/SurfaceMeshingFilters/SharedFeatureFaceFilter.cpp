@@ -47,8 +47,9 @@ SharedFeatureFaceFilter::SharedFeatureFaceFilter() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_SurfaceMeshFeatureFaceIdArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFeatureFaceIdArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId)
+  m_SurfaceMeshFaceLabels(NULL)
 {
   setupFilterParameters();
 }
@@ -258,3 +259,4 @@ SharedFeatureFaceFilter::SharedFeatureFaces_t& SharedFeatureFaceFilter::getShare
 {
   return m_SharedFeatureFaces;
 }
+

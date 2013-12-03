@@ -131,12 +131,13 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_VertexAttributeMatrixName(FIX_ME<<<<<<<<),
   m_IterationSteps(1),
   m_NodeConstraints(true),
   m_ConstrainSurfaceNodes(true),
   m_ConstrainQuadPoints(true),
   m_SmoothTripleLines(true),
+  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
@@ -1066,4 +1067,5 @@ void MovingFiniteElementSmoothing::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+
 

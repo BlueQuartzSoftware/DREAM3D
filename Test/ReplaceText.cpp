@@ -66,11 +66,11 @@ void buildInitializerList(QString hFile, QString cppFile)
     }
 
   }
-  lines = QStringListIterator(initializerList);
-  while (lines.hasNext())
-  {
-    std::cout << lines.next().toStdString() << std::endl;
-  }
+//  lines = QStringListIterator(initializerList);
+//  while (lines.hasNext())
+//  {
+//    std::cout << lines.next().toStdString() << std::endl;
+//  }
 
   // now read the source file
   QFile source(cppFile);
@@ -79,7 +79,7 @@ void buildInitializerList(QString hFile, QString cppFile)
   source.close();
 
   QFileInfo fi(hFile);
-  QFile outSource("/tmp/" + fi.baseName() + ".cpp");
+  QFile outSource(cppFile);
   outSource.open(QFile::WriteOnly);
   QTextStream stream(&outSource);
 
@@ -104,11 +104,10 @@ void buildInitializerList(QString hFile, QString cppFile)
       bool stop = false;
       while(stop == false)
       {
-
         QStringList chunks = line.split(',');
         existinInitializerList << chunks.at(0).trimmed();
         if(chunks.size() == 1) stop = true;
-        line = sourceLines.next();
+        else line = sourceLines.next();
       }
       break;
     }
@@ -145,7 +144,7 @@ void buildInitializerList(QString hFile, QString cppFile)
       }
     }
   }
-  std::cout << "----------------" << std::endl;
+//  std::cout << "----------------" << std::endl;
 
   QString outS;
   QTextStream ss(&outS);
@@ -326,11 +325,11 @@ void scanDirIter(QDir dir)
       QString filename = iterator.fileName();
       if (filename.endsWith(".cpp") )
       {
-        // qDebug("Found %s matching pattern.", qPrintable(filename));
+        qDebug("Found %s matching pattern.", qPrintable(filename));
         QFileInfo fi(iterator.filePath());
         QString header = fi.path() + "/" + fi.baseName() + ".h";
         QString source = iterator.filePath();
-        replaceText1(header, source);
+        buildInitializerList(header, source);
       }
     }
   }
@@ -342,7 +341,7 @@ void scanDirIter(QDir dir)
 int main(int argc, char *argv[])
 {
 
-#if 1
+#if 0
   QString header = argv[1];
   QString source = argv[2];
   buildInitializerList(header, source);

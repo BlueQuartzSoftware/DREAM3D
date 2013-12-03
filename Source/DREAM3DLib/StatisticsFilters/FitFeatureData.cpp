@@ -14,10 +14,11 @@ FitFeatureData::FitFeatureData() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_SelectedFeatureArrayName(""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
-  m_RemoveBiasedFeatures(false)
+  m_RemoveBiasedFeatures(false),
+  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
+  m_BiasedFeatures(NULL)
 {
   setupFilterParameters();
 }
@@ -274,4 +275,5 @@ void FitFeatureData::execute()
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->GetName(), p);
   notifyStatusMessage("Complete");
 }
+
 

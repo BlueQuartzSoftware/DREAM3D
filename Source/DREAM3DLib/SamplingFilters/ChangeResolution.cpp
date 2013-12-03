@@ -50,7 +50,8 @@
 ChangeResolution::ChangeResolution() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName)
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_Resolution(FIX_ME<<<<<<<<)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -223,3 +224,4 @@ void ChangeResolution::execute()
 
   notifyStatusMessage("Complete");
 }
+

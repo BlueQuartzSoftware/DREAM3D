@@ -51,20 +51,19 @@
 FindNeighborhoods::FindNeighborhoods() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
-  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_NeighborhoodListArrayName(DREAM3D::FeatureData::NeighborhoodList),
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_MultiplesOfAverage(1),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_EquivalentDiameters(NULL),
-  m_Neighborhoods(NULL),
-  m_NeighborhoodList(NULL)
+  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
+  m_Neighborhoods(NULL)
 {
   setupFilterParameters();
 }
@@ -324,3 +323,4 @@ void FindNeighborhoods::find_neighborhoods()
     m_NeighborhoodList->setList(static_cast<int>(i), sharedNeiLst);
   }
 }
+

@@ -84,8 +84,8 @@ ConvertEulerAngles::ConvertEulerAngles() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians), // We convert from Degrees to Radians by Default
   m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
@@ -224,3 +224,4 @@ void ConvertEulerAngles::execute()
 
   notifyStatusMessage("Complete");
 }
+

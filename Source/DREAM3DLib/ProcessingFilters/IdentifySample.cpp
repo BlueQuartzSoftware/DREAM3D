@@ -55,8 +55,6 @@ IdentifySample::IdentifySample() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_AlreadyChecked(NULL),
-  m_Neighbors(NULL),
   m_GoodVoxels(NULL)
 {
   setupFilterParameters();
@@ -292,3 +290,4 @@ void IdentifySample::execute()
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("Identifying Sample Complete");
 }
+

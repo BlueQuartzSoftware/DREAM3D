@@ -48,10 +48,10 @@ FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
-  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_Centroids(NULL),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
+  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL)
 {
 }
@@ -280,3 +280,4 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
     if(m_Centroids[3 * j + 1] >= boundbox[4]) { m_BiasedFeatures[j] = true; }
   }
 }
+

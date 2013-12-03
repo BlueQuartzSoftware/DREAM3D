@@ -79,7 +79,10 @@ EdgeDataContainerReader::EdgeDataContainerReader() :
   m_ReadEdgeEnsembleData(true),
   m_ReadAllEdgeArrays(false),
   m_ReadAllEdgeFeatureArrays(false),
-  m_ReadAllEdgeEnsembleArrays(false)
+  m_ReadAllEdgeEnsembleArrays(false),
+  m_EdgeArraysToRead(FIX_ME<<<<<<<<),
+  m_EdgeFeatureArraysToRead(FIX_ME<<<<<<<<),
+  m_EdgeEnsembleArraysToRead(FIX_ME<<<<<<<<)
 {
 }
 
@@ -428,3 +431,4 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupNam
   H5Gclose(gid); // Close the Cell Group
   return err;
 }
+

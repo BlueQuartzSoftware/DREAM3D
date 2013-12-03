@@ -56,13 +56,12 @@ OpenCloseBadData::OpenCloseBadData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_Direction(0),
   m_NumIterations(1),
   m_XDirOn(true),
   m_YDirOn(true),
   m_ZDirOn(true),
-  m_Neighbors(NULL),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -342,3 +341,4 @@ void OpenCloseBadData::execute()
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("Complete");
 }
+

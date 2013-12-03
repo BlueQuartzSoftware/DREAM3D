@@ -65,17 +65,18 @@
 AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
   AlignSections(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_MisorientationTolerance(5.0f),
+  m_FeatureIdsArrayName(FIX_ME<<<<<<<<),
   m_FeatureIds(NULL),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   Seed = QDateTime::currentMSecsSinceEpoch();
@@ -552,3 +553,4 @@ void AlignSectionsMutualInformation::form_features_sections()
     featurecounts[slice] = featurecount;
   }
 }
+

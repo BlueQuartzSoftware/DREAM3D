@@ -44,8 +44,13 @@
 // -----------------------------------------------------------------------------
 ThresholdExample::ThresholdExample() :
   AbstractFilter()
+  m_CellComparisonInputs(FIX_ME<<<<<<<<),
+  m_FeatureComparisonInputs(FIX_ME<<<<<<<<),
+  m_EnsembleComparisonInputs(FIX_ME<<<<<<<<),
+  m_PointComparisonInputs(FIX_ME<<<<<<<<),
+  m_FaceComparisonInputs(FIX_ME<<<<<<<<),
+  m_EdgeComparisonInputs(FIX_ME<<<<<<<<)
 {
-
   setupFilterParameters();
 }
 
@@ -223,3 +228,4 @@ void ThresholdExample::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

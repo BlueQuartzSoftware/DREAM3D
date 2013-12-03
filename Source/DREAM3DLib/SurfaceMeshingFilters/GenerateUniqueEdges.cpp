@@ -56,8 +56,7 @@ GenerateUniqueEdges::GenerateUniqueEdges() :
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
-  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
-  m_SurfaceMeshUniqueEdges(NULL)
+  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges)
 {
   setupFilterParameters();
 }
@@ -406,4 +405,5 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   notifyStatusMessage("Complete");
   return;
 }
+
 

@@ -15,15 +15,14 @@ FindFeatureClustering::FindFeatureClustering() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
-  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_ClusteringListArrayName(DREAM3D::FeatureData::ClusteringList),
   m_ErrorOutputFile(),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
-  m_EquivalentDiameters(NULL),
-  m_ClusteringList(NULL)
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
+  m_EquivalentDiameters(NULL)
 {
   setupFilterParameters();
 }
@@ -215,4 +214,5 @@ void FindFeatureClustering::find_clustering()
     m_ClusteringList->setList(static_cast<int>(i), sharedClustLst);
   }
 }
+
 

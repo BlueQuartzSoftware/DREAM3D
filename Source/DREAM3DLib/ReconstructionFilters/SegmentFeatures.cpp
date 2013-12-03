@@ -227,3 +227,4 @@ bool SegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighbor
 {
   return false;
 }
+

@@ -56,11 +56,12 @@
 LosAlamosFFTWriter::LosAlamosFFTWriter() :
   FileWriter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(FIX_ME<<<<<<<<),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_FeatureIds(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL)
 
 {
@@ -243,3 +244,4 @@ int LosAlamosFFTWriter::writeFile()
   notifyStatusMessage("Complete");
   return err;
 }
+

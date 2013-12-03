@@ -50,8 +50,8 @@ FindFeatureCentroids::FindFeatureCentroids() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_FeatureIds(NULL),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL)
 {
   INIT_DataArray(m_FeatureCenters, float)
@@ -199,3 +199,4 @@ void FindFeatureCentroids::find_centroids()
     m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3];
   }
 }
+

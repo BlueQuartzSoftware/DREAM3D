@@ -47,9 +47,9 @@ SingleThresholdCells::SingleThresholdCells():
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_SelectedCellArrayName(""),
-  m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
   m_ComparisonOperator(2),
   m_ComparisonValue(0.0),
+  m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
   m_Output(NULL)
 {
   setupFilterParameters();
@@ -218,4 +218,5 @@ void SingleThresholdCells::execute()
   m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(goodVoxelsPtr->GetName(), goodVoxelsPtr);
   notifyStatusMessage("Complete");
 }
+
 

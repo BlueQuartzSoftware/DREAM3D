@@ -53,8 +53,9 @@ WriteAbaqusSurfaceMesh::WriteAbaqusSurfaceMesh() :
   AbstractFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_OutputFile(""),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_OutputFile("")
+  m_SurfaceMeshFaceLabels(NULL)
 {
   setupFilterParameters();
 }
@@ -352,6 +353,7 @@ int WriteAbaqusSurfaceMesh::writeFeatures(FILE* f)
   }
   return err;
 }
+
 
 
 

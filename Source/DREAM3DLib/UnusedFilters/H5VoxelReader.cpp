@@ -44,7 +44,8 @@
 // -----------------------------------------------------------------------------
 H5VoxelReader::H5VoxelReader() :
   AbstractFilter(),
-  m_FileId(-1)
+  m_FileName(FIX_ME<<<<<<<<),
+  m_ErrorMessage(FIX_ME<<<<<<<<)
 {
 
 }
@@ -246,4 +247,5 @@ int H5VoxelReader::readVoxelData(int* feature_indicies,
   m_FileId = 0;
   return err;
 }
+
 

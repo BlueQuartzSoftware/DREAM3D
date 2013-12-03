@@ -60,21 +60,21 @@ FeatureFaceCurvatureFilter::FeatureFaceCurvatureFilter() :
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
-  //m_SurfaceMeshFaceEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshFaceEdges),
   m_PrincipalCurvature1ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1),
   m_PrincipalCurvature2ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2),
-  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
-  m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_PrincipalDirection1ArrayName(FIX_ME<<<<<<<<),
+  m_PrincipalDirection2ArrayName(FIX_ME<<<<<<<<),
   m_NRing(3),
   m_ComputePrincipalDirectionVectors(true),
   m_ComputeMeanCurvature(false),
   m_ComputeGaussianCurvature(false),
   m_UseNormalsForCurveFitting(true),
-  m_SurfaceMeshUniqueEdges(NULL),
-  m_SurfaceMeshFaceEdges(NULL),
-  m_TotalFeatureFaces(0),
-  m_CompletedFeatureFaces(0)
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceLabels(NULL),
+  m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
+  m_SurfaceMeshTriangleCentroids(NULL),
+  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_SurfaceMeshFaceNormals(NULL)
 {
   setupFilterParameters();
 }
@@ -439,3 +439,4 @@ void FeatureFaceCurvatureFilter::tbbTaskProgress()
 }
 
 #endif
+

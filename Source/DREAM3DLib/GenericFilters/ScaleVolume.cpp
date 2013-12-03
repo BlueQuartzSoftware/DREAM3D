@@ -95,7 +95,8 @@ ScaleVolume::ScaleVolume() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_ApplyToVoxelVolume(true),
-  m_ApplyToSurfaceMesh(true)
+  m_ApplyToSurfaceMesh(true),
+  m_ScaleFactor(FIX_ME<<<<<<<<)
 {
 
   m_ScaleFactor.x = 1.0f;
@@ -316,3 +317,4 @@ void ScaleVolume::updateSurfaceMesh()
   }
 
 }
+

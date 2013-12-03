@@ -215,9 +215,10 @@ VerifyTriangleWinding::VerifyTriangleWinding() :
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshNodeFacesArrayName(DREAM3D::VertexData::SurfaceMeshNodeFaces),
+  m_XRes(FIX_ME<<<<<<<<),
+  m_OutputFile(FIX_ME<<<<<<<<),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_DoUniqueEdgesFilter(false),
-  m_DoNodeFaceConnectivityFilter(false)
+  m_SurfaceMeshFaceLabels(NULL)
 {
   setupFilterParameters();
 }
@@ -800,5 +801,6 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   // qDebug() << "--------------------------------------------------------------" << "\n";
   return err;
 }
+
 
 

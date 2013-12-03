@@ -99,7 +99,9 @@ class ReverseWindingImpl
 // -----------------------------------------------------------------------------
 ReverseTriangleWinding::ReverseTriangleWinding() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName)
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_XRes(FIX_ME<<<<<<<<),
+  m_OutputFile(FIX_ME<<<<<<<<)
 {
   setupFilterParameters();
 }
@@ -294,3 +296,4 @@ void ReverseTriangleWinding::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

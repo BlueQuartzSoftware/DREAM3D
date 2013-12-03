@@ -50,10 +50,8 @@
 CropVolume::CropVolume() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_XMin(0),
   m_YMin(0),
   m_ZMin(0),
@@ -62,7 +60,9 @@ CropVolume::CropVolume() :
   m_ZMax(0),
   m_RenumberFeatures(true),
   m_UpdateOrigin(true),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL)
 {
   setupFilterParameters();
@@ -452,4 +452,5 @@ void CropVolume::execute()
 
   notifyStatusMessage("Completed");
 }
+
 

@@ -55,7 +55,10 @@ VolumeDataContainerReader::VolumeDataContainerReader() :
   m_ReadCellEnsembleData(true),
   m_ReadAllCellArrays(false),
   m_ReadAllCellFeatureArrays(false),
-  m_ReadAllCellEnsembleArrays(false)
+  m_ReadAllCellEnsembleArrays(false),
+  m_CellArraysToRead(FIX_ME<<<<<<<<),
+  m_CellFeatureArraysToRead(FIX_ME<<<<<<<<),
+  m_CellEnsembleArraysToRead(FIX_ME<<<<<<<<)
 {
 }
 
@@ -487,3 +490,4 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupN
   H5Gclose(gid); // Close the Cell Group
   return err;
 }
+

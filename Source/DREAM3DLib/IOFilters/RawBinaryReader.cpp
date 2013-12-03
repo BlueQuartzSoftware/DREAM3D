@@ -164,6 +164,9 @@ RawBinaryReader::RawBinaryReader() :
   m_Endian(0),
   m_Dimensionality(0),
   m_NumberOfComponents(0),
+  m_Dimensions(FIX_ME<<<<<<<<),
+  m_Origin(FIX_ME<<<<<<<<),
+  m_Resolution(FIX_ME<<<<<<<<),
   m_OverRideOriginResolution(true),
   m_SkipHeaderBytes(0),
   m_OutputArrayName(""),
@@ -673,3 +676,4 @@ void RawBinaryReader::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

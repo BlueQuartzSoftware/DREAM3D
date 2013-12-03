@@ -49,21 +49,17 @@
 FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_F1ArrayName(DREAM3D::FeatureData::F1),
   m_F1sptArrayName(DREAM3D::FeatureData::F1spt),
   m_F7ArrayName(DREAM3D::FeatureData::F7),
   m_mPrimeArrayName(DREAM3D::FeatureData::mPrime),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_FeaturePhases(NULL),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
-  m_F1(NULL),
-  m_F1spt(NULL),
-  m_F7(NULL),
-  m_mPrime(NULL),
-  m_NeighborList(NULL),
+  m_CrystalStructuresArrayName(FIX_ME<<<<<<<<),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -296,3 +292,4 @@ void FindSlipTransmissionMetrics::execute()
 
   notifyStatusMessage("Completed");
 }
+

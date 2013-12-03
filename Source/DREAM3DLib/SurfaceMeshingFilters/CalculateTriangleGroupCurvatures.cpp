@@ -55,18 +55,6 @@
 // -----------------------------------------------------------------------------
 CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
     QVector<int> triangleIds,
-    bool useNormalsForCurveFitting,
-    DoubleArrayType::Pointer principleCurvature1,
-    DoubleArrayType::Pointer principleCurvature2,
-    DoubleArrayType::Pointer principleDirection1,
-    DoubleArrayType::Pointer principleDirection2,
-    DoubleArrayType::Pointer gaussianCurvature,
-    DoubleArrayType::Pointer meanCurvature,
-    SurfaceDataContainer* sm,
-    DataArray<int32_t>::Pointer surfaceMeshFaceLabels,
-    DataArray<double>::Pointer surfaceMeshFaceNormals,
-    DataArray<double>::Pointer surfaceMeshTriangleCentroids,
-    AbstractFilter* parent):
   m_NRing(nring),
   m_TriangleIds(triangleIds),
   m_UseNormalsForCurveFitting(useNormalsForCurveFitting),
@@ -327,5 +315,6 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
 
   return extractedData;
 }
+
 
 

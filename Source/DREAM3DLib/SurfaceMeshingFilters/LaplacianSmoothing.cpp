@@ -163,8 +163,7 @@ LaplacianSmoothing::LaplacianSmoothing() :
   m_QuadPointLambda(0.0),
   m_SurfaceTripleLineLambda(0.0),
   m_SurfaceQuadPointLambda(0.0),
-  m_GenerateIterationOutputFiles(false),
-  m_DoConnectivityFilter(false)
+  m_GenerateIterationOutputFiles(false)
 {
   setupFilterParameters();
 }
@@ -828,3 +827,4 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
 }
 
 #endif
+

@@ -46,9 +46,11 @@
 IOSupport::IOSupport() :
   Observable(),
   m_ErrorCondition(0),
-  m_Cancel(false),
   m_DataContainer(NULL),
-  m_HdfGroupId(-1)
+  m_dcType(FIX_ME<<<<<<<<),
+  m_HdfFileId(FIX_ME<<<<<<<<),
+  m_HdfGroupId(-1),
+  m_PipelineMessages(FIX_ME<<<<<<<<)
 {
 
 }
@@ -198,3 +200,4 @@ void IOSupport::clearErrorMessages()
     iter = m_PipelineMessages.erase(iter);
   }
 }
+

@@ -49,9 +49,11 @@
 MultiThresholdFeatures::MultiThresholdFeatures() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_OutputArrayName(DREAM3D::FeatureData::GoodFeatures)
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_ComparisonInputs(FIX_ME<<<<<<<<),
+  m_OutputArrayName(DREAM3D::FeatureData::GoodFeatures),
+  m_Output(NULL)
 {
   setupFilterParameters();
 }
@@ -237,3 +239,4 @@ void MultiThresholdFeatures::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

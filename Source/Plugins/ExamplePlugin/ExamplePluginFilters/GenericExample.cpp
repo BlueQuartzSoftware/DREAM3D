@@ -14,7 +14,35 @@ GenericExample::GenericExample() :
   AbstractFilter(),
   m_StlFilePrefix(""),
   m_MaxIterations(0),
-  m_MisorientationTolerance(0)
+  m_MisorientationTolerance(0),
+  m_InputFile(FIX_ME<<<<<<<<),
+  m_InputPath(FIX_ME<<<<<<<<),
+  m_OutputFile(FIX_ME<<<<<<<<),
+  m_OutputPath(FIX_ME<<<<<<<<),
+  m_WriteAlignmentShifts(FIX_ME<<<<<<<<),
+  m_ConversionType(FIX_ME<<<<<<<<),
+  m_Dimensions(FIX_ME<<<<<<<<),
+  m_Origin(FIX_ME<<<<<<<<),
+  m_CrystalSymmetryRotations(FIX_ME<<<<<<<<),
+  m_StrVector(FIX_ME<<<<<<<<),
+  m_SelectedVolumeVertexArrayName(FIX_ME<<<<<<<<),
+  m_SelectedVolumeEdgeArrayName(FIX_ME<<<<<<<<),
+  m_SelectedVolumeFaceArrayName(FIX_ME<<<<<<<<),
+  m_SelectedVolumeCellArrayName(FIX_ME<<<<<<<<),
+  m_SelectedVolumeFeatureArrayName(FIX_ME<<<<<<<<),
+  m_SelectedVolumeEnsembleArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceVertexArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceEdgeArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceFaceArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceFeatureArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceEnsembleArrayName(FIX_ME<<<<<<<<),
+  m_SelectedEdgeVertexArrayName(FIX_ME<<<<<<<<),
+  m_SelectedEdgeEdgeArrayName(FIX_ME<<<<<<<<),
+  m_SelectedEdgeFeatureArrayName(FIX_ME<<<<<<<<),
+  m_SelectedEdgeEnsembleArrayName(FIX_ME<<<<<<<<),
+  m_SelectedVertexVertexArrayName(FIX_ME<<<<<<<<),
+  m_SelectedVertexFeatureArrayName(FIX_ME<<<<<<<<),
+  m_SelectedVertexEnsembleArrayName(FIX_ME<<<<<<<<)
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;
@@ -495,3 +523,4 @@ void GenericExample::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

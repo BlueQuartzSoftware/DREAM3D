@@ -46,6 +46,7 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshFilter::SurfaceMeshFilter() :
   AbstractFilter()
+  m_SurfaceDataContainerName(FIX_ME<<<<<<<<)
 {
   setupFilterParameters();
 }
@@ -56,3 +57,4 @@ SurfaceMeshFilter::SurfaceMeshFilter() :
 SurfaceMeshFilter::~SurfaceMeshFilter()
 {
 }
+

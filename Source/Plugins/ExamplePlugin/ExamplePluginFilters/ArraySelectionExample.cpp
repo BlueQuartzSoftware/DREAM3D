@@ -43,8 +43,26 @@
 // -----------------------------------------------------------------------------
 ArraySelectionExample::ArraySelectionExample() :
   AbstractFilter()
+  m_SelectedVolumeVertexArrays(FIX_ME<<<<<<<<),
+  m_SelectedVolumeEdgeArrays(FIX_ME<<<<<<<<),
+  m_SelectedVolumeFaceArrays(FIX_ME<<<<<<<<),
+  m_SelectedVolumeCellArrays(FIX_ME<<<<<<<<),
+  m_SelectedVolumeCellFeatureArrays(FIX_ME<<<<<<<<),
+  m_SelectedVolumeCellEnsembleArrays(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceVertexArrays(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceEdgeArrays(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceFaceArrays(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceFaceFeatureArrays(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceFaceEnsembleArrays(FIX_ME<<<<<<<<),
+  m_SelectedEdgeVertexArrays(FIX_ME<<<<<<<<),
+  m_SelectedEdgeEdgeArrays(FIX_ME<<<<<<<<),
+  m_SelectedEdgeEdgeFeatureArrays(FIX_ME<<<<<<<<),
+  m_SelectedEdgeEdgeEnsembleArrays(FIX_ME<<<<<<<<),
+  m_SelectedVertexVertexArrays(FIX_ME<<<<<<<<),
+  m_SelectedVertexVertexFeatureArrays(FIX_ME<<<<<<<<),
+  m_SelectedVertexVertexEnsembleArrays(FIX_ME<<<<<<<<)
 {
-  setupFilterParameters();
+    setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -220,3 +238,4 @@ void ArraySelectionExample::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

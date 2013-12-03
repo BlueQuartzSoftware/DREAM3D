@@ -48,9 +48,11 @@
 AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_CellAttributeMatrixName(FIX_ME<<<<<<<<),
+  m_OutputFile(FIX_ME<<<<<<<<),
   m_WriteFeatureIds(true),
   m_WriteBinaryFile(false),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -283,4 +285,5 @@ int AvizoUniformCoordinateWriter::writeData(QDataStream& out)
   }
   return 1;
 }
+
 

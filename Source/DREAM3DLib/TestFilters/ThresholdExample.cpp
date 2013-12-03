@@ -45,7 +45,13 @@
 ThresholdExample::ThresholdExample() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName)
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellComparisonInputs(FIX_ME<<<<<<<<),
+  m_FeatureComparisonInputs(FIX_ME<<<<<<<<),
+  m_EnsembleComparisonInputs(FIX_ME<<<<<<<<),
+  m_PointComparisonInputs(FIX_ME<<<<<<<<),
+  m_FaceComparisonInputs(FIX_ME<<<<<<<<),
+  m_EdgeComparisonInputs(FIX_ME<<<<<<<<)
 {
   setupFilterParameters();
 }
@@ -214,3 +220,4 @@ void ThresholdExample::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

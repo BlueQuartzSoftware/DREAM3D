@@ -65,7 +65,8 @@ using namespace std;
 AlignSectionsList::AlignSectionsList() :
   AlignSections(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName)
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_InputFile(FIX_ME<<<<<<<<)
 {
   setupFilterParameters();
 }
@@ -202,3 +203,4 @@ void AlignSectionsList::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts
 
   inFile.close();
 }
+

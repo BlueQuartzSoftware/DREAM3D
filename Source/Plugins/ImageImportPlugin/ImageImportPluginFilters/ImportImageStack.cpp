@@ -50,11 +50,13 @@
 ImportImageStack::ImportImageStack() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_ImageDataArrayName(DREAM3D::CellData::ImageData),
+  m_CellAttributeMatrixName(FIX_ME<<<<<<<<),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
-  m_RefFrameZDir(Ebsd::LowtoHigh),
-  m_ImageData(NULL)
+  m_ImageFileList(FIX_ME<<<<<<<<),
+  m_Origin(FIX_ME<<<<<<<<),
+  m_Resolution(FIX_ME<<<<<<<<),
+  m_RefFrameZDir(Ebsd::LowtoHigh)
 {
 
   m_Origin.x = 0.0;
@@ -285,3 +287,4 @@ void ImportImageStack::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

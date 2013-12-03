@@ -79,7 +79,10 @@ SurfaceDataContainerReader::SurfaceDataContainerReader() :
   m_ReadFaceEnsembleData(true),
   m_ReadAllFaceArrays(false),
   m_ReadAllFaceFeatureArrays(false),
-  m_ReadAllFaceEnsembleArrays(false)
+  m_ReadAllFaceEnsembleArrays(false),
+  m_FaceArraysToRead(FIX_ME<<<<<<<<),
+  m_FaceFeatureArraysToRead(FIX_ME<<<<<<<<),
+  m_FaceEnsembleArraysToRead(FIX_ME<<<<<<<<)
 {
 }
 
@@ -424,3 +427,4 @@ int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString& group
   H5Gclose(gid); // Close the Cell Group
   return err;
 }
+

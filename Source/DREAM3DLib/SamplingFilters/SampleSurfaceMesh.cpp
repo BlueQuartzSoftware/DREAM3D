@@ -111,9 +111,10 @@ class SampleSurfaceMeshImpl
 // -----------------------------------------------------------------------------
 SampleSurfaceMesh::SampleSurfaceMesh() :
   AbstractFilter(),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName)
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceLabels(NULL)
 {
   setupFilterParameters();
 }
@@ -336,3 +337,4 @@ void SampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
 {
 
 }
+

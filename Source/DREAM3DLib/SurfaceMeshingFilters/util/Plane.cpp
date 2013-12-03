@@ -35,7 +35,6 @@ using namespace PlaneDetail;
 //####################RUCTORS ####################
 Plane::Plane(VectorType& normal, double d)
   : m_normal(normal), m_d(d)
-{
   ensure_invariant();
 }
 
@@ -118,3 +117,4 @@ std::ostream& operator<<(std::ostream& os, Plane::CP rhs)
   }
   return os;
 }
+

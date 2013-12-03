@@ -66,9 +66,9 @@ AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() :
   AlignSections(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_ReferenceSlice(0),
   m_UseReferenceSlice(false),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL)
 {
   setupFilterParameters();
@@ -296,3 +296,4 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int>& xshifts, QVector<in
     outFile.close();
   }
 }
+

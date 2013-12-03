@@ -157,6 +157,7 @@ RotateSampleRefFrame::RotateSampleRefFrame() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_RotationAxis(FIX_ME<<<<<<<<),
   m_RotationAngle(0.0),
   m_sliceBySlice(false)
 {
@@ -507,3 +508,4 @@ void RotateSampleRefFrame::execute()
 
   notifyStatusMessage("Complete");
 }
+

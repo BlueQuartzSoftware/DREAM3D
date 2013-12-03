@@ -53,7 +53,9 @@ BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName)
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_BinaryNodesFile(FIX_ME<<<<<<<<),
+  m_BinaryTrianglesFile(FIX_ME<<<<<<<<)
 {
   setupFilterParameters();
 }
@@ -330,5 +332,6 @@ int BinaryNodesTrianglesReader::read()
 
   return getErrorCondition();
 }
+
 
 

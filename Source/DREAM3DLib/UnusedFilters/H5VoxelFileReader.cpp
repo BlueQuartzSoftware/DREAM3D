@@ -46,16 +46,18 @@
 H5VoxelFileReader::H5VoxelFileReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellEnsembleAttributeMatrixName(FIX_ME<<<<<<<<),
+  m_CellAttributeMatrixName(FIX_ME<<<<<<<<),
   m_InputFile(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_FeatureIds(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL)
 {
   setupFilterParameters();
@@ -319,3 +321,4 @@ void H5VoxelFileReader::execute()
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystructs);
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 }
+

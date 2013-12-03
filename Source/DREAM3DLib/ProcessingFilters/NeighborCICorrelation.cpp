@@ -56,9 +56,9 @@ NeighborCICorrelation::NeighborCICorrelation() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
   m_MinConfidence(0.1),
   m_Loop(false),
+  m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
   m_ConfidenceIndex(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -254,3 +254,4 @@ void NeighborCICorrelation::execute()
 // If there is an error set this to something negative and also set a message
   notifyStatusMessage("Filling Bad Data Complete");
 }
+

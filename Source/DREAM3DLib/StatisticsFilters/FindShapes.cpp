@@ -52,21 +52,21 @@
 FindShapes::FindShapes()  :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
-  m_AspectRatiosArrayName(DREAM3D::FeatureData::AspectRatios),
-  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
-  m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),
-  m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
   m_FeatureIds(NULL),
+  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
   m_AxisEulerAngles(NULL),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
+  m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),
   m_AxisLengths(NULL),
+  m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
   m_Omega3s(NULL),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_Volumes(NULL),
+  m_AspectRatiosArrayName(DREAM3D::FeatureData::AspectRatios),
   m_AspectRatios(NULL)
 {
   featuremoments = NULL;
@@ -719,4 +719,5 @@ void FindShapes::find_axiseulers2D()
     m_AxisEulerAngles[3 * i + 2] = 0.0f;
   }
 }
+
 

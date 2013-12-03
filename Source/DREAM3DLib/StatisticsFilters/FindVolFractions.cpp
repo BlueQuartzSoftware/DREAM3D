@@ -47,11 +47,11 @@
 FindVolFractions::FindVolFractions() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
   m_CellPhases(NULL),
+  m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
   m_VolFractions(NULL)
 {
 
@@ -142,3 +142,4 @@ void FindVolFractions::execute()
 
   notifyStatusMessage("Complete");
 }
+

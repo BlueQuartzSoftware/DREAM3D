@@ -48,18 +48,16 @@
 FindMDF::FindMDF()  :
   AbstractFilter(),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
-  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_AvgQuats(NULL),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
   m_TotalSurfaceAreas(NULL),
-  m_NeighborList(NULL),
-  m_SharedSurfaceAreaList(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -325,3 +323,4 @@ void FindMDF::execute()
 
   notifyStatusMessage("FindMDF Completed");
 }
+

@@ -45,9 +45,11 @@
 SingleThresholdFeatures::SingleThresholdFeatures():
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_SelectedFeatureArrayName(""),
+  m_ComparisonOperator(FIX_ME<<<<<<<<),
+  m_ComparisonValue(FIX_ME<<<<<<<<),
   m_OutputArrayName(DREAM3D::FeatureData::GoodFeatures),
   m_Output(NULL)
 {
@@ -218,4 +220,5 @@ void SingleThresholdFeatures::execute()
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(goodFeaturesPtr->GetName(), goodFeaturesPtr);
   notifyStatusMessage("Complete");
 }
+
 

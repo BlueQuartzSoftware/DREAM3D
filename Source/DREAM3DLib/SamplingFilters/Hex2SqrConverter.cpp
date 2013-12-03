@@ -58,11 +58,13 @@
 // -----------------------------------------------------------------------------
 Hex2SqrConverter::Hex2SqrConverter() :
   m_ZStartIndex(0),
+  m_ZStartIndex(FIX_ME<<<<<<<<),
   m_ZEndIndex(0),
   m_XResolution(1.0),
   m_YResolution(1.0),
   m_NumCols(0),
   m_NumRows(0),
+  m_EbsdFileList(FIX_ME<<<<<<<<),
   m_HeaderIsComplete(false)
 {
   setupFilterParameters();
@@ -386,4 +388,5 @@ QString Hex2SqrConverter::modifyAngHeaderLine(QString& buf)
   }
   return line;
 }
+
 

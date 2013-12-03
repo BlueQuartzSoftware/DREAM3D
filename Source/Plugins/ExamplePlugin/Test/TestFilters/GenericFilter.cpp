@@ -29,8 +29,30 @@
 // -----------------------------------------------------------------------------
 GenericFilter::GenericFilter() :
   AbstractFilter()
+  m_StlFilePrefix(FIX_ME<<<<<<<<),
+  m_MaxIterations(FIX_ME<<<<<<<<),
+  m_MisorientationTolerance(FIX_ME<<<<<<<<),
+  m_InputFile(FIX_ME<<<<<<<<),
+  m_InputPath(FIX_ME<<<<<<<<),
+  m_OutputFile(FIX_ME<<<<<<<<),
+  m_OutputPath(FIX_ME<<<<<<<<),
+  m_WriteAlignmentShifts(FIX_ME<<<<<<<<),
+  m_ConversionType(FIX_ME<<<<<<<<),
+  m_Dimensions(FIX_ME<<<<<<<<),
+  m_Origin(FIX_ME<<<<<<<<),
+  m_TestAxisAngleRotations(FIX_ME<<<<<<<<),
+  m_StrVector(FIX_ME<<<<<<<<),
+  m_SelectedVoxelCellArrayName(FIX_ME<<<<<<<<),
+  m_SelectedVoxelFeatureArrayName(FIX_ME<<<<<<<<),
+  m_SelectedVoxelEnsembleArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceMeshPointArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceMeshFaceArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceMeshEdgeArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSolidMeshPointArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSolidMeshFaceArrayName(FIX_ME<<<<<<<<),
+  m_SelectedSolidMeshEdgeArrayName(FIX_ME<<<<<<<<)
 {
-  m_Dimensions.x = 0;
+    m_Dimensions.x = 0;
   m_Dimensions.y = 0;
   m_Dimensions.z = 0;
 
@@ -407,3 +429,4 @@ void GenericFilter::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

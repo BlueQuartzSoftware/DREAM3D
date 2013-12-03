@@ -48,13 +48,13 @@
 FindSurfaceVoxelFractions::FindSurfaceVoxelFractions() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
-  m_SurfaceVoxelFractionsArrayName(DREAM3D::FeatureData::SurfaceVoxelFractions),
   m_FeatureIds(NULL),
+  m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
   m_SurfaceVoxels(NULL),
+  m_SurfaceVoxelFractionsArrayName(DREAM3D::FeatureData::SurfaceVoxelFractions),
   m_SurfaceVoxelFractions(NULL)
 {
   setupFilterParameters();
@@ -179,3 +179,4 @@ void FindSurfaceVoxelFractions::find_surface_voxel_fractions()
     m_SurfaceVoxelFractions[i] = surfvoxcounts[i] / voxcounts[i];
   }
 }
+

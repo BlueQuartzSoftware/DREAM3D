@@ -75,12 +75,28 @@
 ReadH5Ebsd::ReadH5Ebsd() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellEnsembleAttributeMatrixName(FIX_ME<<<<<<<<),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
+  m_PhaseNameArrayName(FIX_ME<<<<<<<<),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
+  m_SelectedVolumeVertexArrays(FIX_ME<<<<<<<<),
+  m_SelectedVolumeEdgeArrays(FIX_ME<<<<<<<<),
+  m_SelectedVolumeFaceArrays(FIX_ME<<<<<<<<),
+  m_SelectedVolumeCellArrays(FIX_ME<<<<<<<<),
+  m_SelectedVolumeCellFeatureArrays(FIX_ME<<<<<<<<),
+  m_SelectedVolumeCellEnsembleArrays(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceVertexArrays(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceEdgeArrays(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceFaceArrays(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceFaceFeatureArrays(FIX_ME<<<<<<<<),
+  m_SelectedSurfaceFaceEnsembleArrays(FIX_ME<<<<<<<<),
+  m_SelectedEdgeVertexArrays(FIX_ME<<<<<<<<),
+  m_SelectedEdgeEdgeArrays(FIX_ME<<<<<<<<),
+  m_SelectedEdgeEdgeFeatureArrays(FIX_ME<<<<<<<<),
+  m_SelectedEdgeEdgeEnsembleArrays(FIX_ME<<<<<<<<),
+  m_SelectedVertexVertexArrays(FIX_ME<<<<<<<<),
+  m_SelectedVertexVertexFeatureArrays(FIX_ME<<<<<<<<),
+  m_SelectedVertexVertexEnsembleArrays(FIX_ME<<<<<<<<),
   m_InputFile(""),
   m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
   m_ZStartIndex(0),
@@ -88,13 +104,17 @@ ReadH5Ebsd::ReadH5Ebsd() :
   m_UseTransformations(true),
   m_Manufacturer(Ebsd::UnknownManufacturer),
   m_SampleTransformationAngle(0.0),
+  m_SampleTransformationAxis(FIX_ME<<<<<<<<),
   m_EulerTransformationAngle(0.0),
+  m_EulerTransformationAxis(FIX_ME<<<<<<<<),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
-  tempxpoints(0),
-  tempypoints(0),
-  totaltemppoints(0)
+  m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
+  m_LatticeConstants(NULL)
 {
   m_SampleTransformationAxis.resize(3);
   m_SampleTransformationAxis[0] = 0.0;
@@ -986,3 +1006,4 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
     m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Mic::Confidence, fArray);
   }
 }
+

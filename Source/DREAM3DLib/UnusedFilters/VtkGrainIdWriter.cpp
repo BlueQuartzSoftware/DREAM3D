@@ -42,8 +42,9 @@
 // -----------------------------------------------------------------------------
 VtkGrainIdWriter::VtkGrainIdWriter() :
   FileWriter(),
+  m_WriteBinaryFiles(true),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_WriteBinaryFiles(true)
+  m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -172,6 +173,7 @@ int VtkGrainIdWriter::writeFile()
   }
   return err;
 }
+
 
 
 

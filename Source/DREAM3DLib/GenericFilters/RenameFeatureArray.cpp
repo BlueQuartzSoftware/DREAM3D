@@ -42,6 +42,7 @@
 // -----------------------------------------------------------------------------
 RenameFeatureArray::RenameFeatureArray() :
   AbstractFilter(),
+  m_DataContainerName(FIX_ME<<<<<<<<),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_SelectedFeatureArrayName(""),
   m_NewFeatureArrayName("")
@@ -165,4 +166,5 @@ void RenameFeatureArray::execute()
 
   notifyStatusMessage("Complete");
 }
+
 

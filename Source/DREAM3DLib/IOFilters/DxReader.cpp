@@ -48,6 +48,8 @@ DxReader::DxReader() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
+  m_Origin(FIX_ME<<<<<<<<),
+  m_Resolution(FIX_ME<<<<<<<<),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -432,4 +434,5 @@ int DxReader::readFile()
   notifyStatusMessage("Complete");
   return 0;
 }
+
 

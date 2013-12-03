@@ -49,20 +49,18 @@
 FindNeighbors::FindNeighbors() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
-  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
   m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
   m_SurfaceVoxels(NULL),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
-  m_NumNeighbors(NULL),
-  m_NeighborList(NULL),
-  m_SharedSurfaceAreaList(NULL)
+  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
+  m_NumNeighbors(NULL)
 {
 }
 
@@ -352,4 +350,5 @@ void FindNeighbors::execute()
 
   notifyStatusMessage("Finding Neighbors Complete");
 }
+
 

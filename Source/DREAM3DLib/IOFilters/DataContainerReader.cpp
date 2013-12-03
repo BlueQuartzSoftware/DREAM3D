@@ -52,7 +52,8 @@
 DataContainerReader::DataContainerReader() :
   AbstractFilter(),
   m_InputFile(""),
-  m_OverwriteExistingDataContainers(false)
+  m_OverwriteExistingDataContainers(false),
+  m_DataToRead(FIX_ME<<<<<<<<)
 {
   m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();
@@ -328,3 +329,4 @@ void DataContainerReader::readData(bool preflight)
     dcaGid = -1;
   }
 }
+

@@ -56,10 +56,9 @@ OpenCloseCoordinationNumber::OpenCloseCoordinationNumber() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_Loop(false),
   m_CoordinationNumber(6),
-  m_Neighbors(NULL),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -318,3 +317,4 @@ void OpenCloseCoordinationNumber::execute()
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("Complete");
 }
+
