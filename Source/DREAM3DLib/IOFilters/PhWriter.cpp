@@ -109,11 +109,13 @@ int PhWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void PhWriter::dataCheck()
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   if(getOutputFile().isEmpty() == true)
@@ -125,7 +127,7 @@ void PhWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t 
   }
 
   QVector<int> dims(1, 1);
-  m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -135,7 +137,7 @@ void PhWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t 
 // -----------------------------------------------------------------------------
 void PhWriter::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -154,24 +156,7 @@ int PhWriter::writeFile()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-//  int32_t* feature_indicies = 0;
-//  {
-//    IDataArray::Pointer iDataArray = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(DREAM3D::CellData::FeatureIds);
-//    if (iDataArray.get() == 0) {
-//      return -10;
-//    }
-//    if (static_cast<size_t>(m->getTotalPoints()) != iDataArray->getNumberOfTuples()) {
-//      return -20;
-//    }
-//    feature_indicies =
-//    IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t* >(m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(DREAM3D::CellData::FeatureIds).get());
-//    if (0 == feature_indicies) {
-//      return -30;
-//    }
-//  }
-
-  int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, 1, 1);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return -40;
@@ -213,7 +198,7 @@ int PhWriter::writeFile()
     return -1;
   }
 
-
+  int64_t totalPoints = m->getTotalPoints();
   // Find the unique number of features
   QMap<int, bool> used;
   for (int i = 0; i < totalpoints; ++i)

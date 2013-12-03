@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     JumbleOrientations(const JumbleOrientations&); // Copy Constructor Not Implemented
     void operator=(const JumbleOrientations&); // Operator '=' Not Implemented

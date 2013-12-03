@@ -217,7 +217,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     float currentclusteringerror, oldclusteringerror;
     float currentsizedisterror, oldsizedisterror;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     InsertPrecipitatePhases(const InsertPrecipitatePhases&); // Copy Constructor Not Implemented
     void operator=(const InsertPrecipitatePhases&); // Operator '=' Not Implemented

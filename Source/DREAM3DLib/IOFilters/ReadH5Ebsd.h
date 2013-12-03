@@ -163,7 +163,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
                                              QSet<QString> selectedEnsembleArrays);
   protected:
     ReadH5Ebsd();
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     int initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m);
 

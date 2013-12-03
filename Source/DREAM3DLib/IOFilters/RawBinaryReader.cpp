@@ -358,11 +358,13 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void RawBinaryReader::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -414,52 +416,52 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t features, 
     QVector<int> dims(1, m_NumberOfComponents);
     if (m_ScalarType == Detail::Int8)
     {
-      p = Int8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      attrMat->createAndAddAttributeArray<DataArray<int8_t>, int8_t>(m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int8_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt8)
     {
-      p = UInt8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      attrMat->createAndAddAttributeArray<DataArray<uint8_t>, uint8_t>(m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint8_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int16)
     {
-      p = Int16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      attrMat->createAndAddAttributeArray<DataArray<int16_t>, int16_t>(m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int16_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt16)
     {
-      p = UInt16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      attrMat->createAndAddAttributeArray<DataArray<uint16_t>, uint16_t>(m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint16_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int32)
     {
-      p = Int32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      attrMat->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int32_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt32)
     {
-      p = UInt32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      attrMat->createAndAddAttributeArray<DataArray<uint32_t>, uint32_t>(m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint32_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int64)
     {
-      p = Int64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      attrMat->createAndAddAttributeArray<DataArray<int64_t>, int64_t>(m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int64_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt64)
     {
-      p = UInt64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      attrMat->createAndAddAttributeArray<DataArray<uint64_t>, uint64_t>(m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint64_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Float)
     {
-      p = FloatArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      attrMat->createAndAddAttributeArray<DataArray<float>, float>(m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(float) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Double)
     {
-      p = DoubleArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      attrMat->createAndAddAttributeArray<DataArray<double>, double>(m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(double) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
 
@@ -482,8 +484,6 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t features, 
       addWarningMessage(getHumanLabel(), ss, RBR_FILE_TOO_BIG);
     }
 
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->GetName(), p);
-
     m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
     m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
     m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
@@ -496,13 +496,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t features, 
 // -----------------------------------------------------------------------------
 void RawBinaryReader::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName(), false);
-  if(NULL == m)
-  {
-    m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
-  }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -513,14 +507,10 @@ void RawBinaryReader::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
+
+  dataCheck(false);
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  }
 
   setErrorCondition(0);
 
@@ -532,7 +522,6 @@ void RawBinaryReader::execute()
     m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   }
   m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
-
 
   array = IDataArray::NullPointer();
   if (m_ScalarType == Detail::Int8)

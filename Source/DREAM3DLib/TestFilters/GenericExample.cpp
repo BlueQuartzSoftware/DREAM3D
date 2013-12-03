@@ -537,38 +537,38 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericExample::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void GenericExample::dataCheck()
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, GenericExample>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* am = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   // Require the following Cell Data
-  m_FeatureIdsPtr = aattrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_CellPatternQualityPtr = aattrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellPatternQualityArrayName, -302, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellPatternQualityPtr = attrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellPatternQualityArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPatternQualityPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPatternQuality = m_CellPatternQualityPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Create the following array
   dims[0] = 3; // We are going to create a [1x3] component for each Cell.
-  m_CellEulerAnglesPtr = aattrMat->createNonPrereqArray<DataArray<float>, GenericExample>(this, m_CellEulerAnglesArrayName, -303, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellEulerAnglesPtr = attrMat->createNonPrereqArray<DataArray<float>, GenericExample>(this, m_CellEulerAnglesArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   dims[0] = 1;
-  m_GoodVoxelsPtr = aattrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -304, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = attrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(NULL == m_GoodVoxelsPtr.lock().get() )  // The Good Voxels array was NOT available so create it
   {
-    m_GoodVoxelsPtr = aattrMat->createNonPrereqArray<DataArray<bool>, GenericExample, bool>(this, m_GoodVoxelsArrayName, false, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_GoodVoxelsPtr = attrMat->createNonPrereqArray<DataArray<bool>, GenericExample, bool>(this, m_GoodVoxelsArrayName, false, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -578,7 +578,7 @@ void GenericExample::dataCheck(bool preflight, size_t voxels, size_t features, s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericExample::dataCheck2(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void GenericExample::dataCheck2()
 {
   VolumeDataContainer* vdc = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, QString("Test Container") );
   if(getErrorCondition() < 0) { return; }
@@ -595,21 +595,8 @@ void GenericExample::dataCheck2(bool preflight, size_t voxels, size_t features, 
 // -----------------------------------------------------------------------------
 void GenericExample::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(m == NULL)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-    AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New();
-    attrMatrix->setName(getCellAttributeMatrixName());
-    vdc->addAttributeMatrix(getCellAttributeMatrixName(), attrMatrix);
-  }
-
-  dataCheck(true, 1, 1, 1);
-
-  dataCheck2(true, 1, 1, 1);
+  dataCheck();
+  dataCheck2();
 }
 
 // -----------------------------------------------------------------------------
@@ -628,21 +615,14 @@ void GenericExample::execute()
 {
   int err = 0;
   setErrorCondition(err);
+
+  // Run the data check to get references to all of our data arrays initialized to the values stored in memory
+  dataCheck();
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-    setErrorCondition(-1);
-    QString ss = QObject::tr(" DataContainer was NULL");
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), -1);
-    return;
-  }
-  setErrorCondition(0);
 
   // Get the number of cells
   int64_t numCells = m->getTotalPoints();
-
-  // Run the data check to get references to all of our data arrays initialized to the values stored in memory
-  dataCheck(false, numCells, 0, 0);
 
   // We want to work with the raw point for shear speed so initialize some local variables. We have to temporarily turn
   // the weak shared pointer into a shared_ptr<> using the ".lock()" then we can use the normal -> semantics to access

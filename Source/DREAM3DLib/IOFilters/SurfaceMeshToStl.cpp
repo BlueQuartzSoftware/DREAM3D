@@ -120,7 +120,7 @@ int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void SurfaceMeshToStl::dataCheck()
 {
   setErrorCondition(0);
   if (m_OutputStlDirectory.isEmpty() == true)
@@ -130,6 +130,10 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t features,
   }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+
   if (sm->getFaces().get() == NULL)
   {
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
@@ -141,7 +145,7 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t features,
     setErrorCondition(-384);
   }
   QVector<int> dims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = sattrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFaceLabelsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -153,12 +157,7 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t features,
 // -----------------------------------------------------------------------------
 void SurfaceMeshToStl::preflight()
 {
-  setErrorCondition(0);
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -168,13 +167,9 @@ void SurfaceMeshToStl::execute()
 {
   int err = 0;
 
+  dataCheck();
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceDataContainer Object was NULL", -999);
-    return;
-  }
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -192,13 +187,6 @@ void SurfaceMeshToStl::execute()
   FaceArray& triangles = *(sm->getFaces());
 
   int nTriangles = triangles.getNumberOfTuples();
-  dataCheck(false, 0, nTriangles, 0);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-
-
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
@@ -236,7 +224,6 @@ void SurfaceMeshToStl::execute()
       QString ss = QObject::tr("Writing STL for Feature Id ").arg(spin);
       notifyStatusMessage(ss);
     }
-
 
     QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);
     err = writeHeader(f, header, 0);

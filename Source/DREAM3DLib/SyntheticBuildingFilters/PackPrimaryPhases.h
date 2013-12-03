@@ -223,7 +223,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     PackPrimaryPhases(const PackPrimaryPhases&); // Copy Constructor Not Implemented

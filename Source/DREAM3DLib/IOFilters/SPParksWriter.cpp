@@ -114,15 +114,17 @@ int SPParksWriter::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void SPParksWriter::dataCheck()
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
-  m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -132,8 +134,7 @@ void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t features, si
 // -----------------------------------------------------------------------------
 void SPParksWriter::preflight()
 {
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -141,21 +142,9 @@ void SPParksWriter::preflight()
 // -----------------------------------------------------------------------------
 int SPParksWriter::writeHeader()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -2);
-    setErrorCondition(-1);
-    return -1;
-  }
+  dataCheck();
 
-  int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, 1, 1);
-  if (getErrorCondition() < 0)
-  {
-    return -40;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -171,7 +160,6 @@ int SPParksWriter::writeHeader()
     static_cast<DimType>(udims[2]),
   };
   int64_t totalpoints = dims[0] * dims[1] * dims[2];
-
 
   std::ofstream outfile;
   outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary);
@@ -200,14 +188,9 @@ int SPParksWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int SPParksWriter::writeFile()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  dataCheck();
 
-  int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, 1, 1);
-  if (getErrorCondition() < 0)
-  {
-    return -40;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -224,7 +207,6 @@ int SPParksWriter::writeFile()
   };
   int64_t totalpoints = dims[0] * dims[1] * dims[2];
 
-
   std::ofstream outfile;
   outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary | std::ios_base::app);
   if(!outfile)
@@ -232,7 +214,6 @@ int SPParksWriter::writeFile()
     qDebug() << "Failed to open: " << getOutputFile() ;
     return -1;
   }
-
 
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;

@@ -151,11 +151,13 @@ int PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void PhReader::dataCheck()
 {
 
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, PhReader>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, PhReader>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -173,7 +175,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t 
   }
 
   QVector<int> dims(1, 1);
-  m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -207,13 +209,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t 
 // -----------------------------------------------------------------------------
 void PhReader::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName(), false);
-  if(NULL == m)
-  {
-    m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
-  }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -221,20 +217,9 @@ void PhReader::preflight()
 // -----------------------------------------------------------------------------
 void PhReader::execute()
 {
-  /* DO NOT CALL THE DATACHECK() from this method. You will end up in an endless loop.
-   * The array will get allocated down in the 'readFile()' method.
-   */
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  }
-
-
   int err = 0;
+
+  dataCheck();
 
   m_InStream = fopen(getInputFile().toLatin1().data(), "r");
   if(m_InStream == NULL)
@@ -243,7 +228,6 @@ void PhReader::execute()
     notifyErrorMessage("Error opening input file", getErrorCondition());
     return;
   }
-
 
   err = readHeader();
   if(err < 0)
@@ -259,7 +243,6 @@ void PhReader::execute()
   {
     return;
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -296,12 +279,13 @@ int  PhReader::readFile()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t totalPoints = m->getTotalPoints();
-  Int32ArrayType::Pointer m_FeatureIdData = Int32ArrayType::CreateArray(totalPoints, m_FeatureIdsArrayName);
-  m_FeatureIdData->initializeWithValues(-1);
-  int32_t* featureIds = m_FeatureIdData->getPointer(0);
+
+  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(totalPoints);
+  dataCheck();
+
   for(size_t n = 0; n < totalPoints; ++n)
   {
-    if (fscanf(m_InStream, "%d", featureIds + n) == 0)
+    if (fscanf(m_InStream, "%d", m_FeatureIds + n) == 0)
     {
       fclose(m_InStream);
       m_InStream = NULL;
@@ -310,15 +294,6 @@ int  PhReader::readFile()
       return getErrorCondition();
     }
   }
-
-  // Read the data and stick it in the data Container
-  VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == vdc) { return -1; }
-
-  AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellAttributeMatrixName());
-  if (NULL == attrMatrix.get() ) { return -2; }
-
-  attrMatrix->addAttributeArray(DREAM3D::CellData::FeatureIds, m_FeatureIdData);
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);

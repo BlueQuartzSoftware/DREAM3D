@@ -89,13 +89,6 @@ int FileWriter::writeFile()
 // -----------------------------------------------------------------------------
 void FileWriter::execute()
 {
-  if (getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()) == NULL)
-  {
-    setErrorCondition(-100);
-    QString ss = QObject::tr("The DataContainer Object was NOT set correctly.");
-    notifyErrorMessage(ss, getErrorCondition());
-    return;
-  }
   setErrorCondition(0);
 
   // Make sure any directory path is also available as the user may have just typed

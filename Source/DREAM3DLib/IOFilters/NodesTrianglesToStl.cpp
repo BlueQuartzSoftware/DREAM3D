@@ -136,7 +136,7 @@ int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void NodesTrianglesToStl::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
@@ -192,7 +192,7 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t featur
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck(true);
 }
 
 
@@ -203,11 +203,7 @@ void NodesTrianglesToStl::execute()
 {
   int err = 0;
 
-  dataCheck(false, 1, 1, 1);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  dataCheck(false);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

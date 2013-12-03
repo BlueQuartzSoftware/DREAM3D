@@ -132,11 +132,15 @@ int ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void ReadOrientationData::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* amC = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* amCE = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(m_InputFile);
@@ -172,17 +176,16 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
       m->setOrigin(0.0f, 0.0f, 0.0f);
       AngFields angfeatures;
       names = angfeatures.getFilterFeatures<QVector<QString> > ();
+      QVector<int> dims(1, 1);
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
-          Int32ArrayType::Pointer array = Int32ArrayType::CreateArray(voxels, names[i]);
-          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
+          amC->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, dims);
         }
         else if (reader.getPointerType(names[i]) == Ebsd::Float)
         {
-          FloatArrayType::Pointer array = FloatArrayType::CreateArray(voxels, names[i]);
-          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
+          amC->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, dims);
         }
       }
     }
@@ -206,17 +209,16 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
       m->setOrigin(0.0f, 0.0f, 0.0f);
       CtfFields ctffeatures;
       names = ctffeatures.getFilterFeatures<QVector<QString> > ();
+      QVector<int> dims(1, 1);
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
-          Int32ArrayType::Pointer array = Int32ArrayType::CreateArray(voxels, names[i]);
-          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
+          amC->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, dims);
         }
         else if (reader.getPointerType(names[i]) == Ebsd::Float)
         {
-          FloatArrayType::Pointer array = FloatArrayType::CreateArray(voxels, names[i]);
-          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
+          amC->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, dims);
         }
       }
     }
@@ -233,17 +235,16 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
       m->setOrigin(0.0f, 0.0f, 0.0f);
       MicFields micfeatures;
       names = micfeatures.getFilterFeatures<QVector<QString> > ();
+      QVector<int> dims(1, 1);
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
-          Int32ArrayType::Pointer array = Int32ArrayType::CreateArray(voxels, names[i]);
-          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
+          amC->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, dims);
         }
         else if (reader.getPointerType(names[i]) == Ebsd::Float)
         {
-          FloatArrayType::Pointer array = FloatArrayType::CreateArray(voxels, names[i]);
-          m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(names[i], array);
+          amC->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, dims);
         }
       }
     }
@@ -257,20 +258,20 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
     }
 
     QVector<int> dim(1, 3);
-    m_CellEulerAnglesPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, 0, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellEulerAnglesPtr = amC->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dim[0] = 1;
-    m_CellPhasesPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName,  m_CellPhasesArrayName, 0, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellPhasesPtr = amC->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_CellPhasesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     typedef DataArray<unsigned int> XTalStructArrayType;
-    m_CrystalStructuresPtr = attrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_CellEnsembleAttributeMatrixName,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CrystalStructuresPtr = amCE->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dim[0] = 6;
-    m_LatticeConstantsPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_CellEnsembleAttributeMatrixName,  m_LatticeConstantsArrayName, 0.0, ensembles, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_LatticeConstantsPtr = amCE->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_LatticeConstantsArrayName, 0.0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -284,13 +285,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t featur
 // -----------------------------------------------------------------------------
 void ReadOrientationData::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName(), false);
-  if(NULL == m)
-  {
-    m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
-  }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -301,15 +296,11 @@ void ReadOrientationData::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
+  
+  dataCheck();
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  }
-  setErrorCondition(0);
+
   QFileInfo fi(getInputFile());
   QString ext = fi.suffix();
   if(ext.compare(Ebsd::Ang::FileExt) == 0)

@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
     unsigned int* m_CrystalStructures;
     StringDataArray::Pointer m_MaterialNames;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     LosAlamosFFTWriter(const LosAlamosFFTWriter&); // Copy Constructor Not Implemented
     void operator=(const LosAlamosFFTWriter&); // Operator '=' Not Implemented

@@ -138,7 +138,7 @@ int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void EbsdToH5Ebsd::dataCheck()
 {
   setErrorCondition(0);
   QString ss;
@@ -199,7 +199,7 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t features, siz
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

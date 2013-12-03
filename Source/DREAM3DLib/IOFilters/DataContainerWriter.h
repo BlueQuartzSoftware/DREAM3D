@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
   protected:
     DataContainerWriter();
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     /**
      * @brief Opens or Creates an HDF5 file to write data into

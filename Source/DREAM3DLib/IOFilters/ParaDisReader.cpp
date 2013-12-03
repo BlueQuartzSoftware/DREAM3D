@@ -111,10 +111,15 @@ int ParaDisReader::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ParaDisReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void ParaDisReader::dataCheck()
 {
   setErrorCondition(0);
-  EdgeDataContainer* m = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
+  EdgeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<EdgeDataContainer, AbstractFilter>(this, getEdgeDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* amV = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), DREAM3D::AttributeMatrixType::Vertex);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* amE = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEdgeAttributeMatrixName(), DREAM3D::AttributeMatrixType::Edge);
+  if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
 
@@ -131,17 +136,17 @@ void ParaDisReader::dataCheck(bool preflight, size_t voxels, size_t features, si
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QVector<int> dims(1, 1);
-  m_NumberOfArmsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_VertexAttributeMatrixName,  m_NumberOfArmsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumberOfArmsPtr = amV->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NumberOfArmsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumberOfArmsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumberOfArms = m_NumberOfArmsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_NodeConstraintsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_VertexAttributeMatrixName,  m_NodeConstraintsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NodeConstraintsPtr = amV->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NodeConstraintsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NodeConstraintsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NodeConstraints = m_NodeConstraintsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 3;
-  m_BurgersVectorsPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_EdgeAttributeMatrixName,  m_BurgersVectorsArrayName, 0.0, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BurgersVectorsPtr = amE->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_BurgersVectorsArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BurgersVectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BurgersVectors = m_BurgersVectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_SlipPlaneNormalsPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_EdgeAttributeMatrixName,  m_SlipPlaneNormalsArrayName, 0.0, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SlipPlaneNormalsPtr = amE->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_SlipPlaneNormalsArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SlipPlaneNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SlipPlaneNormals = m_SlipPlaneNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -178,16 +183,7 @@ void ParaDisReader::dataCheck(bool preflight, size_t voxels, size_t features, si
 // -----------------------------------------------------------------------------
 void ParaDisReader::preflight()
 {
-  EdgeDataContainer* m = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
-  if(NULL == m)
-  {
-    EdgeDataContainer::Pointer edc = EdgeDataContainer::New();
-    edc->setName(getEdgeDataContainerName());
-    getDataContainerArray()->pushBack(edc);
-    m = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
-  }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -197,14 +193,7 @@ void ParaDisReader::execute()
 {
   int err = 0;
 
-  EdgeDataContainer* m = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
-  if(NULL == m)
-  {
-    EdgeDataContainer::Pointer edc = EdgeDataContainer::New();
-    edc->setName(getEdgeDataContainerName());
-    getDataContainerArray()->pushBack(edc);
-    m = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
-  }
+  dataCheck();
 
   m_InStream.setFileName(getInputFile());
   if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -357,20 +346,14 @@ int ParaDisReader::readFile()
   QList<QByteArray> tokens; /* vector to store the split data */
   QList<QByteArray> subTokens; /* vector to store the split data */
 
-  // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
-  // method which is performed before this function. This will cause an error -501 because the array with the name
-  // m_FeatureIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
-  m->getAttributeMatrix(getVertexAttributeMatrixName())->removeAttributeArray(m_NumberOfArmsArrayName);
-  m->getAttributeMatrix(getVertexAttributeMatrixName())->removeAttributeArray(m_NodeConstraintsArrayName);
-  m->getAttributeMatrix(getEdgeAttributeMatrixName())->removeAttributeArray(m_BurgersVectorsArrayName);
-  m->getAttributeMatrix(getEdgeAttributeMatrixName())->removeAttributeArray(m_SlipPlaneNormalsArrayName);
-  // Rerun the data check in order to allocate the array to store the data from the .dx file.
-  int64_t totalVerts = m->getAttributeMatrix(getVertexAttributeMatrixName())->getNumTuples();
-  int64_t totalEdges = m->getAttributeMatrix(getEdgeAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalVerts, totalEdges, 0);
-
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
+  numVerts = verticesPtr->getNumberOfTuples();
+
+  // Resize the vertex attribute matrix to the number of vertices
+  m->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(numVerts);
+  // Rerun the data check in order to allocate the array to store the data.
+  dataCheck();
 
   if (getErrorCondition() < 0)
   {
@@ -478,6 +461,11 @@ int ParaDisReader::readFile()
   EdgeArray::Pointer edges = EdgeArray::CreateArray(numEdges, DREAM3D::EdgeData::SurfaceMeshEdges, verticesPtr.get());
   m->setEdges(edges);
   EdgeArray::Edge_t* edge = edges.get()->getPointer(0);
+
+  // Resize the edge attribute matrix to the number of vertices
+  m->getAttributeMatrix(getEdgeAttributeMatrixName())->resizeAttributeArrays(numEdges);
+  // Rerun the data check in order to allocate the array to store the data.
+  dataCheck();
 
   for(int i = 0; i < numEdges; i++)
   {

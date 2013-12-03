@@ -187,7 +187,14 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         return attributeArray;
       }
       createAndAddAttributeArray<ArrayType, T>(attributeArrayName, initValue, dims);
-      attributeArray = getAttributeArray(attributeArrayName);
+      IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
+      attributeArray = boost::dynamic_pointer_cast< ArrayType >(iDataArray);
+      if(NULL == attributeArray.get() && filter) 
+      {
+        filter->setErrorCondition(-10003);
+        ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' could not be downcast using boost::dynamic_pointer_cast<T>.").arg(getName()).arg(attributeArrayName);
+        filter->addErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      }
       return attributeArray;
     }
 
@@ -199,7 +206,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     template<class ArrayType, typename T>
     void createAndAddAttributeArray(const QString& name, T initValue, QVector<int> dims)
     {
-      attributeArray = ArrayType::CreateArray(getNumTuples(), dims, name);
+      ArrayType::Pointer attributeArray = ArrayType::CreateArray(getNumTuples(), dims, name);
       attributeArray->initializeWithValues(initValue);
       addAttributeArray(name, attributeArray);
     }

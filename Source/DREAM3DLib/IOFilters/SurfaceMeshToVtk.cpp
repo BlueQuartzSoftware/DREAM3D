@@ -132,11 +132,15 @@ int SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void SurfaceMeshToVtk::dataCheck()
 {
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* amV = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* amF = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   if (m_OutputVtkFile.isEmpty() == true)
@@ -145,18 +149,17 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t features,
     addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 
-
   if (sm->getVertices().get() == NULL)
   {
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
     setErrorCondition(-384);
   }
   QVector<int> dims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = sattrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFaceLabelsPtr = amF->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  m_SurfaceMeshNodeTypePtr = sattrMat->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceMeshNodeTypeArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshNodeTypePtr = amV->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceMeshNodeTypeArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -167,7 +170,7 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t features,
 // -----------------------------------------------------------------------------
 void SurfaceMeshToVtk::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 /**
@@ -193,11 +196,7 @@ void SurfaceMeshToVtk::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  dataCheck(false, 0, 0, 0);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  dataCheck();
 
   setErrorCondition(0);
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  /* Place all your code to execute your filter here. */
@@ -206,8 +205,6 @@ void SurfaceMeshToVtk::execute()
 
   FaceArray& triangles = *(sm->getFaces().get());
   int triangleCount = triangles.getNumberOfTuples();
-
-  dataCheck(false, nNodes, triangleCount, 0);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -222,7 +219,6 @@ void SurfaceMeshToVtk::execute()
     setErrorCondition(-1);
     return;
   }
-
 
   // Open the output VTK File for writing
   FILE* vtkFile = NULL;
@@ -255,7 +251,6 @@ void SurfaceMeshToVtk::execute()
     //  Node& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0) { ++numberWrittenNodes; }
   }
-
 
   fprintf(vtkFile, "POINTS %d float\n", numberWrittenNodes);
 
@@ -335,12 +330,10 @@ void SurfaceMeshToVtk::execute()
     }
   }
 
-
   // Write the POINT_DATA section
   err = writePointData(vtkFile);
   // Write the CELL_DATA section
   err = writeCellData(vtkFile);
-
 
   fprintf(vtkFile, "\n");
 

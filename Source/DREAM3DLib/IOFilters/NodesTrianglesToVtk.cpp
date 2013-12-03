@@ -148,7 +148,7 @@ int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void NodesTrianglesToVtk::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
@@ -200,7 +200,7 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t featur
 // -----------------------------------------------------------------------------
 void NodesTrianglesToVtk::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -210,11 +210,7 @@ void NodesTrianglesToVtk::execute()
 {
   int err = 0;
 
-  dataCheck(false, 1, 1, 1);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+  dataCheck(false);
 
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");

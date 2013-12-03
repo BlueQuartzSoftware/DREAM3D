@@ -48,7 +48,7 @@ class GenerateFeatureIds : public AbstractFilter
       }
       int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
 
-      dataCheck(false, size, 0, 0);
+      dataCheck();
       // Set the default data into the FeatureIds
       for (int i = 0; i < size; ++i)
       {
@@ -58,7 +58,7 @@ class GenerateFeatureIds : public AbstractFilter
     }
     virtual void preflight()
     {
-      dataCheck(true, 1, 1, 1);
+      dataCheck();
     }
 
     void readFilterParameters(AbstractFilterParametersReader* reader, int index) {
@@ -88,27 +88,16 @@ class GenerateFeatureIds : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+    void dataCheck()
     {
       setErrorCondition(0);
-      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
-      if (NULL == m)
-      {
-        QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
-        setErrorCondition(-1001);
-        addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-      AttributeMatrix* am = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-      if (NULL == am)
-      {
-        QString ss = QObject::tr("The Attribute Matrix with name '%1'' was not found in the Data Container Array.").arg(m_CellAttributeMatrixName);
-        setErrorCondition(-1001);
-        addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
+      VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+      if(getErrorCondition() < 0) { return; }
+       AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+      if(getErrorCondition() < 0) { return; }
+
       QVector<int> dims(1, 1);
-      m_FeatureIdsPtr = aattrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeatureIdsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }

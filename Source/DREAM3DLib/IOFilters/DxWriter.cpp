@@ -121,11 +121,13 @@ int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DxWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void DxWriter::dataCheck()
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   if (getOutputFile().isEmpty() == true)
@@ -148,7 +150,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t 
   }
 
   QVector<int> dims(1, 1);
-  m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -158,16 +160,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t 
 // -----------------------------------------------------------------------------
 void DxWriter::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    QString ss = QObject::tr("The Volume Data Container with name '%1' was not found in the Data Container Array.").arg(getDataContainerName());
-    setErrorCondition(-1001);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -185,12 +178,7 @@ int DxWriter::writeFile()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, 1, 1);
-  if(getErrorCondition() < 0)
-  {
-    return -40;
-  }
+  dataCheck();
 
   int err = 0;
   size_t udims[3] =
@@ -247,7 +235,6 @@ int DxWriter::writeFile()
     posYDim = fileYDim + 1;
     posZDim = fileZDim + 1;
   }
-  totalPoints = fileXDim * fileYDim * fileZDim;
   //Write the header
   out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
   out << "origin 0 0 0" << "\n";
@@ -257,7 +244,7 @@ int DxWriter::writeFile()
   out << "\n";
   out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
   out << "\n";
-  out << "object 3 class array type int rank 0 items " << totalPoints << " data follows" << "\n";
+  out << "object 3 class array type int rank 0 items " << fileXDim * fileYDim * fileZDim << " data follows" << "\n";
 
   // Add a complete layer of surface voxels
   size_t rnIndex = 1;

@@ -117,19 +117,14 @@ int AvizoRectilinearCoordinateWriter::writeFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AvizoRectilinearCoordinateWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void AvizoRectilinearCoordinateWriter::dataCheck()
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  if(NULL == m)
-  {
-    QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
-    setErrorCondition(-1001);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
 
   if(m_OutputFile.isEmpty() == true)
   {
@@ -140,7 +135,7 @@ void AvizoRectilinearCoordinateWriter::dataCheck(bool preflight, size_t voxels, 
   if(m_WriteFeatureIds == true)
   {
     QVector<int> dims(1 , 1);
-    m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -153,7 +148,7 @@ void AvizoRectilinearCoordinateWriter::dataCheck(bool preflight, size_t voxels, 
 void AvizoRectilinearCoordinateWriter::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -163,9 +158,8 @@ void AvizoRectilinearCoordinateWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
+
+  dataCheck();
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -179,12 +173,6 @@ void AvizoRectilinearCoordinateWriter::execute()
     setErrorCondition(-1);
     return;
   }
-
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = 0; //m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0; //m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
-
 
   QFile writer(getOutputFile());
   if (!writer.open(QIODevice::WriteOnly | QIODevice::Text))

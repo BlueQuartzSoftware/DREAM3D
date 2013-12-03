@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT INLWriter : public FileWriter
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     StringDataArray::Pointer m_MaterialNames;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     INLWriter(const INLWriter&); // Copy Constructor Not Implemented
     void operator=(const INLWriter&); // Operator '=' Not Implemented

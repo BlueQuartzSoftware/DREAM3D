@@ -60,7 +60,6 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 
     virtual ~SurfaceMeshToVtk();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
@@ -125,7 +124,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     int writeCellData(FILE* vtkFile);
 
