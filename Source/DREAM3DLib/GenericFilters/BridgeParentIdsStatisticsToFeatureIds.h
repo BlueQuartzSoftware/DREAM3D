@@ -35,12 +35,6 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-    //------ Created Cell Data
-    //------ Required Feature Data
-    //------ Created Feature Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumFeaturesPerParentArrayName)
-    //------ Required Ensemble Data
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::MemoryManagementFilters;}
@@ -68,7 +62,7 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, m_NumFeaturesPerParent);
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeaturesPerParent)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     QVector<OrientationOps::Pointer> m_OrientationOps;

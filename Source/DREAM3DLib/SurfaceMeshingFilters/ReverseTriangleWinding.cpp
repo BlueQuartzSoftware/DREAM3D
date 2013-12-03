@@ -99,9 +99,7 @@ class ReverseWindingImpl
 // -----------------------------------------------------------------------------
 ReverseTriangleWinding::ReverseTriangleWinding() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_XRes(FIX_ME<<<<<<<<),
-  m_OutputFile(FIX_ME<<<<<<<<)
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName)
 {
   setupFilterParameters();
 }

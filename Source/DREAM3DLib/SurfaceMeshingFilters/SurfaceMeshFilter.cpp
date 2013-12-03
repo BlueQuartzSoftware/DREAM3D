@@ -46,7 +46,7 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshFilter::SurfaceMeshFilter() :
   AbstractFilter()
-  m_SurfaceDataContainerName(FIX_ME<<<<<<<<)
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName)
 {
   setupFilterParameters();
 }

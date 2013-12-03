@@ -90,8 +90,8 @@
 WritePoleFigure::WritePoleFigure() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellEnsembleAttributeMatrixName(FIX_ME<<<<<<<<),
-  m_CellAttributeMatrixName(FIX_ME<<<<<<<<),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),

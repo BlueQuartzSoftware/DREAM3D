@@ -85,8 +85,8 @@ typedef int64_t DimType;
 //
 // -----------------------------------------------------------------------------
 CropVolumePipeline::CropVolumePipeline() :
-  AbstractFilter()
-  m_InputFile(FIX_ME<<<<<<<<)
+  AbstractFilter(),
+  m_InputFile("")
 {
   setupFilterParameters();
 }

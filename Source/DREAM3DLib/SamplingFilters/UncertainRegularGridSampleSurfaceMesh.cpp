@@ -52,13 +52,11 @@
 // -----------------------------------------------------------------------------
 UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_DataContainerName(FIX_ME<<<<<<<<),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_XPoints(0),
   m_YPoints(0),
   m_ZPoints(0),
-  m_Resolution(FIX_ME<<<<<<<<),
-  m_Uncertainty(FIX_ME<<<<<<<<),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {

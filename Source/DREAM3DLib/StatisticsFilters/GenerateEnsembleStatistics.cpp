@@ -70,7 +70,6 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_CalculateODF(false),
   m_CalculateMDF(false),
   m_CalculateAxisODF(false),
-  m_PhaseTypeArray(FIX_ME<<<<<<<<),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
   m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),

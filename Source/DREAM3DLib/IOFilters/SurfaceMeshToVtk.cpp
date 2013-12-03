@@ -50,11 +50,11 @@
 SurfaceMeshToVtk::SurfaceMeshToVtk() :
   AbstractFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_CellAttributeMatrixName(FIX_ME<<<<<<<<),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_OutputVtkFile(FIX_ME<<<<<<<<),
+  m_OutputVtkFile(""),
   m_WriteBinaryFile(false),
   m_WriteConformalMesh(true),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),

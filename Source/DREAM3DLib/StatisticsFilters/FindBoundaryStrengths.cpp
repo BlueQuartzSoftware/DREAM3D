@@ -57,7 +57,6 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_Loading(FIX_ME<<<<<<<<),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),

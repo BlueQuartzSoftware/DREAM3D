@@ -44,7 +44,6 @@
 // -----------------------------------------------------------------------------
 RemoveArrays::RemoveArrays() :
   AbstractFilter()
-  m_DataToRemove(FIX_ME<<<<<<<<)
 {
   setupFilterParameters();
 }

@@ -81,7 +81,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 DataContainerWriter::DataContainerWriter() :
   AbstractFilter(),
-  m_OutputFile(FIX_ME<<<<<<<<),
+  m_OutputFile(""),
   m_WritePipeline(true),
   m_WriteXdmfFile(true)
 {

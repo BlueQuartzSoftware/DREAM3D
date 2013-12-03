@@ -49,7 +49,7 @@ FindNumFeatures::FindNumFeatures() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_ActiveArrayName(FIX_ME<<<<<<<<),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),

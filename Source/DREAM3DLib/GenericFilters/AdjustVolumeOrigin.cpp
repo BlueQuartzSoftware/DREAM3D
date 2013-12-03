@@ -100,8 +100,7 @@ AdjustVolumeOrigin::AdjustVolumeOrigin() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_ApplyToVoxelVolume(true),
-  m_ApplyToSurfaceMesh(true),
-  m_Origin(FIX_ME<<<<<<<<)
+  m_ApplyToSurfaceMesh(true)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;

@@ -131,7 +131,7 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_VertexAttributeMatrixName(FIX_ME<<<<<<<<),
+  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_IterationSteps(1),
   m_NodeConstraints(true),
   m_ConstrainSurfaceNodes(true),

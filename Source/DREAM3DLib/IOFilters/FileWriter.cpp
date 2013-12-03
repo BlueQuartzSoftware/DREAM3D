@@ -48,7 +48,7 @@
 FileWriter::FileWriter() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_OutputFile(FIX_ME<<<<<<<<)
+  m_OutputFile("")
 {
 
 }

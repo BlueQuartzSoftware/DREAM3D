@@ -51,7 +51,6 @@ FindSchmids::FindSchmids() :
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_LoadingDir(FIX_ME<<<<<<<<),
   m_SchmidsArrayName(DREAM3D::FeatureData::Schmids),
   m_Schmids(NULL),
   m_PolesArrayName(DREAM3D::FeatureData::Poles),

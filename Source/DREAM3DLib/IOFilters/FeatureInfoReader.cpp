@@ -67,7 +67,7 @@ FeatureInfoReader::FeatureInfoReader() :
   m_FeaturePhases(NULL),
   m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_FeatureEulerAngles(NULL),
-  m_ActiveArrayName(FIX_ME<<<<<<<<),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL)
 {
   setupFilterParameters();

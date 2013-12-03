@@ -54,7 +54,7 @@ SurfaceMeshToNonconformalVtk::SurfaceMeshToNonconformalVtk() :
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_OutputVtkFile(FIX_ME<<<<<<<<),
+  m_OutputVtkFile(""),
   m_WriteBinaryFile(false),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),

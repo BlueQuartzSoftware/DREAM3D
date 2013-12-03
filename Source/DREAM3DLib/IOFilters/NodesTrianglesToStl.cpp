@@ -47,11 +47,11 @@
 //
 // -----------------------------------------------------------------------------
 NodesTrianglesToStl::NodesTrianglesToStl() :
-  AbstractFilter()
-  m_NodesFile(FIX_ME<<<<<<<<),
-  m_TrianglesFile(FIX_ME<<<<<<<<),
-  m_OutputStlDirectory(FIX_ME<<<<<<<<),
-  m_OutputStlPrefix(FIX_ME<<<<<<<<)
+  AbstractFilter(),
+  m_NodesFile(""),
+  m_TrianglesFile(""),
+  m_OutputStlDirectory(""),
+  m_OutputStlPrefix("")
 {
   setupFilterParameters();
 }

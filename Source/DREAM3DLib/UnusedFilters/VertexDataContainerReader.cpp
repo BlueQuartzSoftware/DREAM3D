@@ -55,10 +55,7 @@ VertexDataContainerReader::VertexDataContainerReader() :
   m_ReadVertexEnsembleData(true),
   m_ReadAllVertexArrays(false),
   m_ReadAllVertexFeatureArrays(false),
-  m_ReadAllVertexEnsembleArrays(false),
-  m_VertexArraysToRead(FIX_ME<<<<<<<<),
-  m_VertexFeatureArraysToRead(FIX_ME<<<<<<<<),
-  m_VertexEnsembleArraysToRead(FIX_ME<<<<<<<<)
+  m_ReadAllVertexEnsembleArrays(false)
 {
 }
 

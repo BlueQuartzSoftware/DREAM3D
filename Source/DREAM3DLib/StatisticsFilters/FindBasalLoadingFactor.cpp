@@ -17,7 +17,6 @@ FindBasalLoadingFactor::FindBasalLoadingFactor() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_LoadingDir(FIX_ME<<<<<<<<),
   m_BasalLoadingFactorArrayName(DREAM3D::FeatureData::BasalLoadingFactor),
   m_BasalLoadingFactor(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),

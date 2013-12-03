@@ -48,7 +48,7 @@
 SaveImages::SaveImages() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(FIX_ME<<<<<<<<),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0)

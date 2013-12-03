@@ -44,8 +44,8 @@
 // -----------------------------------------------------------------------------
 H5VoxelReader::H5VoxelReader() :
   AbstractFilter(),
-  m_FileName(FIX_ME<<<<<<<<),
-  m_ErrorMessage(FIX_ME<<<<<<<<)
+  m_FileName(""),
+  m_ErrorMessage("")
 {
 
 }

@@ -295,7 +295,7 @@ FindGBCD::FindGBCD() :
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_GBCDRes(9.0),
-  m_GBCDArrayNames(FIX_ME<<<<<<<<),
+  m_GBCDArrayNames(DREAM3D::EnsembleData::GBCD),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),

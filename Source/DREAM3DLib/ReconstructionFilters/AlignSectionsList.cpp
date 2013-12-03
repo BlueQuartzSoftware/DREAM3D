@@ -66,7 +66,7 @@ AlignSectionsList::AlignSectionsList() :
   AlignSections(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_InputFile(FIX_ME<<<<<<<<)
+  m_InputFile("")
 {
   setupFilterParameters();
 }

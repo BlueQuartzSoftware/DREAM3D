@@ -95,8 +95,7 @@ ScaleVolume::ScaleVolume() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_ApplyToVoxelVolume(true),
-  m_ApplyToSurfaceMesh(true),
-  m_ScaleFactor(FIX_ME<<<<<<<<)
+  m_ApplyToSurfaceMesh(true)
 {
 
   m_ScaleFactor.x = 1.0f;
@@ -142,7 +141,7 @@ void ScaleVolume::setupFilterParameters()
     option->setPropertyName("ScaleFactor");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
-//   option->setUnits("Microns");
+    //   option->setUnits("Microns");
     parameters.push_back(option);
   }
 

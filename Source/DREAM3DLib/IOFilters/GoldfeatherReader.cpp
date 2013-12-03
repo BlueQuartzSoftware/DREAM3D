@@ -71,7 +71,7 @@ GoldfeatherReader::GoldfeatherReader() :
   m_SurfaceMeshTriangleLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshTrianglesArrayName(DREAM3D::FaceData::SurfaceMeshFaces),
-  m_InputFile(FIX_ME<<<<<<<<)
+  m_InputFile("")
 {
   setupFilterParameters();
 }

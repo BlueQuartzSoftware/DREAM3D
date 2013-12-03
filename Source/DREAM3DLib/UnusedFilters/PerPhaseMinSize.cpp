@@ -55,7 +55,7 @@
 // -----------------------------------------------------------------------------
 PerPhaseMinSize::PerPhaseMinSize() :
   MinSize(),
-  m_PhaseNumber(FIX_ME<<<<<<<<),
+  m_PhaseNumber(0),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),

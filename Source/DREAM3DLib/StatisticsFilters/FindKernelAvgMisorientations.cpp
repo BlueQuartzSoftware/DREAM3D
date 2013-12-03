@@ -51,7 +51,7 @@ FindKernelAvgMisorientations::FindKernelAvgMisorientations() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_KernelSize(FIX_ME<<<<<<<<),
+  m_KernelSize(1),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),

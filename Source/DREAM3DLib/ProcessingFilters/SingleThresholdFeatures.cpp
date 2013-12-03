@@ -48,8 +48,8 @@ SingleThresholdFeatures::SingleThresholdFeatures():
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_SelectedFeatureArrayName(""),
-  m_ComparisonOperator(FIX_ME<<<<<<<<),
-  m_ComparisonValue(FIX_ME<<<<<<<<),
+  m_ComparisonOperator(0),
+  m_ComparisonValue(0.0),
   m_OutputArrayName(DREAM3D::FeatureData::GoodFeatures),
   m_Output(NULL)
 {

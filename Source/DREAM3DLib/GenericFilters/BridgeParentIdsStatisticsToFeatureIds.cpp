@@ -31,15 +31,14 @@ BridgeParentIdsStatisticsToFeatureIds::BridgeParentIdsStatisticsToFeatureIds() :
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_NumFeaturesPerParentArrayName(FIX_ME<<<<<<<<),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_CellParentIds(NULL),
   m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
   m_FeatureParentIds(NULL),
-  m_m_NumFeaturesPerParentArrayName(FIX_ME<<<<<<<<),
-  m_m_NumFeaturesPerParent(NULL),
+  m_NumFeaturesPerParentArrayName(DREAM3D::FeatureData::NumFeaturesPerParent),
+  m_NumFeaturesPerParent(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {

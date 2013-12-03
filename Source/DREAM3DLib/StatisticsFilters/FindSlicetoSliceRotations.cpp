@@ -51,14 +51,14 @@ FindSlicetoSliceRotations::FindSlicetoSliceRotations() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_SlicetoSliceRotationsFile(FIX_ME<<<<<<<<),
+  m_SlicetoSliceRotationsFile(""),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
-  m_CrystalStructuresArrayName(FIX_ME<<<<<<<<),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();

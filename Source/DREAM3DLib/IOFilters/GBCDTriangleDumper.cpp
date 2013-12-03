@@ -48,7 +48,7 @@ GBCDTriangleDumper::GBCDTriangleDumper() :
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_OutputFile(FIX_ME<<<<<<<<),
+  m_OutputFile(""),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),

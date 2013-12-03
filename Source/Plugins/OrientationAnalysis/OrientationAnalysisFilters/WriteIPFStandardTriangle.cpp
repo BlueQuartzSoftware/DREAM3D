@@ -76,7 +76,7 @@ WriteIPFStandardTriangle::WriteIPFStandardTriangle() :
   m_ImageFormat(2),
   m_ImageSize(512),
   m_ColorCorrectionFactor(1.0),
-  m_CellPhasesArrayName(FIX_ME<<<<<<<<),
+  m_CellPhasesArrayName(DREAM3D::CellData::CellPhases),
   m_CellPhases(NULL)
 {
   setupFilterParameters();

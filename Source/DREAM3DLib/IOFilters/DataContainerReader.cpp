@@ -52,8 +52,7 @@
 DataContainerReader::DataContainerReader() :
   AbstractFilter(),
   m_InputFile(""),
-  m_OverwriteExistingDataContainers(false),
-  m_DataToRead(FIX_ME<<<<<<<<)
+  m_OverwriteExistingDataContainers(false)
 {
   m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();

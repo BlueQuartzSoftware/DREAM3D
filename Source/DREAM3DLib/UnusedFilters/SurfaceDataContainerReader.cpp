@@ -80,9 +80,6 @@ SurfaceDataContainerReader::SurfaceDataContainerReader() :
   m_ReadAllFaceArrays(false),
   m_ReadAllFaceFeatureArrays(false),
   m_ReadAllFaceEnsembleArrays(false),
-  m_FaceArraysToRead(FIX_ME<<<<<<<<),
-  m_FaceFeatureArraysToRead(FIX_ME<<<<<<<<),
-  m_FaceEnsembleArraysToRead(FIX_ME<<<<<<<<)
 {
 }
 

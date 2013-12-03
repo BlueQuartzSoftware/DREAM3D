@@ -51,7 +51,6 @@ MultiThresholdFeatures::MultiThresholdFeatures() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_ComparisonInputs(FIX_ME<<<<<<<<),
   m_OutputArrayName(DREAM3D::FeatureData::GoodFeatures),
   m_Output(NULL)
 {

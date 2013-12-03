@@ -60,7 +60,6 @@ GenerateIPFColors::GenerateIPFColors() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_ReferenceDir(FIX_ME<<<<<<<<),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),

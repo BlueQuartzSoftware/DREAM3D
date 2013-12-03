@@ -68,7 +68,7 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_MisorientationTolerance(5.0f),
-  m_FeatureIdsArrayName(FIX_ME<<<<<<<<),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),

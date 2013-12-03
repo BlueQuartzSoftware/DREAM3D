@@ -51,7 +51,6 @@ M3CEntireVolume::M3CEntireVolume() :
   AbstractFilter(),
   m_SurfaceMeshEdgesArrayName(DREAM3D::CellData::SurfaceMeshEdges),
   m_SurfaceMeshInternalEdgesArrayName(DREAM3D::CellData::SurfaceMeshInternalEdges),
-  m_VoxelCoordsArrayName(FIX_ME<<<<<<<<),
   m_AddSurfaceLayer(true),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_GrainIds(NULL),

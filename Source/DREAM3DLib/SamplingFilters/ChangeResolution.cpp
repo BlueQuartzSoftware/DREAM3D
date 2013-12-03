@@ -50,8 +50,7 @@
 ChangeResolution::ChangeResolution() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_Resolution(FIX_ME<<<<<<<<)
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -137,7 +136,7 @@ void ChangeResolution::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+      VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   setErrorCondition(0);
@@ -149,8 +148,8 @@ void ChangeResolution::execute()
   }
 
   if(m->getXRes() == m_Resolution.x
-      && m->getYRes() == m_Resolution.y
-      && m->getZRes() == m_Resolution.z)
+     && m->getYRes() == m_Resolution.y
+     && m->getZRes() == m_Resolution.z)
   {
     return;
   }

@@ -59,7 +59,7 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
   m_FeaturePhases(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
-  m_CrystalStructuresArrayName(FIX_ME<<<<<<<<),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();

@@ -52,8 +52,8 @@ FindDeformationStatistics::FindDeformationStatistics() :
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_DeformationStatisticsFile(FIX_ME<<<<<<<<),
-  m_VtkOutputFile(FIX_ME<<<<<<<<),
+  m_DeformationStatisticsFile(""),
+  m_VtkOutputFile(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -86,7 +86,7 @@ FindDeformationStatistics::FindDeformationStatistics() :
   m_TJEuclideanDistances(NULL),
   m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
   m_QPEuclideanDistances(NULL),
-  m_CrystalStructuresArrayName(FIX_ME<<<<<<<<),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();

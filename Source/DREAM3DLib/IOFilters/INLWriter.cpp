@@ -62,8 +62,8 @@
 INLWriter::INLWriter() :
   FileWriter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellEnsembleAttributeMatrixName(FIX_ME<<<<<<<<),
-  m_CellAttributeMatrixName(FIX_ME<<<<<<<<),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),

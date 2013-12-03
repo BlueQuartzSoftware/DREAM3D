@@ -53,11 +53,11 @@
 FeatureDataCSVWriter::FeatureDataCSVWriter() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(FIX_ME<<<<<<<<),
-  m_CellAttributeMatrixName(FIX_ME<<<<<<<<),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FeatureDataFile(""),
   m_WriteNeighborListData(false),
-  m_Delimiter('
+  m_Delimiter(',')
 {
   setupFilterParameters();
 }

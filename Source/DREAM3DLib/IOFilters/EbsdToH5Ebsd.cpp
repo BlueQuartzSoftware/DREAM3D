@@ -63,16 +63,13 @@
 // -----------------------------------------------------------------------------
 EbsdToH5Ebsd::EbsdToH5Ebsd() :
   m_ZStartIndex(0),
-  m_OutputFile(FIX_ME<<<<<<<<),
-  m_ZStartIndex(FIX_ME<<<<<<<<),
+  m_OutputFile(""),
+  m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_ZResolution(1.0),
-  m_EbsdFileList(FIX_ME<<<<<<<<),
   m_SampleTransformationAngle(0.0),
-  m_SampleTransformationAxis(FIX_ME<<<<<<<<),
   m_EulerTransformationAngle(0.0),
-  m_EulerTransformationAxis(FIX_ME<<<<<<<<),
-  m_RefFrameZDir(FIX_ME<<<<<<<<)
+  m_RefFrameZDir(Ebsd::LowtoHigh)
 {
   m_SampleTransformationAxis.resize(3);
   m_SampleTransformationAxis[0] = 0.0;
