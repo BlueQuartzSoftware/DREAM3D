@@ -262,7 +262,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   DREAM3D_TEST_POINTER(attrMatrix.get(), ==, NULL)
 
   // Now add an AttributeMatrix to the DataContainer
-  AttributeMatrix* attrMat = m->createAttributeMatrix(getCellAttributeMatrixName());
+  AttributeMatrix* attrMat = m->createAndAddAttributeMatrix(getCellAttributeMatrixName());
   DREAM3D_TEST_POINTER(attrMat, !=, NULL)
 
   // Now create an Array and add it to the Attribute Matrix
@@ -276,8 +276,8 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   IDataArray::Pointer ida = attrMat->getAttributeArray("Test");
   DREAM3D_TEST_POINTER(ida.get(), !=, NULL);
 
-  QVector<int> dims(1, 5);
-  t = attrMat->getPrereqArray<T, AbstractFilter>(NULL, "Test", -723, 5, dims);
+  QVector<int> dims(1, 1);
+  t = attrMat->getPrereqArray<T, AbstractFilter>(NULL, "Test", -723, dims);
   DREAM3D_TEST_POINTER(t.get(), !=, NULL);
 
   // Remove the AttributeArray from the AttributeMatrix
@@ -292,7 +292,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   DREAM3D_TEST_POINTER(ida.get(), ==, NULL);
 
 
-  t = attrMat->getPrereqArray<T, AbstractFilter>(NULL, "Test", -723, 5, dims);
+  t = attrMat->getPrereqArray<T, AbstractFilter>(NULL, "Test", -723, dims);
   DREAM3D_TEST_POINTER(t.get(), ==, NULL);
 
 

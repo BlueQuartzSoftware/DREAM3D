@@ -167,7 +167,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       attributeMatrix = getAttributeMatrix(attributeMatrixName);
       if(NULL == attributeMatrix)
       {
-        AttributeMatrix* attrMat = createAttributeMatrix(attributeMatrixName);
+        AttributeMatrix* attrMat = createAndAddAttributeMatrix(attributeMatrixName);
         return attrMat;
       }
       if(filter) 
@@ -184,7 +184,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @param attrMatName
      * @return
      */
-    virtual AttributeMatrix* createAttributeMatrix(const QString& attrMatName);
+    virtual AttributeMatrix* createAndAddAttributeMatrix(const QString& attrMatName);
 
     /**
      * @brief Returns bool of whether a named array exists

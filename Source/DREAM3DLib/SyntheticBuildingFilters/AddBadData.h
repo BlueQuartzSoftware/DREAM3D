@@ -101,7 +101,7 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     AddBadData(const AddBadData&); // Copy Constructor Not Implemented
     void operator=(const AddBadData&); // Operator '=' Not Implemented

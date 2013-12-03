@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     AddOrientationNoise(const AddOrientationNoise&); // Copy Constructor Not Implemented
     void operator=(const AddOrientationNoise&); // Operator '=' Not Implemented

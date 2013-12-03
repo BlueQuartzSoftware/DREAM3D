@@ -74,7 +74,7 @@ bool DataContainer::doesAttributeMatrixExist(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrix* DataContainer::createAttributeMatrix(const QString& attrMatName)
+AttributeMatrix* DataContainer::createAndAddAttributeMatrix(const QString& attrMatName)
 {
   AttributeMatrix::Pointer attrMat = AttributeMatrix::New(attrMatName);
   addAttributeMatrix(attrMatName, attrMat);

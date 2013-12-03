@@ -103,7 +103,6 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     typename ArrayType::Pointer getPrereqArray(Filter* filter,
                                                QString attributeArrayName,
                                                int err,
-                                               int size,
                                                QVector<int> dims)
     {
       QString ss;
@@ -137,7 +136,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         NumComp *= dims[i];
       }
       // Check to make sure the AttributeArray we have is of the proper type, size and number of components
-      if(false == dataArrayCompatibility<ArrayType, Filter>(attributeArrayName, size, NumComp, filter) )
+      if(false == dataArrayCompatibility<ArrayType, Filter>(attributeArrayName, NumComp, filter) )
       {
         if(filter) 
         {
@@ -172,7 +171,6 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     typename ArrayType::Pointer createNonPrereqArray(Filter* filter,
                                                      const QString& attributeArrayName,
                                                      T initValue,
-                                                     int size,
                                                      QVector<int> dims)
     {
       typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
@@ -188,16 +186,27 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         }
         return attributeArray;
       }
-      attributeArray = ArrayType::CreateArray(size, dims, attributeArrayName);
-      attributeArray->initializeWithValues(initValue);
-      attributeArray->SetName(attributeArrayName);
-      addAttributeArray(attributeArrayName, attributeArray);
+      createAndAddAttributeArray<ArrayType, T>(attributeArrayName, initValue, dims);
+      attributeArray = getAttributeArray(attributeArrayName);
       return attributeArray;
+    }
+
+    /**
+    * @brief Creates and Adds the data for a named array
+    * @param name The name that the array will be known by
+    * @param dims The size the data on each tuple
+    */
+    template<class ArrayType, typename T>
+    void createAndAddAttributeArray(const QString& name, T initValue, QVector<int> dims)
+    {
+      attributeArray = ArrayType::CreateArray(getNumTuples(), dims, name);
+      attributeArray->initializeWithValues(initValue);
+      addAttributeArray(name, attributeArray);
     }
 
     //Get Array Size Check Func Here
     template<class ArrayType, class AbstractFilter>
-    bool dataArrayCompatibility(const QString& arrayName, size_t size, int numComp, AbstractFilter* filter)
+    bool dataArrayCompatibility(const QString& arrayName, int numComp, AbstractFilter* filter)
     {
       // First try checking by name
       IDataArray::Pointer iDataArray = getAttributeArray(arrayName);
@@ -212,12 +221,12 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         return false;
       }
       // Make sure the sizes are equal to what is being asked for
-      if (size * numComp != iDataArray->GetSize())
+      if (getNumTuples() * numComp != iDataArray->GetSize())
       {
         if (NULL != filter)
         {
           QString s = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Compoenets = %3. The currently available array "
-                                  " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((size * numComp)).arg(iDataArray->GetSize());
+                                  " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples() * numComp)).arg(iDataArray->GetSize());
           filter->setErrorCondition(-501);
           filter->addErrorMessage(filter->getHumanLabel(), s, -501);
         }
