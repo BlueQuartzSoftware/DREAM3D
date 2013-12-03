@@ -60,7 +60,6 @@ endmacro()
 
 macro(ADD_DREAM3D_TEST testname LIBRARIES)
   add_executable( ${testname} "${DREAM3DTest_SOURCE_DIR}/${testname}.cpp")
-message(STATUS "LIBRARIES: ${LIBRARIES}")
   target_link_libraries( ${testname} "${LIBRARIES}")
   set_target_properties( ${testname} PROPERTIES FOLDER Test)
   add_test(${testname} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${testname})
@@ -87,17 +86,11 @@ if(0)
 ADD_DREAM3D_TEST(RawBinaryReaderTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(StatsGenTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(PhIOTest  "DREAM3DLib")
-
 ADD_DREAM3D_TEST(QFilterParameterIOTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(AngleFileLoaderTest  "DREAM3DLib")
-
-
 ADD_DREAM3D_TEST(ManagedPointerArrayTest  "DREAM3DLib")
-
-
 ADD_DREAM3D_TEST(SyntheticTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(FilterParametersRWTest  "DREAM3DLib")
-
 ADD_DREAM3D_TEST(LambertArrayRWTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(NewDataContainerStructureTest  "DREAM3DLib")
 endif()

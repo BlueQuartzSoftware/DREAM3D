@@ -1,5 +1,7 @@
 
 
+#include <iostream>
+
 #include <QtCore/QFile>
 
 #include <QtCore/QString>
@@ -8,6 +10,165 @@
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
+
+#include "TestFileLocations.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void buildInitializerList(QString hFile, QString cppFile)
+{
+
+  // Read the header file
+  QFile h(hFile);
+  h.open(QFile::ReadOnly);
+  QString header = h.readAll();
+  h.close();
+
+  QStringList list;
+  QStringList initializerList;
+
+  list = header.split(QRegExp("\\n"));
+
+  QStringListIterator lines(list);
+  while (lines.hasNext())
+  {
+
+    QString line = lines.next();
+    // std::cout << line.toStdString() << std::endl;
+    if(line.contains(QString("DREAM3D_INSTANCE_STRING_PROPERTY")) )
+    {
+      QStringList chunks = line.split(QRegExp("\\("));
+      chunks = chunks.at(1).split(QRegExp("\\)"));
+      QString s = QString("m_") + chunks.at(0);
+      s = s.trimmed();
+      initializerList << s;
+    }
+
+    if(line.contains(QString("DREAM3D_INSTANCE_PROPERTY")) )
+    {
+      QStringList chunks = line.split(QRegExp(", "));
+      chunks = chunks.at(1).split(QRegExp("\\)"));
+      QString s = QString("m_") + chunks.at(0);
+      s = s.trimmed();
+      initializerList << s;
+    }
+
+    if(line.contains(QString("DEFINE_PTR_WEAKPTR_DATAARRAY")) )
+    {
+      QStringList chunks = line.split(QRegExp(", "));
+      chunks = chunks.at(1).split(QRegExp("\\)"));
+      QString s = QString("m_") + chunks.at(0) + QString("ArrayName");
+      initializerList << s;
+      s = QString("m_") + chunks.at(0) + "(NULL)";
+      s = s.trimmed();
+      initializerList << s;
+    }
+
+  }
+  lines = QStringListIterator(initializerList);
+  while (lines.hasNext())
+  {
+    std::cout << lines.next().toStdString() << std::endl;
+  }
+
+  // now read the source file
+  QFile source(cppFile);
+  source.open(QFile::ReadOnly);
+  QString cpp = source.readAll();
+  source.close();
+
+  QFileInfo fi(hFile);
+  QFile outSource("/tmp/" + fi.baseName() + ".cpp");
+  outSource.open(QFile::WriteOnly);
+  QTextStream stream(&outSource);
+
+
+
+
+  QString constructor = fi.baseName() + "::" + fi.baseName();
+  QStringList existinInitializerList;
+
+  list = cpp.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    stream << line << "\n";
+    if(line.contains(constructor) == true)
+    {
+      // We are in the constructor
+      line = sourceLines.next(); // Should be the super class
+      stream << line << "\n";
+      line = sourceLines.next(); // Should be the first instance variable of class
+      bool stop = false;
+      while(stop == false)
+      {
+
+        QStringList chunks = line.split(',');
+        existinInitializerList << chunks.at(0).trimmed();
+        if(chunks.size() == 1) stop = true;
+        line = sourceLines.next();
+      }
+      break;
+    }
+  }
+
+  //  lines = QStringListIterator(existinInitializerList);
+  //  while (lines.hasNext())
+  //  {
+  //    std::cout << lines.next().toStdString() << std::endl;
+  //  }
+
+  QStringList newList;
+
+  lines = QStringListIterator(initializerList);
+  while (lines.hasNext())
+  {
+    QString line = lines.next();
+    QStringList result;
+    result = existinInitializerList.filter(line + "(");
+
+    if(result.size() == 1)
+    {
+      newList << result.at(0);
+    }
+    else
+    {
+
+      if(line.contains("NULL") == false) {
+        newList << line + QString("(FIX_ME<<<<<<<<)");
+      }
+      else
+      {
+        newList << QString(line);
+      }
+    }
+  }
+  std::cout << "----------------" << std::endl;
+
+  QString outS;
+  QTextStream ss(&outS);
+
+  lines = QStringListIterator(newList);
+  while (lines.hasNext())
+  {
+    ss << "  " << lines.next();
+    if(lines.hasNext() == true) { ss << ",\n"; }
+    else { ss << "\n"; }
+  }
+
+  stream << outS;
+
+  // Finish writing the source file back out
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    stream << line << "\n";
+  }
+
+  outSource.close();
+}
 
 
 // -----------------------------------------------------------------------------
@@ -34,12 +195,12 @@ void replaceText1(QString hFile, QString cppFile)
   int hIndex = -1;
   if(index > 0)
   {
-     hIndex = header.indexOf("DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)");
-     if(hIndex < 0) // This class does not have a Feature Attribute Matrix Name
-     {
+    hIndex = header.indexOf("DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)");
+    if(hIndex < 0) // This class does not have a Feature Attribute Matrix Name
+    {
       cpp.replace(searchStr, "size_t totalFeatures = 0;");
       doReplace = true;
-     }
+    }
   }
 
 
@@ -48,12 +209,12 @@ void replaceText1(QString hFile, QString cppFile)
   hIndex = -1;
   if(index > 0)
   {
-     hIndex = header.indexOf("DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)");
-     if(hIndex < 0) // This class does not have a Ensemble Attribute Matrix Name
-     {
+    hIndex = header.indexOf("DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)");
+    if(hIndex < 0) // This class does not have a Ensemble Attribute Matrix Name
+    {
       cpp.replace(searchStr, "size_t totalEnsembles = 0;");
       doReplace = true;
-     }
+    }
   }
 
   //// WRITE THE HEADER BACK OUT TO A FILE
@@ -181,11 +342,14 @@ void scanDirIter(QDir dir)
 int main(int argc, char *argv[])
 {
 
+#if 1
   QString header = argv[1];
   QString source = argv[2];
-
-  scanDirIter(QString("/Users/mjackson/Workspace/DREAM3D_Rewrite/Source/DREAM3DLib"));
-  scanDirIter(QString("/Users/mjackson/Workspace/DREAM3D_Rewrite/Source/Plugins"));
+  buildInitializerList(header, source);
+#else
+  scanDirIter(UnitTest::DREAM3DProjDir + QString("/Source/DREAM3DLib"));
+  scanDirIter(UnitTest::DREAM3DProjDir + QString("/Source/Plugins"));
+#endif
 
   return 0;
 }
