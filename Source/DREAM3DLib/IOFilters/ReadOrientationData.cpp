@@ -142,9 +142,9 @@ void ReadOrientationData::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* amC = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* amCE = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(m_InputFile);
@@ -185,11 +185,11 @@ void ReadOrientationData::dataCheck()
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
-          amC->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, dims);
+          cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, dims);
         }
         else if (reader.getPointerType(names[i]) == Ebsd::Float)
         {
-          amC->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, dims);
+          cellAttrMat->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, dims);
         }
       }
     }
@@ -218,11 +218,11 @@ void ReadOrientationData::dataCheck()
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
-          amC->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, dims);
+          cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, dims);
         }
         else if (reader.getPointerType(names[i]) == Ebsd::Float)
         {
-          amC->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, dims);
+          cellAttrMat->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, dims);
         }
       }
     }
@@ -244,11 +244,11 @@ void ReadOrientationData::dataCheck()
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
-          amC->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, dims);
+          cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, dims);
         }
         else if (reader.getPointerType(names[i]) == Ebsd::Float)
         {
-          amC->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, dims);
+          cellAttrMat->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, dims);
         }
       }
     }
@@ -262,20 +262,20 @@ void ReadOrientationData::dataCheck()
     }
 
     QVector<int> dim(1, 3);
-    m_CellEulerAnglesPtr = amC->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dim[0] = 1;
-    m_CellPhasesPtr = amC->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_CellPhasesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellPhasesPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_CellPhasesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     typedef DataArray<unsigned int> XTalStructArrayType;
-    m_CrystalStructuresPtr = amCE->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CrystalStructuresPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dim[0] = 6;
-    m_LatticeConstantsPtr = amCE->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_LatticeConstantsArrayName, 0.0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_LatticeConstantsPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_LatticeConstantsArrayName, 0.0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
