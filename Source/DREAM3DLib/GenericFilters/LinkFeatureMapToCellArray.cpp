@@ -153,9 +153,6 @@ void LinkFeatureMapToCellArray::dataCheck()
 // -----------------------------------------------------------------------------
 void LinkFeatureMapToCellArray::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
   dataCheck();
 }
 

@@ -66,11 +66,11 @@ void buildInitializerList(QString hFile, QString cppFile)
     }
 
   }
-//  lines = QStringListIterator(initializerList);
-//  while (lines.hasNext())
-//  {
-//    std::cout << lines.next().toStdString() << std::endl;
-//  }
+  //  lines = QStringListIterator(initializerList);
+  //  while (lines.hasNext())
+  //  {
+  //    std::cout << lines.next().toStdString() << std::endl;
+  //  }
 
   // now read the source file
   QFile source(cppFile);
@@ -136,7 +136,7 @@ void buildInitializerList(QString hFile, QString cppFile)
     {
 
       if(line.contains("NULL") == false) {
-        newList << line + QString("(FIX_ME<<<<<<<<)");
+        newList << line + QString("");
       }
       else
       {
@@ -144,7 +144,7 @@ void buildInitializerList(QString hFile, QString cppFile)
       }
     }
   }
-//  std::cout << "----------------" << std::endl;
+  //  std::cout << "----------------" << std::endl;
 
   QString outS;
   QTextStream ss(&outS);
@@ -254,7 +254,7 @@ void replaceText(QString hFile, QString cppFile)
   QStringList varNames;
   QStringList typeNames;
 
-  int index = cpp.indexOf("attrMat->getPrereqArray<");
+  int index = cpp.indexOf("cellAttrMat->getPrereqArray<");
   int endIdx = 0;
   bool doReplace = false;
   while (index > 0)
@@ -268,7 +268,7 @@ void replaceText(QString hFile, QString cppFile)
     sub = sub.mid(2, endIdx-2);
     varNames << sub;
     doReplace = true;
-    index = cpp.indexOf("attrMat->getPrereqArray<", index + 1);
+    index = cpp.indexOf("cellAttrMat->getPrereqArray<", index + 1);
     //break;
   }
 
@@ -312,6 +312,120 @@ void replaceText(QString hFile, QString cppFile)
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void fixDataCheck(QString hFile, QString cppFile)
+{
+  // Read the Source File
+  QFileInfo fi(cppFile);
+  QFile source(cppFile);
+  source.open(QFile::ReadOnly);
+  QString cpp = source.readAll();
+  source.close();
+
+  QStringList list;
+  QStringList initializerList;
+
+  list = cpp.split(QRegExp("\\n"));
+
+  QString dataCheck = QString("void ") + fi.baseName() + QString("::dataCheck(");
+  QString preflight = QString("void ") + fi.baseName() + QString("::preflight()");
+
+  bool needCellAttr = false;
+  bool needFeatAttr = false;
+  bool needEnsemAttr = false;
+
+  QStringListIterator sourceLines(list);
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(dataCheck) )
+    {
+      // We are in the constructor
+      bool stop = false;
+      while(stop == false)
+      {
+        line = sourceLines.next();
+        if(line.contains("cellAttrMat->"))
+        {
+          needCellAttr = true;
+        }
+        if(line.contains("featureAttrMat->"))
+        {
+          needFeatAttr = true;
+        }
+        if(line.contains("ensemAttrMat->"))
+        {
+          needEnsemAttr = true;
+        }
+
+        if(line.contains(preflight)) { stop = true; }
+        if(sourceLines.hasNext() == false) { stop = true; }
+      }
+      break;
+    }
+  }
+
+if (!needCellAttr && !needFeatAttr && !needEnsemAttr) { return; }
+  qDebug("Updating %s", qPrintable(cppFile));
+
+  QFile fout(cppFile);
+  fout.open(QFile::WriteOnly);
+  QTextStream out(&fout);
+
+
+  sourceLines = QStringListIterator(list);
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(dataCheck) )
+    {
+      out << line << "\n";
+      // We are in the constructor
+      bool stop = false;
+      while(stop == false)
+      {
+        line = sourceLines.next();
+        if(line.contains("VolumeDataContainer* m = getDataContainerArray()"))
+        {
+          out << line << "\n";
+          line = sourceLines.next();
+          out << line << "\n";
+          if(needCellAttr)
+          {
+            out << "  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);\n";
+            out << "  if(getErrorCondition() < 0) { return; }\n";
+          }
+          if(needFeatAttr)
+          {
+            out << "  AttributeMatrix* featureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -302);\n";
+            out << "  if(getErrorCondition() < 0) { return; }\n";
+          }
+          if(needEnsemAttr)
+          {
+            out << "  AttributeMatrix* ensemAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);\n";
+            out << "  if(getErrorCondition() < 0) { return; }\n";
+          }
+          stop = true;
+        }
+        else
+        {
+          out << line << "\n";
+        }
+        if(line.contains(preflight)) { out << line << "\n"; stop = true; }
+
+      }
+    }
+    else
+    {
+      if (sourceLines.hasNext()) out << line << "\n";
+    }
+
+  }
+
+  fout.close();
+}
 
 
 void scanDirIter(QDir dir)
@@ -325,11 +439,11 @@ void scanDirIter(QDir dir)
       QString filename = iterator.fileName();
       if (filename.endsWith(".cpp") )
       {
-        qDebug("Found %s matching pattern.", qPrintable(filename));
+        //qDebug("Found %s matching pattern.", qPrintable(filename));
         QFileInfo fi(iterator.filePath());
         QString header = fi.path() + "/" + fi.baseName() + ".h";
         QString source = iterator.filePath();
-        buildInitializerList(header, source);
+        fixDataCheck(header, source);
       }
     }
   }
