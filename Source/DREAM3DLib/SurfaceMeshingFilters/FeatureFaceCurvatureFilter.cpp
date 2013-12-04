@@ -174,7 +174,7 @@ int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FeatureFaceCurvatureFilter::dataCheck()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
@@ -241,7 +241,7 @@ void FeatureFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t
 // -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

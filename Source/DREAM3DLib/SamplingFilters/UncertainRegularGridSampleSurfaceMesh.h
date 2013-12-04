@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT UncertainRegularGridSampleSurfaceMesh : public SampleSur
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     virtual VertexArray::Pointer generate_points();
     virtual void assign_points(Int32ArrayType::Pointer iArray);

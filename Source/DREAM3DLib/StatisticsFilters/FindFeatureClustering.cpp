@@ -62,7 +62,7 @@ int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindFeatureClustering::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindFeatureClustering::dataCheck()
 {
   setErrorCondition(0);
 
@@ -124,7 +124,7 @@ void FindFeatureClustering::dataCheck(bool preflight, size_t voxels, size_t feat
 void FindFeatureClustering::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 // -----------------------------------------------------------------------------
 //

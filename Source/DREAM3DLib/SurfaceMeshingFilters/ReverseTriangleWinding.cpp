@@ -219,7 +219,7 @@ int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void ReverseTriangleWinding::dataCheck()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
@@ -245,7 +245,7 @@ void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fea
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT FindSurfaceFeatures : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindSurfaceFeatures(const FindSurfaceFeatures&); // Copy Constructor Not Implemented
     void operator=(const FindSurfaceFeatures&); // Operator '=' Not Implemented

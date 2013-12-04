@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
   protected:
     VertexDataContainerReader();
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     int gatherData(bool preflight);
 

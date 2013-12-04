@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     unsigned long long int Seed;
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     MergeTwins(const MergeTwins&); // Copy Constructor Not Implemented

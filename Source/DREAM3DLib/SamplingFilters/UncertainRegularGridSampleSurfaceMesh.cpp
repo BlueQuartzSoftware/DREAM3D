@@ -154,7 +154,7 @@ int UncertainRegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UncertainRegularGridSampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 {
   setErrorCondition(0);
 

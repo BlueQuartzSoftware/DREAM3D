@@ -191,7 +191,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void CropVolume::dataCheck()
 {
   setErrorCondition(0);
 
@@ -206,11 +206,16 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t features, size_
   }
   if (m_RenumberFeatures == true)
   {
+    AttributeMatrix* amC = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+    if(getErrorCondition() < 0) { return; }
+    AttributeMatrix* amCF = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+    if(getErrorCondition() < 0) { return; }
+
     QVector<int> dims(1, 1);
-    m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_FeatureIdsPtr = amC->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    m_ActivePtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_CellFeatureAttributeMatrixName,  m_ActiveArrayName, true, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_ActivePtr = amCF->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this,  m_ActiveArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -222,13 +227,11 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t features, size_
 // -----------------------------------------------------------------------------
 void CropVolume::preflight()
 {
-  dataCheck(true, 1, 1, 1);
-
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
   setErrorCondition(0);
+
+  dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if (getXMax() < getXMin())
   {
@@ -304,16 +307,11 @@ void CropVolume::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  dataCheck();
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, 0);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
 
   size_t udims[3] =
   { 0, 0, 0 };
@@ -411,10 +409,8 @@ void CropVolume::execute()
       notifyStatusMessage("Completed");
       return;
     }
-    size_t totalEnsembles = 0;
-    dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
 
-
+    dataCheck();
 
     // Find the unique set of feature ids
     for (size_t i = 1; i < totalFeatures; ++i)

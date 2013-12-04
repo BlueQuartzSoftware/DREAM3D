@@ -93,7 +93,7 @@ SurfaceDataContainerReader::~SurfaceDataContainerReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void SurfaceDataContainerReader::dataCheck()
 {
   setErrorCondition(0);
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
@@ -134,7 +134,7 @@ void SurfaceDataContainerReader::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

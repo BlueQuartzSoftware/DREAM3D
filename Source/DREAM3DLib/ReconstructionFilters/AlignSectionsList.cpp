@@ -123,7 +123,7 @@ int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void AlignSectionsList::dataCheck()
 {
   setErrorCondition(0);
 
@@ -143,7 +143,7 @@ void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t features
 void AlignSectionsList::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -155,7 +155,7 @@ void AlignSectionsList::execute()
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
-  dataCheck(false, 0, 0, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

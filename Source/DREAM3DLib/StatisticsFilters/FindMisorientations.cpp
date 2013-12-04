@@ -96,7 +96,7 @@ int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindMisorientations::dataCheck()
 {
   setErrorCondition(0);
 
@@ -160,7 +160,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t featur
 void FindMisorientations::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 // -----------------------------------------------------------------------------
 //

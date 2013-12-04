@@ -84,7 +84,7 @@ int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBasalLoadingFactor::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindBasalLoadingFactor::dataCheck()
 {
   setErrorCondition(0);
 
@@ -118,7 +118,7 @@ void FindBasalLoadingFactor::dataCheck(bool preflight, size_t voxels, size_t fea
 void FindBasalLoadingFactor::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

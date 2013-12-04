@@ -109,7 +109,7 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     BadDataNeighborOrientationCheck(const BadDataNeighborOrientationCheck&); // Copy Constructor Not Implemented

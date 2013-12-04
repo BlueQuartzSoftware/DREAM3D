@@ -113,11 +113,13 @@ int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void AlignSectionsFeature::dataCheck()
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
@@ -128,7 +130,7 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t featu
   }
 
   QVector<int> dims(1 , 1);
-  m_GoodVoxelsPtr = attrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -303, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = attrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -138,8 +140,7 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t featu
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::preflight()
 {
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -148,15 +149,8 @@ void AlignSectionsFeature::preflight()
 void AlignSectionsFeature::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, 0, 0);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+  dataCheck();
 
   AlignSections::execute();
 

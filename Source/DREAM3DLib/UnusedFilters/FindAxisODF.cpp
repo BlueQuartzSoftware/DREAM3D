@@ -104,7 +104,7 @@ int FindAxisODF::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindAxisODF::dataCheck()
 {
   setErrorCondition(0);
 
@@ -163,7 +163,7 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t features, size
 // -----------------------------------------------------------------------------
 void FindAxisODF::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

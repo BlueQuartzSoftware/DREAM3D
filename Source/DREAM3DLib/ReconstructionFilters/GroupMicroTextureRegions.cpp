@@ -158,7 +158,7 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void GroupMicroTextureRegions::dataCheck()
 {
   setErrorCondition(0);
 
@@ -239,7 +239,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

@@ -123,7 +123,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented

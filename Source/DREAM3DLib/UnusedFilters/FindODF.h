@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
 
     StatsDataArray* m_StatsDataArray;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindODF(const FindODF&); // Copy Constructor Not Implemented
     void operator=(const FindODF&); // Operator '=' Not Implemented

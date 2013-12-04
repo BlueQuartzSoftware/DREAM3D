@@ -95,7 +95,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     int writeMetaInfo(const QString& hdfPath, int64_t volDims[3],

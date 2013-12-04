@@ -118,7 +118,7 @@ int Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Hex2SqrConverter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void Hex2SqrConverter::dataCheck()
 {
   setErrorCondition(0);
 
@@ -137,7 +137,7 @@ void Hex2SqrConverter::dataCheck(bool preflight, size_t voxels, size_t features,
 // -----------------------------------------------------------------------------
 void Hex2SqrConverter::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

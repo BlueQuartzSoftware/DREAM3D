@@ -82,7 +82,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWri
   protected:
     SurfaceDataContainerWriter();
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     virtual void writeXdmfMeshStructure();
     virtual void writeXdmfAttributeData(const QString& groupName, IDataArray::Pointer array, const QString& centering);

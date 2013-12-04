@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     void find_boundingboxfeatures();
     void find_boundingboxfeatures2D();

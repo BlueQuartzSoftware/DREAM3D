@@ -109,7 +109,7 @@ int AdjustVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void AdjustVolume::dataCheck()
 {
   setErrorCondition(0);
 
@@ -130,7 +130,7 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t features, siz
 // -----------------------------------------------------------------------------
 void AdjustVolume::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

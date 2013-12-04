@@ -123,7 +123,7 @@ int FindKernelAvgMisorientations::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindKernelAvgMisorientations::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindKernelAvgMisorientations::dataCheck()
 {
   setErrorCondition(0);
 
@@ -160,7 +160,7 @@ void FindKernelAvgMisorientations::dataCheck(bool preflight, size_t voxels, size
 void FindKernelAvgMisorientations::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

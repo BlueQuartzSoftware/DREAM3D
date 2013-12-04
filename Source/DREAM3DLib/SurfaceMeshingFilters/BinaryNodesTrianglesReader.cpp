@@ -122,9 +122,9 @@ int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void BinaryNodesTrianglesReader::dataCheck()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
+  SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
   if (getBinaryNodesFile().isEmpty() == true)
@@ -149,16 +149,7 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::preflight()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
-  {
-    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
-    sdc->setName(getSurfaceDataContainerName());
-    getDataContainerArray()->pushBack(sdc);
-    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -170,17 +161,8 @@ void BinaryNodesTrianglesReader::execute()
   QString ss;
   setErrorCondition(err);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
-  {
-    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
-    sdc->setName(getSurfaceDataContainerName());
-    getDataContainerArray()->pushBack(sdc);
-    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  }
-
   /* Make sure everything is in place */
-  dataCheck(false, 0, 0, 0);
+  dataCheck();
 
   /* Place all your code to execute your filter here. */
   err = read();

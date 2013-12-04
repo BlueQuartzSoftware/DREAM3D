@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT FindFeatureClustering : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
     NeighborList<float>* m_ClusteringList;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindFeatureClustering(const FindFeatureClustering&); // Copy Constructor Not Implemented
     void operator=(const FindFeatureClustering&); // Operator '=' Not Implemented

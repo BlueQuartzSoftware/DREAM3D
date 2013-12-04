@@ -131,7 +131,7 @@ class ImportImageStack : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
   private:
     uint8_t* m_ImageData;

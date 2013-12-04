@@ -106,7 +106,7 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     NeighborOrientationCorrelation(const NeighborOrientationCorrelation&); // Copy Constructor Not Implemented

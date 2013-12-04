@@ -119,7 +119,7 @@ int MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void MinNeighbors::dataCheck()
 {
   setErrorCondition(0);
 
@@ -147,7 +147,7 @@ void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t features, siz
 void MinNeighbors::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
   renumber_features->setObservers(this->getObservers());

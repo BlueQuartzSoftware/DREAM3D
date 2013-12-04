@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
 
     CompareFunctor* m_Compare;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     ScalarSegmentFeatures(const ScalarSegmentFeatures&); // Copy Constructor Not Implemented

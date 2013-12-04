@@ -132,7 +132,7 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void AlignSections::dataCheck()
 {
   setErrorCondition(0);
 
@@ -153,7 +153,7 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t features, si
 void AlignSections::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -168,7 +168,7 @@ void AlignSections::execute()
 
   setErrorCondition(0);
 
-  dataCheck(false, 0, 0, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

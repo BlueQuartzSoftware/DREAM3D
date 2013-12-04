@@ -158,7 +158,7 @@ int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FlattenImage::dataCheck()
 {
   setErrorCondition(0);
 
@@ -192,7 +192,7 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t features, siz
 void FlattenImage::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

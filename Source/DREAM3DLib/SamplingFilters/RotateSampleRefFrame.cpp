@@ -232,7 +232,7 @@ int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void RotateSampleRefFrame::dataCheck()
 {
   setErrorCondition(0);
   QString ss;
@@ -243,7 +243,7 @@ void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t featu
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);

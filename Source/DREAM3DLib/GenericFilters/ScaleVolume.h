@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     /**
      * @brief updateSurfaceMesh This method does the actual updating of the meesh coordinates

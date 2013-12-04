@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
 
     unsigned long long int Seed;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     AlignSectionsMutualInformation(const AlignSectionsMutualInformation&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsMutualInformation&); // Operator '=' Not Implemented

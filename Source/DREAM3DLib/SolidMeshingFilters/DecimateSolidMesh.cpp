@@ -63,7 +63,7 @@ DecimateSolidMesh::~DecimateSolidMesh()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DecimateSolidMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void DecimateSolidMesh::dataCheck()
 {
 
   setErrorCondition(0);
@@ -119,7 +119,7 @@ int DecimateSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void DecimateSolidMesh::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

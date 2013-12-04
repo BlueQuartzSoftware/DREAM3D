@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
     QVector<int> gsizes;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     AdjustVolume(const AdjustVolume&); // Copy Constructor Not Implemented
     void operator=(const AdjustVolume&); // Operator '=' Not Implemented

@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT RenumberFeatures : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     RenumberFeatures(const RenumberFeatures&); // Copy Constructor Not Implemented
     void operator=(const RenumberFeatures&); // Operator '=' Not Implemented

@@ -67,7 +67,7 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     BridgeParentIdsStatisticsToFeatureIds(const BridgeParentIdsStatisticsToFeatureIds&); // Copy Constructor Not Implemented

@@ -96,7 +96,7 @@ int VtkGrainIdWriter::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkGrainIdWriter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void VtkGrainIdWriter::dataCheck()
 {
   setErrorCondition(0);
 
@@ -114,7 +114,7 @@ void VtkGrainIdWriter::dataCheck(bool preflight, size_t voxels, size_t features,
 // -----------------------------------------------------------------------------
 void VtkGrainIdWriter::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

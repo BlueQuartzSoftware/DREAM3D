@@ -113,7 +113,7 @@ int RenameFeatureArray::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameFeatureArray::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void RenameFeatureArray::dataCheck()
 {
   setErrorCondition(0);
 
@@ -143,7 +143,7 @@ void RenameFeatureArray::dataCheck(bool preflight, size_t voxels, size_t feature
 void RenameFeatureArray::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 

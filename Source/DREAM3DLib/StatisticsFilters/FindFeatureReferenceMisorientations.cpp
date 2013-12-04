@@ -133,7 +133,7 @@ int FindFeatureReferenceMisorientations::writeFilterParameters(AbstractFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindFeatureReferenceMisorientations::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindFeatureReferenceMisorientations::dataCheck()
 {
   setErrorCondition(0);
 
@@ -186,7 +186,7 @@ void FindFeatureReferenceMisorientations::dataCheck(bool preflight, size_t voxel
 void FindFeatureReferenceMisorientations::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

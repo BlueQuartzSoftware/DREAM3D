@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceVoxelFractions)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindSurfaceVoxelFractions(const FindSurfaceVoxelFractions&); // Copy Constructor Not Implemented
     void operator=(const FindSurfaceVoxelFractions&); // Operator '=' Not Implemented

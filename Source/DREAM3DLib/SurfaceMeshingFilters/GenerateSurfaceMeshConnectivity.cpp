@@ -133,7 +133,7 @@ int GenerateSurfaceMeshConnectivity::writeFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void GenerateSurfaceMeshConnectivity::dataCheck()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
@@ -166,7 +166,7 @@ void GenerateSurfaceMeshConnectivity::preflight()
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

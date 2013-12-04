@@ -88,7 +88,7 @@ int FindFeaturePhases::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindFeaturePhases::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindFeaturePhases::dataCheck()
 {
   setErrorCondition(0);
 
@@ -116,7 +116,7 @@ void FindFeaturePhases::dataCheck(bool preflight, size_t voxels, size_t features
 void FindFeaturePhases::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

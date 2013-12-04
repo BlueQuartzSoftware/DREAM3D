@@ -141,7 +141,7 @@ int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinSize::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void MinSize::dataCheck()
 {
   setErrorCondition(0);
 
@@ -169,7 +169,7 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
 void MinSize::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
   renumber_features->setObservers(this->getObservers());

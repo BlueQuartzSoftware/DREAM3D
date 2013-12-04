@@ -112,7 +112,7 @@ int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindLargestCrossSections::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindLargestCrossSections::dataCheck()
 {
   setErrorCondition(0);
 
@@ -135,7 +135,7 @@ void FindLargestCrossSections::dataCheck(bool preflight, size_t voxels, size_t f
 void FindLargestCrossSections::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 // -----------------------------------------------------------------------------
 //

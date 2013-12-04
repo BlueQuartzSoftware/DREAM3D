@@ -274,7 +274,7 @@ int FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindEuclideanDistMap::dataCheck()
 {
   setErrorCondition(0);
 
@@ -308,7 +308,7 @@ void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t featu
 void FindEuclideanDistMap::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

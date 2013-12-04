@@ -109,7 +109,7 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     CropVolume(const CropVolume&); // Copy Constructor Not Implemented
     void operator=(const CropVolume&); // Operator '=' Not Implemented

@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    virtual void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    virtual void dataCheck();
 
   protected:
     MinSize();

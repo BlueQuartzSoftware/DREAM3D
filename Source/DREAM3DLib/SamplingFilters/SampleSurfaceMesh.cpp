@@ -160,7 +160,7 @@ int SampleSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void SampleSurfaceMesh::dataCheck()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }

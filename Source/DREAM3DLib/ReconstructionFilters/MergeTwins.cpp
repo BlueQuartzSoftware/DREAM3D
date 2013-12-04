@@ -158,7 +158,7 @@ int MergeTwins::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void MergeTwins::dataCheck()
 {
   setErrorCondition(0);
 
@@ -211,7 +211,7 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t features, size_
 void MergeTwins::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

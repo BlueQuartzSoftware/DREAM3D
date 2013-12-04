@@ -85,7 +85,7 @@ int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindBoundingBoxFeatures::dataCheck()
 {
   setErrorCondition(0);
 
@@ -113,7 +113,7 @@ void FindBoundingBoxFeatures::dataCheck(bool preflight, size_t voxels, size_t fe
 void FindBoundingBoxFeatures::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 // -----------------------------------------------------------------------------
 //

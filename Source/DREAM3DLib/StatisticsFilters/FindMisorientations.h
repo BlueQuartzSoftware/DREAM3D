@@ -115,7 +115,7 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindMisorientations(const FindMisorientations&); // Copy Constructor Not Implemented
     void operator=(const FindMisorientations&); // Operator '=' Not Implemented

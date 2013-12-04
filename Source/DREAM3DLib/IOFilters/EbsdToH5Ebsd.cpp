@@ -64,7 +64,6 @@
 EbsdToH5Ebsd::EbsdToH5Ebsd() :
   m_ZStartIndex(0),
   m_OutputFile(""),
-  m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_ZResolution(1.0),
   m_SampleTransformationAngle(0.0),

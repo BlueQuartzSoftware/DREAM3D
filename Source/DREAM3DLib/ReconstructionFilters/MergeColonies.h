@@ -118,7 +118,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     MergeColonies(const MergeColonies&); // Copy Constructor Not Implemented

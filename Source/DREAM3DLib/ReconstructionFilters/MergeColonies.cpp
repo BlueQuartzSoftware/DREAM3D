@@ -239,7 +239,7 @@ int MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void MergeColonies::dataCheck()
 {
   setErrorCondition(0);
 
@@ -300,7 +300,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t features, si
 void MergeColonies::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

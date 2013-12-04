@@ -92,7 +92,7 @@ class DREAM3DLib_EXPORT CropVolumePipeline : public AbstractFilter
 
 
   private:
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     CropVolumePipeline(const CropVolumePipeline&); // Copy Constructor Not Implemented
     void operator=(const CropVolumePipeline&); // Operator '=' Not Implemented

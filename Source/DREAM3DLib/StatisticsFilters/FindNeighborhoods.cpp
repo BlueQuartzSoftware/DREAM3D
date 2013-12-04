@@ -117,7 +117,7 @@ int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindNeighborhoods::dataCheck()
 {
   setErrorCondition(0);
 
@@ -181,7 +181,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t features
 void FindNeighborhoods::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 // -----------------------------------------------------------------------------
 //

@@ -222,7 +222,7 @@ void ArraySelectionExample::setVertexSelectedArrayNames(QSet<QString> selectedVe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void ArraySelectionExample::dataCheck()
 {
   setErrorCondition(0);
 
@@ -236,7 +236,7 @@ void ArraySelectionExample::dataCheck(bool preflight, size_t voxels, size_t feat
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

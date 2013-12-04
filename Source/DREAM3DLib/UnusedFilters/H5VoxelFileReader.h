@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT H5VoxelFileReader : public FileReader
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     H5VoxelFileReader(const H5VoxelFileReader&); // Copy Constructor Not Implemented
     void operator=(const H5VoxelFileReader&); // Operator '=' Not Implemented

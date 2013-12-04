@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
 
     float boundbox[7];
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     FindRadialDist(const FindRadialDist&); // Copy Constructor Not Implemented

@@ -88,7 +88,7 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
 
     // We over ride this method because we need to change the functionality
     virtual void remove_smallfeatures();
-    virtual void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    virtual void dataCheck();
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)

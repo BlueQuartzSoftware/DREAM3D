@@ -133,7 +133,7 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     NeighborList<int>* m_NeighborList;
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindSlipTransmissionMetrics(const FindSlipTransmissionMetrics&); // Copy Constructor Not Implemented
     void operator=(const FindSlipTransmissionMetrics&); // Operator '=' Not Implemented

@@ -104,7 +104,7 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindNeighbors(const FindNeighbors&); // Copy Constructor Not Implemented
     void operator=(const FindNeighbors&); // Operator '=' Not Implemented

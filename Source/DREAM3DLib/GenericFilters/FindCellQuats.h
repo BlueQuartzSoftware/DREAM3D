@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindCellQuats(const FindCellQuats&); // Copy Constructor Not Implemented
     void operator=(const FindCellQuats&); // Operator '=' Not Implemented

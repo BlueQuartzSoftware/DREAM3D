@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, TJEuclideanDistances)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, QPEuclideanDistances)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented

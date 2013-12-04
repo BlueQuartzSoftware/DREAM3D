@@ -180,7 +180,7 @@ int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void AdjustVolumeOrigin::dataCheck()
 {
   setErrorCondition(0);
 
@@ -224,7 +224,7 @@ void AdjustVolumeOrigin::preflight()
   }
   if(NULL != sm && NULL != m)
   {
-    dataCheck(true, 1, 1, 1);
+    dataCheck();
   }
 }
 

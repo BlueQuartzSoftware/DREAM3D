@@ -120,7 +120,7 @@ int FitCorrelatedFeatureData::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FitCorrelatedFeatureData::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FitCorrelatedFeatureData::dataCheck()
 {
   setErrorCondition(0);
 
@@ -152,7 +152,7 @@ void FitCorrelatedFeatureData::dataCheck(bool preflight, size_t voxels, size_t f
 void FitCorrelatedFeatureData::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

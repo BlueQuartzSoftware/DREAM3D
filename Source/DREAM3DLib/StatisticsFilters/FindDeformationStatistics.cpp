@@ -148,7 +148,7 @@ int FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindDeformationStatistics::dataCheck()
 {
   setErrorCondition(0);
 

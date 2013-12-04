@@ -152,7 +152,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 
     QVector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     GenerateEnsembleStatistics(const GenerateEnsembleStatistics&); // Copy Constructor Not Implemented
     void operator=(const GenerateEnsembleStatistics&); // Operator '=' Not Implemented

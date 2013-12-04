@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
     QVector<QVector<int> > voxellists;
     QVector<int> nuclei;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     FillBadData(const FillBadData&); // Copy Constructor Not Implemented

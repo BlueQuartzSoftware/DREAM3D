@@ -121,7 +121,7 @@ class DREAM3DLib_EXPORT SegmentBetaGrains : public SegmentGrains
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     int check_for_burgers(float betaQuat[5], float alphaQuat[5]);
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     SegmentBetaGrains(const SegmentBetaGrains&); // Copy Constructor Not Implemented

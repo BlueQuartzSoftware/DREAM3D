@@ -144,7 +144,7 @@ int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void TriangleCentroidFilter::dataCheck()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
@@ -177,7 +177,7 @@ void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fea
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

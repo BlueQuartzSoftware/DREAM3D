@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
     QVector<QVector<int> > voxellists;
     QVector<int> nuclei;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     OpenCloseCoordinationNumber(const OpenCloseCoordinationNumber&); // Copy Constructor Not Implemented
     void operator=(const OpenCloseCoordinationNumber&); // Operator '=' Not Implemented

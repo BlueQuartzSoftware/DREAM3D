@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT GenerateUniqueEdges : public SurfaceMeshFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
   private:
     int32_t* m_SurfaceMeshUniqueEdges;

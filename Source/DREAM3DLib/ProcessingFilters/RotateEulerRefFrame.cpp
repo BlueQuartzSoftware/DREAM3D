@@ -185,7 +185,7 @@ int RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void RotateEulerRefFrame::dataCheck()
 {
   setErrorCondition(0);
 
@@ -210,7 +210,7 @@ void RotateEulerRefFrame::dataCheck(bool preflight, size_t voxels, size_t featur
 void RotateEulerRefFrame::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

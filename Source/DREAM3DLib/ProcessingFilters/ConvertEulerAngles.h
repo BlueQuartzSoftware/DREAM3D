@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT ConvertEulerAngles : public AbstractFilter
   protected:
     ConvertEulerAngles();
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)

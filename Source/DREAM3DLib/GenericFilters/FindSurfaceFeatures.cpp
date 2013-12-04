@@ -83,7 +83,7 @@ int FindSurfaceFeatures::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSurfaceFeatures::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindSurfaceFeatures::dataCheck()
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FindSurfaceFeatures>(this, getDataContainerName(), false);
@@ -106,7 +106,7 @@ void FindSurfaceFeatures::dataCheck(bool preflight, size_t voxels, size_t featur
 // -----------------------------------------------------------------------------
 void FindSurfaceFeatures::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

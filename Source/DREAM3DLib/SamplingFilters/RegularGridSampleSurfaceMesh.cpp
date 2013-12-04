@@ -143,7 +143,7 @@ int RegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularGridSampleSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void RegularGridSampleSurfaceMesh::dataCheck()
 {
   setErrorCondition(0);
 

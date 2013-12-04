@@ -86,7 +86,7 @@ int UpdateCellQuats::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UpdateCellQuats::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void UpdateCellQuats::dataCheck()
 {
   setErrorCondition(0);
 
@@ -111,7 +111,7 @@ void UpdateCellQuats::dataCheck(bool preflight, size_t voxels, size_t features, 
 void UpdateCellQuats::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

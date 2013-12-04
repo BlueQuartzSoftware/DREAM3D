@@ -111,7 +111,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
     NeighborList<int>* m_NeighborhoodList;
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
     void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented

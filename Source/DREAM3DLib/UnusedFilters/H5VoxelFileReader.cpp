@@ -112,7 +112,7 @@ int H5VoxelFileReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void H5VoxelFileReader::dataCheck()
 {
   setErrorCondition(0);
 
@@ -209,7 +209,7 @@ void H5VoxelFileReader::preflight()
     m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
   }
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

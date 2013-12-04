@@ -143,7 +143,7 @@ class CreateVolumeDataContainer : public AbstractFilter
     */
     virtual void execute()
     {
-      dataCheck(true, 1, 1, 1);
+      dataCheck();
     }
 
     /**
@@ -152,7 +152,7 @@ class CreateVolumeDataContainer : public AbstractFilter
     */
     virtual void preflight()
     {
-      dataCheck(true, 1, 1, 1);
+      dataCheck();
     }
 
     void readFilterParameters(AbstractFilterParametersReader* reader, int index) {
@@ -178,7 +178,7 @@ class CreateVolumeDataContainer : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+    void dataCheck()
     {
       VolumeDataContainer::Pointer m = VolumeDataContainer::New();
       m->setName(DREAM3D::Defaults::VolumeDataContainerName);

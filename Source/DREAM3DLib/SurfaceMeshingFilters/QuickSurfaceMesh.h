@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     QuickSurfaceMesh(const QuickSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const QuickSurfaceMesh&); // Operator '=' Not Implemented

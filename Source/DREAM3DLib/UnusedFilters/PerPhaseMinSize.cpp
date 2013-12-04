@@ -126,7 +126,7 @@ int PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerPhaseMinSize::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void PerPhaseMinSize::dataCheck()
 {
   setErrorCondition(0);
 
@@ -164,7 +164,7 @@ void PerPhaseMinSize::preflight()
   }
 
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
   renumber_features->setObservers(this->getObservers());

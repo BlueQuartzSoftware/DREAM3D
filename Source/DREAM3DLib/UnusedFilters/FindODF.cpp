@@ -98,7 +98,7 @@ int FindODF::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindODF::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindODF::dataCheck()
 {
   setErrorCondition(0);
 
@@ -166,7 +166,7 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t features, size_t e
 // -----------------------------------------------------------------------------
 void FindODF::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 // -----------------------------------------------------------------------------
 //

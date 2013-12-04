@@ -97,7 +97,7 @@ int IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void IdentifySample::dataCheck()
 {
   setErrorCondition(0);
 
@@ -123,7 +123,7 @@ void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t features, s
 void IdentifySample::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

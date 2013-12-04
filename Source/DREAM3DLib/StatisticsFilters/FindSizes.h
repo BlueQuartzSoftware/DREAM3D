@@ -101,7 +101,7 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumCells)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindSizes(const FindSizes&); // Copy Constructor Not Implemented
     void operator=(const FindSizes&); // Operator '=' Not Implemented

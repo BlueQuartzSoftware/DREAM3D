@@ -94,7 +94,7 @@ int FindCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindCellQuats::dataCheck()
 {
   setErrorCondition(0);
 
@@ -130,7 +130,7 @@ void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t features, si
 void FindCellQuats::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT CreateFeatureArrayFromCellArray : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)

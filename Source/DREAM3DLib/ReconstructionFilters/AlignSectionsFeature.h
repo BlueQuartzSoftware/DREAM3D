@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     AlignSectionsFeature(const AlignSectionsFeature&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsFeature&); // Operator '=' Not Implemented

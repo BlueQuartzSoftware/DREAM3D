@@ -146,7 +146,7 @@ int SingleThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void SingleThresholdCells::dataCheck()
 {
   setErrorCondition(0);
 
@@ -172,7 +172,7 @@ void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t featu
 void SingleThresholdCells::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

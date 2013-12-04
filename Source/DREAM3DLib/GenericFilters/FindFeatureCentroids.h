@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT FindFeatureCentroids : public AbstractFilter
     DECLARE_WRAPPED_ARRAY(featurecenters, m_FeatureCenters, float) // N x 5 Array
 
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindFeatureCentroids(const FindFeatureCentroids&); // Copy Constructor Not Implemented
     void operator=(const FindFeatureCentroids&); // Operator '=' Not Implemented

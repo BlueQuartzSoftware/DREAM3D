@@ -126,7 +126,7 @@ int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void NeighborCICorrelation::dataCheck()
 {
   setErrorCondition(0);
 
@@ -146,7 +146,7 @@ void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t feat
 void NeighborCICorrelation::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     AlignSectionsFeatureCentroid(const AlignSectionsFeatureCentroid&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsFeatureCentroid&); // Operator '=' Not Implemented

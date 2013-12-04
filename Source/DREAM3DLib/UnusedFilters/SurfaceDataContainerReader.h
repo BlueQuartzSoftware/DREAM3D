@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
   protected:
     SurfaceDataContainerReader();
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     int gatherData(bool preflight);
 

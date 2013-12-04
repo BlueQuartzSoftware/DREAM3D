@@ -69,15 +69,19 @@ int CreateFeatureArrayFromCellArray::writeFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CreateFeatureArrayFromCellArray::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void CreateFeatureArrayFromCellArray::dataCheck()
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* amC = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* amCF = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
-  m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = amC->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -95,8 +99,7 @@ void CreateFeatureArrayFromCellArray::dataCheck(bool preflight, size_t voxels, s
 // -----------------------------------------------------------------------------
 void CreateFeatureArrayFromCellArray::preflight()
 {
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 
@@ -107,8 +110,6 @@ void CreateFeatureArrayFromCellArray::preflight()
 template<typename T>
 IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int64_t features, int32_t* featureIds)
 {
-
-
   QString featureArrayName = inputData->GetName();
 
   DataArray<T>* cell = DataArray<T>::SafePointerDownCast(inputData.get());
@@ -147,22 +148,15 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int64_t features
 // -----------------------------------------------------------------------------
 void CreateFeatureArrayFromCellArray::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+  dataCheck();
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, 0);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayName);
   if (NULL == inputData.get())
   {
-
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
     setErrorCondition(-11001);
     notifyErrorMessage(ss, getErrorCondition());

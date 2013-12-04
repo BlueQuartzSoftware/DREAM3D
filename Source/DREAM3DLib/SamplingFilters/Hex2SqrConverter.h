@@ -111,7 +111,7 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
   protected:
     Hex2SqrConverter();
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
   private:
     /** @brief Modifies a single line of the header section of the TSL .ang file if necessary

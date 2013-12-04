@@ -80,7 +80,7 @@ class DREAM3DLib_EXPORT FindFeatureNeighborCAxisMisalignments : public AbstractF
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     FindFeatureNeighborCAxisMisalignments(const FindFeatureNeighborCAxisMisalignments&); // Copy Constructor Not Implemented
     void operator=(const FindFeatureNeighborCAxisMisalignments&); // Operator '=' Not Implemented

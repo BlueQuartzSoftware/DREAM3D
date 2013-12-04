@@ -89,7 +89,7 @@ int FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindAvgCAxes::dataCheck()
 {
   setErrorCondition(0);
 
@@ -112,7 +112,7 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t features, siz
 void FindAvgCAxes::preflight()
 {
 
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

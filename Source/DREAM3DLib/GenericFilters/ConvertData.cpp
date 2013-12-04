@@ -276,11 +276,13 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertData::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void ConvertData::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   QString ss;
@@ -299,7 +301,7 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t features, size
   }
 
   int numberOfComponents = 0;
-  IDataArray::Pointer iArray = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayName);
+  IDataArray::Pointer iArray = attrMat->getAttributeArray(m_SelectedCellArrayName);
   if (NULL != iArray)
   {
     numberOfComponents = iArray->GetNumberOfComponents();
@@ -309,6 +311,7 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t features, size
   {
     IDataArray::Pointer p = IDataArray::NullPointer();
     QVector<int> dims(1, numberOfComponents);
+    int64_t voxels = attrMat->getNumTuples();
     if (m_ScalarType == Detail::Int8)
     {
       p = Int8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
@@ -359,8 +362,7 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t features, size
 // -----------------------------------------------------------------------------
 void ConvertData::preflight()
 {
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck(true);
 }
 
 
@@ -370,11 +372,11 @@ void ConvertData::preflight()
 void ConvertData::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
+
+  dataCheck(false);
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   IDataArray::Pointer iArray = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayName);
   bool completed = false;

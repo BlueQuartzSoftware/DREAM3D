@@ -132,7 +132,7 @@ int GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void GenerateIPFColors::dataCheck()
 {
   setErrorCondition(0);
 
@@ -177,7 +177,7 @@ void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t features
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
