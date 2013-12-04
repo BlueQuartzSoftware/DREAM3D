@@ -52,6 +52,7 @@
 PhWriter::PhWriter() :
   FileWriter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -235,4 +236,5 @@ int PhWriter::writeFile()
   notifyStatusMessage("Writing Ph File Complete");
   return 0;
 }
+
 

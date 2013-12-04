@@ -15,15 +15,16 @@
 FindBasalLoadingFactor::FindBasalLoadingFactor() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_BasalLoadingFactorArrayName(DREAM3D::FeatureData::BasalLoadingFactor),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_BasalLoadingFactor(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
-  m_AvgQuats(NULL)
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_AvgQuats(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CrystalStructures(NULL)
 {
   m_LoadingDir.x = 1.0f;
   m_LoadingDir.y = 1.0f;
@@ -175,3 +176,4 @@ void FindBasalLoadingFactor::execute()
 
   notifyStatusMessage("FindBasalLoadingFactor Completed");
 }
+

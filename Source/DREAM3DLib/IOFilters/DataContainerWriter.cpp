@@ -81,9 +81,9 @@ namespace Detail
 // -----------------------------------------------------------------------------
 DataContainerWriter::DataContainerWriter() :
   AbstractFilter(),
+  m_OutputFile(""),
   m_WritePipeline(true),
-  m_WriteXdmfFile(true),
-  m_FileId(-1)
+  m_WriteXdmfFile(true)
 {
   setupFilterParameters();
 }
@@ -406,3 +406,4 @@ int DataContainerWriter::closeFile()
   // Close the file when we are finished with it
   return QH5Utilities::closeFile(m_FileId);
 }
+

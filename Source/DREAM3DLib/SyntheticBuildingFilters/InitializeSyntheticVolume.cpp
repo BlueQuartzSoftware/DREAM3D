@@ -57,17 +57,23 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
   m_InputFile(""),
+  m_InputDataContainerName(""),
+  m_InputEnsembleAttributeMatrixName(""),
+  m_InputStatsAttributeArrayName(""),
   m_XVoxels(50),
   m_YVoxels(50),
   m_ZVoxels(50),
   m_XRes(0.15f),
   m_YRes(0.15f),
-  m_ZRes(0.15f)
+  m_ZRes(0.15f),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_CellPhases(NULL),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxels(NULL)
 {
   setupFilterParameters();
 }
@@ -259,4 +265,5 @@ void InitializeSyntheticVolume::execute()
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("InitializeSyntheticVolume Complete");
 }
+
 

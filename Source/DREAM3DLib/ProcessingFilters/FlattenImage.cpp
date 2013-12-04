@@ -92,10 +92,10 @@ FlattenImage::FlattenImage() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
-  m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
-  m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity), // We convert from Degrees to Radians by Default
   m_ImageData(NULL),
+  m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
   m_FlatImageData(NULL)
 {
   setupFilterParameters();
@@ -250,3 +250,4 @@ void FlattenImage::execute()
 
   notifyStatusMessage("Complete");
 }
+

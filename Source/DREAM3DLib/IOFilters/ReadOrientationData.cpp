@@ -62,17 +62,21 @@
 ReadOrientationData::ReadOrientationData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
+  m_PhaseNameArrayName(""),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
   m_InputFile(""),
   m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
+  m_Manufacturer(Ebsd::UnknownManufacturer),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
-  m_CrystalStructures(NULL)
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CrystalStructures(NULL),
+  m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
+  m_LatticeConstants(NULL)
 {
   setupFilterParameters();
 }
@@ -643,3 +647,4 @@ void ReadOrientationData::readMicFile()
   }
 
 }
+

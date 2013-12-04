@@ -51,19 +51,17 @@
 FindMisorientations::FindMisorientations()  :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
   m_MisorientationListArrayName(DREAM3D::FeatureData::MisorientationList),
-  m_avgMisorientationArrayName(DREAM3D::FeatureData::avgMisorientation),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
-  m_NeighborList(NULL),
-  m_MisorientationList(NULL),
+  m_avgMisorientationArrayName(DREAM3D::FeatureData::avgMisorientation),
   m_avgMisorientation(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -247,3 +245,4 @@ void FindMisorientations::execute()
 
   notifyStatusMessage("FindMisorientations Completed");
 }
+

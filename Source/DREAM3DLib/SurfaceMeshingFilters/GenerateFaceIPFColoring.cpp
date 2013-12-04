@@ -198,21 +198,21 @@ class CalculateFaceIPFColorsImpl
 GenerateFaceIPFColoring::GenerateFaceIPFColoring() :
   SurfaceMeshFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceIPFColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceIPFColors),
-  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_SurfaceMeshFaceLabels(NULL),
+  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceNormals(NULL),
+  m_SurfaceMeshFaceIPFColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceIPFColors),
   m_SurfaceMeshFaceIPFColors(NULL),
+  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_FeatureEulerAngles(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   setupFilterParameters();
@@ -401,3 +401,4 @@ void GenerateFaceIPFColoring::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

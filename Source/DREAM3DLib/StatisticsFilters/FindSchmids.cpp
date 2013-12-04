@@ -48,20 +48,21 @@
 FindSchmids::FindSchmids() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_SchmidsArrayName(DREAM3D::FeatureData::Schmids),
-  m_PolesArrayName(DREAM3D::FeatureData::Poles),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_SlipSystemsArrayName(DREAM3D::FeatureData::SlipSystems),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_Schmids(NULL),
+  m_PolesArrayName(DREAM3D::FeatureData::Poles),
   m_Poles(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
-  m_SlipSystems(NULL)
+  m_SlipSystemsArrayName(DREAM3D::FeatureData::SlipSystems),
+  m_SlipSystems(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CrystalStructures(NULL)
 {
   m_LoadingDir.x = 1.0f;
   m_LoadingDir.y = 1.0f;
@@ -213,3 +214,4 @@ void FindSchmids::execute()
 
   notifyStatusMessage("FindSchmids Completed");
 }
+

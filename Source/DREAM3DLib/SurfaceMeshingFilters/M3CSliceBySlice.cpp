@@ -335,14 +335,15 @@ M3CSliceBySlice::M3CSliceBySlice() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshTriangleLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_DeleteTempFiles(true),
-  m_FeatureIds(NULL)
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL),
+  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
 }
@@ -3068,3 +3069,4 @@ QVector<int> M3CSliceBySlice::findAdjacentTriangles(SurfaceMesh::M3C::Triangle* 
 
 
 #endif
+

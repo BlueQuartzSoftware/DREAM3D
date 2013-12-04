@@ -159,19 +159,19 @@ class CalculateFaceMisorientationColorsImpl
 GenerateFaceMisorientationColoring::GenerateFaceMisorientationColoring() :
   SurfaceMeshFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceMisorientationColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceMisorientationColors),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_SurfaceMeshFaceLabels(NULL),
+  m_SurfaceMeshFaceMisorientationColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceMisorientationColors),
   m_SurfaceMeshFaceMisorientationColors(NULL),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   setupFilterParameters();
@@ -356,3 +356,4 @@ void GenerateFaceMisorientationColoring::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

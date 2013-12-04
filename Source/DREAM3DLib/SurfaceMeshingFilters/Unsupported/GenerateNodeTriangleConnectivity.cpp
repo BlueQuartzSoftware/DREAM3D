@@ -45,7 +45,6 @@ GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity() :
   AbstractFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
-  //  m_SurfaceMeshUniqueEdges(NULL),
   m_SurfaceMeshTriangleEdges(NULL)
 {
   setupFilterParameters();
@@ -263,4 +262,5 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   getSurfaceMeshDataContainer()->addCellData(nodeTriangleArray->GetName(), nodeTriangleArray);
   return;
 }
+
 

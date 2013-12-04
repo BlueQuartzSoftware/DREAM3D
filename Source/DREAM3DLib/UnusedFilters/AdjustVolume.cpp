@@ -53,10 +53,10 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 AdjustVolume::AdjustVolume() :
   AbstractFilter(),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_MaxIterations(1),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_GrainIds(NULL),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_EquivalentDiameters(NULL)
 {
   setupFilterParameters();
@@ -336,3 +336,4 @@ void AdjustVolume::execute()
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("Adjusting Grain Boundaries Complete");
 }
+

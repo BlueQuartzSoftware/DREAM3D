@@ -72,7 +72,6 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshInternalEdgesArrayName)
 
     //------ Required Cell Data
-    //DREAM3D_INSTANCE_STRING_PROPERTY(VoxelCoordsArrayName)
 
     //--------- Input Parameters
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)

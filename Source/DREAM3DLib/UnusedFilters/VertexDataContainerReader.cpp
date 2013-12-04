@@ -357,3 +357,4 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupN
   H5Gclose(gid); // Close the Cell Group
   return err;
 }
+

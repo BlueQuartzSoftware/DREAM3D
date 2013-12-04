@@ -223,14 +223,14 @@ FindEuclideanDistMap::FindEuclideanDistMap() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
-  m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
-  m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
-  m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
   m_FeatureIds(NULL),
+  m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
   m_NearestNeighbors(NULL),
+  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_GBEuclideanDistances(NULL),
+  m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
   m_TJEuclideanDistances(NULL),
+  m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
   m_QPEuclideanDistances(NULL)
 {
 }
@@ -448,3 +448,4 @@ void FindEuclideanDistMap::find_euclideandistmap()
     }
   }
 }
+

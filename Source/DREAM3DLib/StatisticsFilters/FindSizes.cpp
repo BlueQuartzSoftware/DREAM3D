@@ -48,15 +48,15 @@
 FindSizes::FindSizes() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
-  m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_FeatureIds(NULL),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_Volumes(NULL),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_EquivalentDiameters(NULL),
+  m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
   m_NumCells(NULL)
 {
   setupFilterParameters();
@@ -227,4 +227,5 @@ void FindSizes::find_sizes2D()
     m_EquivalentDiameters[i] = diameter;
   }
 }
+
 

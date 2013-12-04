@@ -428,3 +428,4 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupNam
   H5Gclose(gid); // Close the Cell Group
   return err;
 }
+

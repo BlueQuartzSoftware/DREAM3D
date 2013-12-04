@@ -45,19 +45,18 @@
 // -----------------------------------------------------------------------------
 FindODF::FindODF()  :
   AbstractFilter(),
-  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_Volumes(NULL),
+  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_FeatureEulerAngles(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
-  m_CrystalStructures(NULL),
-  m_StatsDataArray(NULL)
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -270,3 +269,4 @@ void FindODF::execute()
 
   notifyStatusMessage("FindODF Completed");
 }
+

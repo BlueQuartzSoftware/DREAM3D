@@ -75,7 +75,9 @@ WriteIPFStandardTriangle::WriteIPFStandardTriangle() :
   m_OutputFile(""),
   m_ImageFormat(2),
   m_ImageSize(512),
-  m_ColorCorrectionFactor(1.0)
+  m_ColorCorrectionFactor(1.0),
+  m_CellPhasesArrayName(DREAM3D::CellData::CellPhases),
+  m_CellPhases(NULL)
 {
   setupFilterParameters();
 }
@@ -353,4 +355,5 @@ void WriteIPFStandardTriangle::writeImage( QImage& image)
     notifyErrorMessage(ss, getErrorCondition());
   }
 }
+
 

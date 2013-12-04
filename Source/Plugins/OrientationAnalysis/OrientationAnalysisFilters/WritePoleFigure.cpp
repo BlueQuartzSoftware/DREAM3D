@@ -90,7 +90,8 @@
 WritePoleFigure::WritePoleFigure() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
@@ -102,7 +103,9 @@ WritePoleFigure::WritePoleFigure() :
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalStructures(NULL)
+  m_CrystalStructures(NULL),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxels(NULL)
 {
   setupFilterParameters();
 }
@@ -568,4 +571,5 @@ QString WritePoleFigure::generateImagePath( QString label)
 
   return path;
 }
+
 

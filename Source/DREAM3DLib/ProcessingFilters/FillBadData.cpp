@@ -56,10 +56,8 @@ FillBadData::FillBadData() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_MinAllowedDefectSize(1),
-  m_AlreadyChecked(NULL),
-  m_Neighbors(NULL),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -347,3 +345,4 @@ void FillBadData::execute()
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("Filling Bad Data Complete");
 }
+

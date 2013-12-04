@@ -62,14 +62,17 @@
 INLWriter::INLWriter() :
   FileWriter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_CellEulerAngles(NULL)
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CellEulerAngles(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CrystalStructures(NULL)
 
 {
   setupFilterParameters();
@@ -370,3 +373,4 @@ int INLWriter::writeFile()
   notifyStatusMessage("Complete");
   return err;
 }
+

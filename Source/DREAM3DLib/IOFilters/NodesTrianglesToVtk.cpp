@@ -48,10 +48,13 @@
 // -----------------------------------------------------------------------------
 NodesTrianglesToVtk::NodesTrianglesToVtk() :
   AbstractFilter(),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_NodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_NodesFile(""),
+  m_TrianglesFile(""),
+  m_OutputVtkFile(""),
   m_WriteBinaryFile(false),
-  m_WriteConformalMesh(true),
-  m_NodeKind(NULL)
+  m_WriteConformalMesh(true)
 {
   setupFilterParameters();
 }
@@ -403,7 +406,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vt
   //#                       For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring features.
   //#                       12 = on the feature boundary trace area at the surface of microstructure
   //#                       13 = on the feature boundary trace line
-  //#                 14 = on the triple point, and so on‚àö√¢
+  //#                 14 = on the triple point, and so onâÃ Ã¶âÂ¢
   //# column 3 to 5 = coordinates of nodes, x, y, and z
 
   int err = 0;
@@ -586,4 +589,5 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
   fclose(triFile);
   return 0;
 }
+
 

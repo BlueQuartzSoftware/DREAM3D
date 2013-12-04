@@ -48,7 +48,23 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 FindAxisODF::FindAxisODF() :
-  AbstractFilter(), m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles), m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases), m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures), m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes), m_SurfaceFeatures(NULL), m_FeaturePhases(NULL), m_AxisEulerAngles(NULL), m_PhaseTypes(NULL)
+  AbstractFilter(),
+  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+  m_SurfaceFeatures(NULL),
+  m_FeaturePhases(NULL),
+  m_AxisEulerAngles(NULL),
+  m_PhaseTypes(NULL),
+  m_SurfaceFeaturesArrayName(),
+  m_SurfaceFeatures(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::FeaturePhases),
+  m_FeaturePhases(NULL),
+  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
+  m_AxisEulerAngles(NULL),
+  m_PhaseTypesArrayName(DREAM3D::FeatureData::Phases),
+  m_PhaseTypes(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
@@ -234,3 +250,4 @@ void FindAxisODF::execute()
 
   notifyStatusMessage("Completed");
 }
+

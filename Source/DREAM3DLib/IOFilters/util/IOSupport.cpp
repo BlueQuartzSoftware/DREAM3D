@@ -46,8 +46,9 @@
 IOSupport::IOSupport() :
   Observable(),
   m_ErrorCondition(0),
-  m_Cancel(false),
   m_DataContainer(NULL),
+  m_DataContainerType(DREAM3D::DataContainerType::UnknownDataContainer),
+  m_HdfFileId(-1),
   m_HdfGroupId(-1)
 {
 
@@ -198,3 +199,4 @@ void IOSupport::clearErrorMessages()
     iter = m_PipelineMessages.erase(iter);
   }
 }
+

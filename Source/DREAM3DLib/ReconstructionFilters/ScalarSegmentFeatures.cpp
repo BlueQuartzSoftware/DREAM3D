@@ -130,16 +130,15 @@ class TSpecificCompareFunctor : public CompareFunctor
 ScalarSegmentFeatures::ScalarSegmentFeatures() :
   SegmentFeatures(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ScalarArrayName(""),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_ScalarTolerance(5.0f),
   m_RandomizeFeatureIds(true),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_Active(NULL),
-  m_Compare(NULL)
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_Active(NULL)
 {
   setupFilterParameters();
 }
@@ -446,3 +445,4 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
   //     | Functor  ||calling the operator() method of the CompareFunctor Class |
 
 }
+

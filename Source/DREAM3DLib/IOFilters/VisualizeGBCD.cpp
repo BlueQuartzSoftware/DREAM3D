@@ -58,12 +58,11 @@ VisualizeGBCD::VisualizeGBCD() :
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceEnsembleAttributeMatrixName(DREAM3D::Defaults::FaceEnsembleAttributeMatrixName),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
-  m_GBCDdimensionsArrayName(DREAM3D::EnsembleData::GBCDdimensions),
   m_MisAngle(60.0f),
   m_OutputFile(""),
-  m_CrystalStructures(NULL),
+  m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL),
+  m_GBCDdimensionsArrayName(DREAM3D::EnsembleData::GBCDdimensions),
   m_GBCDdimensions(NULL)
 {
   m_MisAxis.x = 1;
@@ -547,3 +546,4 @@ void VisualizeGBCD::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

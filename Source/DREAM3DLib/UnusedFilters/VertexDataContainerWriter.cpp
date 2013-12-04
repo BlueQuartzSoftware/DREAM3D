@@ -230,3 +230,4 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const QString& groupName,
 
   out << block << "\n";
 }
+

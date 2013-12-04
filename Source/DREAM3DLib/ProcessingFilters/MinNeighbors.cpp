@@ -57,16 +57,14 @@
 MinNeighbors::MinNeighbors() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_MinNumNeighbors(1),
-  m_AlreadyChecked(NULL),
-  m_Neighbors(NULL),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_NumNeighbors(NULL),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL)
 {
   setupFilterParameters();
@@ -381,3 +379,4 @@ void MinNeighbors::merge_containedfeatures()
     }
   }
 }
+

@@ -55,11 +55,10 @@
 // -----------------------------------------------------------------------------
 PerPhaseMinSize::PerPhaseMinSize() :
   MinSize(),
-//  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-//  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_PhaseNumber(0),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_CellPhases(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL)
 {
   setupFilterParameters();
@@ -223,3 +222,4 @@ void PerPhaseMinSize::remove_smallfeatures()
     }
   }
 }
+

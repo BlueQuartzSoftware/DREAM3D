@@ -47,7 +47,11 @@
 //
 // -----------------------------------------------------------------------------
 NodesTrianglesToStl::NodesTrianglesToStl() :
-  AbstractFilter()
+  AbstractFilter(),
+  m_NodesFile(""),
+  m_TrianglesFile(""),
+  m_OutputStlDirectory(""),
+  m_OutputStlPrefix("")
 {
   setupFilterParameters();
 }
@@ -461,6 +465,7 @@ int NodesTrianglesToStl::writeNumTrianglesToFile(const QString& filename, int tr
 
   return err;
 }
+
 
 
 

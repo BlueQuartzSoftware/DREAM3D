@@ -54,25 +54,25 @@
 FindFeatureReferenceMisorientations::FindFeatureReferenceMisorientations() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
-  m_FeatureReferenceMisorientationsArrayName(DREAM3D::CellData::FeatureReferenceMisorientations),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
-  m_FeatureAvgMisorientationsArrayName(DREAM3D::FeatureData::FeatureAvgMisorientations),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ReferenceOrientation(0),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_GBEuclideanDistances(NULL),
+  m_FeatureReferenceMisorientationsArrayName(DREAM3D::CellData::FeatureReferenceMisorientations),
   m_FeatureReferenceMisorientations(NULL),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
+  m_FeatureAvgMisorientationsArrayName(DREAM3D::FeatureData::FeatureAvgMisorientations),
   m_FeatureAvgMisorientations(NULL),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -319,3 +319,4 @@ void FindFeatureReferenceMisorientations::execute()
 
   notifyStatusMessage("FindFeatureReferenceMisorientations Completed");
 }
+

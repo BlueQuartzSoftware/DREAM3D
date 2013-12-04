@@ -141,7 +141,7 @@ void ScaleVolume::setupFilterParameters()
     option->setPropertyName("ScaleFactor");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
-//   option->setUnits("Microns");
+    //   option->setUnits("Microns");
     parameters.push_back(option);
   }
 
@@ -316,3 +316,4 @@ void ScaleVolume::updateSurfaceMesh()
   }
 
 }
+

@@ -49,17 +49,18 @@
 FindKernelAvgMisorientations::FindKernelAvgMisorientations() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_KernelSize(1),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_FeatureIds(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
   m_KernelAverageMisorientations(NULL),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -264,3 +265,4 @@ void FindKernelAvgMisorientations::execute()
 
   notifyStatusMessage("FindKernelAvgMisorientations Completed");
 }
+

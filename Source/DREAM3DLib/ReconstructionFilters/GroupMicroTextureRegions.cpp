@@ -61,32 +61,30 @@
 GroupMicroTextureRegions::GroupMicroTextureRegions() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_MTRdensityArrayName(DREAM3D::CellData::MTRdensity),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ContiguousNeighborListArrayName(DREAM3D::FeatureData::NeighborList),
   m_NonContiguousNeighborListArrayName(DREAM3D::FeatureData::NeighborhoodList),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CAxisTolerance(1.0f),
   m_UseNonContiguousNeighbors(false),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_CellParentIds(NULL),
+  m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
   m_FeatureParentIds(NULL),
+  m_MTRdensityArrayName(DREAM3D::CellData::MTRdensity),
   m_MTRdensity(NULL),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_Volumes(NULL),
-  m_ContiguousNeighborList(NULL),
-  m_NonContiguousNeighborList(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -412,3 +410,4 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   }
 
 }
+

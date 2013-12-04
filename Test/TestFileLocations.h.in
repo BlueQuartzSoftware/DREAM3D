@@ -19,6 +19,7 @@ namespace UnitTest
 
   const QString DataDir("@DREAM3D_DATA_DIR@");
   const QString TestTempDir("@TEST_TEMP_DIR@");
+  const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
 
   // -----------------------------------------------------------------------------
   //  Define where to put our temporary files for the H5Utilities Test

@@ -52,12 +52,14 @@
 // -----------------------------------------------------------------------------
 RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
   m_XPoints(0),
   m_YPoints(0),
-  m_ZPoints(0)
+  m_ZPoints(0),
+
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -236,3 +238,4 @@ void RegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
     m_FeatureIds[i] = ids[i];
   }
 }
+

@@ -48,11 +48,10 @@
 SaveImages::SaveImages() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ImagePrefix(""),
   m_OutputPath(""),
-  m_ImageFormat(0),
-  m_ColorsArrayName(""),
-  m_Colors(NULL)
+  m_ImageFormat(0)
 {
   setupFilterParameters();
 }
@@ -300,3 +299,4 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
   else { err = -1;}
   return err;
 }
+

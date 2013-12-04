@@ -214,3 +214,4 @@ void ThresholdExample::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

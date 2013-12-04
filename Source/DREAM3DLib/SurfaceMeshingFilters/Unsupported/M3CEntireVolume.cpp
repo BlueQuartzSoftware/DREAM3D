@@ -51,10 +51,10 @@ M3CEntireVolume::M3CEntireVolume() :
   AbstractFilter(),
   m_SurfaceMeshEdgesArrayName(DREAM3D::CellData::SurfaceMeshEdges),
   m_SurfaceMeshInternalEdgesArrayName(DREAM3D::CellData::SurfaceMeshInternalEdges),
-  m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_AddSurfaceLayer(true),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_GrainIds(NULL),
+  m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
   m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
@@ -5393,5 +5393,6 @@ void M3CEntireVolume::get_output(node* v, segment* fe, isegment* ie, patch* t, i
 }
 
 #endif
+
 
 

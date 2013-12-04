@@ -216,8 +216,7 @@ VerifyTriangleWinding::VerifyTriangleWinding() :
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshNodeFacesArrayName(DREAM3D::VertexData::SurfaceMeshNodeFaces),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_DoUniqueEdgesFilter(false),
-  m_DoNodeFaceConnectivityFilter(false)
+  m_SurfaceMeshFaceLabels(NULL)
 {
   setupFilterParameters();
 }
@@ -500,7 +499,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
   qDebug() << "Face ID: " << index << "\n";\
   qDebug() << "Face.labels[0] " << triangles[index].labels[0] << "\n";\
   qDebug() << "Face.labels[1] " << triangles[index].labels[1] << "\n";\
-   
+
 #define PRINT_VERT(index)\
   qDebug() << index << " " << verts[index].pos[0] << " " << verts[index].pos[1] << " " << verts[index].pos[2] << "\n";
 
@@ -800,5 +799,6 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   // qDebug() << "--------------------------------------------------------------" << "\n";
   return err;
 }
+
 
 

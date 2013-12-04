@@ -68,7 +68,6 @@
 QImportImageStackWidget::QImportImageStackWidget(QWidget* parent) :
   QFilterWidget(parent)
 {
-
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
     setOpenDialogLastDirectory( QDir::homePath() );
@@ -707,4 +706,5 @@ QUrl QImportImageStackWidget::htmlHelpIndexFile()
   s = s + helpDir.absolutePath() + "/Help/DREAM3D/" + lowerFilter + ".html";
   return QUrl(s);
 }
+
 

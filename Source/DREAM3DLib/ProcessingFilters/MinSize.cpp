@@ -56,14 +56,16 @@
 MinSize::MinSize() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_MinAllowedFeatureSize(1),
+  m_ApplyToAll(true),
+  m_PhaseNumber(0),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL)
 {
   setupFilterParameters();
@@ -409,3 +411,4 @@ void MinSize::remove_smallfeatures()
     }
   }
 }
+

@@ -45,7 +45,8 @@ LinkFeatureMapToCellArray::LinkFeatureMapToCellArray() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_SelectedCellDataArrayName("")
+  m_SelectedCellDataArrayName(""),
+  m_SelectedCellData(NULL)
 {
   setupFilterParameters();
 }
@@ -201,4 +202,5 @@ void LinkFeatureMapToCellArray::execute()
 
   notifyStatusMessage("Complete");
 }
+
 

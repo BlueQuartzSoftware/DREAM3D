@@ -66,31 +66,29 @@ MatchCrystallography::MatchCrystallography() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
-  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-  m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
   m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
   m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
   m_StatsDataArrayName(DREAM3D::EnsembleData::Statistics),
   m_MaxIterations(1),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_Volumes(NULL),
+  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_FeatureEulerAngles(NULL),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
-  m_NeighborList(NULL),
-  m_SharedSurfaceAreaList(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL),
+  m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
   m_NumFeatures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -892,3 +890,4 @@ void MatchCrystallography::measure_misorientations(int ensem)
     }
   }
 }
+

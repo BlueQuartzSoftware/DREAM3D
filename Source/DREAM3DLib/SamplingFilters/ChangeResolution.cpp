@@ -136,7 +136,7 @@ void ChangeResolution::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+      VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   setErrorCondition(0);
@@ -148,8 +148,8 @@ void ChangeResolution::execute()
   }
 
   if(m->getXRes() == m_Resolution.x
-      && m->getYRes() == m_Resolution.y
-      && m->getZRes() == m_Resolution.z)
+     && m->getYRes() == m_Resolution.y
+     && m->getZRes() == m_Resolution.z)
   {
     return;
   }
@@ -223,3 +223,4 @@ void ChangeResolution::execute()
 
   notifyStatusMessage("Complete");
 }
+

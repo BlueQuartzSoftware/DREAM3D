@@ -55,22 +55,9 @@
 GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
-  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
-  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
-  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
-  m_AspectRatiosArrayName(DREAM3D::FeatureData::AspectRatios),
-  m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
-  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
-  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
-  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_SizeCorrelationResolution(1),
   m_SizeDistribution(false),
   m_SizeDistributionFitType(DREAM3D::DistributionType::LogNormal),
@@ -83,22 +70,32 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_CalculateODF(false),
   m_CalculateMDF(false),
   m_CalculateAxisODF(false),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
+  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_FeatureEulerAngles(NULL),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_Volumes(NULL),
+  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
   m_AxisEulerAngles(NULL),
+  m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
   m_Omega3s(NULL),
+  m_AspectRatiosArrayName(DREAM3D::FeatureData::AspectRatios),
   m_AspectRatios(NULL),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_EquivalentDiameters(NULL),
+  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
   m_Neighborhoods(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
-  m_PhaseTypes(NULL),
-  m_NeighborList(NULL),
-  m_SharedSurfaceAreaList(NULL),
-  m_StatsDataArray(NULL)
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+  m_PhaseTypes(NULL)
 {
   m_DistributionAnalysis.push_back(BetaOps::New());
   m_DistributionAnalysis.push_back(LogNormalOps::New());
@@ -986,3 +983,4 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
     }
   }
 }
+

@@ -68,8 +68,6 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeFacesArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
 
     typedef QMap<int, QSet<int> >                      LabelFaceMap_t;

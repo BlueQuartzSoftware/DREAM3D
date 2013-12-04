@@ -58,17 +58,18 @@
 GenerateIPFColors::GenerateIPFColors() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CellIPFColorsArrayName(DREAM3D::CellData::IPFColor),
   m_CellPhases(NULL),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
-  m_CellIPFColors(NULL)
+  m_CellIPFColorsArrayName(DREAM3D::CellData::IPFColor),
+  m_CellIPFColors(NULL),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxels(NULL)
 {
 
   m_ReferenceDir.x = 0.0f;
@@ -253,3 +254,4 @@ void GenerateIPFColors::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+

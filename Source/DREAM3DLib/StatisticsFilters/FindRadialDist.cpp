@@ -59,16 +59,16 @@ FindRadialDist::FindRadialDist() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_OutputFile(""),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_EquivalentDiameters(NULL),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_Volumes(NULL),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL)
 {
   setupFilterParameters();
@@ -390,3 +390,4 @@ void FindRadialDist::find_boundingbox()
   }
 
 }
+

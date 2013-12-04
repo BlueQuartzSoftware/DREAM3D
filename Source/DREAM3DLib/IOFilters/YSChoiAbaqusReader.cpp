@@ -57,24 +57,25 @@
 YSChoiAbaqusReader::YSChoiAbaqusReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_InputFeatureInfoFile(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_FeatureIds(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
-  m_CellEulerAngles(NULL)
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CellEulerAngles(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CrystalStructures(NULL)
 {
   setupFilterParameters();
 }
@@ -408,3 +409,4 @@ void YSChoiAbaqusReader::execute()
   }
   delete[] mat;
 }
+

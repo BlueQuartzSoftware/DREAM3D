@@ -28,7 +28,16 @@
 //
 // -----------------------------------------------------------------------------
 GenericFilter::GenericFilter() :
-  AbstractFilter()
+  AbstractFilter(),
+  m_StlFilePrefix(""),
+  m_MaxIterations(25),
+  m_MisorientationTolerance(5.0),
+  m_InputFile(""),
+  m_InputPath(""),
+  m_OutputFile(""),
+  m_OutputPath(""),
+  m_WriteAlignmentShifts(false),
+  m_ConversionType(0),
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;
@@ -407,3 +416,4 @@ void GenericFilter::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+
