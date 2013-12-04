@@ -169,7 +169,7 @@ void GBCDTriangleDumper::dataCheckVoxel()
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+  AttributeMatrix* CellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 3);

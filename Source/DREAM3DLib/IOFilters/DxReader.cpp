@@ -354,7 +354,7 @@ int DxReader::readFile()
 
   // Reseize the Cell Attribute Matrix based on the number of points about to be read.
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(totalPoints);
-  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
 
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

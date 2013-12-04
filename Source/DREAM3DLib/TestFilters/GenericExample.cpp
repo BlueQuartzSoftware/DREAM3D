@@ -585,7 +585,7 @@ void GenericExample::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, GenericExample>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
