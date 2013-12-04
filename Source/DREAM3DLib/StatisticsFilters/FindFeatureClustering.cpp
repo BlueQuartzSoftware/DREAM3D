@@ -138,7 +138,7 @@ void FindFeatureClustering::execute()
   setErrorCondition(0);
 
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, 0, totalFeatures, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

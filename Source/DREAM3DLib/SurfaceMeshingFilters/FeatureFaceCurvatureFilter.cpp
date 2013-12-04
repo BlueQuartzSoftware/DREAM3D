@@ -274,7 +274,7 @@ void FeatureFaceCurvatureFilter::execute()
 
   // Just to double check we have everything.
   int64_t numTriangles = trianglesPtr->getNumberOfTuples();
-  dataCheck(false, numTriangles, 0, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

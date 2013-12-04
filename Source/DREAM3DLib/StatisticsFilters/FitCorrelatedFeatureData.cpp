@@ -279,7 +279,7 @@ void FitCorrelatedFeatureData::execute()
   setErrorCondition(0);
   int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int64_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, 0, features, ensembles);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

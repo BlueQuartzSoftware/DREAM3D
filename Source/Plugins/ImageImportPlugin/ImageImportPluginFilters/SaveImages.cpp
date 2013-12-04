@@ -218,7 +218,7 @@ void SaveImages::execute()
   size_t dims[3];
   m->getDimensions(dims);
 
-  dataCheck(false, dims[0] * dims[1] * dims[2], 1, 1);
+  dataCheck();
 
 
 

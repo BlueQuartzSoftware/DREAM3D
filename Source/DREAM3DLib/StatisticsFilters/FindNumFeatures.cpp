@@ -130,7 +130,7 @@ void FindNumFeatures::execute()
 
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, 0, totalFeatures, totalEnsembles);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

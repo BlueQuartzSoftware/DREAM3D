@@ -218,7 +218,7 @@ void FindMDF::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFeatureTuples(), m->getNumEnsembleTuples());
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;
@@ -300,7 +300,7 @@ void FindMDF::execute()
   }
 
   // We do this to create new set of MisorientationList objects
-  dataCheck(false, m->getNumCellTuples(), m->getNumFeatureTuples(), m->getNumEnsembleTuples());
+  dataCheck();
 
 // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for (size_t i = 1; i < numensembles; i++)

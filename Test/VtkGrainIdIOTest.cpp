@@ -91,7 +91,7 @@ class GenerateGrainIds : public AbstractFilter
       m->setOrigin(1.0f, 2.0f, 3.0f);
 
       int64_t totalPoints = m->getTotalPoints();
-      dataCheck(false, totalPoints, m->getNumFeatureTuples(), m->getNumEnsembleTuples());
+      dataCheck();
       // Set the default data into the GrainIds
       for (int i = 0; i < size; ++i)
       {

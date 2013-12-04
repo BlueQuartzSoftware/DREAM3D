@@ -152,7 +152,7 @@ void AdjustVolume::execute()
   int totalFeatures = m->getNumFeatureTuples();
 
   // Check to make sure we have all of our data arrays available or make them available.
-  dataCheck(false, totalPoints, totalFeatures, 1);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

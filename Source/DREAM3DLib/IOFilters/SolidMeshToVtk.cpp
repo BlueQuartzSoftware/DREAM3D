@@ -186,7 +186,7 @@ void SolidMeshToVtk::execute()
   int err = 0;
 
   setErrorCondition(err);
-  dataCheck(false, 0, 0, 0);
+  dataCheck();
   if(getErrorCondition() < 0)
   {
     return;
@@ -331,7 +331,7 @@ void SolidMeshToVtk::execute()
 //  int err = 0;
 //
 //  setErrorCondition(err);
-//  dataCheck(false, 0, 0, 0);
+//  dataCheck();
 //  if(getErrorCondition() < 0)
 //  {
 //    return;

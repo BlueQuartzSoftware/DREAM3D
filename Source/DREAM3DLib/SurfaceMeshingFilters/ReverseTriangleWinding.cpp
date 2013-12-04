@@ -274,7 +274,7 @@ void ReverseTriangleWinding::execute()
   size_t totalPoints = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
-  dataCheck(false, trianglesPtr->getNumberOfTuples(), 0, 0);
+  dataCheck();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)

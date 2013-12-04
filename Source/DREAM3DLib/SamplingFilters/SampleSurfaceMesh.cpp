@@ -201,7 +201,7 @@ void SampleSurfaceMesh::preflight()
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
-  dataCheck(false, 1, 1, 1);
+  dataCheck();
 
 }
 

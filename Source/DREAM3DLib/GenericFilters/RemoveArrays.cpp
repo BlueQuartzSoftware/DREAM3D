@@ -140,7 +140,7 @@ void RemoveArrays::execute()
   setErrorCondition(err);
 
   // Simply running the preflight will do what we need it to.
-  dataCheck(false, 0, 0, 0);
+  dataCheck();
   notifyStatusMessage("Complete");
 }
 

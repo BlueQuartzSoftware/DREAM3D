@@ -196,7 +196,7 @@ void FindNeighborhoods::execute()
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;
@@ -222,7 +222,7 @@ void FindNeighborhoods::find_neighborhoods()
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck();
 
   neighborhoodlist.resize(totalFeatures);
 

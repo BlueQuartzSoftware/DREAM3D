@@ -129,7 +129,7 @@ void FindVolFractions::execute()
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, 0, totalEnsembles);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

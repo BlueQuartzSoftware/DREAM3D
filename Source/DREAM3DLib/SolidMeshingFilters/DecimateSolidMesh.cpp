@@ -134,7 +134,7 @@ void DecimateSolidMesh::execute()
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getNumFeatureTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

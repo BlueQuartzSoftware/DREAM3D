@@ -148,7 +148,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
 
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, 0, totalFeatures, totalEnsembles);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;
@@ -231,7 +231,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   // We do this to create new set of MisalignmentList objects
   totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, 0, totalFeatures, totalEnsembles);
+  dataCheck();
 
   for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {

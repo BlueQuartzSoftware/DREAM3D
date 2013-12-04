@@ -163,7 +163,7 @@ void RegularGridSampleSurfaceMesh::dataCheck()
 // -----------------------------------------------------------------------------
 void RegularGridSampleSurfaceMesh::preflight()
 {
-  dataCheck(false, 1, 1, 1);
+  dataCheck();
 
   SampleSurfaceMesh::preflight();
 }

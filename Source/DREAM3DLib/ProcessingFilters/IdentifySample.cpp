@@ -139,7 +139,7 @@ void IdentifySample::execute()
   if(getErrorCondition() < 0) { return; }
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, 0, 0);
+  dataCheck();
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;

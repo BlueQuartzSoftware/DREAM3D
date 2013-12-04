@@ -180,7 +180,7 @@ void UncertainRegularGridSampleSurfaceMesh::preflight()
     m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
   }
 
-  dataCheck(false, 1, 1, 1);
+  dataCheck();
 
   SampleSurfaceMesh::preflight();
 

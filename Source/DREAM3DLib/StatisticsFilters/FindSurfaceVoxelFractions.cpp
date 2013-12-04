@@ -140,7 +140,7 @@ void FindSurfaceVoxelFractions::execute()
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

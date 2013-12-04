@@ -153,7 +153,7 @@ int VtkGrainIdWriter::writeFile()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, 1, 1);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return -40;

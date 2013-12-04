@@ -165,7 +165,7 @@ void GenerateUniqueEdges::execute()
   setErrorCondition(0);
 
   // Just to double check we have everything.
-  dataCheck(false, 0, 0, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

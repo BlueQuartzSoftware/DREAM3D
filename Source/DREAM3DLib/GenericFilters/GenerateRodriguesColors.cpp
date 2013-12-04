@@ -179,7 +179,7 @@ void GenerateRodriguesColors::execute()
   if(getErrorCondition() < 0) { return; }
   int64_t totalPoints = m->getTotalPoints();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, 0, totalEnsembles);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

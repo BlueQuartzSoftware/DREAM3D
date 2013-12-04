@@ -177,7 +177,7 @@ void GenerateSurfaceMeshConnectivity::execute()
   int err = 0;
 
   setErrorCondition(err);
-  dataCheck(false, 1, 1, 1);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

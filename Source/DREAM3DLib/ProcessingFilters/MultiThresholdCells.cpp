@@ -169,7 +169,7 @@ void MultiThresholdCells::execute()
 
   setErrorCondition(0);
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, 0, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

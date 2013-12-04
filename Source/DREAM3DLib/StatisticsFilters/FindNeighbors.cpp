@@ -207,7 +207,7 @@ void FindNeighbors::execute()
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;
@@ -304,7 +304,7 @@ void FindNeighbors::execute()
 
   // We do this to create new set of NeighborList objects
   size_t totalEnsembles = 0;
-  dataCheck(false, totalPoints, totalFeatures, totalEnsembles);
+  dataCheck();
 
   for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {

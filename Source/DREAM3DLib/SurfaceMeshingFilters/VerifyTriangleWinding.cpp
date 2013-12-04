@@ -332,7 +332,7 @@ void VerifyTriangleWinding::execute()
     return;
   }
   setErrorCondition(0);
-  dataCheck(false, 0, 0, 0);
+  dataCheck();
 
   //  Generate the Unique Edges
   if (m_DoUniqueEdgesFilter == true)

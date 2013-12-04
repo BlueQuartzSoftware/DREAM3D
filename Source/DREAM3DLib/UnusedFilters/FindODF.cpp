@@ -184,7 +184,7 @@ void FindODF::execute()
   setErrorCondition(0);
 
   //int64_t totalPoints = m->totalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumFeatureTuples(), m->getNumEnsembleTuples());
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

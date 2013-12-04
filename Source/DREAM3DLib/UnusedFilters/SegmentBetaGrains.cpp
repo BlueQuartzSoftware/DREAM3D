@@ -313,7 +313,7 @@ void SegmentBetaGrains::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   m->resizeFeatureDataArrays(1);
-  dataCheck(false, totalPoints, m->getNumFeatureTuples(), m->getNumEnsembleTuples());
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;
@@ -423,7 +423,7 @@ int SegmentBetaGrains::getSeed(size_t gnum)
   {
     m_GrainIds[seed] = gnum;
     m->resizeFeatureDataArrays(gnum + 1);
-    dataCheck(false, totalPoints, m->getNumFeatureTuples(), m->getNumEnsembleTuples());
+    dataCheck();
   }
   return seed;
 }

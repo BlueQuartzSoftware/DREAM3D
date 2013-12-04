@@ -225,7 +225,7 @@ void TriangleNormalFilter::execute()
   size_t numTriangles = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
-  dataCheck(false, numTriangles, 0, 0);
+  dataCheck();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)

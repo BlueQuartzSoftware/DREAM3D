@@ -163,7 +163,7 @@ void RenumberFeatures::execute()
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;
@@ -214,7 +214,7 @@ void RenumberFeatures::execute()
       //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;
     }
     totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-    dataCheck(false, totalPoints, totalFeatures, 0);
+    dataCheck();
 
     // Loop over all the points and correct all the feature names
     ss = QObject::tr("Renumbering Cell Region Ids");

@@ -181,7 +181,7 @@ void FindAxisODF::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFeatureTuples(), m->getNumEnsembleTuples());
+  dataCheck();
   if(getErrorCondition() < 0)
   {
     return;

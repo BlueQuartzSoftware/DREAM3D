@@ -208,7 +208,7 @@ void ThresholdExample::preflight()
 // -----------------------------------------------------------------------------
 void ThresholdExample::execute()
 {
-  dataCheck(false, 0,0,0);
+  dataCheck();
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */

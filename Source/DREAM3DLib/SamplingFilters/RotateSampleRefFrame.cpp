@@ -350,7 +350,7 @@ void RotateSampleRefFrame::execute()
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-  dataCheck(false, 0, 0, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;

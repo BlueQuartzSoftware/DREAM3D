@@ -269,7 +269,7 @@ void ScalarSegmentFeatures::execute()
   // This runs a subfilter
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, totalFeatures, 0);
+  dataCheck();
   if (getErrorCondition() < 0)
   {
     return;
@@ -433,7 +433,7 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(gnum + 1);
     int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
     size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-    dataCheck(false, totalPoints, totalFeatures, 0);
+    dataCheck();
   }
   return seed;
 }

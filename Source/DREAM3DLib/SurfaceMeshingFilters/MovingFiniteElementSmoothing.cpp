@@ -293,7 +293,7 @@ void MovingFiniteElementSmoothing::execute()
   setErrorCondition(err);
 
   // This needs to get run so that our private pointers are set correctly.
-  dataCheck(false, 0, 0, 0);
+  dataCheck();
   if(getErrorCondition() < 0)
   {
     return;
