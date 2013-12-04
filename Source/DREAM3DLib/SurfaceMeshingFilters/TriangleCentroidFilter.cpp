@@ -165,7 +165,7 @@ void TriangleCentroidFilter::dataCheck()
   else
   {
     QVector<int> dims(1, 3);
-    m_SurfaceMeshTriangleCentroidsPtr = sattrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_FaceAttributeMatrixName,  m_SurfaceMeshTriangleCentroidsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshTriangleCentroidsPtr = faceAttrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_SurfaceMeshTriangleCentroidsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshTriangleCentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshTriangleCentroids = m_SurfaceMeshTriangleCentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }

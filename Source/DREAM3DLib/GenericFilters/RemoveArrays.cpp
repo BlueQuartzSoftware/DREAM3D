@@ -103,7 +103,7 @@ void RemoveArrays::dataCheck()
     MapOfAttributeArrays_t mapOfArraysToRemove = iter.value();
     for(MapOfAttributeArrays_t::iterator iter = mapOfArraysToRemove.begin(); iter != mapOfArraysToRemove.end(); ++iter)
     {
-      AttributeMatrix* attrMatrix = m->getAttributeMatrix(iter.key());
+      AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(iter.key());
       if(NULL == attrMatrix)
       {
         setErrorCondition(-999);
