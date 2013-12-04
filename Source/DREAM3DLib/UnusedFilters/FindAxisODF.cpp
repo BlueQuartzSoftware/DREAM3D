@@ -162,6 +162,7 @@ void FindAxisODF::dataCheck()
 //
 // -----------------------------------------------------------------------------
 void FindAxisODF::preflight()
+void FindAxisODF::preflight()
 {
   dataCheck();
 }

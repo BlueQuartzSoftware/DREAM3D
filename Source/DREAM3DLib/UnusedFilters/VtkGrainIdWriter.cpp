@@ -113,6 +113,7 @@ void VtkGrainIdWriter::dataCheck()
 //
 // -----------------------------------------------------------------------------
 void VtkGrainIdWriter::preflight()
+void VtkGrainIdWriter::preflight()
 {
   dataCheck();
 }

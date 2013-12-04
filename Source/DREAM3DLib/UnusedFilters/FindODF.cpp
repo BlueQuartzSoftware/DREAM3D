@@ -165,6 +165,7 @@ void FindODF::dataCheck()
 //
 // -----------------------------------------------------------------------------
 void FindODF::preflight()
+void FindODF::preflight()
 {
   dataCheck();
 }

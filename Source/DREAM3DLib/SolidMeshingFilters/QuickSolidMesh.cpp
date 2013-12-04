@@ -113,6 +113,7 @@ void QuickSolidMesh::dataCheck()
 //
 // -----------------------------------------------------------------------------
 void QuickSolidMesh::preflight()
+void QuickSolidMesh::preflight()
 {
   dataCheck();
 }

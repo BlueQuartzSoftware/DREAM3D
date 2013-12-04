@@ -129,6 +129,7 @@ void AdjustVolume::dataCheck()
 //
 // -----------------------------------------------------------------------------
 void AdjustVolume::preflight()
+void AdjustVolume::preflight()
 {
   dataCheck();
 }

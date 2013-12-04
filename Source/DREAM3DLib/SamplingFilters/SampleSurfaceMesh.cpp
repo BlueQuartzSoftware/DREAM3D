@@ -191,6 +191,8 @@ void SampleSurfaceMesh::dataCheck()
 //
 // -----------------------------------------------------------------------------
 void SampleSurfaceMesh::preflight()
+void SampleSurfaceMesh::preflight()
+void SampleSurfaceMesh::preflight()
 {
   setErrorCondition(0);
 

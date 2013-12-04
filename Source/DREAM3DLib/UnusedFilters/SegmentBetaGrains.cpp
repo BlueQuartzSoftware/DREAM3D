@@ -292,6 +292,7 @@ void SegmentBetaGrains::dataCheck()
 //
 // -----------------------------------------------------------------------------
 void SegmentBetaGrains::preflight()
+void SegmentBetaGrains::preflight()
 {
   dataCheck();
 }

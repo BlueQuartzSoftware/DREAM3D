@@ -200,6 +200,7 @@ void FindMDF::dataCheck()
 //
 // -----------------------------------------------------------------------------
 void FindMDF::preflight()
+void FindMDF::preflight()
 {
   dataCheck();
 }

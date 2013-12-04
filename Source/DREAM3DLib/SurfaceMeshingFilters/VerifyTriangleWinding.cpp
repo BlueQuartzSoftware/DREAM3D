@@ -308,6 +308,8 @@ void VerifyTriangleWinding::dataCheck()
 //
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::preflight()
+void VerifyTriangleWinding::preflight()
+void VerifyTriangleWinding::preflight()
 {
   dataCheck();
 }

@@ -332,9 +332,12 @@ void fixDataCheck(QString hFile, QString cppFile)
   QString dataCheck = QString("void ") + fi.baseName() + QString("::dataCheck(");
   QString preflight = QString("void ") + fi.baseName() + QString("::preflight()");
 
-  bool needCellAttr = false;
-  bool needFeatAttr = false;
-  bool needEnsemAttr = false;
+  bool needCellAttrGet = false;
+  bool needCellAttrCreate = false;
+  bool hasCellGet = false;
+  bool hasCellCreate = false;
+  bool alreadyHasDecl = false;
+
 
   QStringListIterator sourceLines(list);
   while (sourceLines.hasNext())
@@ -347,18 +350,19 @@ void fixDataCheck(QString hFile, QString cppFile)
       while(stop == false)
       {
         line = sourceLines.next();
-        if(line.contains("cellAttrMat->"))
+        if(line.contains("faceAttrMat->get"))
         {
-          needCellAttr = true;
+          hasCellGet = true;
         }
-        if(line.contains("featureAttrMat->"))
+        if(line.contains("faceAttrMat->create"))
         {
-          needFeatAttr = true;
+          hasCellCreate = true;
         }
-        if(line.contains("ensemAttrMat->"))
+        if(line.contains("AttributeMatrix* faceAttrMat ="))
         {
-          needEnsemAttr = true;
+          alreadyHasDecl = true;
         }
+
 
         if(line.contains(preflight)) { stop = true; }
         if(sourceLines.hasNext() == false) { stop = true; }
@@ -366,11 +370,26 @@ void fixDataCheck(QString hFile, QString cppFile)
       break;
     }
   }
+  if(hasCellGet == true && alreadyHasDecl == false)
+  {
+    needCellAttrGet = true;
+  }
+  else if(hasCellCreate == true && alreadyHasDecl == false)
+  {
+    needCellAttrCreate = true;
+  }
 
-if (!needCellAttr && !needFeatAttr && !needEnsemAttr) { return; }
+
+
+  if (!needCellAttrGet && !needCellAttrCreate) { return; }
+
   qDebug("Updating %s", qPrintable(cppFile));
 
+#if 0
+  QFile fout("/tmp/out.cpp");
+#else
   QFile fout(cppFile);
+  #endif
   fout.open(QFile::WriteOnly);
   QTextStream out(&fout);
 
@@ -387,26 +406,22 @@ if (!needCellAttr && !needFeatAttr && !needEnsemAttr) { return; }
       while(stop == false)
       {
         line = sourceLines.next();
-        if(line.contains("VolumeDataContainer* m = getDataContainerArray()"))
+        if(line.contains("SurfaceDataContainer* sm = getDataContainerArray()"))
         {
           out << line << "\n";
           line = sourceLines.next();
           out << line << "\n";
-          if(needCellAttr)
+          if(needCellAttrGet)
           {
-            out << "  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);\n";
+            out << "  AttributeMatrix* faceAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);\n";
             out << "  if(getErrorCondition() < 0) { return; }\n";
           }
-          if(needFeatAttr)
+          if(needCellAttrCreate)
           {
-            out << "  AttributeMatrix* featureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -302);\n";
+            out << "  AttributeMatrix* faceAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), DREAM3D::AttributeMatrixType::Face);\n";
             out << "  if(getErrorCondition() < 0) { return; }\n";
           }
-          if(needEnsemAttr)
-          {
-            out << "  AttributeMatrix* ensemAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);\n";
-            out << "  if(getErrorCondition() < 0) { return; }\n";
-          }
+
           stop = true;
         }
         else
