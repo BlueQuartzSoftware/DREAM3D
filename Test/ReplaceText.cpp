@@ -350,15 +350,15 @@ void fixDataCheck(QString hFile, QString cppFile)
       while(stop == false)
       {
         line = sourceLines.next();
-        if(line.contains("faceAttrMat->get"))
+        if(line.contains("cellEnsembleAttrMat->get"))
         {
           hasCellGet = true;
         }
-        if(line.contains("faceAttrMat->create"))
+        if(line.contains("cellEnsembleAttrMat->create"))
         {
           hasCellCreate = true;
         }
-        if(line.contains("AttributeMatrix* faceAttrMat ="))
+        if(line.contains("AttributeMatrix* cellEnsembleAttrMat ="))
         {
           alreadyHasDecl = true;
         }
@@ -406,19 +406,19 @@ void fixDataCheck(QString hFile, QString cppFile)
       while(stop == false)
       {
         line = sourceLines.next();
-        if(line.contains("SurfaceDataContainer* sm = getDataContainerArray()"))
+        if(line.contains("VolumeDataContainer* m = getDataContainerArray()"))
         {
           out << line << "\n";
           line = sourceLines.next();
           out << line << "\n";
           if(needCellAttrGet)
           {
-            out << "  AttributeMatrix* faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);\n";
+            out << "  AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);\n";
             out << "  if(getErrorCondition() < 0) { return; }\n";
           }
           if(needCellAttrCreate)
           {
-            out << "  AttributeMatrix* faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), DREAM3D::AttributeMatrixType::Face);\n";
+            out << "  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);\n";
             out << "  if(getErrorCondition() < 0) { return; }\n";
           }
 
