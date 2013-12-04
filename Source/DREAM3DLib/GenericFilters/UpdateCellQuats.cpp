@@ -124,7 +124,6 @@ void UpdateCellQuats::execute()
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
@@ -139,7 +138,7 @@ void UpdateCellQuats::execute()
   float* quats5ptr = quats5->getPointer(0);
   //creating the 4 component quaternions in the data container
   QVector<int> dims(1, 4);
-  m_QuatsPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_CellAttributeMatrixName,  m_QuatsArrayName, 0, totalPoints, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_QuatsPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_QuatsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 

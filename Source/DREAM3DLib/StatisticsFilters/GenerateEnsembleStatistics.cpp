@@ -268,7 +268,7 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     dims[0] = 1;
     typedef DataArray<unsigned int> PhaseTypeArrayType;
-    m_PhaseTypesPtr = attrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_CellEnsembleAttributeMatrixName,  m_PhaseTypesArrayName, DREAM3D::PhaseType::UnknownPhaseType, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_PhaseTypesPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_PhaseTypesArrayName, DREAM3D::PhaseType::UnknownPhaseType, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
