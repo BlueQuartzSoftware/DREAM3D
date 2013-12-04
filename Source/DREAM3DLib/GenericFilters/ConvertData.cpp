@@ -301,7 +301,7 @@ void ConvertData::dataCheck(bool preflight)
   }
 
   int numberOfComponents = 0;
-  IDataArray::Pointer iArray = attrMat->getAttributeArray(m_SelectedCellArrayName);
+  IDataArray::Pointer iArray = cellAttrMat->getAttributeArray(m_SelectedCellArrayName);
   if (NULL != iArray)
   {
     numberOfComponents = iArray->GetNumberOfComponents();
@@ -311,7 +311,7 @@ void ConvertData::dataCheck(bool preflight)
   {
     IDataArray::Pointer p = IDataArray::NullPointer();
     QVector<int> dims(1, numberOfComponents);
-    int64_t voxels = attrMat->getNumTuples();
+    int64_t voxels = cellAttrMat->getNumTuples();
     if (m_ScalarType == Detail::Int8)
     {
       p = Int8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
