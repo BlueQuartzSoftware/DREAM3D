@@ -123,7 +123,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     int writeCellData(FILE* vtkFile, QMap<int32_t, int32_t>& featureIds);
 

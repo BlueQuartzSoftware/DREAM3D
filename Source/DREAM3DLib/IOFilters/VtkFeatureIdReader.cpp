@@ -117,11 +117,13 @@ int VtkFeatureIdReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkFeatureIdReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void VtkFeatureIdReader::dataCheck()
 {
 
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, VtkFeatureIdReader>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, VtkFeatureIdReader>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -139,7 +141,7 @@ void VtkFeatureIdReader::dataCheck(bool preflight, size_t voxels, size_t feature
   }
 
   QVector<int> dims(1, 1);
-  m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName,  m_FeatureIdsArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -155,13 +157,7 @@ void VtkFeatureIdReader::dataCheck(bool preflight, size_t voxels, size_t feature
 // -----------------------------------------------------------------------------
 void VtkFeatureIdReader::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
-  if(NULL == m)
-  {
-    m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
-  }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -232,8 +228,9 @@ int VtkFeatureIdReader::ignoreData(QFile& in, int byteSize, char* text, size_t x
 // -----------------------------------------------------------------------------
 int VtkFeatureIdReader::readHeader()
 {
-
   int err = 0;
+
+  dataCheck();
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
@@ -298,7 +295,7 @@ int VtkFeatureIdReader::readHeader()
   dims[0] = tokens[1].toInt(&ok, 10);
   dims[1] = tokens[2].toInt(&ok, 10);
   dims[2] = tokens[3].toInt(&ok, 10);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setDimensions(dims);
+  m->setDimensions(dims);
 
 #if 1
   buf = instream.readLine(); // Read Line 6 which is the Origin values
@@ -306,14 +303,14 @@ int VtkFeatureIdReader::readHeader()
   origin[0] = tokens[1].toFloat(&ok);
   origin[1] = tokens[2].toFloat(&ok);
   origin[2] = tokens[3].toFloat(&ok);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setOrigin(origin);
+  m->setOrigin(origin);
 
   buf = instream.readLine();// Read Line 7 which is the Scaling values
   float resolution[3];
   resolution[0] = tokens[1].toFloat(&ok);
   resolution[1] = tokens[2].toFloat(&ok);
   resolution[2] = tokens[3].toFloat(&ok);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setResolution(resolution);
+  m->setResolution(resolution);
 
 #endif
 
@@ -348,6 +345,9 @@ int VtkFeatureIdReader::readFile()
 {
   int err = 0;
 
+  dataCheck();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
   QFile instream(getInputFile());
 
   if (!instream.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -365,62 +365,8 @@ int VtkFeatureIdReader::readFile()
 
   // These should have been set from reading the header
   size_t dims[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getDimensions(dims);
+  m->getDimensions(dims);
 
-#if 0
-  size_t dim = 0;
-  // Now parse the X, coordinates.
-// ::memset(buf, 0, kBufferSize);
-  err = readLine(instream, buf, kBufferSize);
-  err = parseCoordinateLine(buf, dim);
-  if (err < 0 || dim != dims[0])
-  {
-
-    ss << "x dimension does not match expected dimension: " << dim << " <--> " << dims[0];
-    addErrorMessage(getHumanLabel(), ss, -1);
-    return -1;
-  }
-  float xscale = 1.0f;
-  err = skipVolume<float>(instream, 4, dim, 1, 1, xscale);
-
-  // Now parse the Y coordinates.
-// ::memset(buf, 0, kBufferSize);
-  err = readLine(instream, buf, kBufferSize);
-  err = parseCoordinateLine(buf, dim);
-  if (err < 0 || dim != dims[1])
-  {
-
-    ss << "y dimension does not match expected dimension: " << dim << " <--> " << dims[1];
-    addErrorMessage(getHumanLabel(), ss, -1);
-    return -1;
-  }
-  float yscale = 1.0f;
-  err = skipVolume<float>(instream, 4, 1, dim, 1, yscale);
-
-  // Now parse the Z coordinates.
-//  ::memset(buf, 0, kBufferSize);
-  err = readLine(instream, buf, kBufferSize);
-  err = parseCoordinateLine(buf, dim);
-  if (err < 0 || dim != dims[2])
-  {
-
-    ss << "z dimension does not match expected dimension: " << dim << " <--> " << dims[2];
-    addErrorMessage(getHumanLabel(), ss, -1);
-    return -1;
-  }
-  float zscale = 1.0f;
-  err = skipVolume<float>(instream, 4, 1, 1, dim, zscale);
-  if (err < 0)
-  {
-
-    ss << "Error skipping Volume section of VTK file.";
-    return err;
-  }
-  // This makes a very bad assumption that the Rectilinear grid has even spacing
-  // along each axis which it does NOT have to have. Since this class is specific
-  // to the DREAM.3D package this is a safe assumption.
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setResolution(xscale, yscale, zscale);
-#endif
   bool ok = false;
   // Now we need to search for the 'FeatureID' and
   bool needFeatureIds = true;
@@ -430,7 +376,8 @@ int VtkFeatureIdReader::readFile()
 
   //Cell Data is one less in each direction
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
-  DataArray<int>::Pointer featureIds = DataArray<int>::CreateArray(totalVoxels, DREAM3D::CellData::FeatureIds);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(totalVoxels);
+  dataCheck();
 
   buf = instream.readLine();
   QList<QByteArray> tokens;
@@ -467,14 +414,14 @@ int VtkFeatureIdReader::readFile()
       {
         // Splat 0xAB across the entire array. that way if the read messes up we
         //  can more easily diagnose the problem.
-        ::memset(featureIds->getPointer(0), 0xAB, sizeof(int) * totalVoxels);
-        instream.read(reinterpret_cast<char*> (featureIds->getPointer(0)), sizeof(int) * totalVoxels);
+        ::memset(m_FeatureIdsPtr.lock()->getPointer(0), 0xAB, sizeof(int) * totalVoxels);
+        instream.read(reinterpret_cast<char*> (m_FeatureIdsPtr.lock()->getPointer(0)), sizeof(int) * totalVoxels);
         int t;
         // We need to Byte Swap (Possibly) from the Big Endian format stored by
         // the vtk binary file into what ever system we are running.
         for (size_t i = 0; i < totalVoxels; ++i)
         {
-          t = featureIds->GetValue(i);
+          t = m_FeatureIdsPtr.lock()->GetValue(i);
           DREAM3D::Endian::FromSystemToBig::convert(t);
           m_FeatureIds[i] = t;
         }

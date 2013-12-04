@@ -93,7 +93,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
     YSChoiAbaqusReader(const YSChoiAbaqusReader&); // Copy Constructor Not Implemented
     void operator=(const YSChoiAbaqusReader&); // Operator '=' Not Implemented

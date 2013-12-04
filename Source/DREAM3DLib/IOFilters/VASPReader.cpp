@@ -108,10 +108,13 @@ int VASPReader::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VASPReader::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void VASPReader::dataCheck()
 {
   setErrorCondition(0);
-  VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
+  VertexDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VertexDataContainer, AbstractFilter>(this, getVertexDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
 
@@ -128,11 +131,11 @@ void VASPReader::dataCheck(bool preflight, size_t voxels, size_t features, size_
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QVector<int> dims(1, 3);
-  m_AtomVelocitiesPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_VertexAttributeMatrixName,  m_AtomVelocitiesArrayName, 0.0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AtomVelocitiesPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_AtomVelocitiesArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AtomVelocitiesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  m_AtomTypesPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_VertexAttributeMatrixName,  m_AtomTypesArrayName, 0, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AtomTypesPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_AtomTypesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AtomTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -169,16 +172,7 @@ void VASPReader::dataCheck(bool preflight, size_t voxels, size_t features, size_
 // -----------------------------------------------------------------------------
 void VASPReader::preflight()
 {
-  VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
-  if(NULL == m)
-  {
-    VertexDataContainer::Pointer vdc = VertexDataContainer::New();
-    vdc->setName(getVertexDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
-  }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -186,17 +180,7 @@ void VASPReader::preflight()
 // -----------------------------------------------------------------------------
 void VASPReader::execute()
 {
-
   int err = 0;
-
-  VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
-  if(NULL == m)
-  {
-    VertexDataContainer::Pointer vdc = VertexDataContainer::New();
-    vdc->setName(getVertexDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
-  }
 
   m_InStream.setFileName(getInputFile());
   if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -229,6 +213,9 @@ void VASPReader::execute()
 int VASPReader::readHeader()
 {
   QString ss;
+
+  dataCheck();
+
   VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
 
   int error = 0;
@@ -293,21 +280,20 @@ int VASPReader::readHeader()
 // -----------------------------------------------------------------------------
 int VASPReader::readFile()
 {
+  dataCheck();
+
   VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
 
   QByteArray buf;
   QList<QByteArray> tokens; /* vector to store the split data */
 
-  // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
-  // method which is performed before this function. This will cause an error -501 because the array with the name
-  // m_FeatureIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
-  m->getAttributeMatrix(getVertexAttributeMatrixName())->removeAttributeArray(m_AtomVelocitiesArrayName);
-  m->getAttributeMatrix(getVertexAttributeMatrixName())->removeAttributeArray(m_AtomTypesArrayName);
-  // Rerun the data check in order to allocate the array to store the data from the .dx file.
-  int64_t totalPoints = m->getAttributeMatrix(getVertexAttributeMatrixName())->getNumTuples();
-  dataCheck(false, totalPoints, 0, 0);
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
+  totalAtoms = verticesPtr->getNumberOfTuples();
+
+  // Resize the vertex attribute matrix 
+  m->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(totalAtoms);
+  dataCheck();
 
   if (getErrorCondition() < 0)
   {

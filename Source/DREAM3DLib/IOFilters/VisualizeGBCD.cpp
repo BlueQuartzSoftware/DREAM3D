@@ -160,11 +160,14 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void VisualizeGBCD::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceEnsembleAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
 
   if(getOutputFile().isEmpty() == true)
   {
@@ -198,12 +201,12 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     else
     {
       QVector<int> dims(1, 5);
-      m_GBCDdimensionsPtr = sattrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_GBCDdimensionsArrayName, -301, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      m_GBCDdimensionsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_GBCDdimensionsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_GBCDdimensionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_GBCDdimensions = m_GBCDdimensionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
       int numComp = iDataArray->GetNumberOfComponents();
       dims[0] = numComp;
-      m_GBCDPtr = sattrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_GBCDArrayName, -301, ensembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      m_GBCDPtr = attrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_GBCDArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
@@ -215,12 +218,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 void VisualizeGBCD::preflight()
 {
-  setErrorCondition(0);
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
-  dataCheckSurfaceMesh(true, 1, 1, 1);
+  dataCheckSurfaceMesh();
 }
 
 // -----------------------------------------------------------------------------
@@ -230,28 +228,17 @@ void VisualizeGBCD::execute()
 {
   int err = 0;
   setErrorCondition(err);
+
+  dataCheckSurfaceMesh();
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
+
   notifyStatusMessage("Starting");
 
   VertexArray::Pointer nodesPtr = sm->getVertices();
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->getNumberOfTuples();
-
-  // Run the data check to allocate the memory for the centroid array
-  int64_t totalEnsembles = sm->getAttributeMatrix(getFaceEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheckSurfaceMesh(false, 0, 0, totalEnsembles);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->initializeWithZeros();

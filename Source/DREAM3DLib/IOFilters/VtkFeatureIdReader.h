@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
   protected:
     VtkFeatureIdReader();
 
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
 
     /**

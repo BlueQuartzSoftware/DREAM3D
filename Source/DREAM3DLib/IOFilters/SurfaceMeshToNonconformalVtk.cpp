@@ -121,7 +121,7 @@ int SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void SurfaceMeshToNonconformalVtk::dataCheck()
 {
   setErrorCondition(0);
   QString ss;
@@ -132,7 +132,13 @@ void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size
     addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* amV = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* amF = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+
   if (sm->getFaces().get() == NULL)
   {
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
@@ -144,11 +150,11 @@ void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size
     setErrorCondition(-384);
   }
   QVector<int> dims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = sattrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, features, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFaceLabelsPtr = amF->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  m_SurfaceMeshNodeTypePtr = sattrMat->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceMeshNodeTypeArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshNodeTypePtr = amV->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceMeshNodeTypeArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -159,12 +165,7 @@ void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNonconformalVtk::preflight()
 {
-  setErrorCondition(0);
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 /**
@@ -190,20 +191,14 @@ void SurfaceMeshToNonconformalVtk::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  dataCheck(false, 0, 0, 0);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
 
-  setErrorCondition(0);
+  dataCheck();
+
   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   VertexArray& nodes = *(m->getVertices());
   int nNodes = nodes.getNumberOfTuples();
   FaceArray& triangles = *(m->getFaces());
   int triangleCount = triangles.getNumberOfTuples();
-
-  dataCheck(false, nNodes, triangleCount, 0);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -211,7 +206,6 @@ void SurfaceMeshToNonconformalVtk::execute()
   QDir parentPath = fi.path();
   if(!parentPath.mkpath("."))
   {
-
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
@@ -223,7 +217,6 @@ void SurfaceMeshToNonconformalVtk::execute()
   vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
-
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
     notifyErrorMessage(ss, -18542);
     setErrorCondition(-18542);
@@ -232,7 +225,6 @@ void SurfaceMeshToNonconformalVtk::execute()
   ScopedFileMonitor vtkFileMonitor(vtkFile);
 
   notifyStatusMessage("Writing Vertex Data ....");
-
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");

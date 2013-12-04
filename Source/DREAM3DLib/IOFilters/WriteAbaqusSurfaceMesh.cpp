@@ -111,7 +111,7 @@ int WriteAbaqusSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void WriteAbaqusSurfaceMesh::dataCheck()
 {
   setErrorCondition(0);
   if (m_OutputFile.isEmpty() == true)
@@ -120,7 +120,11 @@ void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fea
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* attrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+
   if (sm->getFaces().get() == NULL)
   {
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
@@ -129,7 +133,7 @@ void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fea
   else
   {
     QVector<int> dims(1, 2);
-    m_SurfaceMeshFaceLabelsPtr = sattrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, voxels, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceLabelsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     {
       m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
@@ -148,12 +152,7 @@ void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fea
 // -----------------------------------------------------------------------------
 void WriteAbaqusSurfaceMesh::preflight()
 {
-  setErrorCondition(0);
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -163,20 +162,9 @@ void WriteAbaqusSurfaceMesh::execute()
 {
   int err = 0;
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceDataContainer Object was NULL", -999);
-    return;
-  }
+  dataCheck();
 
-  int64_t numTriangles = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getNumTuples();
-  dataCheck(false, numTriangles, 0, 0);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -184,7 +172,6 @@ void WriteAbaqusSurfaceMesh::execute()
   QDir parentPath = fi.path();
   if(!parentPath.mkpath("."))
   {
-
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
@@ -193,7 +180,6 @@ void WriteAbaqusSurfaceMesh::execute()
 
   VertexArray::Pointer nodesPtr = sm->getVertices();
   FaceArray::Pointer trianglePtr = sm->getFaces();
-
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
@@ -267,7 +253,6 @@ int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
   fprintf(f, "*ELEMENT, TYPE=SFM3D3\n");
   for(size_t i = 1; i <= numTri; ++i)
   {
-
     // When we get the node index, add 1 to it because Abaqus number is 1 based.
     int nId0 = triangles[i - 1].verts[0] + 1;
     int nId1 = triangles[i - 1].verts[1] + 1;
