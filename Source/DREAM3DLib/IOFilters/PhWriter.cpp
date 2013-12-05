@@ -154,14 +154,9 @@ int PhWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int PhWriter::writeFile()
 {
+  dataCheck();
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return -40;
-  }
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -236,5 +231,3 @@ int PhWriter::writeFile()
   notifyStatusMessage("Writing Ph File Complete");
   return 0;
 }
-
-

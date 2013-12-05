@@ -40,7 +40,6 @@
 
 #include "EbsdLib/EbsdReader.h"
 
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
@@ -69,17 +68,12 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-
-    //------ Created Cell Data
-    //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
-
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer)
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

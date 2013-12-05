@@ -148,8 +148,6 @@ void VtkFeatureIdReader::dataCheck()
   // Errors will get propagated to the user through the normal mechanism
   // Reading the header will set the Dimensions, Resolution and Origin
   readHeader();
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -317,8 +315,6 @@ int VtkFeatureIdReader::readHeader()
   instream.close();
   return err;
 }
-
-
 
 // -----------------------------------------------------------------------------
 //

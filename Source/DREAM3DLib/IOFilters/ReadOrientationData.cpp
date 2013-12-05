@@ -55,7 +55,6 @@
   m_msgType* var = var##Array.get();
 
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -150,7 +149,6 @@ void ReadOrientationData::dataCheck()
   QFileInfo fi(m_InputFile);
   if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
-
     QString ss = QObject::tr("%1: Either the H5Ebsd file must exist or the Manufacturer must be set").arg(getHumanLabel());
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss, -1);
@@ -257,7 +255,6 @@ void ReadOrientationData::dataCheck()
       setErrorCondition(-997);
       QString ss = QObject::tr("The File extension '%1' was not recognized. Currently .ang or .ctf are the only recognized file extensions").arg(ext);
       addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
       return;
     }
 
