@@ -81,7 +81,7 @@ void FindFeatureClustering::dataCheck()
   {
     NeighborList<float>::Pointer clusteringPtr = NeighborList<float>::New();
     clusteringPtr->SetName(m_ClusteringListArrayName);
-    clusteringPtr->Resize(features);
+    clusteringPtr->Resize(cellFeatureAttrMat->getNumTuples());
     clusteringPtr->setNumNeighborsArrayName(m_ClusteringListArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_ClusteringListArrayName, clusteringPtr);
     if (clusteringPtr.get() == NULL)

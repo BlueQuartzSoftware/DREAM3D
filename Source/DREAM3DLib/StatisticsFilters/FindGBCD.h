@@ -133,8 +133,8 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles);
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheckSurfaceMesh();
+    void dataCheckVoxel();
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceAreas)

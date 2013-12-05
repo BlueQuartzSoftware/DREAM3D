@@ -142,7 +142,7 @@ void FindMisorientations::dataCheck()
   {
     NeighborList<float>::Pointer misorientationListPtr = NeighborList<float>::New();
     misorientationListPtr->SetName(m_MisorientationListArrayName);
-    misorientationListPtr->Resize(features);
+    misorientationListPtr->Resize(cellFeatureAttrMat->getNumTuples());
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_MisorientationListArrayName, misorientationListPtr);
     m_MisorientationList = misorientationListPtr.get();
     if (misorientationListPtr.get() == NULL)
@@ -155,7 +155,7 @@ void FindMisorientations::dataCheck()
   else
   {
     m_MisorientationList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(misorientationPtr.get());
-    m_MisorientationList->Resize(features);
+    m_MisorientationList->Resize(cellFeatureAttrMat->getNumTuples());
   }
 }
 

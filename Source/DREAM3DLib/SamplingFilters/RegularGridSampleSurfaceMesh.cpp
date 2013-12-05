@@ -52,7 +52,6 @@
 // -----------------------------------------------------------------------------
 RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_XPoints(0),
   m_YPoints(0),
@@ -192,7 +191,7 @@ void RegularGridSampleSurfaceMesh::execute()
   m->setOrigin(0.0, 0.0, 0.0);
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
-  dataCheck(true, (m_XPoints * m_YPoints * m_ZPoints), 0, 0);
+  dataCheck();
 
   SampleSurfaceMesh::execute();
 

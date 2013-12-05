@@ -52,7 +52,6 @@
 // -----------------------------------------------------------------------------
 UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_XPoints(0),
   m_YPoints(0),
@@ -174,7 +173,7 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(getDataContainerName(), false, NULL);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(NULL == m)
   {
     m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
@@ -210,7 +209,7 @@ void UncertainRegularGridSampleSurfaceMesh::execute()
   m->setOrigin(0.0, 0.0, 0.0);
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
-  dataCheck(true, (m_XPoints * m_YPoints * m_ZPoints), 0, 0);
+  dataCheck();
 
   SampleSurfaceMesh::execute();
 

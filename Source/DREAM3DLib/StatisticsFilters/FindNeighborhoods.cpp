@@ -136,7 +136,7 @@ void FindNeighborhoods::dataCheck()
   {
     NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
     neighborhoodlistPtr->SetName(m_NeighborhoodListArrayName);
-    neighborhoodlistPtr->Resize(features);
+    neighborhoodlistPtr->Resize(cellFeatureAttrMat->getNumTuples());
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborhoodListArrayName, neighborhoodlistPtr);
 

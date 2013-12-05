@@ -88,6 +88,7 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats5)
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 

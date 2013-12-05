@@ -295,7 +295,7 @@ FindGBCD::FindGBCD() :
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_GBCDRes(9.0),
-  m_GBCDArrayNames(DREAM3D::EnsembleData::GBCD),
+//  m_GBCDArrayNames(DREAM3D::EnsembleData::GBCD),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
@@ -369,11 +369,16 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindGBCD::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -302);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* faceEnsembleAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceEnsembleAttributeMatrixName(), -302);
+  if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
@@ -402,11 +407,11 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t featur
     m_SurfaceMeshFaceAreasPtr = faceAttrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_SurfaceMeshFaceAreasArrayName, -388, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    m_GBCDPtr = scellEnsembleAttrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_GBCDArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_GBCDPtr = faceEnsembleAttrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_GBCDArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 5;
-    m_GBCDdimensionsPtr = scellEnsembleAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_GBCDdimensionsArrayName, 1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_GBCDdimensionsPtr = faceEnsembleAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_GBCDdimensionsArrayName, 1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_GBCDdimensionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GBCDdimensions = m_GBCDdimensionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -415,10 +420,15 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t featur
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindGBCD::dataCheckVoxel()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -302);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 3);
   m_FeatureEulerAnglesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_FeatureEulerAnglesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -440,25 +450,8 @@ void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t features, si
 // -----------------------------------------------------------------------------
 void FindGBCD::preflight()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
-
-  dataCheckSurfaceMesh(true, 1, 1, 1);
-
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
-
-  dataCheckVoxel(true, 1, 1, 1);
+  dataCheckSurfaceMesh();
+  dataCheckVoxel();
 }
 
 // -----------------------------------------------------------------------------
@@ -468,27 +461,21 @@ void FindGBCD::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
-    return;
-  }
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
+
+  // Run the data check to allocate the memory for the centroid array
+  // Note the use of the voxel datacontainer num ensembles to set the gbcd size
+  dataCheckSurfaceMesh();
+  dataCheckVoxel();
+
   notifyStatusMessage("Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   VertexArray::Pointer nodesPtr = sm->getVertices();
 
@@ -497,11 +484,6 @@ void FindGBCD::execute()
 
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-
-  // Run the data check to allocate the memory for the centroid array
-  // Note the use of the voxel datacontainer num ensembles to set the gbcd size
-  dataCheckSurfaceMesh(false, totalFaces, 0, totalEnsembles);
-  dataCheckVoxel(false, 0, totalFeatures, totalEnsembles);
 
   size_t faceChunkSize = 50000;
   size_t numMisoReps = 2304;
@@ -573,10 +555,12 @@ void FindGBCD::execute()
   dims[3] = m_GBCDsizes[3];
   dims[4] = m_GBCDsizes[4];
   dims[5] = 2;
-  m_GBCDPtr = sattrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_FaceEnsembleAttributeMatrixName,  m_GBCDArrayName, 0, totalEnsembles, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+  AttributeMatrix* faceEnsembleAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceEnsembleAttributeMatrixName(), -302);
+  m_GBCDPtr = faceEnsembleAttrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this,  m_GBCDArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  for(int i = 0; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
+  for(int i = 0; i < faceEnsembleAttrMat->getNumTuples(); i++)
   {
     m_GBCDdimensions[5 * i + 0] = m_GBCDsizes[0];
     m_GBCDdimensions[5 * i + 1] = m_GBCDsizes[1];
