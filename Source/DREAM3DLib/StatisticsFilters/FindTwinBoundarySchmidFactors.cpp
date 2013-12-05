@@ -304,7 +304,12 @@ int FindTwinBoundarySchmidFactors::writeFilterParameters(AbstractFilterParameter
 void FindTwinBoundarySchmidFactors::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -302);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 4);
@@ -330,6 +335,8 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh(bool preflight, size_t 
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -302);
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 2);

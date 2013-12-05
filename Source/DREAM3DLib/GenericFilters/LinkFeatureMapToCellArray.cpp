@@ -110,13 +110,12 @@ void LinkFeatureMapToCellArray::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  if(NULL == m)
-  {
-    setErrorCondition(-10000);
-    addErrorMessage(getHumanLabel(), "Volume Data Container is NULL", getErrorCondition());
-    return;
-  }
-  IDataArray::Pointer data = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellDataArrayName);
+  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+
+  IDataArray::Pointer data = cellAttrMat->getAttributeArray(m_SelectedCellDataArrayName);
   if (NULL == data.get())
   {
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellDataArrayName);
@@ -140,11 +139,9 @@ void LinkFeatureMapToCellArray::dataCheck()
     return;
   }
 
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->clearAttributeArrays();
-  BoolArrayType::Pointer active = BoolArrayType::CreateArray(features, DREAM3D::FeatureData::Active);
-  // bool* mActive = m_Active->getPointer(0);
+  cellFeatureAttrMat->clearAttributeArrays();
+  BoolArrayType::Pointer active = BoolArrayType::CreateArray(1, DREAM3D::FeatureData::Active);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::Active, active);
-
 }
 
 
@@ -162,15 +159,11 @@ void LinkFeatureMapToCellArray::preflight()
 // -----------------------------------------------------------------------------
 void LinkFeatureMapToCellArray::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   // We get the attribute maxtrix here but no need to check it as that should have been done in the "dataCheck()" function
   AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());

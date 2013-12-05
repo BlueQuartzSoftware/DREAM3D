@@ -408,6 +408,8 @@ void M3CSliceBySlice::dataCheck()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* vertexAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -302);
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -419,7 +421,7 @@ void M3CSliceBySlice::dataCheck()
   VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
   FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
 
-  m_SurfaceMeshNodeTypePtr = sattrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_VertexAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, 0, 1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshNodeTypePtr = vertexAttrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this,  m_SurfaceMeshNodeTypeArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -435,16 +437,6 @@ void M3CSliceBySlice::dataCheck()
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::preflight()
 {
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
-  {
-    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
-    sdc->setName(getSurfaceDataContainerName());
-    getDataContainerArray()->pushBack(sdc);
-    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  }
-
   dataCheck();
 }
 
@@ -454,27 +446,14 @@ void M3CSliceBySlice::preflight()
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::execute()
 {
+  int err = 0;
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  dataCheck();
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
-  {
-    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
-    sdc->setName(getSurfaceDataContainerName());
-    getDataContainerArray()->pushBack(sdc);
-    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  }
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-
-  int err = 0;
 
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
 
@@ -494,14 +473,12 @@ void M3CSliceBySlice::execute()
     qDebug() << trianglesFile << "\n";
   }
 
-
   int cNodeID = 0;
   int cTriID = 0;
   int cEdgeID = 0;
   int nTriangle = 0; // number of triangles...
   int nEdge = 0; // number of edges...
   int nNodes = 0; // number of total Nodes used...
-
 
   //  FeatureChecker::Pointer m_FeatureChecker = FeatureChecker::New();
 
@@ -580,7 +557,6 @@ void M3CSliceBySlice::execute()
   }
   for (size_t i = 0; i < sliceCount; i++)
   {
-
     QString ss = QObject::tr(" Layers %1 and %2 of %3").arg(i).arg(i + 1).arg(sliceCount);
     // notifyProgressValue((i * 90 / sliceCount));
     notifyStatusMessage(ss);
@@ -622,7 +598,6 @@ void M3CSliceBySlice::execute()
     // If we are on the last slice then we need both layers to be ghost cells with
     // negative feature ids but ONLY if the voxel volume was NOT originally wrapped in
     // ghost cells
-
 
     // This starts the actual M3C Algorithm codes
     get_neighbor_list(NSP, NS, wrappedDims, neighborsPtr, neighCSiteIdPtr);

@@ -230,8 +230,7 @@ void FindDeformationStatistics::dataCheck()
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::preflight()
 {
-
-  dataCheck(true, 1, 1 , 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------

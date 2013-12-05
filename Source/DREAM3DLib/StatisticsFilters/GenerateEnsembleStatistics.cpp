@@ -277,7 +277,7 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     StatsDataArray::Pointer p = StatsDataArray::New();
     m_StatsDataArray = p.get();
-    m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
+    m_StatsDataArray->fillArrayWithNewStatsData(cellEnsembleAttrMat->getNumTuples(), m_PhaseTypes);
     m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, p);
   }
 

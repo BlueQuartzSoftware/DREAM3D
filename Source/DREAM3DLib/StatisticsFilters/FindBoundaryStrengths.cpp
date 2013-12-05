@@ -138,6 +138,9 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, 
 
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -302);
+  if(getErrorCondition() < 0) { return; }
+
   // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {
@@ -180,6 +183,10 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FindBoundaryStrengths>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -302);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 4);

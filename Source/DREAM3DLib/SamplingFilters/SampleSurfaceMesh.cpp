@@ -193,16 +193,8 @@ void SampleSurfaceMesh::dataCheck()
 //
 // -----------------------------------------------------------------------------
 void SampleSurfaceMesh::preflight()
-void SampleSurfaceMesh::preflight()
-void SampleSurfaceMesh::preflight()
 {
-  setErrorCondition(0);
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
   dataCheck();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -232,7 +224,7 @@ void SampleSurfaceMesh::execute()
   FaceArray::Pointer faces = sm->getFaces();
   int numFaces = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getNumTuples();
 
-  dataCheck(true, numFaces, 0, 0);
+  dataCheck();
 
   //create array to hold bounding vertices for each face
   VertexArray::Vert_t ll, ur;

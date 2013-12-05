@@ -96,9 +96,9 @@ void UpdateCellQuats::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 5);
-  m_QuatsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_QuatsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_Quats5Ptr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_Quats5ArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_Quats5Ptr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Quats5 = m_Quats5Ptr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 4;
   m_QuatsPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_QuatsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -122,30 +122,11 @@ void UpdateCellQuats::preflight()
 void UpdateCellQuats::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  dataCheck();
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-
-  //getting the 5 component quaternions from the data container and down-casting them
-  IDataArray::Pointer Quats5 = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(DREAM3D::CellData::Quats);
-  if(Quats5->GetNumberOfComponents() != 5)
-  {
-    notifyErrorMessage("The Quats array did not contain 5 components", -999);
-    return;
-  }
-  DataArray<float>* quats5 = DataArray<float>::SafePointerDownCast(Quats5.get());
-  float* quats5ptr = quats5->getPointer(0);
-  //creating the 4 component quaternions in the data container
-  QVector<int> dims(1, 4);
-  m_QuatsPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_QuatsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  int64_t totalPoints = cellAttrMat->getNumTuples();
 
   //copying the 5 component quaternions into the new 4 component quaternions
   // This is a special case for dealing with this conversion. If you are dealing with
@@ -154,7 +135,7 @@ void UpdateCellQuats::execute()
   {
     for(int j = 0; j < 4; j++)
     {
-      m_Quats[4 * i + j] = quats5ptr[5 * i + (j + 1)];
+      m_Quats[4 * i + j] = m_Quats5[5 * i + (j + 1)];
     }
   }
 
