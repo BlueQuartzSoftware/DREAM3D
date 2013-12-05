@@ -140,8 +140,8 @@ void LinkFeatureMapToCellArray::dataCheck()
   }
 
   cellFeatureAttrMat->clearAttributeArrays();
-  BoolArrayType::Pointer active = BoolArrayType::CreateArray(1, DREAM3D::FeatureData::Active);
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::Active, active);
+  QVector<int> dims(1, 1);
+  cellFeatureAttrMat->createAndAddAttributeArray<DataArray<bool>, bool>(DREAM3D::FeatureData::Active, false, dims);
 }
 
 

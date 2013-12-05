@@ -133,7 +133,6 @@ void FindCellQuats::dataCheck()
 // -----------------------------------------------------------------------------
 void FindCellQuats::preflight()
 {
-
   dataCheck();
 }
 
@@ -143,17 +142,11 @@ void FindCellQuats::preflight()
 void FindCellQuats::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   QuatF qr;

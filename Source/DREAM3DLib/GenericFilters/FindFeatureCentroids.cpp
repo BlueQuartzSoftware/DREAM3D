@@ -93,7 +93,7 @@ void FindFeatureCentroids::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
+  AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -304);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
@@ -126,17 +126,11 @@ void FindFeatureCentroids::preflight()
 void FindFeatureCentroids::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   QVector<int> dims(1, 5);
   m_FeatureCenters = FloatArrayType::CreateArray(totalFeatures, dims, "centers");

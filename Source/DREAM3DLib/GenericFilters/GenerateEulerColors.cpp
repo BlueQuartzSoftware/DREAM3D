@@ -138,9 +138,6 @@ void GenerateEulerColors::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateEulerColors::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
   dataCheck();
 }
 
@@ -152,16 +149,11 @@ void GenerateEulerColors::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   size_t index = 0;
 
@@ -195,11 +187,7 @@ void GenerateEulerColors::execute()
       m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index + 1] / halfPi * 255.0f);
       m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index + 2] / twoThirdPi * 255.0f);
     }
-
-
-
   }
-
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }

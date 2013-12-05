@@ -110,7 +110,6 @@ void FindSurfaceCells::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSurfaceCells::preflight()
 {
-
   dataCheck();
 }
 
@@ -120,16 +119,10 @@ void FindSurfaceCells::preflight()
 void FindSurfaceCells::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());

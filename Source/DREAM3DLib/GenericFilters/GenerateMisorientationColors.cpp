@@ -153,14 +153,6 @@ void GenerateMisorientationColors::dataCheck()
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
-  if (NULL == m)
-  {
-    QString ss = QObject::tr("The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers");
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
-
   QVector<int> dims(1, 1);
   m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -200,8 +192,6 @@ void GenerateMisorientationColors::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateMisorientationColors::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   dataCheck();
 }
 
@@ -212,23 +202,14 @@ void GenerateMisorientationColors::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
-    return;
-  }
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   bool missingGoodVoxels = true;
-
   if (NULL != m_GoodVoxels)
   {
     missingGoodVoxels = false;

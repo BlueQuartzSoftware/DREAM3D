@@ -138,9 +138,9 @@ void RenumberFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void RenumberFeatures::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QList<QString> headers = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
   for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
@@ -157,17 +157,13 @@ void RenumberFeatures::preflight()
 void RenumberFeatures::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
+
+  dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   QString ss;
   size_t goodcount = 1;

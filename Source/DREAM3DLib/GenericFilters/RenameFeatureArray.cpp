@@ -119,6 +119,8 @@ void RenameFeatureArray::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, RenameFeatureArray>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
 
   if(m_SelectedFeatureArrayName.isEmpty() == true)
   {
@@ -127,7 +129,7 @@ void RenameFeatureArray::dataCheck()
   }
   else
   {
-    bool check = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->renameAttributeArray(m_SelectedFeatureArrayName, m_NewFeatureArrayName);
+    bool check = cellFeatureAttrMat->renameAttributeArray(m_SelectedFeatureArrayName, m_NewFeatureArrayName);
     if(check == false)
     {
       QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
@@ -142,7 +144,6 @@ void RenameFeatureArray::dataCheck()
 // -----------------------------------------------------------------------------
 void RenameFeatureArray::preflight()
 {
-
   dataCheck();
 }
 
@@ -152,9 +153,11 @@ void RenameFeatureArray::preflight()
 // -----------------------------------------------------------------------------
 void RenameFeatureArray::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+
+  dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   bool check = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->renameAttributeArray(m_SelectedFeatureArrayName, m_NewFeatureArrayName);
 
   if(check == false)

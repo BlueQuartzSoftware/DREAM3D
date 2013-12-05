@@ -188,6 +188,7 @@ IDataArray::Pointer copyData(IDataArray::Pointer inputData, int64_t voxels, int3
 void CopyFeatureArrayToCellArray::execute()
 {
   setErrorCondition(0);
+
   dataCheck();
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -251,7 +252,6 @@ void CopyFeatureArrayToCellArray::execute()
   {
     p = copyData<bool>(inputData, totalPoints, m_FeatureIds);
   }
-
 
   if (p.get() != NULL)
   {

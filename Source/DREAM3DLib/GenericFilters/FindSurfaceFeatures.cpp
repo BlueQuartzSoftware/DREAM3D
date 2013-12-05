@@ -88,9 +88,9 @@ void FindSurfaceFeatures::dataCheck()
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FindSurfaceFeatures>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
+  AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -302);
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
@@ -118,24 +118,15 @@ void FindSurfaceFeatures::preflight()
 // -----------------------------------------------------------------------------
 void FindSurfaceFeatures::execute()
 {
-  QString ss;
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+  QString ss;
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  ss = QObject::tr("FSG Points - %1, Features - %2").arg(totalPoints).arg(totalFeatures);
-  notifyStatusMessage(ss);
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_surfacefeatures(); }
   if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_surfacefeatures2D(); }
-
 
   notifyStatusMessage("FindSurfaceFeatures Completed");
 }

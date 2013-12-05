@@ -119,6 +119,8 @@ void RenameCellArray::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, RenameCellArray>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
@@ -128,7 +130,7 @@ void RenameCellArray::dataCheck()
   }
   else
   {
-    bool check = m->getAttributeMatrix(getCellAttributeMatrixName())->renameAttributeArray(m_SelectedCellArrayName, m_NewCellArrayName);
+    bool check = cellAttrMat->renameAttributeArray(m_SelectedCellArrayName, m_NewCellArrayName);
     if(check == false)
     {
       QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
@@ -143,14 +145,6 @@ void RenameCellArray::dataCheck()
 // -----------------------------------------------------------------------------
 void RenameCellArray::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", -999);
-    return;
-  }
-
   dataCheck();
 }
 
@@ -160,9 +154,11 @@ void RenameCellArray::preflight()
 // -----------------------------------------------------------------------------
 void RenameCellArray::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+ 
+  dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   bool check = m->getAttributeMatrix(getCellAttributeMatrixName())->renameAttributeArray(m_SelectedCellArrayName, m_NewCellArrayName);
 
   if(check == false)

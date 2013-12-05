@@ -156,10 +156,7 @@ namespace Detail
         p->SetValue(v, ptr->GetValue(v) );
       }
     }
-
-
   }
-
 } // End Namespace Detail
 
 #define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, AttributeMatrixName, OutputName)\
@@ -170,8 +167,6 @@ namespace Detail
       completed = true;\
     }\
   }
-
-
 
 // -----------------------------------------------------------------------------
 //

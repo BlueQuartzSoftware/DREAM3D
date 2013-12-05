@@ -62,9 +62,6 @@ class DREAM3DLib_EXPORT GenerateRodriguesColors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    //------ Required Cell Data
-    //------ Required Ensemble Data
-    //------ Created Cell Data
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 

@@ -184,9 +184,15 @@ void AdjustVolumeOrigin::dataCheck()
 {
   setErrorCondition(0);
 
+  if (m_ApplyToVoxelVolume == true)
+  {
+    VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
+  }
   if (m_ApplyToSurfaceMesh == true)
   {
-    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+    SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
+    if(getErrorCondition() < 0) { return; }
     if(sm->getVertices().get() == NULL)
     {
       setErrorCondition(-384);
@@ -201,31 +207,7 @@ void AdjustVolumeOrigin::dataCheck()
 // -----------------------------------------------------------------------------
 void AdjustVolumeOrigin::preflight()
 {
-  VolumeDataContainer* m = NULL;
-  SurfaceDataContainer* sm  = NULL;
-
-  if (m_ApplyToVoxelVolume == true)
-  {
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-    if(NULL == m)
-    {
-      setErrorCondition(-999);
-      addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    }
-  }
-  if (m_ApplyToSurfaceMesh == true)
-  {
-    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-    if(NULL == sm)
-    {
-      setErrorCondition(-999);
-      addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    }
-  }
-  if(NULL != sm && NULL != m)
-  {
-    dataCheck();
-  }
+  dataCheck();
 }
 
 
@@ -236,28 +218,17 @@ void AdjustVolumeOrigin::execute()
 {
   setErrorCondition(0);
 
+  dataCheck();
+
   // Set the Voxel Volume First, since this is easy
   if (m_ApplyToVoxelVolume == true)
   {
     VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-    if(NULL == m)
-    {
-      setErrorCondition(-999);
-      addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-      return;
-    }
     m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
   }
 
   if (m_ApplyToSurfaceMesh == true)
   {
-    SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-    if(NULL == m)
-    {
-      setErrorCondition(-999);
-      addErrorMessage(getHumanLabel(), "The SurfaceDataContainer Object with the specific name " + getSurfaceDataContainerName() + " was not available.", getErrorCondition());
-      return;
-    }
     updateSurfaceMesh();
   }
 
@@ -272,7 +243,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   int err = 0;
 
   setErrorCondition(err);
-// SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+ SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   setErrorCondition(0);
   notifyStatusMessage("Starting");
@@ -282,7 +253,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   bool doParallel = true;
 #endif
 
-  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
+  VertexArray::Pointer nodesPtr = sm->getVertices();
   VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
 
   // First get the min/max coords.

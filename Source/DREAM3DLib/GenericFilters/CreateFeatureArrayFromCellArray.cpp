@@ -149,6 +149,7 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int64_t features
 void CreateFeatureArrayFromCellArray::execute()
 {
   setErrorCondition(0);
+
   dataCheck();
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());

@@ -181,7 +181,24 @@ int ScaleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 void ScaleVolume::dataCheck()
 {
+  setErrorCondition(0);
+  if (m_ApplyToVoxelVolume == true)
+  {
+    VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
+  }
 
+  if (m_ApplyToSurfaceMesh == true)
+  {
+    SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
+    if(getErrorCondition() < 0) { return; }
+    // We MUST have Nodes
+    if(sm->getVertices().get() == NULL)
+    {
+      setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+    }
+  }
 }
 
 
@@ -190,35 +207,7 @@ void ScaleVolume::dataCheck()
 // -----------------------------------------------------------------------------
 void ScaleVolume::preflight()
 {
-  setErrorCondition(0);
-  if (m_ApplyToVoxelVolume == true)
-  {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-    if(NULL == m)
-    {
-      setErrorCondition(-383);
-      addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", getErrorCondition());
-    }
-  }
-
-  if (m_ApplyToSurfaceMesh == true)
-  {
-    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-    if(NULL == sm)
-    {
-      setErrorCondition(-383);
-      addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-    }
-    else
-    {
-      // We MUST have Nodes
-      if(sm->getVertices().get() == NULL)
-      {
-        setErrorCondition(-384);
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-      }
-    }
-  }
+  dataCheck();
 }
 
 
@@ -231,16 +220,12 @@ void ScaleVolume::execute()
   setErrorCondition(0);
   QString ss;
 
+  dataCheck();
 
   if (m_ApplyToVoxelVolume == true)
   {
     VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-    if(NULL == m)
-    {
-      setErrorCondition(-999);
-      notifyErrorMessage("The DataContainer Object was NULL", -999);
-      return;
-    }
+
     float resolution[3];
     m->getResolution(resolution);
     resolution[0] *= m_ScaleFactor.x;
@@ -251,12 +236,7 @@ void ScaleVolume::execute()
   if (m_ApplyToSurfaceMesh == true)
   {
     SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-    if(NULL == m)
-    {
-      setErrorCondition(-999);
-      notifyErrorMessage("The DataContainer Object was NULL", -999);
-      return;
-    }
+
     updateSurfaceMesh();
   }
 
