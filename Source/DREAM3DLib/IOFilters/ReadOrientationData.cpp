@@ -317,8 +317,8 @@ void ReadOrientationData::readAngFile()
   err = reader.readFile();
   if (err < 0)
   {
-    setErrorCondition(err);
-    notifyErrorMessage("AngReader could not read the .ang file.", getErrorCondition());
+    setErrorCondition(reader.getErrorCode());
+    notifyErrorMessage(reader.getErrorMessage(), getErrorCondition());
     return;
   }
   VoxelDataContainer* m = getVoxelDataContainer();

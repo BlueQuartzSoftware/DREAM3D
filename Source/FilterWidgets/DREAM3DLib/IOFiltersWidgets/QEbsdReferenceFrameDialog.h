@@ -94,6 +94,22 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
 
     void on_showHelp_clicked();
 
+    void z10_triggered();
+    void z25_triggered();
+    void z50_triggered();
+    void z100_triggered();
+    void z125_triggered();
+    void z150_triggered();
+    void z200_triggered();
+    void z400_triggered();
+    void z600_triggered();
+
+    void on_fitToWindow_clicked();
+
+  protected:
+
+    void setupGui();
+
   private:
     QString                     m_EbsdFileName;
     QButtonGroup*               m_OriginGroup;

@@ -61,6 +61,8 @@
   <file>cube_molecule_delete.png</file>
   <file>cube_molecule_gearwheel.png</file>
   <file>warning.png</file>
+
+
   <file>QFilterWidgetHeaders/Generic_Header.png</file>
   <file>QFilterWidgetHeaders/IO_Header.png</file>
   <file>QFilterWidgetHeaders/Plugin_Header.png</file>

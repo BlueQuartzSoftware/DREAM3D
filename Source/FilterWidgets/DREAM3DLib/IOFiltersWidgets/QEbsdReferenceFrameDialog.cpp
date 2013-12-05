@@ -49,6 +49,7 @@
 #include <QtGui/QColor>
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
+#include <QtGui/QMenu>
 
 #include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
@@ -70,6 +71,67 @@ QEbsdReferenceFrameDialog::QEbsdReferenceFrameDialog(QString filename, QWidget *
   m_OriginGroup(NULL)
 {
   setupUi(this);
+
+  setupGui();
+
+
+  loadEbsdData();
+  updateGraphicsView();
+  m_NoTransBtn->setChecked(true);
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QEbsdReferenceFrameDialog::~QEbsdReferenceFrameDialog()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+#define ZOOM_MENU(var, menu, slot)\
+  {\
+  QAction* action = new QAction(menu);\
+  action->setText( #var );\
+  QString actionName("action_z" #var "Action");\
+  action->setObjectName(actionName);\
+  zoomMenu->addAction(action);\
+  connect(action, SIGNAL(triggered()), this, SLOT(slot())); \
+}
+
+#define ZOOM_MENU_SLOT_DEF(var, index)\
+void QEbsdReferenceFrameDialog::z##var##_triggered() {\
+  zoomButton->setText(#var " % ");\
+  m_EbsdView->setZoomIndex(index);\
+}
+
+ZOOM_MENU_SLOT_DEF(10, 0)
+ZOOM_MENU_SLOT_DEF(25, 1)
+ZOOM_MENU_SLOT_DEF(50, 2)
+ZOOM_MENU_SLOT_DEF(100, 3)
+ZOOM_MENU_SLOT_DEF(125, 4)
+ZOOM_MENU_SLOT_DEF(150, 5)
+ZOOM_MENU_SLOT_DEF(200, 6)
+ZOOM_MENU_SLOT_DEF(400, 7)
+ZOOM_MENU_SLOT_DEF(600, 8)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdReferenceFrameDialog::on_fitToWindow_clicked()
+{
+  m_EbsdView->setZoomIndex(9);
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdReferenceFrameDialog::setupGui()
+{
   m_OriginGroup = new QButtonGroup(this);
   m_OriginGroup->addButton(m_TSLdefaultBtn);
   m_OriginGroup->addButton(m_HKLdefaultBtn);
@@ -91,17 +153,21 @@ QEbsdReferenceFrameDialog::QEbsdReferenceFrameDialog(QString filename, QWidget *
   connect(refDir, SIGNAL(currentIndexChanged(int)),
           this, SLOT(referenceDirectionChanged()));
 
-  loadEbsdData();
-  updateGraphicsView();
-  m_NoTransBtn->setChecked(true);
+    QMenu* zoomMenu = new QMenu(this);
+  ZOOM_MENU(10, zoomMenu, z10_triggered);
+  ZOOM_MENU(25, zoomMenu, z25_triggered);
+  ZOOM_MENU(50, zoomMenu, z50_triggered);
+  ZOOM_MENU(100, zoomMenu, z100_triggered);
+  ZOOM_MENU(125, zoomMenu, z125_triggered);
+  ZOOM_MENU(150, zoomMenu, z150_triggered);
+  ZOOM_MENU(200, zoomMenu, z200_triggered);
+  ZOOM_MENU(400, zoomMenu, z400_triggered);
+  ZOOM_MENU(600, zoomMenu, z600_triggered);
 
-}
+  zoomButton->setMenu(zoomMenu);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QEbsdReferenceFrameDialog::~QEbsdReferenceFrameDialog()
-{
+//  connect(fitToWindow, SIGNAL(clicked()),
+//          m_EbsdView->fitInView() );
 }
 
 // -----------------------------------------------------------------------------
@@ -203,7 +269,6 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   int err = reader->getErrorCondition();
   if (err < 0)
   {
-    ipfLabel->setText("Error Reading the file");
     m_BaseImage = QImage();
     m_DisplayedImage = QImage();
   }
@@ -218,7 +283,6 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     err = convert->getErrorCondition();
     if (err < 0)
     {
-      ipfLabel->setText("Error converting angles to radians");
       m_BaseImage = QImage();
       m_DisplayedImage = QImage();
     }
@@ -247,7 +311,6 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   err = ipfColorFilter->getErrorCondition();
   if (err < 0)
   {
-    ipfLabel->setText("Error Generating IPF Colors" );
     m_BaseImage = QImage();
     m_DisplayedImage = QImage();
   }
@@ -268,7 +331,6 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   IDataArray::Pointer arrayPtr = m->getCellData(ipfColorFilter->getCellIPFColorsArrayName());
   if (NULL == arrayPtr.get())
   {
-      ipfLabel->setText("Error Generating IPF Colors from Array in Voxel Data Container" );
     m_BaseImage = QImage();
     m_DisplayedImage = QImage();
     return;
@@ -427,10 +489,7 @@ void QEbsdReferenceFrameDialog::updateGraphicsView()
 
   m_DisplayedImage = paintImage(m_DisplayedImage);
 
-
-
-  ipfLabel->setText("");
-  ipfLabel->setPixmap(QPixmap::fromImage(m_DisplayedImage));
+  m_EbsdView->setBaseImage(m_DisplayedImage);
 }
 
 // -----------------------------------------------------------------------------
