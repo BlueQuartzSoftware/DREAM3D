@@ -276,6 +276,13 @@ int AngReader::readFile()
     return -110;
   }
 
+  if (m_PhaseVector.size() == 0)
+  {
+    setErrorCode(-150);
+    setErrorMessage("No phase was parsed in the header portion of the file. This possibly means that part of the header is missing.");
+    return -150;
+  }
+
   // We need to pass in the buffer because it has the first line of data
   readData(in, buf, kBufferSize);
   if (getErrorCode() < 0)
