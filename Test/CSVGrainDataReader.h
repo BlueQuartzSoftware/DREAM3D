@@ -55,9 +55,8 @@ void set##name##Pointer(type* f)\
 
 /**
 * @class CSVReader CSVReader.h CSVReader/CSVReader.h
-* @brief This class is a self contained TSL OIM .ang file reader. It should only be dependent on
-* standard C++ features
-* @author Michael A. Jackson for BlueQuartz Software
+* @brief 
+* @author 
 * @date Mar 1, 2010
 * @version 1.0
 */
@@ -154,7 +153,7 @@ protected:
 
 private:
     std::string m_FileName;
-    int64_t m_NumberOfElements;
+    long long int m_NumberOfElements;
     int    m_NumFields;
 
     int*   m_GrainId;
