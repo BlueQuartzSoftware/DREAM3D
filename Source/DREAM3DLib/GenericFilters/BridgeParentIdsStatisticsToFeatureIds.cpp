@@ -235,9 +235,3 @@ void BridgeParentIdsStatisticsToFeatureIds::execute()
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("BridgeParentIdsStatisticsToFeatureIds Completed");
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-

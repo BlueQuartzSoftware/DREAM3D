@@ -61,9 +61,6 @@ class DREAM3DLib_EXPORT FindVolFractions : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Feature Data
-    //------ Created Ensemble Data
-
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Volume Fractions of Phases"; }

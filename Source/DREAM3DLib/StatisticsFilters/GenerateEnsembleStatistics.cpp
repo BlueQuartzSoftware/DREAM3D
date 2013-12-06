@@ -305,7 +305,6 @@ void GenerateEnsembleStatistics::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::preflight()
 {
-
   dataCheck();
 }
 // -----------------------------------------------------------------------------
@@ -313,18 +312,11 @@ void GenerateEnsembleStatistics::preflight()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-
-
-  int totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  int totalEnsembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int totalEnsembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   // Check to see if the user has over ridden the phase types for this filter
   if (m_PhaseTypeArray.size() > 0)

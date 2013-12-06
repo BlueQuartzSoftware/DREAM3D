@@ -301,7 +301,7 @@ int FindTwinBoundarySchmidFactors::writeFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindTwinBoundarySchmidFactors::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());

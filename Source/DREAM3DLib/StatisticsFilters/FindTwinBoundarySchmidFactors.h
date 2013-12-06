@@ -116,8 +116,8 @@ class DREAM3DLib_EXPORT FindTwinBoundarySchmidFactors : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceMeshTwinBoundary)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshTwinBoundarySchmidFactors)
 
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
-    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheckVoxel();
+    void dataCheckSurfaceMesh();
 
     FindTwinBoundarySchmidFactors(const FindTwinBoundarySchmidFactors&); // Copy Constructor Not Implemented
     void operator=(const FindTwinBoundarySchmidFactors&); // Operator '=' Not Implemented

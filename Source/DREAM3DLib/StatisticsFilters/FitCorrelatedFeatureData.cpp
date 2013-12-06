@@ -190,7 +190,6 @@ void FitCorrelatedFeatureData::dataCheck()
 // -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::preflight()
 {
-
   dataCheck();
 }
 
@@ -311,16 +310,11 @@ Int32ArrayType::Pointer binData(IDataArray::Pointer correlatedData, int64_t numB
 // -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-  int64_t features = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  int64_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   QString ss;
 

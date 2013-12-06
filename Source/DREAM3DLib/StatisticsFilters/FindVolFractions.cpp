@@ -106,14 +106,11 @@ void FindVolFractions::dataCheck()
   { m_VolFractions = m_VolFractionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindVolFractions::preflight()
 {
-
   dataCheck();
 }
 
@@ -123,17 +120,11 @@ void FindVolFractions::preflight()
 void FindVolFractions::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
+  dataCheck();
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   for(size_t i = 1; i < totalEnsembles; i++)
   {
