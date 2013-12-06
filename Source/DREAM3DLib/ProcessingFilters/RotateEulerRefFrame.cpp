@@ -84,7 +84,6 @@ class RotateEulerRefFrameImpl
         OrientationMath::MattoEuler(gNew, ea1new, ea2new, ea3new);
         m_CellEulerAngles[3 * i + 0] = ea1new;
         m_CellEulerAngles[3 * i + 1] = ea2new;
-
         m_CellEulerAngles[3 * i + 2] = ea3new;
       }
     }
@@ -211,7 +210,6 @@ void RotateEulerRefFrame::dataCheck()
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::preflight()
 {
-
   dataCheck();
 }
 
@@ -220,15 +218,12 @@ void RotateEulerRefFrame::preflight()
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 

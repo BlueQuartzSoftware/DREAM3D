@@ -172,7 +172,6 @@ void MinSize::dataCheck()
 // -----------------------------------------------------------------------------
 void MinSize::preflight()
 {
-
   dataCheck();
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
@@ -195,19 +194,8 @@ void MinSize::preflight()
 void MinSize::execute()
 {
   setErrorCondition(0);
-  // int err = 0;
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
 
-
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0 && getErrorCondition() != -305)
-  {
-    return;
-  }
-  setErrorCondition(0);
 
   remove_smallfeatures();
   assign_badpoints();

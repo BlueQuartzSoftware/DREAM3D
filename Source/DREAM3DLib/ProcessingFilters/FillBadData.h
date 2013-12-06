@@ -69,8 +69,6 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
@@ -86,13 +84,11 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-
     virtual void execute();
     virtual void preflight();
 
   protected:
     FillBadData();
-
 
   private:
     bool* m_AlreadyChecked;
@@ -104,7 +100,6 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
     QVector<int> nuclei;
 
     void dataCheck();
-
 
     FillBadData(const FillBadData&); // Copy Constructor Not Implemented
     void operator=(const FillBadData&); // Operator '=' Not Implemented

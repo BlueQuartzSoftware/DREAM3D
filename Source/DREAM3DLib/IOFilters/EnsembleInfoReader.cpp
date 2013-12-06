@@ -118,7 +118,6 @@ int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::dataCheck()
 {
-
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
@@ -171,6 +170,8 @@ int EnsembleInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 int EnsembleInfoReader::readFile()
 {
+  dataCheck();
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   std::ifstream inFile;

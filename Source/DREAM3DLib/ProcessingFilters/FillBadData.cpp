@@ -134,7 +134,6 @@ void FillBadData::dataCheck()
 // -----------------------------------------------------------------------------
 void FillBadData::preflight()
 {
-
   dataCheck();
 }
 
@@ -144,18 +143,11 @@ void FillBadData::preflight()
 void FillBadData::execute()
 {
   setErrorCondition(0);
-// int err = 0;
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
 
-
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0 && getErrorCondition() != -305)
-  {
-    return;
-  }
-  setErrorCondition(0);
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
   m_Neighbors = neighborsPtr->getPointer(0);

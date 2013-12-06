@@ -60,13 +60,10 @@ class DREAM3DLib_EXPORT SingleThresholdFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
-    //------ Created Feature Data
 
     DREAM3D_INSTANCE_PROPERTY(int, ComparisonOperator)
     DREAM3D_INSTANCE_PROPERTY(double, ComparisonValue)
-
 
     virtual void preflight();
 

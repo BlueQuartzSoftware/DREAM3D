@@ -180,7 +180,6 @@ void NeighborOrientationCorrelation::dataCheck()
 // -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::preflight()
 {
-
   dataCheck();
 }
 
@@ -190,19 +189,11 @@ void NeighborOrientationCorrelation::preflight()
 void NeighborOrientationCorrelation::execute()
 {
   setErrorCondition(0);
-// int err = 0;
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
 
-
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0 && getErrorCondition() != -305)
-  {
-    return;
-  }
-  setErrorCondition(0);
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0;
 

@@ -149,7 +149,6 @@ void AvizoRectilinearCoordinateWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::preflight()
 {
-
   dataCheck();
 }
 

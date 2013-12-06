@@ -173,7 +173,6 @@ void SingleThresholdFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void SingleThresholdFeatures::preflight()
 {
-
   dataCheck();
 }
 
@@ -182,19 +181,13 @@ void SingleThresholdFeatures::preflight()
 // -----------------------------------------------------------------------------
 void SingleThresholdFeatures::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
-
   if (NULL == inputData.get())
   {
 
@@ -213,11 +206,9 @@ void SingleThresholdFeatures::execute()
     return;
   }
 
-
   ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(m_ComparisonOperator), m_ComparisonValue, goodFeatures);
 
   filter.execute(inputData.get(), goodFeaturesPtr.get());
-
 
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(goodFeaturesPtr->GetName(), goodFeaturesPtr);
   notifyStatusMessage("Complete");

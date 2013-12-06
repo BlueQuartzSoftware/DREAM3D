@@ -173,7 +173,6 @@ void SingleThresholdCells::dataCheck()
 // -----------------------------------------------------------------------------
 void SingleThresholdCells::preflight()
 {
-
   dataCheck();
 }
 
@@ -182,20 +181,15 @@ void SingleThresholdCells::preflight()
 // -----------------------------------------------------------------------------
 void SingleThresholdCells::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayName);
   if (NULL == inputData.get())
   {
-
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
     setErrorCondition(-11001);
     notifyErrorMessage(ss, getErrorCondition());
@@ -211,11 +205,9 @@ void SingleThresholdCells::execute()
     return;
   }
 
-
   ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(m_ComparisonOperator), m_ComparisonValue, goodVoxels);
 
   filter.execute(inputData.get(), goodVoxelsPtr.get());
-
 
   m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(goodVoxelsPtr->GetName(), goodVoxelsPtr);
   notifyStatusMessage("Complete");

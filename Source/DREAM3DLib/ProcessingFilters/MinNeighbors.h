@@ -89,7 +89,6 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-
     virtual void execute();
     virtual void preflight();
 
@@ -98,7 +97,6 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
 
     void assign_badpoints();
     void merge_containedfeatures();
-
 
   private:
     bool* m_AlreadyChecked;

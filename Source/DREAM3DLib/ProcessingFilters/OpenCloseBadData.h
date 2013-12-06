@@ -69,8 +69,6 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-
     DREAM3D_INSTANCE_PROPERTY(unsigned int, Direction)
     DREAM3D_INSTANCE_PROPERTY(int, NumIterations)
     DREAM3D_INSTANCE_PROPERTY(bool, XDirOn)
@@ -94,13 +92,11 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-
     virtual void execute();
     virtual void preflight();
 
   protected:
     OpenCloseBadData();
-
 
   private:
     int32_t* m_Neighbors;

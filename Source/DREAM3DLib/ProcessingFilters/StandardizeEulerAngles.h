@@ -60,9 +60,6 @@ class DREAM3DLib_EXPORT StandardizeEulerAngles : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-    //------ Required Ensemble Data
-
     virtual void preflight();
 
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }

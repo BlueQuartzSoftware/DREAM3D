@@ -67,8 +67,6 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
-    //------ Created Ensemble Data
-
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Ensemble Info File"; }

@@ -70,9 +70,6 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-    //------ Required Ensemble Data
-
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)
     DREAM3D_INSTANCE_PROPERTY(int, Level)
@@ -90,13 +87,11 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-
     virtual void execute();
     virtual void preflight();
 
   protected:
     NeighborOrientationCorrelation();
-
 
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
@@ -107,7 +102,6 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck();
-
 
     NeighborOrientationCorrelation(const NeighborOrientationCorrelation&); // Copy Constructor Not Implemented
     void operator=(const NeighborOrientationCorrelation&); // Operator '=' Not Implemented

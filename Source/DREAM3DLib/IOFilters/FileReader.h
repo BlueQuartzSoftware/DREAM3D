@@ -64,62 +64,6 @@ class DREAM3DLib_EXPORT FileReader : public AbstractFilter
      * and readFile methods unless special setups are needed.
      */
     virtual void execute();
-#if 0
-    /**
-    * @brief This function parses 3 floating point values from a comma delimited string
-    * @param input
-    * @param output
-    * @param defaultValue The value to set if the parsing fails
-    * @return Zero on Success, Negative on Error
-    */
-    int parseFloat3V(const char* input, float* output, float defaultValue);
-
-    /**
-     * @brief This function parses 3 integer values from a comma delimited string
-     * @param input
-     * @param output
-     * @param defaultValue The value to set if the parsing fails
-     * @return Zero on Success, Negative on Error
-     */
-    int parseInt3V(const char* input, int* output, int defaultValue);
-
-    /**
-     * @brief This function parses 3  64 bit integer values from a comma delimited string
-     * @param input
-     * @param output
-     * @param defaultValue The value to set if the parsing fails
-     * @return Zero on Success, Negative on Error
-     */
-    int parseSizeT_3V(const char* input, size_t* output, size_t defaultValue);
-    int parse64_3V(const char* input, int64_t* output, int64_t defaultValue);
-
-    /**
-     * @brief Reads a single line from a buffer
-     * @param in The input stream
-     * @param buf The buffer
-     * @param bufSize The size of the buffer
-     * @return
-     */
-    int readLine(std::istream& in, char* buf, int bufSize);
-
-
-
-    /**
-     * @brief
-     * @param buf
-     * @param bufSize
-     * @return
-     */
-    size_t nonPrintables(char* buf, size_t bufSize);
-
-    /**
-     * @brief
-     * @param str
-     * @param tokens
-     * @param delimiters
-     */
-    void tokenize(const QString& str, QVector<QString>& tokens, const QString& delimiters = " ");
-#endif
 
   protected:
     FileReader();

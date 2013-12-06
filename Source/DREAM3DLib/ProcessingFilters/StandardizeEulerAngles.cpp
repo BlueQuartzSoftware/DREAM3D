@@ -57,12 +57,10 @@ class StandardizeEulerAnglesImpl
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
-    StandardizeEulerAnglesImpl(float* eulers, int* phases, unsigned int* crystructs, int64_t numCells, size_t numEnsembles) :
+    StandardizeEulerAnglesImpl(float* eulers, int* phases, unsigned int* crystructs) :
       m_CellEulerAngles(eulers),
       m_CellPhases(phases),
       m_CrystalStructures(crystructs)
-      //      numCells(numCells),
-      //      numEnsembles(numEnsembles)
     {
       m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
@@ -201,7 +199,6 @@ void StandardizeEulerAngles::dataCheck()
 // -----------------------------------------------------------------------------
 void StandardizeEulerAngles::preflight()
 {
-
   dataCheck();
 }
 
@@ -210,16 +207,12 @@ void StandardizeEulerAngles::preflight()
 // -----------------------------------------------------------------------------
 void StandardizeEulerAngles::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -230,12 +223,12 @@ void StandardizeEulerAngles::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                      StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, totalEnsembles), tbb::auto_partitioner());
+                      StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    StandardizeEulerAnglesImpl serial(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, totalEnsembles);
+    StandardizeEulerAnglesImpl serial(m_CellEulerAngles, m_CellPhases, m_CrystalStructures);
     serial.convert(0, totalPoints);
   }
 

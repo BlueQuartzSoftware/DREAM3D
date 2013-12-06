@@ -123,6 +123,7 @@ void DataContainerReader::preflight()
 // -----------------------------------------------------------------------------
 void DataContainerReader::execute()
 {
+  dataCheck();
   readData(false);
   notifyStatusMessage("Complete");
 }

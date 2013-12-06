@@ -148,7 +148,6 @@ void AvizoUniformCoordinateWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::preflight()
 {
-
   dataCheck();
 }
 

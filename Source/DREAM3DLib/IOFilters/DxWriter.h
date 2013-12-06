@@ -63,8 +63,6 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }

@@ -151,7 +151,6 @@ void MultiThresholdCells::dataCheck()
 // -----------------------------------------------------------------------------
 void MultiThresholdCells::preflight()
 {
-
   dataCheck();
 }
 
@@ -161,20 +160,12 @@ void MultiThresholdCells::preflight()
 void MultiThresholdCells::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
-  setErrorCondition(0);
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-  /* Place all your code to execute your filter here. */
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   IDataArray::Pointer outputArrayPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_OutputArrayName);
   BoolArrayType* outputArray = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(outputArrayPtr.get());

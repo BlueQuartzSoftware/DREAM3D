@@ -70,9 +70,6 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-    //------ Created Feature Data
-
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedFeatureSize)
     DREAM3D_INSTANCE_PROPERTY(bool, ApplyToAll)
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
@@ -94,11 +91,8 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-
     virtual void execute();
     virtual void preflight();
-
-    virtual void dataCheck();
 
   protected:
     MinSize();
@@ -116,6 +110,8 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     virtual void assign_badpoints();
 
   private:
+    void dataCheck();
+
     MinSize(const MinSize&); // Copy Constructor Not Implemented
     void operator=(const MinSize&); // Operator '=' Not Implemented
 };

@@ -124,7 +124,7 @@ int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureDataCSVWriter::preflight()
+void FeatureDataCSVWriter::dataCheck()
 {
   setErrorCondition(0);
 
@@ -149,7 +149,14 @@ void FeatureDataCSVWriter::preflight()
   {
     setFeatureDataFile(getFeatureDataFile().append(".dx"));
   }
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FeatureDataCSVWriter::preflight()
+{
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -159,8 +166,10 @@ void FeatureDataCSVWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+
+  dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

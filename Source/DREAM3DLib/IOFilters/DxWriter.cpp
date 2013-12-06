@@ -176,9 +176,9 @@ int DxWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int DxWriter::writeFile()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
   dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int err = 0;
   size_t udims[3] =
@@ -360,8 +360,3 @@ int DxWriter::writeFile()
   notifyStatusMessage("Complete");
   return err;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-

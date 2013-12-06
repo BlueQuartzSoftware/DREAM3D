@@ -175,63 +175,54 @@ void ClearData::dataCheck()
 
   if (getXMax() < getXMin())
   {
-
     QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getYMax() < getYMin())
   {
-
     QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getZMax() < getZMin())
   {
-
     QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getXMin() < 0)
   {
-
     QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getYMin() < 0)
   {
-
     QString ss = QObject::tr("Y Min (%1) less than 0").arg(getYMin());
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getZMin() < 0)
   {
-
     QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getXMax() > (static_cast<int64_t>(m->getXPoints()) - 1))
   {
-
     QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getXPoints()) - 1);
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getYMax() > (static_cast<int64_t>(m->getYPoints()) - 1))
   {
-
     QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getYPoints()) - 1);
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5556);
   }
   if (getZMax() > (static_cast<int64_t>(m->getZPoints()) - 1))
   {
-
     QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getZPoints()) - 1);
     addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5557);
@@ -254,10 +245,10 @@ void ClearData::execute()
 {
   int err = 0;
   setErrorCondition(err);
+
   dataCheck();
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   size_t udims[3] =
   { 0, 0, 0 };
@@ -269,8 +260,6 @@ void ClearData::execute()
 #endif
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-
-
 
   int index;
   QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();

@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT FeatureDataCSVWriter : public AbstractFilter
     FeatureDataCSVWriter();
 
   private:
-
+    void dataCheck();
 
     FeatureDataCSVWriter(const FeatureDataCSVWriter&); // Copy Constructor Not Implemented
     void operator=(const FeatureDataCSVWriter&); // Operator '=' Not Implemented

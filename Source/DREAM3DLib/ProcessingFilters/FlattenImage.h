@@ -59,9 +59,6 @@ class DREAM3DLib_EXPORT FlattenImage : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-
-
     DREAM3D_INSTANCE_PROPERTY(uint32_t, FlattenMethod)
 
     virtual void preflight();

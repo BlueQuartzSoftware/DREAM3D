@@ -86,13 +86,11 @@ class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-
     virtual void execute();
     virtual void preflight();
 
   protected:
     IdentifySample();
-
 
   private:
     bool* m_AlreadyChecked;
