@@ -74,30 +74,22 @@ DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
   setupGui();
 
 
-  #if defined (Q_OS_MAC)
-    QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-  #else
-    QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-  #endif
+#if defined (Q_OS_MAC)
+  QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+  QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
 
   updatePrefs.beginGroup(Detail::UpdatePreferencesGroup);
-  // If the update preferences exist in the preferences file, read them in
-  if ( updatePrefs.contains(Detail::UpdateFrequencyKey) )
+  bool hasPrefSetting = updatePrefs.contains(Detail::UpdateFrequencyKey);
+  if (hasPrefSetting == false)
   {
-    updatePrefs.endGroup();
-    readUpdatePreferences(updatePrefs);
+    // Set to manually check. The US Govt Agencies do not like it when you automatically check a web site.
+    updatePrefs.setValue(Detail::UpdateFrequencyKey, QVariant(UpdateCheckManual));
   }
-  // Otherwise, write and set the defaults
-  else
-  {
-    updatePrefs.endGroup();
-	automatically->blockSignals(true);
-	manually->blockSignals(true);
-    automatically->setChecked(true);
-	automatically->blockSignals(false);
-	manually->blockSignals(false);
-    howOften->setCurrentIndex(UpdateCheckMonthly);
-  }
+  updatePrefs.endGroup();
+
+  readUpdatePreferences(updatePrefs);
 }
 
 // -----------------------------------------------------------------------------
@@ -291,7 +283,7 @@ void DREAM3DUpdateCheckDialog::on_checkNowBtn_clicked()
   m_UpdateCheck = new UpdateCheck(this);
 
   connect( m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ),
-    this, SLOT( LatestVersionReplied(UpdateCheckData*) ) );
+           this, SLOT( LatestVersionReplied(UpdateCheckData*) ) );
 
   m_UpdateCheck->checkVersion(m_UpdateWebSite);
   checkNowBtn->setEnabled(true);
@@ -302,25 +294,25 @@ void DREAM3DUpdateCheckDialog::on_checkNowBtn_clicked()
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::on_howOften_currentIndexChanged(int index)
 {
-	if (index == DREAM3DUpdateCheckDialog::UpdateCheckDaily)
-	{
-		setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
-	}
-	else if (index == DREAM3DUpdateCheckDialog::UpdateCheckWeekly)
-	{
-		setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
-	}
-	else if (index == DREAM3DUpdateCheckDialog::UpdateCheckMonthly)
-	{
-		setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
-	}
+  if (index == DREAM3DUpdateCheckDialog::UpdateCheckDaily)
+  {
+    setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
+  }
+  else if (index == DREAM3DUpdateCheckDialog::UpdateCheckWeekly)
+  {
+    setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
+  }
+  else if (index == DREAM3DUpdateCheckDialog::UpdateCheckMonthly)
+  {
+    setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
+  }
 
 #if defined (Q_OS_MAC)
-	QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #else
-	QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
-	writeUpdatePreferences(updatePrefs);
+  writeUpdatePreferences(updatePrefs);
 }
 
 // -----------------------------------------------------------------------------
@@ -328,29 +320,29 @@ void DREAM3DUpdateCheckDialog::on_howOften_currentIndexChanged(int index)
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::on_automatically_toggled(bool boolValue)
 {
-	if ( automatically->isChecked() )
-	{
-		if (howOften->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily)
-		{
-			setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
-		}
-		else if (howOften->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly)
-		{
-			setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
-		}
-		else if (howOften->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly)
-		{
-			setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
-		}
+  if ( automatically->isChecked() )
+  {
+    if (howOften->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily)
+    {
+      setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
+    }
+    else if (howOften->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly)
+    {
+      setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
+    }
+    else if (howOften->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly)
+    {
+      setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
+    }
 
-		#if defined (Q_OS_MAC)
-			QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-		#else
-			QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-		#endif
+#if defined (Q_OS_MAC)
+    QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+    QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
 
-		writeUpdatePreferences(updatePrefs);
-	}
+    writeUpdatePreferences(updatePrefs);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -358,18 +350,18 @@ void DREAM3DUpdateCheckDialog::on_automatically_toggled(bool boolValue)
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::on_manually_toggled(bool)
 {
-	if ( manually->isChecked() )
-	{
-		setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
+  if ( manually->isChecked() )
+  {
+    setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
 
-		#if defined (Q_OS_MAC)
-			QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-		#else
-			QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-		#endif
+#if defined (Q_OS_MAC)
+    QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+    QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
 
-		writeUpdatePreferences(updatePrefs);
-	}
+    writeUpdatePreferences(updatePrefs);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -379,7 +371,7 @@ void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
 {  // Read in value from preferences file
   prefs.beginGroup(Detail::UpdatePreferencesGroup);
   bool ok = false;
-  m_WhenToCheck = static_cast<UpdateType>( prefs.value(Detail::UpdateFrequencyKey).toInt(&ok) );
+  m_WhenToCheck = static_cast<UpdateType>( prefs.value(Detail::UpdateFrequencyKey, QVariant(UpdateCheckManual)).toInt(&ok) );
   prefs.endGroup();
 
   if (m_WhenToCheck == UpdateCheckManual)
@@ -392,7 +384,7 @@ void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
   else
   {
     automatically->blockSignals(true);
-	manually->blockSignals(true);
+    manually->blockSignals(true);
     howOften->blockSignals(true);
     automatically->setChecked(true);
     if (m_WhenToCheck == UpdateCheckDaily)
@@ -408,7 +400,7 @@ void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
       howOften->setCurrentIndex(UpdateCheckMonthly);
     }
     automatically->blockSignals(false);
-	manually->blockSignals(false);
+    manually->blockSignals(false);
     howOften->blockSignals(false);
   }
 }
