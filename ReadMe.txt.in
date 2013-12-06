@@ -17,7 +17,7 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 ## Version 4.2 Bugs Fixed & Features Added ##
 
-## Version 4.2.4684 ###
+## Version 4.2.4685 ###
 + Updating issue no. *114*: Adding Experimental "Write Pole Figure" filter which is only allowable for some Laue groups
 + Fixed issue no. *128*: Fixing Bugs in the Alignment filters due to mis-use of C++ inheritance rules.
 + Fixed issue no. *110*: Adding an "Update Favorite" to the DREAM3D contextual menu. This will update the selected favorite with the current pipeline.
@@ -28,7 +28,7 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 + Fixed issue no. *125*: ReadH5Ebsd crashes if Z Spacing is 0 (Zero)
 + Updating the Euler to Rotation_Matrix and Rotation_Matrix to Euler functions with more robust implementations that will not cause a NAN value.
 + Updating the Misorientation Coloring Filter based off the C. Schuh/S. Patala paper. This only works for some Laue groups currently. See the documentation for the filter for those Laue groups that the filter will work for.
-+ Fixing automatic update check to be manual by default.
++ Setting automatic update check to be manual by default.
 
 
 ### Version 4.2.4635 ###
