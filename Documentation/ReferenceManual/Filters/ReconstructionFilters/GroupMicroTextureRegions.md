@@ -34,14 +34,13 @@ Voxel
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Feature | Active | Boolean value specifying if the **Feature** is still in the sample (1 if the **Feature** is in the sample and 0 if it is not). | At the end of the filter, all **Features** will be "Active" as the "Inactive" **Features** will have been removed.  |  
-| Feature | MTRgKAM | Float of the microtexture region "grain"-kernel average c-axis misalignment. | Only calculated if "Use Non-Contiguous Neighbors" is UNCHECKED. |  
 | Cell | MTRdensity | Float of the voxel fraction of "flipped" microtexture against the region searched in Find Neighborhoods filter. | To convert to a **Feature**, use Create Feature Array From Cell Array Filter. |  
 | Feature | ParentIds | List of grouped microtexture region **Features**. |  |
 | Cell | ParentIds | List of grouped microtexture region **Cells**.  |  |  
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2013 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 

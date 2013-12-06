@@ -24,6 +24,7 @@ set(_PublicFilters
   FindBoundaryStrengths
   FindEuclideanDistMap
   FindFeatureClustering
+  FindFeatureHistogram
   FindFeatureNeighborCAxisMisalignments
   FindGBCD
   FindFeatureReferenceCAxisMisorientations

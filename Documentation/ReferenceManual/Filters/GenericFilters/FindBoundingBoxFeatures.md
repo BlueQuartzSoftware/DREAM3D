@@ -29,14 +29,14 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Feature | Centroids | X, Y, Z coordinates (floats) of **Feature** center of mass | Filter will calculate **Feature** centroids if not previously calculated | Find Feature Centroids (Generic) |
+| Feature | BiasedFeatures | Boolean flag of 1 if **Feature** is biased or of 0 if it is not |  | Find Biased Features (Generic) |
 | Feature | SurfaceFeatures | Boolean flag of 1 if **Feature** touches an outer surface or of 0 if it does not | Filter will determine if **Features** intersect an outer surface if not already determined | Feature Surface Features (Generic) |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Feature | BiasedFeatures | Boolean flag of 1 if **Feature** is biased or of 0 if it is not | |
+| Feature |  |  | |
 
 ## Authors ##
 

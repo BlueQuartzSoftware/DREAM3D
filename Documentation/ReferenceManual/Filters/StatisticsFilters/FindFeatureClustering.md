@@ -36,7 +36,7 @@ Voxel
 
 ## Authors ##
 
-**Contact Info:** dream3d@bluequartz.net
+**Copyright:** 2013 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Version:** 1.0.0
 

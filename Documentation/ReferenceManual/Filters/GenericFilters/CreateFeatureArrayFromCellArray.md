@@ -34,7 +34,7 @@ Voxel
 
 ## Authors ##
 
-**Copyright:**
+**Copyright:** 2013 Joseph C. Tucker (UES)
 
 **Contact Info:** dream3d@bluequartz.net
 

@@ -35,51 +35,64 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDFIELDCLUSTERING_H_
-#define FINDFIELDCLUSTERING_H_
+#ifndef FindFeatureHistogram_H_
+#define FindFeatureHistogram_H_
 
-#include <vector>
-#include <string>
+#include <QtCore/QString>
+#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 /**
- * @class FindFeatureClustering FindFeatureClustering.h DREAM3DLib/GenericFilters/FindFeatureClustering.h
+ * @class FindFeatureHistogram FindFeatureHistogram.h /FilterCategoryFilters/FindFeatureHistogram.h
  * @brief
  * @author
- * @date Nov 19, 2011
+ * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindFeatureClustering : public AbstractFilter
+class DREAM3DLib_EXPORT FindFeatureHistogram : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindFeatureClustering)
-    DREAM3D_STATIC_NEW_MACRO(FindFeatureClustering)
-    DREAM3D_TYPE_MACRO_SUPER(FindFeatureClustering, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindFeatureHistogram)
+    DREAM3D_STATIC_NEW_MACRO(FindFeatureHistogram)
+    DREAM3D_TYPE_MACRO_SUPER(FindFeatureHistogram, AbstractFilter)
 
-    virtual ~FindFeatureClustering();
-
+    virtual ~FindFeatureHistogram();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFeaturesArrayName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
-
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Feature Clustering"; }
+	DREAM3D_INSTANCE_PROPERTY(int, NumBins)
+    DREAM3D_INSTANCE_PROPERTY(bool, RemoveBiasedFeatures)
 
     /**
-    * @brief Reimplemented from @see AbstractFilter class
+    * @brief This returns the group that the filter belonds to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
     */
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
 
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel() { return "Find Feature Histogram"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -92,25 +105,35 @@ class DREAM3DLib_EXPORT FindFeatureClustering : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+    /**
+    * @brief Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
     virtual void preflight();
 
   protected:
-    FindFeatureClustering();
+    FindFeatureHistogram();
 
-    void find_clustering();
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param features The number of features
+    * @param ensembles The number of ensembles
+    */
+    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    NeighborList<float>* m_ClusteringList;
+    bool* m_BiasedFeatures;
 
-    void dataCheck();
-
-    FindFeatureClustering(const FindFeatureClustering&); // Copy Constructor Not Implemented
-    void operator=(const FindFeatureClustering&); // Operator '=' Not Implemented
+    FindFeatureHistogram(const FindFeatureHistogram&); // Copy Constructor Not Implemented
+    void operator=(const FindFeatureHistogram&); // Operator '=' Not Implemented
 };
 
-
-#endif /* FINDFIELDCLUSTERING_H_ */
+#endif /* FindFeatureHistogram_H_ */

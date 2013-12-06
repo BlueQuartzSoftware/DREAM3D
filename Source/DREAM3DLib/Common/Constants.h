@@ -223,6 +223,7 @@ namespace DREAM3D
     const DREAM3D_STRING Volumes("Volumes");
     const DREAM3D_STRING avgMisorientation("avgMisorientation");
     const DREAM3D_STRING mPrime("mPrime");
+	const DREAM3D_STRING NumBins("NumBins");
 
   }
 
