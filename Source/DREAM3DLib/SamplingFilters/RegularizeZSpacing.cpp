@@ -125,7 +125,7 @@ int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularizeZSpacing::preflight()
+void RegularizeZSpacing::dataCheck()
 {
   setErrorCondition(0);
 
@@ -150,20 +150,22 @@ void RegularizeZSpacing::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RegularizeZSpacing::preflight()
+{
+  dataCheck();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RegularizeZSpacing::execute()
 {
   int err = 0;
   setErrorCondition(err);
+  dataCheck();
+
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
-  setErrorCondition(0);
-
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t dims[3];
   m->getDimensions(dims);

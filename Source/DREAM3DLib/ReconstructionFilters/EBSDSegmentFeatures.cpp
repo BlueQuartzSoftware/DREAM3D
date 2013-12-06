@@ -198,12 +198,9 @@ void EBSDSegmentFeatures::execute()
   dataCheck();
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
-
-  // This runs a subfilter
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   // Tell the user we are starting the filter
   notifyStatusMessage("Starting");

@@ -174,24 +174,16 @@ void RegularGridSampleSurfaceMesh::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  }
+  dataCheck();
 
-  setErrorCondition(0);
+  DREAM3D_RANDOMNG_NEW()
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // set volume datacontainer details
   m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
   m->setOrigin(0.0, 0.0, 0.0);
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-
-  dataCheck();
 
   SampleSurfaceMesh::execute();
 

@@ -115,16 +115,13 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
-
     std::vector<int> parentnumbers;
     std::vector<bool> beenChecked;
     std::vector<float> intensities;
 
-
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck();
-
 
     GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented
     void operator=(const GroupMicroTextureRegions&); // Operator '=' Not Implemented

@@ -72,10 +72,7 @@ class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ScalarArrayName)
-    //------ Created Cell Data
-    //------ Created Feature Data
 
     DREAM3D_INSTANCE_PROPERTY(float, ScalarTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
@@ -118,7 +115,6 @@ class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
     CompareFunctor* m_Compare;
 
     void dataCheck();
-
 
     ScalarSegmentFeatures(const ScalarSegmentFeatures&); // Copy Constructor Not Implemented
     void operator=(const ScalarSegmentFeatures&); // Operator '=' Not Implemented

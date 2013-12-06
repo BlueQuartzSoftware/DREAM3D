@@ -97,6 +97,7 @@ class DREAM3DLib_EXPORT RegularizeZSpacing : public AbstractFilter
 
 
   private:
+    void dataCheck();
 
     RegularizeZSpacing(const RegularizeZSpacing&); // Copy Constructor Not Implemented
     void operator=(const RegularizeZSpacing&); // Operator '=' Not Implemented

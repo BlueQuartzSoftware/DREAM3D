@@ -142,8 +142,6 @@ void AlignSections::dataCheck()
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss, -1);
   }
-
-
 }
 
 
@@ -152,7 +150,6 @@ void AlignSections::dataCheck()
 // -----------------------------------------------------------------------------
 void AlignSections::preflight()
 {
-
   dataCheck();
 }
 
@@ -162,17 +159,10 @@ void AlignSections::preflight()
 void AlignSections::execute()
 {
   setErrorCondition(0);
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
-  setErrorCondition(0);
-
+  
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);

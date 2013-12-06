@@ -306,7 +306,6 @@ void MergeColonies::dataCheck()
 // -----------------------------------------------------------------------------
 void MergeColonies::preflight()
 {
-
   dataCheck();
 }
 
@@ -315,17 +314,11 @@ void MergeColonies::preflight()
 // -----------------------------------------------------------------------------
 void MergeColonies::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  setErrorCondition(0);
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   notifyStatusMessage("Merging Colonies");
   merge_colonies();

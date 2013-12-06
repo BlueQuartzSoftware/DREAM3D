@@ -142,7 +142,6 @@ void AlignSectionsList::dataCheck()
 // -----------------------------------------------------------------------------
 void AlignSectionsList::preflight()
 {
-
   dataCheck();
 }
 
@@ -152,14 +151,9 @@ void AlignSectionsList::preflight()
 void AlignSectionsList::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   AlignSections::execute();
 

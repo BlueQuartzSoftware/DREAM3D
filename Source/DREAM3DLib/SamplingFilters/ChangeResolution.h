@@ -95,6 +95,8 @@ class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
 
   private:
 
+    void dataCheck();
+
     ChangeResolution(const ChangeResolution&); // Copy Constructor Not Implemented
     void operator=(const ChangeResolution&); // Operator '=' Not Implemented
 };

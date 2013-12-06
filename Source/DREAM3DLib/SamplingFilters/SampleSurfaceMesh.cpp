@@ -203,15 +203,12 @@ void SampleSurfaceMesh::preflight()
 void SampleSurfaceMesh::execute()
 {
   int err = 0;
-  setErrorCondition(err);
-  DREAM3D_RANDOMNG_NEW()
+  setErrorCondition(0);
+  
+  dataCheck();
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
+  DREAM3D_RANDOMNG_NEW()
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -223,8 +220,6 @@ void SampleSurfaceMesh::execute()
   //pull down faces
   FaceArray::Pointer faces = sm->getFaces();
   int numFaces = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getNumTuples();
-
-  dataCheck();
 
   //create array to hold bounding vertices for each face
   VertexArray::Vert_t ll, ur;

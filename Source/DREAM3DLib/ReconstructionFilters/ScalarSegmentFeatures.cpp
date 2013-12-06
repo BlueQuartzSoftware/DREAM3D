@@ -252,7 +252,6 @@ void ScalarSegmentFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::preflight()
 {
-
   dataCheck();
 }
 
@@ -262,18 +261,14 @@ void ScalarSegmentFeatures::preflight()
 void ScalarSegmentFeatures::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+
+  dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
   // This runs a subfilter
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   m_InputData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_ScalarArrayName);
   if (NULL == m_InputData.get())

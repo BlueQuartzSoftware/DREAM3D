@@ -53,9 +53,6 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-
-
-
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
   m_msgType* var = var##Array.get();
@@ -217,7 +214,6 @@ void MergeTwins::dataCheck()
 // -----------------------------------------------------------------------------
 void MergeTwins::preflight()
 {
-
   dataCheck();
 }
 
@@ -226,19 +222,11 @@ void MergeTwins::preflight()
 // -----------------------------------------------------------------------------
 void MergeTwins::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   notifyStatusMessage("Merging Twins");
   merge_twins();

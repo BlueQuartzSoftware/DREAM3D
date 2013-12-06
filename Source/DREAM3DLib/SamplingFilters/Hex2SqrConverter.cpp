@@ -147,6 +147,8 @@ void Hex2SqrConverter::execute()
 
   herr_t err = 0;
 
+  dataCheck();
+
   QVector<int> indices;
   // Loop on Each EBSD File
   float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );

@@ -110,10 +110,11 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChangeResolution::preflight()
+void ChangeResolution::dataCheck()
 {
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
+
   size_t dims[3];
   m->getDimensions(dims);
 
@@ -127,6 +128,13 @@ void ChangeResolution::preflight()
   m->setDimensions(m_XP, m_YP, m_ZP);
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ChangeResolution::preflight()
+{
+  dataCheck();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -135,17 +143,10 @@ void ChangeResolution::execute()
 {
   int err = 0;
   setErrorCondition(err);
+  dataCheck();
+
   DREAM3D_RANDOMNG_NEW()
-      VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
-  setErrorCondition(0);
-
-
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if(m->getXRes() == m_Resolution.x
      && m->getYRes() == m_Resolution.y

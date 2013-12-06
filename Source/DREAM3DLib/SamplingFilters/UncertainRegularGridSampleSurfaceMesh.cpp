@@ -173,16 +173,9 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-  if(NULL == m)
-  {
-    m = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(getDataContainerName(), getCellAttributeMatrixName() );
-  }
-
   dataCheck();
 
   SampleSurfaceMesh::preflight();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -191,25 +184,17 @@ void UncertainRegularGridSampleSurfaceMesh::preflight()
 void UncertainRegularGridSampleSurfaceMesh::execute()
 {
   int err = 0;
-  setErrorCondition(err);
-  DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-    vdc->setName(getDataContainerName());
-    getDataContainerArray()->pushBack(vdc);
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  }
-
   setErrorCondition(0);
+  
+  dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DREAM3D_RANDOMNG_NEW()
 
   // set volume datacontainer details
   m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
   m->setOrigin(0.0, 0.0, 0.0);
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-
-  dataCheck();
 
   SampleSurfaceMesh::execute();
 

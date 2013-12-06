@@ -236,6 +236,8 @@ void RotateSampleRefFrame::dataCheck()
 {
   setErrorCondition(0);
   QString ss;
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
 }
 
 // -----------------------------------------------------------------------------
@@ -243,12 +245,10 @@ void RotateSampleRefFrame::dataCheck()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::preflight()
 {
+  setErrorCondition(0);
   dataCheck();
 
-  setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
@@ -257,7 +257,6 @@ void RotateSampleRefFrame::preflight()
   int32_t xpNew, ypNew, zpNew;
   float xResNew, yResNew, zResNew;
   RotateSampleRefFrameImplArg_t params;
-
 
   xp = static_cast<int32_t>(m->getXPoints());
   xRes = m->getXRes();
@@ -347,14 +346,10 @@ void RotateSampleRefFrame::preflight()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
