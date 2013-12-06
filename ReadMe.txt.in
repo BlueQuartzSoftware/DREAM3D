@@ -17,13 +17,18 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 ## Version 4.2 Bugs Fixed & Features Added ##
 
-## Version 4.2.XXXX ###
-+ Adding Experimental "Write Pole Figure" filter which is only allowable for some Laue groups
-+ Updating the Euler to Rotation Matrix and RotationMatrix to Euler functions with more robust implementations that will not cause and NAN value.
-+ Fixing Bugs in the Alignment filters due to mis-use of C++ inheritance rules.
-+ Adding an "Update Favorite" to the DREAM3D contextual menu. This will update the selected favorite with the current pipeline.
-+ Adding in a Misorientation Coloring Filter based off the C. Schuh/S. Patala paper. This only works for some Laue groups currently.
-+ Backporting all the Crystal Orientation Operations classes from the development branch to allow more functionality in certain filters
+## Version 4.2.4683 ###
++ Updating issue no. *114*: Adding Experimental "Write Pole Figure" filter which is only allowable for some Laue groups
++ Fixed issue no. *128*: Fixing Bugs in the Alignment filters due to mis-use of C++ inheritance rules.
++ Fixed issue no. *110*: Adding an "Update Favorite" to the DREAM3D contextual menu. This will update the selected favorite with the current pipeline.
++ Fixed issue no. *109*: Backporting all the Crystal Orientation Operations classes from the development branch to allow more functionality in certain filters
++ Fixed issue no. *129*: Fixing issue with "Import Orientation Data" filter when large EBSD scans were imported the Reference Frame Dialog would resize larger than the screen making use of the dialog impossible. This has been fixed with a QGraphicsView layout and basic zooming capabilities.
++ Fixed issue with the EBSD .ang reader to report an error if the "Phase" header entry is never found which can happen on some TSL "combo" scans.
++ Fixed issue no. *130*: Estimated Time remaining for Synthetic generation was not correct.
++ Fixed issue no. *125*: ReadH5Ebsd crashes if Z Spacing is 0 (Zero)
++ Updating the Euler to Rotation_Matrix and Rotation_Matrix to Euler functions with more robust implementations that will not cause a NAN value.
++ Updating the Misorientation Coloring Filter based off the C. Schuh/S. Patala paper. This only works for some Laue groups currently. See the documentation for the filter for those Laue groups that the filter will work for.
+
 
 ### Version 4.2.4635 ###
 + Adding crystal symmetry operations for all crystal symmetries. This allows the IPF Coloring to work for all symmetries
@@ -36,7 +41,7 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 + Adding another entry for the Small IN100 .ang files
 + Fixing crashing errors for MinSizePerPhase due to inappropriate use of subclass functions
 + Fixing Documentation errors
-+ Crash on Visual Studio using %zu as a format specifier in printf statements on Visual Studio. Effected the INLWriter
++ Fixing no. *124*: Crash on Visual Studio using %zu as a format specifier in printf statements on Visual Studio. Effected the INLWriter
 + Fixing bad dimension output for the INLWriter
 + Updating the tutorial for reconstruction of the Small IN100 data set
 + Adding an IN100 prebuilt pipeline that reconstructs the entire Small IN100 data set in a single pipeline
