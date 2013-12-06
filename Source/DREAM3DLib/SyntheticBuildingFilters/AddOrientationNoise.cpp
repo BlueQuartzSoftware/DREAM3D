@@ -148,11 +148,6 @@ void AddOrientationNoise::execute()
 
   dataCheck();
 
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-
   m_Magnitude = m_Magnitude * DREAM3D::Constants::k_Pi / 180.0;
 
   add_orientation_noise();

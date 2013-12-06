@@ -161,7 +161,6 @@ void AddBadData::dataCheck()
 // -----------------------------------------------------------------------------
 void AddBadData::preflight()
 {
-
   dataCheck();
 }
 
@@ -175,11 +174,6 @@ void AddBadData::execute()
   DREAM3D_RANDOMNG_NEW()
 
   dataCheck();
-
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   add_noise();
 

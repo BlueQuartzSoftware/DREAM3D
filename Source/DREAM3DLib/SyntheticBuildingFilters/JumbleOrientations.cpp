@@ -149,7 +149,6 @@ void JumbleOrientations::dataCheck()
 // -----------------------------------------------------------------------------
 void JumbleOrientations::preflight()
 {
-
   dataCheck();
 }
 
@@ -164,7 +163,6 @@ void JumbleOrientations::execute()
   dataCheck();
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
   int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
   int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
 
