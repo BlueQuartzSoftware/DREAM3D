@@ -39,14 +39,13 @@ class GenerateFeatureIds : public AbstractFilter
     virtual void execute()
     {
       setErrorCondition(0);
+      dataCheck();
+      if(getErrorCondition() < 0) { return; }
+
       VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
-      if(NULL == m)
-      {
-        setErrorCondition(-1);
-        addErrorMessage(getHumanLabel(), " DataContainer was NULL", -1);
-        return;
-      }
+
       int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
+      m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(size);
 
       dataCheck();
       // Set the default data into the FeatureIds
