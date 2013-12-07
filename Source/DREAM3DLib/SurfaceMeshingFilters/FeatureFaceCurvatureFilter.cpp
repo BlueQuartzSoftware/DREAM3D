@@ -313,7 +313,7 @@ void FeatureFaceCurvatureFilter::execute()
   DoubleArrayType::Pointer gaussianCurvature;
   if (m_ComputeGaussianCurvature == true)
   {
-    gaussianCurvature = DoubleArrayType::CreateArray(, DREAM3D::FaceData::SurfaceMeshGaussianCurvatures);
+    gaussianCurvature = DoubleArrayType::CreateArray(numTriangles, DREAM3D::FaceData::SurfaceMeshGaussianCurvatures);
     gaussianCurvature->initializeWithZeros();
   }
   // Check if the user wants to calculate the Mean Curvature
