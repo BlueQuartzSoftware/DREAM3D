@@ -177,7 +177,7 @@ int DxWriter::writeHeader()
 int DxWriter::writeFile()
 {
   dataCheck();
-  if(getErrorCondition() < 0) { return -1; }
+  if(getErrorCondition() < 0) { return getErrorCondition(); }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
