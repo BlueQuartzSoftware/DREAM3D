@@ -229,6 +229,7 @@ void VisualizeGBCD::execute()
   setErrorCondition(err);
 
   dataCheckSurfaceMesh();
+  if(getErrorCondition() < 0) { return; }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
