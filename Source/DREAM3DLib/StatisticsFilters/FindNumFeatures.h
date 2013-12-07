@@ -61,11 +61,6 @@ class DREAM3DLib_EXPORT FindNumFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    //------ Required Feature Data
-    //------ Created Ensemble Data
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Number of Features"; }
@@ -90,7 +85,6 @@ class DREAM3DLib_EXPORT FindNumFeatures : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeatures)
 
     void dataCheck();

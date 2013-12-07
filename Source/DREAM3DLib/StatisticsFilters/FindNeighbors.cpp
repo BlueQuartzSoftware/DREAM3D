@@ -191,7 +191,6 @@ void FindNeighbors::dataCheck()
 // -----------------------------------------------------------------------------
 void FindNeighbors::preflight()
 {
-
   dataCheck();
 }
 
@@ -201,17 +200,11 @@ void FindNeighbors::preflight()
 void FindNeighbors::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  dataCheck();
 
-
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -257,8 +250,6 @@ void FindNeighbors::execute()
     neighborsurfacearealist[i].fill(-1.0, nListSize);
     m_SurfaceFeatures[i] = false;
   }
-
-  totalPoints = m->getTotalPoints();
 
   for (int64_t j = 0; j < totalPoints; j++)
   {

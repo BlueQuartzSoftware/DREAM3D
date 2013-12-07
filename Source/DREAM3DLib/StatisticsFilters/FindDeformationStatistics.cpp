@@ -238,18 +238,12 @@ void FindDeformationStatistics::preflight()
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+  dataCheck();
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   //  QString filename = m_OutputFile1;
   std::ofstream outFile;
@@ -400,11 +394,6 @@ void FindDeformationStatistics::execute()
       mprime = m_mPrime[i];
       QuaternionMathF::Copy(avgQuats[gname], q1);
       QuaternionMathF::Copy(avgQuats[gname2], q2);
-//      for (int j = 0; j < 5; j++)
-//      {
-//        q1[j] = m_AvgQuats[5 * gname + j];
-//        q2[j] = m_AvgQuats[5 * gname2 + j];
-//      }
       if(m_CrystalStructures[m_FeaturePhases[gname]] == m_CrystalStructures[m_FeaturePhases[gname2]] && m_FeaturePhases[gname] > 0)
       {
         w = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
@@ -573,15 +562,12 @@ void FindDeformationStatistics::execute()
   fprintf(vtkFile,  "DREAM3D Generated Data Set: Deformation Statistics\n");
   fprintf(vtkFile,  "ASCII\n");
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
-  fprintf(vtkFile,  "POINTS %ld float\n", m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
-
-
-  size_t size = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  fprintf(vtkFile,  "POINTS %ld float\n", totalFeatures);
 
   float x, y, z;
   float xtemp, ytemp, ztemp;
   float xFZ, yFZ, zFZ;
-  for(size_t i = 1; i < size; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     xtemp = m_Poles[3 * i];
     ytemp = m_Poles[3 * i + 1];
@@ -613,17 +599,17 @@ void FindDeformationStatistics::execute()
     fprintf(vtkFile, "%f %f %f\n", xFZ, yFZ, zFZ);
   }
 
-  fprintf(vtkFile, "CELLS %ld %ld\n", m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
+  fprintf(vtkFile, "CELLS %ld %ld\n", totalFeatures);
   //  Store the Feature Ids so we don't have to re-read the triangles file again
-  for(size_t i = 1; i < size; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     fprintf(vtkFile, "1 %ld\n", (i - 1));
   }
 
   // Write the CELL_TYPES into the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
-  for(size_t i = 1; i < size; i++)
+  fprintf(vtkFile, "CELL_TYPES %ld\n", totalFeatures);
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     fprintf(vtkFile, "1\n");
   }
@@ -631,10 +617,10 @@ void FindDeformationStatistics::execute()
 
   // Write the FeatureId Data to teh file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %ld\n", m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
+  fprintf(vtkFile, "CELL_DATA %ld\n", totalFeatures);
   fprintf(vtkFile, "SCALARS Misorientation float\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  for (size_t i = 1; i < size; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     float miso = m_FeatureAvgMisorientations[i];
     fprintf(vtkFile, "%f\n", miso);

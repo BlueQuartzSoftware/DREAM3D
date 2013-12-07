@@ -71,25 +71,15 @@ class DREAM3DLib_EXPORT FindFeatureReferenceMisorientations : public AbstractFil
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-
-    //------ Required Cell Data
-    //------ Created Cell Data
-    //------ Required Feature Data
-    //------ Created Feature Data
-
-    //------ Required Ensemble Data
-
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Reference Misorientations"; }
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, ReferenceOrientation)
 
-
     virtual void setupFilterParameters();
 
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
 
     /**
     * @brief This method will read the options from a file

@@ -73,9 +73,6 @@ class DREAM3DLib_EXPORT FindTwinBoundaries : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    //------ Required Ensemble Data
-
-
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
 
@@ -119,8 +116,8 @@ class DREAM3DLib_EXPORT FindTwinBoundaries : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceMeshTwinBoundary)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshTwinBoundaryIncoherence)
 
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
-    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheckVoxel();
+    void dataCheckSurfaceMesh();
 
     FindTwinBoundaries(const FindTwinBoundaries&); // Copy Constructor Not Implemented
     void operator=(const FindTwinBoundaries&); // Operator '=' Not Implemented

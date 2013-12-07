@@ -132,7 +132,7 @@ int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindBoundaryStrengths::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
 
@@ -178,7 +178,7 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindBoundaryStrengths::dataCheckVoxel()
 {
   setErrorCondition(0);
 
@@ -211,33 +211,22 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::preflight()
 {
-  dataCheckVoxel(true, 1, 1 , 1);
-  dataCheckSurfaceMesh(true, 1, 1 , 1);
+  dataCheckVoxel();
+  dataCheckSurfaceMesh();
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::execute()
 {
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+  dataCheckVoxel();
+  dataCheckSurfaceMesh();
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   int64_t numTriangles = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getNumTuples();
-  dataCheckSurfaceMesh(false, numTriangles, 0, 0);
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheckVoxel(false, 0, totalFeatures, totalEnsembles);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-
 
   // float w, n1, n2, n3;
 // float sf1, sf2;
@@ -261,7 +250,6 @@ void FindBoundaryStrengths::execute()
     gname2 = m_SurfaceMeshFaceLabels[i * 2 + 1];
     if(gname1 > 0 && gname2 > 0)
     {
-
       QuaternionMathF::Copy(avgQuats[gname1], q1);
       QuaternionMathF::Copy(avgQuats[gname2], q2);
       if(m_CrystalStructures[m_FeaturePhases[gname1]] == m_CrystalStructures[m_FeaturePhases[gname2]]
@@ -308,7 +296,6 @@ void FindBoundaryStrengths::execute()
     m_SurfaceMeshF7s[2 * i] = F7_1;
     m_SurfaceMeshF7s[2 * i + 1] = F7_2;
   }
-
 
   notifyStatusMessage("Completed");
 }

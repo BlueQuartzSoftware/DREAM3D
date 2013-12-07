@@ -148,7 +148,6 @@ void FindFeatureReferenceCAxisMisorientations::dataCheck()
   m_QuatsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_QuatsArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
 }
 
 
@@ -157,7 +156,6 @@ void FindFeatureReferenceCAxisMisorientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceCAxisMisorientations::preflight()
 {
-
   dataCheck();
 }
 
@@ -167,22 +165,15 @@ void FindFeatureReferenceCAxisMisorientations::preflight()
 void FindFeatureReferenceCAxisMisorientations::execute()
 {
   setErrorCondition(0);
+  dataCheck();
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
-  size_t numFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int avgMisoComps = 3;
   QVector<int> dims(1, avgMisoComps);
-  FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(numFeatures, dims, "AvgMiso_Temp");
+  FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(totalFeatures, dims, "AvgMiso_Temp");
   avgmisoPtr->initializeWithZeros();
   float* avgmiso = avgmisoPtr->getPointer(0);
 
@@ -264,7 +255,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     }
   }
 
-  for (size_t i = 1; i < numFeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     if (i % 1000 == 0)
     {
@@ -284,7 +275,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     avgmiso[(gNum * avgMisoComps) + 2] += ((m_FeatureReferenceCAxisMisorientations[j] - m_FeatureAvgCAxisMisorientations[gNum]) * (m_FeatureReferenceCAxisMisorientations[j] - m_FeatureAvgCAxisMisorientations[gNum]));
   }
 
-  for (size_t i = 1; i < numFeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     index = i * avgMisoComps;
     m_FeatureStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * avgmiso[index + 2]);

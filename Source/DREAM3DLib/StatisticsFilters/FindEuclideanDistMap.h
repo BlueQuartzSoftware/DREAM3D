@@ -88,9 +88,6 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-
-
-
   protected:
     FindEuclideanDistMap();
 
@@ -104,7 +101,6 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, QPEuclideanDistances)
 
     void dataCheck();
-
 
     FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented
     void operator=(const FindEuclideanDistMap&); // Operator '=' Not Implemented

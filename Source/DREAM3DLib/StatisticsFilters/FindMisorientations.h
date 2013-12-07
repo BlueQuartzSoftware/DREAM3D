@@ -71,9 +71,7 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
-    //------ Created Feature Data
     DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationListArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

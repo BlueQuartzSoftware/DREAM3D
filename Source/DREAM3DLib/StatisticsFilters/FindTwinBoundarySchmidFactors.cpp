@@ -306,7 +306,6 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -302);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
@@ -330,7 +329,7 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
 
@@ -361,25 +360,20 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh(bool preflight, size_t 
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::preflight()
 {
-  dataCheckVoxel(true, 1, 1, 1);
-  dataCheckSurfaceMesh(true, 1, 1, 1);
+  dataCheckVoxel();
+  dataCheckSurfaceMesh();
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+  dataCheckVoxel();
+  dataCheckSurfaceMesh();
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
-    return;
-  }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -387,14 +381,6 @@ void FindTwinBoundarySchmidFactors::execute()
 #endif
 
   int64_t numTriangles = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheckVoxel(false, 0, totalFeatures, totalEnsembles);
-  dataCheckSurfaceMesh(false, numTriangles, 0, 0);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   float LoadingDir[3];
   LoadingDir[0] = m_LoadingDir.x;

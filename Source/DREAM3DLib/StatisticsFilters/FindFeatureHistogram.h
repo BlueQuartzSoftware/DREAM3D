@@ -66,11 +66,12 @@ class DREAM3DLib_EXPORT FindFeatureHistogram : public AbstractFilter
 
     virtual ~FindFeatureHistogram();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFeaturesArrayName)
 
-	DREAM3D_INSTANCE_PROPERTY(int, NumBins)
+  	DREAM3D_INSTANCE_PROPERTY(int, NumBins)
     DREAM3D_INSTANCE_PROPERTY(bool, RemoveBiasedFeatures)
 
     /**
@@ -127,10 +128,10 @@ class DREAM3DLib_EXPORT FindFeatureHistogram : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheck();
 
   private:
-    bool* m_BiasedFeatures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
 
     FindFeatureHistogram(const FindFeatureHistogram&); // Copy Constructor Not Implemented
     void operator=(const FindFeatureHistogram&); // Operator '=' Not Implemented

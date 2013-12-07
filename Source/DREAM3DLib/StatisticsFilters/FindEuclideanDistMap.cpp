@@ -301,7 +301,6 @@ void FindEuclideanDistMap::dataCheck()
   m_NearestNeighborsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_NearestNeighborsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NearestNeighborsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NearestNeighbors = m_NearestNeighborsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
 }
 
 // -----------------------------------------------------------------------------
@@ -309,7 +308,6 @@ void FindEuclideanDistMap::dataCheck()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::preflight()
 {
-
   dataCheck();
 }
 
@@ -318,16 +316,8 @@ void FindEuclideanDistMap::preflight()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   find_euclideandistmap();
   notifyStatusMessage("Completed");

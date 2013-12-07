@@ -164,7 +164,6 @@ void FindMisorientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindMisorientations::preflight()
 {
-
   dataCheck();
 }
 // -----------------------------------------------------------------------------
@@ -172,17 +171,11 @@ void FindMisorientations::preflight()
 // -----------------------------------------------------------------------------
 void FindMisorientations::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
@@ -201,15 +194,14 @@ void FindMisorientations::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   unsigned int phase1, phase2;
 
   float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
 
   size_t nname;
   // float nsa;
-  misorientationlists.resize(numfeatures);
-  for (size_t i = 1; i < numfeatures; i++)
+  misorientationlists.resize(totalFeatures);
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
     phase1 = m_CrystalStructures[m_FeaturePhases[i]];
@@ -237,17 +229,15 @@ void FindMisorientations::execute()
 
   // We do this to create new set of MisorientationList objects
   totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck();
 
-  for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType misoL(new std::vector<float>);
     misoL->assign(misorientationlists[i].begin(), misorientationlists[i].end());
     m_MisorientationList->setList(static_cast<int>(i), misoL);
   }
-
   notifyStatusMessage("FindMisorientations Completed");
 }
 

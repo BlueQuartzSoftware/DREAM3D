@@ -48,11 +48,14 @@
 // -----------------------------------------------------------------------------
 FindFeatureHistogram::FindFeatureHistogram() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
-  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_SelectedFeatureArrayName(""),
   m_NumBins(1),
-  m_RemoveBiasedFeatures(false)
+  m_RemoveBiasedFeatures(false),
+  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
+  m_BiasedFeatures(NULL)
 {
   setupFilterParameters();
 }
@@ -128,11 +131,14 @@ int FindFeatureHistogram::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindFeatureHistogram::dataCheck(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void FindFeatureHistogram::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
 
   if(m_SelectedFeatureArrayName.isEmpty() == true)
   {
@@ -142,7 +148,9 @@ void FindFeatureHistogram::dataCheck(bool preflight, size_t voxels, size_t featu
   if(m_RemoveBiasedFeatures == true)
   {
     QVector<int> dims(1, 1);
-    GET_PREREQ_DATA(m, DREAM3D, CellFeatureData, BiasedFeatures, -302, bool, BoolArrayType, features, dims)
+    m_BiasedFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_BiasedFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -151,15 +159,7 @@ void FindFeatureHistogram::dataCheck(bool preflight, size_t voxels, size_t featu
 // -----------------------------------------------------------------------------
 void FindFeatureHistogram::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The VolumeDataContainer Object with the specific name " + getDataContainerName() + " was not available.", getErrorCondition());
-    return;
-  }
-
-  dataCheck(true, 1, 1, 1);
+  dataCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -236,26 +236,15 @@ IDataArray::Pointer findHistogram(IDataArray::Pointer inputData, int64_t ensembl
 // -----------------------------------------------------------------------------
 void FindFeatureHistogram::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
   setErrorCondition(0);
-  int64_t voxels = m->getTotalPoints();
-  int64_t features = m->getNumCellFeatureTuples();
-  int64_t ensembles = m->getNumCellEnsembleTuples();
-  dataCheck(false, voxels, features, ensembles);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+  dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  int64_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   QString ss;
 
-  IDataArray::Pointer inputData = m->getCellFeatureData(m_SelectedFeatureArrayName);
+  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
   if (NULL == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);
@@ -311,7 +300,7 @@ void FindFeatureHistogram::execute()
     p = findHistogram<bool>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
 
-  m->addCellEnsembleData(p->GetName(), p);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->GetName(), p);
   notifyStatusMessage("Complete");
 }
 

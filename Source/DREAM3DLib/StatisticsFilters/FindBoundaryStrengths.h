@@ -129,8 +129,8 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshF7s)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshmPrimes)
 
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles);
-    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles);
+    void dataCheckVoxel();
+    void dataCheckSurfaceMesh();
 
     FindBoundaryStrengths(const FindBoundaryStrengths&); // Copy Constructor Not Implemented
     void operator=(const FindBoundaryStrengths&); // Operator '=' Not Implemented

@@ -174,7 +174,6 @@ void FindRadialDist::dataCheck()
 // -----------------------------------------------------------------------------
 void FindRadialDist::preflight()
 {
-
   dataCheck();
 }
 // -----------------------------------------------------------------------------
@@ -182,16 +181,8 @@ void FindRadialDist::preflight()
 // -----------------------------------------------------------------------------
 void FindRadialDist::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -206,10 +197,8 @@ void FindRadialDist::execute()
     return;
   }
 
-
   find_boundingbox();
   find_radialdist();
-
 
   notifyStatusMessage("Completed");
 }

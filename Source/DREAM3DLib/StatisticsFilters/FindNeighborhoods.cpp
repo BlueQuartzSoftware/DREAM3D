@@ -183,7 +183,6 @@ void FindNeighborhoods::dataCheck()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::preflight()
 {
-
   dataCheck();
 }
 // -----------------------------------------------------------------------------
@@ -191,17 +190,8 @@ void FindNeighborhoods::preflight()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   find_neighborhoods();
   notifyStatusMessage("FindNeighborhoods Completed");

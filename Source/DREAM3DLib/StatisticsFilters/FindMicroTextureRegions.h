@@ -91,7 +91,6 @@ class DREAM3DLib_EXPORT FindMicroTextureRegions : public AbstractFilter
     FindMicroTextureRegions();
     void find_microtextureregions();
 
-
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, MicroTextureRegionNumCells)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, MicroTextureRegionFractionOccupied)

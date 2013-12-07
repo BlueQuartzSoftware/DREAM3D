@@ -49,7 +49,6 @@ FindNumFeatures::FindNumFeatures() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
@@ -114,7 +113,6 @@ void FindNumFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void FindNumFeatures::preflight()
 {
-
   dataCheck();
 }
 
@@ -124,17 +122,11 @@ void FindNumFeatures::preflight()
 void FindNumFeatures::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
+  dataCheck();
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   for(size_t i = 1; i < totalEnsembles; i++)
   {

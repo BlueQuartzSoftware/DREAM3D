@@ -183,7 +183,6 @@ void FindFeatureReferenceMisorientations::dataCheck()
     if( NULL != m_GBEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-
 }
 
 
@@ -192,7 +191,6 @@ void FindFeatureReferenceMisorientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceMisorientations::preflight()
 {
-
   dataCheck();
 }
 
@@ -202,20 +200,13 @@ void FindFeatureReferenceMisorientations::preflight()
 void FindFeatureReferenceMisorientations::execute()
 {
   setErrorCondition(0);
+  dataCheck();
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   int64_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
-  float** avgmiso = new float *[m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples()];
+  float** avgmiso = new float *[totalFeatures];
   for (size_t i = 1; i < totalFeatures; i++)
   {
     avgmiso[i] = new float[2];

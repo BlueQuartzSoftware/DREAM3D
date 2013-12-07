@@ -148,7 +148,6 @@ void FindSlicetoSliceRotations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSlicetoSliceRotations::preflight()
 {
-
   dataCheck();
 }
 
@@ -158,17 +157,9 @@ void FindSlicetoSliceRotations::preflight()
 void FindSlicetoSliceRotations::execute()
 {
   setErrorCondition(0);
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QuatF q1;
   QuatF q2;
@@ -285,8 +276,6 @@ void FindSlicetoSliceRotations::execute()
     }
     outFile << plane << "	" << inPlaneCount << "	" << inPlaneAngle << "	" << inPlaneAxisX << "	" << inPlaneAxisY << "	" << inPlaneAxisZ << "	" << outPlaneCount << "	" << outPlaneAngle << "	" << outPlaneAxisX << "	" << outPlaneAxisY << "	" << outPlaneAxisZ << "\n";
   }
-
-
 
   notifyStatusMessage("FindSlicetoSliceRotations Completed");
 }

@@ -73,9 +73,6 @@ class DREAM3DLib_EXPORT FindSlicetoSliceRotations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-    //------ Required Ensemble Data
-
     DREAM3D_INSTANCE_STRING_PROPERTY(SlicetoSliceRotationsFile)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

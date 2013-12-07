@@ -70,11 +70,6 @@ class DREAM3DLib_EXPORT FindFeatureReferenceCAxisMisorientations : public Abstra
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-    //------ Created Cell Data
-    //------ Required Feature Data
-    //------ Created Feature Data
-
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Reference C-Axis Misorientations"; }
@@ -111,7 +106,6 @@ class DREAM3DLib_EXPORT FindFeatureReferenceCAxisMisorientations : public Abstra
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceCAxisMisorientations)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureAvgCAxisMisorientations)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureStdevCAxisMisorientations)
-
 
     void dataCheck();
 

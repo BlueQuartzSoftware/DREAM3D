@@ -66,9 +66,6 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-    //------ Created Feature Data
-
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Sizes"; }
@@ -93,7 +90,6 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
     FindSizes();
     void find_sizes();
     void find_sizes2D();
-
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)

@@ -129,17 +129,6 @@ void FindFeatureClustering::dataCheck()
     }
     m_ClusteringList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >
                        (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_ClusteringListArrayName).get());
-
-    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
-    e->setFilterName(this->getNameOfClass());
-    e->setFilterHumanLabel(this->getHumanLabel());
-    e->setFilterGroup(this->getGroupName());
-    e->setFilterSubGroup(this->getSubGroupName());
-    e->setArrayDefaultName(m_ClusteringListArrayName);
-    e->setArrayGroup("Feature");
-    e->setArrayNumComponents(0);
-    e->setArrayType("NeighborList");
-    addCreatedArrayHelpIndexEntry(e);
   }
 
   QVector<int> dims(1, 1);
@@ -162,7 +151,6 @@ void FindFeatureClustering::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::preflight()
 {
-
   dataCheck();
 }
 // -----------------------------------------------------------------------------
@@ -170,16 +158,8 @@ void FindFeatureClustering::preflight()
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
-
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   find_clustering();
   notifyStatusMessage("FindFeatureClustering Completed");
