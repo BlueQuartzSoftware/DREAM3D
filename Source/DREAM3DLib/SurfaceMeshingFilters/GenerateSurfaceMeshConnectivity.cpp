@@ -159,13 +159,6 @@ void GenerateSurfaceMeshConnectivity::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateSurfaceMeshConnectivity::preflight()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
-
   dataCheck();
 }
 
@@ -175,13 +168,9 @@ void GenerateSurfaceMeshConnectivity::preflight()
 void GenerateSurfaceMeshConnectivity::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
   // We need the vertex->Triangle Lists to build the Triangle Neighbor lists so if either
   // of those are true then build the vertex->triangle lists
   if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)

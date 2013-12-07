@@ -137,13 +137,6 @@ void GenerateUniqueEdges::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateUniqueEdges::preflight()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
-
   dataCheck();
 }
 
@@ -153,27 +146,13 @@ void GenerateUniqueEdges::preflight()
 void GenerateUniqueEdges::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
-
-  // Just to double check we have everything.
   dataCheck();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   /* Place all your code to execute your filter here. */
   generateUniqueEdgeIds();
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -184,7 +163,6 @@ void GenerateUniqueEdges::execute()
 // -----------------------------------------------------------------------------
 void GenerateUniqueEdges::generateUniqueEdgeIds()
 {
-
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
@@ -194,7 +172,6 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   notifyStatusMessage("Stage 1 of 2");
   struct  { int32_t v0; int32_t v1; } edge;
   int64_t* u64Edge = reinterpret_cast<int64_t*>(&edge); // This pointer is a 64 bit integer interpretation of the above struct variable
-
 
   EdgeSet_t uedges_id_set;
   for(size_t t = 0; t < totalPoints; ++t)
@@ -257,12 +234,6 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   // Get our Reference counted Array of Triangle Structures
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   FaceArray::Pointer trianglesPtr = sm->getFaces();
-  if(NULL == trianglesPtr.get())
-  {
-    setErrorCondition(-556);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
-    return;
-  }
   int ntri = trianglesPtr->getNumberOfTuples();
 
   // get the triangle definitions - use the pointer to the start of the Struct Array
@@ -365,10 +336,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   curPercent = 0.0;
   float total = static_cast<float>(uedges_id_map.size());
 
-
   for(QMap<int64_t, int>::iterator iter = uedges_id_map.begin(); iter != uedges_id_map.end(); ++iter)
   {
-
     if ( progIndex / total * 100.0f > (curPercent) )
     {
       QString ss = QObject::tr("Stage 2/2: %1% Complete").arg(progIndex / total * 100.0f);
@@ -405,5 +374,3 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   notifyStatusMessage("Complete");
   return;
 }
-
-

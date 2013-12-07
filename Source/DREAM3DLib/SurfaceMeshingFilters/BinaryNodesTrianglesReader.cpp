@@ -160,8 +160,6 @@ void BinaryNodesTrianglesReader::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-
-  /* Make sure everything is in place */
   dataCheck();
 
   /* Place all your code to execute your filter here. */
@@ -178,10 +176,10 @@ void BinaryNodesTrianglesReader::execute()
 // -----------------------------------------------------------------------------
 int BinaryNodesTrianglesReader::read()
 {
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   int err = 0;
   setErrorCondition(err);
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_BinaryNodesFile.toLatin1().data(), "rb+");

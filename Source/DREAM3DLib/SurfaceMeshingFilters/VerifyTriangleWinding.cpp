@@ -320,17 +320,10 @@ void VerifyTriangleWinding::preflight()
 void VerifyTriangleWinding::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceDataContainer DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
   dataCheck();
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   //  Generate the Unique Edges
   if (m_DoUniqueEdgesFilter == true)
@@ -379,8 +372,6 @@ void VerifyTriangleWinding::execute()
   // Execute the actual verification step.
   notifyStatusMessage("Generating Connectivity Complete. Starting Analysis");
   verifyTriangleWinding();
-
-
 
   // Clean up any arrays that were designated as temp
   if (m_DoUniqueEdgesFilter == true)

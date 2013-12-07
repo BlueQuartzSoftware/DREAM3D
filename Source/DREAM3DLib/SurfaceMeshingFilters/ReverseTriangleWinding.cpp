@@ -117,76 +117,6 @@ ReverseTriangleWinding::~ReverseTriangleWinding()
 void ReverseTriangleWinding::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* Place all your option initialization code here */
-  /* For String input use this code */
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("STL Output Prefix");
-    parameter->setPropertyName("StlFilePrefix");
-    parameter->setWidgetType(FilterParameter::StringWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*  For an Integer use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Max Iterations");
-    parameter->setPropertyName("MaxIterations");
-    parameter->setWidgetType(FilterParameter::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }*/
-  /*  For a Floating point value use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Misorientation Tolerance");
-    parameter->setPropertyName("MisorientationTolerance");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }*/
-  /*   For an input file use this code*/
-  /*  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameter::InputFileWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*   For an output file use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Alignment File");
-    parameter->setPropertyName("AlignmentShiftFileName");
-    parameter->setWidgetType(FilterParameter::OutputFileWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*   For a simple true/false boolean use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Alignment Shift File");
-    parameter->setPropertyName("WriteAlignmentShifts");
-    parameter->setWidgetType(FilterParameter::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }*/
-  /*   For presenting a set of choices to the user use this code*/
-  /* {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Conversion Type");
-    parameter->setPropertyName("ConversionType");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
-    parameter->setValueType("unsigned int");
-    QVector<QString> choices;
-    choices.push_back("Degrees To Radians");
-    choices.push_back("Radians To Degrees");
-    parameter->setChoices(choices);
-    parameters.push_back(parameter);
-  }*/
-
 
   setFilterParameters(parameters);
 }
@@ -254,24 +184,18 @@ void ReverseTriangleWinding::preflight()
 void ReverseTriangleWinding::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
+  dataCheck();
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   notifyStatusMessage("Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
 #endif
 
-  FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
-  size_t totalPoints = trianglesPtr->getNumberOfTuples();
+  FaceArray::Pointer trianglesPtr = sm->getFaces();
+  size_t totalTriangles = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
   dataCheck();
@@ -279,7 +203,7 @@ void ReverseTriangleWinding::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalTriangles),
                       ReverseWindingImpl(trianglesPtr), tbb::auto_partitioner());
 
   }
@@ -287,7 +211,7 @@ void ReverseTriangleWinding::execute()
 #endif
   {
     ReverseWindingImpl serial(trianglesPtr);
-    serial.generate(0, totalPoints);
+    serial.generate(0, totalTriangles);
   }
 
 

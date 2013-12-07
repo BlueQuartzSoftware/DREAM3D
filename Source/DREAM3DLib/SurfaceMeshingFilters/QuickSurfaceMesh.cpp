@@ -103,7 +103,12 @@ void QuickSurfaceMesh::dataCheck()
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), DREAM3D::AttributeMatrixType::Vertex);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* faceAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), DREAM3D::AttributeMatrixType::Face);
+  if(getErrorCondition() < 0) { return; }
 
   VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
   FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
@@ -124,16 +129,6 @@ void QuickSurfaceMesh::dataCheck()
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::preflight()
 {
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
-  {
-    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
-    sdc->setName(getSurfaceDataContainerName());
-    getDataContainerArray()->pushBack(sdc);
-    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  }
-
   dataCheck();
 }
 
@@ -143,29 +138,14 @@ void QuickSurfaceMesh::preflight()
 void QuickSurfaceMesh::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
-
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
-  {
-    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
-    sdc->setName(getSurfaceDataContainerName());
-    getDataContainerArray()->pushBack(sdc);
-    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  }
-
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   dataCheck();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   float m_OriginX, m_OriginY, m_OriginZ;
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
-
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);

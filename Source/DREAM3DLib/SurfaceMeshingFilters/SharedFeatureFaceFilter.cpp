@@ -151,16 +151,10 @@ void SharedFeatureFaceFilter::preflight()
 void SharedFeatureFaceFilter::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
+  dataCheck();
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
   notifyStatusMessage("Starting");
 
   /* Place all your code to execute your filter here. */
@@ -171,7 +165,6 @@ void SharedFeatureFaceFilter::execute()
 
   Int32ArrayType::Pointer featureFaceId = Int32ArrayType::CreateArray(trianglesPtr->getNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
   featureFaceId->initializeWithZeros();
-
 
   QMap<uint64_t, int> faceSizeMap;
   QMap<uint64_t, int32_t> faceIdMap; // This maps a unique 64 bit integer to an increasing 32 bit integer
@@ -211,7 +204,6 @@ void SharedFeatureFaceFilter::execute()
     }
   }
 
-
   SharedFeatureFaces_t faces;
 
   // Allocate all the vectors that we need
@@ -222,7 +214,6 @@ void SharedFeatureFaceFilter::execute()
     index = faceIdMap[iter.key()];
     faces[index] = v;
   }
-
 
   // Loop through all the Triangles and assign each one to a unique Feature Face Id.
   for(size_t t = 0; t < totalPoints; ++t)

@@ -291,51 +291,22 @@ void MovingFiniteElementSmoothing::preflight()
 void MovingFiniteElementSmoothing::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
-
-  // This needs to get run so that our private pointers are set correctly.
   dataCheck();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
 
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
-    return;
-  }
-
-  VertexArray::Pointer floatNodesPtr = m->getVertices();
-  if(NULL == floatNodesPtr.get())
-  {
-    setErrorCondition(-555);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
-    return;
-  }
-
-  FaceArray::Pointer trianglesPtr = m->getFaces();
-  if(NULL == trianglesPtr.get())
-  {
-    setErrorCondition(-556);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
-    return;
-  }
+  VertexArray::Pointer floatNodesPtr = sm->getVertices();
+  FaceArray::Pointer trianglesPtr = sm->getFaces();
 
   setErrorCondition(0);
   /* Place all your code to execute your filter here. */
   VertexArray::Vert_t* nodesF = floatNodesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
-
   FaceArray::Face_t* triangles = trianglesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   // Data variables
   int numberNodes = floatNodesPtr->getNumberOfTuples();
   int ntri = trianglesPtr->getNumberOfTuples();
-
 
   StructArray<VertexArray::VertD_t>::Pointer nodesDPtr = StructArray<VertexArray::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
   nodesDPtr->initializeWithZeros();

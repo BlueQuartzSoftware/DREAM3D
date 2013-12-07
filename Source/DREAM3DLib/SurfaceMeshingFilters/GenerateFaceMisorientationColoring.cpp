@@ -218,7 +218,7 @@ int GenerateFaceMisorientationColoring::writeFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
 
@@ -256,7 +256,7 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, si
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateFaceMisorientationColoring::dataCheckVoxel(bool preflight, size_t voxels, size_t features, size_t ensembles)
+void GenerateFaceMisorientationColoring::dataCheckVoxel()
 {
   setErrorCondition(0);
 
@@ -286,28 +286,8 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel(bool preflight, size_t v
 // -----------------------------------------------------------------------------
 void GenerateFaceMisorientationColoring::preflight()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    QString ss = QObject::tr("The Surface Data Container with name '%1'' was not found in the Data Container Array.").arg(getSurfaceDataContainerName());
-    setErrorCondition(-10000);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-
-  dataCheckSurfaceMesh(true, 1, 1, 1);
-
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
-    setErrorCondition(-10000);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  dataCheckVoxel(true, 1, 1, 1);
+  dataCheckSurfaceMesh();
+  dataCheckVoxel();
 }
 
 // -----------------------------------------------------------------------------
@@ -316,36 +296,20 @@ void GenerateFaceMisorientationColoring::preflight()
 void GenerateFaceMisorientationColoring::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
+  dataCheckSurfaceMesh();
+  dataCheckVoxel();
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
-    return;
-  }
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
   notifyStatusMessage("Starting");
 
   // Run the data check to allocate the memory for the centroid array
   int64_t numTriangles = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getNumTuples();
-  dataCheckSurfaceMesh(false, numTriangles, 0, 0);
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheckVoxel(false, 0, totalFeatures, totalEnsembles);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
 #endif
-
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
@@ -360,8 +324,6 @@ void GenerateFaceMisorientationColoring::execute()
     serial.generate(0, numTriangles);
   }
 
-
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
-

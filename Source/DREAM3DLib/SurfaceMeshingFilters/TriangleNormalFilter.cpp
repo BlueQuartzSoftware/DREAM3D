@@ -203,25 +203,19 @@ void TriangleNormalFilter::preflight()
 void TriangleNormalFilter::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
+  dataCheck();
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   notifyStatusMessage("Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
 #endif
 
-  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
+  VertexArray::Pointer nodesPtr = sm->getVertices();
 
-  FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t numTriangles = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

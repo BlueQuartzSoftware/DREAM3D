@@ -110,7 +110,6 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles)

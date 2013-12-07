@@ -408,28 +408,32 @@ void M3CSliceBySlice::dataCheck()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* vertexAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -302);
-  if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), DREAM3D::AttributeMatrixType::Vertex);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* faceAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), DREAM3D::AttributeMatrixType::Face);
+  if(getErrorCondition() < 0) { return; }
 
   VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
   FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
 
-  m_SurfaceMeshNodeTypePtr = vertexAttrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this,  m_SurfaceMeshNodeTypeArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
+  VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+  FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
   dims[0] = 2;
-  DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(labels->GetName(), labels);
+  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodeType);
+
   sm->setVertices(vertices);
   sm->setFaces(triangles);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
 }
 
 // -----------------------------------------------------------------------------
@@ -452,7 +456,6 @@ void M3CSliceBySlice::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-
   int64_t totalPoints = m->getTotalPoints();
 
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);

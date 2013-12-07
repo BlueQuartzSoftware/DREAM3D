@@ -332,13 +332,6 @@ void LaplacianSmoothing::dataCheck()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::preflight()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
-
   dataCheck();
 }
 
@@ -348,18 +341,8 @@ void LaplacianSmoothing::preflight()
 void LaplacianSmoothing::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
-
   dataCheck();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-
-  setErrorCondition(0);
-
-
 
   /* Place all your code to execute your filter here. */
   err = edgeBasedSmoothing();
@@ -369,7 +352,6 @@ void LaplacianSmoothing::execute()
     notifyErrorMessage("Error smoothing the surface mesh", getErrorCondition());
     return;
   }
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -382,12 +364,7 @@ int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
 {
   notifyStatusMessage("Generating Lambda values");
   VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
-  if(NULL == nodesPtr.get())
-  {
-    setErrorCondition(-555);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
-    return -1;
-  }
+
   int numNodes = nodesPtr->getNumberOfTuples();
   int8_t* nodeType = nodeTypePtr->getPointer(0);
 
@@ -595,10 +572,6 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   FaceArray::Pointer facesPtr = sm->getFaces();
-  if(facesPtr == NULL)
-  {
-    return -1;
-  }
   Int32DynamicListArray::Pointer MeshLinks = facesPtr->getFacesContainingVert();
   if (NULL == MeshLinks.get())
   {
