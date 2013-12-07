@@ -343,7 +343,11 @@ void GenerateFaceIPFColoring::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheckSurfaceMesh();
+ if(getErrorCondition() < 0) { return; }
+
   dataCheckVoxel();
+  if(getErrorCondition() < 0) { return; }
+
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
