@@ -465,7 +465,10 @@ void FindGBCD::execute()
   // Run the data check to allocate the memory for the centroid array
   // Note the use of the voxel datacontainer num ensembles to set the gbcd size
   dataCheckSurfaceMesh();
+  if(getErrorCondition() < 0) { return; }
+
   dataCheckVoxel();
+  if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage("Starting");
 
