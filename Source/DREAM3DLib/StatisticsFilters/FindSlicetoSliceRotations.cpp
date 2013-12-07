@@ -158,6 +158,7 @@ void FindSlicetoSliceRotations::execute()
 {
   setErrorCondition(0);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 

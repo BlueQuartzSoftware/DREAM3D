@@ -195,6 +195,7 @@ void DataContainerWriter::execute()
 {
   setErrorCondition(0);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   int err = 0;
 

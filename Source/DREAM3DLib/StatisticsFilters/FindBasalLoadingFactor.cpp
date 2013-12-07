@@ -165,6 +165,10 @@ void FindBasalLoadingFactor::preflight()
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::execute()
 {
+
+
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 

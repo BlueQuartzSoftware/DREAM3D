@@ -208,7 +208,7 @@ void NodesTrianglesToStl::execute()
   int err = 0;
 
   dataCheck(false);
-
+  if(getErrorCondition() < 0) { return; }
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QDir stlDir(getOutputStlDirectory());

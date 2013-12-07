@@ -214,7 +214,7 @@ void NodesTrianglesToVtk::execute()
   int err = 0;
 
   dataCheck(false);
-
+  if(getErrorCondition() < 0) { return; }
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
   if (nodesFile == NULL)

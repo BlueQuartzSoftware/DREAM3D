@@ -160,6 +160,7 @@ void FindFeatureClustering::execute()
 {
   setErrorCondition(0);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   find_clustering();
   notifyStatusMessage("FindFeatureClustering Completed");

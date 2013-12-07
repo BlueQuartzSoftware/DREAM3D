@@ -192,6 +192,7 @@ void FindNeighborhoods::execute()
 {
   setErrorCondition(0);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   find_neighborhoods();
   notifyStatusMessage("FindNeighborhoods Completed");
