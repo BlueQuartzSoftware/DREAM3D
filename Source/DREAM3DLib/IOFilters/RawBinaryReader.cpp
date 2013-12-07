@@ -512,7 +512,7 @@ void RawBinaryReader::execute()
   setErrorCondition(err);
 
   dataCheck(false);
-
+  if(getErrorCondition() < 0) { return; }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   setErrorCondition(0);
