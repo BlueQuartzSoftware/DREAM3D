@@ -138,7 +138,8 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL)
+  m_Active(NULL),
+  m_Compare(NULL)
 {
   setupFilterParameters();
 }

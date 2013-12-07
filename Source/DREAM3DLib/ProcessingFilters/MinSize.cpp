@@ -173,6 +173,7 @@ void MinSize::dataCheck()
 void MinSize::preflight()
 {
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
   renumber_features->setObservers(this->getObservers());
