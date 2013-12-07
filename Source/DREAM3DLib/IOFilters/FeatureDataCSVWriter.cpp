@@ -168,6 +168,7 @@ void FeatureDataCSVWriter::execute()
   setErrorCondition(err);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 

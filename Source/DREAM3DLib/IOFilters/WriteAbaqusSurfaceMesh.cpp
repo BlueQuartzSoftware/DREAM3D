@@ -164,6 +164,7 @@ void WriteAbaqusSurfaceMesh::execute()
   int err = 0;
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 

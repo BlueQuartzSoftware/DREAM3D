@@ -211,6 +211,7 @@ void GoldfeatherReader::execute()
   setErrorCondition(err);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 

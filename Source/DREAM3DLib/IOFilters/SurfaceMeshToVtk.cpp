@@ -199,6 +199,7 @@ void SurfaceMeshToVtk::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   setErrorCondition(0);
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  /* Place all your code to execute your filter here. */

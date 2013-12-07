@@ -196,6 +196,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   setErrorCondition(err);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   VertexArray& nodes = *(m->getVertices());

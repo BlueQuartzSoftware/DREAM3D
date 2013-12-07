@@ -212,6 +212,7 @@ void DxReader::execute()
   int err = 0;
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   m_InStream.setFileName(getInputFile());
   if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))

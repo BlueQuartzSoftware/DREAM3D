@@ -206,6 +206,7 @@ void SampleSurfaceMesh::execute()
   setErrorCondition(0);
   
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   DREAM3D_RANDOMNG_NEW()

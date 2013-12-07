@@ -161,6 +161,7 @@ void BinaryNodesTrianglesReader::execute()
   QString ss;
   setErrorCondition(err);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   /* Place all your code to execute your filter here. */
   err = read();

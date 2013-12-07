@@ -343,6 +343,7 @@ void LaplacianSmoothing::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   /* Place all your code to execute your filter here. */
   err = edgeBasedSmoothing();

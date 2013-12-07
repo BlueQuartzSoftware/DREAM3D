@@ -191,6 +191,7 @@ void NeighborOrientationCorrelation::execute()
   setErrorCondition(0);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();

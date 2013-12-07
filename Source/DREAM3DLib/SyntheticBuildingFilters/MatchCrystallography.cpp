@@ -255,6 +255,7 @@ void MatchCrystallography::execute()
   setErrorCondition(err);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
 

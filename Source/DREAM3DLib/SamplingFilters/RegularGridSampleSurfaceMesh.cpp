@@ -175,6 +175,7 @@ void RegularGridSampleSurfaceMesh::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   DREAM3D_RANDOMNG_NEW()
 

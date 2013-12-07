@@ -196,6 +196,7 @@ void MinSize::execute()
   setErrorCondition(0);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   remove_smallfeatures();
   assign_badpoints();

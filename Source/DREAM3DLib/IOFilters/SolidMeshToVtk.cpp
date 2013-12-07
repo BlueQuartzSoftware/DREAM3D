@@ -187,6 +187,7 @@ void SolidMeshToVtk::execute()
 
   setErrorCondition(err);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
   if(getErrorCondition() < 0)
   {
     return;

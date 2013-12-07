@@ -160,6 +160,7 @@ void AvizoUniformCoordinateWriter::execute()
   setErrorCondition(err);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

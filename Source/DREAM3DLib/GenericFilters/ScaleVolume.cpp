@@ -221,6 +221,7 @@ void ScaleVolume::execute()
   QString ss;
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   if (m_ApplyToVoxelVolume == true)
   {

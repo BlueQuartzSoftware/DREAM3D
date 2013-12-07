@@ -148,6 +148,7 @@ void Hex2SqrConverter::execute()
   herr_t err = 0;
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   QVector<int> indices;
   // Loop on Each EBSD File

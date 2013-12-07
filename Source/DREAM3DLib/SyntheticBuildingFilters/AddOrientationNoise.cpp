@@ -147,6 +147,7 @@ void AddOrientationNoise::execute()
   DREAM3D_RANDOMNG_NEW()
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   m_Magnitude = m_Magnitude * DREAM3D::Constants::k_Pi / 180.0;
 

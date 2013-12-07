@@ -197,6 +197,7 @@ void AlignSectionsMutualInformation::execute()
   setErrorCondition(0);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   //Converting the user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;

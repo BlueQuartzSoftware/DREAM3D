@@ -660,6 +660,7 @@ void GenericExample::execute()
 
   // Run the data check to get references to all of our data arrays initialized to the values stored in memory
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 

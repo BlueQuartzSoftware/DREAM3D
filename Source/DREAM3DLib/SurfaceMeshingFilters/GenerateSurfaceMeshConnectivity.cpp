@@ -170,6 +170,7 @@ void GenerateSurfaceMeshConnectivity::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   // We need the vertex->Triangle Lists to build the Triangle Neighbor lists so if either
   // of those are true then build the vertex->triangle lists

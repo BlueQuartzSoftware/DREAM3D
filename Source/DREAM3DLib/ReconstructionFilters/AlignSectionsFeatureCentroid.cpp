@@ -196,6 +196,7 @@ void AlignSectionsFeatureCentroid::execute()
   setErrorCondition(0);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   AlignSections::execute();
 

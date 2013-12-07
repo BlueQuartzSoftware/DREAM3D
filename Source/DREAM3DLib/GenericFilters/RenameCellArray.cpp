@@ -157,6 +157,7 @@ void RenameCellArray::execute()
   setErrorCondition(0);
  
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   bool check = m->getAttributeMatrix(getCellAttributeMatrixName())->renameAttributeArray(m_SelectedCellArrayName, m_NewCellArrayName);

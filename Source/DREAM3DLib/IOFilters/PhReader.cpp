@@ -218,6 +218,7 @@ void PhReader::execute()
   int err = 0;
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   m_InStream = fopen(getInputFile().toLatin1().data(), "r");
   if(m_InStream == NULL)

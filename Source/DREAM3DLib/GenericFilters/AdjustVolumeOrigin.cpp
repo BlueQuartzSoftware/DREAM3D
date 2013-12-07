@@ -219,6 +219,7 @@ void AdjustVolumeOrigin::execute()
   setErrorCondition(0);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   // Set the Voxel Volume First, since this is easy
   if (m_ApplyToVoxelVolume == true)

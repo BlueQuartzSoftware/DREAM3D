@@ -291,6 +291,7 @@ void InsertPrecipitatePhases::execute()
   DREAM3D_RANDOMNG_NEW()
     
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 

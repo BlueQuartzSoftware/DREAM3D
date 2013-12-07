@@ -202,6 +202,7 @@ void BridgeParentIdsStatisticsToFeatureIds::execute()
   setErrorCondition(0);
 
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
   rename_cell_array->setObservers(this->getObservers());

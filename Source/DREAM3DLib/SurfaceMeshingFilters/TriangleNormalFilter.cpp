@@ -205,6 +205,7 @@ void TriangleNormalFilter::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   notifyStatusMessage("Starting");
