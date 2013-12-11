@@ -138,15 +138,15 @@ void InitializeSyntheticVolume::dataCheck()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
+  AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
   //Cell Data
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellPhasesPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_GoodVoxelsPtr = cellAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -205,10 +205,18 @@ void InitializeSyntheticVolume::preflight()
   QMap<QString, QMap<QString, QSet<QString> > > inputDataToRead;
   QMap<QString, QSet<QString> > inputArrayToRead;
   QSet<QString> inputStatsArray;
+  m_InputStatsAttributeArrayName = "Statistics";
   inputStatsArray.insert(m_InputStatsAttributeArrayName);
+  m_InputCrystalStructuresAttributeArrayName = "CrystalStructures";
+  inputStatsArray.insert(m_InputCrystalStructuresAttributeArrayName);
+  m_InputPhaseTypeAttributeArrayName = "PhaseTypes";
+  inputStatsArray.insert(m_InputPhaseTypeAttributeArrayName);
+  m_InputEnsembleAttributeMatrixName = "CellEnsembleData";
   inputArrayToRead[m_InputEnsembleAttributeMatrixName] = inputStatsArray;
+  m_InputDataContainerName = "VolumeDataContainer";
   inputDataToRead[m_InputDataContainerName] = inputArrayToRead;
   read_data->setDataToRead(inputDataToRead);
+  read_data->setInputFile(m_InputFile);
   read_data->preflight();
   if (read_data->getErrorCondition() < 0)
   {
@@ -259,6 +267,7 @@ void InitializeSyntheticVolume::execute()
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(m->getTotalPoints());
 
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
   m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);

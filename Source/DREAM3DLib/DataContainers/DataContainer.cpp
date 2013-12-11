@@ -259,6 +259,7 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QM
     {
       AttributeMatrix::Pointer am = AttributeMatrix::New();
       am->setType(amType);
+      am->setName(amName);
       addAttributeMatrix(amName, am);
     }
 

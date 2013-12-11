@@ -84,486 +84,6 @@
 
 #include "TestFileLocations.h"
 
-#define helper(a, b)\
-  a##b
-
-
-#define MAKE_ARRAY(m_msgType, name)\
-  IDataArray::Pointer m_msgType##Ptr = DataArray<m_msgType>::CreateArray(5, name);\
-  dataContainer->addCellData(name, m_msgType##Ptr);
-
-
-#define TEST_DATA_CONTAINER(Type, DCType)\
-  {  IDataArray::Pointer t_##Type = Type::CreateArray(5);\
-    t_##Type->SetName( #Type );\
-    m->add##DCType(#Type, t_##Type);\
-    IDataArray::Pointer t = m->get##DCType(#Type);\
-    DREAM3D_REQUIRE_NE(t.get(), NULL);\
-    t = m->removeCellFeatureData(#Type);\
-    DREAM3D_REQUIRE_NE(t.get(), NULL);\
-    t = m->get##DCType(#Type);\
-    DREAM3D_REQUIRE_EQUAL(t.get(), NULL);\
-  }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveTestFiles()
-{
-#if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::DataContainerIOTest::TestFile);
-#endif
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestDataContainerWriter()
-{
-
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
-  DataContainerArray::Pointer dca = DataContainerArray::New();
-  dca->pushBack(m);
-  size_t nx = UnitTest::DataContainerIOTest::XSize;
-  size_t ny = UnitTest::DataContainerIOTest::YSize;
-  size_t nz = UnitTest::DataContainerIOTest::ZSize;
-  m->setDimensions(nx, ny, nz);
-  int size = nx * ny * nz;
-
-  QDir dir(UnitTest::DataContainerIOTest::TestDir);
-  dir.mkpath(".");
-
-  Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(size, DREAM3D::CellData::FeatureIds);
-  for (int i = 0; i < size; ++i)
-  {
-    featureIds->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
-  }
-  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::FeatureIds, featureIds);
-
-  BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, DREAM3D::CellData::SurfaceVoxels);
-  for (int i = 0; i < size; ++i)
-  {
-    boolArray->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
-  }
-  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceVoxels, boolArray);
-
-  QVector<int> dims(1, 3);
-  FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(4, dims, DREAM3D::FeatureData::AxisEulerAngles);
-  for(size_t i = 0; i < 4; ++i)
-  {
-    avgEuler->SetComponent(i, 0, i * 0.665f);
-    avgEuler->SetComponent(i, 1, i * 0.665f);
-    avgEuler->SetComponent(i, 2, i * 0.665f);
-  }
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::AxisEulerAngles, avgEuler);
-
-
-  FloatArrayType::Pointer surfArea = FloatArrayType::CreateArray(4, DREAM3D::EnsembleData::TotalSurfaceAreas);
-  for (int i = 0; i < 4; ++i)
-  {
-    surfArea->SetValue(i, i + 41.2f);
-  }
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::TotalSurfaceAreas, surfArea);
-
-
-  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
-  neighborlistPtr->SetName(DREAM3D::FeatureData::NeighborList);
-  neighborlistPtr->setNumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors);
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::NeighborList, neighborlistPtr);
-
-  for(int i = 0; i < 4; ++i)
-  {
-    for(int j = 0; j < i + 4; ++j)
-    {
-      neighborlistPtr->addEntry(i, j * i + 3);
-    }
-  }
-
-  DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setDataContainerArray(dca);
-  writer->setOutputFile(UnitTest::DataContainerIOTest::TestFile);
-  writer->execute();
-  int err = writer->getErrorCondition();
-  writer = DataContainerWriter::NullPointer();
-  DREAM3D_REQUIRE_EQUAL(err, 0);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestDataContainerReader()
-{
-  size_t nx = 0;
-  size_t ny = 0;
-  size_t nz = 0;
-
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
-  DataContainerArray::Pointer dca = DataContainerArray::New();
-  dca->pushBack(m);
-
-  DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(UnitTest::DataContainerIOTest::TestFile);
-  reader->setDataContainerArray(dca);
-  reader->setReadVolumeData(true);
-  reader->setReadSurfaceData(false);
-  reader->setReadVertexData(false);
-  reader->setReadEdgeData(false);
-  reader->setReadAllArrays(true);
-  reader->execute();
-  int err = reader->getErrorCondition();
-  DREAM3D_REQUIRE(err >= 0)
-  m->getDimensions(nx, ny, nz);
-
-  DREAM3D_REQUIRE_EQUAL(m->getNumCellArrays(), 2);
-  DREAM3D_REQUIRE_EQUAL(m->getNumCellFeatureArrays(), 3);
-  DREAM3D_REQUIRE_EQUAL(m->getNumCellEnsembleArrays(), 1);
-
-
-  // Validate the NeighborList Data
-  NeighborList<int32_t>* neighborlistPtr
-    = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
-  DREAM3D_REQUIRE_NE(NULL, neighborlistPtr);
-  NeighborList<int32_t>::SharedVectorType vec;
-  size_t nLists = neighborlistPtr->getNumberOfTuples();
-  DREAM3D_REQUIRE_EQUAL(nLists, 4);
-  for(size_t l = 0; l < nLists; ++l)
-  {
-    vec = neighborlistPtr->getList(l);
-    for(int j = 0; j < (int)(l + 4); ++j)
-    {
-      DREAM3D_REQUIRE_EQUAL(vec->at(j), (int32_t)((j * l + 3)) );
-    }
-
-  }
-
-  DREAM3D_REQUIRE_EQUAL(err, 0);
-  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DataContainerIOTest::XSize);
-  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DataContainerIOTest::YSize);
-  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::DataContainerIOTest::ZSize);
-
-  DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::DataContainerIOTest::TestFile2);
-  writer->setDataContainerArray(dca);
-  writer->execute();
-  err = writer->getErrorCondition();
-  DREAM3D_REQUIRE(err >= 0)
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void insertDeleteArray(VolumeDataContainer::Pointer m)
-{
-
-  IDataArray::Pointer p = T::CreateArray(5, "Test");
-  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray("Test", p);
-  IDataArray::Pointer t = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray("Test");
-  DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray( "Test" );
-  DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray( "Test" );
-  DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
-
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray("Test", p);
-  t = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray("Test");
-  DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->removeCellFeatureData( "Test" );
-  DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray( "Test" );
-  DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
-
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray("Test", p);
-  t = m->getCellEnsembleData("Test");
-  DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->removeCellEnsembleData( "Test" );
-  DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->getCellEnsembleData( "Test" );
-  DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestInsertDelete()
-{
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
-  QList<QString> nameList;
-
-  insertDeleteArray<Int8ArrayType> (m);
-  insertDeleteArray<UInt16ArrayType> (m);
-  insertDeleteArray<Int16ArrayType> (m);
-  insertDeleteArray<UInt16ArrayType>(m);
-  insertDeleteArray<Int32ArrayType> (m);
-  insertDeleteArray<UInt32ArrayType> (m);
-  insertDeleteArray<Int64ArrayType> (m);
-  insertDeleteArray<UInt64ArrayType> (m);
-  insertDeleteArray<FloatArrayType> (m);
-  insertDeleteArray<DoubleArrayType> (m);
-
-  nameList = m->getCellArrayNameList();
-  DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
-
-  nameList = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
-  DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
-
-  nameList = m->getCellEnsembleArrayNameList();
-  DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
-}
-
-
-template<typename T, typename K>
-void _arrayCreation(VolumeDataContainer::Pointer m)
-{
-  AbstractFilter::Pointer absFilt = AbstractFilter::New();
-
-  QVector<int> dims(1, 2);
-  T* ptr = m->createCellData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
-  DREAM3D_REQUIRE_NE(ptr, NULL);
-  absFilt->setErrorCondition(0);
-
-  // First try getting the array, but pass in a bad array name which should produce a null pointer
-  // and negative error condition
-  ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
-  absFilt->setErrorCondition(0);
-
-  // Next try getting the array, but pass in a bad size name which should produce a null pointer
-  // and negative error condition
-  ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
-  absFilt->setErrorCondition(0);
-
-  // Next try getting the array, but pass in a bad cast type which should produce a null pointer
-  // and negative error condition
-  bool* bool_ptr =  m->getCellDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
-  absFilt->setErrorCondition(0);
-
-  // Next, pass in all the correct values which should produce a Non NULL pointer value and
-  // Zero Error Condition
-  ptr = m->getCellDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
-  DREAM3D_REQUIRE_NE(ptr, NULL);
-  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
-
-  IDataArray::Pointer t = m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray( "Test" );
-  DREAM3D_REQUIRE_NE(t.get(), NULL);
-
-  /********************************* Feature Data Tests *********************************************/
-  ptr = m->createCellFeatureData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
-  DREAM3D_REQUIRE_NE(ptr, NULL);
-  absFilt->setErrorCondition(0);
-
-  // First try getting the array, but pass in a bad array name which should produce a null pointer
-  // and negative error condition
-  ptr =  m->getCellFeatureDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
-  absFilt->setErrorCondition(0);
-
-  // Next try getting the array, but pass in a bad size name which should produce a null pointer
-  // and negative error condition
-  ptr =  m->getCellFeatureDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
-  absFilt->setErrorCondition(0);
-
-  // Next try getting the array, but pass in a bad cast type which should produce a null pointer
-  // and negative error condition
-  bool_ptr =  m->getCellFeatureDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
-  absFilt->setErrorCondition(0);
-
-  // Next, pass in all the correct values which should produce a Non NULL pointer value and
-  // Zero Error Condition
-  ptr = m->getCellFeatureDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
-  DREAM3D_REQUIRE_NE(ptr, NULL);
-  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
-
-  t = m->removeCellFeatureData( "Test" );
-  DREAM3D_REQUIRE_NE(t.get(), NULL);
-
-
-  /********************************* Ensemble Data Tests *********************************************/
-  ptr = m->createCellEnsembleData<T, K, AbstractFilter>("Test", 10, dims, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
-  DREAM3D_REQUIRE_NE(ptr, NULL);
-  absFilt->setErrorCondition(0);
-
-  // First try getting the array, but pass in a bad array name which should produce a null pointer
-  // and negative error condition
-  ptr =  m->getCellEnsembleDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
-  absFilt->setErrorCondition(0);
-
-  // Next try getting the array, but pass in a bad size name which should produce a null pointer
-  // and negative error condition
-  ptr =  m->getCellEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
-  absFilt->setErrorCondition(0);
-
-  // Next try getting the array, but pass in a bad cast type which should produce a null pointer
-  // and negative error condition
-  bool_ptr =  m->getCellEnsembleDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
-  DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
-  absFilt->setErrorCondition(0);
-
-  // Next, pass in all the correct values which should produce a Non NULL pointer value and
-  // Zero Error Condition
-  ptr = m->getCellEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
-  DREAM3D_REQUIRE_NE(ptr, NULL);
-  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
-
-
-  t = m->removeCellEnsembleData( "Test" );
-  DREAM3D_REQUIRE_NE(t.get(), NULL);
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestArrayCreation()
-{
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
-  QList<QString> nameList;
-
-  _arrayCreation<int8_t, Int8ArrayType>(m);
-  _arrayCreation<uint8_t, UInt8ArrayType>(m);
-  _arrayCreation<int16_t, Int16ArrayType>(m);
-  _arrayCreation<uint16_t, UInt16ArrayType>(m);
-  _arrayCreation<int32_t, Int32ArrayType>(m);
-  _arrayCreation<uint32_t, UInt32ArrayType>(m);
-  _arrayCreation<int64_t, Int64ArrayType>(m);
-  _arrayCreation<uint64_t, UInt64ArrayType>(m);
-  _arrayCreation<float, FloatArrayType>(m);
-  _arrayCreation<double, DoubleArrayType>(m);
-
-
-  nameList = m->getCellArrayNameList();
-  DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
-
-  nameList = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
-  DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
-
-  nameList = m->getCellEnsembleArrayNameList();
-  DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
-
-  // DO NOT TEST THE BoolArrayType - we are using that as a negative test in the _arrayCreation test
-
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestDataContainer()
-{
-
-  IDataArray::Pointer iDataArray = NeighborList<int>::New();
-
-  NeighborList<int>* neighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(iDataArray.get());
-  assert (neighborList != NULL);
-
-
-  for (int featureId = 0; featureId < 10; ++featureId)
-  {
-    for (int neighborId = 0; neighborId < featureId + 5; ++neighborId)
-    {
-      neighborList->addEntry(featureId, neighborId * 23);
-    }
-  }
-  bool ok = true;
-
-  int value = neighborList->getValue(5, 4, ok);
-  BOOST_ASSERT(ok);
-
-  value = neighborList->getValue(12, 4, ok);
-  BOOST_ASSERT(!ok);
-
-  std::cout << "Number of Lists: " << neighborList->getNumberOfLists() << std::endl;
-  std::cout << "Number of Entries for Feature Id[5]: " << neighborList->getListSize(5) << std::endl;
-  std::cout << "Value for [5][3]: " << neighborList->getValue(5, 3, ok) << std::endl;
-
-  VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New();
-  dataContainer->setName(DREAM3D::Defaults::VolumeDataContainerName);
-  dataContainer->addCellData("NeighborList", iDataArray);
-  {
-    MAKE_ARRAY(int8_t, "int8_t_Array" );
-    MAKE_ARRAY(int16_t, "int16_t_Array" );
-    MAKE_ARRAY(int32_t, "int32_t_Array" );
-    MAKE_ARRAY(int64_t, "int64_t_Array" );
-    MAKE_ARRAY(uint8_t, "uint8_t_Array" );
-    MAKE_ARRAY(uint16_t, "uint16_t_Array" );
-    MAKE_ARRAY(uint32_t, "uint32_t_Array" );
-    MAKE_ARRAY(uint64_t, "uint64_t_Array" );
-    MAKE_ARRAY(float, "float_Array" );
-    MAKE_ARRAY(double, "double_Array" );
-  }
-
-  {
-    // We can get a smaart pointer to the IDataArray Class
-    IDataArray::Pointer ptr = dataContainer->getCellData("int32_t_Array");
-
-
-    double* dPtr = IDataArray::SafeReinterpretCast<IDataArray*, DoubleArrayType*, double*>(ptr.get());
-    BOOST_ASSERT(NULL == dPtr);
-
-    int32_t* iPtr = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(ptr.get());
-    BOOST_ASSERT(NULL != iPtr);
-
-    // Or we can downcast to the type we know it is (in line)
-    Int32ArrayType* intPtr = Int32ArrayType::SafeObjectDownCast<IDataArray*, Int32ArrayType* >(dataContainer->getCellData("int32_t_Array").get());
-    if (NULL != intPtr)
-    {
-      std::cout << "Downcast to intPtr pointer was successful" << std::endl;
-      std::cout << "Number of Tuples:" << intPtr->getNumberOfTuples() << std::endl;
-      int32_t* p = intPtr->getPointer(0);
-      for (int i = 0; i < 5; ++i)
-      {
-        std::cout << (int)p[i] << std::endl;
-      }
-      for (int i = 0; i < 5; ++i)
-      {
-        std::cout << (int)(intPtr->GetValue(i)) << std::endl;
-      }
-    }
-
-
-    DoubleArrayType* doublePtr = DoubleArrayType::SafeObjectDownCast<IDataArray*, DataArray<double>*>(ptr.get());
-    if (NULL != doublePtr)
-    {
-      std::cout << "Downcast to double pointer was successful" << std::endl;
-    }
-    else
-    {
-      std::cout << "Downcast to double pointer FAILED." << std::endl;
-    }
-
-  }
-
-  // Test Getting an Array
-
-  // Test removing an Array
-
-  // Test Size of all types of maps
-
-}
 
 void RunPipeline1()
 {
@@ -603,10 +123,6 @@ void RunPipeline1()
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
-  dcw->setWriteVolumeData(true);
-  dcw->setWriteSurfaceData(false);
-  dcw->setWriteEdgeData(false);
-  dcw->setWriteVertexData(false);
   dcw->setWriteXdmfFile(true);
   pipeline->pushBack(dcw);
 
@@ -618,271 +134,271 @@ void RunPipeline1()
   pipeline->run();
 }
 
-void RunPipeline2()
-{
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-  DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
-  dcr->setReadVertexData(false);
-  dcr->setReadEdgeData(false);
-  dcr->setReadSurfaceData(false);
-  dcr->setReadVolumeData(true);
-  dcr->setReadAllVertexArrays(true);
-  dcr->setReadAllCellArrays(true);
-  dcr->setReadAllCellFeatureArrays(true);
-  dcr->setReadAllCellEnsembleArrays(true);
-  pipeline->pushBack(dcr);
-
-  QuickSurfaceMesh::Pointer qsm = QuickSurfaceMesh::New();
-  pipeline->pushBack(qsm);
-
-  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile2);
-  dcw->setWriteVolumeData(true);
-  dcw->setWriteSurfaceData(true);
-  dcw->setWriteEdgeData(false);
-  dcw->setWriteVertexData(false);
-  dcw->setWriteXdmfFile(true);
-  pipeline->pushBack(dcw);
-
-  int err = pipeline->preflightPipeline();
-  if(err < 0)
-  {
-    std::cout << "Failed Preflight" << std::endl;
-  }
-  pipeline->run();
-}
-
-void RunPipeline3()
-{
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-  DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile2);
-  dcr->setReadVertexData(false);
-  dcr->setReadEdgeData(false);
-  dcr->setReadSurfaceData(true);
-  dcr->setReadAllVertexArrays(true);
-  dcr->setReadAllFaceArrays(true);
-  dcr->setReadVolumeData(true);
-  dcr->setReadAllCellArrays(true);
-  dcr->setReadAllCellFeatureArrays(true);
-  dcr->setReadAllCellEnsembleArrays(true);
-  pipeline->pushBack(dcr);
-
-  LaplacianSmoothing::Pointer ls = LaplacianSmoothing::New();
-  ls->setIterationSteps(50);
-  ls->setLambda(0.25);
-  ls->setTripleLineLambda(0.2);
-  ls->setQuadPointLambda(0.15);
-  ls->setSurfacePointLambda(0.0);
-  ls->setSurfaceTripleLineLambda(0.0);
-  ls->setSurfaceQuadPointLambda(0.0);
-  pipeline->pushBack(ls);
-
-  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile3);
-  dcw->setWriteVolumeData(true);
-  dcw->setWriteSurfaceData(true);
-  dcw->setWriteEdgeData(false);
-  dcw->setWriteVertexData(false);
-  dcw->setWriteXdmfFile(true);
-  pipeline->pushBack(dcw);
-
-  int err = pipeline->preflightPipeline();
-  if(err < 0)
-  {
-    std::cout << "Failed Preflight" << std::endl;
-  }
-  pipeline->run();
-}
-
-void RunPipeline4()
-{
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-  VASPReader::Pointer vr = VASPReader::New();
-  vr->setInputFile(UnitTest::NewDataContainerStructureTest::VASPInputFile);
-  pipeline->pushBack(vr);
-
-  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::VASPOutputFile);
-  dcw->setWriteVolumeData(false);
-  dcw->setWriteSurfaceData(false);
-  dcw->setWriteEdgeData(false);
-  dcw->setWriteVertexData(true);
-  dcw->setWriteXdmfFile(true);
-  pipeline->pushBack(dcw);
-
-  int err = pipeline->preflightPipeline();
-  if(err < 0)
-  {
-    std::cout << "Failed Preflight" << std::endl;
-  }
-  pipeline->run();
-}
-
-void RunPipeline5()
-{
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-  ParaDisReader::Pointer pr = ParaDisReader::New();
-  pr->setInputFile(UnitTest::NewDataContainerStructureTest::ParaDisInputFile);
-  pipeline->pushBack(pr);
-
-  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::ParaDisOutputFile);
-  dcw->setWriteVolumeData(false);
-  dcw->setWriteSurfaceData(false);
-  dcw->setWriteEdgeData(true);
-  dcw->setWriteVertexData(false);
-  dcw->setWriteXdmfFile(true);
-  pipeline->pushBack(dcw);
-
-  int err = pipeline->preflightPipeline();
-  if(err < 0)
-  {
-    std::cout << "Failed Preflight" << std::endl;
-  }
-  pipeline->run();
-}
-
-void RunPipeline6()
-{
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-  DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::ParaDisInputFile2);
-  dcr->setReadVertexData(false);
-  dcr->setReadEdgeData(true);
-  dcr->setReadSurfaceData(false);
-  dcr->setReadVolumeData(false);
-  dcr->setReadAllVertexArrays(true);
-  dcr->setReadAllEdgeArrays(true);
-  pipeline->pushBack(dcr);
-
-  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::ParaDisOutputFile2);
-  dcw->setWriteVolumeData(false);
-  dcw->setWriteSurfaceData(false);
-  dcw->setWriteEdgeData(true);
-  dcw->setWriteVertexData(false);
-  dcw->setWriteXdmfFile(true);
-  pipeline->pushBack(dcw);
-
-  int err = pipeline->preflightPipeline();
-  if(err < 0)
-  {
-    std::cout << "Failed Preflight" << std::endl;
-  }
-  pipeline->run();
-}
-
-void RunPipeline7()
-{
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-  DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile3);
-  dcr->setReadVertexData(false);
-  dcr->setReadEdgeData(false);
-  dcr->setReadSurfaceData(true);
-  dcr->setReadAllVertexArrays(true);
-  dcr->setReadAllFaceArrays(true);
-  dcr->setReadVolumeData(false);
-  dcr->setReadAllCellArrays(false);
-  dcr->setReadAllCellFeatureArrays(false);
-  dcr->setReadAllCellEnsembleArrays(false);
-  pipeline->pushBack(dcr);
-
-  RegularGridSampleSurfaceMesh::Pointer rgssm = RegularGridSampleSurfaceMesh::New();
-  rgssm->setXPoints(256);
-  rgssm->setYPoints(256);
-  rgssm->setZPoints(256);
-  FloatVec3Widget_t res = {0.05,0.05,0.05};
-  rgssm->setResolution(res);
-  pipeline->pushBack(rgssm);
-
-  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile4);
-  dcw->setWriteVolumeData(true);
-  dcw->setWriteSurfaceData(true);
-  dcw->setWriteEdgeData(false);
-  dcw->setWriteVertexData(false);
-  dcw->setWriteXdmfFile(true);
-  pipeline->pushBack(dcw);
-
-  int err = pipeline->preflightPipeline();
-  if(err < 0)
-  {
-    std::cout << "Failed Preflight" << std::endl;
-  }
-  pipeline->run();
-}
-
-void RunPipeline8()
-{
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-  DataContainerReader::Pointer dcr = DataContainerReader::New();
-  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SmallIN100InputFile);
-  dcr->setReadVertexData(false);
-  dcr->setReadEdgeData(false);
-  dcr->setReadSurfaceData(false);
-  dcr->setReadVolumeData(true);
-  dcr->setReadAllCellArrays(true);
-  dcr->setReadAllCellFeatureArrays(true);
-  dcr->setReadAllCellEnsembleArrays(true);
-  pipeline->pushBack(dcr);
-
-  FindSurfaceFeatures::Pointer fsg = FindSurfaceFeatures::New();
-  pipeline->pushBack(fsg);
-
-  FindFeatureCentroids::Pointer fgc = FindFeatureCentroids::New();
-  pipeline->pushBack(fgc);
-
-  FindBoundingBoxFeatures::Pointer fbbg = FindBoundingBoxFeatures::New();
-  pipeline->pushBack(fbbg);
-
-  FindSizes::Pointer fs = FindSizes::New();
-  pipeline->pushBack(fs);
-
-  FindNeighbors::Pointer fn = FindNeighbors::New();
-  pipeline->pushBack(fn);
-
-  FitCorrelatedFeatureData::Pointer fcfd = FitCorrelatedFeatureData::New();
-  fcfd->setSelectedFeatureArrayName(DREAM3D::FeatureData::NumNeighbors);
-  fcfd->setCorrelatedFeatureArrayName(DREAM3D::FeatureData::EquivalentDiameters);
-  fcfd->setDistributionType(DREAM3D::DistributionType::LogNormal);
-  fcfd->setNumberOfCorrelatedBins(10);
-  fcfd->setRemoveBiasedFeatures(true);
-  pipeline->pushBack(fcfd);
-
-  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SmallIN100OutputFile);
-  dcw->setWriteVolumeData(true);
-  dcw->setWriteSurfaceData(false);
-  dcw->setWriteEdgeData(false);
-  dcw->setWriteVertexData(false);
-  dcw->setWriteXdmfFile(true);
-  pipeline->pushBack(dcw);
-
-  int err = pipeline->preflightPipeline();
-  if(err < 0)
-  {
-    std::cout << "Failed Preflight" << std::endl;
-  }
-  pipeline->run();
-
-  err = pipeline->getErrorCondition();
-  if(err < 0)
-  {
-    std::cout << "Pipeline Execute Failed" << std::endl;
-  }
-  DREAM3D_REQUIRE(err >= 0)
-
-}
+//void RunPipeline2()
+//{
+//  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+//
+//  DataContainerReader::Pointer dcr = DataContainerReader::New();
+//  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
+//  dcr->setReadVertexData(false);
+//  dcr->setReadEdgeData(false);
+//  dcr->setReadSurfaceData(false);
+//  dcr->setReadVolumeData(true);
+//  dcr->setReadAllVertexArrays(true);
+//  dcr->setReadAllCellArrays(true);
+//  dcr->setReadAllCellFeatureArrays(true);
+//  dcr->setReadAllCellEnsembleArrays(true);
+//  pipeline->pushBack(dcr);
+//
+//  QuickSurfaceMesh::Pointer qsm = QuickSurfaceMesh::New();
+//  pipeline->pushBack(qsm);
+//
+//  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+//  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile2);
+//  dcw->setWriteVolumeData(true);
+//  dcw->setWriteSurfaceData(true);
+//  dcw->setWriteEdgeData(false);
+//  dcw->setWriteVertexData(false);
+//  dcw->setWriteXdmfFile(true);
+//  pipeline->pushBack(dcw);
+//
+//  int err = pipeline->preflightPipeline();
+//  if(err < 0)
+//  {
+//    std::cout << "Failed Preflight" << std::endl;
+//  }
+//  pipeline->run();
+//}
+//
+//void RunPipeline3()
+//{
+//  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+//
+//  DataContainerReader::Pointer dcr = DataContainerReader::New();
+//  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile2);
+//  dcr->setReadVertexData(false);
+//  dcr->setReadEdgeData(false);
+//  dcr->setReadSurfaceData(true);
+//  dcr->setReadAllVertexArrays(true);
+//  dcr->setReadAllFaceArrays(true);
+//  dcr->setReadVolumeData(true);
+//  dcr->setReadAllCellArrays(true);
+//  dcr->setReadAllCellFeatureArrays(true);
+//  dcr->setReadAllCellEnsembleArrays(true);
+//  pipeline->pushBack(dcr);
+//
+//  LaplacianSmoothing::Pointer ls = LaplacianSmoothing::New();
+//  ls->setIterationSteps(50);
+//  ls->setLambda(0.25);
+//  ls->setTripleLineLambda(0.2);
+//  ls->setQuadPointLambda(0.15);
+//  ls->setSurfacePointLambda(0.0);
+//  ls->setSurfaceTripleLineLambda(0.0);
+//  ls->setSurfaceQuadPointLambda(0.0);
+//  pipeline->pushBack(ls);
+//
+//  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+//  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile3);
+//  dcw->setWriteVolumeData(true);
+//  dcw->setWriteSurfaceData(true);
+//  dcw->setWriteEdgeData(false);
+//  dcw->setWriteVertexData(false);
+//  dcw->setWriteXdmfFile(true);
+//  pipeline->pushBack(dcw);
+//
+//  int err = pipeline->preflightPipeline();
+//  if(err < 0)
+//  {
+//    std::cout << "Failed Preflight" << std::endl;
+//  }
+//  pipeline->run();
+//}
+//
+//void RunPipeline4()
+//{
+//  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+//
+//  VASPReader::Pointer vr = VASPReader::New();
+//  vr->setInputFile(UnitTest::NewDataContainerStructureTest::VASPInputFile);
+//  pipeline->pushBack(vr);
+//
+//  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+//  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::VASPOutputFile);
+//  dcw->setWriteVolumeData(false);
+//  dcw->setWriteSurfaceData(false);
+//  dcw->setWriteEdgeData(false);
+//  dcw->setWriteVertexData(true);
+//  dcw->setWriteXdmfFile(true);
+//  pipeline->pushBack(dcw);
+//
+//  int err = pipeline->preflightPipeline();
+//  if(err < 0)
+//  {
+//    std::cout << "Failed Preflight" << std::endl;
+//  }
+//  pipeline->run();
+//}
+//
+//void RunPipeline5()
+//{
+//  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+//
+//  ParaDisReader::Pointer pr = ParaDisReader::New();
+//  pr->setInputFile(UnitTest::NewDataContainerStructureTest::ParaDisInputFile);
+//  pipeline->pushBack(pr);
+//
+//  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+//  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::ParaDisOutputFile);
+//  dcw->setWriteVolumeData(false);
+//  dcw->setWriteSurfaceData(false);
+//  dcw->setWriteEdgeData(true);
+//  dcw->setWriteVertexData(false);
+//  dcw->setWriteXdmfFile(true);
+//  pipeline->pushBack(dcw);
+//
+//  int err = pipeline->preflightPipeline();
+//  if(err < 0)
+//  {
+//    std::cout << "Failed Preflight" << std::endl;
+//  }
+//  pipeline->run();
+//}
+//
+//void RunPipeline6()
+//{
+//  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+//
+//  DataContainerReader::Pointer dcr = DataContainerReader::New();
+//  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::ParaDisInputFile2);
+//  dcr->setReadVertexData(false);
+//  dcr->setReadEdgeData(true);
+//  dcr->setReadSurfaceData(false);
+//  dcr->setReadVolumeData(false);
+//  dcr->setReadAllVertexArrays(true);
+//  dcr->setReadAllEdgeArrays(true);
+//  pipeline->pushBack(dcr);
+//
+//  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+//  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::ParaDisOutputFile2);
+//  dcw->setWriteVolumeData(false);
+//  dcw->setWriteSurfaceData(false);
+//  dcw->setWriteEdgeData(true);
+//  dcw->setWriteVertexData(false);
+//  dcw->setWriteXdmfFile(true);
+//  pipeline->pushBack(dcw);
+//
+//  int err = pipeline->preflightPipeline();
+//  if(err < 0)
+//  {
+//    std::cout << "Failed Preflight" << std::endl;
+//  }
+//  pipeline->run();
+//}
+//
+//void RunPipeline7()
+//{
+//  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+//
+//  DataContainerReader::Pointer dcr = DataContainerReader::New();
+//  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile3);
+//  dcr->setReadVertexData(false);
+//  dcr->setReadEdgeData(false);
+//  dcr->setReadSurfaceData(true);
+//  dcr->setReadAllVertexArrays(true);
+//  dcr->setReadAllFaceArrays(true);
+//  dcr->setReadVolumeData(false);
+//  dcr->setReadAllCellArrays(false);
+//  dcr->setReadAllCellFeatureArrays(false);
+//  dcr->setReadAllCellEnsembleArrays(false);
+//  pipeline->pushBack(dcr);
+//
+//  RegularGridSampleSurfaceMesh::Pointer rgssm = RegularGridSampleSurfaceMesh::New();
+//  rgssm->setXPoints(256);
+//  rgssm->setYPoints(256);
+//  rgssm->setZPoints(256);
+//  FloatVec3Widget_t res = {0.05,0.05,0.05};
+//  rgssm->setResolution(res);
+//  pipeline->pushBack(rgssm);
+//
+//  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+//  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile4);
+//  dcw->setWriteVolumeData(true);
+//  dcw->setWriteSurfaceData(true);
+//  dcw->setWriteEdgeData(false);
+//  dcw->setWriteVertexData(false);
+//  dcw->setWriteXdmfFile(true);
+//  pipeline->pushBack(dcw);
+//
+//  int err = pipeline->preflightPipeline();
+//  if(err < 0)
+//  {
+//    std::cout << "Failed Preflight" << std::endl;
+//  }
+//  pipeline->run();
+//}
+//
+//void RunPipeline8()
+//{
+//  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+//
+//  DataContainerReader::Pointer dcr = DataContainerReader::New();
+//  dcr->setInputFile(UnitTest::NewDataContainerStructureTest::SmallIN100InputFile);
+//  dcr->setReadVertexData(false);
+//  dcr->setReadEdgeData(false);
+//  dcr->setReadSurfaceData(false);
+//  dcr->setReadVolumeData(true);
+//  dcr->setReadAllCellArrays(true);
+//  dcr->setReadAllCellFeatureArrays(true);
+//  dcr->setReadAllCellEnsembleArrays(true);
+//  pipeline->pushBack(dcr);
+//
+//  FindSurfaceFeatures::Pointer fsg = FindSurfaceFeatures::New();
+//  pipeline->pushBack(fsg);
+//
+//  FindFeatureCentroids::Pointer fgc = FindFeatureCentroids::New();
+//  pipeline->pushBack(fgc);
+//
+//  FindBoundingBoxFeatures::Pointer fbbg = FindBoundingBoxFeatures::New();
+//  pipeline->pushBack(fbbg);
+//
+//  FindSizes::Pointer fs = FindSizes::New();
+//  pipeline->pushBack(fs);
+//
+//  FindNeighbors::Pointer fn = FindNeighbors::New();
+//  pipeline->pushBack(fn);
+//
+//  FitCorrelatedFeatureData::Pointer fcfd = FitCorrelatedFeatureData::New();
+//  fcfd->setSelectedFeatureArrayName(DREAM3D::FeatureData::NumNeighbors);
+//  fcfd->setCorrelatedFeatureArrayName(DREAM3D::FeatureData::EquivalentDiameters);
+//  fcfd->setDistributionType(DREAM3D::DistributionType::LogNormal);
+//  fcfd->setNumberOfCorrelatedBins(10);
+//  fcfd->setRemoveBiasedFeatures(true);
+//  pipeline->pushBack(fcfd);
+//
+//  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+//  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SmallIN100OutputFile);
+//  dcw->setWriteVolumeData(true);
+//  dcw->setWriteSurfaceData(false);
+//  dcw->setWriteEdgeData(false);
+//  dcw->setWriteVertexData(false);
+//  dcw->setWriteXdmfFile(true);
+//  pipeline->pushBack(dcw);
+//
+//  int err = pipeline->preflightPipeline();
+//  if(err < 0)
+//  {
+//    std::cout << "Failed Preflight" << std::endl;
+//  }
+//  pipeline->run();
+//
+//  err = pipeline->getErrorCondition();
+//  if(err < 0)
+//  {
+//    std::cout << "Pipeline Execute Failed" << std::endl;
+//  }
+//  DREAM3D_REQUIRE(err >= 0)
+//
+//}
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
@@ -891,30 +407,15 @@ int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 
-#if !REMOVE_TEST_FILES
-//  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-#endif
-
   RunPipeline1();
-  RunPipeline2();
-  RunPipeline3();
+//  RunPipeline2();
+//  RunPipeline3();
 //  RunPipeline4();
 //  RunPipeline5();
 //  RunPipeline6();
 //  RunPipeline7();
 //  RunPipeline8();
 
-  //DREAM3D_REGISTER_TEST( TestInsertDelete() )
-  //DREAM3D_REGISTER_TEST( TestArrayCreation() )
-
-  //DREAM3D_REGISTER_TEST( TestDataContainerWriter() )
-  //DREAM3D_REGISTER_TEST( TestDataContainerReader() )
-
-#if REMOVE_TEST_FILES
-//  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-#endif
-
-//  PRINT_TEST_SUMMARY();
   return err;
 }
 

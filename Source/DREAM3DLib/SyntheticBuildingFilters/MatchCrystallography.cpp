@@ -228,6 +228,12 @@ void MatchCrystallography::dataCheck()
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   dims[0] = 1;
+  QList<QString> check = cellEnsembleAttrMat->getAttributeArrayNameList();
+  for(QList<QString>::iterator it = check.begin(); it != check.end(); ++it)
+  {
+    QString name = *(it);
+    int stop = 0;
+  }
   m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this,  m_CrystalStructuresArrayName, -301, dims);
   m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   m_PhaseTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this,  m_PhaseTypesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
