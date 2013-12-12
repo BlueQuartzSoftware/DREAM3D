@@ -56,13 +56,13 @@
 //
 // -----------------------------------------------------------------------------
 Hex2SqrConverter::Hex2SqrConverter() :
-    m_ZStartIndex(0),
-    m_ZEndIndex(0),
-    m_XResolution(1.0),
-    m_YResolution(1.0),
-    m_NumCols(0),
-    m_NumRows(0),
-    m_HeaderIsComplete(false)
+  m_ZStartIndex(0),
+  m_ZEndIndex(0),
+  m_XResolution(1.0),
+  m_YResolution(1.0),
+  m_NumCols(0),
+  m_NumRows(0),
+  m_HeaderIsComplete(false)
 {
   setupFilterParameters();
 }
@@ -161,7 +161,7 @@ void Hex2SqrConverter::execute()
    * which is going to cause problems because the data is going to be placed
    * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
    */
- // int totalSlicesImported = 0;
+  // int totalSlicesImported = 0;
   for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
     std::string ebsdFName = *filepath;
@@ -180,124 +180,129 @@ void Hex2SqrConverter::execute()
     std::string path = MXAFileInfo::parentPath(ebsdFName);
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
-        AngReader reader;
-        reader.setFileName(ebsdFName);
-        reader.setReadHexGrid(true);
-        int err = reader.readFile();
-        if(err < 0)
-        {
-            addErrorMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());
-            setErrorCondition(reader.getErrorCode());
-            return;
-        }
-        else if(reader.getGrid().find(Ebsd::Ang::SquareGrid) == 0)
-        {
-            ss.str("");
-            ss << "Ang File is already a square grid: " << ebsdFName;
-            setErrorCondition(-55000);
-            addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-            return;
-        }
-        else
-        {
-            std::string origHeader = reader.getOriginalHeader();
-            if (origHeader.empty() == true)
-            {
-              ss.str();
-              ss << "Header could not be retrieved: " << ebsdFName;
-              setErrorCondition(-55001);
-              addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-            }
-            char buf[kBufferSize];
-            std::stringstream in(origHeader);
+      AngReader reader;
+      reader.setFileName(ebsdFName);
+      reader.setReadHexGrid(true);
+      int err = reader.readFile();
 
-            std::string newEbsdFName = path + "/Sqr_" + base + "." + ext;
-            std::ofstream outFile;
-            outFile.open(newEbsdFName.c_str());
-
-            m_HeaderIsComplete = false;
-
-            float HexXStep = reader.getXStep();
-            float HexYStep = reader.getYStep();
-            int HexNumColsOdd = reader.getNumOddCols();
-            int HexNumColsEven = reader.getNumEvenCols();
-            int HexNumRows = reader.getNumRows();
-            m_NumCols = (HexNumColsOdd*HexXStep)/m_XResolution;
-            m_NumRows = (HexNumRows*HexYStep)/m_YResolution;
-            float xSqr, ySqr, xHex1, yHex1, xHex2, yHex2;
-            int point, point1, point2;
-            int row1, row2, col1, col2;
-            float dist1, dist2;
-            float* phi1 = reader.getPhi1Pointer();
-            float* PHI = reader.getPhiPointer();
-            float* phi2 = reader.getPhi2Pointer();
-            float* ci = reader.getConfidenceIndexPointer();
-            float* iq = reader.getImageQualityPointer();
-            float* semsig = reader.getSEMSignalPointer();
-            float* fit = reader.getFitPointer();
-            int* phase = reader.getPhaseDataPointer();
-            while (!in.eof())
-            {
-                std::string line;
-                ::memset(buf, 0, kBufferSize);
-                in.getline(buf, kBufferSize);
-                line = modifyAngHeaderLine(buf, kBufferSize);
-                if(m_HeaderIsComplete == false) outFile << line << std::endl;
-            }
-            for(int j = 0; j < m_NumRows; j++)
-            {
-                for(int i = 0; i < m_NumCols; i++)
-                {
-                    xSqr = float(i)*m_XResolution;
-                    ySqr = float(j)*m_YResolution;
-                    row1 = ySqr/(HexYStep);
-                    yHex1 = row1*HexYStep;
-                    row2 = row1 + 1;
-                    yHex2 = row2*HexYStep;
-                    if(row1%2 == 0)
-                    {
-                        col1 = xSqr/(HexXStep);
-                        xHex1 = col1*HexXStep;
-                        point1 = ((row1/2)*HexNumColsEven) + ((row1/2)*HexNumColsOdd) + col1;
-                        col2 = (xSqr-(HexXStep/2.0))/(HexXStep);
-                        xHex2 = col2*HexXStep + (HexXStep/2.0);
-                        point2 = ((row1/2)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col2;
-                    }
-                    else
-                    {
-                        col1 = (xSqr-(HexXStep/2.0))/(HexXStep);
-                        xHex1 = col1*HexXStep + (HexXStep/2.0);
-                        point1 = ((row1/2)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col1;
-                        col2 = xSqr/(HexXStep);
-                        xHex2 = col2*HexXStep;
-                        point2 = (((row1/2)+1)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col2;
-                    }
-                    dist1 = ((xSqr-xHex1)*(xSqr-xHex1)) + ((ySqr-yHex1)*(ySqr-yHex1));
-                    dist2 = ((xSqr-xHex2)*(xSqr-xHex2)) + ((ySqr-yHex2)*(ySqr-yHex2));
-                    if(dist1 <= dist2 || row1 == (HexNumRows-1)) {point = point1;}
-                    else {point = point2;}
-                    outFile << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" << std::endl;
-                }
-            }
+      if(err < 0 && err != -600)
+      {
+        addErrorMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());
+        setErrorCondition(reader.getErrorCode());
+        return;
+      }
+      else if(reader.getGrid().find(Ebsd::Ang::SquareGrid) == 0)
+      {
+        ss.str("");
+        ss << "Ang File is already a square grid: " << ebsdFName;
+        setErrorCondition(-55000);
+        addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+        return;
+      }
+      else
+      {
+        if (err == -600)
+        {
+          notifyWarningMessage( reader.getErrorMessage(), reader.getErrorCode() );
         }
+        std::string origHeader = reader.getOriginalHeader();
+        if (origHeader.empty() == true)
+        {
+          ss.str();
+          ss << "Header could not be retrieved: " << ebsdFName;
+          setErrorCondition(-55001);
+          addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+        }
+        char buf[kBufferSize];
+        std::stringstream in(origHeader);
+
+        std::string newEbsdFName = path + "/Sqr_" + base + "." + ext;
+        std::ofstream outFile;
+        outFile.open(newEbsdFName.c_str());
+
+        m_HeaderIsComplete = false;
+
+        float HexXStep = reader.getXStep();
+        float HexYStep = reader.getYStep();
+        int HexNumColsOdd = reader.getNumOddCols();
+        int HexNumColsEven = reader.getNumEvenCols();
+        int HexNumRows = reader.getNumRows();
+        m_NumCols = (HexNumColsOdd*HexXStep)/m_XResolution;
+        m_NumRows = (HexNumRows*HexYStep)/m_YResolution;
+        float xSqr, ySqr, xHex1, yHex1, xHex2, yHex2;
+        int point, point1, point2;
+        int row1, row2, col1, col2;
+        float dist1, dist2;
+        float* phi1 = reader.getPhi1Pointer();
+        float* PHI = reader.getPhiPointer();
+        float* phi2 = reader.getPhi2Pointer();
+        float* ci = reader.getConfidenceIndexPointer();
+        float* iq = reader.getImageQualityPointer();
+        float* semsig = reader.getSEMSignalPointer();
+        float* fit = reader.getFitPointer();
+        int* phase = reader.getPhaseDataPointer();
+        while (!in.eof())
+        {
+          std::string line;
+          ::memset(buf, 0, kBufferSize);
+          in.getline(buf, kBufferSize);
+          line = modifyAngHeaderLine(buf, kBufferSize);
+          if(m_HeaderIsComplete == false) outFile << line << std::endl;
+        }
+        for(int j = 0; j < m_NumRows; j++)
+        {
+          for(int i = 0; i < m_NumCols; i++)
+          {
+            xSqr = float(i)*m_XResolution;
+            ySqr = float(j)*m_YResolution;
+            row1 = ySqr/(HexYStep);
+            yHex1 = row1*HexYStep;
+            row2 = row1 + 1;
+            yHex2 = row2*HexYStep;
+            if(row1%2 == 0)
+            {
+              col1 = xSqr/(HexXStep);
+              xHex1 = col1*HexXStep;
+              point1 = ((row1/2)*HexNumColsEven) + ((row1/2)*HexNumColsOdd) + col1;
+              col2 = (xSqr-(HexXStep/2.0))/(HexXStep);
+              xHex2 = col2*HexXStep + (HexXStep/2.0);
+              point2 = ((row1/2)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col2;
+            }
+            else
+            {
+              col1 = (xSqr-(HexXStep/2.0))/(HexXStep);
+              xHex1 = col1*HexXStep + (HexXStep/2.0);
+              point1 = ((row1/2)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col1;
+              col2 = xSqr/(HexXStep);
+              xHex2 = col2*HexXStep;
+              point2 = (((row1/2)+1)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col2;
+            }
+            dist1 = ((xSqr-xHex1)*(xSqr-xHex1)) + ((ySqr-yHex1)*(ySqr-yHex1));
+            dist2 = ((xSqr-xHex2)*(xSqr-xHex2)) + ((ySqr-yHex2)*(ySqr-yHex2));
+            if(dist1 <= dist2 || row1 == (HexNumRows-1)) {point = point1;}
+            else {point = point2;}
+            outFile << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" << std::endl;
+          }
+        }
+      }
     }
     else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
-        std::cout << "Ctf files are not on a hexagonal grid and do not need to be converted." << std::endl;
+      std::cout << "Ctf files are not on a hexagonal grid and do not need to be converted." << std::endl;
     }
     else
     {
-        err = -1;
-        ss.str("");
-        ss << "The File extension was not detected correctly";
-        addErrorMessage(getHumanLabel(), ss.str(), err);
-        setErrorCondition(-1);
-        return;
+      err = -1;
+      ss.str("");
+      ss << "The File extension was not detected correctly";
+      addErrorMessage(getHumanLabel(), ss.str(), err);
+      setErrorCondition(-1);
+      return;
     }
 
   }
 
- notifyStatusMessage("Import Complete");
+  notifyStatusMessage("Import Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -338,27 +343,27 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   }
   if (word.compare(Ebsd::Ang::Grid) == 0)
   {
-      line = "# " + word + ": SqrGrid";
+    line = "# " + word + ": SqrGrid";
   }
   else if (word.compare(Ebsd::Ang::XStep) == 0)
   {
-      line = "# " + word + ": " + float_to_string(m_XResolution);
+    line = "# " + word + ": " + float_to_string(m_XResolution);
   }
   else if (word.compare(Ebsd::Ang::YStep) == 0)
   {
-      line = "# " + word + ": " + float_to_string(m_YResolution);
+    line = "# " + word + ": " + float_to_string(m_YResolution);
   }
   else if (word.compare(Ebsd::Ang::NColsOdd) == 0)
   {
-      line = "# " + word + ": " + int_to_string(m_NumCols);
+    line = "# " + word + ": " + int_to_string(m_NumCols);
   }
   else if (word.compare(Ebsd::Ang::NColsEven) == 0)
   {
-      line = "# " + word + ": " + int_to_string(m_NumCols);
+    line = "# " + word + ": " + int_to_string(m_NumCols);
   }
   else if (word.compare(Ebsd::Ang::NRows) == 0)
   {
-      line = "# " + word + ": " + int_to_string(m_NumRows);
+    line = "# " + word + ": " + int_to_string(m_NumRows);
   }
   else
   {
@@ -369,14 +374,14 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
 
 std::string Hex2SqrConverter::int_to_string(int value)
 {
-    std::stringstream oss;
-    oss << value;
-    return oss.str();
+  std::stringstream oss;
+  oss << value;
+  return oss.str();
 }
 
 std::string Hex2SqrConverter::float_to_string(float value)
 {
-    std::stringstream oss;
-    oss << value;
-    return oss.str();
+  std::stringstream oss;
+  oss << value;
+  return oss.str();
 }

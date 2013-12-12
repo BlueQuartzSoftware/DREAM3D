@@ -67,16 +67,16 @@ typedef struct
 
 typedef struct
 {
-    signed short xIndex; //0
-    signed short yIndex; //2
-    float   Pattern_Quality; //4
-    unsigned short Max_Bands; //8
-    float   euler1; //10
-    float   euler2; //14
-    float   euler3; //18
-    unsigned short Phase; //22   Has byte value of 0xFFFF
-    unsigned short Detected_Bands; // 24
-    float   BMM; //26
+    uint16_t xIndex;
+    uint16_t yIndex;
+    float   patternQuality;
+    uint16_t detectedBands;
+    float   euler1; // radians
+    float   euler2; // radians
+    float   euler3; // radians
+    int16_t phase; //Has byte value of 0xFFFF
+    uint16_t indexedBands;
+    float   bmm;
 } IndexResult_t;
 
 namespace Bcf

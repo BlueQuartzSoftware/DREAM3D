@@ -54,7 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 AngReader::AngReader() :
-EbsdReader()
+  EbsdReader()
 {
   // Init all the arrays to NULL
   m_Phi1 = NULL;
@@ -303,15 +303,15 @@ void AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   // Delete any currently existing pointers
   deletePointers();
   // Initialize new pointers
-  size_t totalDataRows = 0;
+  size_t totalDataPoints = 0;
 
   std::string grid = getGrid();
 
   int nOddCols = getNumOddCols();
-  int nEvexCells = getNumEvenCols();
-  int yCells = getNumRows();
+  int nEvenCols = getNumEvenCols();
+  int numRows = getNumRows();
 
-  if (yCells < 1)
+  if (numRows < 1)
   {
     setErrorCode(-200);
     setErrorMessage("NumRows Sanity Check not correct. Check the entry for NROWS in the .ang file");
@@ -319,10 +319,9 @@ void AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   }
   else if (grid.find(Ebsd::Ang::SquareGrid) == 0)
   {
-   // if (xCells > 0) { numElements = yCells * xCells; }
-    if (nOddCols > 0) { totalDataRows = yCells * nOddCols;/* xCells = nOddCols;*/ }
-    else if (nEvexCells > 0) { totalDataRows = yCells * nEvexCells; /* xCells = nEvexCells; */ }
-    else { totalDataRows = 0; }
+    if (nOddCols > 0) { totalDataPoints = numRows * nOddCols;/* xCells = nOddCols;*/ }
+    else if (nEvenCols > 0) { totalDataPoints = numRows * nEvenCols; /* xCells = nEvexCells; */ }
+    else { totalDataPoints = 0; }
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0 && m_ReadHexGrid == false)
   {
@@ -332,17 +331,22 @@ void AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0 && m_ReadHexGrid == true)
   {
-    if (yCells%2 == 0) { totalDataRows = ((yCells/2) * nOddCols) + ((yCells/2) * nEvexCells);/* xCells = nOddCols;*/ }
-    else if (yCells%2 == 1) { totalDataRows = (((yCells/2)+1) * nOddCols) + ((yCells/2) * nEvexCells); /* xCells = nEvexCells; */ }
+    bool evenRow = false;
+    totalDataPoints = 0;
+    for(int r = 0; r < numRows; r++)
+    {
+      if(evenRow) {  totalDataPoints = totalDataPoints + nEvenCols; evenRow = false; }
+      else { totalDataPoints = totalDataPoints + nOddCols; evenRow = true; }
+    }
   }
   else // Grid was not set
   {
-   setErrorMessage("Ang file is missing the 'GRID' header entry.");
-   setErrorCode(-300);
-   return;
+    setErrorMessage("Ang file is missing the 'GRID' header entry.");
+    setErrorCode(-300);
+    return;
   }
 
-  initPointers(totalDataRows);
+  initPointers(totalDataPoints);
   if (NULL == m_Phi1 || NULL == m_Phi || NULL == m_Phi2
       || NULL == m_Iq || NULL == m_SEMSignal || NULL == m_Ci
       || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
@@ -356,15 +360,48 @@ void AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
 
   size_t counter = 0;
-  // The buf variable already has the first line of data in it
-  for(size_t i = 0; i < totalDataRows; ++i)
+
+  bool onEvenRow = false;
+  int col = 0;
+
+  int yChange = 0;
+  float oldY = m_Y[0];
+  int nxOdd = 0;
+  int nxEven = 0;
+  int nRows = 0;
+
+  for(size_t i = 0; i < totalDataPoints; ++i)
   {
-      this->parseDataLine(buf, i);
-      ::memset(buf, 0, bufSize); // Clear the buffer
-      in.getline(buf, kBufferSize);// Read the next line of data
-      ++counter;
-      if (in.eof() == true) break;
+    this->parseDataLine(buf, i);
+
+    if (fabs(m_Y[i]-oldY)>1e-6)
+    {
+      ++yChange;
+      oldY =  m_Y[i];
+      onEvenRow = !onEvenRow;
+      col = 0;
+    }
+    else
+    {
+      col++;
+    }
+    if (yChange == 0) ++nxOdd;
+    if (yChange == 1) ++nxEven;
+
+    ::memset(buf, 0, bufSize); // Clear the buffer
+    in.getline(buf, kBufferSize);// Read the next line of data
+    ++counter;
+    if (in.eof() == true)
+    {
+      break;
+    }
   }
+  nRows = yChange + 1;
+#if 0
+  std::cout << "Header: nRows: " << numRows << " Odd Cols: " << nOddCols << "  Even Cols: " << nEvenCols << std::endl;
+  std::cout << "File:   nRows: " << nRows << " Odd Cols: " << nxOdd << "  Even Cols: " << nxEven << std::endl;
+#endif
+
 
   if (getNumFields() < 10)
   {
@@ -375,15 +412,16 @@ void AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
     this->deallocateArrayData<float > (m_SEMSignal);
   }
 
-  if (counter != totalDataRows && in.eof() == true)
+  if (counter != totalDataPoints && in.eof() == true)
   {
     ss.str("");
 
-    ss << "Premature End Of File reached.\n"
-        << getFileName()
-        << "\nNumRows=" << yCells << " nEvenCells=" << nEvexCells
-        << "\ncounter=" << counter << " totalDataRows=" << totalDataRows
-        << "\nTotal Data Points Read=" << counter << std::endl;
+    ss << "End of ANG file reached before all data was parsed.\n"
+       << getFileName()
+       << "\n*** Header information ***\nRows=" << numRows << " EvenCols=" << nEvenCols << " OddCols=" << nOddCols
+       << "  Calculated Data Points: " << totalDataPoints
+       << "\n***Parsing Position ***\nCurrent Row: " << yChange << "  Current Column Index: " << col << "  Current Data Point Count: " << counter
+       << std::endl;
     setErrorMessage(ss.str());
     setErrorCode(-600);
   }
