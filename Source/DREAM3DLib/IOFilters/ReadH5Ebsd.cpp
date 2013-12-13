@@ -137,28 +137,28 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
   // reads would have failed to read anything so those arrays are still empty. These functions will now read those
   // arrays from the file.
   READ_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-      READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-      READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
-      READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-      READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-      READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
+  READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
-      READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-      READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-      READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-      READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-      READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
+  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
-      READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-      READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-      READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-      READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
+  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
-      READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-      READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-      READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+  READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
+  READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
+  READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
 
-      reader->closeFilterGroup();
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -174,28 +174,28 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->writeValue("RefFrameZDir", getRefFrameZDir());
 
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-      WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-      WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
-      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
+  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
-      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
+  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
-      WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
+  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
-      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
+  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
+  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
 
-      writer->closeFilterGroup();
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -499,9 +499,10 @@ void ReadH5Ebsd::execute()
     setErrorCondition(-1);
 
     QString ss = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
-        .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
+                 .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);    return;
+    emit filterGeneratedMessage(em);
+    return;
   }
 
   // Sanity Check the Error Condition or the state of the EBSD Reader Object.
@@ -550,9 +551,10 @@ void ReadH5Ebsd::execute()
   else
   {
     QString ss = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
-        .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
+                 .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);    return;
+    emit filterGeneratedMessage(em);
+    return;
   }
 
   if(m_UseTransformations == true)
@@ -567,7 +569,7 @@ void ReadH5Ebsd::execute()
 
       RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
       connect(rot_Sample.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-                    this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+              this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
       rot_Sample->setDataContainerArray(getDataContainerArray());
       rot_Sample->setRotationAngle(m_SampleTransformationAngle);
       rot_Sample->setRotationAxis(sampleAxis);
@@ -584,7 +586,7 @@ void ReadH5Ebsd::execute()
 
       RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
       connect(rot_Euler.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-                    this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+              this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
       rot_Euler->setDataContainerArray(getDataContainerArray());
       rot_Euler->setRotationAngle(m_EulerTransformationAngle);
       rot_Euler->setRotationAxis(eulerAxis);

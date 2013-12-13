@@ -127,13 +127,13 @@ void QuickSolidMesh::execute()
   setErrorCondition(0);
   VoxelDataContainer* m = getVoxelDataContainer();
   SolidMeshDataContainer* sm = getSolidMeshDataContainer();
-    if(NULL == m)
-    {
-      setErrorCondition(-999);
-      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
-      return;
-    }
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+    return;
+  }
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();

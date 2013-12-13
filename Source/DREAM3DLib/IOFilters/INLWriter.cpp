@@ -227,7 +227,7 @@ int INLWriter::writeFile()
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(fi.path());
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return -1;
   }
@@ -238,7 +238,7 @@ emit filterGeneratedMessage(em);
 
     QString ss = QObject::tr("Error Opening File for writing '%1'").arg(getOutputFile());
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return -1;
   }
@@ -272,7 +272,7 @@ emit filterGeneratedMessage(em);
 
     QString ss = QObject::tr("The MaterialNames Ensemble Array was not in the Data Container");
     PipelineMessage em(getHumanLabel(), ss, -1111, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1111);
     return -1;
   }

@@ -282,8 +282,8 @@ void FeatureFaceCurvatureFilter::execute()
   SharedFeatureFaceFilter::Pointer sharedFeatureFacesFilter = SharedFeatureFaceFilter::New();
   sharedFeatureFacesFilter->setSurfaceMeshFeatureFaceIdArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
   sharedFeatureFacesFilter->setDataContainerArray(getDataContainerArray());
-connect(sharedFeatureFacesFilter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+  connect(sharedFeatureFacesFilter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   sharedFeatureFacesFilter->setMessagePrefix(getMessagePrefix());
   sharedFeatureFacesFilter->execute();
   if (sharedFeatureFacesFilter->getErrorCondition() < 0)

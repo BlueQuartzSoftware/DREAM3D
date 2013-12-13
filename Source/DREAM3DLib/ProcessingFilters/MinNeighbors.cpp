@@ -152,8 +152,8 @@ void MinNeighbors::preflight()
   if(getErrorCondition() < 0) { return; }
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
-connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+  connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->preflight();
@@ -191,8 +191,8 @@ void MinNeighbors::execute()
   assign_badpoints();
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
-connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+  connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->execute();

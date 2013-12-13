@@ -321,7 +321,7 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_CrystalStructuresArrayName, -305, dims)
-; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+                           ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -371,7 +371,7 @@ void FindTwinBoundarySchmidFactors::execute()
   setErrorCondition(0);
   dataCheckVoxel();
   if(getErrorCondition() < 0) { return; }
-  
+
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
 

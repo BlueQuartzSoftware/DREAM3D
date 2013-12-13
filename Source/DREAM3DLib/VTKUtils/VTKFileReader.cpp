@@ -186,7 +186,7 @@ int VTKFileReader::readHeader()
     err = -1;
     qDebug()
         << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
-           ;
+        ;
     return err;
   }
 
@@ -225,7 +225,7 @@ int VTKFileReader::readHeader()
   {
     err = -1;
     QString s = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version. dim[0]=%1  dim[1]=%2im[2]=%3")\
-        .arg(dims[0]).arg(dims[1]).arg(dims[2]);
+                .arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), s, getErrorCondition(), PipelineMessage::Error);
     emit filterGeneratedMessage(em);

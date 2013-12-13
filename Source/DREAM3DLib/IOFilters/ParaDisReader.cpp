@@ -128,14 +128,14 @@ void ParaDisReader::dataCheck()
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   QVector<int> dims(1, 1);
   m_NumberOfArmsPtr = amV->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NumberOfArmsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -166,7 +166,7 @@ emit filterGeneratedMessage(em);
       QString ss = QObject::tr("ParaDisReader Input file could not be opened: %1").arg(getInputFile());
       setErrorCondition(-100);
       PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
       return;
     }
 
@@ -206,7 +206,7 @@ void ParaDisReader::execute()
     QString ss = QObject::tr("ParaDisReader Input file could not be opened: %1").arg(getInputFile());
     setErrorCondition(-100);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 

@@ -218,7 +218,7 @@ int H5VoxelReader::readVoxelData(int* feature_indicies,
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Euler Angles", err, PipelineMessage::Error);
-	emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     err |= H5Gclose(scalarGid);
     err |= H5Gclose(reconGid);
     return err;
@@ -232,7 +232,7 @@ int H5VoxelReader::readVoxelData(int* feature_indicies,
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Feature Data", err, PipelineMessage::Error);
-	emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     err |= H5Gclose(reconGid);
     return err;
   }
@@ -241,7 +241,7 @@ int H5VoxelReader::readVoxelData(int* feature_indicies,
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Phase Type Data", err, PipelineMessage::Error);
-	emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     err |= H5Gclose(reconGid);
     return err;
   }

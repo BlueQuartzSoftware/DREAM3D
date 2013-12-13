@@ -164,7 +164,7 @@ bool AbstractFilter::getCancel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::emitFilterGeneratedMessage(const PipelineMessage &msg)
+void AbstractFilter::emitFilterGeneratedMessage(const PipelineMessage& msg)
 {
   emit filterGeneratedMessage(msg);
 }
@@ -172,7 +172,7 @@ void AbstractFilter::emitFilterGeneratedMessage(const PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::notifyErrorMessage(const QString &ss, int code)
+void AbstractFilter::notifyErrorMessage(const QString& ss, int code)
 {
   PipelineMessage em = PipelineMessage::CreateErrorMessage(getHumanLabel(), ss, code);
   emit filterGeneratedMessage(em);
@@ -181,7 +181,7 @@ void AbstractFilter::notifyErrorMessage(const QString &ss, int code)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::notifyStatusMessage(const QString &ss)
+void AbstractFilter::notifyStatusMessage(const QString& ss)
 {
   PipelineMessage em = PipelineMessage::CreateStatusMessage(getHumanLabel(), ss);
   emit filterGeneratedMessage(em);
@@ -190,7 +190,7 @@ void AbstractFilter::notifyStatusMessage(const QString &ss)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::notifyWarningMessage(const QString &ss, int code)
+void AbstractFilter::notifyWarningMessage(const QString& ss, int code)
 {
   PipelineMessage em = PipelineMessage::CreateWarningMessage(getHumanLabel(), ss, code);
   emit filterGeneratedMessage(em);

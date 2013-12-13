@@ -602,7 +602,7 @@ void PackPrimaryPhases::execute()
   {
     QString ss = QObject::tr("Filter Cancelled.");
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -655,7 +655,7 @@ emit filterGeneratedMessage(em);
       {
         QString ss = QObject::tr("Filter Cancelled.");
         PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+        emit filterGeneratedMessage(em);
         setErrorCondition(-1);
         return;
       }
@@ -705,7 +705,7 @@ emit filterGeneratedMessage(em);
         {
           QString ss = QObject::tr("Filter Cancelled.");
           PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+          emit filterGeneratedMessage(em);
           setErrorCondition(-1);
           return;
         }
@@ -722,7 +722,7 @@ emit filterGeneratedMessage(em);
 
     QString ss = QObject::tr("Filter Cancelled.");
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -781,7 +781,7 @@ emit filterGeneratedMessage(em);
 
     QString ss = QObject::tr("Filter Cancelled.");
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -843,7 +843,7 @@ emit filterGeneratedMessage(em);
 
       QString ss = QObject::tr("Filter Cancelled.");
       PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       return;
     }
@@ -910,7 +910,7 @@ emit filterGeneratedMessage(em);
 
       QString ss = QObject::tr("Filter Cancelled.");
       PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       return;
     }
@@ -1074,8 +1074,8 @@ emit filterGeneratedMessage(em);
 
   emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Features - Renumbering Features") );
   RenumberFeatures::Pointer renumber_features2 = RenumberFeatures::New();
-connect(renumber_features2.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+  connect(renumber_features2.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features2->setDataContainerArray(getDataContainerArray());
   renumber_features2->execute();
   err = renumber_features2->getErrorCondition();
@@ -1991,8 +1991,8 @@ void PackPrimaryPhases::assign_voxels()
 
   emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Assigning Voxels - Removing Included Features") );
   RenumberFeatures::Pointer renumber_features1 = RenumberFeatures::New();
-connect(renumber_features1.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+  connect(renumber_features1.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features1->setDataContainerArray(getDataContainerArray());
   renumber_features1->execute();
   int err = renumber_features1->getErrorCondition();
@@ -2011,7 +2011,7 @@ connect(renumber_features1.get(), SIGNAL(filterGeneratedMessage(const PipelineMe
 
     QString ss = QObject::tr("Filter Cancelled.");
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -2420,7 +2420,7 @@ void PackPrimaryPhases::write_goal_attributes()
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -2431,7 +2431,7 @@ emit filterGeneratedMessage(em);
     QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
     setErrorCondition(-200);
     PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 

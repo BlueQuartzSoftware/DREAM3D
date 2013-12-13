@@ -121,7 +121,7 @@ void LinkFeatureMapToCellArray::dataCheck()
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellDataArrayName);
     setErrorCondition(-11001);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -137,7 +137,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("Selected array '%1' is not an Integer array. Is this the array you want to use?").arg(m_SelectedCellDataArrayName);
     setErrorCondition(-11001);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 

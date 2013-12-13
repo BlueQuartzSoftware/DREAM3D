@@ -208,7 +208,7 @@ void CAxisSegmentFeatures::preflight()
 void CAxisSegmentFeatures::execute()
 {
   setErrorCondition(0);
-  
+
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 

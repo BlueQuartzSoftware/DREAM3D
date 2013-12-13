@@ -329,7 +329,7 @@ void CropVolume::execute()
     QString ss = QObject::tr("A Maximum value of %1 has been entered for the Max X which is larger than the input volume X Dimension of %2"
                              " This may lead to junk data being filled into the extra space.").arg(m_XMax).arg(dims[0]);
     PipelineMessage em(getHumanLabel(), ss, -950, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   if (dims[1] <= m_YMax)
   {
@@ -337,7 +337,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("A Maximum value of %1 has been entered for the Max Y which is larger than the input volume Y Dimension of %2"
                              " This may lead to junk data being filled into the extra space.").arg(m_YMax).arg(dims[1]);
     PipelineMessage em(getHumanLabel(), ss, -950, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   if (dims[2] <= m_ZMax)
   {
@@ -345,7 +345,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("A Maximum value of has been entered for the Max Z which is larger than the input volume Z Dimension of "
                              " This may lead to junk data being filled into the extra space.").arg(m_ZMax).arg(dims[2]);
     PipelineMessage em(getHumanLabel(), ss, -950, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
 
   int64_t m_XP = ( (m_XMax - m_XMin) + 1 );
@@ -420,7 +420,7 @@ emit filterGeneratedMessage(em);
 
     RenumberFeatures::Pointer renum = RenumberFeatures::New();
     renum->setDataContainerArray(getDataContainerArray());
-connect(renum.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+    connect(renum.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
             this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     renum->setMessagePrefix(getMessagePrefix());
     renum->execute();

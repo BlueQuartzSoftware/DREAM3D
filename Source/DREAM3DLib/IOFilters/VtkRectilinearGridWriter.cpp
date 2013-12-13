@@ -191,7 +191,7 @@ void VtkRectilinearGridWriter::execute()
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }

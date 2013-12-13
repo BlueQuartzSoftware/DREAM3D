@@ -125,14 +125,14 @@ void H5VoxelFileReader::dataCheck()
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
 
   QVector<int> dim(1, 3);

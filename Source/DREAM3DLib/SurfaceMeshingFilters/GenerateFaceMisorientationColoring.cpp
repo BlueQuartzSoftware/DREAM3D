@@ -301,7 +301,7 @@ void GenerateFaceMisorientationColoring::execute()
   setErrorCondition(err);
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
-  
+
   dataCheckVoxel();
   if(getErrorCondition() < 0) { return; }
 

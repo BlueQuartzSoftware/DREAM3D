@@ -205,7 +205,7 @@ void Hex2SqrConverter::execute()
       {
         setErrorCondition(reader.getErrorCode());
         PipelineMessage em (getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode(), PipelineMessage::Error);
-		emit filterGeneratedMessage(em);
+        emit filterGeneratedMessage(em);
         return;
       }
       else if(reader.getGrid().startsWith(Ebsd::Ang::SquareGrid) == true)
@@ -214,7 +214,7 @@ void Hex2SqrConverter::execute()
         QString ss = QObject::tr("Ang File is already a square grid: %1").arg(ebsdFName);
         setErrorCondition(-55000);
         PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+        emit filterGeneratedMessage(em);
         return;
       }
       else
@@ -226,7 +226,7 @@ emit filterGeneratedMessage(em);
           QString ss = QObject::tr("Header could not be retrieved: %1").arg(ebsdFName);
           setErrorCondition(-55001);
           PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+          emit filterGeneratedMessage(em);
         }
 
         QTextStream in(&origHeader);
@@ -239,7 +239,7 @@ emit filterGeneratedMessage(em);
           QString msg = QObject::tr("ANG Square Output file could not be opened for writing: %1").arg(newEbsdFName);
           setErrorCondition(-200);
           PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+          emit filterGeneratedMessage(em);
           return;
         }
 

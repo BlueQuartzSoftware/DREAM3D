@@ -221,7 +221,7 @@ void SurfaceMeshToVtk::execute()
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -234,7 +234,7 @@ emit filterGeneratedMessage(em);
 
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
     PipelineMessage em(getHumanLabel(), ss, -18542, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-18542);
     return;
   }

@@ -159,7 +159,7 @@ void ReadOrientationData::dataCheck()
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   else if (m_InputFile.isEmpty() == false)
   {
@@ -257,7 +257,7 @@ emit filterGeneratedMessage(em);
       setErrorCondition(-997);
       QString ss = QObject::tr("The File extension '%1' was not recognized. Currently .ang or .ctf are the only recognized file extensions").arg(ext);
       PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
       return;
     }
 
@@ -300,7 +300,7 @@ void ReadOrientationData::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  
+
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 

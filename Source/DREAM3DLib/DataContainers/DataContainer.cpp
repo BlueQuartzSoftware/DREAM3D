@@ -151,7 +151,9 @@ bool DataContainer::renameAttributeMatrix(const QString& oldname, const QString&
   {
     AttributeMatrix::Pointer removedAttributeMatrix = removeAttributeMatrix(newname); // Remove the existing one
     addAttributeMatrix(newname, p);
-  } else {
+  }
+  else
+  {
     return false;
   }
   return true;

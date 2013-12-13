@@ -214,7 +214,7 @@ void SolidMeshToVtk::execute()
     ss.str("");
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -228,7 +228,7 @@ emit filterGeneratedMessage(em);
     ss.str("");
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
     PipelineMessage em(getHumanLabel(), ss, -18542, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-18542);
     return;
   }

@@ -135,7 +135,7 @@ void RenameFeatureArray::dataCheck()
     {
       QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
       PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
     }
   }
 }
@@ -168,7 +168,7 @@ void RenameFeatureArray::execute()
     QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
     setErrorCondition(-10234);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
 
   emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );

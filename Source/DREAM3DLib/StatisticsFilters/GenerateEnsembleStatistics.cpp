@@ -216,7 +216,7 @@ void GenerateEnsembleStatistics::dataCheck()
     dims[0] = 1;
     typedef DataArray<unsigned int> XTalStructArrayType;
     m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_CrystalStructuresArrayName, -305, dims)
-; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+                             ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     m_SurfaceFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_SurfaceFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -338,7 +338,7 @@ void GenerateEnsembleStatistics::execute()
 
       QString ss = QObject::tr("The number of PhaseTypes entered is more than the number of Ensembles, only the first %1 will be used").arg(totalEnsembles - 1);
       PipelineMessage em(getHumanLabel(), ss, -999, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
     }
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
     for(int r = 0; r < totalEnsembles; ++r)

@@ -166,7 +166,7 @@ void BridgeParentIdsStatisticsToFeatureIds::preflight()
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
   connect(rename_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   rename_cell_array->setDataContainerArray(getDataContainerArray());
   rename_cell_array->setMessagePrefix(getMessagePrefix());
   rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
@@ -182,7 +182,7 @@ void BridgeParentIdsStatisticsToFeatureIds::preflight()
 
   LinkFeatureMapToCellArray::Pointer link_feature_map_to_cell_array = LinkFeatureMapToCellArray::New();
   connect(link_feature_map_to_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   link_feature_map_to_cell_array->setDataContainerArray(getDataContainerArray());
   link_feature_map_to_cell_array->setMessagePrefix(getMessagePrefix());
   link_feature_map_to_cell_array->setSelectedCellDataArrayName(m_FeatureIdsArrayName);
@@ -208,7 +208,7 @@ void BridgeParentIdsStatisticsToFeatureIds::execute()
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
   connect(rename_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   rename_cell_array->setDataContainerArray(getDataContainerArray());
   rename_cell_array->setMessagePrefix(getMessagePrefix());
   rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
@@ -224,7 +224,7 @@ void BridgeParentIdsStatisticsToFeatureIds::execute()
 
   LinkFeatureMapToCellArray::Pointer link_feature_map_to_cell_array = LinkFeatureMapToCellArray::New();
   connect(link_feature_map_to_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   link_feature_map_to_cell_array->setDataContainerArray(getDataContainerArray());
   link_feature_map_to_cell_array->setMessagePrefix(getMessagePrefix());
   link_feature_map_to_cell_array->setSelectedCellDataArrayName(m_FeatureIdsArrayName);

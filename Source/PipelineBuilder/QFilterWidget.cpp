@@ -522,9 +522,9 @@ void QFilterWidget::setupGui()
       theSlot.append("(const QString &)");
       // qDebug() << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot() << "\n";
       QObject::connect(com, SIGNAL(activated(const QString&)),
-                        this, theSlot.toAscii());
+                       this, theSlot.toAscii());
       QObject::connect(fp, SIGNAL(textChanged(const QString&)),
-                        this, theSlot.toAscii());
+                       this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
       QPushButton* btn = new QPushButton("Select...");
@@ -551,9 +551,9 @@ void QFilterWidget::setupGui()
       theSlot.append("(const QString &)");
       // qDebug() << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot() << "\n";
       QObject::connect(com, SIGNAL(activated(const QString&)),
-                        this, theSlot.toAscii());
+                       this, theSlot.toAscii());
       QObject::connect(fp, SIGNAL(textChanged(const QString&)),
-                        this, theSlot.toAscii());
+                       this, theSlot.toAscii());
       //      connect(fp, SIGNAL(textChanged(const QString &)),
       //              this, SLOT(updateLineEdit(const QString &)));
 
@@ -583,7 +583,7 @@ void QFilterWidget::setupGui()
       theSlot.append((option->getPropertyName()));
       theSlot.append("(const QString &)");
       QObject::connect(fp, SIGNAL(textChanged(const QString&)),
-                        this, theSlot.toAscii());
+                       this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
       QPushButton* btn = new QPushButton("Save As...");
       btn->setObjectName(("btn_" + option->getPropertyName()));
@@ -609,7 +609,7 @@ void QFilterWidget::setupGui()
       theSlot.append("(const QString &)");
 
       QObject::connect(fp, SIGNAL(textChanged(const QString&)),
-                        this, theSlot.toAscii());
+                       this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
       QPushButton* btn = new QPushButton("Select Folder...");

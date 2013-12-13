@@ -197,7 +197,7 @@ int LosAlamosFFTWriter::writeFile()
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return -1;
   }
@@ -207,7 +207,7 @@ emit filterGeneratedMessage(em);
   {
     QString ss = QObject::tr("Error Opening File for writing '%1'").arg(getOutputFile());
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return -1;
   }

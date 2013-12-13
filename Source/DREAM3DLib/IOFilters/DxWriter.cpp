@@ -205,7 +205,7 @@ int DxWriter::writeFile()
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return -1;
   }
@@ -216,7 +216,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("DxWriter Input file could not be opened: %1").arg(getOutputFile());
     setErrorCondition(-100);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return -100;
   }
 
@@ -248,7 +248,7 @@ emit filterGeneratedMessage(em);
   out << "\n";
   out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
   out << "\n";
-  out << "object 3 class array type int rank 0 items " << fileXDim * fileYDim * fileZDim << " data follows" << "\n";
+  out << "object 3 class array type int rank 0 items " << fileXDim* fileYDim* fileZDim << " data follows" << "\n";
 
   // Add a complete layer of surface voxels
   size_t rnIndex = 1;

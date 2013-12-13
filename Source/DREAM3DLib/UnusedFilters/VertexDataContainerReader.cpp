@@ -129,13 +129,13 @@ void VertexDataContainerReader::execute()
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.
   VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
-    if(NULL == dc)
-    {
-      setErrorCondition(-999);
-      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
-      return;
-    }
+  if(NULL == dc)
+  {
+    setErrorCondition(-999);
+    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+    return;
+  }
 
   setErrorCondition(err);
 
@@ -176,7 +176,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
     QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return -1;
   }
 
@@ -186,7 +186,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::Defaults::VertexDataContainerName);
     setErrorCondition(-61);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return -61;
   }
 

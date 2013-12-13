@@ -105,13 +105,13 @@ void RemoveArrays::dataCheck()
     for(MapOfAttributeArrays_t::iterator iter = mapOfArraysToRemove.begin(); iter != mapOfArraysToRemove.end(); ++iter)
     {
       AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(iter.key());
-    if(NULL == m)
-    {
-      setErrorCondition(-999);
-      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
-      return;
-    }
+      if(NULL == m)
+      {
+        setErrorCondition(-999);
+        PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+        emit filterGeneratedMessage(em);
+        return;
+      }
       QSet<QString> arraysToRemove = iter.value();
       foreach (const QString & value, arraysToRemove)
       {

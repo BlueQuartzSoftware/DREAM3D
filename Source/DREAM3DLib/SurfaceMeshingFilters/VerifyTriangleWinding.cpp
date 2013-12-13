@@ -335,7 +335,7 @@ void VerifyTriangleWinding::execute()
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
     QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
     conn->setMessagePrefix(ss);
-connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+    connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
             this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     conn->setSurfaceMeshUniqueEdgesArrayName(getSurfaceMeshUniqueEdgesArrayName());
     conn->setDataContainerArray(getDataContainerArray());
@@ -464,7 +464,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
   {
     ReverseTriangleWinding::Pointer reverse = ReverseTriangleWinding::New();
     reverse->setDataContainerArray(getDataContainerArray());
-connect(reverse.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+    connect(reverse.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
             this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     reverse->setMessagePrefix(getMessagePrefix());
     reverse->execute();
@@ -497,7 +497,7 @@ connect(reverse.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
   qDebug() << "Face ID: " << index << "\n";\
   qDebug() << "Face.labels[0] " << triangles[index].labels[0] << "\n";\
   qDebug() << "Face.labels[1] " << triangles[index].labels[1] << "\n";\
-
+   
 #define PRINT_VERT(index)\
   qDebug() << index << " " << verts[index].pos[0] << " " << verts[index].pos[1] << " " << verts[index].pos[2] << "\n";
 

@@ -321,8 +321,8 @@ void InsertPrecipitatePhases::execute()
 
   emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Precipitates - Renumbering Features") );
   RenumberFeatures::Pointer renumber_features1 = RenumberFeatures::New();
-connect(renumber_features1.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+  connect(renumber_features1.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features1->setDataContainerArray(getDataContainerArray());
   renumber_features1->execute();
   err = renumber_features1->getErrorCondition();
@@ -347,8 +347,8 @@ connect(renumber_features1.get(), SIGNAL(filterGeneratedMessage(const PipelineMe
 
   emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Precipitates - Renumbering Features") );
   RenumberFeatures::Pointer renumber_features2 = RenumberFeatures::New();
-connect(renumber_features2.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+  connect(renumber_features2.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features2->setDataContainerArray(getDataContainerArray());
   renumber_features2->execute();
   err = renumber_features2->getErrorCondition();
@@ -1897,7 +1897,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -1909,7 +1909,7 @@ emit filterGeneratedMessage(em);
     QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
     setErrorCondition(-200);
     PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 

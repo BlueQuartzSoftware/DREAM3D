@@ -181,7 +181,7 @@ void FeatureDataCSVWriter::execute()
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -193,7 +193,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("Feature Data CSV Output file could not be opened: %1").arg(getFeatureDataFile());
     setErrorCondition(-100);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 

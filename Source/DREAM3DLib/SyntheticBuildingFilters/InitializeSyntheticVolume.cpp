@@ -194,7 +194,7 @@ void InitializeSyntheticVolume::preflight()
     QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
     setErrorCondition(-150);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
@@ -251,7 +251,7 @@ void InitializeSyntheticVolume::execute()
     QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
     setErrorCondition(-150);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.

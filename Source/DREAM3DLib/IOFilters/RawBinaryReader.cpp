@@ -376,14 +376,14 @@ void RawBinaryReader::dataCheck(bool preflight)
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
 
   if(m_OutputArrayName.isEmpty() == true)
@@ -391,7 +391,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-398);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
 
   if (m_NumberOfComponents < 1)
@@ -399,7 +399,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("The number of components must be larger than Zero");
     setErrorCondition(-391);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
 
   if (m_Dimensionality < 1)
@@ -407,7 +407,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("The dimensionality must be larger than Zero");
     setErrorCondition(-389);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
 
   if (  m_Dimensions.x == 0 || m_Dimensions.y == 0 || m_Dimensions.z == 0)
@@ -415,7 +415,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("One of the dimensions has a size less than or Equal to Zero (0). The minimum size must be greater than One (1).");
     setErrorCondition(-390);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
 
   if (true == preflight)
@@ -484,7 +484,7 @@ emit filterGeneratedMessage(em);
                                " Please adjust the input parameters to match the size of the file or select a different data file.").arg(fileSize).arg(allocatedBytes);
       setErrorCondition(RBR_FILE_TOO_SMALL);
       PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
     }
     else if (check == 1)
     {

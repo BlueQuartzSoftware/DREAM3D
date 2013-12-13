@@ -149,10 +149,10 @@ void ArraySelectionExample::setVoxelSelectedArrayNames(QSet<QString> selectedCel
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                             QSet<QString> selectedFaceArrays,
-                                                             QSet<QString> selectedEdgeArrays,
-                                                             QSet<QString> selectedFeatureArrays,
-                                                             QSet<QString> selectedEnsembleArrays)
+    QSet<QString> selectedFaceArrays,
+    QSet<QString> selectedEdgeArrays,
+    QSet<QString> selectedFeatureArrays,
+    QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;

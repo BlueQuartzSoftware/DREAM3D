@@ -104,7 +104,7 @@ void SharedFeatureFaceFilter::dataCheck()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
-  
+
   if(NULL == sm)
   {
     setErrorCondition(-10000);

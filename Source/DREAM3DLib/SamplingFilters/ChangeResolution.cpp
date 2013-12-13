@@ -150,8 +150,8 @@ void ChangeResolution::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if(m->getXRes() == m_Resolution.x
-     && m->getYRes() == m_Resolution.y
-     && m->getZRes() == m_Resolution.z)
+      && m->getYRes() == m_Resolution.y
+      && m->getZRes() == m_Resolution.z)
   {
     return;
   }

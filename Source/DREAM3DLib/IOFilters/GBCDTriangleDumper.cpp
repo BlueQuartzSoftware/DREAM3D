@@ -133,7 +133,7 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
   AttributeMatrix* attrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
-    // We MUST have Nodes
+  // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);

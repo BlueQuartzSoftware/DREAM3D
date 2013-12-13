@@ -158,7 +158,7 @@ void QReadH5EbsdWidget::setupGui()
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   m_InputFile->setCompleter(com);
   QObject::connect(com, SIGNAL(activated(const QString&)),
-                    this, SLOT(on_m_InputFile_textChanged(const QString&)));
+                   this, SLOT(on_m_InputFile_textChanged(const QString&)));
 
   connect(arraySelectionWidget, SIGNAL(arrayListsChanged()),
           this, SLOT(arraySelectionWidgetChanged()));

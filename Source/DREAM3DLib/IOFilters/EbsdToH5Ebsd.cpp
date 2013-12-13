@@ -221,7 +221,7 @@ void EbsdToH5Ebsd::execute()
                              ". Please set the output file before running the importer. ").arg(m_OutputFile);
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
   // Make sure any directory path is also available as the user may have just typed
@@ -438,10 +438,10 @@ emit filterGeneratedMessage(em);
     err = fileImporter->importFile(fileId, z, ebsdFName);
     if (err < 0)
     {
-      	setErrorCondition(err);
-     	PipelineMessage em (getHumanLabel(), fileImporter->getPipelineMessage(), fileImporter->getErrorCondition(), PipelineMessage::Error);
-		emit filterGeneratedMessage(em);
- 		return;
+      setErrorCondition(err);
+      PipelineMessage em (getHumanLabel(), fileImporter->getPipelineMessage(), fileImporter->getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+      return;
     }
     totalSlicesImported = totalSlicesImported + fileImporter->numberOfSlicesImported();
 

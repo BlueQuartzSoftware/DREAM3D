@@ -159,14 +159,14 @@ void YSChoiAbaqusReader::dataCheck()
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   else
   {
@@ -179,7 +179,7 @@ emit filterGeneratedMessage(em);
       QString msg = QObject::tr("Abaqus file could not be opened: %1").arg(getInputFile());
       setErrorCondition(-100);
       PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
       return;
     }
     QString word;
@@ -261,7 +261,7 @@ void YSChoiAbaqusReader::execute()
     QString msg = QObject::tr("Abaqus file could not be opened: %1").arg(getInputFile());
     setErrorCondition(-100);
     PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -307,7 +307,7 @@ emit filterGeneratedMessage(em);
     QString msg = QObject::tr("Abaqus Feature Info file could not be opened: %1").arg(getInputFeatureInfoFile());
     setErrorCondition(-100);
     PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -319,7 +319,7 @@ emit filterGeneratedMessage(em);
   QList<QByteArray> tokens = buf.split(' ');
 //  in2 >> word >> word >> word >> word >> word >> word;
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(totalpoints);
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(numfeatures+1);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(numfeatures + 1);
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->resizeAttributeArrays(2);
   dataCheck();
   //Read data file

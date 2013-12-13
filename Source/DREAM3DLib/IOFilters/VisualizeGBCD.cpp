@@ -488,7 +488,7 @@ void VisualizeGBCD::execute()
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     setErrorCondition(-998);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -500,7 +500,7 @@ emit filterGeneratedMessage(em);
 
       QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
       PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
       return;
     }
 

@@ -172,7 +172,7 @@ void AvizoUniformCoordinateWriter::execute()
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -183,7 +183,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("Avizo Output file could not be opened: %1").arg(getOutputFile());
     setErrorCondition(-100);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 

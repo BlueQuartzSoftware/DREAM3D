@@ -164,7 +164,7 @@ void GenerateNodeTriangleConnectivity::execute()
   // Just to double check we have everything.
   dataCheck();
   if(getErrorCondition() < 0) { return; }
-  
+
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(NULL == m)

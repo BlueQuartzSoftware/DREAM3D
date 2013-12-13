@@ -62,7 +62,7 @@ ArraySelectionExample::ArraySelectionExample() :
 //  m_SelectedVertexVertexFeatureArrays(FIX_ME<<<<<<<<),
 //  m_SelectedVertexVertexEnsembleArrays(FIX_ME<<<<<<<<)
 {
-    setupFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

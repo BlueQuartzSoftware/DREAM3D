@@ -100,7 +100,7 @@ void FileWriter::execute()
     setErrorCondition(-200);
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -110,7 +110,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("Error Writing the Header portion of the file");
     setErrorCondition(err);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
   err = writeFile();
@@ -119,7 +119,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr("Error Writing the data to the file");
     setErrorCondition(err);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 }

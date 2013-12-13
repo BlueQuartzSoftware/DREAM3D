@@ -97,13 +97,13 @@ void SurfaceDataContainerReader::dataCheck()
 {
   setErrorCondition(0);
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
-    if(NULL == dc)
-    {
-      setErrorCondition(-999);
-      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
-      return;
-    }
+  if(NULL == dc)
+  {
+    setErrorCondition(-999);
+    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+    return;
+  }
 
   if(getHdfGroupId() < 0)
   {
@@ -149,13 +149,13 @@ void SurfaceDataContainerReader::execute()
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
-    if(NULL == dc)
-    {
-      setErrorCondition(-999);
-      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
-      return;
-    }
+  if(NULL == dc)
+  {
+    setErrorCondition(-999);
+    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+    return;
+  }
   setErrorCondition(0);
 
   if(m_FaceArraysToRead.size() == 0 && m_ReadAllFaceArrays != true) { m_ReadFaceData = false; }
@@ -194,7 +194,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
     QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return -1;
   }
 
@@ -204,7 +204,7 @@ emit filterGeneratedMessage(em);
     QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::Defaults::EdgeDataContainerName);
     setErrorCondition(-150);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return -1;
   }
 

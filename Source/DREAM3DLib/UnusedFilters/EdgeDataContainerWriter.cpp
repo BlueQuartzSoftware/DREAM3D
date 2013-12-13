@@ -69,13 +69,13 @@ void EdgeDataContainerWriter::dataCheck()
   setErrorCondition(0);
 
   EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
-    if(NULL == dc)
-    {
-      setErrorCondition(-999);
-      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
-      return;
-    }
+  if(NULL == dc)
+  {
+    setErrorCondition(-999);
+    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+    return;
+  }
 
   if(getHdfGroupId() < 0)
   {

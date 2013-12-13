@@ -347,7 +347,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
     QString ss = QObject::tr(": Error opening data container folder");
     setErrorCondition(-150);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return -1;
   }
 
@@ -431,7 +431,7 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupN
     QString ss = QObject::tr("Error opening HDF5 Group %1").arg(groupName);
     setErrorCondition(-154);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return -154;
   }
 

@@ -110,7 +110,7 @@ void FindODF::dataCheck()
   {
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-connect(find_grainphases, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+    connect(find_grainphases, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
             this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) { find_grainphases->preflight(); }
@@ -129,7 +129,7 @@ connect(find_grainphases, SIGNAL(filterGeneratedMessage(const PipelineMessage&))
   {
     setErrorCondition(0);
     FindSurfaceGrains::Pointer find_surfacefeatures = FindSurfaceGrains::New();
-connect(find_surfacefeatures, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+    connect(find_surfacefeatures, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
             this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     find_surfacefeatures->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) { find_surfacefeatures->preflight(); }
@@ -177,13 +177,13 @@ void FindODF::preflight()
 void FindODF::execute()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
-    if(NULL == m)
-    {
-      setErrorCondition(-999);
-      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
-      return;
-    }
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+    return;
+  }
   setErrorCondition(0);
 
   //int64_t totalPoints = m->totalPoints();

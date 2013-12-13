@@ -184,7 +184,7 @@ void SurfaceMeshToStl::execute()
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
     PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -301,7 +301,7 @@ emit filterGeneratedMessage(em);
 
         QString ss = QObject::tr("Error Writing STL File. Not enough elements written for feature id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
         PipelineMessage em(getHumanLabel(), ss, -1201, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+        emit filterGeneratedMessage(em);
       }
       triCount++;
     }

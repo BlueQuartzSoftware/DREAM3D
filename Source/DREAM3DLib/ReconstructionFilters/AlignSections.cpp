@@ -160,7 +160,7 @@ void AlignSections::preflight()
 void AlignSections::execute()
 {
   setErrorCondition(0);
-  
+
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 

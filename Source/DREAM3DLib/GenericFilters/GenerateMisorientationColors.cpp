@@ -286,8 +286,8 @@ void GenerateMisorientationColors::execute()
     if (notSupported->GetValue(i) == 1)
     {
       QString ss = QObject::tr("The Symmetry of %1  is not currently supported for Misorientation Coloring. Voxels with this symmetry have been set to black.").arg(ops[i]->getSymmetryName());
-    PipelineMessage em(getHumanLabel(), ss, -500, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+      PipelineMessage em(getHumanLabel(), ss, -500, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
 

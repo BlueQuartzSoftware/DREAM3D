@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
- * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors  
- * may be used to endorse or promote products derived from this software without  
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -195,10 +195,10 @@ IDataArray::Pointer findHistogram(IDataArray::Pointer inputData, int64_t ensembl
   for(int64_t i = 1; i < ensembles; i++)
   {
     counts[i].resize(NumBins);
-	for(int j = 0; j < NumBins; j++)
-	{
-	  counts[i][j] = 0;
-	}
+    for(int j = 0; j < NumBins; j++)
+    {
+      counts[i][j] = 0;
+    }
   }
 
   int ensemble, bin;
@@ -208,8 +208,8 @@ IDataArray::Pointer findHistogram(IDataArray::Pointer inputData, int64_t ensembl
   for (size_t i = 1; i < numfeatures; i++)
   {
     value = fPtr[i];
-	if(value > max) max = value;
-	if(value < min) min = value;
+    if(value > max) { max = value; }
+    if(value < min) { min = value; }
   }
   float stepsize = (max - min) / NumBins;
 
@@ -217,8 +217,8 @@ IDataArray::Pointer findHistogram(IDataArray::Pointer inputData, int64_t ensembl
   {
     if(removeBiasedFeatures == false || biasedFeatures[i] == false)
     {
-	  bin = (fPtr[i] - min) / stepsize;
-	  if(bin >= NumBins) bin = NumBins - 1;
+      bin = (fPtr[i] - min) / stepsize;
+      if(bin >= NumBins) { bin = NumBins - 1; }
       counts[1][bin]++;
     }
   }
@@ -226,7 +226,7 @@ IDataArray::Pointer findHistogram(IDataArray::Pointer inputData, int64_t ensembl
   {
     for (int j = 0; j < numComp; j++)
     {
-      ePtr[numComp*i+j] = counts[i][j];
+      ePtr[numComp * i + j] = counts[i][j];
     }
   }
   return ensembleArray;
@@ -252,7 +252,7 @@ void FindFeatureHistogram::execute()
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);
     setErrorCondition(-11001);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 

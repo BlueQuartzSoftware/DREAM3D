@@ -291,7 +291,7 @@ void DREAM3DUpdateCheckDialog::on_checkNowBtn_clicked()
   m_UpdateCheck = new UpdateCheck(this);
 
   connect(m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ),
-           this, SLOT( LatestVersionReplied(UpdateCheckData*) ) );
+          this, SLOT( LatestVersionReplied(UpdateCheckData*) ) );
 
   m_UpdateCheck->checkVersion(m_UpdateWebSite);
   checkNowBtn->setEnabled(true);

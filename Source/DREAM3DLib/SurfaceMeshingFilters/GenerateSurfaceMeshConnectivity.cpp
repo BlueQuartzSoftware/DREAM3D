@@ -193,7 +193,7 @@ void GenerateSurfaceMeshConnectivity::execute()
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
     QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
     conn->setMessagePrefix(ss);
-connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+    connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
             this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     conn->setDataContainerArray(getDataContainerArray());
     conn->setSurfaceDataContainerName(getSurfaceDataContainerName());

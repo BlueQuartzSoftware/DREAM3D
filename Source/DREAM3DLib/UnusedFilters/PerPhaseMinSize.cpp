@@ -172,8 +172,8 @@ void PerPhaseMinSize::preflight()
   dataCheck();
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
-connect(renumber_features, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+  connect(renumber_features, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->preflight();
@@ -181,7 +181,7 @@ connect(renumber_features, SIGNAL(filterGeneratedMessage(const PipelineMessage&)
   if (err < 0)
   {
     setErrorCondition(renumber_features->getErrorCondition());
-    
+
     return;
   }
 }

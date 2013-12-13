@@ -345,7 +345,7 @@ void GenerateFaceIPFColoring::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheckSurfaceMesh();
- if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0) { return; }
 
   dataCheckVoxel();
   if(getErrorCondition() < 0) { return; }

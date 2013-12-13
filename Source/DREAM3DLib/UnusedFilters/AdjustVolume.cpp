@@ -142,13 +142,13 @@ void AdjustVolume::execute()
   setErrorCondition(0);
   DREAM3D_RANDOMNG_NEW()
   VoxelDataContainer* m = getVoxelDataContainer();
-    if(NULL == m)
-    {
-      setErrorCondition(-999);
-      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
-      return;
-    }
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+    return;
+  }
   int64_t totalPoints = m->getTotalPoints();
   int totalFeatures = m->getNumFeatureTuples();
 
@@ -211,8 +211,8 @@ void AdjustVolume::execute()
   }
   PackPrimaryPhases::Pointer packGrains = PackPrimaryPhases::New();
   packGrains->setVoxelDataContainer(getVoxelDataContainer());
-connect(packGrains, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+  connect(packGrains, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
 //  Feature feature;
 //  oldsizedisterror = packGrains->check_sizedisterror(&feature);
   while(iterations < m_MaxIterations)

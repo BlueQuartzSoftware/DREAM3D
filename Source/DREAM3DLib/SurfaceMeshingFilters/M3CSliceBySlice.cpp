@@ -567,7 +567,7 @@ void M3CSliceBySlice::execute()
 
       ss = QObject::tr("Cancelling filter");
       PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       break;
     }
@@ -630,7 +630,7 @@ emit filterGeneratedMessage(em);
 
       ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
       PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       return;
     }
@@ -641,7 +641,7 @@ emit filterGeneratedMessage(em);
 
       ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
       PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       return;
     }
@@ -673,8 +673,8 @@ emit filterGeneratedMessage(em);
 
   QString ss = QObject::tr("%1 |--> %2").arg( getMessagePrefix()).arg(binaryReader->getNameOfClass());
   binaryReader->setMessagePrefix(ss);
-connect(binaryReader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+  connect(binaryReader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   binaryReader->setDataContainerArray(getDataContainerArray());
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)

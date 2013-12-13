@@ -123,14 +123,14 @@ void VASPReader::dataCheck()
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
     PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
   }
   QVector<int> dims(1, 3);
   m_AtomVelocitiesPtr = vertexAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_AtomVelocitiesArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -155,7 +155,7 @@ emit filterGeneratedMessage(em);
       QString ss = QObject::tr("VASPReader Input file could not be opened: %1").arg(getInputFile());
       setErrorCondition(-100);
       PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+      emit filterGeneratedMessage(em);
       return;
     }
 
@@ -192,7 +192,7 @@ void VASPReader::execute()
     QString ss = QObject::tr("VASPReader Input file could not be opened: %1").arg(getInputFile());
     setErrorCondition(-100);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -296,7 +296,7 @@ int VASPReader::readFile()
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
   totalAtoms = verticesPtr->getNumberOfTuples();
 
-  // Resize the vertex attribute matrix 
+  // Resize the vertex attribute matrix
   m->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(totalAtoms);
   dataCheck();
 

@@ -458,7 +458,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
     QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
     conn->setMessagePrefix(ss);
-connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+    connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
             this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     conn->setDataContainerArray(getDataContainerArray());
     conn->setSurfaceDataContainerName(getSurfaceDataContainerName());
@@ -702,7 +702,7 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
     setErrorCondition(-90123);
     QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
     PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
   Detail::ScopedFileMonitor vtkFileMonitor(vtkFile);

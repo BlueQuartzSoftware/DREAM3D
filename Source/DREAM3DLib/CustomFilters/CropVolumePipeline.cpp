@@ -152,8 +152,9 @@ void CropVolumePipeline::dataCheck()
   {
     ss << "The Input file name must be set before executing this filter.";
     setErrorCondition(-1);
-PipelineMessage em (getHumanLabel(), ss.str(), getErrorCondition(), PipelineMessage::Error);
-emit filterGeneratedMessage(em);  }
+    PipelineMessage em (getHumanLabel(), ss.str(), getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+  }
 }
 
 
