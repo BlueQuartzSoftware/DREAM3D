@@ -242,6 +242,6 @@ void RegularizeZSpacing::execute()
   m->setResolution(xRes, yRes, m_NewZRes);
   m->setDimensions(m_XP, m_YP, m_ZP);
 
-  notifyStatusMessage("Changing Resolution Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Changing Resolution Complete") );
 }
 

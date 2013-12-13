@@ -159,17 +159,19 @@ void NodesTrianglesToVtk::dataCheck(bool preflight)
   if (m_TrianglesFile.isEmpty() == true)
   {
     setErrorCondition(-1001);
-    addErrorMessage(getHumanLabel(), "Triangles file is not set correctly", -1001);
+    PipelineMessage em (getHumanLabel(), "Triangles file is not set correctly", -1001, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
 
     if (preflight == true)
-    { addWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
+    { notifyWarningMessage("Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
     else
     {
       setErrorCondition(-1001);
-      addErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+      PipelineMessage em (getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
 
@@ -177,24 +179,27 @@ void NodesTrianglesToVtk::dataCheck(bool preflight)
   if (m_NodesFile.isEmpty() == true)
   {
     setErrorCondition(-1002);
-    addErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
+    PipelineMessage em (getHumanLabel(), "Nodes file path or name is emtpy", -1002, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else if (fii.exists() == false)
   {
 
     if (preflight == true)
-    { addWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
+    { notifyWarningMessage("Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
     else
     {
       setErrorCondition(-1002);
-      addErrorMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
+      PipelineMessage em (getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
 
   if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
+    PipelineMessage em (getHumanLabel(), "Vtk Output file is Not set correctly", -1003, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 }
 
@@ -223,7 +228,7 @@ void NodesTrianglesToVtk::execute()
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_NodesFile);
     setErrorCondition(-1);
     PipelineMessage em(getHumanLabel(), ss, -666);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -243,7 +248,7 @@ void NodesTrianglesToVtk::execute()
     QString ss = QObject::tr(": Error opening Triangles file '%1'").arg(m_TrianglesFile);
     setErrorCondition(-1);
     PipelineMessage em(getHumanLabel(), ss, -666);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
   // how many triangles are in the file
@@ -263,7 +268,7 @@ void NodesTrianglesToVtk::execute()
     QString ss = QObject::tr(": Error creating Triangles VTK Visualization '%1'").arg(getOutputVtkFile());
     setErrorCondition(-1);
     PipelineMessage em(getHumanLabel(), ss, -666);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
@@ -388,7 +393,7 @@ void NodesTrianglesToVtk::execute()
   fclose(vtkFile);
 
   setErrorCondition(0);
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 
   return;
 }

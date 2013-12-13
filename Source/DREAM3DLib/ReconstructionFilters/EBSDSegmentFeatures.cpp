@@ -204,7 +204,7 @@ void EBSDSegmentFeatures::execute()
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
 
   // Tell the user we are starting the filter
-  notifyStatusMessage("Starting");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
 
   //Convert user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
@@ -273,7 +273,7 @@ void EBSDSegmentFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 
 

@@ -127,7 +127,8 @@ void SurfaceMeshToStl::dataCheck()
   if (m_OutputStlDirectory.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
+    PipelineMessage em (getHumanLabel(), "Stl Output Directory is Not set correctly", -1003, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
@@ -137,13 +138,15 @@ void SurfaceMeshToStl::dataCheck()
 
   if (sm->getFaces().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   if (sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   QVector<int> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -180,7 +183,8 @@ void SurfaceMeshToStl::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -296,7 +300,8 @@ void SurfaceMeshToStl::execute()
       {
 
         QString ss = QObject::tr("Error Writing STL File. Not enough elements written for feature id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
-        notifyErrorMessage(ss, -1201);
+        PipelineMessage em(getHumanLabel(), ss, -1201, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       }
       triCount++;
     }
@@ -305,7 +310,7 @@ void SurfaceMeshToStl::execute()
   }
 
   setErrorCondition(0);
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 
   return;
 }

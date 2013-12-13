@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
- * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors  
- * may be used to endorse or promote products derived from this software without  
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -125,7 +125,8 @@ void CreateFeatureArrayFromCellArray::dataCheck()
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    addErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
 }
@@ -198,7 +199,8 @@ void CreateFeatureArrayFromCellArray::execute()
   {
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
     setErrorCondition(-11001);
-    notifyErrorMessage(ss, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -253,13 +255,13 @@ void CreateFeatureArrayFromCellArray::execute()
   if (p.get() != NULL)
   {
     m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->GetName(), p);
-
   }
   else
   {
     setErrorCondition(-14000);
-    notifyErrorMessage("There was an issue creating a feature data array from a cell data array. Either the types did not match or we could not cast the input array to the expected output type", getErrorCondition());
+    PipelineMessage em(getHumanLabel(), "There was an issue creating a feature data array from a cell data array. Either the types did not match or we could not cast the input array to the expected output type", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

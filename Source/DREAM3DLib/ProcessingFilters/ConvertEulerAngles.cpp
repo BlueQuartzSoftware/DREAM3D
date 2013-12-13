@@ -214,6 +214,6 @@ void ConvertEulerAngles::execute()
     serial.convert(0, totalPoints);
   }
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

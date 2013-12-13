@@ -13,7 +13,13 @@ set(DREAM3DLib_VTKUtils_HDRS
   ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKFileReader.h
   ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKWriterMacros.h
 )
+
+QT4_WRAP_CPP( _moc_filter_source ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKFileReader.h)
+
+
+
 set(DREAM3DLib_VTKUtils_SRCS
+  ${_moc_filter_source}
   ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKFileReader.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/VTKUtils" "${DREAM3DLib_VTKUtils_HDRS}" "${DREAM3DLib_VTKUtils_SRCS}" "0")

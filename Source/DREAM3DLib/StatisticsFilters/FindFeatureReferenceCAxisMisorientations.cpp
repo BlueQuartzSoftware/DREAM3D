@@ -282,6 +282,6 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     m_FeatureStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * avgmiso[index + 2]);
   }
 
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 

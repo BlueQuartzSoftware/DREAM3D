@@ -70,6 +70,7 @@ QString IOSupport::getHumanLabel()
   return QString("IOSupport");
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -199,4 +200,5 @@ void IOSupport::clearErrorMessages()
     iter = m_PipelineMessages.erase(iter);
   }
 }
+#endif
 

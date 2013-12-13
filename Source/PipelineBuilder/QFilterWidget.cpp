@@ -521,9 +521,9 @@ void QFilterWidget::setupGui()
       theSlot.append((option->getPropertyName()));
       theSlot.append("(const QString &)");
       // qDebug() << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot() << "\n";
-      QObject::connect( com, SIGNAL(activated(const QString&)),
+      QObject::connect(com, SIGNAL(activated(const QString&)),
                         this, theSlot.toAscii());
-      QObject::connect( fp, SIGNAL(textChanged(const QString&)),
+      QObject::connect(fp, SIGNAL(textChanged(const QString&)),
                         this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
@@ -550,9 +550,9 @@ void QFilterWidget::setupGui()
       theSlot.append((option->getPropertyName()));
       theSlot.append("(const QString &)");
       // qDebug() << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot() << "\n";
-      QObject::connect( com, SIGNAL(activated(const QString&)),
+      QObject::connect(com, SIGNAL(activated(const QString&)),
                         this, theSlot.toAscii());
-      QObject::connect( fp, SIGNAL(textChanged(const QString&)),
+      QObject::connect(fp, SIGNAL(textChanged(const QString&)),
                         this, theSlot.toAscii());
       //      connect(fp, SIGNAL(textChanged(const QString &)),
       //              this, SLOT(updateLineEdit(const QString &)));
@@ -582,7 +582,7 @@ void QFilterWidget::setupGui()
       theSlot.append("set");
       theSlot.append((option->getPropertyName()));
       theSlot.append("(const QString &)");
-      QObject::connect( fp, SIGNAL(textChanged(const QString&)),
+      QObject::connect(fp, SIGNAL(textChanged(const QString&)),
                         this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
       QPushButton* btn = new QPushButton("Save As...");
@@ -608,7 +608,7 @@ void QFilterWidget::setupGui()
       theSlot.append((option->getPropertyName()));
       theSlot.append("(const QString &)");
 
-      QObject::connect( fp, SIGNAL(textChanged(const QString&)),
+      QObject::connect(fp, SIGNAL(textChanged(const QString&)),
                         this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 

@@ -36,6 +36,7 @@
 #ifndef _AbstractFilter_H_
 #define _AbstractFilter_H_
 
+#include <QtCore/QObject>
 #include <QtCore/QSet>
 #include <QtCore/QString>
 
@@ -63,12 +64,14 @@
  * @date Nov 28, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AbstractFilter : public Observable
+class DREAM3DLib_EXPORT AbstractFilter : public QObject
 {
+    Q_OBJECT
+
   public:
     DREAM3D_SHARED_POINTERS(AbstractFilter)
     DREAM3D_STATIC_NEW_MACRO(AbstractFilter)
-    DREAM3D_TYPE_MACRO_SUPER(AbstractFilter, Observable)
+    DREAM3D_TYPE_MACRO(AbstractFilter)
 
     virtual ~AbstractFilter();
 
@@ -81,6 +84,20 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(DataContainerArray::Pointer, DataContainerArray)
 
+    DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
+
+    /**
+     * @brief This method should be fully implemented in subclasses.
+     */
+    virtual void execute();
+
+    /**
+     * @brief preflight
+     */
+    virtual void preflight();
+
+
+#if 0
     DREAM3D_INSTANCE_PROPERTY(QVector<PipelineMessage>, PipelineMessages)
 
     void addErrorMessage(PipelineMessage& msg);
@@ -97,23 +114,35 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     void clearErrorMessages();
 
+
     /**
      * @brief tbbTaskProgress If your filter spawns threads for parallelization you can use this callback to try and
      * keep progress for your parallel threads.
      */
     virtual void tbbTaskProgress();
+#endif
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
-
     DREAM3D_INSTANCE_PROPERTY(int, PipelineIndex)
+
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, PreviousFilter)
+
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, NextFilter)
 
     /**
-      * @brief Cancel the operation
-      */
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel)
+     * @brief doesPipelineContainFilterBeforeThis
+     * @param name
+     * @return
+     */
+    virtual bool doesPipelineContainFilterBeforeThis(const QString& name);
+
+    /**
+     * @brief doesPipelineContainFilterAfterThis
+     * @param name
+     * @return
+     */
+    virtual bool doesPipelineContainFilterAfterThis(const QString& name);
 
 
     DREAM3D_INSTANCE_PROPERTY(QVector<FilterParameter::Pointer>, FilterParameters)
@@ -123,7 +152,9 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual void printValues(std::ostream& out) {}
 
-
+    /**
+     * @brief setupFilterParameters
+     */
     virtual void setupFilterParameters();
 
     /**
@@ -140,17 +171,34 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
 
+
+    void notifyErrorMessage(const QString &ss, int code);
+
+    void notifyWarningMessage(const QString &ss, int code);
+
+    void notifyStatusMessage(const QString &ss);
+
+    bool getCancel();
+
+
+  signals:
+
+    void filterGeneratedMessage(const PipelineMessage &msg);
+
+  public slots:
+
     /**
-     * @brief This method should be fully implemented in subclasses.
+      * @brief Cancel the operation
+      */
+    void setCancel(bool value);
+
+    /**
+     * @brief This method will cause this object to 'emit' the filterGeneratedMessage() signal. This is useful if other
+     * classes need the filter to emit an error or warning messge from a class that is not able to emit the proper signals
+     * or the class is not connected to anything that would receive the signals
+     * @param msg
      */
-    virtual void execute();
-    virtual void preflight();
-
-    virtual bool doesPipelineContainFilterBeforeThis(const QString& name);
-    virtual bool doesPipelineContainFilterAfterThis(const QString& name);
-
-
-
+    void emitFilterGeneratedMessage(const PipelineMessage &msg);
 
   protected:
     AbstractFilter();
@@ -158,7 +206,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
 
   private:
-
+    bool m_Cancel;
 
     AbstractFilter(const AbstractFilter&); // Copy Constructor Not Implemented
     void operator=(const AbstractFilter&); // Operator '=' Not Implemented

@@ -361,6 +361,6 @@ void FindTwinBoundaries::execute()
     serial.generate(0, numTriangles);
   }
 
-  notifyStatusMessage("FindTwinBoundaries Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindTwinBoundaries Completed") );
 }
 

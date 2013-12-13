@@ -122,13 +122,15 @@ void VASPReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   QVector<int> dims(1, 3);
   m_AtomVelocitiesPtr = vertexAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_AtomVelocitiesArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -152,7 +154,8 @@ void VASPReader::dataCheck()
     {
       QString ss = QObject::tr("VASPReader Input file could not be opened: %1").arg(getInputFile());
       setErrorCondition(-100);
-      notifyErrorMessage(ss, getErrorCondition());
+      PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       return;
     }
 
@@ -162,7 +165,8 @@ void VASPReader::dataCheck()
     {
       setErrorCondition(error);
       QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
-      addErrorMessage(getHumanLabel(), ss, -11000);
+      PipelineMessage em (getHumanLabel(), ss, -11000, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
 }
@@ -187,7 +191,8 @@ void VASPReader::execute()
   {
     QString ss = QObject::tr("VASPReader Input file could not be opened: %1").arg(getInputFile());
     setErrorCondition(-100);
-    notifyErrorMessage(ss, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 
@@ -357,7 +362,7 @@ int VASPReader::readFile()
   tokens.clear();
   m_InStream.close();
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
   return 0;
 }
 

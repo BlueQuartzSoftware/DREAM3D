@@ -229,55 +229,64 @@ void CropVolume::preflight()
   if (getXMax() < getXMin())
   {
     QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
-    addErrorMessage(getHumanLabel(), ss, -5555);
+    PipelineMessage em (getHumanLabel(), ss, -5555, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-5555);
   }
   if (getYMax() < getYMin())
   {
     QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
-    addErrorMessage(getHumanLabel(), ss, -5555);
+    PipelineMessage em (getHumanLabel(), ss, -5555, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-5555);
   }
   if (getZMax() < getZMin())
   {
     QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
-    addErrorMessage(getHumanLabel(), ss, -5555);
+    PipelineMessage em (getHumanLabel(), ss, -5555, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-5555);
   }
   if (getXMin() < 0)
   {
     QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
-    addErrorMessage(getHumanLabel(), ss, -5555);
+    PipelineMessage em (getHumanLabel(), ss, -5555, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-5555);
   }
   if (getYMin() < 0)
   {
     QString ss = QObject::tr("Y Min (%1) less than 0").arg(getYMin());
-    addErrorMessage(getHumanLabel(), ss, -5555);
+    PipelineMessage em (getHumanLabel(), ss, -5555, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-5555);
   }
   if (getZMin() < 0)
   {
     QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
-    addErrorMessage(getHumanLabel(), ss, -5555);
+    PipelineMessage em (getHumanLabel(), ss, -5555, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-5555);
   }
   if (getXMax() > (static_cast<int64_t>(m->getXPoints()) - 1))
   {
     QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getXPoints()) - 1);
-    addErrorMessage(getHumanLabel(), ss, -5555);
+    PipelineMessage em (getHumanLabel(), ss, -5555, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-5555);
   }
   if (getYMax() > (static_cast<int64_t>(m->getYPoints()) - 1))
   {
     QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getYPoints()) - 1);
-    addErrorMessage(getHumanLabel(), ss, -5555);
+    PipelineMessage em (getHumanLabel(), ss, -5555, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-5556);
   }
   if (getZMax() > (static_cast<int64_t>(m->getZPoints()) - 1))
   {
     QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getZPoints()) - 1);
-    addErrorMessage(getHumanLabel(), ss, -5555);
+    PipelineMessage em (getHumanLabel(), ss, -5555, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-5557);
   }
 
@@ -319,21 +328,24 @@ void CropVolume::execute()
   {
     QString ss = QObject::tr("A Maximum value of %1 has been entered for the Max X which is larger than the input volume X Dimension of %2"
                              " This may lead to junk data being filled into the extra space.").arg(m_XMax).arg(dims[0]);
-    notifyWarningMessage(ss, -950);
+    PipelineMessage em(getHumanLabel(), ss, -950, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   if (dims[1] <= m_YMax)
   {
 
     QString ss = QObject::tr("A Maximum value of %1 has been entered for the Max Y which is larger than the input volume Y Dimension of %2"
                              " This may lead to junk data being filled into the extra space.").arg(m_YMax).arg(dims[1]);
-    notifyWarningMessage(ss, -950);
+    PipelineMessage em(getHumanLabel(), ss, -950, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   if (dims[2] <= m_ZMax)
   {
 
     QString ss = QObject::tr("A Maximum value of has been entered for the Max Z which is larger than the input volume Z Dimension of "
                              " This may lead to junk data being filled into the extra space.").arg(m_ZMax).arg(dims[2]);
-    notifyWarningMessage(ss, -950);
+    PipelineMessage em(getHumanLabel(), ss, -950, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   int64_t m_XP = ( (m_XMax - m_XMin) + 1 );
@@ -390,7 +402,7 @@ void CropVolume::execute()
     if (0 == totalFeatures)
     {
       notifyErrorMessage("The number of features is Zero and should be greater than Zero", -600);
-      notifyStatusMessage("Completed");
+      emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
       return;
     }
 
@@ -408,11 +420,12 @@ void CropVolume::execute()
 
     RenumberFeatures::Pointer renum = RenumberFeatures::New();
     renum->setDataContainerArray(getDataContainerArray());
-    renum->setObservers(getObservers());
+connect(renum.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     renum->setMessagePrefix(getMessagePrefix());
     renum->execute();
     setErrorCondition(renum->getErrorCondition());
-    addErrorMessages(renum->getPipelineMessages());
+
   }
 
   if(m_UpdateOrigin == true)
@@ -430,7 +443,7 @@ void CropVolume::execute()
   }
 
 
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 
 

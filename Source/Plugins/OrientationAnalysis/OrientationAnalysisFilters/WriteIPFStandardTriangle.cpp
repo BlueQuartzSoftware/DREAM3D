@@ -179,7 +179,7 @@ void WriteIPFStandardTriangle::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     ss = QObject::tr( ": The output file must be set before executing this filter.");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
   }
   QFileInfo fi(getOutputFile());
@@ -187,12 +187,12 @@ void WriteIPFStandardTriangle::dataCheck()
   if (parentPath.exists() == false)
   {
     ss = QObject::tr( "The directory path for the output file does not exist.");
-    addWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(ss, -1);
   }
   if (m_ImageSize == 0)
   {
     setErrorCondition(-1005);
-    addErrorMessage(getHumanLabel(), "The size of the image is Zero and must be a positive integer.", getErrorCondition());
+    notifyErrorMessage("The size of the image is Zero and must be a positive integer.", getErrorCondition());
   }
 }
 
@@ -220,7 +220,7 @@ void WriteIPFStandardTriangle::execute()
 
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 
@@ -229,7 +229,7 @@ void WriteIPFStandardTriangle::execute()
 // -----------------------------------------------------------------------------
 QImage WriteIPFStandardTriangle::generateCubicHighTriangle()
 {
-  notifyStatusMessage("Generating Cubic IPF Triangle Legend");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Generating Cubic IPF Triangle Legend") );
 
   CubicOps ops;
   UInt8ArrayType::Pointer rgbaImage = ops.generateIPFTriangleLegend(getImageSize());

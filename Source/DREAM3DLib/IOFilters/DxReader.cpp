@@ -152,13 +152,15 @@ void DxReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   QVector<int> dims(1, 1);
   m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -181,7 +183,8 @@ void DxReader::dataCheck()
     {
       QString ss = QObject::tr("DxReader Input file could not be opened: %1").arg(getInputFile());
       setErrorCondition(-100);
-      notifyErrorMessage(ss, getErrorCondition());
+      PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       return;
     }
 
@@ -191,7 +194,8 @@ void DxReader::dataCheck()
     {
       setErrorCondition(error);
       QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
-      addErrorMessage(getHumanLabel(), ss, -11000);
+      PipelineMessage em (getHumanLabel(), ss, -11000, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
 }
@@ -219,7 +223,8 @@ void DxReader::execute()
   {
     QString ss = QObject::tr("DxReader Input file could not be opened: %1").arg(getInputFile());
     setErrorCondition(-100);
-    notifyErrorMessage(ss, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 
@@ -316,7 +321,8 @@ int DxReader::readHeader()
       if(tokens.size() == 20)
       {
         ss = QObject::tr("ERROR: Unable to locate the last header line");
-        addErrorMessage(getHumanLabel(), ss, -8);
+        PipelineMessage em (getHumanLabel(), ss, -8, PipelineMessage::Error);
+        emit filterGeneratedMessage(em);
         setErrorCondition(-496);
         m_InStream.close();
         return -496;
@@ -404,7 +410,8 @@ int DxReader::readFile()
   {
     QString ss = QObject::tr("ERROR: data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getTotalPoints());
     setErrorCondition(-495);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     m_InStream.close();
     return getErrorCondition();
   }
@@ -423,7 +430,7 @@ int DxReader::readFile()
   //    qDebug() << "Feature ID: " << (*iter) ;
   //  }
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
   return 0;
 }
 

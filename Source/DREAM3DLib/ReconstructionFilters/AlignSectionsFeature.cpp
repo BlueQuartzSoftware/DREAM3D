@@ -126,7 +126,8 @@ void AlignSectionsFeature::dataCheck()
   {
     QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   QVector<int> dims(1 , 1);
@@ -156,7 +157,7 @@ void AlignSectionsFeature::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Aligning Sections Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Aligning Sections Complete") );
 }
 
 

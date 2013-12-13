@@ -102,23 +102,26 @@ void GenerateNodeTriangleConnectivity::dataCheck()
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
     // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
+      PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
 
     // We MUST have Triangles defined also.
     if(sm->getFaces().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
+      PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
     else
     {
@@ -174,13 +177,13 @@ void GenerateNodeTriangleConnectivity::execute()
 
 
 
-  notifyStatusMessage("Starting");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
 
   // Generate the connectivity data
   generateConnectivity();
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 #if 0
@@ -209,7 +212,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   }
   int ntri = trianglesPtr->GetNumberOfTuples();
   NodeTrianglesMap_t m_Node2Triangle;
-  notifyStatusMessage("Creating the Mapping of Triangles to Node");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Creating the Mapping of Triangles to Node") );
   // get the triangle definitions - use the pointer to the start of the Struct Array
   Triangle* triangles = trianglesPtr->GetPointer(0);
   // Generate the map of node_id -> Triangles that include that node_id value

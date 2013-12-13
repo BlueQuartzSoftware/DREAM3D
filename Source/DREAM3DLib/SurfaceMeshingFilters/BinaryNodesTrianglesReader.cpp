@@ -131,14 +131,16 @@ void BinaryNodesTrianglesReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   if (getBinaryNodesFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
 }
@@ -168,7 +170,7 @@ void BinaryNodesTrianglesReader::execute()
   setErrorCondition(err);
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 

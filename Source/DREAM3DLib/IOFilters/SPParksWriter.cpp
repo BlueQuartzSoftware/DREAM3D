@@ -250,7 +250,7 @@ int SPParksWriter::writeFile()
   outfile.close();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Writing Ph File Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Ph File Complete") );
   return 0;
 }
 

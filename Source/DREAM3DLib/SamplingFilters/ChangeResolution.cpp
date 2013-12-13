@@ -223,6 +223,6 @@ void ChangeResolution::execute()
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setDimensions(m_XP, m_YP, m_ZP);
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

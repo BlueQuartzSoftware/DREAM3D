@@ -112,7 +112,8 @@ void FindMDF::dataCheck()
   {
     setErrorCondition(0);
     FindSurfaceGrains::Pointer find_surfacefeatures = FindSurfaceGrains::New();
-    find_surfacefeatures->setObservers(this->getObservers());
+connect(find_surfacefeatures, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     find_surfacefeatures->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) { find_surfacefeatures->preflight(); }
     if(preflight == false) { find_surfacefeatures->execute(); }
@@ -127,7 +128,8 @@ void FindMDF::dataCheck()
   {
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
+connect(find_grainphases, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) { find_grainphases->preflight(); }
     if(preflight == false) { find_grainphases->execute(); }
@@ -143,7 +145,8 @@ void FindMDF::dataCheck()
   {
     setErrorCondition(0);
     FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setObservers(this->getObservers());
+connect(find_neighbors, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) { find_neighbors->preflight(); }
     if(preflight == false) { find_neighbors->execute(); }
@@ -153,7 +156,8 @@ void FindMDF::dataCheck()
       ss.str("");
       ss << "NeighborLists Array Not Initialized correctly" << "\n";
       setErrorCondition(-305);
-      addErrorMessage(getHumanLabel(), ss.str(), -305);
+      PipelineMessage em (getHumanLabel(), ss.str(), getErrorCondition(), PipelineMessage::Error);
+	  emit filterGeneratedMessage(em);
     }
   }
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFeatureData(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
@@ -161,7 +165,8 @@ void FindMDF::dataCheck()
   {
     setErrorCondition(0);
     FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setObservers(this->getObservers());
+connect(find_neighbors, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) { find_neighbors->preflight(); }
     if(preflight == false) { find_neighbors->execute(); }
@@ -171,7 +176,8 @@ void FindMDF::dataCheck()
       ss.str("");
       ss << "SurfaceAreaLists Array Not Initialized correctly" << "\n";
       setErrorCondition(-306);
-      addErrorMessage(getHumanLabel(), ss.str(), -306);
+      PipelineMessage em (getHumanLabel(), ss.str(), getErrorCondition(), PipelineMessage::Error);
+	  emit filterGeneratedMessage(em);
     }
   }
 
@@ -210,12 +216,13 @@ void FindMDF::preflight()
 void FindMDF::execute()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+    if(NULL == m)
+    {
+      setErrorCondition(-999);
+      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+      return;
+    }
   setErrorCondition(0);
 
   dataCheck();
@@ -322,6 +329,6 @@ void FindMDF::execute()
     }
   }
 
-  notifyStatusMessage("FindMDF Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindMDF Completed") );
 }
 

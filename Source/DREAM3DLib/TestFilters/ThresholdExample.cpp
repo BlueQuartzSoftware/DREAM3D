@@ -186,7 +186,7 @@ void ThresholdExample::dataCheck()
   {
     ss << "The output file must be set before executing this filter.";
     PipelineMessage em(getNameOfClass(), "There was an error", -666);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
   }
   */
@@ -212,6 +212,6 @@ void ThresholdExample::execute()
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

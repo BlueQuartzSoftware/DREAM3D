@@ -125,7 +125,7 @@ void DataContainerReader::execute()
 {
   dataCheck();
   readData(false);
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------
@@ -206,13 +206,15 @@ void DataContainerReader::readData(bool preflight)
   {
     ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
@@ -222,7 +224,8 @@ void DataContainerReader::readData(bool preflight)
     {
       ss = QObject::tr(": Error opening input file '%1'").arg(ClassName());
       setErrorCondition(-150);
-      addErrorMessage(getHumanLabel(), ss, err);
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       return;
     }
 
@@ -243,7 +246,8 @@ void DataContainerReader::readData(bool preflight)
     {
       ss = QObject::tr(": File unable to be read - file structure older than 6.0 '%1'").arg(ClassName());
       setErrorCondition(-250);
-      addErrorMessage(getHumanLabel(), ss, err);
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       return;
     }
     hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
@@ -264,7 +268,8 @@ void DataContainerReader::readData(bool preflight)
       {
         setErrorCondition(-10987);
         QString ss = QObject::tr("A Data Container with name %1 already exists in Memory. Reading a Data Container with the same name would over write the one in memory. Currently this is not allowed.").arg(dcNames[iter]);
-        notifyErrorMessage(ss, getErrorCondition());
+        PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+        emit filterGeneratedMessage(em);
         return;
       }
       err = QH5Lite::readScalarAttribute(dcaGid, dcNames[iter], DREAM3D::StringConstants::DataContainerType, dcType);
@@ -272,7 +277,8 @@ void DataContainerReader::readData(bool preflight)
       {
         setErrorCondition(-109283);
         QString ss = QObject::tr("The DataContainer is missing the 'DataContainerType' attribute on the '%1' Data Container").arg(dcNames[iter]);
-        notifyErrorMessage(ss, getErrorCondition());
+        PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+        emit filterGeneratedMessage(em);
         return;
       }
       if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
@@ -304,7 +310,8 @@ void DataContainerReader::readData(bool preflight)
       {
         QString ss = QObject::tr("Error opening Group %1").arg(dcNames[iter]);
         setErrorCondition(-61);
-        addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+        emit filterGeneratedMessage(em);
         return;
       }
       MapOfAttributeMatrices_t::Iterator it = m_DataToRead.find(dcNames[iter]);
@@ -315,7 +322,8 @@ void DataContainerReader::readData(bool preflight)
       {
         if(preflight == true)
         {
-          addErrorMessage(getHumanLabel(), "The data was not available in the data file.", getErrorCondition());
+          PipelineMessage em (getHumanLabel(), "The data was not available in the data file.", getErrorCondition(), PipelineMessage::Error);
+          emit filterGeneratedMessage(em);
         }
         else
         {

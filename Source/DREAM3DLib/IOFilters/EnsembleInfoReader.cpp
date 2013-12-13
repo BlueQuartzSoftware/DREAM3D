@@ -129,13 +129,15 @@ void EnsembleInfoReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -180,7 +182,8 @@ int EnsembleInfoReader::readFile()
   {
     QString ss = QObject::tr("Failed to open: ").arg(getInputFile());
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return -1;
   }
   int numphases, pnum;
@@ -204,6 +207,6 @@ int EnsembleInfoReader::readFile()
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, m_XTalStructData);
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypeData);
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
   return 0;
 }

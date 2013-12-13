@@ -170,14 +170,16 @@ void TriangleNormalFilter::dataCheck()
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
@@ -208,7 +210,7 @@ void TriangleNormalFilter::execute()
   if(getErrorCondition() < 0) { return; }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  notifyStatusMessage("Starting");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
@@ -238,5 +240,5 @@ void TriangleNormalFilter::execute()
 
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }

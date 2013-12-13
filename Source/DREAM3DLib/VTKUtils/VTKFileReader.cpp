@@ -144,7 +144,7 @@ int VTKFileReader::readHeader()
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "FileName was not set and must be valid", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return -1;
   }
 
@@ -152,7 +152,7 @@ int VTKFileReader::readHeader()
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "DataContainer Pointer was NULL and must be valid", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return -1;
   }
 
@@ -160,7 +160,8 @@ int VTKFileReader::readHeader()
   if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString msg = QObject::tr("VTF file could not be opened: %1").arg(getInputFile());
-    addErrorMessage(getHumanLabel(), msg, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return -100;
   }
 
@@ -185,7 +186,7 @@ int VTKFileReader::readHeader()
     err = -1;
     qDebug()
         << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
-        ;
+           ;
     return err;
   }
 
@@ -215,7 +216,8 @@ int VTKFileReader::readHeader()
     err = -1;
     QString s = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg(dims[0] * dims[1] * dims[2]);
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s, err);
+    PipelineMessage em (getHumanLabel(), s, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return err;
   }
 
@@ -223,9 +225,10 @@ int VTKFileReader::readHeader()
   {
     err = -1;
     QString s = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version. dim[0]=%1  dim[1]=%2im[2]=%3")\
-                .arg(dims[0]).arg(dims[1]).arg(dims[2]);
+        .arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s, -1);
+    PipelineMessage em (getHumanLabel(), s, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return err;
   }
 

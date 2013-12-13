@@ -120,7 +120,8 @@ void LinkFeatureMapToCellArray::dataCheck()
   {
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellDataArrayName);
     setErrorCondition(-11001);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 
@@ -135,7 +136,8 @@ void LinkFeatureMapToCellArray::dataCheck()
   {
     QString ss = QObject::tr("Selected array '%1' is not an Integer array. Is this the array you want to use?").arg(m_SelectedCellDataArrayName);
     setErrorCondition(-11001);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 
@@ -191,7 +193,7 @@ void LinkFeatureMapToCellArray::execute()
   }
   attrMatrix->addAttributeArray(DREAM3D::FeatureData::Active, m_Active);
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 

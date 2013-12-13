@@ -164,7 +164,8 @@ void SingleThresholdCells::dataCheck()
   {
     setErrorCondition(-11000);
     QString ss = QObject::tr("An array from the Volume DataContainer must be selected.");
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 }
 
@@ -193,7 +194,8 @@ void SingleThresholdCells::execute()
   {
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
     setErrorCondition(-11001);
-    notifyErrorMessage(ss, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 
@@ -211,7 +213,7 @@ void SingleThresholdCells::execute()
   filter.execute(inputData.get(), goodVoxelsPtr.get());
 
   m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(goodVoxelsPtr->GetName(), goodVoxelsPtr);
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 

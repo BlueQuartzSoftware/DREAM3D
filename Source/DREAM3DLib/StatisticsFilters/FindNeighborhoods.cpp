@@ -195,7 +195,7 @@ void FindNeighborhoods::execute()
   if(getErrorCondition() < 0) { return; }
 
   find_neighborhoods();
-  notifyStatusMessage("FindNeighborhoods Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindNeighborhoods Completed") );
 }
 
 // -----------------------------------------------------------------------------

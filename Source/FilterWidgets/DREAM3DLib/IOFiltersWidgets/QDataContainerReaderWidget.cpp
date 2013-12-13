@@ -139,7 +139,7 @@ void QDataContainerReaderWidget::setupGui()
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   InputFile->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString&)),
+  QObject::connect(com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_InputFile_textChanged(const QString&)));
 
   connect(arraySelectionWidget, SIGNAL(arrayListsChanged()),

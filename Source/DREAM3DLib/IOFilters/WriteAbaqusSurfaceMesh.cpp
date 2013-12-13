@@ -118,7 +118,8 @@ void WriteAbaqusSurfaceMesh::dataCheck()
   if (m_OutputFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
+    PipelineMessage em (getHumanLabel(), "Stl Output Directory is Not set correctly", -1003, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
@@ -128,8 +129,9 @@ void WriteAbaqusSurfaceMesh::dataCheck()
 
   if (sm->getFaces().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
@@ -142,8 +144,9 @@ void WriteAbaqusSurfaceMesh::dataCheck()
   }
   if (sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 }
 
@@ -175,7 +178,8 @@ void WriteAbaqusSurfaceMesh::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -200,7 +204,7 @@ void WriteAbaqusSurfaceMesh::execute()
   err = writeFeatures(f);
 
   setErrorCondition(0);
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 
   return;
 }

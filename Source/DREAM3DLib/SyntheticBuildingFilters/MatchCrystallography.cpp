@@ -194,7 +194,8 @@ void MatchCrystallography::dataCheck()
 
     QString ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else
   {
@@ -206,7 +207,8 @@ void MatchCrystallography::dataCheck()
 
     QString ss = QObject::tr("'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
     setErrorCondition(-306);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else
   {
@@ -218,7 +220,8 @@ void MatchCrystallography::dataCheck()
 
     QString ss = QObject::tr("'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
     setErrorCondition(-310);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else
   {
@@ -281,7 +284,7 @@ void MatchCrystallography::execute()
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase ||  m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       ss = QObject::tr("Initializing Arrays of Phase ").arg(i);
-      notifyStatusMessage("Initializing Arrays");
+      emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Initializing Arrays") );
       initializeArrays(i);
 
       ss = QObject::tr("Assigning Eulers to Phase ").arg(i);
@@ -299,7 +302,7 @@ void MatchCrystallography::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------
@@ -330,7 +333,8 @@ void MatchCrystallography::initializeArrays(int ensem)
     setErrorCondition(-55000);
     QString ss;
     ss = QObject::tr("Improper PhaseType for MatchCrystallography");
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 

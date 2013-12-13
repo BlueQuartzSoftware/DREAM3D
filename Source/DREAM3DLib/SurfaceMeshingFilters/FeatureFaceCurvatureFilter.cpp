@@ -187,7 +187,8 @@ void FeatureFaceCurvatureFilter::dataCheck()
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   // We do not know the size of the array so we can not use the macro so we just manually call
@@ -281,7 +282,8 @@ void FeatureFaceCurvatureFilter::execute()
   SharedFeatureFaceFilter::Pointer sharedFeatureFacesFilter = SharedFeatureFaceFilter::New();
   sharedFeatureFacesFilter->setSurfaceMeshFeatureFaceIdArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
   sharedFeatureFacesFilter->setDataContainerArray(getDataContainerArray());
-  sharedFeatureFacesFilter->setObservers(getObservers());
+connect(sharedFeatureFacesFilter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   sharedFeatureFacesFilter->setMessagePrefix(getMessagePrefix());
   sharedFeatureFacesFilter->execute();
   if (sharedFeatureFacesFilter->getErrorCondition() < 0)
@@ -413,7 +415,7 @@ void FeatureFaceCurvatureFilter::execute()
     trianglesPtr->deleteFacesContainingVert();
   }
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------

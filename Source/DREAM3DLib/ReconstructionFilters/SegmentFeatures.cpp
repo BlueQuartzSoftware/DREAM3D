@@ -208,7 +208,7 @@ void SegmentFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 
 // -----------------------------------------------------------------------------

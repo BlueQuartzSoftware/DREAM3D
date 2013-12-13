@@ -163,13 +163,15 @@ void PhReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   QVector<int> dims(1, 1);
@@ -197,7 +199,8 @@ void PhReader::dataCheck()
     {
       setErrorCondition(error);
       QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?");
-      addErrorMessage(getHumanLabel(), ss, -48010);
+      PipelineMessage em (getHumanLabel(), ss, -48010, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
 }
@@ -298,7 +301,7 @@ int  PhReader::readFile()
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
   return 0;
 }
 

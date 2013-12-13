@@ -108,21 +108,24 @@ void SharedFeatureFaceFilter::dataCheck()
   if(NULL == sm)
   {
     setErrorCondition(-10000);
-    addErrorMessage(getHumanLabel(), "Surface Data Container is NULL", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "Surface Data Container is NULL", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return;
   }
   // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   QVector<int> dims(1, 2);
@@ -156,7 +159,7 @@ void SharedFeatureFaceFilter::execute()
   if(getErrorCondition() < 0) { return; }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  notifyStatusMessage("Starting");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
 
   /* Place all your code to execute your filter here. */
 
@@ -243,7 +246,7 @@ void SharedFeatureFaceFilter::execute()
   sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(DREAM3D::FaceData::SurfaceMeshFeatureFaceId, featureFaceId);
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------

@@ -125,7 +125,8 @@ void Hex2SqrConverter::dataCheck()
   {
 
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    addErrorMessage(getHumanLabel(), ss, -11);
+    PipelineMessage em (getHumanLabel(), ss, -11, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
   }
 
@@ -202,8 +203,9 @@ void Hex2SqrConverter::execute()
       err = reader.readFile();
       if(err < 0)
       {
-        addErrorMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());
         setErrorCondition(reader.getErrorCode());
+        PipelineMessage em (getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode(), PipelineMessage::Error);
+		emit filterGeneratedMessage(em);
         return;
       }
       else if(reader.getGrid().startsWith(Ebsd::Ang::SquareGrid) == true)
@@ -211,7 +213,8 @@ void Hex2SqrConverter::execute()
 
         QString ss = QObject::tr("Ang File is already a square grid: %1").arg(ebsdFName);
         setErrorCondition(-55000);
-        addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
         return;
       }
       else
@@ -222,7 +225,8 @@ void Hex2SqrConverter::execute()
 
           QString ss = QObject::tr("Header could not be retrieved: %1").arg(ebsdFName);
           setErrorCondition(-55001);
-          addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
         }
 
         QTextStream in(&origHeader);
@@ -234,7 +238,8 @@ void Hex2SqrConverter::execute()
         {
           QString msg = QObject::tr("ANG Square Output file could not be opened for writing: %1").arg(newEbsdFName);
           setErrorCondition(-200);
-          notifyErrorMessage(msg, getErrorCondition());
+          PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
           return;
         }
 
@@ -313,14 +318,16 @@ void Hex2SqrConverter::execute()
       err = -1;
 
       QString ss = QObject::tr("The File extension was not detected correctly");
-      addErrorMessage(getHumanLabel(), ss, err);
       setErrorCondition(-1);
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+
       return;
     }
 
   }
 
-  notifyStatusMessage("Import Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Import Complete") );
 }
 
 // -----------------------------------------------------------------------------

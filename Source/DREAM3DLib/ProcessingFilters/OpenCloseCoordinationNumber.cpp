@@ -198,7 +198,7 @@ void OpenCloseCoordinationNumber::execute()
   {
     setErrorCondition(-90001);
     notifyErrorMessage("No features have been defined in the Feature map. A filter needs to be executed before this filter that defines the number of features.", getErrorCondition());
-    notifyStatusMessage("Completed with Errors");
+    emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed with Errors") );
     return;
   }
 
@@ -310,6 +310,6 @@ void OpenCloseCoordinationNumber::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

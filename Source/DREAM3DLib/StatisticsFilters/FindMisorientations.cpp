@@ -130,7 +130,8 @@ void FindMisorientations::dataCheck()
   {
     QString ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else
   {
@@ -149,7 +150,8 @@ void FindMisorientations::dataCheck()
     {
       QString ss = QObject::tr("MisorientationLists Array Not Initialized correctly");
       setErrorCondition(-308);
-      addErrorMessage(getHumanLabel(), ss, -308);
+      PipelineMessage em (getHumanLabel(), ss, -308, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
   else
@@ -239,6 +241,6 @@ void FindMisorientations::execute()
     misoL->assign(misorientationlists[i].begin(), misorientationlists[i].end());
     m_MisorientationList->setList(static_cast<int>(i), misoL);
   }
-  notifyStatusMessage("FindMisorientations Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindMisorientations Completed") );
 }
 

@@ -163,7 +163,8 @@ void PerPhaseMinSize::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -171,7 +172,8 @@ void PerPhaseMinSize::preflight()
   dataCheck();
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
-  renumber_features->setObservers(this->getObservers());
+connect(renumber_features, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->preflight();
@@ -179,7 +181,7 @@ void PerPhaseMinSize::preflight()
   if (err < 0)
   {
     setErrorCondition(renumber_features->getErrorCondition());
-    addErrorMessages(renumber_features->getPipelineMessages());
+    
     return;
   }
 }

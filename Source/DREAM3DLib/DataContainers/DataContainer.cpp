@@ -200,7 +200,8 @@ int DataContainer::writeAttributeMatricesToHDF5(hid_t parentId)
     {
 //      QString ss = QObject::tr("Error creating HDF Group ").arg(iter.key());
 //      setErrorCondition(-63);
-//      addErrorMessage(getHumanLabel(), ss, err);
+//      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+//      emit filterGeneratedMessage(em);
       H5Gclose(parentId); // Close the Data Container Group
       return err;
     }
@@ -210,7 +211,8 @@ int DataContainer::writeAttributeMatricesToHDF5(hid_t parentId)
     {
 //      QString ss = QObject::tr("Error writing string attribute to HDF Group %1").arg(iter.key());
 //      setErrorCondition(-64);
-//      addErrorMessage(getHumanLabel(), ss, err);
+//      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+//      emit filterGeneratedMessage(em);
       H5Gclose(parentId); // Close the Data Container Group
       return err;
     }
@@ -242,7 +244,8 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QM
     {
 //      setErrorCondition(-109283);
 //      QString ss = QObject::tr("The AttributeMatrix is missing the 'AttirbuteMatrixType' attribute on the '%1' Attribute Matrix").arg(amNames[iter]);
-//      notifyErrorMessage(ss, getErrorCondition());
+//      PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+//emit filterGeneratedMessage(em);
       return -1;
     }
 
@@ -251,7 +254,8 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QM
     {
 //      QString ss = QObject::tr("Error opening AttributeMatrix %1").arg(amName);
 //      setErrorCondition(-61);
-//      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+//      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+// emit filterGeneratedMessage(em);
       return -1;
     }
 

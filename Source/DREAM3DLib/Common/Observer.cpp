@@ -105,11 +105,11 @@ void Observer::sendPipelineMessage(PipelineMessage& msg)
   {
     ss << msg.generateStatusString();
   }
-  else if(msg.getMessageType() == PipelineMessage::StatusValue)
+  else if(msg.getMessageType() == PipelineMessage::ProgressValue)
   {
     ss << msg.getProgressValue() << "%";
   }
-  else if(msg.getMessageType() == PipelineMessage::StatusMessageAndValue)
+  else if(msg.getMessageType() == PipelineMessage::StatusMessageAndProgressValue)
   {
     ss << msg.getProgressValue() << msg.generateStatusString();
   }

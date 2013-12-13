@@ -138,7 +138,8 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
   {
     ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else
   {
@@ -157,7 +158,8 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
     {
       ss = QObject::tr("MisalignmentLists Array Not Initialized correctly");
       setErrorCondition(-308);
-      addErrorMessage(getHumanLabel(), ss, -308);
+      PipelineMessage em (getHumanLabel(), ss, -308, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
   else
@@ -270,5 +272,5 @@ void FindFeatureNeighborCAxisMisalignments::execute()
     m_CAxisMisalignmentList->setList(static_cast<int>(i), misaL);
   }
 
-  notifyStatusMessage("FindFeatureNeighborCAxisMisalignments Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindFeatureNeighborCAxisMisalignments Completed") );
 }

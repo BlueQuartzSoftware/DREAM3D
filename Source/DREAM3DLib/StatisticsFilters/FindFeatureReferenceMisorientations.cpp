@@ -316,6 +316,6 @@ void FindFeatureReferenceMisorientations::execute()
   }
   delete avgmiso;
 
-  notifyStatusMessage("FindFeatureReferenceMisorientations Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindFeatureReferenceMisorientations Completed") );
 }
 

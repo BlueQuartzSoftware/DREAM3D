@@ -174,7 +174,8 @@ void GroupMicroTextureRegions::dataCheck()
   {
     QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
     setErrorCondition(-1001);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 
@@ -224,7 +225,8 @@ void GroupMicroTextureRegions::dataCheck()
     {
       QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
       setErrorCondition(-304);
-      addErrorMessage(getHumanLabel(), ss, -1);
+      PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
   else
@@ -236,7 +238,8 @@ void GroupMicroTextureRegions::dataCheck()
     {
       QString ss = QObject::tr("NeighborhoodLists Array Not Initialized correctly");
       setErrorCondition(-305);
-      addErrorMessage(getHumanLabel(), ss, -1);
+      PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
 }
@@ -264,14 +267,14 @@ void GroupMicroTextureRegions::execute()
   // Convert user defined tolerance to radians.
   m_CAxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
-  notifyStatusMessage("Grouping MicroTexture Regions");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Grouping MicroTexture Regions") );
   merge_micro_texture_regions();
 
-  notifyStatusMessage("Characterizing MicroTexture Regions");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Characterizing MicroTexture Regions") );
   // characterize_micro_texture_regions();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("GroupMicroTextureRegions Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "GroupMicroTextureRegions Completed") );
 }
 
 // -----------------------------------------------------------------------------

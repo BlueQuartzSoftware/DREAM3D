@@ -124,13 +124,15 @@ void H5VoxelFileReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   QVector<int> dim(1, 3);
@@ -176,7 +178,8 @@ void H5VoxelFileReader::dataCheck()
     err = -1;
     QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -186,7 +189,8 @@ void H5VoxelFileReader::dataCheck()
     QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
                              " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return;
   }
   /* ************ End Sanity Check *************************** */
@@ -236,7 +240,7 @@ void H5VoxelFileReader::execute()
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
   }
   size_t dcDims[3] = {volDims[0], volDims[1], volDims[2]};
   m->setDimensions(dcDims);
@@ -257,7 +261,7 @@ void H5VoxelFileReader::execute()
   {
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Reading the FeatureIDs from the .h5voxel file.", err);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     featureIds = DataArray<int>::NullPointer();
   }
   arrayname = "PhaseID";
@@ -266,7 +270,7 @@ void H5VoxelFileReader::execute()
   {
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Reading the Phases from the .h5voxel file.", err);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     featureIds = DataArray<int>::NullPointer();
   }
   arrayname = "Euler Angles";
@@ -275,7 +279,7 @@ void H5VoxelFileReader::execute()
   {
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Reading the Euler Angles from the .h5voxel file.", err);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     featureIds = DataArray<int>::NullPointer();
   }
 
@@ -300,14 +304,14 @@ void H5VoxelFileReader::execute()
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Feature Data", err);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
   }
   arrayname = "PhaseType";
   err = reader->readFeatureData<unsigned int, uint32_t>(arrayname, phaseType);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Phase Type Data", err);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
   }
 
   DataArray<unsigned int>::Pointer crystructs = DataArray<unsigned int>::CreateArray(crystruct.size(), DREAM3D::EnsembleData::CrystalStructures);

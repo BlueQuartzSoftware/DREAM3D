@@ -164,7 +164,7 @@ void FindCellQuats::execute()
     QuaternionMathF::Copy(qr, quats[i]);
   }
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 

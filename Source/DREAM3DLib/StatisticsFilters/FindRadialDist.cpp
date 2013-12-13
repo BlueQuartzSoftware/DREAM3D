@@ -150,7 +150,8 @@ void FindRadialDist::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr(": The output file must be set before executing this filter.");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
   }
 
@@ -159,7 +160,7 @@ void FindRadialDist::dataCheck()
   if (parentPath.exists() == false)
   {
     QString ss = QObject::tr("The directory path for the output file does not exist.");
-    addWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(ss, -1);
   }
 
   if (fi.suffix().compare("") == 0)
@@ -193,7 +194,8 @@ void FindRadialDist::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -201,7 +203,7 @@ void FindRadialDist::execute()
   find_boundingbox();
   find_radialdist();
 
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 
 // -----------------------------------------------------------------------------

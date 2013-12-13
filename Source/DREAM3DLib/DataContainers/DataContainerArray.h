@@ -31,7 +31,7 @@
 #ifndef DATACONTAINERARRAY_H_
 #define DATACONTAINERARRAY_H_
 
-
+#include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QTextStream>
@@ -55,12 +55,14 @@
  * @date Sep 28, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT DataContainerArray : public Observable
+class DREAM3DLib_EXPORT DataContainerArray : public QObject
 {
+    Q_OBJECT
+
   public:
     DREAM3D_SHARED_POINTERS(DataContainerArray)
-    DREAM3D_TYPE_MACRO_SUPER(DataContainerArray, Observable)
     DREAM3D_STATIC_NEW_MACRO(DataContainerArray)
+    DREAM3D_TYPE_MACRO(DataContainerArray)
 
     virtual ~DataContainerArray();
 
@@ -121,7 +123,9 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
       {
         if (filter) {
           filter->setErrorCondition(-999);
-          filter->addErrorMessage(filter->getHumanLabel(), "The DataContainer Object with the specific name " + name + " was not available.", -999);
+          QString ss = "The DataContainer Object with the specific name " + name + " was not available.";
+          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
+          filter->emitFilterGeneratedMessage(em);
         }
         return NULL;
       }
@@ -136,7 +140,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
     }
 
     /**
-     * @brief This function will create a new DataContainer of type <T> 
+     * @brief This function will create a new DataContainer of type <T>
      * @param dataContainerName The name of the DataContainer. Must not be empty or this method will ASSERT()
      * @return
      */
@@ -146,10 +150,12 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
       Q_ASSERT(dataContainerName.isEmpty() == false);
       if(contains(dataContainerName) == true)
       {
-        if (filter) 
+        if (filter)
         {
           filter->setErrorCondition(-888);
-          filter->addErrorMessage(filter->getHumanLabel(), "The DataContainer Object with the specific name " + dataContainerName + " already exists.", -888);
+          QString ss = "The DataContainer Object with the specific name " + dataContainerName + " already exists.";
+          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
+          filter->emitFilterGeneratedMessage(em);
         }
       }
       typename DataContainerType::Pointer dataContainer = DataContainerType::New(dataContainerName);

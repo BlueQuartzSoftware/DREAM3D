@@ -209,6 +209,6 @@ void FindSchmids::execute()
     m_SlipSystems[i] = ss;
   }
 
-  notifyStatusMessage("FindSchmids Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindSchmids Completed") );
 }
 

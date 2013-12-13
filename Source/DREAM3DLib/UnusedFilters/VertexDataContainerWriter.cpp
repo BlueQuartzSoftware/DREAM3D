@@ -73,17 +73,19 @@ void VertexDataContainerWriter::dataCheck()
   setErrorCondition(0);
 
   VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
-  if(NULL == dc)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+    if(NULL == dc)
+    {
+      setErrorCondition(-999);
+      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+      return;
+    }
 
   if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 }
 
@@ -110,12 +112,13 @@ void VertexDataContainerWriter::execute()
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.
   VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
-  if(NULL == dc)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+    if(NULL == dc)
+    {
+      setErrorCondition(-999);
+      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+      return;
+    }
   setErrorCondition(0);
 
   hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), H5P_DEFAULT );
@@ -126,7 +129,7 @@ void VertexDataContainerWriter::execute()
   H5Gclose(dcGid); // Close the Data Container Group
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------

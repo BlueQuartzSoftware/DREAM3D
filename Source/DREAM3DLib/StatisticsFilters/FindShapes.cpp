@@ -180,7 +180,7 @@ void FindShapes::execute()
   if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_axiseulers(); }
   if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_axiseulers2D(); }
 
-  notifyStatusMessage("FindShapes Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindShapes Completed") );
 }
 
 // -----------------------------------------------------------------------------

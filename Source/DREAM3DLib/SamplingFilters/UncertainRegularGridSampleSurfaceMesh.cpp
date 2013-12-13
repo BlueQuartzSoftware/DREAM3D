@@ -199,7 +199,7 @@ void UncertainRegularGridSampleSurfaceMesh::execute()
 
   SampleSurfaceMesh::execute();
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------

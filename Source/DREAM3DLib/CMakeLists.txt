@@ -137,7 +137,6 @@ file(WRITE ${FilterWidget_GEN_HDRS_File})
 file(WRITE ${FilterWidget_GEN_SRCS_File})
 
 
-
 # Add in our Filter classes
 include(${DREAM3DLib_SOURCE_DIR}/GenericFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/IOFilters/SourceList.cmake)

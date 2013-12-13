@@ -134,7 +134,8 @@ void LosAlamosFFTWriter::dataCheck()
   if(getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-387);
   }
 
@@ -195,7 +196,8 @@ int LosAlamosFFTWriter::writeFile()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return -1;
   }
@@ -204,7 +206,8 @@ int LosAlamosFFTWriter::writeFile()
   if(NULL == f)
   {
     QString ss = QObject::tr("Error Opening File for writing '%1'").arg(getOutputFile());
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return -1;
   }
@@ -235,7 +238,7 @@ int LosAlamosFFTWriter::writeFile()
 
   fclose(f);
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
   return err;
 }
 

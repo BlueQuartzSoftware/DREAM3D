@@ -62,10 +62,11 @@ endforeach()
 
 #-------------
 # These are files that need to be compiled into DREAM3DLib but are NOT filters
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} SurfaceMeshFilter.h)
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} SurfaceMeshFilter.cpp)
+ADD_DREAM3D_SUPPORT_MOC_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} SurfaceMeshFilter.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} SurfaceMeshFilter.cpp)
 
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} BinaryNodesTrianglesReader.h)
+
+ADD_DREAM3D_SUPPORT_MOC_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} BinaryNodesTrianglesReader.h)
 ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} BinaryNodesTrianglesReader.cpp)
 
 ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} MeshFunctions.h)

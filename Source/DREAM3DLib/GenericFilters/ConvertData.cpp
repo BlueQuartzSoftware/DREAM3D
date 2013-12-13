@@ -285,14 +285,16 @@ void ConvertData::dataCheck(bool preflight)
   {
     ss = QObject::tr("The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-397);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   if(m_OutputArrayName.isEmpty() == true)
   {
     ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-398);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   int numberOfComponents = 0;
@@ -389,5 +391,5 @@ void ConvertData::execute()
   CHECK_AND_CONVERT(DoubleArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }

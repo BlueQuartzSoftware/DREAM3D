@@ -70,7 +70,8 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
 
   if(m_FileName.isEmpty() == true)
   {
-    addErrorMessage(getHumanLabel(), "H5ReconVolumeReader Error; Filename was empty", -1);
+    PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error; Filename was empty", -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return -1;
   }
 
@@ -81,7 +82,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error Reading the Dimensions", err);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     err = H5Gclose(reconGid);
     err = H5Fclose(fileId);
     return err;
@@ -91,7 +92,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   {
     PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error Reading the Spacing (Resolution)", err);
     err = H5Gclose(reconGid);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     err = H5Fclose(fileId);
     return err;
   }
@@ -100,7 +101,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error Reading the Origin", err);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     err = H5Gclose(reconGid);
     err = H5Fclose(fileId);
     return err;
@@ -182,7 +183,8 @@ int H5VoxelReader::readVoxelData(int* feature_indicies,
   int err = 0;
   if(m_FileName.isEmpty() == true)
   {
-    addErrorMessage(getHumanLabel(), "H5ReconVolumeReader Error; Filename was empty", -1);
+    PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error; Filename was empty", -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return -1;
   }
 
@@ -204,7 +206,7 @@ int H5VoxelReader::readVoxelData(int* feature_indicies,
   if (totalpoints * 3 > static_cast<int64_t>(std::numeric_limits<size_t>::max()) )
   {
     PipelineMessage em (getHumanLabel(), "Trying to read more data than this architecture can handle.", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return -400;
   }
 #endif
@@ -215,7 +217,8 @@ int H5VoxelReader::readVoxelData(int* feature_indicies,
   err = readScalarData(DREAM3D::CellData::EulerAngles, eulerangles);
   if(err < 0)
   {
-    addErrorMessage(getHumanLabel(), "H5VoxelReader Error Reading the Euler Angles", err);
+    PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Euler Angles", err, PipelineMessage::Error);
+	emit filterGeneratedMessage(em);
     err |= H5Gclose(scalarGid);
     err |= H5Gclose(reconGid);
     return err;
@@ -228,7 +231,8 @@ int H5VoxelReader::readVoxelData(int* feature_indicies,
   err = readFeatureData<unsigned int, uint32_t>(DREAM3D::EnsembleData::CrystalStructures, crystruct);
   if(err < 0)
   {
-    addErrorMessage(getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Feature Data", err);
+    PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Feature Data", err, PipelineMessage::Error);
+	emit filterGeneratedMessage(em);
     err |= H5Gclose(reconGid);
     return err;
   }
@@ -236,7 +240,8 @@ int H5VoxelReader::readVoxelData(int* feature_indicies,
   err = readFeatureData<unsigned int, uint32_t>(DREAM3D::EnsembleData::PhaseTypes, phaseType);
   if(err < 0)
   {
-    addErrorMessage(getHumanLabel(), "H5VoxelReader Error Reading the Phase Type Data", err);
+    PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Phase Type Data", err, PipelineMessage::Error);
+	emit filterGeneratedMessage(em);
     err |= H5Gclose(reconGid);
     return err;
   }

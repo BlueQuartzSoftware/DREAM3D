@@ -99,17 +99,19 @@ void EdgeDataContainerReader::dataCheck()
   setErrorCondition(0);
 
   EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
-  if(NULL == dc)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+    if(NULL == dc)
+    {
+      setErrorCondition(-999);
+      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+      return;
+    }
 
   if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else if (preflight == true)
   {
@@ -150,12 +152,13 @@ void EdgeDataContainerReader::execute()
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.
   EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
-  if(NULL == dc)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+    if(NULL == dc)
+    {
+      setErrorCondition(-999);
+      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+      return;
+    }
   setErrorCondition(err);
 
   if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true) { m_ReadEdgeData = false; }
@@ -170,7 +173,7 @@ void EdgeDataContainerReader::execute()
   setErrorCondition(err);
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------
@@ -194,7 +197,8 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   {
     QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return -1;
   }
 
@@ -203,7 +207,8 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   {
     QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::Defaults::EdgeDataContainerName);
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return -1;
   }
 

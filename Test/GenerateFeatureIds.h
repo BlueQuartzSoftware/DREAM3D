@@ -16,6 +16,7 @@
 // -----------------------------------------------------------------------------
 class GenerateFeatureIds : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(GenerateFeatureIds)
     DREAM3D_STATIC_NEW_MACRO(GenerateFeatureIds)
@@ -117,6 +118,7 @@ class GenerateFeatureIds : public AbstractFilter
  */
 class CreateVolumeDataContainer : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(CreateVolumeDataContainer)
     DREAM3D_STATIC_NEW_MACRO(CreateVolumeDataContainer)
@@ -195,5 +197,8 @@ class CreateVolumeDataContainer : public AbstractFilter
     CreateVolumeDataContainer(const CreateVolumeDataContainer&); // Copy Constructor Not Implemented
     void operator=(const CreateVolumeDataContainer&); // Operator '=' Not Implemented
 };
+
+
+
 
 #endif /* _GenerateFeatureIds_H_ */

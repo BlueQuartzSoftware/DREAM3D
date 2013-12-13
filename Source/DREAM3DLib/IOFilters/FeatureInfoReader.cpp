@@ -161,13 +161,15 @@ void FeatureInfoReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   QVector<int> dims(1, 1);
@@ -208,7 +210,7 @@ void FeatureInfoReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int  FeatureInfoReader::readHeader()
+int FeatureInfoReader::readHeader()
 {
   return 0;
 }
@@ -216,7 +218,7 @@ int  FeatureInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int  FeatureInfoReader::readFile()
+int FeatureInfoReader::readFile()
 {
   dataCheck();
 
@@ -228,7 +230,8 @@ int  FeatureInfoReader::readFile()
   {
     QString ss = QObject::tr("Failed to open: %1").arg(getInputFile());
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return -1;
   }
   int numfeatures;
@@ -295,7 +298,6 @@ int  FeatureInfoReader::readFile()
     if (0 == totalFeatures)
     {
       notifyErrorMessage("The number of features is Zero and should be greater than Zero", -600);
-      notifyStatusMessage("Completed");
       return -999;
     }
 
@@ -313,14 +315,15 @@ int  FeatureInfoReader::readFile()
 
     RenumberFeatures::Pointer renum = RenumberFeatures::New();
     renum->setDataContainerArray(getDataContainerArray());
-    renum->setObservers(getObservers());
+    connect(renum.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     renum->setMessagePrefix(getMessagePrefix());
     renum->execute();
     setErrorCondition(renum->getErrorCondition());
-    addErrorMessages(renum->getPipelineMessages());
+
   }
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
   return 0;
 }
 

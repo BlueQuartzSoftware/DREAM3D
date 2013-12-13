@@ -168,7 +168,8 @@ void FindNeighbors::dataCheck()
 
       QString ss = QObject::tr("SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter");
       setErrorCondition(-308);
-      addErrorMessage(getHumanLabel(), ss, -308);
+      PipelineMessage em (getHumanLabel(), ss, -308, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
                               (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SharedSurfaceAreaListArrayName).get());
@@ -344,7 +345,7 @@ void FindNeighbors::execute()
     m_SharedSurfaceAreaList->setList(static_cast<int>(i), sharedSAL);
   }
 
-  notifyStatusMessage("Finding Neighbors Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Finding Neighbors Complete") );
 }
 
 

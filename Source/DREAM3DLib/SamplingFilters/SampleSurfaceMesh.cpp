@@ -171,14 +171,16 @@ void SampleSurfaceMesh::dataCheck()
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
@@ -311,7 +313,7 @@ void SampleSurfaceMesh::execute()
 
   assign_points(iArray);
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------

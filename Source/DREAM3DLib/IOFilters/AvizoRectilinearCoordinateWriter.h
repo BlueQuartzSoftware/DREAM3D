@@ -57,6 +57,7 @@
  */
 class DREAM3DLib_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(AvizoRectilinearCoordinateWriter);
     DREAM3D_STATIC_NEW_MACRO(AvizoRectilinearCoordinateWriter);

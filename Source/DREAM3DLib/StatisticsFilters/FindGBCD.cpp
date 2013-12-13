@@ -383,15 +383,17 @@ void FindGBCD::dataCheckSurfaceMesh()
   // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
@@ -470,7 +472,7 @@ void FindGBCD::execute()
   dataCheckVoxel();
   if(getErrorCondition() < 0) { return; }
 
-  notifyStatusMessage("Starting");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -645,7 +647,7 @@ void FindGBCD::execute()
   }
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 

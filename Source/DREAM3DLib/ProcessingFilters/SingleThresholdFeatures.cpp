@@ -194,7 +194,8 @@ void SingleThresholdFeatures::execute()
 
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);
     setErrorCondition(-11001);
-    notifyErrorMessage(ss, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 
@@ -212,7 +213,7 @@ void SingleThresholdFeatures::execute()
   filter.execute(inputData.get(), goodFeaturesPtr.get());
 
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(goodFeaturesPtr->GetName(), goodFeaturesPtr);
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 

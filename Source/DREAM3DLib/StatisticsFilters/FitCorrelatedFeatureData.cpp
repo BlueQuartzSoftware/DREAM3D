@@ -169,12 +169,14 @@ void FitCorrelatedFeatureData::dataCheck()
   if(m_SelectedFeatureArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    addErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   if(m_CorrelatedFeatureArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    addErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   if(m_RemoveBiasedFeatures == true)
   {
@@ -325,7 +327,8 @@ void FitCorrelatedFeatureData::execute()
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);
     setErrorCondition(-11001);
-    notifyErrorMessage(ss, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
   IDataArray::Pointer correlatedData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_CorrelatedFeatureArrayName);
@@ -333,7 +336,8 @@ void FitCorrelatedFeatureData::execute()
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_CorrelatedFeatureArrayName);
     setErrorCondition(-11001);
-    notifyErrorMessage(ss, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 
@@ -434,7 +438,7 @@ void FitCorrelatedFeatureData::execute()
   }
 
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->GetName(), p);
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 

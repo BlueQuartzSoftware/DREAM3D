@@ -415,6 +415,6 @@ void FindTwinBoundarySchmidFactors::execute()
   }
   outFile.close();
 
-  notifyStatusMessage("FindTwinBoundarySchmidFactors Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindTwinBoundarySchmidFactors Completed") );
 }
 

@@ -36,7 +36,7 @@
 //
 // -----------------------------------------------------------------------------
 FilterPipeline::FilterPipeline() :
-  Observer(),
+  QObject(),
   m_ErrorCondition(0),
   m_Cancel(false)
 {
@@ -238,56 +238,61 @@ void FilterPipeline::updatePrevNextFilters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FilterPipeline::addMessageReceiver(QObject* obj)
+{
+  m_MessageReceivers.push_back(obj);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterPipeline::connectFilterNotifications(QObject* filter)
+{
+  for(int i = 0; i < m_MessageReceivers.size(); i++)
+  {
+    connect(filter, SIGNAL(filterGeneratedMessage(PipelineMessage&)),
+            m_MessageReceivers.at(i), SLOT(processPipelineMessage(PipelineMessage&)) );
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterPipeline::disconnectFilterNotifications(QObject* filter)
+{
+  for(int i = 0; i < m_MessageReceivers.size(); i++)
+  {
+    disconnect(filter, SIGNAL(filterGeneratedMessage(PipelineMessage&)),
+               m_MessageReceivers.at(i), SLOT(processPipelineMessage(PipelineMessage&)) );
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int FilterPipeline::preflightPipeline()
 {
   // Create the DataContainer object
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
-  dca->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
 
-  int err = 0;
-
-  // Start looping through the Pipeline and preflight everything
+  // Start looping through each filter in the Pipeline and preflight everything
   for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
   {
     (*filter)->setDataContainerArray(dca);
     setCurrentFilter(*filter);
+    connectFilterNotifications( (*filter).get() );
     //qDebug() << "Preflighting Filter [" << (*filter)->getHumanLabel() << "] (" << (*filter)->getNameOfClass() << ")";
     (*filter)->preflight();
-    (*filter)->setDataContainerArray(DataContainerArray::NullPointer());
-    QVector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
-    // Loop through all the messages making sure they are all error messages. If they are all
-    // warning messages we are going to let the preflight pass. Hopefully if the warning
-    // turns into an error the filter will handle it correctly and gracefully fail with
-    // a nice message to the user.
-    for(QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
-    {
-      if ( (*iter).getMessageType() == PipelineMessage::Error)
-      {
-        err |= (*filter)->getErrorCondition();
-      }
-      else if ((*iter).getMessageType() == PipelineMessage::Warning)
-      {
-        err |= 0;
-      }
-    }
-    if(err < 0)
-    {
-      preflightError = err;
-      setErrorCondition(preflightError);
-      sendPipelineMessages( (*filter)->getPipelineMessages());
-    }
-  }
+    disconnectFilterNotifications( (*filter).get() );
 
-#if 0
-  QList<QString> cellNames = m->getCellArrayNameList();
-  for (QList<QString>::iterator name = cellNames.begin(); name != cellNames.end(); ++name )
-  {
-    qDebug() << *name << "\n";
+    (*filter)->setDataContainerArray(DataContainerArray::NullPointer());
+    preflightError |= (*filter)->getErrorCondition();
   }
-#endif
+  setCurrentFilter(AbstractFilter::NullPointer());
   return preflightError;
 }
 
@@ -304,36 +309,44 @@ void FilterPipeline::execute()
   // Start looping through the Pipeline
   float progress = 0.0f;
 
+  // Connect this object to anything that wants to know about PipelineMessages
+  for(int i = 0; i < m_MessageReceivers.size(); i++)
+  {
+    connect(this, SIGNAL(pipelineGeneratedMessage(PipelineMessage&)),
+            m_MessageReceivers.at(i), SLOT(processPipelineMessage(PipelineMessage&)) );
+  }
 
-// Start a Benchmark Clock so we can keep track of each filter's execution time
-  PipelineMessage progValue("", "", 0, PipelineMessage::StatusValue, -1);
+  // Start a Benchmark Clock so we can keep track of each filter's execution time
+  PipelineMessage progValue("", "", 0, PipelineMessage::ProgressValue, -1);
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
     progress = progress + 1.0f;
-    progValue.setMessageType(PipelineMessage::StatusValue);
+    progValue.setMessageType(PipelineMessage::ProgressValue);
     progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
-    sendPipelineMessage(progValue);
+    emit pipelineGeneratedMessage(progValue);
 
     QString ss = QObject::tr("[%1/%2] %3 ").arg(progress).arg(m_Pipeline.size()).arg( (*iter)->getHumanLabel());
 
     progValue.setMessageType(PipelineMessage::StatusMessage);
     progValue.setMessageText(ss);
-    sendPipelineMessage(progValue);
+    emit pipelineGeneratedMessage(progValue);
+
+
     (*iter)->setMessagePrefix(ss);
-    (*iter)->addObserver(static_cast<Observer*>(this));
+    connectFilterNotifications( (*iter).get() );
     (*iter)->setDataContainerArray(dca);
     setCurrentFilter(*iter);
     (*iter)->execute();
-    (*iter)->removeObserver(static_cast<Observer*>(this));
-
+    disconnectFilterNotifications( (*iter).get() );
     err = (*iter)->getErrorCondition();
     if(err < 0)
     {
       setErrorCondition(err);
-      sendPipelineMessages((*iter)->getPipelineMessages());
+
       progValue.setMessageType(PipelineMessage::Error);
       progValue.setProgressValue(100);
-      sendPipelineMessage(progValue);
+      emit pipelineGeneratedMessage(progValue);
+
       pipelineFinished();
       return;
     }
@@ -345,7 +358,7 @@ void FilterPipeline::execute()
   }
 
   PipelineMessage completMessage("", "Pipeline Complete", 0, PipelineMessage::StatusMessage, -1);
-  sendPipelineMessage(completMessage);
+  emit pipelineGeneratedMessage(completMessage);
 }
 
 // -----------------------------------------------------------------------------

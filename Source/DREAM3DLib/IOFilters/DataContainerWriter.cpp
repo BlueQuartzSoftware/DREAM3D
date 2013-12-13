@@ -162,7 +162,8 @@ void DataContainerWriter::dataCheck()
   if (m_OutputFile.isEmpty() == true)
   {
     ss = QObject::tr(": The output file must be set before executing this filter.");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
   }
 
@@ -171,7 +172,7 @@ void DataContainerWriter::dataCheck()
   if (parentPath.exists() == false)
   {
     ss = QObject::tr("The directory path for the output file does not exist.");
-    addWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(ss, -1);
   }
   if (fi.suffix().compare("") == 0)
   {
@@ -207,7 +208,8 @@ void DataContainerWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -217,7 +219,8 @@ void DataContainerWriter::execute()
   {
     QString ss = QObject::tr(": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[%1]").arg(m_OutputFile);
     setErrorCondition(-59);
-    addErrorMessage(getHumanLabel(), ss, err);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -256,7 +259,8 @@ void DataContainerWriter::execute()
   {
     QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::StringConstants::DataContainerGroupName);
     setErrorCondition(-60);
-    addErrorMessage(getHumanLabel(), ss, err);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return;
   }
   hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), H5P_DEFAULT );
@@ -272,7 +276,8 @@ void DataContainerWriter::execute()
     {
       QString ss = QObject::tr("Error creating HDF Group %1").arg(dcNames[iter]);
       setErrorCondition(-60);
-      addErrorMessage(getHumanLabel(), ss, err);
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       return;
     }
 
@@ -317,7 +322,7 @@ void DataContainerWriter::execute()
 
   H5Gclose(dcaGid);
   dcaGid = -1;
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------

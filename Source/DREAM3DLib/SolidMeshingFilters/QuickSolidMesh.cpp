@@ -94,8 +94,9 @@ void QuickSolidMesh::dataCheck()
   SolidMeshDataContainer* sm = getSolidMeshDataContainer();
   if (NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SolidMeshDataContainer is missing", -383);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SolidMeshDataContainer is missing", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
@@ -126,12 +127,13 @@ void QuickSolidMesh::execute()
   setErrorCondition(0);
   VoxelDataContainer* m = getVoxelDataContainer();
   SolidMeshDataContainer* sm = getSolidMeshDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+    if(NULL == m)
+    {
+      setErrorCondition(-999);
+      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+      return;
+    }
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
@@ -266,7 +268,7 @@ void QuickSolidMesh::execute()
   sm->setTetrahedrons(tetrahedrons);
   sm->setNodes(vertices);
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 

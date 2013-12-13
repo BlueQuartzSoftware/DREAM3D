@@ -51,6 +51,7 @@
  */
 class DREAM3DLib_EXPORT FlattenImage : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(FlattenImage)
     DREAM3D_STATIC_NEW_MACRO(FlattenImage)

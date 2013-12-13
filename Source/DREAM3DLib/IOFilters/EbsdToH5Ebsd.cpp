@@ -148,7 +148,8 @@ void EbsdToH5Ebsd::dataCheck()
   if (m_EbsdFileList.size() == 0)
   {
     ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    addErrorMessage(getHumanLabel(), ss, -11);
+    PipelineMessage em (getHumanLabel(), ss, -11, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
   }
   else
@@ -174,7 +175,8 @@ void EbsdToH5Ebsd::dataCheck()
     {
 
       ss = QObject::tr("The File extension '%1' was not recognized. Currently .ang or .ctf are the only recognized file extensions").arg(ext);
-      addErrorMessage(getHumanLabel(), ss, -997);
+      PipelineMessage em (getHumanLabel(), ss, -997, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       return;
     }
@@ -189,7 +191,8 @@ void EbsdToH5Ebsd::dataCheck()
   {
 
     ss = QObject::tr("The output file must be set before executing this filter.");
-    addErrorMessage(getHumanLabel(), ss, -12);
+    PipelineMessage em (getHumanLabel(), ss, -12, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
   }
 
@@ -217,7 +220,8 @@ void EbsdToH5Ebsd::execute()
     QString ss = QObject::tr("EbsdToH5Ebsd Error: The output file was not set correctly or is empty. The current value is '%1'"
                              ". Please set the output file before running the importer. ").arg(m_OutputFile);
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
   // Make sure any directory path is also available as the user may have just typed
@@ -229,7 +233,7 @@ void EbsdToH5Ebsd::execute()
   {
     QString ss;
     PipelineMessage em (getHumanLabel(), ss, -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -241,8 +245,10 @@ void EbsdToH5Ebsd::execute()
     err = -1;
 
     QString ss = QObject::tr("The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
     return;
   }
 
@@ -253,8 +259,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the Z Resolution Scalar to the HDF5 File");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
   unsigned int ui = static_cast<unsigned int>(m_RefFrameZDir);
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, ui);
@@ -262,8 +270,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the Stacking Order Scalar to the HDF5 File");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   QString s = Ebsd::StackingOrder::Utils::getStringForEnum(m_RefFrameZDir);
@@ -272,8 +282,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the Stacking Order Name Attribute to the HDF5 File");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::SampleTransformationAngle, m_SampleTransformationAngle);
@@ -281,8 +293,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the Sample Transformation Angle to the HDF5 File");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   QVector<hsize_t> dims(1, 3);
@@ -291,8 +305,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the Sample Transformation Axis to the HDF5 File");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformationAngle);
@@ -300,8 +316,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the Euler Transformation Angle to the HDF5 File");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   err = QH5Lite::writeVectorDataset(fileId, Ebsd::H5::EulerTransformationAxis, dims, m_EulerTransformationAxis);
@@ -309,8 +327,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the Euler Transformation Axis to the HDF5 File");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   EbsdImporter::Pointer fileImporter;
@@ -326,8 +346,10 @@ void EbsdToH5Ebsd::execute()
     {
 
       QString ss = QObject::tr("Could not write the Manufacturer Data to the HDF5 File");
-      addErrorMessage(getHumanLabel(), ss, err);
       setErrorCondition(-1);
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+
     }
     fileImporter = H5AngImporter::New();
   }
@@ -338,8 +360,10 @@ void EbsdToH5Ebsd::execute()
     {
 
       QString ss = QObject::tr("Could not write the Manufacturer Data to the HDF5 File");
-      addErrorMessage(getHumanLabel(), ss, err);
       setErrorCondition(-1);
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+
     }
     fileImporter = H5CtfImporter::New();
   }
@@ -350,8 +374,10 @@ void EbsdToH5Ebsd::execute()
     {
 
       QString ss = QObject::tr("Could not write the Manufacturer Data to the HDF5 File");
-      addErrorMessage(getHumanLabel(), ss, err);
       setErrorCondition(-1);
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+
     }
     fileImporter = H5MicImporter::New();
   }
@@ -360,8 +386,10 @@ void EbsdToH5Ebsd::execute()
     err = -1;
 
     QString ss = QObject::tr("The File extension was not detected correctly");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
     return;
   }
 
@@ -410,9 +438,10 @@ void EbsdToH5Ebsd::execute()
     err = fileImporter->importFile(fileId, z, ebsdFName);
     if (err < 0)
     {
-      addErrorMessage(getHumanLabel(), fileImporter->getPipelineMessage(), fileImporter->getErrorCondition());
-      setErrorCondition(err);
-      return;
+      	setErrorCondition(err);
+     	PipelineMessage em (getHumanLabel(), fileImporter->getPipelineMessage(), fileImporter->getErrorCondition(), PipelineMessage::Error);
+		emit filterGeneratedMessage(em);
+ 		return;
     }
     totalSlicesImported = totalSlicesImported + fileImporter->numberOfSlicesImported();
 
@@ -425,14 +454,16 @@ void EbsdToH5Ebsd::execute()
     {
 
       QString ss = QObject::tr("Could not write dataset for slice to HDF5 file");
-      addErrorMessage(getHumanLabel(), ss, err);
       setErrorCondition(-1);
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+
     }
     indices.push_back( static_cast<int>(z) );
     ++z;
     if(getCancel() == true)
     {
-      notifyStatusMessage("Conversion was Canceled");
+      emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Conversion was Canceled") );
       return;
     }
   }
@@ -443,8 +474,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the Z Start Index Scalar to the HDF5 File");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   m_ZEndIndex = m_ZStartIndex + totalSlicesImported - 1;
@@ -453,8 +486,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the Z End Index Scalar to the HDF5 File");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, biggestxDim);
@@ -462,8 +497,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the XPoints Scalar to HDF5 file");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, biggestyDim);
@@ -471,8 +508,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the YPoints Scalar to HDF5 file");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
@@ -480,8 +519,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the XResolution Scalar to HDF5 file");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::YResolution, yRes);
@@ -489,8 +530,10 @@ void EbsdToH5Ebsd::execute()
   {
 
     QString ss = QObject::tr("Could not write the YResolution Scalar to HDF5 file");
-    addErrorMessage(getHumanLabel(), ss, err);
     setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
+
   }
 
   if(false == getCancel())
@@ -502,7 +545,7 @@ void EbsdToH5Ebsd::execute()
   }
   err = QH5Utilities::closeFile(fileId);
   fileId = -1;
-  notifyStatusMessage("Import Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Import Complete") );
 }
 
 

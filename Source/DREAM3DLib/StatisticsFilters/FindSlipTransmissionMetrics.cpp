@@ -134,7 +134,8 @@ void FindSlipTransmissionMetrics::dataCheck()
   {
     QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
     setErrorCondition(-305);
-    addErrorMessage(getHumanLabel(), ss, -305);
+    PipelineMessage em (getHumanLabel(), ss, -305, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();
@@ -145,7 +146,8 @@ void FindSlipTransmissionMetrics::dataCheck()
   {
     QString ss = QObject::tr("F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   NeighborList<float>::Pointer f1sptPtr = NeighborList<float>::New();
@@ -156,7 +158,8 @@ void FindSlipTransmissionMetrics::dataCheck()
   {
     QString ss = QObject::tr("F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   NeighborList<float>::Pointer f7Ptr = NeighborList<float>::New();
@@ -167,7 +170,8 @@ void FindSlipTransmissionMetrics::dataCheck()
   {
     QString ss = QObject::tr("F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   NeighborList<float>::Pointer mPrimePtr = NeighborList<float>::New();
@@ -178,7 +182,8 @@ void FindSlipTransmissionMetrics::dataCheck()
   {
     QString ss = QObject::tr("mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 }
 
@@ -288,6 +293,6 @@ void FindSlipTransmissionMetrics::execute()
     m_mPrime->setList(static_cast<int>(i), mPrimeL);
   }
 
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 

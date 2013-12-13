@@ -191,7 +191,7 @@ void StandardizeEulerAngles::dataCheck()
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  addWarningMessage(getHumanLabel(), "This filter is possibly unfinished. Use at your own risk", -666);
+  notifyWarningMessage("This filter is possibly unfinished. Use at your own risk", -666);
 }
 
 // -----------------------------------------------------------------------------
@@ -233,6 +233,6 @@ void StandardizeEulerAngles::execute()
     serial.convert(0, totalPoints);
   }
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

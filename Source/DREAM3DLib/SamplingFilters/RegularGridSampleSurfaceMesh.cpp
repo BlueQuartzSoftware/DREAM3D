@@ -188,7 +188,7 @@ void RegularGridSampleSurfaceMesh::execute()
 
   SampleSurfaceMesh::execute();
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------

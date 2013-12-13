@@ -375,41 +375,47 @@ void RawBinaryReader::dataCheck(bool preflight)
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   if(m_OutputArrayName.isEmpty() == true)
   {
     QString ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-398);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   if (m_NumberOfComponents < 1)
   {
     QString ss = QObject::tr("The number of components must be larger than Zero");
     setErrorCondition(-391);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   if (m_Dimensionality < 1)
   {
     QString ss = QObject::tr("The dimensionality must be larger than Zero");
     setErrorCondition(-389);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   if (  m_Dimensions.x == 0 || m_Dimensions.y == 0 || m_Dimensions.z == 0)
   {
     QString ss = QObject::tr("One of the dimensions has a size less than or Equal to Zero (0). The minimum size must be greater than One (1).");
     setErrorCondition(-390);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   if (true == preflight)
@@ -477,14 +483,15 @@ void RawBinaryReader::dataCheck(bool preflight)
       QString ss = QObject::tr("The file size is %1 but the number of bytes needed to fill the array is %2. This condition would cause an error reading the input file."
                                " Please adjust the input parameters to match the size of the file or select a different data file.").arg(fileSize).arg(allocatedBytes);
       setErrorCondition(RBR_FILE_TOO_SMALL);
-      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     }
     else if (check == 1)
     {
 
       QString ss = QObject::tr("The file size is %1 but the number of bytes needed to fill the array is %1 which is less than the size of the file."
                                " DREAM3D will read only the first part of the file into the array.").arg(fileSize).arg(allocatedBytes);
-      addWarningMessage(getHumanLabel(), ss, RBR_FILE_TOO_BIG);
+      notifyWarningMessage(ss, RBR_FILE_TOO_BIG);
     }
 
     m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
@@ -663,6 +670,6 @@ void RawBinaryReader::execute()
   }
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

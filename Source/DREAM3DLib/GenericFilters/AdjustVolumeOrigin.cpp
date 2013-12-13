@@ -196,7 +196,8 @@ void AdjustVolumeOrigin::dataCheck()
     if(sm->getVertices().get() == NULL)
     {
       setErrorCondition(-384);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+      PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
   }
 }
@@ -233,7 +234,7 @@ void AdjustVolumeOrigin::execute()
     updateSurfaceMesh();
   }
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------
@@ -247,7 +248,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   setErrorCondition(0);
-  notifyStatusMessage("Starting");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;

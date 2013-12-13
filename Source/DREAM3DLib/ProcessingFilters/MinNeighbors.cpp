@@ -152,7 +152,8 @@ void MinNeighbors::preflight()
   if(getErrorCondition() < 0) { return; }
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
-  renumber_features->setObservers(this->getObservers());
+connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->preflight();
@@ -160,7 +161,7 @@ void MinNeighbors::preflight()
   if (err < 0)
   {
     setErrorCondition(renumber_features->getErrorCondition());
-    addErrorMessages(renumber_features->getPipelineMessages());
+
     return;
   }
 }
@@ -190,7 +191,8 @@ void MinNeighbors::execute()
   assign_badpoints();
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
-  renumber_features->setObservers(this->getObservers());
+connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->execute();
@@ -198,12 +200,12 @@ void MinNeighbors::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_features->getErrorCondition());
-    addErrorMessages(renumber_features->getPipelineMessages());
+
     return;
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Minimum Number of Neighbors Filter Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Minimum Number of Neighbors Filter Complete") );
 }
 
 // -----------------------------------------------------------------------------

@@ -147,7 +147,8 @@ void INLWriter::dataCheck()
   {
 
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-387);
   }
 
@@ -173,7 +174,8 @@ void INLWriter::dataCheck()
   {
 
     QString ss = QObject::tr("%1 requires the %2 Ensemble array to be present in the Data Container.").arg(ClassName()).arg(DREAM3D::EnsembleData::MaterialName);
-    addErrorMessage(getHumanLabel(), ss, -1111);
+    PipelineMessage em (getHumanLabel(), ss, -1111, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1111);
   }
 }
@@ -224,7 +226,8 @@ int INLWriter::writeFile()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(fi.path());
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return -1;
   }
@@ -234,7 +237,8 @@ int INLWriter::writeFile()
   {
 
     QString ss = QObject::tr("Error Opening File for writing '%1'").arg(getOutputFile());
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return -1;
   }
@@ -267,7 +271,8 @@ int INLWriter::writeFile()
     fclose(f);
 
     QString ss = QObject::tr("The MaterialNames Ensemble Array was not in the Data Container");
-    notifyErrorMessage(ss, -1111);
+    PipelineMessage em(getHumanLabel(), ss, -1111, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1111);
     return -1;
   }
@@ -370,7 +375,7 @@ int INLWriter::writeFile()
   fclose(f);
 
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
   return err;
 }
 

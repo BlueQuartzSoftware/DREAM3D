@@ -192,7 +192,7 @@ void FindAvgCAxes::execute()
     }
   }
 
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 
 

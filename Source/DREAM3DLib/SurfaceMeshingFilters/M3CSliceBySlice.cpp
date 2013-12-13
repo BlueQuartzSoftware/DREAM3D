@@ -566,7 +566,8 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Cancelling filter");
-      notifyWarningMessage(ss, -1);
+      PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       break;
     }
@@ -628,7 +629,8 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
-      notifyErrorMessage(ss, -1);
+      PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       return;
     }
@@ -638,7 +640,8 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
-      notifyErrorMessage(ss, -1);
+      PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       return;
     }
@@ -670,7 +673,8 @@ void M3CSliceBySlice::execute()
 
   QString ss = QObject::tr("%1 |--> %2").arg( getMessagePrefix()).arg(binaryReader->getNameOfClass());
   binaryReader->setMessagePrefix(ss);
-  binaryReader->setObservers(getObservers());
+connect(binaryReader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   binaryReader->setDataContainerArray(getDataContainerArray());
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
@@ -689,7 +693,7 @@ void M3CSliceBySlice::execute()
     renumberVoxelFeatureIds(renumberFeatureValue);
   }
 
-  notifyStatusMessage("Surface Meshing Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Surface Meshing Complete") );
 }
 
 // -----------------------------------------------------------------------------

@@ -34,7 +34,7 @@
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
-  Observable(),
+  QObject(),
   m_ErrorCondition(0),
   m_Cancel(false)
 {
@@ -53,6 +53,14 @@ AbstractFilter::~AbstractFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AbstractFilter::setCancel(bool value)
+{
+  m_Cancel = value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AbstractFilter::setupFilterParameters()
 {
 }
@@ -63,7 +71,8 @@ void AbstractFilter::setupFilterParameters()
 void AbstractFilter::execute()
 {
   setErrorCondition(-999);
-  notifyErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.", -999);
+  //notifyErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.", -999);
+  emit filterGeneratedMessage(PipelineMessage(getNameOfClass(), "QAbstractFilter does not implement an execute method. Please use a subclass instead.", -999, PipelineMessage::Error) );
 }
 
 // -----------------------------------------------------------------------------
@@ -72,7 +81,7 @@ void AbstractFilter::execute()
 void AbstractFilter::preflight()
 {
   setErrorCondition(-999);
-  notifyErrorMessage("AbstractFilter does not implement a preflight method. Please use a subclass instead.", -999);
+  emit filterGeneratedMessage(PipelineMessage(getNameOfClass(), "AbstractFilter does not implement a preflight method. Please use a subclass instead.", -999, PipelineMessage::Error) );
 }
 
 // -----------------------------------------------------------------------------
@@ -130,7 +139,7 @@ void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+  ////!!##
   reader->closeFilterGroup();
 }
 
@@ -144,6 +153,50 @@ int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer
   return -1;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AbstractFilter::getCancel()
+{
+  return m_Cancel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::emitFilterGeneratedMessage(const PipelineMessage &msg)
+{
+  emit filterGeneratedMessage(msg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::notifyErrorMessage(const QString &ss, int code)
+{
+  PipelineMessage em = PipelineMessage::CreateErrorMessage(getHumanLabel(), ss, code);
+  emit filterGeneratedMessage(em);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::notifyStatusMessage(const QString &ss)
+{
+  PipelineMessage em = PipelineMessage::CreateStatusMessage(getHumanLabel(), ss);
+  emit filterGeneratedMessage(em);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::notifyWarningMessage(const QString &ss, int code)
+{
+  PipelineMessage em = PipelineMessage::CreateWarningMessage(getHumanLabel(), ss, code);
+  emit filterGeneratedMessage(em);
+}
+
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -281,5 +334,5 @@ void AbstractFilter::tbbTaskProgress()
 {
 
 }
-
+#endif
 

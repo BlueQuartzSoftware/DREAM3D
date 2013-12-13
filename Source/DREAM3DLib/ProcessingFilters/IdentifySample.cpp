@@ -109,7 +109,8 @@ void IdentifySample::dataCheck()
   {
     QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
     setErrorCondition(-1001);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
   QVector<int> dims(1, 1);
@@ -284,6 +285,6 @@ void IdentifySample::execute()
   checked.clear();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Identifying Sample Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Identifying Sample Complete") );
 }
 

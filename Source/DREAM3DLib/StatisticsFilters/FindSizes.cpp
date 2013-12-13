@@ -145,7 +145,7 @@ void FindSizes::execute()
 
   if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_sizes(); }
   if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_sizes2D(); }
-  notifyStatusMessage("FindSizes Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindSizes Completed") );
 }
 
 // -----------------------------------------------------------------------------

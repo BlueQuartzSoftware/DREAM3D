@@ -137,28 +137,28 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
   // reads would have failed to read anything so those arrays are still empty. These functions will now read those
   // arrays from the file.
   READ_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
+      READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
+      READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
+      READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
+      READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
+      READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
+      READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
+      READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
+      READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
+      READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
+      READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
-  READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
+      READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
+      READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
+      READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
+      READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+      READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
+      READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
+      READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
 
-  reader->closeFilterGroup();
+      reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -174,28 +174,28 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->writeValue("RefFrameZDir", getRefFrameZDir());
 
   WRITE_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
+      WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
+      WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
+      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
+      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
+      WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
 
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
+      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
+      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
+      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
+      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
+      WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
 
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
+      WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
+      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
+      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
+      WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
 
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
+      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
+      WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
 
-  writer->closeFilterGroup();
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -219,7 +219,8 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
     err = -1;
     QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), ss, err);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return err;
   }
 
@@ -229,7 +230,8 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
     QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
                              " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), ss, err);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return err;
   }
   return err;
@@ -254,13 +256,15 @@ void ReadH5Ebsd::dataCheck()
   {
     QString ss = QObject::tr("%1: The H5Ebsd file must exist and the Manufacturer must be set correctly in the file").arg(getHumanLabel());
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist. '%1'").arg(getInputFile());
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else if (m_InputFile.isEmpty() == false)
   {
@@ -271,7 +275,8 @@ void ReadH5Ebsd::dataCheck()
     {
       QString ss = QObject::tr("%1: Error reading VolumeInfo from H5Ebsd File").arg(getHumanLabel());
       setErrorCondition(-1);
-      addErrorMessage(getHumanLabel(), ss, -1);
+      PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       return;
     }
 
@@ -292,7 +297,8 @@ void ReadH5Ebsd::dataCheck()
     {
       QString ss = QObject::tr("%1:  Original Data source could not be determined. It should be TSL, HKL or HEDM").arg(getHumanLabel());
       setErrorCondition(-1);
-      addErrorMessage(getHumanLabel(), ss, -1);
+      PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       return;
     }
 
@@ -313,7 +319,8 @@ void ReadH5Ebsd::dataCheck()
       err = -1;
       QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg(dims[0] * dims[1] * dims[2]);
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), ss, -1);
+      PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       return;
     }
 
@@ -323,7 +330,8 @@ void ReadH5Ebsd::dataCheck()
       QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."\
                                " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[0]);
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), ss, -1);
+      PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       return;
     }
     /* ************ End Sanity Check *************************** */
@@ -359,7 +367,8 @@ void ReadH5Ebsd::dataCheck()
   {
     QString ss = QObject::tr("%1:  Original Data source could not be determined. It should be TSL or HKL").arg(getHumanLabel());
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -439,9 +448,10 @@ void ReadH5Ebsd::execute()
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
-      QString s = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg(dims[0] * dims[1] * dims[2]);
+      QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg(dims[0] * dims[1] * dims[2]);
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), s, -1);
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       return;
     }
 
@@ -451,7 +461,8 @@ void ReadH5Ebsd::execute()
       QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."\
                                " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[0]);
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), ss, -1);
+      PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       return;
     }
     /* ************ End Sanity Check *************************** */
@@ -487,10 +498,10 @@ void ReadH5Ebsd::execute()
   {
     setErrorCondition(-1);
 
-    QString msg = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
-                  .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
-    addErrorMessage(getHumanLabel(), msg, -1);
-    return;
+    QString ss = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
+        .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);    return;
   }
 
   // Sanity Check the Error Condition or the state of the EBSD Reader Object.
@@ -519,7 +530,7 @@ void ReadH5Ebsd::execute()
   {
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Loading Data from Ebsd Data file.", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return;
   }
 
@@ -538,10 +549,10 @@ void ReadH5Ebsd::execute()
   }
   else
   {
-    QString msg = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
-                  .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
-    addErrorMessage(getHumanLabel(), msg, -10001);
-    return;
+    QString ss = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
+        .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);    return;
   }
 
   if(m_UseTransformations == true)
@@ -555,7 +566,8 @@ void ReadH5Ebsd::execute()
       sampleAxis.z = m_SampleTransformationAxis[2];
 
       RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
-      rot_Sample->setObservers(this->getObservers());
+      connect(rot_Sample.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+                    this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
       rot_Sample->setDataContainerArray(getDataContainerArray());
       rot_Sample->setRotationAngle(m_SampleTransformationAngle);
       rot_Sample->setRotationAxis(sampleAxis);
@@ -571,7 +583,8 @@ void ReadH5Ebsd::execute()
       eulerAxis.z = m_EulerTransformationAxis[2];
 
       RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
-      rot_Euler->setObservers(this->getObservers());
+      connect(rot_Euler.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+                    this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
       rot_Euler->setDataContainerArray(getDataContainerArray());
       rot_Euler->setRotationAngle(m_EulerTransformationAngle);
       rot_Euler->setRotationAxis(eulerAxis);
@@ -581,7 +594,7 @@ void ReadH5Ebsd::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 
 // -----------------------------------------------------------------------------
@@ -646,7 +659,7 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "Could not Create H5AngVolumeReader object.", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return H5EbsdVolumeReader::NullPointer();
   }
   H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
@@ -655,7 +668,7 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return H5EbsdVolumeReader::NullPointer();
   }
   if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end())
@@ -682,7 +695,7 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHKLEbsdVolumeReader()
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "Could not Create H5CtfVolumeReader object.", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return H5EbsdVolumeReader::NullPointer();
   }
   H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
@@ -691,7 +704,7 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHKLEbsdVolumeReader()
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return H5EbsdVolumeReader::NullPointer();
   }
   if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end())
@@ -719,7 +732,7 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHEDMEbsdVolumeReader()
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "Could not Create H5MicVolumeReader object.", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return H5EbsdVolumeReader::NullPointer();
   }
   H5MicVolumeReader* micReader = dynamic_cast<H5MicVolumeReader*>(ebsdReader.get());
@@ -728,7 +741,7 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHEDMEbsdVolumeReader()
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     return H5EbsdVolumeReader::NullPointer();
   }
   if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end())

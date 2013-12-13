@@ -141,7 +141,7 @@ void FindMicroTextureRegions::execute()
   if(getErrorCondition() < 0) { return; }
 
   find_microtextureregions();
-  notifyStatusMessage("FindMicroTextureRegions Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindMicroTextureRegions Completed") );
 }
 
 // -----------------------------------------------------------------------------

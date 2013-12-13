@@ -67,6 +67,7 @@
  */
 class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(Hex2SqrConverter)
     DREAM3D_STATIC_NEW_MACRO(Hex2SqrConverter)

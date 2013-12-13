@@ -264,7 +264,8 @@ void SegmentBetaGrains::dataCheck()
   {
     setErrorCondition(0);
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-    find_cellquats->setObservers(this->getObservers());
+connect(find_cellquats, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) { find_cellquats->preflight(); }
     if(preflight == false) { find_cellquats->execute(); }
@@ -304,12 +305,13 @@ void SegmentBetaGrains::execute()
 {
   setErrorCondition(0);
   VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+    if(NULL == m)
+    {
+      setErrorCondition(-999);
+      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
+      return;
+    }
 
   int64_t totalPoints = m->getTotalPoints();
   m->resizeFeatureDataArrays(1);
@@ -381,7 +383,7 @@ void SegmentBetaGrains::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 
 
@@ -394,10 +396,10 @@ int SegmentBetaGrains::getSeed(size_t gnum)
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
-    setErrorCondition(-1);
-
     ss << " DataContainer was NULL";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), ss.str(), getErrorCondition(), PipelineMessage::Error);
+	emit filterGeneratedMessage(em);
     return -1;
   }
 

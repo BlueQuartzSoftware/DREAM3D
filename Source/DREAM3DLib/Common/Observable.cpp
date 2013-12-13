@@ -134,7 +134,7 @@ void Observable::notifyStatusMessage(QString statusDesc)
 // -----------------------------------------------------------------------------
 void Observable::notifyProgressValue(int statusVal)
 {
-  PipelineMessage statusValueUpdate(getNameOfClass(), "", 0, PipelineMessage::StatusValue, statusVal);
+  PipelineMessage statusValueUpdate(getNameOfClass(), "", 0, PipelineMessage::ProgressValue, statusVal);
   notifyMessage(statusValueUpdate);
 }
 
@@ -143,7 +143,7 @@ void Observable::notifyProgressValue(int statusVal)
 // -----------------------------------------------------------------------------
 void Observable::notifyStatusAndProgress(QString statusDesc, int statusVal)
 {
-  PipelineMessage statusUpdate(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessageAndValue, statusVal);
+  PipelineMessage statusUpdate(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessageAndProgressValue, statusVal);
   notifyMessage(statusUpdate);
 }
 

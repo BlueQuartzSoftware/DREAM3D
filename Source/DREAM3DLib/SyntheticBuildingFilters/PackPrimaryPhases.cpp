@@ -423,7 +423,8 @@ void PackPrimaryPhases::dataCheck()
   {
     QString ss = QObject::tr("Stats Array Not Initialized correctly");
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss, -308);
+    PipelineMessage em (getHumanLabel(), ss, -308, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
 }
@@ -436,7 +437,8 @@ void PackPrimaryPhases::preflight()
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Csv Output File Set and it was not.").arg(ClassName());
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-387);
   }
 
@@ -533,7 +535,7 @@ void PackPrimaryPhases::execute()
                                  "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n")
                      .arg(i).arg(i).arg(m_PhaseTypes[i]);
         PipelineMessage em (getHumanLabel(), ss, -666);
-        addErrorMessage(em);
+        emit filterGeneratedMessage(em);
         setErrorCondition(-666);
         return;
       }
@@ -548,7 +550,7 @@ void PackPrimaryPhases::execute()
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
   }
 
-  notifyStatusMessage("Packing Features - Initializing Volume");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Features - Initializing Volume") );
   // this initializes the arrays to hold the details of the locations of all of the features during packing
   initialize_packinggrid();
 
@@ -599,7 +601,8 @@ void PackPrimaryPhases::execute()
   if (getCancel() == true)
   {
     QString ss = QObject::tr("Filter Cancelled.");
-    notifyWarningMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -651,7 +654,8 @@ void PackPrimaryPhases::execute()
       if (getCancel() == true)
       {
         QString ss = QObject::tr("Filter Cancelled.");
-        notifyWarningMessage(ss, -1);
+        PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
         setErrorCondition(-1);
         return;
       }
@@ -700,7 +704,8 @@ void PackPrimaryPhases::execute()
         if (getCancel() == true)
         {
           QString ss = QObject::tr("Filter Cancelled.");
-          notifyWarningMessage(ss, -1);
+          PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
           setErrorCondition(-1);
           return;
         }
@@ -716,12 +721,13 @@ void PackPrimaryPhases::execute()
   {
 
     QString ss = QObject::tr("Filter Cancelled.");
-    notifyWarningMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
 
-  notifyStatusMessage("Initializing Neighbor Distributions");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Initializing Neighbor Distributions") );
 
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
@@ -774,7 +780,8 @@ void PackPrimaryPhases::execute()
   {
 
     QString ss = QObject::tr("Filter Cancelled.");
-    notifyWarningMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -835,13 +842,14 @@ void PackPrimaryPhases::execute()
     {
 
       QString ss = QObject::tr("Filter Cancelled.");
-      notifyWarningMessage(ss, -1);
+      PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       return;
     }
   }
 
-  notifyStatusMessage("Determining Neighbors");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Determining Neighbors") );
   progFeature = 0;
   progFeatureInc = totalFeatures * .01;
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
@@ -901,7 +909,8 @@ void PackPrimaryPhases::execute()
     {
 
       QString ss = QObject::tr("Filter Cancelled.");
-      notifyWarningMessage(ss, -1);
+      PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       setErrorCondition(-1);
       return;
     }
@@ -1040,7 +1049,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyStatusMessage("Packing Features - Feature Adjustment Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Features - Feature Adjustment Complete") );
 
   if(m_VtkOutputFile.isEmpty() == false)
   {
@@ -1051,28 +1060,29 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyStatusMessage("Packing Features - Assigning Voxels");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Features - Assigning Voxels") );
   assign_voxels();
   if (getCancel() == true) { return; }
 
-  notifyStatusMessage("Packing Features - Assigning Gaps");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Features - Assigning Gaps") );
   assign_gaps_only();
   if (getCancel() == true) { return; }
 
-  notifyStatusMessage("Packing Features - Cleaning Up Volume");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Features - Cleaning Up Volume") );
   //  cleanup_features();
   if (getCancel() == true) { return; }
 
-  notifyStatusMessage("Packing Features - Renumbering Features");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Features - Renumbering Features") );
   RenumberFeatures::Pointer renumber_features2 = RenumberFeatures::New();
-  renumber_features2->setObservers(this->getObservers());
+connect(renumber_features2.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features2->setDataContainerArray(getDataContainerArray());
   renumber_features2->execute();
   err = renumber_features2->getErrorCondition();
   if (err < 0)
   {
     setErrorCondition(renumber_features2->getErrorCondition());
-    addErrorMessages(renumber_features2->getPipelineMessages());
+
     return;
   }
 
@@ -1090,7 +1100,7 @@ void PackPrimaryPhases::execute()
   m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_NeighborhoodsArrayName);
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Packing Features Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Features Complete") );
 }
 
 // -----------------------------------------------------------------------------
@@ -1105,7 +1115,7 @@ int PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, bool* exclusionZones
   {
     qDebug() << "m_VtkOutputFile: " << m_VtkOutputFile << "\n";
     PipelineMessage em (getHumanLabel(), "Could not open Vtk File for writing from PackFeatures", -1);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-55);
     return -1;
   }
@@ -1824,7 +1834,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::assign_voxels()
 {
-  notifyStatusMessage("Assigning Voxels");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Assigning Voxels") );
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
@@ -1979,16 +1989,17 @@ void PackPrimaryPhases::assign_voxels()
     ellipfuncs[i] = -1.0;
   }
 
-  notifyStatusMessage("Assigning Voxels - Removing Included Features");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Assigning Voxels - Removing Included Features") );
   RenumberFeatures::Pointer renumber_features1 = RenumberFeatures::New();
-  renumber_features1->setObservers(this->getObservers());
+connect(renumber_features1.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features1->setDataContainerArray(getDataContainerArray());
   renumber_features1->execute();
   int err = renumber_features1->getErrorCondition();
   if (err < 0)
   {
     setErrorCondition(renumber_features1->getErrorCondition());
-    addErrorMessages(renumber_features1->getPipelineMessages());
+
     return;
   }
 
@@ -1999,7 +2010,8 @@ void PackPrimaryPhases::assign_voxels()
   {
 
     QString ss = QObject::tr("Filter Cancelled.");
-    notifyWarningMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -2021,7 +2033,7 @@ void PackPrimaryPhases::assign_voxels()
 
 void PackPrimaryPhases::assign_gaps_only()
 {
-  notifyStatusMessage("Assigning Gaps");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Assigning Gaps") );
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
@@ -2145,7 +2157,7 @@ void PackPrimaryPhases::assign_gaps_only()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::cleanup_features()
 {
-  notifyStatusMessage("Cleaning Up Features");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Cleaning Up Features") );
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
@@ -2407,7 +2419,8 @@ void PackPrimaryPhases::write_goal_attributes()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -2417,7 +2430,8 @@ void PackPrimaryPhases::write_goal_attributes()
   {
     QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
     setErrorCondition(-200);
-    notifyErrorMessage(msg, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 

@@ -221,6 +221,6 @@ void JumbleOrientations::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Jumbling Orientations Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Jumbling Orientations Complete") );
 }
 

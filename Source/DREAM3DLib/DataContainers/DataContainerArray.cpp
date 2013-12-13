@@ -35,7 +35,7 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerArray::DataContainerArray() :
-  Observable()
+  QObject()
 {
 
 }

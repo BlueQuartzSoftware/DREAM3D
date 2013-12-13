@@ -134,7 +134,7 @@ void ImportImageStack::dataCheck()
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
     setErrorCondition(-11);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
   }
   else
   {
@@ -164,7 +164,7 @@ void ImportImageStack::dataCheck()
       err = -1;
       QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), ss, err);
+      notifyErrorMessage(ss, err);
     }
 
     if(dims[0] > max || dims[1] > max || dims[2] > max)
@@ -173,7 +173,7 @@ void ImportImageStack::dataCheck()
       QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
                                " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), ss, err);
+      notifyErrorMessage(ss, err);
     }
     /* ************ End Sanity Check *************************** */
 
@@ -274,7 +274,7 @@ void ImportImageStack::execute()
     ++z;
     if(getCancel() == true)
     {
-      notifyStatusMessage("Conversion was Canceled");
+      emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Conversion was Canceled") );
       return;
     }
   }
@@ -282,6 +282,6 @@ void ImportImageStack::execute()
   m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(data->GetName(), data);
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

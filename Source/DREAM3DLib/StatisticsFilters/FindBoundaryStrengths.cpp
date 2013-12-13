@@ -144,15 +144,17 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh()
   // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
     setErrorCondition(-385);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
@@ -300,6 +302,6 @@ void FindBoundaryStrengths::execute()
     m_SurfaceMeshF7s[2 * i + 1] = F7_2;
   }
 
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 

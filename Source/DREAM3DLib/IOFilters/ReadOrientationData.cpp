@@ -151,13 +151,15 @@ void ReadOrientationData::dataCheck()
   {
     QString ss = QObject::tr("%1: Either the H5Ebsd file must exist or the Manufacturer must be set").arg(getHumanLabel());
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else if (m_InputFile.isEmpty() == false)
   {
@@ -254,7 +256,8 @@ void ReadOrientationData::dataCheck()
     {
       setErrorCondition(-997);
       QString ss = QObject::tr("The File extension '%1' was not recognized. Currently .ang or .ctf are the only recognized file extensions").arg(ext);
-      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       return;
     }
 
@@ -319,7 +322,7 @@ void ReadOrientationData::execute()
   }
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------

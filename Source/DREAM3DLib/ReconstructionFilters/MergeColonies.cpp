@@ -290,7 +290,8 @@ void MergeColonies::dataCheck()
   {
     QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
     setErrorCondition(-304);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   // Ensemble Data
@@ -322,10 +323,10 @@ void MergeColonies::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  notifyStatusMessage("Merging Colonies");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Merging Colonies") );
   merge_colonies();
 
-  notifyStatusMessage("Characterizing Colonies");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Characterizing Colonies") );
   characterize_colonies();
 
   //m_RandomizeParentIds = false;
@@ -386,7 +387,7 @@ void MergeColonies::execute()
     identify_globAlpha();
   }
 
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 
 // -----------------------------------------------------------------------------

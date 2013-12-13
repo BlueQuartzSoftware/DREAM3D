@@ -365,7 +365,7 @@ int VolumeDataContainer::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
   if(err < 0)
   {
 //    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Dimensions", err);
-//    addErrorMessage(em);
+//    emit filterGeneratedMessage(em);
 //    setErrorCondition(-151);
     return -1;
   }
@@ -374,7 +374,7 @@ int VolumeDataContainer::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
   if(err < 0)
   {
 //    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
-//    addErrorMessage(em);
+//    emit filterGeneratedMessage(em);
 //    setErrorCondition(-152);
     return -1;
   }
@@ -383,7 +383,7 @@ int VolumeDataContainer::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
   if(err < 0)
   {
 //    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Origin", err);
-//    addErrorMessage(em);
+//    emit filterGeneratedMessage(em);
 //    setErrorCondition(-153);
     return -1;
   }

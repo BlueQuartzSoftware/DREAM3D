@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
- * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors  
- * may be used to endorse or promote products derived from this software without  
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -165,7 +165,8 @@ void BridgeParentIdsStatisticsToFeatureIds::preflight()
   dataCheck();
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
-  rename_cell_array->setObservers(this->getObservers());
+  connect(rename_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   rename_cell_array->setDataContainerArray(getDataContainerArray());
   rename_cell_array->setMessagePrefix(getMessagePrefix());
   rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
@@ -175,12 +176,13 @@ void BridgeParentIdsStatisticsToFeatureIds::preflight()
   if (err1 < 0)
   {
     setErrorCondition(rename_cell_array->getErrorCondition());
-    addErrorMessages(rename_cell_array->getPipelineMessages());
+
     return;
   }
 
   LinkFeatureMapToCellArray::Pointer link_feature_map_to_cell_array = LinkFeatureMapToCellArray::New();
-  link_feature_map_to_cell_array->setObservers(this->getObservers());
+  connect(link_feature_map_to_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   link_feature_map_to_cell_array->setDataContainerArray(getDataContainerArray());
   link_feature_map_to_cell_array->setMessagePrefix(getMessagePrefix());
   link_feature_map_to_cell_array->setSelectedCellDataArrayName(m_FeatureIdsArrayName);
@@ -189,7 +191,7 @@ void BridgeParentIdsStatisticsToFeatureIds::preflight()
   if (err2 < 0)
   {
     setErrorCondition(link_feature_map_to_cell_array->getErrorCondition());
-    addErrorMessages(link_feature_map_to_cell_array->getPipelineMessages());
+
     return;
   }
 }
@@ -205,7 +207,8 @@ void BridgeParentIdsStatisticsToFeatureIds::execute()
   if(getErrorCondition() < 0) { return; }
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
-  rename_cell_array->setObservers(this->getObservers());
+  connect(rename_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   rename_cell_array->setDataContainerArray(getDataContainerArray());
   rename_cell_array->setMessagePrefix(getMessagePrefix());
   rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
@@ -215,12 +218,13 @@ void BridgeParentIdsStatisticsToFeatureIds::execute()
   if (err1 < 0)
   {
     setErrorCondition(rename_cell_array->getErrorCondition());
-    addErrorMessages(rename_cell_array->getPipelineMessages());
+
     return;
   }
 
   LinkFeatureMapToCellArray::Pointer link_feature_map_to_cell_array = LinkFeatureMapToCellArray::New();
-  link_feature_map_to_cell_array->setObservers(this->getObservers());
+  connect(link_feature_map_to_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   link_feature_map_to_cell_array->setDataContainerArray(getDataContainerArray());
   link_feature_map_to_cell_array->setMessagePrefix(getMessagePrefix());
   link_feature_map_to_cell_array->setSelectedCellDataArrayName(m_FeatureIdsArrayName);
@@ -229,10 +233,10 @@ void BridgeParentIdsStatisticsToFeatureIds::execute()
   if (err2 < 0)
   {
     setErrorCondition(link_feature_map_to_cell_array->getErrorCondition());
-    addErrorMessages(link_feature_map_to_cell_array->getPipelineMessages());
+
     return;
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("BridgeParentIdsStatisticsToFeatureIds Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "BridgeParentIdsStatisticsToFeatureIds Completed") );
 }

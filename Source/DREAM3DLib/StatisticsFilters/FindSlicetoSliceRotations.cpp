@@ -278,6 +278,6 @@ void FindSlicetoSliceRotations::execute()
     outFile << plane << "	" << inPlaneCount << "	" << inPlaneAngle << "	" << inPlaneAxisX << "	" << inPlaneAxisY << "	" << inPlaneAxisZ << "	" << outPlaneCount << "	" << outPlaneAngle << "	" << outPlaneAxisX << "	" << outPlaneAxisY << "	" << outPlaneAxisZ << "\n";
   }
 
-  notifyStatusMessage("FindSlicetoSliceRotations Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindSlicetoSliceRotations Completed") );
 }
 

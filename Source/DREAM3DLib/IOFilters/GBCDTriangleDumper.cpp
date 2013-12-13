@@ -123,7 +123,8 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
   if(getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-387);
   }
 
@@ -135,14 +136,16 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
     // We MUST have Nodes
   if(sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
@@ -203,7 +206,7 @@ void GBCDTriangleDumper::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   setErrorCondition(0);
-  notifyStatusMessage("Starting");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->getNumberOfTuples();
@@ -255,7 +258,7 @@ void GBCDTriangleDumper::execute()
   fclose(f);
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 

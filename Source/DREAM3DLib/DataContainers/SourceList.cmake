@@ -9,9 +9,18 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-set(DREAM3DLib_DataContainers_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainer.h
+# --------------------------------------------------------------------
+# Any Class that inherits from QObject, either directly or through the heirarchy needs to have its header listed here
+set(DREAM3DLib_DataContainers_Moc_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArray.h
+)
+# --------------------------------------------------------------------
+# Run Qts automoc program to generate some source files that get compiled
+QT4_WRAP_CPP( DREAM3DLib_DataContainers_Generated_MOC_SRCS ${DREAM3DLib_DataContainers_Moc_HDRS})
+
+set(DREAM3DLib_DataContainers_HDRS
+  ${DREAM3DLib_DataContainers_Moc_HDRS}  # Add the headers that get Moc'ed here so they show up in solutions/IDEs/Project files
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/EdgeDataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/SurfaceDataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexDataContainer.h
@@ -26,6 +35,7 @@ set(DREAM3DLib_DataContainers_HDRS
 )
 
 set(DREAM3DLib_DataContainers_SRCS
+  ${DREAM3DLib_DataContainers_Generated_MOC_SRCS}  # Add the generated source files here so they get compiled.
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/EdgeDataContainer.cpp
@@ -35,7 +45,11 @@ set(DREAM3DLib_DataContainers_SRCS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/AttributeMatrix.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexArray.cpp
 )
+
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/DataContainers" "${DREAM3DLib_DataContainers_HDRS}" "${DREAM3DLib_DataContainers_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/DREAM3DLib/DataContainers" "" "${DREAM3DLib_DataContainers_Generated_MOC_SRCS}" "0")
+
+
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_DataContainers_HDRS}
             DESTINATION include/DREAM3D/DataContainers

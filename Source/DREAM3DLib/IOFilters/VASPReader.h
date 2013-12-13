@@ -55,6 +55,7 @@
  */
 class DREAM3DLib_EXPORT VASPReader : public FileReader
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(VASPReader)
     DREAM3D_STATIC_NEW_MACRO(VASPReader)

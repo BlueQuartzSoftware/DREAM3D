@@ -129,7 +129,7 @@ void FindSurfaceFeatures::execute()
   if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_surfacefeatures(); }
   if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_surfacefeatures2D(); }
 
-  notifyStatusMessage("FindSurfaceFeatures Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindSurfaceFeatures Completed") );
 }
 
 // -----------------------------------------------------------------------------

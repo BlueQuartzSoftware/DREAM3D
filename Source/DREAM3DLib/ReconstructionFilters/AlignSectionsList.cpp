@@ -131,7 +131,8 @@ void AlignSectionsList::dataCheck()
   {
     QString ss = QObject::tr("The Input file name must be set before executing this filter.");
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
 
@@ -159,7 +160,7 @@ void AlignSectionsList::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Aligning Sections Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Aligning Sections Complete") );
 }
 
 

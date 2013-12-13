@@ -31,7 +31,7 @@
 #ifndef FILTERPIPELINE_H_
 #define FILTERPIPELINE_H_
 
-
+#include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QTextStream>
@@ -51,11 +51,13 @@
  * @date Sep 28, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FilterPipeline : public Observer
+class DREAM3DLib_EXPORT FilterPipeline : public QObject
 {
+    Q_OBJECT
+
   public:
     DREAM3D_SHARED_POINTERS(FilterPipeline)
-    DREAM3D_TYPE_MACRO_SUPER(FilterPipeline, Observer)
+    DREAM3D_TYPE_MACRO(FilterPipeline)
     DREAM3D_STATIC_NEW_MACRO(FilterPipeline)
 
     virtual ~FilterPipeline();
@@ -118,16 +120,32 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
 
     virtual void printFilterNames(QTextStream& out);
 
+    /**
+     * @brief This method adds a QObject based class that is capable of being connected with the following signals from
+     * AbstractFilter:
+     * @li filterGeneratedMessage(PipelineMessage&)
+     * @param obj Class that implements needed filterGeneratedMessage(PipelineMessage&) method
+     */
+    void addMessageReceiver(QObject* obj);
 
+    void connectFilterNotifications(QObject *filter);
+    void disconnectFilterNotifications(QObject* filter);
 
   protected:
     FilterPipeline();
+
+
     void updatePrevNextFilters();
 
+  signals:
+    void pipelineGeneratedMessage(PipelineMessage &message);
 
   private:
     bool m_Cancel;
     FilterContainerType  m_Pipeline;
+
+    QVector<QObject*> m_MessageReceivers;
+
 
     FilterPipeline(const FilterPipeline&); // Copy Constructor Not Implemented
     void operator=(const FilterPipeline&); // Operator '=' Not Implemented

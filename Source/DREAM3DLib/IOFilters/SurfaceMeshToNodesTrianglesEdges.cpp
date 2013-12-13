@@ -141,20 +141,23 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck()
 
   if(true == m_OutputNodesFile.isEmpty())
   {
-    addErrorMessage(getHumanLabel(), "The output Nodes file needs to be set", -380);
     setErrorCondition(-380);
+    PipelineMessage em (getHumanLabel(), "The output Nodes file needs to be set", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 #if WRITE_EDGES_FILE
   if(true == m_OutputEdgesFile.isEmpty())
   {
-    addErrorMessage(getHumanLabel(), "The output Edges file needs to be set", -381);
     setErrorCondition(-381);
+    PipelineMessage em (getHumanLabel(), "The output Edges file needs to be set", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 #endif
   if(true == m_OutputTrianglesFile.isEmpty())
   {
-    addErrorMessage(getHumanLabel(), "The output Triangles file needs to be set", -382);
     setErrorCondition(-382);
+    PipelineMessage em (getHumanLabel(), "The output Triangles file needs to be set", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
@@ -166,20 +169,23 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck()
 
   if (sm->getFaces().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -384);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   if (sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Vertices", -385);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Vertices", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 #if WRITE_EDGES_FILE
   IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
   if (edges.get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing DREAM3D::CellData::SurfaceMeshEdges Information", -386);
     setErrorCondition(-385);
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing DREAM3D::CellData::SurfaceMeshEdges Information", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 #endif
   QVector<int> dims(1, 2);
@@ -228,7 +234,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   // ++++++++++++++ Write the Nodes File +++++++++++++++++++++++++++++++++++++++++++
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  notifyStatusMessage("Writing Nodes Text File");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Nodes Text File") );
   QFileInfo fi(getOutputNodesFile());
   QDir parentPath = fi.path();
 
@@ -236,7 +242,8 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -259,14 +266,15 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
 #if WRITE_EDGES_FILE
   // ++++++++++++++ Write the Edges File +++++++++++++++++++++++++++++++++++++++++++
-  notifyStatusMessage("Writing Edges Text File");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Edges Text File") );
   parentPath = QFileInfo::parentPath(getOutputEdgesFile());
   QDir dir;
   if(!dir.mkpath(parentPath))
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -311,14 +319,15 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 #endif
 
   // ++++++++++++++ Write the Triangles File +++++++++++++++++++++++++++++++++++++++++++
-  notifyStatusMessage("Writing Triangles Text File");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Triangles Text File") );
   QFileInfo triFI(getOutputTrianglesFile());
   parentPath = triFI.path();
   if(!parentPath.mkpath("."))
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -353,6 +362,6 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   fclose(triFile);
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

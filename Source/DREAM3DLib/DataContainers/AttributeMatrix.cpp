@@ -226,7 +226,8 @@ int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
     if(err < 0)
     {
 //      ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
-//      addErrorMessage(getHumanLabel(), ss, err);
+//      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+//      emit filterGeneratedMessage(em);
 //      setErrorCondition(err);
       H5Gclose(parentId); // Close the Cell Group
       return err;

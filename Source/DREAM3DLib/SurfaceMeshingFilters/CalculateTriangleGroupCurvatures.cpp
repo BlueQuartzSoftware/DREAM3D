@@ -293,7 +293,6 @@ void CalculateTriangleGroupCurvatures::operator()() const
 
   } // End Loop over this triangle
 
-  m_ParentFilter->tbbTaskProgress();
 }
 
 // -----------------------------------------------------------------------------

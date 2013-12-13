@@ -52,6 +52,7 @@
  */
 class DREAM3DLib_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(TriangleCentroidFilter)
     DREAM3D_STATIC_NEW_MACRO(TriangleCentroidFilter)

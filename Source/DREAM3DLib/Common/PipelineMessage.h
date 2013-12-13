@@ -31,14 +31,11 @@
 #define _PIPELINEMESSAGE_H_
 
 #include <QtCore/QString>
-
+#include <QtCore/QMetaType>
 
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#if defined(QT_CORE_LIB)
-#include <QtCore/QMetaType>
-#endif
 
 /**
  * @class PipelineMessage PipelineMessage.h DREAM3DLib/Common/PipelineMessage.h
@@ -55,8 +52,8 @@ class PipelineMessage
     enum MessageType {Error,
                       Warning,
                       StatusMessage,
-                      StatusValue,
-                      StatusMessageAndValue,
+                      ProgressValue,
+                      StatusMessageAndProgressValue,
                       UnknownMessageType
                      };
 
@@ -78,28 +75,47 @@ class PipelineMessage
                     const char* msg,
                     int code,
                     MessageType msgType = UnknownMessageType,
-                    int status = -1) :
+                    int progress = -1) :
       m_FilterClassName(className),
       m_Msg(msg),
       m_Code(code),
       m_msgType(msgType),
-      m_Progress(status)
+      m_Progress(progress)
     {}
 
     PipelineMessage(const QString& className,
                     const QString& msg,
                     int code,
                     MessageType msgType = UnknownMessageType,
-                    int status = -1) :
+                    int progress = -1) :
       m_FilterClassName(className),
       m_FilterHumanLabel(""),
       m_Msg(msg),
       m_Code(code),
       m_msgType(msgType),
-      m_Progress(status)
+      m_Progress(progress)
     {
 
     }
+
+    static PipelineMessage CreateErrorMessage(const QString className, const QString msg, int code)
+    {
+      PipelineMessage em(className, msg, code, Error, -1);
+      return em;
+    }
+
+    static PipelineMessage CreateStatusMessage(const QString className, const QString msg)
+    {
+      PipelineMessage em(className, msg, 0, StatusMessage, -1);
+      return em;
+    }
+
+    static PipelineMessage CreateWarningMessage(const QString className, const QString msg, int code)
+    {
+      PipelineMessage em(className, msg, code, Warning, -1);
+      return em;
+    }
+
 
     DREAM3D_TYPE_MACRO(PipelineMessage)
 
@@ -130,9 +146,10 @@ class PipelineMessage
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(FilterClassName)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(FilterHumanLabel)
-  private:
-    QString m_FilterHumanLabel;
+
+    private:
+      QString m_FilterHumanLabel;
+
   public:
     void setFilterHumanLabel(const QString& s)
     {
@@ -225,8 +242,7 @@ class PipelineMessage
 
 };
 
-#if defined(QT_CORE_LIB)
-Q_DECLARE_METATYPE(PipelineMessage);
-#endif
+
+Q_DECLARE_METATYPE(PipelineMessage)
 
 #endif /* _PipelineMessage_H */

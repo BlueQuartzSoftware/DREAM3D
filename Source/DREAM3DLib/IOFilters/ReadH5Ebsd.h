@@ -70,6 +70,7 @@ class H5EbsdVolumeReader;
  */
 class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(ReadH5Ebsd)
     DREAM3D_STATIC_NEW_MACRO(ReadH5Ebsd)
@@ -195,7 +196,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       if (phases.size() == 0)
       {
         setErrorCondition(reader->getErrorCode());
-        addErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
+        notifyErrorMessage(reader->getErrorMessage(), getErrorCondition());
         return getErrorCondition();
       }
 

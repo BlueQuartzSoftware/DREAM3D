@@ -170,7 +170,7 @@ int VtkGrainIdWriter::writeFile()
   {
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Writing GrainId Vtk RectilinearGrid File", XXXX);
-    addErrorMessage(em);
+    emit filterGeneratedMessage(em);
   }
   return err;
 }

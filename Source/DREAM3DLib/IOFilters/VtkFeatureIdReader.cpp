@@ -131,13 +131,15 @@ void VtkFeatureIdReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
   QVector<int> dims(1, 1);
@@ -237,7 +239,8 @@ int VtkFeatureIdReader::readHeader()
 
     QString ss = QObject::tr("Input filename was empty%1(%2)").arg(__FILE__).arg(__LINE__);
     setErrorCondition(-51010);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return getErrorCondition();
   }
 
@@ -247,7 +250,8 @@ int VtkFeatureIdReader::readHeader()
   {
     QString msg = QObject::tr("Vtk file could not be opened: %1").arg(getInputFile());
     setErrorCondition(-100);
-    notifyErrorMessage(msg, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return -100;
   }
   QByteArray buf = instream.readLine(); // Read Line 1 - VTK Version Info
@@ -268,7 +272,8 @@ int VtkFeatureIdReader::readHeader()
 
     QString ss = QObject::tr("The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file.");
     setErrorCondition(-51030);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return getErrorCondition();
   }
   buf = instream.readLine(); // Read Line 4 - Type of Dataset
@@ -280,7 +285,8 @@ int VtkFeatureIdReader::readHeader()
 
       QString ss = QObject::tr("Error Reading the type of data set. Was expecting 2 features but got %1").arg(n);
       setErrorCondition(-51040);
-      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       return getErrorCondition();
     }
     QString dataset(&(text[16]));
@@ -350,7 +356,8 @@ int VtkFeatureIdReader::readFile()
   {
     QString msg = QObject::tr("Vtk file could not be opened: %1").arg(getInputFile());
     setErrorCondition(-100);
-    notifyErrorMessage(msg, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return -100;
   }
   QByteArray buf;
@@ -388,7 +395,8 @@ int VtkFeatureIdReader::readFile()
     {
 
       QString ss = QObject::tr("Error reading SCALARS header section of VTK file.");
-      addErrorMessage(getHumanLabel(), ss, -1);
+      PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
       return -1;
     }
     scalarName = QString(tokens[0]);

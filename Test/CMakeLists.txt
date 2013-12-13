@@ -65,6 +65,15 @@ macro(ADD_DREAM3D_TEST testname LIBRARIES)
   add_test(${testname} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${testname})
 endmacro()
 
+macro(ADD_DREAM3D_TEST_2 testname LIBRARIES SOURCES)
+  add_executable( ${testname} "${DREAM3DTest_SOURCE_DIR}/${testname}.cpp" ${SOURCES})
+  target_link_libraries( ${testname} "${LIBRARIES}")
+  set_target_properties( ${testname} PROPERTIES FOLDER Test)
+  add_test(${testname} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${testname})
+endmacro()
+
+QT4_WRAP_CPP( _moc_filter_source  GenerateFeatureIds.h)
+
 
 
 ADD_DREAM3D_TEST(H5LiteTest "H5Support")
@@ -74,7 +83,9 @@ ADD_DREAM3D_TEST(H5UtilitiesTest "H5Support")
 ADD_DREAM3D_TEST(QuaternionMathTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(OrientationMathTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(StructArrayTest  "DREAM3DLib")
-ADD_DREAM3D_TEST(DxIOTest  "DREAM3DLib")
+ADD_DREAM3D_TEST_2(DxIOTest  "DREAM3DLib" ${_moc_filter_source})
+
+
 ADD_DREAM3D_TEST(FilterPipelineTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(DataArrayTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(ErrorMessageTest  "DREAM3DLib")

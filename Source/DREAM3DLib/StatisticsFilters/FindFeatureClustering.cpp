@@ -125,7 +125,8 @@ void FindFeatureClustering::dataCheck()
     {
       QString ss = QObject::tr("Clustering Array Not Initialized at Beginning of FindFeatureClustering Filter");
       setErrorCondition(-308);
-      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     }
     m_ClusteringList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >
                        (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_ClusteringListArrayName).get());
@@ -163,7 +164,7 @@ void FindFeatureClustering::execute()
   if(getErrorCondition() < 0) { return; }
 
   find_clustering();
-  notifyStatusMessage("FindFeatureClustering Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindFeatureClustering Completed") );
 }
 
 // -----------------------------------------------------------------------------

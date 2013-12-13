@@ -277,14 +277,16 @@ void VerifyTriangleWinding::dataCheck()
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   QVector<int> dims(1, 2);
@@ -333,7 +335,8 @@ void VerifyTriangleWinding::execute()
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
     QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
     conn->setMessagePrefix(ss);
-    conn->setObservers(getObservers());
+connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     conn->setSurfaceMeshUniqueEdgesArrayName(getSurfaceMeshUniqueEdgesArrayName());
     conn->setDataContainerArray(getDataContainerArray());
     conn->setSurfaceDataContainerName(getSurfaceDataContainerName());
@@ -348,7 +351,7 @@ void VerifyTriangleWinding::execute()
   }
   if (getCancel() == true) { return; }
 
-  notifyStatusMessage("Generating Face List for each Node");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Generating Face List for each Node") );
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   bool clearMeshLinks = false;
@@ -371,7 +374,7 @@ void VerifyTriangleWinding::execute()
   }
 
   // Execute the actual verification step.
-  notifyStatusMessage("Generating Connectivity Complete. Starting Analysis");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Generating Connectivity Complete. Starting Analysis") );
   verifyTriangleWinding();
 
   // Clean up any arrays that were designated as temp
@@ -389,7 +392,7 @@ void VerifyTriangleWinding::execute()
     facesPtr->deleteFaceNeighbors();
   }
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 // -----------------------------------------------------------------------------
@@ -461,7 +464,8 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
   {
     ReverseTriangleWinding::Pointer reverse = ReverseTriangleWinding::New();
     reverse->setDataContainerArray(getDataContainerArray());
-    reverse->setObservers(getObservers());
+connect(reverse.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
     reverse->setMessagePrefix(getMessagePrefix());
     reverse->execute();
     if (reverse->getErrorCondition() < 0)

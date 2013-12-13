@@ -202,7 +202,7 @@ void FindAvgOrientations::execute()
     m_FeatureEulerAngles[3 * i + 1] = ea2;
     m_FeatureEulerAngles[3 * i + 2] = ea3;
   }
-  notifyStatusMessage("Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
 }
 
 

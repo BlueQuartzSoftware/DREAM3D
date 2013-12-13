@@ -503,6 +503,6 @@ void RotateSampleRefFrame::execute()
   m->setResolution(params.xResNew, params.yResNew, params.zResNew);
   m->setDimensions(params.xpNew, params.ypNew, params.zpNew);
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

@@ -206,7 +206,7 @@ void QHex2SqrConverterWidget::setupGui()
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
   m_InputDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString&)),
+  QObject::connect(com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_InputDir_textChanged(const QString&)));
 
   m_WidgetList << m_InputDir << m_InputDirBtn;

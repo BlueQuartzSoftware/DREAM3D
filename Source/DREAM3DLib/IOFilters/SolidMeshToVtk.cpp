@@ -124,26 +124,30 @@ void SolidMeshToVtk::dataCheck()
   if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
+    PipelineMessage em (getHumanLabel(), "Vtk Output file is Not set correctly", -1003, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   VolumeDataContainer* sm = getVolumeDataContainer();
   if (NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
     setErrorCondition(-384);
+    PipelineMessage em (getHumanLabel(), "VolumeDataContainer is missing", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
     //if (sm->getTetrahedrons().get() == NULL)
     //{
-    //    addErrorMessage(getHumanLabel(), "SolidMesh DataContainer missing Triangles", -383);
+    //    PipelineMessage em (getHumanLabel(), "SolidMesh DataContainer missing Triangles", -383, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     //    setErrorCondition(-384);
     //}
 
     //if (sm->getVertices().get() == NULL)
     //{
-    //    addErrorMessage(getHumanLabel(), "SolidMesh DataContainer missing Nodes", -384);
+    //    PipelineMessage em (getHumanLabel(), "SolidMesh DataContainer missing Nodes", -384, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     //    setErrorCondition(-384);
     //}
 
@@ -209,7 +213,8 @@ void SolidMeshToVtk::execute()
   {
     ss.str("");
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -222,7 +227,8 @@ void SolidMeshToVtk::execute()
   {
     ss.str("");
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
-    notifyErrorMessage(ss, -18542);
+    PipelineMessage em(getHumanLabel(), ss, -18542, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-18542);
     return;
   }
@@ -327,7 +333,7 @@ void SolidMeshToVtk::execute()
   fprintf(vtkFile, "\n");
 
   setErrorCondition(0);
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
   == == == =
 //  int err = 0;
 //
@@ -469,7 +475,7 @@ void SolidMeshToVtk::execute()
 //  fprintf(vtkFile, "\n");
 //
 //  setErrorCondition(0);
-//  notifyStatusMessage("Complete");
+//  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
     >>> >>> > develop
 }
 

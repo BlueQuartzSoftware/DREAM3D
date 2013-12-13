@@ -235,12 +235,12 @@ void QEbsdToH5EbsdWidget::setupGui()
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
   m_InputDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString&)),
+  QObject::connect(com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_InputDir_textChanged(const QString&)));
 
   QR3DFileCompleter* com1 = new QR3DFileCompleter(this, false);
   m_OutputFile->setCompleter(com1);
-  QObject::connect( com1, SIGNAL(activated(const QString&)),
+  QObject::connect(com1, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_OutputFile_textChanged(const QString&)));
 
   m_WidgetList << m_InputDir << m_InputDirBtn << m_OutputFile << m_OutputFileBtn;

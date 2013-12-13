@@ -134,7 +134,8 @@ void FeatureDataCSVWriter::dataCheck()
   if (getFeatureDataFile().isEmpty() == true)
   {
     QString ss = QObject::tr(": The output file must be set before executing this filter.");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-1);
   }
 
@@ -143,7 +144,7 @@ void FeatureDataCSVWriter::dataCheck()
   if (parentPath.exists() == false)
   {
     QString ss = QObject::tr("The directory path for the output file does not exist.");
-    addWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(ss, -1);
   }
   if (fi.suffix().compare("") == 0)
   {
@@ -179,7 +180,8 @@ void FeatureDataCSVWriter::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(ss, -1);
+    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     setErrorCondition(-1);
     return;
   }
@@ -190,7 +192,8 @@ void FeatureDataCSVWriter::execute()
   {
     QString ss = QObject::tr("Feature Data CSV Output file could not be opened: %1").arg(getFeatureDataFile());
     setErrorCondition(-100);
-    notifyErrorMessage(ss, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 
@@ -293,7 +296,7 @@ void FeatureDataCSVWriter::execute()
   file.close();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("FeatureDataCSVWriter Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FeatureDataCSVWriter Completed") );
 
 }
 

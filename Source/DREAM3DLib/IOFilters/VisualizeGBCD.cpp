@@ -172,7 +172,8 @@ void VisualizeGBCD::dataCheckSurfaceMesh()
   {
 
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
-    addErrorMessage(getHumanLabel(), ss, -1);
+    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
     setErrorCondition(-387);
   }
 
@@ -180,14 +181,16 @@ void VisualizeGBCD::dataCheckSurfaceMesh()
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
+    emit filterGeneratedMessage(em);
   }
   else
   {
@@ -195,7 +198,8 @@ void VisualizeGBCD::dataCheckSurfaceMesh()
     if (NULL == iDataArray.get())
     {
       setErrorCondition(-387);
-      addErrorMessage(getHumanLabel(), "The GBCD Array was not found in the Surface Mesh Ensemble Data. ", getErrorCondition());
+      PipelineMessage em (getHumanLabel(), "The GBCD Array was not found in the Surface Mesh Ensemble Data. ", getErrorCondition(), PipelineMessage::Error);
+      emit filterGeneratedMessage(em);
     }
     else
     {
@@ -233,7 +237,7 @@ void VisualizeGBCD::execute()
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
-  notifyStatusMessage("Starting");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
 
   VertexArray::Pointer nodesPtr = sm->getVertices();
 
@@ -483,7 +487,8 @@ void VisualizeGBCD::execute()
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     setErrorCondition(-998);
-    notifyErrorMessage(ss, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     return;
   }
 
@@ -494,7 +499,8 @@ void VisualizeGBCD::execute()
     {
 
       QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
-      notifyErrorMessage(ss, getErrorCondition());
+      PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
       return;
     }
 
@@ -545,6 +551,6 @@ void VisualizeGBCD::execute()
   }
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

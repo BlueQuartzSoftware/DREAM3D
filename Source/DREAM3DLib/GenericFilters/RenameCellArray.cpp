@@ -126,7 +126,8 @@ void RenameCellArray::dataCheck()
   {
     setErrorCondition(-11000);
     QString ss = QObject::tr("An array from the Volume DataContainer must be selected.");
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
   else
   {
@@ -134,7 +135,8 @@ void RenameCellArray::dataCheck()
     if(check == false)
     {
       QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
-      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
     }
   }
 }
@@ -166,9 +168,10 @@ void RenameCellArray::execute()
   {
     QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
     setErrorCondition(-11000);
-    notifyErrorMessage(ss, getErrorCondition());
+    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+emit filterGeneratedMessage(em);
   }
 
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 

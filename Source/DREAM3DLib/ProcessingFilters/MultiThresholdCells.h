@@ -52,6 +52,7 @@
  */
 class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(MultiThresholdCells)
     DREAM3D_STATIC_NEW_MACRO(MultiThresholdCells)

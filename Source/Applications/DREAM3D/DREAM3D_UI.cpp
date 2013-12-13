@@ -325,7 +325,7 @@ void DREAM3D_UI::checkForUpdatesAtStartup()
 {
   m_UpdateCheck = new UpdateCheck(this);
 
-  connect( m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ),
+  connect(m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ),
            this, SLOT( versionCheckReply(UpdateCheckData*) ) );
 
   m_UpdateCheck->checkVersion(Detail::UpdateWebSite);

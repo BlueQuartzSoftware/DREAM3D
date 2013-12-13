@@ -176,7 +176,8 @@ void MinSize::preflight()
   if(getErrorCondition() < 0) { return; }
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
-  renumber_features->setObservers(this->getObservers());
+connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->preflight();
@@ -184,7 +185,7 @@ void MinSize::preflight()
   if (err < 0)
   {
     setErrorCondition(renumber_features->getErrorCondition());
-    addErrorMessages(renumber_features->getPipelineMessages());
+
     return;
   }
 }
@@ -203,7 +204,8 @@ void MinSize::execute()
   assign_badpoints();
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
-  renumber_features->setObservers(this->getObservers());
+connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->execute();
@@ -211,12 +213,12 @@ void MinSize::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_features->getErrorCondition());
-    addErrorMessages(renumber_features->getPipelineMessages());
+
     return;
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Minimum Size Filter Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Minimum Size Filter Complete") );
 }
 
 // -----------------------------------------------------------------------------

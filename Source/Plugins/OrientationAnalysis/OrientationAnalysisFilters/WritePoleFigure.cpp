@@ -249,18 +249,18 @@ void WritePoleFigure::dataCheck()
   if (m_OutputPath.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
+    notifyErrorMessage("Output Directory is Not set correctly", getErrorCondition());
   }
   else if (path.exists() == false)
   {
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.");
-    addWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(ss, -1);
   }
 
   if(m_CellEulerAnglesArrayName.isEmpty() == true)
   {
     setErrorCondition(-1004);
-    addErrorMessage(getHumanLabel(), "Input Euler Array name is empty", getErrorCondition());
+    notifyErrorMessage("Input Euler Array name is empty", getErrorCondition());
   }
   else
   {
@@ -436,19 +436,19 @@ void WritePoleFigure::execute()
         break;
       case Ebsd::CrystalStructure::Trigonal_High:
         //   figures = makePoleFigures<TrigonalOps>(config);
-        addWarningMessage(getHumanLabel(), "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+        notifyWarningMessage("Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Trigonal_Low:
         //  figures = makePoleFigures<TrigonalLowOps>(config);
-        addWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+        notifyWarningMessage("Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Tetragonal_High:
         //  figures = makePoleFigures<TetragonalOps>(config);
-        addWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+        notifyWarningMessage("Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Tetragonal_Low:
         //  figures = makePoleFigures<TetragonalLowOps>(config);
-        addWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+        notifyWarningMessage("Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::OrthoRhombic:
         figures = makePoleFigures<OrthoRhombicOps>(config);
@@ -473,7 +473,7 @@ void WritePoleFigure::execute()
 
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
 }
 
 
@@ -505,7 +505,7 @@ QString WritePoleFigure::generateVtkPath( QString label)
 void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType* poleFigurePtr, int dimension)
 {
 
-  notifyStatusMessage("Writing VTK File");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing VTK File") );
 
   size_t dims[3] = {dimension, dimension, 1};
   float res[3] = {  2.0 / (float)(dimension),

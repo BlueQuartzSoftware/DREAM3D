@@ -258,6 +258,6 @@ void FindKernelAvgMisorientations::execute()
     }
   }
 
-  notifyStatusMessage("FindKernelAvgMisorientations Completed");
+  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindKernelAvgMisorientations Completed") );
 }
 

@@ -83,7 +83,6 @@ int main(int argc, char** argv)
   binaryReader->setBinaryNodesFile(nodesFileName);
   binaryReader->setBinaryTrianglesFile(trianglesFileName);
   binaryReader->setMessagePrefix(binaryReader->getNameOfClass());
-  binaryReader->addObserver(&observer);
   binaryReader->setDataContainerArray(dca);
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
@@ -109,7 +108,6 @@ int main(int argc, char** argv)
 
   filter->setDataContainerArray(dca);
   filter->setMessagePrefix(filter->getNameOfClass());
-  filter->addObserver(&observer);
   filter->setIterationSteps(50);
   filter->execute();
   // END_CLOCK("Laplacian Filter");

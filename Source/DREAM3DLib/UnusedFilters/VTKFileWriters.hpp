@@ -88,6 +88,7 @@ m_msgType* valuePtr = NULL;\
  */
 class VtkScalarWriter : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     VtkScalarWriter() : AbstractFilter(), m_WriteBinaryFiles(true), m_ErrorCondition(0) {}
     DREAM3D_TYPE_MACRO(VtkScalarWriter)
@@ -349,6 +350,7 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
  */
 class VTKRectilinearGridFileWriter : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(VTKRectilinearGridFileWriter)
     DREAM3D_STATIC_NEW_MACRO(VTKRectilinearGridFileWriter)
@@ -536,6 +538,7 @@ class VTKStructuredPointsFileWriter
  */
 class VtkMiscFileWriter : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(VtkMiscFileWriter)
     DREAM3D_STATIC_NEW_MACRO(VtkMiscFileWriter)

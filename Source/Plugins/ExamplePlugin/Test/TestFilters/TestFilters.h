@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------------
 class Filt0 : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(Filt0);
     DREAM3D_STATIC_NEW_MACRO(Filt0);
@@ -101,6 +102,7 @@ class Filt0 : public AbstractFilter
 // -----------------------------------------------------------------------------
 class Filt1 : public AbstractFilter
 {
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(Filt1);
     DREAM3D_STATIC_NEW_MACRO(Filt1);
