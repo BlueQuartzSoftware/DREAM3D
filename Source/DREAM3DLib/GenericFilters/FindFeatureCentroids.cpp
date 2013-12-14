@@ -139,7 +139,7 @@ void FindFeatureCentroids::execute()
 
   find_centroids();
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

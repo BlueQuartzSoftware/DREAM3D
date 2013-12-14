@@ -98,21 +98,38 @@ class PipelineMessage
 
     }
 
-    static PipelineMessage CreateErrorMessage(const QString className, const QString msg, int code)
+    PipelineMessage(const QString& className,
+                    const QString& humanLabel,
+                    const QString& msg,
+                    int code,
+                    MessageType msgType = UnknownMessageType,
+                    int progress = -1) :
+      m_FilterClassName(className),
+      m_FilterHumanLabel(humanLabel),
+      m_Msg(msg),
+      m_Code(code),
+      m_msgType(msgType),
+      m_Progress(progress)
     {
-      PipelineMessage em(className, msg, code, Error, -1);
+
+    }
+
+
+    static PipelineMessage CreateErrorMessage(const QString className, const QString humanLabel, const QString msg, int code)
+    {
+      PipelineMessage em(className, humanLabel, msg, code, Error, -1);
       return em;
     }
 
-    static PipelineMessage CreateStatusMessage(const QString className, const QString msg)
+    static PipelineMessage CreateStatusMessage(const QString className, const QString humanLabel, const QString msg)
     {
-      PipelineMessage em(className, msg, 0, StatusMessage, -1);
+      PipelineMessage em(className, humanLabel, msg, 0, StatusMessage, -1);
       return em;
     }
 
-    static PipelineMessage CreateWarningMessage(const QString className, const QString msg, int code)
+    static PipelineMessage CreateWarningMessage(const QString className, const QString humanLabel, const QString msg, int code)
     {
-      PipelineMessage em(className, msg, code, Warning, -1);
+      PipelineMessage em(className, humanLabel,  msg, code, Warning, -1);
       return em;
     }
 
@@ -147,10 +164,8 @@ class PipelineMessage
 
     DREAM3D_INSTANCE_STRING_PROPERTY(FilterClassName)
 
-    private:
-      QString m_FilterHumanLabel;
 
-  public:
+
     void setFilterHumanLabel(const QString& s)
     {
       m_FilterHumanLabel = s;
@@ -234,7 +249,9 @@ class PipelineMessage
       return ss;
     }
 
+
   private:
+    QString m_FilterHumanLabel;
     QString m_Msg;          // Message Text
     int m_Code;                 // Error/Warning Code
     MessageType m_msgType;      // Type of Message (see enumeration "MessageType")

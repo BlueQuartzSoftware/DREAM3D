@@ -58,7 +58,7 @@
  */
 class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(LaplacianSmoothing)
     DREAM3D_STATIC_NEW_MACRO(LaplacianSmoothing)

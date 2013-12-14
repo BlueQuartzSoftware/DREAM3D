@@ -178,8 +178,7 @@ void FindAxisODF::execute()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
   setErrorCondition(0);
@@ -252,6 +251,6 @@ void FindAxisODF::execute()
     }
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 

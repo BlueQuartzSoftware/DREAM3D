@@ -196,8 +196,7 @@ void ScaleVolume::dataCheck()
     if(sm->getVertices().get() == NULL)
     {
       setErrorCondition(-384);
-      PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
     }
   }
 }
@@ -242,7 +241,7 @@ void ScaleVolume::execute()
     updateSurfaceMesh();
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -256,7 +255,7 @@ void ScaleVolume::updateSurfaceMesh()
   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   setErrorCondition(0);
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
+  notifyStatusMessage(getHumanLabel(), "Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;

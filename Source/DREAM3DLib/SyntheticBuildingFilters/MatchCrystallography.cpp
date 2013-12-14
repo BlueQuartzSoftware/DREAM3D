@@ -194,8 +194,7 @@ void MatchCrystallography::dataCheck()
 
     QString ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -207,8 +206,7 @@ void MatchCrystallography::dataCheck()
 
     QString ss = QObject::tr("'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
     setErrorCondition(-306);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -220,8 +218,7 @@ void MatchCrystallography::dataCheck()
 
     QString ss = QObject::tr("'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
     setErrorCondition(-310);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -272,11 +269,11 @@ void MatchCrystallography::execute()
 
   QString ss;
   ss = QObject::tr("Determining Volumes");
-  notifyStatusMessage(ss);
+  notifyStatusMessage(getHumanLabel(), ss);
   determine_volumes();
 
   ss = QObject::tr("Determining Boundary Areas");
-  notifyStatusMessage(ss);
+  notifyStatusMessage(getHumanLabel(), ss);
   determine_boundary_areas();
 
   for (int64_t i = 1; i < totalEnsembles; ++i)
@@ -284,25 +281,25 @@ void MatchCrystallography::execute()
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase ||  m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       ss = QObject::tr("Initializing Arrays of Phase ").arg(i);
-      emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Initializing Arrays") );
+      notifyStatusMessage(getHumanLabel(), "Initializing Arrays");
       initializeArrays(i);
 
       ss = QObject::tr("Assigning Eulers to Phase ").arg(i);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
       assign_eulers(i);
 
       ss = QObject::tr("Measuring Misorientations of Phase ").arg(i);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
       measure_misorientations(i);
 
       ss = QObject::tr("Matching Crystallography of Phase ").arg(i);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
       matchCrystallography(i);
     }
   }
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -333,8 +330,7 @@ void MatchCrystallography::initializeArrays(int ensem)
     setErrorCondition(-55000);
     QString ss;
     ss = QObject::tr("Improper PhaseType for MatchCrystallography");
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -574,7 +570,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
   while (badtrycount < (m_MaxIterations / 10) && iterations < m_MaxIterations)
   {
     QString ss = QObject::tr("Matching Crystallography - Swapping/Switching Orientations - %1% Complete").arg(((float)iterations / float(1000 * totalFeatures)) * 100);
-    //      notifyStatusMessage(ss);
+    //      notifyStatusMessage(getHumanLabel(), ss);
     currentodferror = 0;
     currentmdferror = 0;
     for (int i = 0; i < numbins; i++)

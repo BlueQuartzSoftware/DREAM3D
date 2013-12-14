@@ -384,16 +384,14 @@ void FindGBCD::dataCheckSurfaceMesh()
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
   else
   {
@@ -472,7 +470,7 @@ void FindGBCD::execute()
   dataCheckVoxel();
   if(getErrorCondition() < 0) { return; }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
+  notifyStatusMessage(getHumanLabel(), "Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -621,7 +619,7 @@ void FindGBCD::execute()
       numIterationsPerTime = i - lastIteration;
       lastIteration = i;
     }
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
 
     for(int j = 0; j < faceChunkSize; j++)
     {
@@ -636,7 +634,7 @@ void FindGBCD::execute()
   }
 
   ss = QObject::tr("Starting GBCD Normalization");
-  notifyStatusMessage(ss);
+  notifyStatusMessage(getHumanLabel(), ss);
 
   int totalBins = m_GBCDsizes[0] * m_GBCDsizes[1] * m_GBCDsizes[2] * m_GBCDsizes[3] * m_GBCDsizes[4];
   double MRDfactor[2] = {double(totalBins) / totalFaceArea[0], double(totalBins) / totalFaceArea[1]};
@@ -647,7 +645,7 @@ void FindGBCD::execute()
   }
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

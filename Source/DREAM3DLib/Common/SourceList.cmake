@@ -14,6 +14,8 @@
 set(DREAM3DLib_Common_Moc_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
 )
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
@@ -34,8 +36,8 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/IFilterFactory.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjection.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjectionArray.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
+
+
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PipelineMessage.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ScopedFileMonitor.hpp

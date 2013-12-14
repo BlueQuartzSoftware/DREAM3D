@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
- * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors  
- * may be used to endorse or promote products derived from this software without  
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -60,7 +60,7 @@
  */
 class DREAM3DLib_EXPORT FitCorrelatedFeatureData : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(FitCorrelatedFeatureData)
     DREAM3D_STATIC_NEW_MACRO(FitCorrelatedFeatureData)

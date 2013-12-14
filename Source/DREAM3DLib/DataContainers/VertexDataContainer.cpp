@@ -93,7 +93,7 @@ int VertexDataContainer::writeVerticesToHDF5(hid_t dcGid)
     if (err < 0)
     {
 //      setErrorCondition(err);
-//      notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
+//      notifyErrorMessage(getHumanLabel(), "Error Writing Face List to DREAM3D file", getErrorCondition());
     }
   }
   return err;
@@ -191,7 +191,7 @@ int VertexDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
       if (err < 0)
       {
 //        setErrorCondition(err);
-//        notifyErrorMessage("Error Reading Vertex List from DREAM3D file", getErrorCondition());
+//        notifyErrorMessage(getHumanLabel(), "Error Reading Vertex List from DREAM3D file", getErrorCondition());
         return err;
       }
       setVertices(verticesPtr);

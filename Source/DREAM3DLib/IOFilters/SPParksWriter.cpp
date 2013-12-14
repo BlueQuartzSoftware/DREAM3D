@@ -241,7 +241,7 @@ int SPParksWriter::writeFile()
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
         ss << " Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-        notifyStatusMessage( buf );
+        notifyStatusMessage(getHumanLabel(),  buf );
         millis = QDateTime::currentMSecsSinceEpoch();
       }
     }
@@ -250,7 +250,7 @@ int SPParksWriter::writeFile()
   outfile.close();
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Ph File Complete") );
+  notifyStatusMessage(getHumanLabel(), "Writing Ph File Complete");
   return 0;
 }
 

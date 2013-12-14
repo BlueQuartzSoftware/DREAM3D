@@ -179,7 +179,7 @@ void AddBadData::execute()
   add_noise();
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "AddBadDatas Completed") );
+  notifyStatusMessage(getHumanLabel(), "AddBadDatas Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -187,7 +187,7 @@ void AddBadData::execute()
 // -----------------------------------------------------------------------------
 void  AddBadData::add_noise()
 {
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Adding Noise") );
+  notifyStatusMessage(getHumanLabel(), "Adding Noise");
   DREAM3D_RANDOMNG_NEW()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());

@@ -56,13 +56,14 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DREAM3DPluginFrame.h"
-#include "QtSupport/DREAM3DPluginInterface.h"
+
 #include "QtSupport/HelpDialog.h"
 #include "QtSupport/DREAM3DUpdateCheckDialog.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"

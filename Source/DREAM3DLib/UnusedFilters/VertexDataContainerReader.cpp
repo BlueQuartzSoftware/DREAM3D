@@ -80,15 +80,13 @@ void VertexDataContainerReader::dataCheck()
   if(NULL == dc)
   {
     setErrorCondition(-383);
-    PipelineMessage em (getHumanLabel(), "Vertex DataContainer is NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "Vertex DataContainer is NULL", getErrorCondition());
     return;
   }
   if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
   else if (preflight == true)
   {
@@ -132,8 +130,7 @@ void VertexDataContainerReader::execute()
   if(NULL == dc)
   {
     setErrorCondition(-999);
-    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
 
@@ -151,7 +148,7 @@ void VertexDataContainerReader::execute()
   setErrorCondition(err);
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -175,8 +172,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
   {
     QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -185,8 +181,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
   {
     QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::Defaults::VertexDataContainerName);
     setErrorCondition(-61);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -61;
   }
 
@@ -275,7 +270,7 @@ int VertexDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
       if (err < 0)
       {
         setErrorCondition(err);
-        notifyErrorMessage("Error Reading Vertex List from DREAM3D file", getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), "Error Reading Vertex List from DREAM3D file", getErrorCondition());
         return err;
       }
       dc->setVertices(verticesPtr);

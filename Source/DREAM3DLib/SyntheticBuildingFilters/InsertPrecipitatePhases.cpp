@@ -262,8 +262,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     QString ss = QObject::tr("Stats Array Not Initialized At Beginning Correctly");
     setErrorCondition(-308);
-    PipelineMessage em (getHumanLabel(), ss, -308, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -308);
   }
 }
 
@@ -277,8 +276,7 @@ void InsertPrecipitatePhases::preflight()
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Csv Output File Set and it was not.").arg(ClassName());
-    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 }
@@ -307,7 +305,7 @@ void InsertPrecipitatePhases::execute()
 
   totalvol = sizex * sizey * sizez;
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Precipitates - Generating and Placing Precipitates") );
+  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Generating and Placing Precipitates");
 // this initializes the arrays to hold the details of the locations of all of the features during packing
   Int32ArrayType::Pointer featureOwnersPtr = initialize_packinggrid();
   // Get a pointer to the Feature Owners that was just initialized in the initialize_packinggrid() method
@@ -316,13 +314,13 @@ void InsertPrecipitatePhases::execute()
 
   place_precipitates(featureOwnersPtr);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Precipitates - Assigning Voxels") );
+  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Assigning Voxels");
   assign_voxels();
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Precipitates - Renumbering Features") );
+  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Renumbering Features");
   RenumberFeatures::Pointer renumber_features1 = RenumberFeatures::New();
   connect(renumber_features1.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   renumber_features1->setDataContainerArray(getDataContainerArray());
   renumber_features1->execute();
   err = renumber_features1->getErrorCondition();
@@ -339,16 +337,16 @@ void InsertPrecipitatePhases::execute()
 
   dataCheck();
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Precipitates - Filling Gaps") );
+  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Filling Gaps");
   assign_gaps();
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Precipitates - Cleaning Up Volume") );
+  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Cleaning Up Volume");
   cleanup_features();
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Precipitates - Renumbering Features") );
+  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Renumbering Features");
   RenumberFeatures::Pointer renumber_features2 = RenumberFeatures::New();
   connect(renumber_features2.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   renumber_features2->setDataContainerArray(getDataContainerArray());
   renumber_features2->execute();
   err = renumber_features2->getErrorCondition();
@@ -373,7 +371,7 @@ void InsertPrecipitatePhases::execute()
   m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_NumCellsArrayName);
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "InsertPrecipitatePhases Completed") );
+  notifyStatusMessage(getHumanLabel(), "InsertPrecipitatePhases Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -389,7 +387,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     writeErrorFile = true;
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Placing Precipitates") );
+  notifyStatusMessage(getHumanLabel(), "Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -502,7 +500,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
       {
         QString ss = QObject::tr("Packing Precipitates - Generating Feature #%1").arg(currentnumfeatures);
-        notifyStatusMessage(ss);
+        notifyStatusMessage(getHumanLabel(), ss);
 
         m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(currentnumfeatures + 1);
         dataCheck();
@@ -580,7 +578,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   {
 
     QString ss = QObject::tr("Packing Precipitates - Placing Precipitate #%1").arg(i);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
 
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
     precipboundaryfraction = pp->getPrecipBoundaryFraction();
@@ -660,7 +658,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     outFile << "\n\n";
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete") );
+  notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
 
 
   // begin swaping/moving/adding/removing features to try to improve packing
@@ -670,7 +668,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 
     QString ss;
     ss = QObject::tr("Packing Features - Swapping/Moving/Adding/Removing Features Iteration %1/%2").arg(iteration).arg(totalAdjustments);
-    if(iteration % 100 == 0) { notifyStatusMessage(ss); }
+    if(iteration % 100 == 0) { notifyStatusMessage(getHumanLabel(), ss); }
 
     //    change1 = 0;
     //    change2 = 0;
@@ -1312,7 +1310,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 
 void InsertPrecipitatePhases::assign_voxels()
 {
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Assigning Voxels") );
+  notifyStatusMessage(getHumanLabel(), "Assigning Voxels");
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
@@ -1490,7 +1488,7 @@ void InsertPrecipitatePhases::assign_voxels()
 
 void InsertPrecipitatePhases::assign_gaps()
 {
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Assigning Gaps") );
+  notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
@@ -1670,7 +1668,7 @@ void InsertPrecipitatePhases::assign_gaps()
 }
 void InsertPrecipitatePhases::cleanup_features()
 {
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Cleaning Up Features") );
+  notifyStatusMessage(getHumanLabel(), "Cleaning Up Features");
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
@@ -1896,8 +1894,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -1908,8 +1905,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   {
     QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
     setErrorCondition(-200);
-    PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
     return;
   }
 
@@ -1966,7 +1962,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
     if (((float)i / numTuples) * 100.0f > threshold)
     {
       QString ss = QObject::tr("Writing Feature Data - %1% Complete").arg(((float)i / numTuples) * 100);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f)
       {

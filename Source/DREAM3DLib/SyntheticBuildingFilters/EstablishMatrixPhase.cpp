@@ -139,8 +139,7 @@ void EstablishMatrixPhase::dataCheck()
   {
     QString ss = QObject::tr("Stats Array Not Initialized Correctly");
     setErrorCondition(-308);
-    PipelineMessage em (getHumanLabel(), ss, -308, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -308);
   }
 }
 
@@ -169,7 +168,7 @@ void EstablishMatrixPhase::execute()
   establish_matrix();
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "EstablishMatrixPhases Completed") );
+  notifyStatusMessage(getHumanLabel(), "EstablishMatrixPhases Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -177,7 +176,7 @@ void EstablishMatrixPhase::execute()
 // -----------------------------------------------------------------------------
 void  EstablishMatrixPhase::establish_matrix()
 {
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Establishing Matrix") );
+  notifyStatusMessage(getHumanLabel(), "Establishing Matrix");
   DREAM3D_RANDOMNG_NEW()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());

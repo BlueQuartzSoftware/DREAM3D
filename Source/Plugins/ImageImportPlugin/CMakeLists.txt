@@ -86,6 +86,7 @@ cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_N
 set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PLUGIN_NAME}Filters.h)
 set(AllFilterWidgetsHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetHeaders.h)
 set(RegisterKnownFilterWidgetsFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/RegisterKnownFilterWidgets.cpp)
+set(RegisterKnownFiltersFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/RegisterKnownFilters.cpp)
 
 #--------------------------
 include_directories( ${HDF5_INCLUDE_DIR} )

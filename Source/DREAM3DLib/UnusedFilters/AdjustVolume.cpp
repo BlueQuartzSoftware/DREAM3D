@@ -145,8 +145,7 @@ void AdjustVolume::execute()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
@@ -219,7 +218,7 @@ void AdjustVolume::execute()
   {
 
     ss << "Adjusting Grain Boundaries - " << ((float)iterations / m_MaxIterations) * 100 << "Percent Complete";
-    notifyStatusMessage(ss.str());
+    notifyStatusMessage(getHumanLabel(), ss.str());
     iterations++;
     good = 0;
     while (good == 0)
@@ -337,6 +336,6 @@ void AdjustVolume::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Adjusting Grain Boundaries Complete") );
+  notifyStatusMessage(getHumanLabel(), "Adjusting Grain Boundaries Complete");
 }
 

@@ -249,18 +249,18 @@ void WritePoleFigure::dataCheck()
   if (m_OutputPath.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    notifyErrorMessage("Output Directory is Not set correctly", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
   }
   else if (path.exists() == false)
   {
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.");
-    notifyWarningMessage(ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
   if(m_CellEulerAnglesArrayName.isEmpty() == true)
   {
     setErrorCondition(-1004);
-    notifyErrorMessage("Input Euler Array name is empty", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Input Euler Array name is empty", getErrorCondition());
   }
   else
   {
@@ -327,7 +327,7 @@ void WritePoleFigure::execute()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(getHumanLabel(), "The Voxel DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -345,7 +345,7 @@ void WritePoleFigure::execute()
   if(!path.mkpath(".") )
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(path.absolutePath());
-    notifyErrorMessage(ss, -1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -436,19 +436,19 @@ void WritePoleFigure::execute()
         break;
       case Ebsd::CrystalStructure::Trigonal_High:
         //   figures = makePoleFigures<TrigonalOps>(config);
-        notifyWarningMessage("Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+        notifyWarningMessage(getHumanLabel(), "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Trigonal_Low:
         //  figures = makePoleFigures<TrigonalLowOps>(config);
-        notifyWarningMessage("Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+        notifyWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Tetragonal_High:
         //  figures = makePoleFigures<TetragonalOps>(config);
-        notifyWarningMessage("Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+        notifyWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Tetragonal_Low:
         //  figures = makePoleFigures<TetragonalLowOps>(config);
-        notifyWarningMessage("Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+        notifyWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::OrthoRhombic:
         figures = makePoleFigures<OrthoRhombicOps>(config);
@@ -473,7 +473,7 @@ void WritePoleFigure::execute()
 
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 
@@ -505,7 +505,7 @@ QString WritePoleFigure::generateVtkPath( QString label)
 void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType* poleFigurePtr, int dimension)
 {
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing VTK File") );
+  notifyStatusMessage(getHumanLabel(), "Writing VTK File");
 
   size_t dims[3] = {dimension, dimension, 1};
   float res[3] = {  2.0 / (float)(dimension),
@@ -517,7 +517,7 @@ void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType* pole
   if (err < 0)
   {
     setErrorCondition(-99003);
-    notifyErrorMessage("Error writing the VTK file for the Pole Figure", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error writing the VTK file for the Pole Figure", getErrorCondition());
   }
 }
 
@@ -530,7 +530,7 @@ void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType* pole
 void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dimension, QString label)
 {
   QString ss = QObject::tr("Writing Image %1").arg(outputPath);
-  notifyStatusMessage(ss);
+  notifyStatusMessage(getHumanLabel(), ss);
 
   QString filename = generateImagePath(label);
   bool saved = image.save(filename);
@@ -538,7 +538,7 @@ void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dim
   {
     setErrorCondition(-90011);
     QString ss = QObject::tr("The Pole Figure image file '%1' was not saved.").arg(filename);
-    notifyErrorMessage(ss, getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 

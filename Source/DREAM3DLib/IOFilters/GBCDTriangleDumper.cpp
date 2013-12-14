@@ -123,8 +123,7 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
   if(getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
-    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
@@ -137,15 +136,13 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
   else
   {
@@ -206,7 +203,7 @@ void GBCDTriangleDumper::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   setErrorCondition(0);
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
+  notifyStatusMessage(getHumanLabel(), "Starting");
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->getNumberOfTuples();
@@ -215,7 +212,7 @@ void GBCDTriangleDumper::execute()
   if (NULL == f)
   {
     setErrorCondition(-87000);
-    notifyErrorMessage("Could not open Output file for writing.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Could not open Output file for writing.", getErrorCondition());
     return;
   }
 
@@ -258,7 +255,7 @@ void GBCDTriangleDumper::execute()
   fclose(f);
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

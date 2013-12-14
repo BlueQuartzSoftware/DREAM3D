@@ -57,7 +57,7 @@ VertexArray::~VertexArray()
 // -----------------------------------------------------------------------------
 void VertexArray::resizeArray(int32_t newSize)
 {
-  m_Array->Resize(newSize);
+  m_Array->resize(newSize);
 }
 
 // -----------------------------------------------------------------------------

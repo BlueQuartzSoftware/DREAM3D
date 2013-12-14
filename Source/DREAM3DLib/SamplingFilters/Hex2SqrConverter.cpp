@@ -51,7 +51,7 @@
 #include "EbsdLib/EbsdMacros.h"
 #include "EbsdLib/EbsdMath.h"
 
-#include "DREAM3DLib/Common/Observable.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -125,8 +125,7 @@ void Hex2SqrConverter::dataCheck()
   {
 
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    PipelineMessage em (getHumanLabel(), ss, -11, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -11);
     setErrorCondition(-1);
   }
 
@@ -187,7 +186,7 @@ void Hex2SqrConverter::execute()
       progress = static_cast<int>( z - m_ZStartIndex );
       progress = (int)(100.0f * (float)(progress) / total);
       QString msg = "Converting File: " + ebsdFName;
-      notifyStatusMessage(msg.toLatin1().data());
+      notifyStatusMessage(getHumanLabel(), msg.toLatin1().data());
     }
     // Write the Manufacturer of the OIM file here
     // This list will grow to be the number of EBSD file formats we support
@@ -204,8 +203,7 @@ void Hex2SqrConverter::execute()
       if(err < 0)
       {
         setErrorCondition(reader.getErrorCode());
-        PipelineMessage em (getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode(), PipelineMessage::Error);
-        emit filterGeneratedMessage(em);
+        notifyErrorMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());
         return;
       }
       else if(reader.getGrid().startsWith(Ebsd::Ang::SquareGrid) == true)
@@ -213,8 +211,7 @@ void Hex2SqrConverter::execute()
 
         QString ss = QObject::tr("Ang File is already a square grid: %1").arg(ebsdFName);
         setErrorCondition(-55000);
-        PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-        emit filterGeneratedMessage(em);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       else
@@ -225,8 +222,7 @@ void Hex2SqrConverter::execute()
 
           QString ss = QObject::tr("Header could not be retrieved: %1").arg(ebsdFName);
           setErrorCondition(-55001);
-          PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-          emit filterGeneratedMessage(em);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
 
         QTextStream in(&origHeader);
@@ -238,8 +234,7 @@ void Hex2SqrConverter::execute()
         {
           QString msg = QObject::tr("ANG Square Output file could not be opened for writing: %1").arg(newEbsdFName);
           setErrorCondition(-200);
-          PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-          emit filterGeneratedMessage(em);
+          notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
           return;
         }
 
@@ -319,15 +314,14 @@ void Hex2SqrConverter::execute()
 
       QString ss = QObject::tr("The File extension was not detected correctly");
       setErrorCondition(-1);
-      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
 
       return;
     }
 
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Import Complete") );
+  notifyStatusMessage(getHumanLabel(), "Import Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -133,8 +133,7 @@ void DxWriter::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr( ": The output file must be set before executing this filter.");
-    PipelineMessage em (getHumanLabel(), ss, -1000, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1000);
     setErrorCondition(-1);
   }
   QFileInfo fi(getOutputFile());
@@ -142,7 +141,7 @@ void DxWriter::dataCheck()
   if (parentPath.exists() == false)
   {
     QString ss = QObject::tr( "The directory path for the output file does not exist.");
-    notifyWarningMessage(ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
   if (fi.suffix().compare("") == 0)
@@ -204,8 +203,7 @@ int DxWriter::writeFile()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -215,8 +213,7 @@ int DxWriter::writeFile()
   {
     QString ss = QObject::tr("DxWriter Input file could not be opened: %1").arg(getOutputFile());
     setErrorCondition(-100);
-    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -100;
   }
 
@@ -361,6 +358,6 @@ int DxWriter::writeFile()
 #endif
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
   return err;
 }

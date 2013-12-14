@@ -236,8 +236,7 @@ void ScalarSegmentFeatures::dataCheck()
   if(m_ScalarArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    PipelineMessage em (getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
 
   QVector<int> dims(1, 1);
@@ -279,13 +278,12 @@ void ScalarSegmentFeatures::execute()
 
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_ScalarArrayName);
     setErrorCondition(-11001);
-    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   // Tell the user we are starting the filter
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
+  notifyStatusMessage(getHumanLabel(), "Starting");
 
   for(int64_t i = 0; i < totalPoints; i++)
   {
@@ -396,7 +394,7 @@ void ScalarSegmentFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 

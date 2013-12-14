@@ -130,7 +130,7 @@ void FindNeighbors::dataCheck()
   {
     NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
     neighborlistPtr->SetName(m_NeighborListArrayName);
-    neighborlistPtr->Resize(cellFeatureAttrMat->getNumTuples());
+    neighborlistPtr->resize(cellFeatureAttrMat->getNumTuples());
     neighborlistPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborListArrayName, neighborlistPtr);
     if (neighborlistPtr.get() == NULL)
@@ -160,7 +160,7 @@ void FindNeighbors::dataCheck()
   {
     NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
     sharedSurfaceAreaListPtr->SetName(m_SharedSurfaceAreaListArrayName);
-    sharedSurfaceAreaListPtr->Resize(cellFeatureAttrMat->getNumTuples());
+    sharedSurfaceAreaListPtr->resize(cellFeatureAttrMat->getNumTuples());
     sharedSurfaceAreaListPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
     if (sharedSurfaceAreaListPtr.get() == NULL)
@@ -168,8 +168,7 @@ void FindNeighbors::dataCheck()
 
       QString ss = QObject::tr("SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter");
       setErrorCondition(-308);
-      PipelineMessage em (getHumanLabel(), ss, -308, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -308);
     }
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
                               (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SharedSurfaceAreaListArrayName).get());
@@ -246,7 +245,7 @@ void FindNeighbors::execute()
   for (int i = 1; i < totalFeatures; i++)
   {
     QString ss = QObject::tr("Finding Neighbors - Initializing Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(i) / totalFeatures) * 100);
-    //   notifyStatusMessage(ss);
+    //   notifyStatusMessage(getHumanLabel(), ss);
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].fill(-1.0, nListSize);
@@ -256,7 +255,7 @@ void FindNeighbors::execute()
   for (int64_t j = 0; j < totalPoints; j++)
   {
     QString ss = QObject::tr("Finding Neighbors - Determining Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(j) / totalPoints) * 100);
-    //   notifyStatusMessage(ss);
+    //   notifyStatusMessage(getHumanLabel(), ss);
     onsurf = 0;
     feature = m_FeatureIds[j];
     if(feature > 0)
@@ -303,7 +302,7 @@ void FindNeighbors::execute()
   {
 
     QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i / totalFeatures) * 100);
-    //  notifyStatusMessage(ss);
+    //  notifyStatusMessage(getHumanLabel(), ss);
 
     QMap<int, int> neighToCount;
     int numneighs = static_cast<int>( neighborlist[i].size() );
@@ -345,7 +344,7 @@ void FindNeighbors::execute()
     m_SharedSurfaceAreaList->setList(static_cast<int>(i), sharedSAL);
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Finding Neighbors Complete") );
+  notifyStatusMessage(getHumanLabel(), "Finding Neighbors Complete");
 }
 
 

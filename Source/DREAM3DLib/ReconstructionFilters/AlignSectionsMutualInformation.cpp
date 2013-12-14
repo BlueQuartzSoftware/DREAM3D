@@ -159,8 +159,7 @@ void AlignSectionsMutualInformation::dataCheck()
   {
     QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<int> dims(1 , 4);
@@ -206,7 +205,7 @@ void AlignSectionsMutualInformation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Aligning Sections Complete") );
+  notifyStatusMessage(getHumanLabel(), "Aligning Sections Complete");
 }
 
 
@@ -269,7 +268,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
-    //  notifyStatusMessage(ss);
+    //  notifyStatusMessage(getHumanLabel(), ss);
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     featurecount1 = featurecounts[slice];
@@ -456,7 +455,7 @@ void AlignSectionsMutualInformation::form_features_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
-  m_FeatureCounts->Resize(dims[2]);
+  m_FeatureCounts->resize(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);
 
   QVector<int> voxelslist(initialVoxelsListSize, -1);

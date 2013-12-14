@@ -147,8 +147,7 @@ void INLWriter::dataCheck()
   {
 
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
-    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
@@ -174,8 +173,7 @@ void INLWriter::dataCheck()
   {
 
     QString ss = QObject::tr("%1 requires the %2 Ensemble array to be present in the Data Container.").arg(ClassName()).arg(DREAM3D::EnsembleData::MaterialName);
-    PipelineMessage em (getHumanLabel(), ss, -1111, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1111);
     setErrorCondition(-1111);
   }
 }
@@ -226,8 +224,7 @@ int INLWriter::writeFile()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(fi.path());
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -237,8 +234,7 @@ int INLWriter::writeFile()
   {
 
     QString ss = QObject::tr("Error Opening File for writing '%1'").arg(getOutputFile());
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -271,8 +267,7 @@ int INLWriter::writeFile()
     fclose(f);
 
     QString ss = QObject::tr("The MaterialNames Ensemble Array was not in the Data Container");
-    PipelineMessage em(getHumanLabel(), ss, -1111, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1111);
     setErrorCondition(-1111);
     return -1;
   }
@@ -375,7 +370,7 @@ int INLWriter::writeFile()
   fclose(f);
 
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
   return err;
 }
 

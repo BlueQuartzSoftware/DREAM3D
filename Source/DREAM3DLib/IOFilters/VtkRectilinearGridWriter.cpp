@@ -134,8 +134,7 @@ void VtkRectilinearGridWriter::dataCheck()
   if(m_OutputFile.isEmpty() == true)
   {
     QString ss = QObject::tr("The output file must be set before executing this filter.");
-    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
 
@@ -147,14 +146,13 @@ void VtkRectilinearGridWriter::dataCheck()
     if (parentPath.exists() == false)
     {
       QString ss = QObject::tr("The directory path for the output file does not exist.");
-      notifyWarningMessage(ss, -1);
+      notifyWarningMessage(getHumanLabel(), ss, -1);
     }
   }
   else
   {
     QString ss = QObject::tr("The output file path is a path to an existing directory. Please change the path to point to a file");
-    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
 
@@ -190,8 +188,7 @@ void VtkRectilinearGridWriter::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -202,12 +199,11 @@ void VtkRectilinearGridWriter::execute()
   {
     QString ss = QObject::tr("Error writing output vtk file '%1'\n ").arg(m_OutputFile);
     setErrorCondition(-1);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
 
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 
@@ -246,7 +242,7 @@ int VtkRectilinearGridWriter::write(const QString& file)
 
   int index = 0;
   QString ss = QObject::tr("Writing Feature Ids");
-  notifyStatusMessage(ss);
+  notifyStatusMessage(getHumanLabel(), ss);
   if (m_WriteBinaryFile == true)
   {
     WRITE_VTK_FEATURE_IDS_BINARY(r, DREAM3D::CellData::FeatureIds);
@@ -259,8 +255,7 @@ int VtkRectilinearGridWriter::write(const QString& file)
   {
     QString ss = QObject::tr("Error writing vtk file '%1'\n ").arg(file);
     setErrorCondition(-100);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
 
   }
   // Close the file

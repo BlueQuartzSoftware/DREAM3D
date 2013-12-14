@@ -153,7 +153,7 @@ void MinNeighbors::preflight()
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
   connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->preflight();
@@ -192,7 +192,7 @@ void MinNeighbors::execute()
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
   connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->execute();
@@ -205,7 +205,7 @@ void MinNeighbors::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Minimum Number of Neighbors Filter Complete") );
+  notifyStatusMessage(getHumanLabel(), "Minimum Number of Neighbors Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -362,7 +362,7 @@ void MinNeighbors::merge_containedfeatures()
   if(good == false)
   {
     setErrorCondition(-1);
-    notifyErrorMessage("The minimum number of neighbors is larger than the Feature with the most neighbors.  All Features would be removed.  The filter has quit.", -1);
+    notifyErrorMessage(getHumanLabel(), "The minimum number of neighbors is larger than the Feature with the most neighbors.  All Features would be removed.  The filter has quit.", -1);
     return;
   }
   for (size_t i = 0; i < totalPoints; i++)

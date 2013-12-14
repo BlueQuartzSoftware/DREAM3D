@@ -999,15 +999,15 @@ void HexagonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Flo
   // Sanity Check the size of the arrays
   if (xyz0001->getNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize0)
   {
-    xyz0001->Resize(nOrientations * Detail::HexagonalLow::symSize0 * 3);
+    xyz0001->resize(nOrientations * Detail::HexagonalLow::symSize0 * 3);
   }
   if (xyz1010->getNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize1)
   {
-    xyz1010->Resize(nOrientations * Detail::HexagonalLow::symSize1 * 3);
+    xyz1010->resize(nOrientations * Detail::HexagonalLow::symSize1 * 3);
   }
   if (xyz1120->getNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize2)
   {
-    xyz1120->Resize(nOrientations * Detail::HexagonalLow::symSize2 * 3);
+    xyz1120->resize(nOrientations * Detail::HexagonalLow::symSize2 * 3);
   }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

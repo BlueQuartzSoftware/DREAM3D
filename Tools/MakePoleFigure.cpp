@@ -148,7 +148,7 @@ void writeImage(QString outputPath, DoubleArrayType *intensity, int dimension, Q
 void writeVtkFile(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
 {
   std::cout << "writeVtkFile: " << filename << std::endl;
-  //emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing VTK File") );
+  //notifyStatusMessage(getHumanLabel(), "Writing VTK File");
 
   size_t dims[3] = {dimension, dimension, 1};
   float res[3] = {  2.0/(float)(dimension),

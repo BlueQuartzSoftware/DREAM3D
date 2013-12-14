@@ -137,7 +137,7 @@ void FindNeighborhoods::dataCheck()
   {
     NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
     neighborhoodlistPtr->SetName(m_NeighborhoodListArrayName);
-    neighborhoodlistPtr->Resize(cellFeatureAttrMat->getNumTuples());
+    neighborhoodlistPtr->resize(cellFeatureAttrMat->getNumTuples());
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborhoodListArrayName, neighborhoodlistPtr);
 
@@ -195,7 +195,7 @@ void FindNeighborhoods::execute()
   if(getErrorCondition() < 0) { return; }
 
   find_neighborhoods();
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindNeighborhoods Completed") );
+  notifyStatusMessage(getHumanLabel(), "FindNeighborhoods Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -275,7 +275,7 @@ void FindNeighborhoods::find_neighborhoods()
     {
 
       QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
     }
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];

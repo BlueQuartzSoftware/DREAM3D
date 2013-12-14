@@ -95,7 +95,7 @@ int SurfaceDataContainer::writeFacesToHDF5(hid_t dcGid)
     if (err < 0)
     {
 //      setErrorCondition(err);
-//      notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
+//      notifyErrorMessage(getHumanLabel(), "Error Writing Face List to DREAM3D file", getErrorCondition());
     }
 
     //next write face neighbors if they exist
@@ -132,7 +132,7 @@ int SurfaceDataContainer::writeFacesToHDF5(hid_t dcGid)
       err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::FaceNeighbors, rank, dims, bufPtr);
       if (err < 0)
       {
-        notifyErrorMessage("Error writing the Face Neighbors", -998);
+        notifyErrorMessage(getNameOfClass(), "Error writing the Face Neighbors", -998);
         return err;
       }
     }
@@ -180,7 +180,7 @@ int SurfaceDataContainer::writeFacesToHDF5(hid_t dcGid)
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::FacesContainingVert, rank, dims, bufPtr);
     if (err < 0)
     {
-      notifyErrorMessage("Error writing the Faces Containing Verts", -999);
+      notifyErrorMessage(getNameOfClass(), "Error writing the Faces Containing Verts", -999);
       return err;
     }
   }
@@ -296,7 +296,7 @@ int SurfaceDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
       if (err < 0)
       {
 //        setErrorCondition(err);
-//        notifyErrorMessage("Error Reading Face List from DREAM3D file", getErrorCondition());
+//        notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
         return err;
       }
       setFaces(facesPtr);
@@ -311,7 +311,7 @@ int SurfaceDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
         if(err < 0)
         {
 //          setErrorCondition(err);
-//          notifyErrorMessage("Error Reading Face List from DREAM3D file", getErrorCondition());
+//          notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer faceNeighbors = Int32DynamicListArray::New();
@@ -328,7 +328,7 @@ int SurfaceDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
         if(err < 0)
         {
 //          setErrorCondition(err);
-//          notifyErrorMessage("Error Reading Face List from DREAM3D file", getErrorCondition());
+//          notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer facesContainingVert = Int32DynamicListArray::New();

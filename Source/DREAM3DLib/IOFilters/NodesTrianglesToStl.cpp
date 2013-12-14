@@ -149,19 +149,17 @@ void NodesTrianglesToStl::dataCheck(bool preflight)
   if (m_TrianglesFile.isEmpty() == true)
   {
     setErrorCondition(-1001);
-    PipelineMessage em (getHumanLabel(), "Triangles file path or name is emtpy", -1001, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "Triangles file path or name is emtpy", -1001);
   }
   else if (fi.exists() == false)
   {
 
     if (preflight == true)
-    { notifyWarningMessage("Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
+    { notifyWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
     else
     {
       setErrorCondition(-1001);
-      PipelineMessage em (getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
     }
   }
 
@@ -169,27 +167,24 @@ void NodesTrianglesToStl::dataCheck(bool preflight)
   if (m_NodesFile.isEmpty() == true)
   {
     setErrorCondition(-1002);
-    PipelineMessage em (getHumanLabel(), "Nodes file path or name is emtpy", -1002, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
   else if (fii.exists() == false)
   {
 
     if (preflight == true)
-    { notifyWarningMessage("Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
+    { notifyWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
     else
     {
       setErrorCondition(-1002);
-      PipelineMessage em (getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
     }
   }
 
   if (m_OutputStlDirectory.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    PipelineMessage em (getHumanLabel(), "Stl Output Directory is Not set correctly", -1003, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
 
@@ -221,8 +216,7 @@ void NodesTrianglesToStl::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -235,8 +229,7 @@ void NodesTrianglesToStl::execute()
 
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_NodesFile);
     setErrorCondition(-1);
-    PipelineMessage em(getHumanLabel(), ss, -666);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -666);
     return;
   }
   ScopedFileMonitor nodesFilePtr(nodesFile);
@@ -245,7 +238,7 @@ void NodesTrianglesToStl::execute()
   fscanf(nodesFile, "%d", &nNodes);
   {
     QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
   }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
@@ -254,8 +247,7 @@ void NodesTrianglesToStl::execute()
 
     QString ss = QObject::tr(": Error opening Triangles file '%1'").arg(m_TrianglesFile);
     setErrorCondition(-1);
-    PipelineMessage em(getHumanLabel(), ss, -666);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -666);
     return;
   }
   ScopedFileMonitor triFilePtr(triFile);
@@ -265,7 +257,7 @@ void NodesTrianglesToStl::execute()
 
   {
     QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
   }
 
   int nodeId = 0;
@@ -351,7 +343,7 @@ void NodesTrianglesToStl::execute()
 
     {
       QString ss = QObject::tr("Writing STL for Feature Id %1").arg(spin);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
     }
 
     {
@@ -422,8 +414,7 @@ void NodesTrianglesToStl::execute()
       {
 
         QString ss = QObject::tr("Error Writing STL File. Not enough elements written for feature id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
-        PipelineMessage em(getHumanLabel(), ss, -1201, PipelineMessage::Error);
-        emit filterGeneratedMessage(em);
+        notifyErrorMessage(getHumanLabel(), ss, -1201);
       }
       triCount++;
     }
@@ -431,7 +422,7 @@ void NodesTrianglesToStl::execute()
   }
 
   setErrorCondition(0);
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 
   return;
 }

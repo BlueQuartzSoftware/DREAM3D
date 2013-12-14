@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 
@@ -57,7 +57,7 @@ class DREAM3DLib_EXPORT IOSupport : public Observable
   public:
     DREAM3D_SHARED_POINTERS(IOSupport)
     DREAM3D_STATIC_NEW_MACRO(IOSupport)
-    DREAM3D_TYPE_MACRO_SUPER(IOSupport, Observable)
+    DREAM3D_TYPE_MACRO(IOSupport)
 
     virtual ~IOSupport();
 

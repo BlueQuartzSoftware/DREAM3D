@@ -196,7 +196,7 @@ int ModifiedLambertProjectionArray::EraseTuples(QVector<size_t>& idxs)
 
   if (idxs.size() >= getNumberOfTuples() )
   {
-    Resize(0);
+    resize(0);
     return 0;
   }
 
@@ -261,7 +261,7 @@ void ModifiedLambertProjectionArray::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t ModifiedLambertProjectionArray::RawResize(size_t size)
+int32_t ModifiedLambertProjectionArray::resizeTotalElements(size_t size)
 {
   m_ModifiedLambertProjectionArray.resize(size);
   return 1;
@@ -270,9 +270,9 @@ int32_t ModifiedLambertProjectionArray::RawResize(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t ModifiedLambertProjectionArray::Resize(size_t numTuples)
+int32_t ModifiedLambertProjectionArray::resize(size_t numTuples)
 {
-  return RawResize(numTuples);
+  return resizeTotalElements(numTuples);
 }
 
 // -----------------------------------------------------------------------------

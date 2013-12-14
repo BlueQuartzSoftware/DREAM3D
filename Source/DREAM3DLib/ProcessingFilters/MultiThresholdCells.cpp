@@ -136,7 +136,7 @@ void MultiThresholdCells::dataCheck()
   if (m_ComparisonInputs.size() == 0)
   {
     setErrorCondition(-12000);
-    notifyErrorMessage("You must add at least 1 comparison array.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "You must add at least 1 comparison array.", getErrorCondition());
   }
 
   QVector<int> dims(1, 1);
@@ -173,7 +173,7 @@ void MultiThresholdCells::execute()
   if (NULL == outputArray)
   {
     setErrorCondition(-11002);
-    notifyErrorMessage("Could not properly cast the output array to a BoolArrayType", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Could not properly cast the output array to a BoolArrayType", getErrorCondition());
     return;
   }
   m_Output = outputArray->getPointer(0);
@@ -191,7 +191,7 @@ void MultiThresholdCells::execute()
     if (err < 0)
     {
       setErrorCondition(-13001);
-      notifyErrorMessage("Error Executing threshold filter on first array", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), "Error Executing threshold filter on first array", getErrorCondition());
       return;
     }
   }
@@ -212,7 +212,7 @@ void MultiThresholdCells::execute()
     if (err < 0)
     {
       setErrorCondition(-13002);
-      notifyErrorMessage("Error Executing threshold filter on array", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), "Error Executing threshold filter on array", getErrorCondition());
       return;
     }
     for (int64_t p = 0; p < totalPoints; ++p)
@@ -228,6 +228,6 @@ void MultiThresholdCells::execute()
 
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

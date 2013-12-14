@@ -100,16 +100,14 @@ void SurfaceDataContainerReader::dataCheck()
   if(NULL == dc)
   {
     setErrorCondition(-999);
-    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
 
   if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
   else if (preflight == true)
   {
@@ -152,8 +150,7 @@ void SurfaceDataContainerReader::execute()
   if(NULL == dc)
   {
     setErrorCondition(-999);
-    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
   setErrorCondition(0);
@@ -170,7 +167,7 @@ void SurfaceDataContainerReader::execute()
   setErrorCondition(err);
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -193,8 +190,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
   {
     QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -203,8 +199,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
   {
     QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::Defaults::EdgeDataContainerName);
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -306,7 +301,7 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
       if (err < 0)
       {
         setErrorCondition(err);
-        notifyErrorMessage("Error Reading Face List from DREAM3D file", getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
         return err;
       }
       dc->setFaces(facesPtr);
@@ -321,7 +316,7 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         if(err < 0)
         {
           setErrorCondition(err);
-          notifyErrorMessage("Error Reading Face List from DREAM3D file", getErrorCondition());
+          notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer faceNeighbors = Int32DynamicListArray::New();
@@ -338,7 +333,7 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         if(err < 0)
         {
           setErrorCondition(err);
-          notifyErrorMessage("Error Reading Face List from DREAM3D file", getErrorCondition());
+          notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer facesContainingVert = Int32DynamicListArray::New();

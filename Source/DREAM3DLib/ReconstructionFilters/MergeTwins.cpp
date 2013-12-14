@@ -197,8 +197,7 @@ void MergeTwins::dataCheck()
   {
     QString ss = QObject::tr("NeighborLists Array Not Initialized Correctly");
     setErrorCondition(-304);
-    PipelineMessage em (getHumanLabel(), ss, -304, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -304);
   }
 
   // Ensemble Data
@@ -230,10 +229,10 @@ void MergeTwins::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Merging Twins") );
+  notifyStatusMessage(getHumanLabel(), "Merging Twins");
   merge_twins();
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Characterizing Twins") );
+  notifyStatusMessage(getHumanLabel(), "Characterizing Twins");
   characterize_twins();
 
   if (true == m_RandomizeParentIds)
@@ -289,7 +288,7 @@ void MergeTwins::execute()
     }
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 // -----------------------------------------------------------------------------

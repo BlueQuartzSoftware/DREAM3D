@@ -87,6 +87,7 @@ ADD_DREAM3D_TEST_2(DxIOTest  "DREAM3DLib" ${_moc_filter_source})
 
 
 ADD_DREAM3D_TEST(FilterPipelineTest  "DREAM3DLib")
+
 ADD_DREAM3D_TEST(DataArrayTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(ErrorMessageTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(GenericFilterTest  "DREAM3DLib")

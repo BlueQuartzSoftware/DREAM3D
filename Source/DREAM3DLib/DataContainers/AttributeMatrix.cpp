@@ -62,10 +62,11 @@
 //
 // -----------------------------------------------------------------------------
 AttributeMatrix::AttributeMatrix() :
-  m_NumTuples(0)
+  m_NumTuples(0),
+  m_Type(DREAM3D::AttributeMatrixType::Unknown)
 {
   setName(DREAM3D::Defaults::AttributeMatrixName);
-  setType(DREAM3D::AttributeMatrixType::Unknown);
+  //  setType(DREAM3D::AttributeMatrixType::Unknown);
 }
 
 // -----------------------------------------------------------------------------
@@ -79,6 +80,20 @@ AttributeMatrix::~AttributeMatrix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AttributeMatrix::setType(uint32_t value)
+{
+  m_Type = value;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+uint32_t AttributeMatrix::getType()
+{
+  return m_Type;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool AttributeMatrix::doesAttributeArrayExist(const QString& name)
 {
   return  m_AttributeArrays.contains(name);
@@ -89,7 +104,7 @@ bool AttributeMatrix::doesAttributeArrayExist(const QString& name)
 // -----------------------------------------------------------------------------
 bool AttributeMatrix::validateAttributeArraySizes()
 {
-  int64_t arraySize;
+  int64_t arraySize = 0;
   int64_t matrixSize = getNumTuples();
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
@@ -115,6 +130,8 @@ void AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer
     qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
+  Q_ASSERT(m_NumTuples == data->getNumberOfTuples());
+
   m_AttributeArrays[name] = data;
   m_NumTuples = data->getNumberOfTuples();
 }
@@ -170,16 +187,16 @@ bool AttributeMatrix::renameAttributeArray(const QString& oldname, const QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AttributeMatrix::resizeAttributeArrays(size_t size)
+void AttributeMatrix::resizeAttributeArrays(size_t numTuples)
 {
-// int success = 0;
+  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
     IDataArray::Pointer d = iter.value();
-    d->Resize(size);
+    d->resize(numTuples);
   }
-  m_NumTuples = size;
+  m_NumTuples = numTuples;
 }
 
 // -----------------------------------------------------------------------------
@@ -219,16 +236,16 @@ int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
   int err;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
-//    QString ss = QObject::tr("Writing Data '%1' to HDF5 File").arg(*iter);
-//    notifyStatusMessage(ss);
+    //    QString ss = QObject::tr("Writing Data '%1' to HDF5 File").arg(*iter);
+    //    notifyStatusMessage(getHumanLabel(), ss);
     IDataArray::Pointer d = iter.value();
     err = d->writeH5Data(parentId);
     if(err < 0)
     {
-//      ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
-//      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-//      emit filterGeneratedMessage(em);
-//      setErrorCondition(err);
+      //      ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
+      //      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
+      //      emit filterGeneratedMessage(em);
+      //      setErrorCondition(err);
       H5Gclose(parentId); // Close the Cell Group
       return err;
     }

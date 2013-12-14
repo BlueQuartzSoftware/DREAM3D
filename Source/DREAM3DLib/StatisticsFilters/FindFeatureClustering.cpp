@@ -118,15 +118,14 @@ void FindFeatureClustering::dataCheck()
   {
     NeighborList<float>::Pointer clusteringPtr = NeighborList<float>::New();
     clusteringPtr->SetName(m_ClusteringListArrayName);
-    clusteringPtr->Resize(cellFeatureAttrMat->getNumTuples());
+    clusteringPtr->resize(cellFeatureAttrMat->getNumTuples());
     clusteringPtr->setNumNeighborsArrayName(m_ClusteringListArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_ClusteringListArrayName, clusteringPtr);
     if (clusteringPtr.get() == NULL)
     {
       QString ss = QObject::tr("Clustering Array Not Initialized at Beginning of FindFeatureClustering Filter");
       setErrorCondition(-308);
-      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
     m_ClusteringList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >
                        (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_ClusteringListArrayName).get());
@@ -164,7 +163,7 @@ void FindFeatureClustering::execute()
   if(getErrorCondition() < 0) { return; }
 
   find_clustering();
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindFeatureClustering Completed") );
+  notifyStatusMessage(getHumanLabel(), "FindFeatureClustering Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -204,7 +203,7 @@ void FindFeatureClustering::find_clustering()
     {
 
       QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
     }
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];

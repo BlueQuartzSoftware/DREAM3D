@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
      * @param name The name of the data container
      * @return
      */
-    static Pointer New(const QString &name)
+    static Pointer New(const QString& name)
     {
       Pointer sharedPtr(new VertexDataContainer());
       sharedPtr->setName(name);

@@ -261,7 +261,7 @@ class StringDataArray : public IDataArray
       size_t idxs_size = static_cast<size_t>(idxs.size());
       if (idxs_size >= getNumberOfTuples() )
       {
-        Resize(0);
+        resize(0);
         return 0;
       }
 
@@ -328,7 +328,7 @@ class StringDataArray : public IDataArray
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t RawResize(size_t size)
+    virtual int32_t resizeTotalElements(size_t size)
     {
       m_Array.resize(size);
       return 1;
@@ -339,7 +339,7 @@ class StringDataArray : public IDataArray
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t Resize(size_t numTuples)
+    virtual int32_t resize(size_t numTuples)
     {
       m_Array.resize(numTuples);
       return 1;
@@ -425,7 +425,7 @@ class StringDataArray : public IDataArray
     virtual int readH5Data(hid_t parentId)
     {
       int err = 0;
-      this->Resize(0);
+      this->resize(0);
       IDataArray::Pointer p = H5DataArrayReader::readStringDataArray(parentId, GetName());
       if (p.get() == NULL)
       {

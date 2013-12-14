@@ -269,14 +269,14 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
        * @param size The new size of the internal array
        * @return 1 on success, 0 on failure
        */
-    virtual int32_t RawResize(size_t size);
+    virtual int32_t resizeTotalElements(size_t size);
 
     /**
      * @brief Reseizes the internal array
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t Resize(size_t numTuples);
+    virtual int32_t resize(size_t numTuples);
 
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',');
     virtual void printComponent(QTextStream& out, size_t i, int j);

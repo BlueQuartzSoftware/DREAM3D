@@ -53,7 +53,7 @@
  */
 class ImportImageStack : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(ImportImageStack)
     DREAM3D_STATIC_NEW_MACRO(ImportImageStack)
@@ -135,7 +135,7 @@ class ImportImageStack : public AbstractFilter
     void dataCheck();
 
   private:
-    uint8_t* m_ImageData;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, ImageData)
 
     ImportImageStack(const ImportImageStack&); // Copy Constructor Not Implemented
     void operator=(const ImportImageStack&); // Operator '=' Not Implemented

@@ -69,7 +69,7 @@
  */
 class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(H5VoxelReader)
     DREAM3D_TYPE_MACRO(H5VoxelReader)
@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
       {
         if(m_FileName.isEmpty() == true)
         {
-          notifyErrorMessage("H5VoxelReader Error; Filename was empty", -1);
+          notifyErrorMessage(getHumanLabel(), "H5VoxelReader Error; Filename was empty", -1);
           return -1;
         }
         OPEN_HDF5_FILE(fileId, m_FileName);
@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
       if(err < 0)
       {
         QString ss = QObject::tr(" Error Reading the ").arg(dsetName);
-        notifyErrorMessage(ss, err);
+        notifyErrorMessage(getHumanLabel(), ss, err);
         err = H5Gclose(scalarGid);
         err = H5Gclose(reconGid);
         return err;
@@ -144,7 +144,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
       {
         if(m_FileName.isEmpty() == true)
         {
-          notifyErrorMessage("H5ReconVolumeReader Error; Filename was empty", -1);
+          notifyErrorMessage(getHumanLabel(), "H5ReconVolumeReader Error; Filename was empty", -1);
           return -1;
         }
         OPEN_HDF5_FILE(fileId, m_FileName);
@@ -158,7 +158,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
       if(err < 0)
       {
         QString ss = QObject::tr(" Error Reading the ").arg(dsetName);
-        notifyErrorMessage(ss, err);
+        notifyErrorMessage(getHumanLabel(), ss, err);
         err |= H5Gclose(featureGid);
         err |= H5Gclose(reconGid);
         return err;

@@ -72,16 +72,14 @@ void EdgeDataContainerWriter::dataCheck()
   if(NULL == dc)
   {
     setErrorCondition(-999);
-    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
 
   if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
 }
 
@@ -111,8 +109,7 @@ void EdgeDataContainerWriter::execute()
   if (NULL == dc)
   {
     QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    PipelineMessage em (getHumanLabel(), ss, -2, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -2);
     setErrorCondition(-1);
     return;
   }
@@ -125,7 +122,7 @@ void EdgeDataContainerWriter::execute()
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

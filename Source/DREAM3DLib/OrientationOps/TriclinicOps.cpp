@@ -418,15 +418,15 @@ void TriclinicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatA
   // Sanity Check the size of the arrays
   if (xyz001->getNumberOfTuples() < nOrientations * Detail::Triclinic::symSize0)
   {
-    xyz001->Resize(nOrientations * Detail::Triclinic::symSize0 * 3);
+    xyz001->resize(nOrientations * Detail::Triclinic::symSize0 * 3);
   }
   if (xyz011->getNumberOfTuples() < nOrientations * Detail::Triclinic::symSize1)
   {
-    xyz011->Resize(nOrientations * Detail::Triclinic::symSize1 * 3);
+    xyz011->resize(nOrientations * Detail::Triclinic::symSize1 * 3);
   }
   if (xyz111->getNumberOfTuples() < nOrientations * Detail::Triclinic::symSize2)
   {
-    xyz111->Resize(nOrientations * Detail::Triclinic::symSize2 * 3);
+    xyz111->resize(nOrientations * Detail::Triclinic::symSize2 * 3);
   }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

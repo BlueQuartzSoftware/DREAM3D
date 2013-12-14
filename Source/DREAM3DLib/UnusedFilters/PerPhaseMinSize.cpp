@@ -163,8 +163,7 @@ void PerPhaseMinSize::preflight()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    PipelineMessage em (getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
 
@@ -215,7 +214,7 @@ void PerPhaseMinSize::remove_smallfeatures()
   if(good == false)
   {
     setErrorCondition(-1);
-    notifyErrorMessage("The minimum size is larger than the largest Feature.  All Features would be removed.  The filter has quit.", -1);
+    notifyErrorMessage(getHumanLabel(), "The minimum size is larger than the largest Feature.  All Features would be removed.  The filter has quit.", -1);
     return;
   }
   for (int64_t i = 0; i < totalPoints; i++)

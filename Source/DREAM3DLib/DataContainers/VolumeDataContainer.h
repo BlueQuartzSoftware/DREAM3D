@@ -82,7 +82,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
      * @param name The name of the data container
      * @return
      */
-    static Pointer New(const QString &name)
+    static Pointer New(const QString& name)
     {
       Pointer sharedPtr(new VolumeDataContainer());
       sharedPtr->setName(name);

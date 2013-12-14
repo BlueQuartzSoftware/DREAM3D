@@ -148,15 +148,13 @@ void SurfaceMeshToVtk::dataCheck()
   if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    PipelineMessage em (getHumanLabel(), "Vtk Output file is Not set correctly", -1003, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 
   if (sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
   QVector<int> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = amF->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -220,8 +218,7 @@ void SurfaceMeshToVtk::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -233,8 +230,7 @@ void SurfaceMeshToVtk::execute()
   {
 
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
-    PipelineMessage em(getHumanLabel(), ss, -18542, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -18542);
     setErrorCondition(-18542);
     return;
   }
@@ -345,7 +341,7 @@ void SurfaceMeshToVtk::execute()
   fprintf(vtkFile, "\n");
 
   setErrorCondition(0);
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

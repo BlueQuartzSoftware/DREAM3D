@@ -39,65 +39,52 @@
 #include "DREAM3DLib/Common/PipelineMessage.h"
 
 
-class Observer;
-
-
 /**
  * @class Observable Observable.h DREAM3D/Common/Observable.h
- * @brief This class implements the "Subject" class of the "Observer" design pattern
- * from the "Gang of Four" book. The basic operations of adding and removing an
- * <b>Observer</b> oject from this class. Multiple Observers can be stored in this
- * class if needed. The order in which they are added is the order in which they
- * are notified. There are several types of notification aspects that can be used
- * based on the enumeration that is used. From just updating a message to sending
- * a message that should be considered a warning or error.
+ * @brief
  *
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Sep 22, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT Observable
+class DREAM3DLib_EXPORT Observable : public QObject
 {
+    Q_OBJECT
+
   public:
     Observable();
     virtual ~Observable();
 
     DREAM3D_TYPE_MACRO(Observable)
+    // ------------------------------
+    // These are convenience methods that construct a @see PipelineMessage object and then 'emit' that object
+    // ------------------------------
+    virtual void notifyErrorMessage(const QString& humanLabel, const QString& ss, int code);
+
+    virtual void notifyWarningMessage(const QString& humanLabel, const QString& ss, int code);
+
+    virtual void notifyStatusMessage(const QString& humanLabel, const QString& ss);
+
+  public slots:
 
     /**
-     * @brief Adds an observer to notify when changes occur
-     * @param observer The observer to notify
+     * @brief This method will cause this object to 'emit' the filterGeneratedMessage() signal. This is useful if other
+     * classes need the filter to emit an error or warning messge from a class that is not able to emit the proper signals
+     * or the class is not connected to anything that would receive the signals
+     * @param msg
      */
-    virtual void addObserver(Observer* observer);
+    void broadcastPipelineMessage(const PipelineMessage& msg);
+
+
+  signals:
 
     /**
-     * @brief Removes a specific observer from the list of observers
-     * @param observer The Observer to remove
+     * @brief filterGeneratedMessage This is a Qt Signal that is used when the filter generates Errors, Warnings, Status and Progress Messages
+     * @param msg
      */
-    virtual void removeObserver(Observer* observer);
-
-    virtual void notifyMessage(PipelineMessage& msg);
-
-    void notifyErrorMessage(QString errDesc, int errCode);
-
-    void notifyWarningMessage(QString warnDesc, int warnCode);
-
-    void notifyStatusMessage(QString statusDesc);
-
-    void notifyProgressValue(int status);
-
-    void notifyStatusAndProgress(QString statusDesc, int statusVal);
-
-    virtual QVector<Observer*> getObservers();
-
-    virtual void setObservers(QVector<Observer*> obs);
-
-    virtual void setMessagePrefix(const QString& str);
-    virtual QString getMessagePrefix();
+    void filterGeneratedMessage(const PipelineMessage& msg);
 
   private:
-    QVector<Observer*> m_Observers;
-    QString m_Prefix;
 
     Observable(const Observable&); // Copy Constructor Not Implemented
     void operator=(const Observable&); // Operator '=' Not Implemented

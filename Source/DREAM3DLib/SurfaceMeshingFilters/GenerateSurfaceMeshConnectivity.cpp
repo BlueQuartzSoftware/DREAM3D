@@ -142,16 +142,14 @@ void GenerateSurfaceMeshConnectivity::dataCheck()
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 }
 
@@ -178,12 +176,12 @@ void GenerateSurfaceMeshConnectivity::execute()
   // of those are true then build the vertex->triangle lists
   if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
   {
-    emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Generating Vertex Triangle List") );
+    notifyStatusMessage(getHumanLabel(), "Generating Vertex Triangle List");
     getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFacesContainingVert();
   }
   if (m_GenerateTriangleNeighbors == true)
   {
-    emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Generating Face Neighbors List") );
+    notifyStatusMessage(getHumanLabel(), "Generating Face Neighbors List");
     getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFaceNeighbors();
   }
 
@@ -194,7 +192,7 @@ void GenerateSurfaceMeshConnectivity::execute()
     QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
     conn->setMessagePrefix(ss);
     connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+            this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
     conn->setDataContainerArray(getDataContainerArray());
     conn->setSurfaceDataContainerName(getSurfaceDataContainerName());
     conn->setEdgeAttributeMatrixName(getEdgeAttributeMatrixName());
@@ -208,6 +206,6 @@ void GenerateSurfaceMeshConnectivity::execute()
   }
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

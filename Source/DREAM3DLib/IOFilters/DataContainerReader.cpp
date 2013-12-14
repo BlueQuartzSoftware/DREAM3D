@@ -125,7 +125,7 @@ void DataContainerReader::execute()
 {
   dataCheck();
   readData(false);
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -206,15 +206,13 @@ void DataContainerReader::readData(bool preflight)
   {
     ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (fi.exists() == false)
   {
     ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -224,8 +222,7 @@ void DataContainerReader::readData(bool preflight)
     {
       ss = QObject::tr(": Error opening input file '%1'").arg(ClassName());
       setErrorCondition(-150);
-      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -246,8 +243,7 @@ void DataContainerReader::readData(bool preflight)
     {
       ss = QObject::tr(": File unable to be read - file structure older than 6.0 '%1'").arg(ClassName());
       setErrorCondition(-250);
-      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
     hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
@@ -268,8 +264,7 @@ void DataContainerReader::readData(bool preflight)
       {
         setErrorCondition(-10987);
         QString ss = QObject::tr("A Data Container with name %1 already exists in Memory. Reading a Data Container with the same name would over write the one in memory. Currently this is not allowed.").arg(dcNames[iter]);
-        PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-        emit filterGeneratedMessage(em);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       err = QH5Lite::readScalarAttribute(dcaGid, dcNames[iter], DREAM3D::StringConstants::DataContainerType, dcType);
@@ -277,8 +272,7 @@ void DataContainerReader::readData(bool preflight)
       {
         setErrorCondition(-109283);
         QString ss = QObject::tr("The DataContainer is missing the 'DataContainerType' attribute on the '%1' Data Container").arg(dcNames[iter]);
-        PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-        emit filterGeneratedMessage(em);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
@@ -310,8 +304,7 @@ void DataContainerReader::readData(bool preflight)
       {
         QString ss = QObject::tr("Error opening Group %1").arg(dcNames[iter]);
         setErrorCondition(-61);
-        PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-        emit filterGeneratedMessage(em);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       MapOfAttributeMatrices_t::Iterator it = m_DataToRead.find(dcNames[iter]);
@@ -322,12 +315,11 @@ void DataContainerReader::readData(bool preflight)
       {
         if(preflight == true)
         {
-          PipelineMessage em (getHumanLabel(), "The data was not available in the data file.", getErrorCondition(), PipelineMessage::Error);
-          emit filterGeneratedMessage(em);
+          notifyErrorMessage(getHumanLabel(), "The data was not available in the data file.", getErrorCondition());
         }
         else
         {
-          notifyErrorMessage("Error Reading Data", -100);
+          notifyErrorMessage(getHumanLabel(), "Error Reading Data", -100);
           return;
         }
       }

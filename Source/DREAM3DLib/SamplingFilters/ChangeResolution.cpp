@@ -177,7 +177,7 @@ void ChangeResolution::execute()
   for (int i = 0; i < m_ZP; i++)
   {
     QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getZPoints()) * 100);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -205,7 +205,7 @@ void ChangeResolution::execute()
     // the same name. At least in theory
     QVector<int> dims(1, p->GetNumberOfComponents());
     IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), dims, p->GetName());
-    data->Resize(totalPoints);
+    data->resize(totalPoints);
     void* source = NULL;
     void* destination = NULL;
     size_t newIndicies_I = 0;
@@ -223,6 +223,6 @@ void ChangeResolution::execute()
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setDimensions(m_XP, m_YP, m_ZP);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

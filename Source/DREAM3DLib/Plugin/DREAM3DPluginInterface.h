@@ -40,11 +40,10 @@
 
 #include <QtCore/QSettings>
 #include <QtCore/QtPlugin>
-#include <QPair>
-#include <QVector>
-#include <QtGui/QIcon>
+#include <QtCore/QString>
 
-#include "QtSupport/HelpDialog.h"
+
+
 
 #ifdef NDEBUG
 
@@ -75,18 +74,12 @@
   {\
     namespace UIPlugins\
     {\
-      const std::string libName##File(DREAM3D_PLUGIN_2(libName##Plugin));\
-      const std::string libName##DisplayName(DREAM3D_PLUGIN_3(human));\
-      const std::string libName##BaseName(#libName);\
+      const QString libName##File(DREAM3D_PLUGIN_2(libName##Plugin));\
+      const QString libName##DisplayName(DREAM3D_PLUGIN_3(human));\
+      const QString libName##BaseName(#libName);\
     }\
   }
 
-
-
-
-
-
-class DREAM3DPluginFrame;
 class FilterManager;
 
 /**

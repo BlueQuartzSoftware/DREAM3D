@@ -138,6 +138,6 @@ void FindNumFeatures::execute()
     m_NumFeatures[m_FeaturePhases[i]]++;
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

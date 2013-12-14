@@ -118,8 +118,7 @@ void WriteAbaqusSurfaceMesh::dataCheck()
   if (m_OutputFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    PipelineMessage em (getHumanLabel(), "Stl Output Directory is Not set correctly", -1003, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
@@ -130,8 +129,7 @@ void WriteAbaqusSurfaceMesh::dataCheck()
   if (sm->getFaces().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
   else
   {
@@ -145,8 +143,7 @@ void WriteAbaqusSurfaceMesh::dataCheck()
   if (sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
 }
 
@@ -178,8 +175,7 @@ void WriteAbaqusSurfaceMesh::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -204,7 +200,7 @@ void WriteAbaqusSurfaceMesh::execute()
   err = writeFeatures(f);
 
   setErrorCondition(0);
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 
   return;
 }
@@ -305,7 +301,7 @@ int WriteAbaqusSurfaceMesh::writeFeatures(FILE* f)
 
     {
       QString ss = QObject::tr("Writing ELSET for Feature Id %1").arg(spin);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
     }
 
     // Loop over all the triangles for this spin

@@ -163,15 +163,13 @@ void PhReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<int> dims(1, 1);
@@ -189,7 +187,7 @@ void PhReader::dataCheck()
     if(m_InStream == NULL)
     {
       setErrorCondition(-48802);
-      notifyErrorMessage("Error opening input file", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), "Error opening input file", getErrorCondition());
       return;
     }
     int error = readHeader();
@@ -199,8 +197,7 @@ void PhReader::dataCheck()
     {
       setErrorCondition(error);
       QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?");
-      PipelineMessage em (getHumanLabel(), ss, -48010, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -48010);
     }
   }
 }
@@ -227,7 +224,7 @@ void PhReader::execute()
   if(m_InStream == NULL)
   {
     setErrorCondition(-48030);
-    notifyErrorMessage("Error opening input file", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error opening input file", getErrorCondition());
     return;
   }
 
@@ -292,7 +289,7 @@ int  PhReader::readFile()
       fclose(m_InStream);
       m_InStream = NULL;
       setErrorCondition(-48040);
-      notifyErrorMessage("Error reading Ph data", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), "Error reading Ph data", getErrorCondition());
       return getErrorCondition();
     }
   }
@@ -301,7 +298,7 @@ int  PhReader::readFile()
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;
 }
 

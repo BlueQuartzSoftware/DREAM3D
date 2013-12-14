@@ -74,14 +74,12 @@ void VolumeDataContainerWriter::dataCheck()
   if(NULL == dc)
   {
     setErrorCondition(-383);
-    PipelineMessage em (getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition());
   }
   if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
 }
 
@@ -107,8 +105,7 @@ void VolumeDataContainerWriter::execute()
   if (NULL == dc)
   {
     QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    PipelineMessage em (getHumanLabel(), ss, -2, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -2);
     setErrorCondition(-1);
     return;
   }
@@ -130,8 +127,7 @@ void VolumeDataContainerWriter::execute()
   {
     QString ss = QObject::tr(":Error Writing header information to output file");
     setErrorCondition(-62);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
@@ -143,7 +139,7 @@ void VolumeDataContainerWriter::execute()
 
 
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

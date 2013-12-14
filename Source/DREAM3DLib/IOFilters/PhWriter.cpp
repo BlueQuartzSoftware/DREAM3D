@@ -123,8 +123,7 @@ void PhWriter::dataCheck()
   {
 
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
-    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
@@ -182,8 +181,7 @@ int PhWriter::writeFile()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -230,6 +228,6 @@ int PhWriter::writeFile()
   outfile.close();
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Ph File Complete") );
+  notifyStatusMessage(getHumanLabel(), "Writing Ph File Complete");
   return 0;
 }

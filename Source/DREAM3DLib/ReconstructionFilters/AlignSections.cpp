@@ -140,8 +140,7 @@ void AlignSections::dataCheck()
   {
     QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
   }
 }
 
@@ -204,7 +203,7 @@ void AlignSections::execute()
 
       progressInt = ((float)i / dims[2]) * 100.0;
       QString ss = QObject::tr("Transferring Cell Data - %1% Complete").arg(progressInt);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
       prog = prog + progIncrement;
     }
     if (getCancel() == true)
@@ -247,7 +246,7 @@ void AlignSections::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

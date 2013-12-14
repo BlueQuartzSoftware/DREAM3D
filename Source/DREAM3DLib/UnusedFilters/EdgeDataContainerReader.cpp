@@ -102,16 +102,14 @@ void EdgeDataContainerReader::dataCheck()
   if(NULL == dc)
   {
     setErrorCondition(-999);
-    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
 
   if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
   else if (preflight == true)
   {
@@ -155,8 +153,7 @@ void EdgeDataContainerReader::execute()
   if(NULL == dc)
   {
     setErrorCondition(-999);
-    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
   setErrorCondition(err);
@@ -173,7 +170,7 @@ void EdgeDataContainerReader::execute()
   setErrorCondition(err);
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -197,8 +194,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   {
     QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -207,8 +203,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   {
     QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::Defaults::EdgeDataContainerName);
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -311,7 +306,7 @@ int EdgeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
       if (err < 0)
       {
         setErrorCondition(err);
-        notifyErrorMessage("Error Reading Edge List from DREAM3D file", getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
         return err;
       }
       dc->setEdges(edgesPtr);
@@ -326,7 +321,7 @@ int EdgeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         if(err < 0)
         {
           setErrorCondition(err);
-          notifyErrorMessage("Error Reading Edge List from DREAM3D file", getErrorCondition());
+          notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer edgeNeighbors = Int32DynamicListArray::New();
@@ -343,7 +338,7 @@ int EdgeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         if(err < 0)
         {
           setErrorCondition(err);
-          notifyErrorMessage("Error Reading Edge List from DREAM3D file", getErrorCondition());
+          notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer edgesContainingVert = Int32DynamicListArray::New();

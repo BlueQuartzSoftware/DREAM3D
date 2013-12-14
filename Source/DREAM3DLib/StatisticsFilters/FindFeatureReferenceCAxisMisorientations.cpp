@@ -194,7 +194,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     setErrorCondition(-666);
     ss.str("");
     ss << "The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: " << totalPoints;
-    notifyErrorMessage(ss.str(), getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return;
   }
 #else
@@ -261,7 +261,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     if (i % 1000 == 0)
     {
       QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
     }
     index = i * avgMisoComps;
     m_FeatureAvgCAxisMisorientations[i] = avgmiso[index + 1] / avgmiso[index];
@@ -282,6 +282,6 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     m_FeatureStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * avgmiso[index + 2]);
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 

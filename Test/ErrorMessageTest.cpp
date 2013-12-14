@@ -69,16 +69,16 @@ void TestErrorMessage()
   PipelineMessage e2(a0, a1, eCode);
 
   AbstractFilter::Pointer f = AbstractFilter::New();
-  f->notifyErrorMessage(a1, eCode);
-  f->notifyErrorMessage("A description", -10);
+  f->notifyErrorMessage("Some Test", a1, eCode);
+  f->notifyErrorMessage("Another Test", "A description", -10);
 
   PipelineMessage pm("Joey's Test", "Testing Warning Message...", -23, PipelineMessage::Warning);
   PipelineMessage pm1("Joey's Test", "Testing Error Message...", -23, PipelineMessage::Error);
   PipelineMessage pm2("Joey's Test", "Testing Status Message...", -23, PipelineMessage::StatusMessage);
   PipelineMessage pm3("Joey's Test", "Testing Status Message...", -23, PipelineMessage::ProgressValue, 23);
-  f->emitFilterGeneratedMessage(pm);
-  f->emitFilterGeneratedMessage(pm1);
-  f->emitFilterGeneratedMessage(pm2);
+  f->broadcastPipelineMessage(pm);
+  f->broadcastPipelineMessage(pm1);
+  f->broadcastPipelineMessage(pm2);
 
   if (true)
   { return; }

@@ -185,7 +185,7 @@ int StatsDataArray::EraseTuples(QVector<size_t>& idxs)
 
   if (idxs.size() >= getNumberOfTuples() )
   {
-    Resize(0);
+    resize(0);
     return 0;
   }
 
@@ -250,7 +250,7 @@ void StatsDataArray::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t StatsDataArray::RawResize(size_t size)
+int32_t StatsDataArray::resizeTotalElements(size_t size)
 {
   m_StatsDataArray.resize(size);
   return 1;
@@ -259,9 +259,9 @@ int32_t StatsDataArray::RawResize(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t StatsDataArray::Resize(size_t numTuples)
+int32_t StatsDataArray::resize(size_t numTuples)
 {
-  return RawResize(numTuples);
+  return resizeTotalElements(numTuples);
 }
 
 // -----------------------------------------------------------------------------

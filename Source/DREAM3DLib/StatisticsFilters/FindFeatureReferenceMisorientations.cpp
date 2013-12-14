@@ -237,7 +237,7 @@ void FindFeatureReferenceMisorientations::execute()
   if(totalPoints > maxUInt32)
   {
     setErrorCondition(-666);
-    notifyErrorMessage("More Points than can be help in memory on a 32 bit machine. Try reducing the size of the input volume.", -666);
+    notifyErrorMessage(getHumanLabel(), "More Points than can be help in memory on a 32 bit machine. Try reducing the size of the input volume.", -666);
     return;
   }
 #else
@@ -316,6 +316,6 @@ void FindFeatureReferenceMisorientations::execute()
   }
   delete avgmiso;
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindFeatureReferenceMisorientations Completed") );
+  notifyStatusMessage(getHumanLabel(), "FindFeatureReferenceMisorientations Completed");
 }
 

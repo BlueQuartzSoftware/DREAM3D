@@ -132,8 +132,7 @@ void SurfaceMeshToNonconformalVtk::dataCheck()
   if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    PipelineMessage em (getHumanLabel(), "Vtk Output file is Not set correctly", -1003, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
@@ -146,14 +145,12 @@ void SurfaceMeshToNonconformalVtk::dataCheck()
   if (sm->getFaces().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
   if (sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
   QVector<int> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = amF->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -214,8 +211,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -226,14 +222,13 @@ void SurfaceMeshToNonconformalVtk::execute()
   if (NULL == vtkFile)
   {
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
-    PipelineMessage em(getHumanLabel(), ss, -18542, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -18542);
     setErrorCondition(-18542);
     return;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Vertex Data ....") );
+  notifyStatusMessage(getHumanLabel(), "Writing Vertex Data ....");
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
@@ -287,7 +282,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
 
   // Write the triangle indices into the vtk File
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Faces ....") );
+  notifyStatusMessage(getHumanLabel(), "Writing Faces ....");
 
   int tData[4];
 
@@ -393,7 +388,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   fprintf(vtkFile, "\n");
 
   setErrorCondition(0);
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 
@@ -847,26 +842,26 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
     }
   }
 #endif
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Face Normals...") );
+  notifyStatusMessage(getHumanLabel(), "Writing Face Normals...");
   writeCellNormalData<SurfaceDataContainer, double>(sm, getFaceAttributeMatrixName(), DREAM3D::FaceData::SurfaceMeshFaceNormals,
                                                     "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Principal Curvature 1") );
+  notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 1");
   writeCellScalarData<SurfaceDataContainer, double>(sm, getFaceAttributeMatrixName(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1,
                                                     "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Principal Curvature 2") );
+  notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 2");
   writeCellScalarData<SurfaceDataContainer, double>(sm, getFaceAttributeMatrixName(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2,
                                                     "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Feature Face Id") );
+  notifyStatusMessage(getHumanLabel(), "Writing Feature Face Id");
   writeCellScalarData<SurfaceDataContainer, int32_t>(sm, getFaceAttributeMatrixName(), DREAM3D::FaceData::SurfaceMeshFeatureFaceId,
                                                      "int", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Gaussian Curvature") );
+  notifyStatusMessage(getHumanLabel(), "Writing Gaussian Curvature");
   writeCellScalarData<SurfaceDataContainer, double>(sm, getFaceAttributeMatrixName(), DREAM3D::FaceData::SurfaceMeshGaussianCurvatures,
                                                     "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Writing Mean Curvature") );
+  notifyStatusMessage(getHumanLabel(), "Writing Mean Curvature");
   writeCellScalarData<SurfaceDataContainer, double>(sm, getFaceAttributeMatrixName(), DREAM3D::FaceData::SurfaceMeshMeanCurvatures,
                                                     "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 #if 0

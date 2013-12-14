@@ -18,7 +18,7 @@
 // -----------------------------------------------------------------------------
 class DREAM3DLib_EXPORT Filt0 : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(Filt0);
     DREAM3D_STATIC_NEW_MACRO(Filt0);
@@ -104,7 +104,7 @@ class DREAM3DLib_EXPORT Filt0 : public AbstractFilter
 // -----------------------------------------------------------------------------
 class DREAM3DLib_EXPORT Filt1 : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(Filt1);
     DREAM3D_STATIC_NEW_MACRO(Filt1);

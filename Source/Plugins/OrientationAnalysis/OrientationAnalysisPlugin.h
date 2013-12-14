@@ -7,7 +7,8 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
-#include "QtSupport/DREAM3DPluginInterface.h"
+
+#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
 
 
 /**
@@ -19,7 +20,8 @@
  */
 class OrientationAnalysisPlugin : public QObject, public DREAM3DPluginInterface
 {
-    Q_OBJECT;
+    Q_OBJECT
+
     Q_INTERFACES(DREAM3DPluginInterface)
 
   public:

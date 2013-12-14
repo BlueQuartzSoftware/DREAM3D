@@ -447,15 +447,15 @@ void OrthoRhombicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Flo
   // Sanity Check the size of the arrays
   if (xyz001->getNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize0)
   {
-    xyz001->Resize(nOrientations * Detail::Orthorhombic::symSize0 * 3);
+    xyz001->resize(nOrientations * Detail::Orthorhombic::symSize0 * 3);
   }
   if (xyz011->getNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize1)
   {
-    xyz011->Resize(nOrientations * Detail::Orthorhombic::symSize1 * 3);
+    xyz011->resize(nOrientations * Detail::Orthorhombic::symSize1 * 3);
   }
   if (xyz111->getNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize2)
   {
-    xyz111->Resize(nOrientations * Detail::Orthorhombic::symSize2 * 3);
+    xyz111->resize(nOrientations * Detail::Orthorhombic::symSize2 * 3);
   }
 
 

@@ -308,8 +308,7 @@ void SegmentBetaGrains::execute()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
 
@@ -383,7 +382,7 @@ void SegmentBetaGrains::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 
@@ -398,8 +397,7 @@ int SegmentBetaGrains::getSeed(size_t gnum)
   {
     ss << " DataContainer was NULL";
     setErrorCondition(-1);
-    PipelineMessage em (getHumanLabel(), ss.str(), getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return -1;
   }
 

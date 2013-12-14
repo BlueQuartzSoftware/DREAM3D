@@ -170,8 +170,7 @@ void AlignSectionsFeatureCentroid::dataCheck()
   {
     QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<int> dims(1 , 1);
@@ -202,7 +201,7 @@ void AlignSectionsFeatureCentroid::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Aligning Sections Complete") );
+  notifyStatusMessage(getHumanLabel(), "Aligning Sections Complete");
 }
 
 
@@ -250,7 +249,7 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int>& xshifts, QVector<in
     yCentroid[iter] = 0;
 
     QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
-    //  notifyStatusMessage(ss);
+    //  notifyStatusMessage(getHumanLabel(), ss);
     slice = static_cast<int>( (dims[2] - 1) - iter );
     for (DimType l = 0; l < dims[1]; l++)
     {

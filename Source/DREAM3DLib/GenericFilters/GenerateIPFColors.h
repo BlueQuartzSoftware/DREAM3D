@@ -53,19 +53,16 @@
  */
 class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GenerateIPFColors);
-    DREAM3D_STATIC_NEW_MACRO(GenerateIPFColors);
-    DREAM3D_TYPE_MACRO_SUPER(GenerateIPFColors, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GenerateIPFColors)
+    DREAM3D_STATIC_NEW_MACRO(GenerateIPFColors)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateIPFColors, AbstractFilter)
 
     virtual ~GenerateIPFColors();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    //------ Required Cell Data
-    //------ Required Ensemble Data
-    //------ Created Cell Data
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, ReferenceDir)

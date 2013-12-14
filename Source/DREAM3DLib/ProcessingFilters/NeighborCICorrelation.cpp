@@ -247,6 +247,6 @@ void NeighborCICorrelation::execute()
   }
 
 // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Filling Bad Data Complete") );
+  notifyStatusMessage(getHumanLabel(), "Filling Bad Data Complete");
 }
 

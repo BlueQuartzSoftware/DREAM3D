@@ -31,6 +31,8 @@
 #ifndef OBSERVER_H_
 #define OBSERVER_H_
 
+
+#include <QtCore/QObject>
 #include <QtCore/QVector>
 #include <QtCore/QString>
 
@@ -47,50 +49,18 @@
  * @date September 22, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT Observer
+class DREAM3DLib_EXPORT Observer : public QObject
 {
+    Q_OBJECT
+
   public:
     Observer();
     DREAM3D_TYPE_MACRO(Observer)
 
     virtual ~Observer();
 
-    /* --------- These methods are typically called from a subclass of Observer *******/
-
-    /**
-     * @brief This function prints a progress integer to the console.  Progress integers are assumed to be
-     * between 0 and 100.
-     * @param progress The progress of the FeatureGenerator normalized to a value between 0 and 100
-     */
-    virtual void updatePipelineProgress(int progress);
-
-    /**
-     * @brief These functions print human readable messages to the console.
-     * @param msg The message to be printed
-     */
-    virtual void updatePipelineMessage(const char* msg);
-    virtual void updatePipelineMessage(const QString& msg);
-
-    /**
-     * @brief These functions print both a human readable message and a progress integer to the console.
-     * Progress integers are assumed to be between 0 and 100.
-     * @param msg The message to be printed
-     * @param progress The progress of the FeatureGenerator normalized to a value between 0 and 100
-     */
-    virtual void updatePipelineProgressAndMessage(const char* msg, int progress);
-    virtual void updatePipelineProgressAndMessage(const QString& msg, int progress);
-
-    /* --------------------------------------- */
-
-    /**
-     * @brief These functions send one or many pipeline messages to the DREAM3D GUI.  Error and Warning messages
-     * are sent to the table widget, and status messages are sent to the status bar.
-     * @param msg The message to be printed
-     * @param msgs The messages to be printed
-     */
-    virtual void sendPipelineMessage(PipelineMessage& msg);
-    virtual void sendPipelineMessages(QVector<PipelineMessage> msgs);
-
+  public slots:
+    void processPipelineMessage(const PipelineMessage& pm) const;
 
   private:
     Observer(const Observer&); // Copy Constructor Not Implemented

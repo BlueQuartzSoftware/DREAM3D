@@ -97,8 +97,7 @@ void RemoveArrays::dataCheck()
     if(NULL == m)
     {
       setErrorCondition(-999);
-      PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
       return;
     }
     MapOfAttributeArrays_t mapOfArraysToRemove = iter.value();
@@ -108,8 +107,7 @@ void RemoveArrays::dataCheck()
       if(NULL == m)
       {
         setErrorCondition(-999);
-        PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-        emit filterGeneratedMessage(em);
+        notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
         return;
       }
       QSet<QString> arraysToRemove = iter.value();
@@ -144,7 +142,7 @@ void RemoveArrays::execute()
   // Simply running the preflight will do what we need it to.
   dataCheck();
   if(getErrorCondition() < 0) { return; }
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

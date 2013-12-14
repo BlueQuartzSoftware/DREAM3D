@@ -247,16 +247,14 @@ void MovingFiniteElementSmoothing::dataCheck()
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
   if (getErrorCondition() >= 0)
@@ -274,8 +272,7 @@ void MovingFiniteElementSmoothing::dataCheck()
     if(sm->getEdges().get() == NULL)
     {
       setErrorCondition(-385);
-      PipelineMessage em (getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", getErrorCondition());
     }
   }
 }
@@ -391,7 +388,7 @@ void MovingFiniteElementSmoothing::execute()
     if((edgesDataArray.get() == NULL || iEdgesDataArray.get() == NULL) && m_SmoothTripleLines == true)
     {
       setErrorCondition(-596);
-      notifyErrorMessage("Either the Edges or Internal Edges array was NULL which means those arrays have not been created and you have selected to smooth triple lines. Disable the smoothing of triple lines.", -556);
+      notifyErrorMessage(getHumanLabel(), "Either the Edges or Internal Edges array was NULL which means those arrays have not been created and you have selected to smooth triple lines. Disable the smoothing of triple lines.", -556);
       return;
     }
 
@@ -460,7 +457,7 @@ void MovingFiniteElementSmoothing::execute()
               {
                 qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad" << "\n";
                 setErrorCondition(-666);
-                notifyErrorMessage("triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
+                notifyErrorMessage(getHumanLabel(), "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
               }
               return;
             }
@@ -485,7 +482,7 @@ void MovingFiniteElementSmoothing::execute()
               {
                 qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad" << "\n";
                 setErrorCondition(-666);
-                notifyErrorMessage("triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
+                notifyErrorMessage(getHumanLabel(), "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
               }
               return;
             }
@@ -708,7 +705,7 @@ void MovingFiniteElementSmoothing::execute()
       qDebug() << "Update loop: " << updates << "\n";
     }
     QString ss = QObject::tr("Iteration: %1").arg(updates);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
 
     Dihedral_min = 180.;
     Dihedral_max = 0.;
@@ -1042,7 +1039,7 @@ void MovingFiniteElementSmoothing::execute()
 
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

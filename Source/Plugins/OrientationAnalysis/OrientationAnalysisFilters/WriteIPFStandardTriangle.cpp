@@ -179,7 +179,7 @@ void WriteIPFStandardTriangle::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     ss = QObject::tr( ": The output file must be set before executing this filter.");
-    notifyErrorMessage(ss, -1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
   QFileInfo fi(getOutputFile());
@@ -187,12 +187,12 @@ void WriteIPFStandardTriangle::dataCheck()
   if (parentPath.exists() == false)
   {
     ss = QObject::tr( "The directory path for the output file does not exist.");
-    notifyWarningMessage(ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, -1);
   }
   if (m_ImageSize == 0)
   {
     setErrorCondition(-1005);
-    notifyErrorMessage("The size of the image is Zero and must be a positive integer.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "The size of the image is Zero and must be a positive integer.", getErrorCondition());
   }
 }
 
@@ -220,7 +220,7 @@ void WriteIPFStandardTriangle::execute()
 
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 
@@ -229,7 +229,7 @@ void WriteIPFStandardTriangle::execute()
 // -----------------------------------------------------------------------------
 QImage WriteIPFStandardTriangle::generateCubicHighTriangle()
 {
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Generating Cubic IPF Triangle Legend") );
+  notifyStatusMessage(getHumanLabel(), "Generating Cubic IPF Triangle Legend");
 
   CubicOps ops;
   UInt8ArrayType::Pointer rgbaImage = ops.generateIPFTriangleLegend(getImageSize());
@@ -338,7 +338,7 @@ void WriteIPFStandardTriangle::writeImage( QImage& image)
 {
 
   QString ss = QObject::tr("Writing Image %1").arg(getOutputFile());
-  notifyStatusMessage(ss);
+  notifyStatusMessage(getHumanLabel(), ss);
 
   QFileInfo fi((m_OutputFile));
   QDir parent(fi.absolutePath());
@@ -352,7 +352,7 @@ void WriteIPFStandardTriangle::writeImage( QImage& image)
   {
     QString ss = QObject::tr("The Triangle image file '%1' was not saved.").arg(getOutputFile());
     setErrorCondition(-90011);
-    notifyErrorMessage(ss, getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 

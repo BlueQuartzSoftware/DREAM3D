@@ -156,8 +156,7 @@ void FindMDF::dataCheck()
       ss.str("");
       ss << "NeighborLists Array Not Initialized correctly" << "\n";
       setErrorCondition(-305);
-      PipelineMessage em (getHumanLabel(), ss.str(), getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     }
   }
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFeatureData(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
@@ -176,8 +175,7 @@ void FindMDF::dataCheck()
       ss.str("");
       ss << "SurfaceAreaLists Array Not Initialized correctly" << "\n";
       setErrorCondition(-306);
-      PipelineMessage em (getHumanLabel(), ss.str(), getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     }
   }
 
@@ -219,8 +217,7 @@ void FindMDF::execute()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    PipelineMessage em(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
     return;
   }
   setErrorCondition(0);
@@ -329,6 +326,6 @@ void FindMDF::execute()
     }
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindMDF Completed") );
+  notifyStatusMessage(getHumanLabel(), "FindMDF Completed");
 }
 

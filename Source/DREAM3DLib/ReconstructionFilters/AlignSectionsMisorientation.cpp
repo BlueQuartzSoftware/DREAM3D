@@ -173,8 +173,7 @@ void AlignSectionsMisorientation::dataCheck()
   {
     QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<int> dims(1 , 4);
@@ -221,7 +220,7 @@ void AlignSectionsMisorientation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 
@@ -284,7 +283,7 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
   {
     progInt = ((float)iter / dims[2]) * 100.0f;
     QString ss = QObject::tr("Determining Shifts - %1% Complete").arg(progInt);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
     if (getCancel() == true)
     {
       return;

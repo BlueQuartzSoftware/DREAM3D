@@ -138,8 +138,7 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
   {
     ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -151,21 +150,20 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
   {
     NeighborList<float>::Pointer misalignmentListPtr = NeighborList<float>::New();
     misalignmentListPtr->SetName(m_CAxisMisalignmentListArrayName);
-    misalignmentListPtr->Resize(cellFeatureAttrMat->getNumTuples());
+    misalignmentListPtr->resize(cellFeatureAttrMat->getNumTuples());
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_CAxisMisalignmentListArrayName, misalignmentListPtr);
     m_CAxisMisalignmentList = misalignmentListPtr.get();
     if (misalignmentListPtr.get() == NULL)
     {
       ss = QObject::tr("MisalignmentLists Array Not Initialized correctly");
       setErrorCondition(-308);
-      PipelineMessage em (getHumanLabel(), ss, -308, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -308);
     }
   }
   else
   {
     m_CAxisMisalignmentList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(misalignmentPtr.get());
-    m_CAxisMisalignmentList->Resize(cellFeatureAttrMat->getNumTuples());
+    m_CAxisMisalignmentList->resize(cellFeatureAttrMat->getNumTuples());
   }
 }
 
@@ -272,5 +270,5 @@ void FindFeatureNeighborCAxisMisalignments::execute()
     m_CAxisMisalignmentList->setList(static_cast<int>(i), misaL);
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindFeatureNeighborCAxisMisalignments Completed") );
+  notifyStatusMessage(getHumanLabel(), "FindFeatureNeighborCAxisMisalignments Completed");
 }

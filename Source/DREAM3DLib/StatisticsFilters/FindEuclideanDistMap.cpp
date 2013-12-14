@@ -321,7 +321,7 @@ void FindEuclideanDistMap::execute()
   if(getErrorCondition() < 0) { return; }
 
   find_euclideandistmap();
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 

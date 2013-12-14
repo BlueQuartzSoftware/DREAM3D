@@ -77,14 +77,12 @@ void VolumeDataContainerReader::dataCheck()
   if(NULL == dc)
   {
     setErrorCondition(-383);
-    PipelineMessage em (getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition());
   }
   if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
   else if (preflight == true)
   {
@@ -126,8 +124,7 @@ void VolumeDataContainerReader::execute()
   if (NULL == dc)
   {
     QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    PipelineMessage em (getHumanLabel(), ss, -2, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -2);
     setErrorCondition(-1);
     return;
   }
@@ -188,8 +185,7 @@ int VolumeDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t vol
     err = QH5Utilities::closeFile(fileId);
     QString ss = QObject::tr(": Error opening group '%1'").arg(DREAM3D::Defaults::VolumeDataContainerName);
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), ss, -150, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -150);
     return -1;
   }
 
@@ -208,8 +204,7 @@ int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], f
   int err = QH5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
   if(err < 0)
   {
-    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Dimensions", err);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "DataContainerReader Error Reading the Dimensions", err);
     setErrorCondition(-151);
     return -1;
   }
@@ -217,8 +212,7 @@ int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], f
   err = QH5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
   if(err < 0)
   {
-    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
     setErrorCondition(-152);
     return -1;
   }
@@ -226,8 +220,7 @@ int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], f
   err = QH5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
   if(err < 0)
   {
-    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Origin", err);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "DataContainerReader Error Reading the Origin", err);
     setErrorCondition(-153);
     return -1;
   }
@@ -282,7 +275,7 @@ int VolumeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
       if (err < 0)
       {
         setErrorCondition(err);
-        notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
         return err;
       }
       dc->setCells(cellsPtr);
@@ -297,7 +290,7 @@ int VolumeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         if(err < 0)
         {
           setErrorCondition(err);
-          notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+          notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer cellNeighbors = Int32DynamicListArray::New();
@@ -314,7 +307,7 @@ int VolumeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
         if(err < 0)
         {
           setErrorCondition(err);
-          notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+          notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer cellsContainingVert = Int32DynamicListArray::New();
@@ -346,8 +339,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
   {
     QString ss = QObject::tr(": Error opening data container folder");
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -430,8 +422,7 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupN
   {
     QString ss = QObject::tr("Error opening HDF5 Group %1").arg(groupName);
     setErrorCondition(-154);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -154;
   }
 

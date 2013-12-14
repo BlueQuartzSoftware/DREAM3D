@@ -64,93 +64,30 @@
  * @date Nov 28, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AbstractFilter : public QObject
+class DREAM3DLib_EXPORT AbstractFilter : public Observable
 {
     Q_OBJECT
+    Q_PROPERTY(int PipelineIndex READ getPipelineIndex WRITE setPipelineIndex)
+    Q_PROPERTY(QString GroupName READ getGroupName CONSTANT)
+    Q_PROPERTY(QString SubGroupName READ getSubGroupName CONSTANT)
+    Q_PROPERTY(QString HumanLabel READ getHumanLabel CONSTANT)
+    Q_PROPERTY(QString FilterVersion READ getFilterVersion CONSTANT)
+    Q_PROPERTY(int Cancel READ getCancel WRITE setCancel)
 
   public:
     DREAM3D_SHARED_POINTERS(AbstractFilter)
     DREAM3D_STATIC_NEW_MACRO(AbstractFilter)
-    DREAM3D_TYPE_MACRO(AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(AbstractFilter, Observable)
 
     virtual ~AbstractFilter();
 
+    // ------------------------------
     // These should be implemented by the subclass
+    // ------------------------------
+
     virtual const QString getGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
     virtual const QString getSubGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
     virtual const QString getHumanLabel() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
-
-    virtual const QString getFilterVersion() { return DREAM3DLib::Version::Complete(); }
-
-    DREAM3D_INSTANCE_PROPERTY(DataContainerArray::Pointer, DataContainerArray)
-
-    DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
-
-    /**
-     * @brief This method should be fully implemented in subclasses.
-     */
-    virtual void execute();
-
-    /**
-     * @brief preflight
-     */
-    virtual void preflight();
-
-
-#if 0
-    DREAM3D_INSTANCE_PROPERTY(QVector<PipelineMessage>, PipelineMessages)
-
-    void addErrorMessage(PipelineMessage& msg);
-    void addErrorMessage(const QString& filterName, const QString& errorDescription, int errorCode);
-    void addErrorMessages(QVector<PipelineMessage> msgVector);
-
-    void addWarningMessage(PipelineMessage& msg);
-    void addWarningMessage(const QString& filterName, const QString& warnDescription, int warnCode);
-    void addWarningMessages(QVector<PipelineMessage> msgVector);
-
-    void removeErrorMessage(PipelineMessage msg);
-    void removeErrorMessage(int index);
-    void removeErrorMessages(int start, int end);
-
-    void clearErrorMessages();
-
-
-    /**
-     * @brief tbbTaskProgress If your filter spawns threads for parallelization you can use this callback to try and
-     * keep progress for your parallel threads.
-     */
-    virtual void tbbTaskProgress();
-#endif
-
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
-
-    DREAM3D_INSTANCE_PROPERTY(int, PipelineIndex)
-
-    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, PreviousFilter)
-
-    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, NextFilter)
-
-    /**
-     * @brief doesPipelineContainFilterBeforeThis
-     * @param name
-     * @return
-     */
-    virtual bool doesPipelineContainFilterBeforeThis(const QString& name);
-
-    /**
-     * @brief doesPipelineContainFilterAfterThis
-     * @param name
-     * @return
-     */
-    virtual bool doesPipelineContainFilterAfterThis(const QString& name);
-
-
-    DREAM3D_INSTANCE_PROPERTY(QVector<FilterParameter::Pointer>, FilterParameters)
-
-    DREAM3D_INSTANCE_PROPERTY(QVector<CreatedArrayHelpIndexEntry::Pointer>, CreatedArrayHelpIndexEntries)
-    void addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry);
-
-    virtual void printValues(std::ostream& out) {}
 
     /**
      * @brief setupFilterParameters
@@ -170,20 +107,76 @@ class DREAM3DLib_EXPORT AbstractFilter : public QObject
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+    /**
+     * @brief This method should be fully implemented in subclasses.
+     */
+    virtual void execute();
+
+    /**
+     * @brief preflight
+     */
+    virtual void preflight();
+
+    // ------------------------------
+    // Standard methods for this class the are commonly used by subclasses.
+    // ------------------------------
+    virtual const QString getFilterVersion() { return DREAM3DLib::Version::Complete(); }
+
+    DREAM3D_INSTANCE_PROPERTY(DataContainerArray::Pointer, DataContainerArray)
+
+    DREAM3D_INSTANCE_PROPERTY(QVector<FilterParameter::Pointer>, FilterParameters)
+
+    DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
+
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+
+    // ------------------------------
+    // These functions allow interogating the position the filter is in the pipeline and the previous and next filters
+    // ------------------------------
+
+    /**
+    * @brief This property tells which index the filter is in a pipeline
+    */
+    DREAM3D_INSTANCE_PROPERTY(int, PipelineIndex)
+
+    /**
+    * @brief Returns the previous filter
+    */
+    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, PreviousFilter)
+    /**
+    * @brief Returns the next filter in the pipeline
+    */
+    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, NextFilter)
+
+    /**
+     * @brief doesPipelineContainFilterBeforeThis
+     * @param name
+     * @return
+     */
+    virtual bool doesPipelineContainFilterBeforeThis(const QString& name);
+
+    /**
+     * @brief doesPipelineContainFilterAfterThis
+     * @param name
+     * @return
+     */
+    virtual bool doesPipelineContainFilterAfterThis(const QString& name);
 
 
-    void notifyErrorMessage(const QString &ss, int code);
+    // ------------------------------
+    // This pair of methods allows the automatic creation of documention index
+    // ------------------------------
+    DREAM3D_INSTANCE_PROPERTY(QVector<CreatedArrayHelpIndexEntry::Pointer>, CreatedArrayHelpIndexEntries)
+    void addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry);
 
-    void notifyWarningMessage(const QString &ss, int code);
+    virtual void printValues(std::ostream& out) {}
 
-    void notifyStatusMessage(const QString &ss);
-
+    /**
+     * @brief getCancel Returns if the filter has been cancelled.
+     * @return
+     */
     bool getCancel();
 
-
-  signals:
-
-    void filterGeneratedMessage(const PipelineMessage &msg);
 
   public slots:
 
@@ -192,13 +185,6 @@ class DREAM3DLib_EXPORT AbstractFilter : public QObject
       */
     void setCancel(bool value);
 
-    /**
-     * @brief This method will cause this object to 'emit' the filterGeneratedMessage() signal. This is useful if other
-     * classes need the filter to emit an error or warning messge from a class that is not able to emit the proper signals
-     * or the class is not connected to anything that would receive the signals
-     * @param msg
-     */
-    void emitFilterGeneratedMessage(const PipelineMessage &msg);
 
   protected:
     AbstractFilter();

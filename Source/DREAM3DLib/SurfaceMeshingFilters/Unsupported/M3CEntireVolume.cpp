@@ -125,8 +125,7 @@ void M3CEntireVolume::dataCheck()
   if (NULL == sm)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -173,10 +172,8 @@ void M3CEntireVolume::execute()
   if(NULL == m)
   {
     setErrorCondition(-1);
-
     ss << " VoxelDataContainer was NULL";
-    PipelineMessage em(getNameOfClass(), ss.str(), -1);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -184,10 +181,8 @@ void M3CEntireVolume::execute()
   if(getSurfaceMeshDataContainer() == NULL)
   {
     setErrorCondition(-1);
-
     ss << " SurfaceMeshDataContainer was NULL";
-    PipelineMessage em(getNameOfClass(), ss.str(), -1);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -207,12 +202,11 @@ void M3CEntireVolume::execute()
     setErrorCondition(-1);
 
     ss << "Error Creating the Surface Mesh";
-    PipelineMessage em(getNameOfClass(), ss.str(), -1);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -339,23 +333,23 @@ int M3CEntireVolume::createMesh()
   Node* vertex = nodesPtr.get()->GetPointer(0);
 
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Finding neighbors for each site...") );
+  notifyStatusMessage(getHumanLabel(), "Finding neighbors for each site...");
   get_neighbor_list(neigh, NS, NSP, fileDim[0], fileDim[1], fileDim[2]);
 
   //printf("\nReading edge and neighbor spin tables...\n");
   //read_edge_neighspin_table(edgeTable_2d, nsTable_2d);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nInitializing all possible nodes...") );
+  notifyStatusMessage(getHumanLabel(), "\nInitializing all possible nodes...");
   initialize_nodes(voxCoords, vertex, NS, res[0], res[1], res[2]);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nInitializing all possible squares...") );
+  notifyStatusMessage(getHumanLabel(), "\nInitializing all possible squares...");
   initialize_squares(neigh, square, NS, NSP);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nCounting number of total edges turned on...\n") );
+  notifyStatusMessage(getHumanLabel(), "\nCounting number of total edges turned on...\n");
   nFEdge = get_number_fEdges(square, point, neigh, edgeTable_2d, NS);
   ss.str("");
   ss << "total number of face edges = " << nFEdge;
-  notifyStatusMessage(ss.str());
+  notifyStatusMessage(getHumanLabel(), ss.str());
 
   // memory allocation for face edges...
 //  fedge = (segment *)malloc(nFEdge * sizeof(segment));
@@ -363,14 +357,14 @@ int M3CEntireVolume::createMesh()
   faceEdges->initializeWithZeros();
   Segment* fedge = faceEdges.get()->GetPointer(0);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Finding nodes and edges on each square...") );
+  notifyStatusMessage(getHumanLabel(), "Finding nodes and edges on each square...");
   get_nodes_fEdges(square, point, neigh, vertex, fedge, edgeTable_2d, nsTable_2d, NS, NSP, fileDim[0]);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nCounting number of triangles...") );
+  notifyStatusMessage(getHumanLabel(), "\nCounting number of triangles...");
   nTriangle = get_number_triangles(point, square, vertex, fedge, NS, NSP, fileDim[0]);
   ss.str("");
   ss << "\ttotal number of triangles = " << nTriangle;
-  notifyStatusMessage(ss.str());
+  notifyStatusMessage(getHumanLabel(), ss.str());
 
 
   // memory allocation for triangle...
@@ -383,13 +377,13 @@ int M3CEntireVolume::createMesh()
   mCubeIDPtr->initializeWithZeros();
   int32_t* mCubeID = mCubeIDPtr->GetPointer(0);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nFinding triangles...") );
+  notifyStatusMessage(getHumanLabel(), "\nFinding triangles...");
   get_triangles(voxCoords, triangle, mCubeID, square, vertex, fedge, neigh, NS, NSP, fileDim[0]);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nupdating triagle sides as face edges...\n") );
+  notifyStatusMessage(getHumanLabel(), "\nupdating triagle sides as face edges...\n");
   update_triangle_sides_with_fedge(triangle, mCubeID, fedge, square, nTriangle, fileDim[0], NSP);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nCounting the number of inner edges including duplicates...\n") );
+  notifyStatusMessage(getHumanLabel(), "\nCounting the number of inner edges including duplicates...\n");
   tnIEdge = get_number_unique_inner_edges(triangle, mCubeID, nTriangle);
   //printf("\ttotal number of unique inner edges = %d\n", tnIEdge);
   // memory allocation for inner edges...
@@ -398,23 +392,23 @@ int M3CEntireVolume::createMesh()
   internalEdges->initializeWithZeros();
   ISegment* iedge = internalEdges.get()->GetPointer(0);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nFinidng unique inner edges and updating triagle sides as inner edges...\n") );
+  notifyStatusMessage(getHumanLabel(), "\nFinidng unique inner edges and updating triagle sides as inner edges...\n");
   get_unique_inner_edges(triangle, mCubeID, iedge, nTriangle, nFEdge);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nupdating node and edge kinds...\n") );
+  notifyStatusMessage(getHumanLabel(), "\nupdating node and edge kinds...\n");
   update_node_edge_kind(vertex, fedge, iedge, triangle, nTriangle, nFEdge);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nArranging neighboring spins across the triangle patches...\n") );
+  notifyStatusMessage(getHumanLabel(), "\nArranging neighboring spins across the triangle patches...\n");
   arrange_spins(point, voxCoords, triangle, vertex, nTriangle, fileDim[0], NSP);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nAssigning new node IDs...\n") );
+  notifyStatusMessage(getHumanLabel(), "\nAssigning new node IDs...\n");
   DataArray<int32_t>::Pointer new_ids_for_nodes = DataArray<int32_t>::CreateArray(7 * NS, 1, "NewIds_For_Nodes");
   new_ids_for_nodes->initializeWithValues(-1);
 
   nNodes = assign_new_nodeID(vertex, new_ids_for_nodes, NS);
   ss.str("");
   ss << "number of nodes used = " << nNodes;
-  notifyStatusMessage(ss.str());
+  notifyStatusMessage(getHumanLabel(), ss.str());
 
   // Create new shortend arrays for the Triangles and the Nodes and NodeKind
   StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
@@ -431,7 +425,7 @@ int M3CEntireVolume::createMesh()
   sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
   sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshNodeType, shortNodeKindPtr);
 
-//  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "\nOutputting nodes and triangles...\n") );
+//  notifyStatusMessage(getHumanLabel(), "\nOutputting nodes and triangles...\n");
 //  get_output(vertex, fedge, iedge, triangle, NS, nNodes, nFEdge, tnIEdge, nTriangle, mp);
 
 
@@ -1012,7 +1006,7 @@ int M3CEntireVolume::get_number_fEdges(Face* sq,
         }
         else if(atBulk == 1)
         {
-          notifyErrorMessage("one negative spin case is not supposed to happen! Wrong!", -1001);
+          notifyErrorMessage(getHumanLabel(), "one negative spin case is not supposed to happen! Wrong!", -1001);
         }
         else
         {
@@ -1155,7 +1149,7 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
 
                   if(atBulk == 1)
                   {
-                    notifyErrorMessage("one negative spin case is not supposed to happen! Wrong!", -1001);
+                    notifyErrorMessage(getHumanLabel(), "one negative spin case is not supposed to happen! Wrong!", -1001);
                   }
 
                 }
@@ -1195,7 +1189,7 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
 
 
   ss << "total number of identified face edges = " <<  eid;
-  notifyStatusMessage(ss.str());
+  notifyStatusMessage(getHumanLabel(), ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -1358,7 +1352,7 @@ int M3CEntireVolume::treat_anomaly(int tnst[4],
 
   if(minid == -1)
   {
-    notifyErrorMessage("Something wrong with counting same-spin neighbors for each corner of the square!", -1001);
+    notifyErrorMessage(getHumanLabel(), "Something wrong with counting same-spin neighbors for each corner of the square!", -1001);
     tempFlag = 0;
   }
   else if(minid == 1 || minid == 3)
@@ -1704,7 +1698,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
       {
         ss.str("");
         ss << "corners are wrongfully burnt in this marching cube: cube id =" << i << " number burnt = " << nburnt;
-        notifyErrorMessage(ss.str(), -1001);
+        notifyErrorMessage(getHumanLabel(), ss.str(), -1001);
       }
       // update nodeKind of body center node in the current marching cube...
       if(nkFlag > 0)
@@ -1735,7 +1729,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
     }
     else
     {
-      notifyErrorMessage("get_number_triangles - what?", -10666);
+      notifyErrorMessage(getHumanLabel(), "get_number_triangles - what?", -10666);
     }
 
     // if the current marching cube is a collection of 6 effective squares...and
@@ -1765,7 +1759,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
 
       if(tindex != nFE)
       {
-        notifyErrorMessage("something wrong with counting number of edges for marching cube...", -10667);
+        notifyErrorMessage(getHumanLabel(), "something wrong with counting number of edges for marching cube...", -10667);
       }
 
       // Consider each case as Z. Wu's paper...
@@ -1800,7 +1794,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
 
   ss.str("");
   ss << "number of triangles for case 0, case 1 and case 2 = " << nTri0 << " " << nTri2 << " " << nTriM;
-  notifyStatusMessage(ss.str());
+  notifyStatusMessage(getHumanLabel(), ss.str());
   // sum up triangle numbers...
   nTri = nTri0 + nTri2 + nTriM;
 
@@ -1992,7 +1986,7 @@ int M3CEntireVolume::get_number_case0_triangles(int* afe,
       // do nothing...
       ss.str("");
       ss << "something wrong in counting # case 0 triangles... " << numN << " " << nfedge;
-      notifyErrorMessage(ss.str(), -1000);
+      notifyErrorMessage(getHumanLabel(), ss.str(), -1000);
     }
   }
 
@@ -2806,7 +2800,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
     }
     else
     {
-      notifyErrorMessage("get_triangles - what?", -1001);
+      notifyErrorMessage(getHumanLabel(), "get_triangles - what?", -1001);
     }
 
     // if the current marching cube is a collection of 6 effective squares...and
@@ -2844,7 +2838,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
 
       if(tindex != nFE)
       {
-        notifyErrorMessage("Something wrong with counting number of edges for marching cube...", -1001);
+        notifyErrorMessage(getHumanLabel(), "Something wrong with counting number of edges for marching cube...", -1001);
       }
 
       // Consider each case as Z. Wu's paper...
@@ -2872,7 +2866,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
       {
         ss.str("");
         ss << "Somthing's wrong in counting face centers turned on..." << nFC << "  " <<  i;
-        notifyErrorMessage(ss.str(), -1001);
+        notifyErrorMessage(getHumanLabel(), ss.str(), -1001);
       }
 
       free(arrayFE);
@@ -2881,7 +2875,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
 
   ss.str("");
   ss << "number of triangles found = " << tidIn;
-  notifyStatusMessage(ss.str());
+  notifyStatusMessage(getHumanLabel(), ss.str());
   return 0;
 }
 
@@ -4746,10 +4740,10 @@ int M3CEntireVolume::get_number_unique_inner_edges(Triangle* t, int* mCubeID, in
   while (i < numT);
   ss.str("");
   ss << "total number of inner edges including duplicates = " <<  nIED;
-  notifyStatusMessage(ss.str());
+  notifyStatusMessage(getHumanLabel(), ss.str());
   ss.str("");
   ss << "total number of unique inner edges = " << nIE;
-  notifyStatusMessage(ss.str());
+  notifyStatusMessage(getHumanLabel(), ss.str());
 
   return nIE;
 }
@@ -4959,7 +4953,7 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
           {
             ss.str("");
             ss << "something's wrong in counting inner edge kind!!! " << tedgeKind;
-            notifyErrorMessage(ss.str(), -1001);
+            notifyErrorMessage(getHumanLabel(), ss.str(), -1001);
           }
           IEindex++;
         }
@@ -4975,7 +4969,7 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
 
   ss.str("");
   ss << "total number of unique inner edges updated = " << IEindex;
-  notifyStatusMessage(ss.str());
+  notifyStatusMessage(getHumanLabel(), ss.str());
 }
 
 // -----------------------------------------------------------------------------

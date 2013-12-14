@@ -116,8 +116,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         {
           filter->setErrorCondition(err * 1010);
           ss = QObject::tr("AttributeMatrix:'%1' The name of the Attribute Array was empty. Please provide a name for this array").arg(getName());
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
       }
       // Now ask for the actual AttributeArray from the AttributeMatrix
@@ -127,8 +126,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         {
           filter->setErrorCondition(err * 1020);
           ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' does not exist in the AttributeMatrix and is required for this filter to execute.").arg(getName()).arg(attributeArrayName);
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeArray;
       }
@@ -144,8 +142,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         {
           filter->setErrorCondition(err * 1030);
           ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' is not compatible with desired dimensions.").arg(getName()).arg(attributeArrayName);
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeArray;
       }
@@ -155,8 +152,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       {
         filter->setErrorCondition(err * 1040);
         ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' could not be downcast using boost::dynamic_pointer_cast<T>.").arg(getName()).arg(attributeArrayName);
-        PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-        filter->emitFilterGeneratedMessage(em);
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
       return attributeArray;
     }
@@ -186,8 +182,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         {
           filter->setErrorCondition(-10002);
           ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeArray;
       }
@@ -198,8 +193,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       {
         filter->setErrorCondition(-10003);
         ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' could not be downcast using boost::dynamic_pointer_cast<T>.").arg(getName()).arg(attributeArrayName);
-        PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-        filter->emitFilterGeneratedMessage(em);
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
       return attributeArray;
     }
@@ -217,7 +211,13 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       addAttributeArray(name, attributeArray);
     }
 
-    //Get Array Size Check Func Here
+    /**
+     * @brief dataArrayCompatibility
+     * @param arrayName
+     * @param numComp
+     * @param filter
+     * @return
+     */
     template<class ArrayType, class AbstractFilter>
     bool dataArrayCompatibility(const QString& arrayName, int numComp, AbstractFilter* filter)
     {
@@ -229,8 +229,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         {
           QString ss = QObject::tr("Filter '%1' requires an available array with name '%2'").arg(filter->getHumanLabel()).arg(arrayName);
           filter->setErrorCondition(-501);
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
@@ -242,8 +241,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
           QString ss = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Compoenets = %3. The currently available array "
                                    " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples() * numComp)).arg(iDataArray->GetSize());
           filter->setErrorCondition(-501);
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
@@ -255,8 +253,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
           QString ss = QObject::tr("Filter '%1' requires an array where the number of components is %2 but the currently available array"
                                    " that was supplied has %3.").arg(filter->getHumanLabel()).arg(numComp).arg(iDataArray->GetNumberOfComponents());
           filter->setErrorCondition(-502);
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
@@ -267,19 +264,21 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         typename ArrayType::Pointer dat = ArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
         QString ss = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"
                                  "An Array with name '%4' is stored in the %5 but is of type %6\n")
-            .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
+                     .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
         if (NULL != filter)
         {
           filter->setErrorCondition(-502);
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
       return true;
     }
 
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, Type)
+    //DREAM3D_INSTANCE_PROPERTY(uint32_t, Type)
+    void setType(uint32_t value);
+    uint32_t getType();
+
     DREAM3D_INSTANCE_PROPERTY(QString, Name)
 
     /**
@@ -332,7 +331,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @brief Resizes an array from the Data Container
     * @param size The new size of the array
     */
-    void resizeAttributeArrays(size_t size);
+    void resizeAttributeArrays(size_t numTuples);
 
     /**
      * @brief Removes all the Cell Arrays
@@ -357,7 +356,10 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * in during a set of filtering operations then the a value of '32' would be returned.
     * @return
     */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumTuples)
+    size_t getNumTuples()
+    {
+      return m_NumTuples;
+    }
 
     virtual int writeAttributeArraysToHDF5(hid_t parentId);
     virtual int readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QSet<QString>& namesToRead);
@@ -370,8 +372,9 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& dataContainerName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName, const QString& hdfFileName);
 
   private:
-
+    size_t m_NumTuples;
     QMap<QString, IDataArray::Pointer> m_AttributeArrays;
+    uint32_t m_Type;
 
     AttributeMatrix(const AttributeMatrix&);
     void operator =(const AttributeMatrix&);

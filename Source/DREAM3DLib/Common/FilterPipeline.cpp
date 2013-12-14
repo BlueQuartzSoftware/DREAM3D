@@ -250,8 +250,8 @@ void FilterPipeline::connectFilterNotifications(QObject* filter)
 {
   for(int i = 0; i < m_MessageReceivers.size(); i++)
   {
-    connect(filter, SIGNAL(filterGeneratedMessage(PipelineMessage&)),
-            m_MessageReceivers.at(i), SLOT(processPipelineMessage(PipelineMessage&)) );
+    connect(filter, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            m_MessageReceivers.at(i), SLOT(processPipelineMessage(const PipelineMessage&)) );
   }
 
 }
@@ -263,8 +263,8 @@ void FilterPipeline::disconnectFilterNotifications(QObject* filter)
 {
   for(int i = 0; i < m_MessageReceivers.size(); i++)
   {
-    disconnect(filter, SIGNAL(filterGeneratedMessage(PipelineMessage&)),
-               m_MessageReceivers.at(i), SLOT(processPipelineMessage(PipelineMessage&)) );
+    disconnect(filter, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+               m_MessageReceivers.at(i), SLOT(processPipelineMessage(const PipelineMessage&)) );
   }
 }
 
@@ -312,8 +312,8 @@ void FilterPipeline::execute()
   // Connect this object to anything that wants to know about PipelineMessages
   for(int i = 0; i < m_MessageReceivers.size(); i++)
   {
-    connect(this, SIGNAL(pipelineGeneratedMessage(PipelineMessage&)),
-            m_MessageReceivers.at(i), SLOT(processPipelineMessage(PipelineMessage&)) );
+    connect(this, SIGNAL(pipelineGeneratedMessage(const PipelineMessage&)),
+            m_MessageReceivers.at(i), SLOT(processPipelineMessage(const PipelineMessage&)) );
   }
 
   // Start a Benchmark Clock so we can keep track of each filter's execution time

@@ -164,7 +164,7 @@ void SingleThresholdFeatures::dataCheck()
   if(m_SelectedFeatureArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    notifyErrorMessage("An array from the Volume DataContainer must be selected.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
 }
 
@@ -194,8 +194,7 @@ void SingleThresholdFeatures::execute()
 
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);
     setErrorCondition(-11001);
-    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -204,7 +203,7 @@ void SingleThresholdFeatures::execute()
   if (NULL == goodFeatures)
   {
     setErrorCondition(-11002);
-    notifyErrorMessage("Could not properly cast the output array to a BoolArrayType", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Could not properly cast the output array to a BoolArrayType", getErrorCondition());
     return;
   }
 
@@ -213,7 +212,7 @@ void SingleThresholdFeatures::execute()
   filter.execute(inputData.get(), goodFeaturesPtr.get());
 
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(goodFeaturesPtr->GetName(), goodFeaturesPtr);
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

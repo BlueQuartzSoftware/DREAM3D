@@ -155,10 +155,10 @@ void FindLargestCrossSections::execute()
   else
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The volume is not 3D and cannot be run through this filter", -999);
+    notifyErrorMessage(getHumanLabel(), "The volume is not 3D and cannot be run through this filter", -999);
     return;
   }
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindLargestCrossSections Completed") );
+  notifyStatusMessage(getHumanLabel(), "FindLargestCrossSections Completed");
 }
 
 // -----------------------------------------------------------------------------

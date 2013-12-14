@@ -74,7 +74,7 @@ void FileReader::dataCheck()
 int FileReader::readHeader()
 {
   setErrorCondition(-1);
-  notifyErrorMessage( "FileReader::readHeader() should be subclassed and functionality implemented.\nPlease notify dream3d@bluequartz.net", -1);
+  notifyErrorMessage(getHumanLabel(),  "FileReader::readHeader() should be subclassed and functionality implemented.\nPlease notify dream3d@bluequartz.net", -1);
   return -1;
 }
 
@@ -84,7 +84,7 @@ int FileReader::readHeader()
 int FileReader::readFile()
 {
   setErrorCondition(-1);
-  notifyErrorMessage("FileReader::readFile() should be subclassed and functionality implemented\nPlease notify dream3d@bluequartz.net", -1);
+  notifyErrorMessage(getHumanLabel(), "FileReader::readFile() should be subclassed and functionality implemented\nPlease notify dream3d@bluequartz.net", -1);
   return -1;
 }
 

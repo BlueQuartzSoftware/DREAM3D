@@ -143,15 +143,13 @@ void GoldfeatherReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 
@@ -221,7 +219,7 @@ void GoldfeatherReader::execute()
   if (NULL == f)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("Error opening Input file", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error opening Input file", getErrorCondition());
     return;
   }
   ScopedFileMonitor fileMonitor(f);
@@ -290,7 +288,7 @@ void GoldfeatherReader::execute()
     off_t fpos;
     fpos = ftell(f);
     setErrorCondition(-876);
-    notifyErrorMessage("Error Reading the number of Triangles from the file", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error Reading the number of Triangles from the file", getErrorCondition());
     return;
   }
 
@@ -325,7 +323,7 @@ void GoldfeatherReader::execute()
   sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(triNormalsPtr->GetName(), triNormalsPtr);
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

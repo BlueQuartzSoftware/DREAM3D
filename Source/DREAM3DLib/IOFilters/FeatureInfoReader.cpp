@@ -161,15 +161,13 @@ void FeatureInfoReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<int> dims(1, 1);
@@ -230,8 +228,7 @@ int FeatureInfoReader::readFile()
   {
     QString ss = QObject::tr("Failed to open: %1").arg(getInputFile());
     setErrorCondition(-1);
-    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     return -1;
   }
   int numfeatures;
@@ -257,9 +254,9 @@ int FeatureInfoReader::readFile()
     inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
     if(gnum >= featureActive->GetSize())
     {
-      featureActive->Resize(gnum + 1);
-      featurePhaseData->Resize(gnum + 1);
-      featureEulerData->Resize(gnum + 1);
+      featureActive->resize(gnum + 1);
+      featurePhaseData->resize(gnum + 1);
+      featureEulerData->resize(gnum + 1);
     }
     featureEulerData->SetValue(3 * gnum, ea1);
     featureEulerData->SetValue(3 * gnum + 1, ea2);
@@ -297,7 +294,7 @@ int FeatureInfoReader::readFile()
     size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
     if (0 == totalFeatures)
     {
-      notifyErrorMessage("The number of features is Zero and should be greater than Zero", -600);
+      notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
       return -999;
     }
 
@@ -316,14 +313,14 @@ int FeatureInfoReader::readFile()
     RenumberFeatures::Pointer renum = RenumberFeatures::New();
     renum->setDataContainerArray(getDataContainerArray());
     connect(renum.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+            this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
     renum->setMessagePrefix(getMessagePrefix());
     renum->execute();
     setErrorCondition(renum->getErrorCondition());
 
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;
 }
 

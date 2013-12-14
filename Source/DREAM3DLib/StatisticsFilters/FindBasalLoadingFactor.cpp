@@ -207,6 +207,6 @@ void FindBasalLoadingFactor::execute()
     m_BasalLoadingFactor[i] = w;
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindBasalLoadingFactor Completed") );
+  notifyStatusMessage(getHumanLabel(), "FindBasalLoadingFactor Completed");
 }
 

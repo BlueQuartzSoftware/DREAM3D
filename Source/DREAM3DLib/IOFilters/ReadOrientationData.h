@@ -58,7 +58,7 @@
  */
 class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(ReadOrientationData)
     DREAM3D_STATIC_NEW_MACRO(ReadOrientationData)
@@ -172,7 +172,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
       if (phases.size() == 0)
       {
         setErrorCondition(reader->getErrorCode());
-        notifyErrorMessage(reader->getErrorMessage(), getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
         return getErrorCondition();
       }
 
@@ -212,6 +212,9 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
       AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
       if(NULL == attrMatrix.get() ) { return -2; }
 
+      // Resize the AttributeMatrix based on the size of the crystal structures array
+      attrMatrix->resizeAttributeArrays(crystalStructures->getNumberOfTuples());
+      // Now add the attributeArray to the AttributeMatrix
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);

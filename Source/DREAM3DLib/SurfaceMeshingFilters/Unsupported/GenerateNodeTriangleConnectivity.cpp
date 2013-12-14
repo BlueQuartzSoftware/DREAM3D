@@ -103,8 +103,7 @@ void GenerateNodeTriangleConnectivity::dataCheck()
   if(NULL == sm)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -112,16 +111,14 @@ void GenerateNodeTriangleConnectivity::dataCheck()
     if(sm->getVertices().get() == NULL)
     {
       setErrorCondition(-384);
-      PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
     }
 
     // We MUST have Triangles defined also.
     if(sm->getFaces().get() == NULL)
     {
       setErrorCondition(-384);
-      PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
     }
     else
     {
@@ -170,20 +167,20 @@ void GenerateNodeTriangleConnectivity::execute()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
+    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
 
 
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
+  notifyStatusMessage(getHumanLabel(), "Starting");
 
   // Generate the connectivity data
   generateConnectivity();
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 #if 0
@@ -207,12 +204,12 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
+    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
     return;
   }
   int ntri = trianglesPtr->GetNumberOfTuples();
   NodeTrianglesMap_t m_Node2Triangle;
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Creating the Mapping of Triangles to Node") );
+  notifyStatusMessage(getHumanLabel(), "Creating the Mapping of Triangles to Node");
   // get the triangle definitions - use the pointer to the start of the Struct Array
   Triangle* triangles = trianglesPtr->GetPointer(0);
   // Generate the map of node_id -> Triangles that include that node_id value
@@ -239,7 +236,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
     {
       ss.str("");
       ss << (progIndex / total * 100.0f) << "% Complete";
-      notifyStatusMessage(ss.str());
+      notifyStatusMessage(getHumanLabel(), ss.str());
       curPercent += 5.0f;
     }
     progIndex++;

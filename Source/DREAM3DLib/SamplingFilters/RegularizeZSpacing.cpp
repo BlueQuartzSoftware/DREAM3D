@@ -224,7 +224,7 @@ void RegularizeZSpacing::execute()
     // the same name. At least in theory
     QVector<int> dims(1, p->GetNumberOfComponents());
     IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), dims, p->GetName());
-    data->Resize(totalPoints);
+    data->resize(totalPoints);
     void* source = NULL;
     void* destination = NULL;
     size_t newIndicies_I = 0;
@@ -242,6 +242,6 @@ void RegularizeZSpacing::execute()
   m->setResolution(xRes, yRes, m_NewZRes);
   m->setDimensions(m_XP, m_YP, m_ZP);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Changing Resolution Complete") );
+  notifyStatusMessage(getHumanLabel(), "Changing Resolution Complete");
 }
 

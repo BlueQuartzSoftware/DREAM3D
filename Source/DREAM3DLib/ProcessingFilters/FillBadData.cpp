@@ -192,8 +192,8 @@ void FillBadData::execute()
   if (numfeatures == 0)
   {
     setErrorCondition(-90001);
-    notifyErrorMessage("No features have been defined in the Feature map. A filter needs to be executed before this filter that defines the number of features.", getErrorCondition());
-    emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed with Errors") );
+    notifyErrorMessage(getHumanLabel(), "No features have been defined in the Feature map. A filter needs to be executed before this filter that defines the number of features.", getErrorCondition());
+    notifyStatusMessage(getHumanLabel(), "Completed with Errors");
     return;
   }
 
@@ -338,6 +338,6 @@ void FillBadData::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Filling Bad Data Complete") );
+  notifyStatusMessage(getHumanLabel(), "Filling Bad Data Complete");
 }
 

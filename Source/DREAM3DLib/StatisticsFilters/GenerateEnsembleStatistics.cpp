@@ -246,8 +246,7 @@ void GenerateEnsembleStatistics::dataCheck()
 
       QString ss = QObject::tr("SurfaceAreaLists Array Not Initialized correctly");
       setErrorCondition(-306);
-      PipelineMessage em (getHumanLabel(), ss, -306, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -306);
     }
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
@@ -256,16 +255,14 @@ void GenerateEnsembleStatistics::dataCheck()
 
       QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
       setErrorCondition(-305);
-      PipelineMessage em (getHumanLabel(), ss, -305, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -305);
     }
   }
 
 
   if (m_PhaseTypeArray.size() <= 1)
   {
-    PipelineMessage em (getHumanLabel(), "The Phase Type Array must contain at least one member.  Add a Phase Type on the GUI.", -1000, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "The Phase Type Array must contain at least one member.  Add a Phase Type on the GUI.", -1000);
   }
   else
   {
@@ -286,19 +283,19 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
   {
-    notifyWarningMessage("The Size Distribution needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
+    notifyWarningMessage(getHumanLabel(), "The Size Distribution needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
   }
   if (m_AspectRatioDistributionFitType != DREAM3D::DistributionType::Beta)
   {
-    notifyWarningMessage("The Aspect Ratio needs to be a Beta Distribution otherwise unpredictable results may occur.", -1000);
+    notifyWarningMessage(getHumanLabel(), "The Aspect Ratio needs to be a Beta Distribution otherwise unpredictable results may occur.", -1000);
   }
   if (m_Omega3DistributionFitType != DREAM3D::DistributionType::Beta)
   {
-    notifyWarningMessage("The Omega 3 needs to be a Beta Distribution otherwise unpredictable results may occur.", -1000);
+    notifyWarningMessage(getHumanLabel(), "The Omega 3 needs to be a Beta Distribution otherwise unpredictable results may occur.", -1000);
   }
   if (m_NeighborhoodDistributionFitType != DREAM3D::DistributionType::LogNormal)
   {
-    notifyWarningMessage("The Neighborhood type needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
+    notifyWarningMessage(getHumanLabel(), "The Neighborhood type needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
   }
 
 }
@@ -330,15 +327,14 @@ void GenerateEnsembleStatistics::execute()
     if(static_cast<int>(m_PhaseTypeArray.size()) < totalEnsembles)
     {
       setErrorCondition(-999);
-      notifyErrorMessage("The number of PhaseTypes entered is less than the number of Ensembles", -999);
+      notifyErrorMessage(getHumanLabel(), "The number of PhaseTypes entered is less than the number of Ensembles", -999);
       return;
     }
     if(static_cast<int>(m_PhaseTypeArray.size()) > totalEnsembles)
     {
 
       QString ss = QObject::tr("The number of PhaseTypes entered is more than the number of Ensembles, only the first %1 will be used").arg(totalEnsembles - 1);
-      PipelineMessage em(getHumanLabel(), ss, -999, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -999);
     }
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
     for(int r = 0; r < totalEnsembles; ++r)
@@ -385,7 +381,7 @@ void GenerateEnsembleStatistics::execute()
     gatherAxisODFStats();
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "GenerateEnsembleStatistics Completed") );
+  notifyStatusMessage(getHumanLabel(), "GenerateEnsembleStatistics Completed");
 }
 
 // -----------------------------------------------------------------------------

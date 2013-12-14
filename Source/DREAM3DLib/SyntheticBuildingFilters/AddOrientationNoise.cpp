@@ -154,7 +154,7 @@ void AddOrientationNoise::execute()
   add_orientation_noise();
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "AddOrientationNoises Completed") );
+  notifyStatusMessage(getHumanLabel(), "AddOrientationNoises Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -162,7 +162,7 @@ void AddOrientationNoise::execute()
 // -----------------------------------------------------------------------------
 void  AddOrientationNoise::add_orientation_noise()
 {
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Adding Orientation Noise") );
+  notifyStatusMessage(getHumanLabel(), "Adding Orientation Noise");
   DREAM3D_RANDOMNG_NEW()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());

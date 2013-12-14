@@ -516,7 +516,7 @@ class GbcdDataArray : public IDataArray
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t RawResize(size_t size)
+    virtual int32_t resizeTotalElements(size_t size)
     {
       if (this->ResizeAndExtend(size) || size == 0)
       {
@@ -528,9 +528,9 @@ class GbcdDataArray : public IDataArray
       }
     }
 
-    virtual int32_t Resize(size_t numElements)
+    virtual int32_t resize(size_t numElements)
     {
-      return RawResize(numElements);
+      return resizeTotalElements(numElements);
     }
 
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
@@ -657,7 +657,7 @@ class GbcdDataArray : public IDataArray
     {
       int err = 0;
 
-      this->Resize(0);
+      this->resize(0);
       IDataArray::Pointer p = H5GbcdArrayReader::readIDataArray(parentId, GetName());
       if (p.get() == NULL)
       {

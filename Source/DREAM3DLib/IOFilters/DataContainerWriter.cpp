@@ -83,7 +83,8 @@ DataContainerWriter::DataContainerWriter() :
   AbstractFilter(),
   m_OutputFile(""),
   m_WritePipeline(true),
-  m_WriteXdmfFile(true)
+  m_WriteXdmfFile(true),
+  m_FileId(-1)
 {
   setupFilterParameters();
 }
@@ -162,8 +163,7 @@ void DataContainerWriter::dataCheck()
   if (m_OutputFile.isEmpty() == true)
   {
     ss = QObject::tr(": The output file must be set before executing this filter.");
-    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
 
@@ -172,7 +172,7 @@ void DataContainerWriter::dataCheck()
   if (parentPath.exists() == false)
   {
     ss = QObject::tr("The directory path for the output file does not exist.");
-    notifyWarningMessage(ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, -1);
   }
   if (fi.suffix().compare("") == 0)
   {
@@ -208,8 +208,7 @@ void DataContainerWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -219,8 +218,7 @@ void DataContainerWriter::execute()
   {
     QString ss = QObject::tr(": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[%1]").arg(m_OutputFile);
     setErrorCondition(-59);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -259,8 +257,7 @@ void DataContainerWriter::execute()
   {
     QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::StringConstants::DataContainerGroupName);
     setErrorCondition(-60);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), H5P_DEFAULT );
@@ -276,8 +273,7 @@ void DataContainerWriter::execute()
     {
       QString ss = QObject::tr("Error creating HDF Group %1").arg(dcNames[iter]);
       setErrorCondition(-60);
-      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -295,13 +291,13 @@ void DataContainerWriter::execute()
     err = dc->writeAttributeMatricesToHDF5(dcGid);
     if (err < 0)
     {
-      notifyErrorMessage("Error Writing DataContainer Attribute Matrices", -803);
+      notifyErrorMessage(getHumanLabel(), "Error Writing DataContainer Attribute Matrices", -803);
       return;
     }
     err = dc->writeMeshToHDF5(dcGid);
     if (err < 0)
     {
-      notifyErrorMessage("Error Writing DataContainer Mesh", -804);
+      notifyErrorMessage(getHumanLabel(), "Error Writing DataContainer Mesh", -804);
       return;
     }
     if (m_WriteXdmfFile == true)
@@ -309,7 +305,7 @@ void DataContainerWriter::execute()
       err = dc->writeXdmf(&out, m_OutputFile);
       if (err < 0)
       {
-        notifyErrorMessage("Error Writing Xdmf File", -805);
+        notifyErrorMessage(getHumanLabel(), "Error Writing Xdmf File", -805);
         return;
       }
     }
@@ -322,7 +318,7 @@ void DataContainerWriter::execute()
 
   H5Gclose(dcaGid);
   dcaGid = -1;
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -410,6 +406,10 @@ int DataContainerWriter::openFile(bool appendData)
 int DataContainerWriter::closeFile()
 {
   // Close the file when we are finished with it
-  return QH5Utilities::closeFile(m_FileId);
+  if(m_FileId > 0)
+  {
+    return QH5Utilities::closeFile(m_FileId);
+  }
+  return true;
 }
 

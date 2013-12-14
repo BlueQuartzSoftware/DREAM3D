@@ -187,8 +187,7 @@ void FeatureFaceCurvatureFilter::dataCheck()
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
   // We do not know the size of the array so we can not use the macro so we just manually call
@@ -283,12 +282,12 @@ void FeatureFaceCurvatureFilter::execute()
   sharedFeatureFacesFilter->setSurfaceMeshFeatureFaceIdArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
   sharedFeatureFacesFilter->setDataContainerArray(getDataContainerArray());
   connect(sharedFeatureFacesFilter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   sharedFeatureFacesFilter->setMessagePrefix(getMessagePrefix());
   sharedFeatureFacesFilter->execute();
   if (sharedFeatureFacesFilter->getErrorCondition() < 0)
   {
-    notifyErrorMessage("Error Generating the Shared Feature Faces", -803);
+    notifyErrorMessage(getHumanLabel(), "Error Generating the Shared Feature Faces", -803);
     return;
   }
 
@@ -415,7 +414,7 @@ void FeatureFaceCurvatureFilter::execute()
     trianglesPtr->deleteFacesContainingVert();
   }
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -427,7 +426,7 @@ void FeatureFaceCurvatureFilter::tbbTaskProgress()
   m_CompletedFeatureFaces++;
 
   QString ss = QObject::tr("%1/%2 Complete").arg(m_CompletedFeatureFaces).arg(m_TotalFeatureFaces);
-  notifyStatusMessage(ss);
+  notifyStatusMessage(getHumanLabel(), ss);
 }
 
 #endif

@@ -111,7 +111,7 @@ int VolumeDataContainer::writeCellsToHDF5(hid_t dcGid)
     if (err < 0)
     {
 //      setErrorCondition(err);
-//      notifyErrorMessage("Error Writing Cell List to DREAM3D file", getErrorCondition());
+//      notifyErrorMessage(getHumanLabel(), "Error Writing Cell List to DREAM3D file", getErrorCondition());
     }
 
     //next write cell neighbors if they exist
@@ -148,7 +148,7 @@ int VolumeDataContainer::writeCellsToHDF5(hid_t dcGid)
       err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::CellNeighbors, rank, dims, bufPtr);
       if (err < 0)
       {
-        notifyErrorMessage("Error writing the Cell Neighbors", -998);
+        notifyErrorMessage(getNameOfClass(), "Error writing the Cell Neighbors", -998);
         return err;
       }
     }
@@ -196,7 +196,7 @@ int VolumeDataContainer::writeCellsToHDF5(hid_t dcGid)
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::CellsContainingVert, rank, dims, bufPtr);
     if (err < 0)
     {
-      notifyErrorMessage("Error writing the Cells Containing Verts", -999);
+      notifyErrorMessage(getNameOfClass(), "Error writing the Cells Containing Verts", -999);
       return err;
     }
   }
@@ -217,9 +217,12 @@ int VolumeDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
   writeXdmfMeshStructure(*out, hdfFileName);
   for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
   {
-    if((*iter)->getType() == DREAM3D::AttributeMatrixType::Cell)
+    AttributeMatrix::Pointer attrMat = iter.value();
+    uint32_t amType = attrMat->getType();
+    // QString name = iter.key();
+    if(amType == DREAM3D::AttributeMatrixType::Cell)
     {
-      (*iter)->generateXdmfText("Cell", getName(), hdfFileName);
+      attrMat->generateXdmfText("Cell", getName(), hdfFileName);
     }
   }
   writeXdmfGridFooter(*out);
@@ -312,7 +315,7 @@ int VolumeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
       if (err < 0)
       {
 //        setErrorCondition(err);
-//        notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+//        notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
         return err;
       }
       setCells(cellsPtr);
@@ -327,7 +330,7 @@ int VolumeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
         if(err < 0)
         {
 //          setErrorCondition(err);
-//          notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+//          notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer cellNeighbors = Int32DynamicListArray::New();
@@ -344,7 +347,7 @@ int VolumeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
         if(err < 0)
         {
 //          setErrorCondition(err);
-//          notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+//          notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer cellsContainingVert = Int32DynamicListArray::New();

@@ -136,6 +136,6 @@ void FindVolFractions::execute()
     m_VolFractions[m_CellPhases[i]]++;
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

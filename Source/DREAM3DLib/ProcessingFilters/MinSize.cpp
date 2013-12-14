@@ -177,7 +177,7 @@ void MinSize::preflight()
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
   connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->preflight();
@@ -205,7 +205,7 @@ void MinSize::execute()
 
   RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
   connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   renumber_features->setDataContainerArray(getDataContainerArray());
   renumber_features->setMessagePrefix(getMessagePrefix());
   renumber_features->execute();
@@ -218,7 +218,7 @@ void MinSize::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Minimum Size Filter Complete") );
+  notifyStatusMessage(getHumanLabel(), "Minimum Size Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -394,7 +394,7 @@ void MinSize::remove_smallfeatures()
   if(good == false)
   {
     setErrorCondition(-1);
-    notifyErrorMessage("The minimum size is larger than the largest Feature.  All Features would be removed.  The filter has quit.", -1);
+    notifyErrorMessage(getHumanLabel(), "The minimum size is larger than the largest Feature.  All Features would be removed.  The filter has quit.", -1);
     return;
   }
   for (int64_t i = 0; i < totalPoints; i++)

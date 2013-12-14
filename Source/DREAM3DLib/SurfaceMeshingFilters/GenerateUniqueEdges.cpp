@@ -114,16 +114,14 @@ void GenerateUniqueEdges::dataCheck()
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
   // We do not know the size of the array so we can not use the macro so we just manually call
@@ -158,7 +156,7 @@ void GenerateUniqueEdges::execute()
   generateUniqueEdgeIds();
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -172,7 +170,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   size_t totalPoints = trianglesPtr->getNumberOfTuples();
   FaceArray::Face_t* faces = trianglesPtr->getPointer(0);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Stage 1 of 2") );
+  notifyStatusMessage(getHumanLabel(), "Stage 1 of 2");
   struct  { int32_t v0; int32_t v1; } edge;
   int64_t* u64Edge = reinterpret_cast<int64_t*>(&edge); // This pointer is a 64 bit integer interpretation of the above struct variable
 
@@ -205,7 +203,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
 
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Stage 1 of 2") );
+  notifyStatusMessage(getHumanLabel(), "Stage 1 of 2");
 // qDebug() << "uedges_id_set size: " << uedges_id_set.size() << "\n";
   QVector<int> dims(1, 2);
   DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), dims, m_SurfaceMeshUniqueEdgesArrayName);
@@ -233,7 +231,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 // opertates in this program.  The time to cacluate the vertex connectivity arrays is long, and not needed
 // for mesh smoothing.
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Generating edge list for mesh. Stage 1 of 2") );
+  notifyStatusMessage(getHumanLabel(), "Generating edge list for mesh. Stage 1 of 2");
   // Get our Reference counted Array of Triangle Structures
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   FaceArray::Pointer trianglesPtr = sm->getFaces();
@@ -264,7 +262,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     if ( static_cast<float>(i) / static_cast<float>(ntri) * 100.0f > (curPercent) )
     {
       QString ss = QObject::tr("Stage 1/2: %1% Complete").arg(static_cast<float>(i) / static_cast<float>(ntri) * 100.0f);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
       curPercent += 5.0f;
     }
     if (getCancel() == true) { return; }
@@ -326,7 +324,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   }
 
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Generating edge list for mesh. Stage 2 of 2") );
+  notifyStatusMessage(getHumanLabel(), "Generating edge list for mesh. Stage 2 of 2");
   // Now copy the unique Edges out of the map and into an array at the proper index (which is the "value" that goes with the "key" to the map.
   int index = 0;
   QVector<int> dims(1, 2);
@@ -344,7 +342,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     if ( progIndex / total * 100.0f > (curPercent) )
     {
       QString ss = QObject::tr("Stage 2/2: %1% Complete").arg(progIndex / total * 100.0f);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
       curPercent += 5.0f;
     }
     progIndex++;
@@ -374,6 +372,6 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
   sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(edgeTriangleArray->GetName(), edgeTriangleArray);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
   return;
 }

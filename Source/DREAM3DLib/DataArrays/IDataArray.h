@@ -170,14 +170,14 @@ class DREAM3DLib_EXPORT IDataArray
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t RawResize(size_t size) = 0;
+    virtual int32_t resizeTotalElements(size_t size) = 0;
 
     /**
      * @brief Reseizes the internal array
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t Resize(size_t numTuples) = 0;
+    virtual int32_t resize(size_t numTuples) = 0;
 
 
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',') = 0;

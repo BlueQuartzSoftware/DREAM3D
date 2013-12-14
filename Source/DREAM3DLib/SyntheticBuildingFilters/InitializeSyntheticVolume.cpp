@@ -45,7 +45,7 @@
 
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-  if (m_##var <= 0) { QString ss = QObject::tr(":%1 must be a value > 0\n").arg( #var); PipelineMessage em (getHumanLabel(), ss, errCond, PipelineMessage::Error); emit filterGeneratedMessage(em);}
+  if (m_##var <= 0) { QString ss = QObject::tr(":%1 must be a value > 0\n").arg( #var); notifyErrorMessage(getHumanLabel(), ss, errCond);}
 
 
 
@@ -157,8 +157,7 @@ void InitializeSyntheticVolume::dataCheck()
   {
     QString ss = QObject::tr("The intput file must be set before executing this filter.\n");
     setErrorCondition(-800);
-    PipelineMessage em (getHumanLabel(), ss, -800, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -800);
   }
 
   INIT_SYNTH_VOLUME_CHECK(XVoxels, -5000);
@@ -172,8 +171,7 @@ void InitializeSyntheticVolume::dataCheck()
   {
     QString ss = QObject::tr("No ShapeTypes have been set and a shape type for each phase.\n");
     setErrorCondition(-801);
-    PipelineMessage em (getHumanLabel(), ss, -801, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -801);
   }
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
@@ -193,8 +191,7 @@ void InitializeSyntheticVolume::preflight()
 
     QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
@@ -250,8 +247,7 @@ void InitializeSyntheticVolume::execute()
 
     QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
     setErrorCondition(-150);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
@@ -277,7 +273,7 @@ void InitializeSyntheticVolume::execute()
   m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "InitializeSyntheticVolume Complete") );
+  notifyStatusMessage(getHumanLabel(), "InitializeSyntheticVolume Complete");
 }
 
 

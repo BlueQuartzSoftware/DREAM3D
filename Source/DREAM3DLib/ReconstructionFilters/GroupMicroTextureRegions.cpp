@@ -174,8 +174,7 @@ void GroupMicroTextureRegions::dataCheck()
   {
     QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
     setErrorCondition(-1001);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -225,8 +224,7 @@ void GroupMicroTextureRegions::dataCheck()
     {
       QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
       setErrorCondition(-304);
-      PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
     }
   }
   else
@@ -238,8 +236,7 @@ void GroupMicroTextureRegions::dataCheck()
     {
       QString ss = QObject::tr("NeighborhoodLists Array Not Initialized correctly");
       setErrorCondition(-305);
-      PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
     }
   }
 }
@@ -267,14 +264,14 @@ void GroupMicroTextureRegions::execute()
   // Convert user defined tolerance to radians.
   m_CAxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Grouping MicroTexture Regions") );
+  notifyStatusMessage(getHumanLabel(), "Grouping MicroTexture Regions");
   merge_micro_texture_regions();
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Characterizing MicroTexture Regions") );
+  notifyStatusMessage(getHumanLabel(), "Characterizing MicroTexture Regions");
   // characterize_micro_texture_regions();
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "GroupMicroTextureRegions Completed") );
+  notifyStatusMessage(getHumanLabel(), "GroupMicroTextureRegions Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -323,7 +320,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       if (i % 1000 == 0)
       {
         QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(numfeatures);
-        notifyStatusMessage(ss);
+        notifyStatusMessage(getHumanLabel(), ss);
       }
       m_Active[i] = true;
       microtexturelist.push_back(i);

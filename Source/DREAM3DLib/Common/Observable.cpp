@@ -28,14 +28,13 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "Observable.h"
-#include "Observer.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Observable::Observable()
+Observable::Observable() :
+  QObject(NULL)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -48,118 +47,34 @@ Observable::~Observable()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::addObserver(Observer* observer)
+void Observable::broadcastPipelineMessage(const PipelineMessage& msg)
 {
-  m_Observers.push_back(observer);
+  emit filterGeneratedMessage(msg);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::removeObserver(Observer* observer)
+void Observable::notifyErrorMessage(const QString& humanLabel, const QString& str, int code)
 {
-  for (QVector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter )
-  {
-    if ((*iter) == observer)
-    {
-      m_Observers.erase(iter);
-      break;
-    }
-  }
+  PipelineMessage pm = PipelineMessage::CreateErrorMessage(getNameOfClass(), humanLabel, str, code);
+  emit filterGeneratedMessage(pm);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::setMessagePrefix(const QString& str)
+void Observable::notifyStatusMessage(const QString& humanLabel, const QString& str)
 {
-  m_Prefix = str;
+  PipelineMessage pm = PipelineMessage::CreateStatusMessage(getNameOfClass(), humanLabel, str);
+  emit filterGeneratedMessage(pm);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString Observable::getMessagePrefix()
+void Observable::notifyWarningMessage(const QString& humanLabel, const QString& str, int code)
 {
-  return m_Prefix;
+  PipelineMessage pm = PipelineMessage::CreateWarningMessage(getNameOfClass(), humanLabel, str, code);
+  emit filterGeneratedMessage(pm);
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observable::notifyMessage(PipelineMessage& msg)
-{
-  // If the programmer set a prefix (which FilterPipeline does) we are going to
-  // use the prefix in place of the 'FilterName' because this gives us more
-  // information to use and display to the user.
-  if (m_Prefix.isEmpty() == false)
-  {
-    msg.setMessagePrefix(m_Prefix);
-  }
-  for (QVector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
-  {
-    (*iter)->sendPipelineMessage(msg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observable::notifyErrorMessage(QString errDesc, int errCode)
-{
-  PipelineMessage errorMsg(getNameOfClass(), errDesc, errCode, PipelineMessage::Error);
-  notifyMessage(errorMsg);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observable::notifyWarningMessage(QString warnDesc, int warnCode)
-{
-  PipelineMessage warningMsg(getNameOfClass(), warnDesc, warnCode, PipelineMessage::Warning);
-  notifyMessage(warningMsg);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observable::notifyStatusMessage(QString statusDesc)
-{
-  PipelineMessage statusMsg(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessage);
-  notifyMessage(statusMsg);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observable::notifyProgressValue(int statusVal)
-{
-  PipelineMessage statusValueUpdate(getNameOfClass(), "", 0, PipelineMessage::ProgressValue, statusVal);
-  notifyMessage(statusValueUpdate);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observable::notifyStatusAndProgress(QString statusDesc, int statusVal)
-{
-  PipelineMessage statusUpdate(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessageAndProgressValue, statusVal);
-  notifyMessage(statusUpdate);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QVector<Observer*> Observable::getObservers()
-{
-  return this->m_Observers;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observable::setObservers(QVector<Observer*> obs)
-{
-  this->m_Observers = obs;
-}
-

@@ -53,7 +53,7 @@
  */
 class DREAM3DLib_EXPORT FilterPipeline : public QObject
 {
-    Q_OBJECT
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
     DREAM3D_SHARED_POINTERS(FilterPipeline)
@@ -123,12 +123,12 @@ class DREAM3DLib_EXPORT FilterPipeline : public QObject
     /**
      * @brief This method adds a QObject based class that is capable of being connected with the following signals from
      * AbstractFilter:
-     * @li filterGeneratedMessage(PipelineMessage&)
-     * @param obj Class that implements needed filterGeneratedMessage(PipelineMessage&) method
+     * @li processPipelineMessage(PipelineMessage&)
+     * @param obj Class that implements needed processPipelineMessage(PipelineMessage&) method
      */
     void addMessageReceiver(QObject* obj);
 
-    void connectFilterNotifications(QObject *filter);
+    void connectFilterNotifications(QObject* filter);
     void disconnectFilterNotifications(QObject* filter);
 
   protected:
@@ -138,7 +138,7 @@ class DREAM3DLib_EXPORT FilterPipeline : public QObject
     void updatePrevNextFilters();
 
   signals:
-    void pipelineGeneratedMessage(PipelineMessage &message);
+    void pipelineGeneratedMessage(const PipelineMessage& message);
 
   private:
     bool m_Cancel;

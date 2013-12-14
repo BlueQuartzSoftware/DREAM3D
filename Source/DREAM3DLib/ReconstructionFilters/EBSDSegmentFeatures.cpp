@@ -204,7 +204,7 @@ void EBSDSegmentFeatures::execute()
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
 
   // Tell the user we are starting the filter
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting") );
+  notifyStatusMessage(getHumanLabel(), "Starting");
 
   //Convert user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
@@ -219,7 +219,7 @@ void EBSDSegmentFeatures::execute()
   if (totalFeatures < 2)
   {
     setErrorCondition(-87000);
-    notifyErrorMessage("The number of Features was 0 or 1 which means no features were detected. Is a threshold value set to high?", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no features were detected. Is a threshold value set to high?", getErrorCondition());
     return;
   }
   if (true == m_RandomizeFeatureIds)
@@ -273,7 +273,7 @@ void EBSDSegmentFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 

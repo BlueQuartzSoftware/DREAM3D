@@ -158,15 +158,13 @@ void YSChoiAbaqusReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -178,8 +176,7 @@ void YSChoiAbaqusReader::dataCheck()
     {
       QString msg = QObject::tr("Abaqus file could not be opened: %1").arg(getInputFile());
       setErrorCondition(-100);
-      PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
       return;
     }
     QString word;
@@ -260,8 +257,7 @@ void YSChoiAbaqusReader::execute()
   {
     QString msg = QObject::tr("Abaqus file could not be opened: %1").arg(getInputFile());
     setErrorCondition(-100);
-    PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
     return;
   }
 
@@ -306,8 +302,7 @@ void YSChoiAbaqusReader::execute()
   {
     QString msg = QObject::tr("Abaqus Feature Info file could not be opened: %1").arg(getInputFeatureInfoFile());
     setErrorCondition(-100);
-    PipelineMessage em(getHumanLabel(), msg, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
     return;
   }
 

@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     virtual ~DataContainer();
 
-    static Pointer New(const QString &name)
+    static Pointer New(const QString& name)
     {
       Pointer sharedPtr(new DataContainer(name));
       return sharedPtr;
@@ -105,8 +105,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
         {
           filter->setErrorCondition(err * 1000);
           ss = QObject::tr("DataContainer:'%1' The name of the AttributeMatrix was empty. Please provide a name for this AttributeMatrix").arg(getName());
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeMatrix.get();
       }
@@ -118,8 +117,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
         {
           filter->setErrorCondition(err * 1020);
           ss = QObject::tr("DataContainer:'%1' An AttributeMatrix with name '%2' does not exist and is required for this filter to execute.").arg(getName()).arg(attributeMatrixName);
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeMatrix.get();
       }
@@ -129,8 +127,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
         {
           filter->setErrorCondition(err * 1030);
           ss = QObject::tr("DataContainer:'%1' AttributeMatrix: '%2' Attribute Matrix has Attribute Arrays with mismatched number of objects.").arg(getName()).arg(attributeMatrixName);
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeMatrix.get();
       }
@@ -163,8 +160,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
         {
           filter->setErrorCondition(-10001);
           ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeMatrix.get();
       }
@@ -178,8 +174,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       {
         filter->setErrorCondition(-10002);
         ss = QObject::tr("An Attribute Matrix already exists with the name %1").arg(attributeMatrixName);
-        PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-        filter->emitFilterGeneratedMessage(em);
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
       return attributeMatrix.get();
     }

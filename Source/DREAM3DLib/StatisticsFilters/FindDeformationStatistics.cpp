@@ -628,6 +628,6 @@ void FindDeformationStatistics::execute()
   }
   fclose(vtkFile);
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 

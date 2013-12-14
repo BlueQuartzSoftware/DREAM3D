@@ -125,8 +125,7 @@ void CreateFeatureArrayFromCellArray::dataCheck()
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    PipelineMessage em (getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
 
 }
@@ -199,8 +198,7 @@ void CreateFeatureArrayFromCellArray::execute()
   {
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
     setErrorCondition(-11001);
-    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -260,8 +258,7 @@ void CreateFeatureArrayFromCellArray::execute()
   {
     setErrorCondition(-14000);
     PipelineMessage em(getHumanLabel(), "There was an issue creating a feature data array from a cell data array. Either the types did not match or we could not cast the input array to the expected output type", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
   }
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

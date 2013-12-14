@@ -164,8 +164,7 @@ void SingleThresholdCells::dataCheck()
   {
     setErrorCondition(-11000);
     QString ss = QObject::tr("An array from the Volume DataContainer must be selected.");
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 
@@ -194,8 +193,7 @@ void SingleThresholdCells::execute()
   {
     QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
     setErrorCondition(-11001);
-    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -204,7 +202,7 @@ void SingleThresholdCells::execute()
   if (NULL == goodVoxels)
   {
     setErrorCondition(-11002);
-    notifyErrorMessage("Could not properly cast the output array to a BoolArrayType", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Could not properly cast the output array to a BoolArrayType", getErrorCondition());
     return;
   }
 
@@ -213,7 +211,7 @@ void SingleThresholdCells::execute()
   filter.execute(inputData.get(), goodVoxelsPtr.get());
 
   m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(goodVoxelsPtr->GetName(), goodVoxelsPtr);
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

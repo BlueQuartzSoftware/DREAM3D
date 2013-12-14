@@ -164,7 +164,7 @@ class NeighborList : public IDataArray
 
       if (idxs.size() >= getNumberOfTuples() )
       {
-        Resize(0);
+        resize(0);
         return 0;
       }
 
@@ -255,7 +255,7 @@ class NeighborList : public IDataArray
     void initializeWithZeros() { _data.clear(); }
 
 
-    int32_t RawResize(size_t size)
+    int32_t resizeTotalElements(size_t size)
     {
       size_t old = _data.size();
       _data.resize(size);
@@ -272,7 +272,7 @@ class NeighborList : public IDataArray
      * @param numTuples
      * @return
      */
-    virtual int32_t Resize(size_t numTuples) { return RawResize(numTuples); }
+    virtual int32_t resize(size_t numTuples) { return resizeTotalElements(numTuples); }
 
     //FIXME: These need to be implemented
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')

@@ -131,16 +131,14 @@ void BinaryNodesTrianglesReader::dataCheck()
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (getBinaryNodesFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 }
@@ -170,7 +168,7 @@ void BinaryNodesTrianglesReader::execute()
   setErrorCondition(err);
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 
@@ -208,7 +206,7 @@ int BinaryNodesTrianglesReader::read()
   }
   {
     QString ss = QObject::tr("Calc Node Count from Nodes.bin File: ").arg(nNodes);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
   }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_BinaryTrianglesFile.toLatin1().data(), "rb+");
@@ -237,7 +235,7 @@ int BinaryNodesTrianglesReader::read()
 
   {
     QString ss = QObject::tr("Calc Triangle Count from Triangles.bin File: %1").arg(nTriangles);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
   }
 
   // Allocate all the nodes
@@ -251,7 +249,7 @@ int BinaryNodesTrianglesReader::read()
 
   {
     QString ss  = QObject::tr("Reading Nodes file into Memory");
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
   }
   size_t nread = 0;
   SurfaceMesh::NodesFile::NodesFileRecord_t nRecord;
@@ -272,7 +270,7 @@ int BinaryNodesTrianglesReader::read()
 
   {
     QString ss = QObject::tr("Reading Triangles file into Memory");
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
   }
 
   // Allocate all the Triangle Objects

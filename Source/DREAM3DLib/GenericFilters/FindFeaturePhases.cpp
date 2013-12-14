@@ -142,7 +142,7 @@ void FindFeaturePhases::execute()
     m_FeaturePhases[gnum] = m_CellPhases[i];
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

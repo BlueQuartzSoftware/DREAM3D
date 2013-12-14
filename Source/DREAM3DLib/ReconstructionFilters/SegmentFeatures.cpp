@@ -203,12 +203,12 @@ void SegmentFeatures::execute()
       gnum++;
 
       QString ss = QObject::tr("Total Features: %1").arg(gnum);
-      if(gnum % 100 == 0) { notifyStatusMessage(ss); }
+      if(gnum % 100 == 0) { notifyStatusMessage(getHumanLabel(), ss); }
     }
   }
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Completed") );
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 // -----------------------------------------------------------------------------

@@ -429,8 +429,8 @@ void M3CSliceBySlice::dataCheck()
 
   sm->setVertices(vertices);
   sm->setFaces(triangles);
-  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
+  faceAttrMat->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
+  vertexAttrMat->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
 }
 
 // -----------------------------------------------------------------------------
@@ -560,14 +560,13 @@ void M3CSliceBySlice::execute()
   {
     QString ss = QObject::tr(" Layers %1 and %2 of %3").arg(i).arg(i + 1).arg(sliceCount);
     // notifyProgressValue((i * 90 / sliceCount));
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
 
     if (getCancel() == true)
     {
 
       ss = QObject::tr("Cancelling filter");
-      PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
       break;
     }
@@ -629,8 +628,7 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
-      PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
       return;
     }
@@ -640,8 +638,7 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
-      PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
       return;
     }
@@ -650,7 +647,7 @@ void M3CSliceBySlice::execute()
     cEdgeID = cEdgeID + nEdge;
     if (nTriangle > 0)
     {
-      cTrianglePtr->Resize(0);
+      cTrianglePtr->resize(0);
     }
   }
 
@@ -674,7 +671,7 @@ void M3CSliceBySlice::execute()
   QString ss = QObject::tr("%1 |--> %2").arg( getMessagePrefix()).arg(binaryReader->getNameOfClass());
   binaryReader->setMessagePrefix(ss);
   connect(binaryReader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   binaryReader->setDataContainerArray(getDataContainerArray());
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
@@ -693,7 +690,7 @@ void M3CSliceBySlice::execute()
     renumberVoxelFeatureIds(renumberFeatureValue);
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Surface Meshing Complete") );
+  notifyStatusMessage(getHumanLabel(), "Surface Meshing Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -1174,7 +1171,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                     edgeResizeCount = 0;
                     edgeResize *= 10; // Increment the resize factor by an order of magnitude
                   }
-                  cEdgePtr->Resize(currentEdgeArraySize + edgeResize); // Allocate Edges in 100,000 packs
+                  cEdgePtr->resize(currentEdgeArraySize + edgeResize); // Allocate Edges in 100,000 packs
                   currentEdgeArraySize = cEdgePtr->getNumberOfTuples();
                   //qDebug() << "cEdgePtr->Resize(" <<currentEdgeArraySize << ")" << "\n";
                 }
@@ -1232,7 +1229,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
       cSquare[k].nEdge = edgeCount;
     }
   }
-  cEdgePtr->Resize(eid);
+  cEdgePtr->resize(eid);
   return eid;
 }
 
@@ -1673,10 +1670,10 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
   }
 
   //  qDebug() << "cTrianglePtr->Resize(" << tidIn << ")" << "\n";
-  cTrianglePtr->Resize(tidIn);
+  cTrianglePtr->resize(tidIn);
 
   //  qDebug() << "cEdgePtr numTuples: " << cEdgePtr->getNumberOfTuples() << " - Clearing Array" << "\n";
-  cEdgePtr->Resize(0);
+  cEdgePtr->resize(0);
 
   return cTrianglePtr->getNumberOfTuples();
 }
@@ -1690,7 +1687,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
         Detail::triangleResizeCount = 0;\
         Detail::triangleResize *= 10;\
       }\
-      cTrianglePtr->Resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
+      cTrianglePtr->resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
     }\
     StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
     cTriangle[ctid].node_id[0] = n0;\

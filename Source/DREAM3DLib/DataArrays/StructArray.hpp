@@ -285,7 +285,7 @@ class StructArray : public IDataArray
       size_t idxs_size = static_cast<size_t>(idxs.size());
       if (idxs_size >= getNumberOfTuples() )
       {
-        Resize(0);
+        resize(0);
         return 0;
       }
 
@@ -527,7 +527,7 @@ class StructArray : public IDataArray
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t RawResize(size_t size)
+    virtual int32_t resizeTotalElements(size_t size)
     {
       if (this->ResizeAndExtend(size) || size == 0)
       {
@@ -544,9 +544,9 @@ class StructArray : public IDataArray
      * @param numTuples
      * @return
      */
-    virtual int32_t Resize(size_t numTuples)
+    virtual int32_t resize(size_t numTuples)
     {
-      return RawResize(numTuples );
+      return resizeTotalElements(numTuples );
     }
 
     /**

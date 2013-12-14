@@ -73,8 +73,7 @@ void DecimateSolidMesh::dataCheck()
   if (NULL == sm)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SolidMeshDataContainer is missing", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SolidMeshDataContainer is missing", getErrorCondition());
   }
 }
 
@@ -287,7 +286,7 @@ void DecimateSolidMesh::execute()
     removeED = removeED - 1;
   }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 int DecimateSolidMesh::updateNodesandTets(int currentTet, int killedNode, int newNode)

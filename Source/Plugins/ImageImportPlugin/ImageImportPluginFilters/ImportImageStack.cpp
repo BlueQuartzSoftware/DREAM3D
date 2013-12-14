@@ -129,18 +129,20 @@ void ImportImageStack::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, ImportImageStack>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  if(getErrorCondition() < 0) { return; }
 
   if (m_ImageFileList.size() == 0)
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
     setErrorCondition(-11);
-    notifyErrorMessage(ss, getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
     QVector<int> arraydims(1, 1);
     // This would be for a gray scale image
-    m_ImageDataPtr = attrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_CellAttributeMatrixName,  m_ImageDataArrayName, 0, voxels, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_ImageDataPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_ImageDataArrayName, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     // If we have RGB or RGBA Images then we are going to have to change things a bit.
@@ -164,7 +166,7 @@ void ImportImageStack::dataCheck()
       err = -1;
       QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
       setErrorCondition(err);
-      notifyErrorMessage(ss, err);
+      notifyErrorMessage(getHumanLabel(), ss, err);
     }
 
     if(dims[0] > max || dims[1] > max || dims[2] > max)
@@ -173,7 +175,7 @@ void ImportImageStack::dataCheck()
       QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
                                " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
       setErrorCondition(err);
-      notifyErrorMessage(ss, err);
+      notifyErrorMessage(getHumanLabel(), ss, err);
     }
     /* ************ End Sanity Check *************************** */
 
@@ -229,13 +231,13 @@ void ImportImageStack::execute()
   {
     QString imageFName = *filepath;
     QString ss = QObject::tr("Importing file %1").arg(imageFName);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
 
     QImage image((imageFName));
     if (image.isNull() == true)
     {
       setErrorCondition(-14000);
-      notifyErrorMessage("Failed to load Image file", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), "Failed to load Image file", getErrorCondition());
     }
     height = image.height();
     width = image.width();
@@ -274,7 +276,7 @@ void ImportImageStack::execute()
     ++z;
     if(getCancel() == true)
     {
-      emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Conversion was Canceled") );
+      notifyStatusMessage(getHumanLabel(), "Conversion was Canceled");
       return;
     }
   }
@@ -282,6 +284,6 @@ void ImportImageStack::execute()
   m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(data->GetName(), data);
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

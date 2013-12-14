@@ -134,8 +134,7 @@ void FeatureDataCSVWriter::dataCheck()
   if (getFeatureDataFile().isEmpty() == true)
   {
     QString ss = QObject::tr(": The output file must be set before executing this filter.");
-    PipelineMessage em (getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
 
@@ -144,7 +143,7 @@ void FeatureDataCSVWriter::dataCheck()
   if (parentPath.exists() == false)
   {
     QString ss = QObject::tr("The directory path for the output file does not exist.");
-    notifyWarningMessage(ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, -1);
   }
   if (fi.suffix().compare("") == 0)
   {
@@ -180,8 +179,7 @@ void FeatureDataCSVWriter::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    PipelineMessage em(getHumanLabel(), ss, -1, PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -192,8 +190,7 @@ void FeatureDataCSVWriter::execute()
   {
     QString ss = QObject::tr("Feature Data CSV Output file could not be opened: %1").arg(getFeatureDataFile());
     setErrorCondition(-100);
-    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -247,7 +244,7 @@ void FeatureDataCSVWriter::execute()
     {
 
       QString ss = QObject::tr("Writing Feature Data - %1% Complete").arg(((float)i / numTuples) * 100);
-      notifyStatusMessage(ss);
+      notifyStatusMessage(getHumanLabel(), ss);
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f)
       {
@@ -296,7 +293,7 @@ void FeatureDataCSVWriter::execute()
   file.close();
 
   // If there is an error set this to something negative and also set a message
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FeatureDataCSVWriter Completed") );
+  notifyStatusMessage(getHumanLabel(), "FeatureDataCSVWriter Completed");
 
 }
 

@@ -83,7 +83,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * @param name The name of the data container
      * @return
      */
-    static Pointer New(const QString &name)
+    static Pointer New(const QString& name)
     {
       Pointer sharedPtr(new SurfaceDataContainer());
       sharedPtr->setName(name);

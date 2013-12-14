@@ -117,7 +117,7 @@ void Filt0::execute()
   {
     setErrorCondition(-1);
     QString ss = QObject::tr(" DataContainer was NULL");
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), -1);
+    notifyErrorMessage(getHumanLabel(), QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), -1);
     return;
   }
   setErrorCondition(0);
@@ -125,7 +125,7 @@ void Filt0::execute()
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -237,7 +237,7 @@ void Filt1::execute()
   {
     setErrorCondition(-1);
     QString ss = QObject::tr(" DataContainer was NULL");
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), -1);
+    notifyErrorMessage(getHumanLabel(), QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), -1);
     return;
   }
   setErrorCondition(0);
@@ -245,5 +245,5 @@ void Filt1::execute()
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }

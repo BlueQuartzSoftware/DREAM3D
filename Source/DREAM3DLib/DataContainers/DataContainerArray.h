@@ -121,11 +121,12 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       DataContainerType* dc = getDataContainerAs<DataContainerType>(name);
       if(NULL == dc && createIfNotExists == false)
       {
-        if (filter) {
+        if (filter)
+        {
           filter->setErrorCondition(-999);
           QString ss = "The DataContainer Object with the specific name " + name + " was not available.";
           PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->broadcastPipelineMessage(em);
         }
         return NULL;
       }
@@ -155,7 +156,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
           filter->setErrorCondition(-888);
           QString ss = "The DataContainer Object with the specific name " + dataContainerName + " already exists.";
           PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->emitFilterGeneratedMessage(em);
+          filter->broadcastPipelineMessage(em);
         }
       }
       typename DataContainerType::Pointer dataContainer = DataContainerType::New(dataContainerName);
@@ -175,7 +176,8 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       Q_ASSERT(dataContainerName.isEmpty() == false);
       Q_ASSERT(attributeMatrixName.isEmpty() == false);
       typename DataContainerType::Pointer dataContainer = DataContainerType::New(dataContainerName);
-      AttributeMatrix* attrMat = dataContainer->createAndAddAttributeMatrix(attributeMatrixName); attrMat=NULL; /* THis is just here to quiet the compiler */
+      AttributeMatrix* attrMat = dataContainer->createAndAddAttributeMatrix(attributeMatrixName);
+      attrMat = NULL; /* THis is just here to quiet the compiler */
       pushBack(dataContainer);
       return dataContainer.get();
     }

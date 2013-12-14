@@ -161,18 +161,18 @@ void SaveImages::dataCheck()
   if (getOutputPath().isEmpty() == true)
   {
     setErrorCondition(-1003);
-    notifyErrorMessage("Output Directory is Not set correctly", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
   }
   else if (dir.exists() == false)
   {
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.");
-    notifyWarningMessage(ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
   if(m_ColorsArrayName.isEmpty() == true)
   {
     setErrorCondition(-1004);
-    notifyErrorMessage("Input  Color Array name is empty", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Input  Color Array name is empty", getErrorCondition());
   }
   else
   {
@@ -207,7 +207,7 @@ void SaveImages::execute()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(getHumanLabel(), "The Voxel DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -238,7 +238,7 @@ void SaveImages::execute()
 
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

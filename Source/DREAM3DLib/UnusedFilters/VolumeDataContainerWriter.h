@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
         {
           setErrorCondition(err);
           QString ss = QObject::tr("Error writing Ensemble data set '%1'").arg(label);
-          notifyErrorMessage(ss, getErrorCondition());
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
       }
 

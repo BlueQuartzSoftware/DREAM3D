@@ -53,7 +53,7 @@
  */
 class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(VerifyTriangleWinding)
     DREAM3D_STATIC_NEW_MACRO(VerifyTriangleWinding)

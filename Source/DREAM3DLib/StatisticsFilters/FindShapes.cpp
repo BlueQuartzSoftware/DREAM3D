@@ -180,7 +180,7 @@ void FindShapes::execute()
   if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_axiseulers(); }
   if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_axiseulers2D(); }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindShapes Completed") );
+  notifyStatusMessage(getHumanLabel(), "FindShapes Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -198,7 +198,7 @@ void FindShapes::find_moments()
   float u101 = 0;
   float xx, yy, zz, xy, xz, yz;
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  m_FeatureMoments->Resize(numfeatures * 6);
+  m_FeatureMoments->resize(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
   float xPoints = m->getXPoints();
@@ -326,7 +326,7 @@ void FindShapes::find_moments2D()
 
   float xx, yy, xy;
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  m_FeatureMoments->Resize(numfeatures * 6);
+  m_FeatureMoments->resize(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
   int xPoints = 0, yPoints = 0;
@@ -417,10 +417,10 @@ void FindShapes::find_axes()
 
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
-  m_FeatureMoments->Resize(numfeatures * 6);
+  m_FeatureMoments->resize(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
-  m_FeatureEigenVals->Resize(numfeatures * 3);
+  m_FeatureEigenVals->resize(numfeatures * 3);
   featureeigenvals = m_FeatureEigenVals->getPointer(0);
 
 
@@ -504,7 +504,7 @@ void FindShapes::find_axes2D()
 
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
-  m_FeatureMoments->Resize(numfeatures * 6);
+  m_FeatureMoments->resize(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
 

@@ -360,7 +360,7 @@ void TestDataArray()
     }
 
     // Resize Larger
-    int32Array->Resize(NUM_TUPLES_2);
+    int32Array->resize(NUM_TUPLES_2);
     DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_2, int32Array->getNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_2, int32Array->GetSize());
     DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
@@ -375,7 +375,7 @@ void TestDataArray()
     }
 
     // Resize Smaller - Which should have still saved some of our data
-    int32Array->Resize(NUM_TUPLES_3);
+    int32Array->resize(NUM_TUPLES_3);
     DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_3, int32Array->getNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_3, int32Array->GetSize());
     DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);

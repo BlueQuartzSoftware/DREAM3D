@@ -130,8 +130,7 @@ void FindMisorientations::dataCheck()
   {
     QString ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
-    PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -143,21 +142,20 @@ void FindMisorientations::dataCheck()
   {
     NeighborList<float>::Pointer misorientationListPtr = NeighborList<float>::New();
     misorientationListPtr->SetName(m_MisorientationListArrayName);
-    misorientationListPtr->Resize(cellFeatureAttrMat->getNumTuples());
+    misorientationListPtr->resize(cellFeatureAttrMat->getNumTuples());
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_MisorientationListArrayName, misorientationListPtr);
     m_MisorientationList = misorientationListPtr.get();
     if (misorientationListPtr.get() == NULL)
     {
       QString ss = QObject::tr("MisorientationLists Array Not Initialized correctly");
       setErrorCondition(-308);
-      PipelineMessage em (getHumanLabel(), ss, -308, PipelineMessage::Error);
-      emit filterGeneratedMessage(em);
+      notifyErrorMessage(getHumanLabel(), ss, -308);
     }
   }
   else
   {
     m_MisorientationList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(misorientationPtr.get());
-    m_MisorientationList->Resize(cellFeatureAttrMat->getNumTuples());
+    m_MisorientationList->resize(cellFeatureAttrMat->getNumTuples());
   }
 }
 
@@ -241,6 +239,6 @@ void FindMisorientations::execute()
     misoL->assign(misorientationlists[i].begin(), misorientationlists[i].end());
     m_MisorientationList->setList(static_cast<int>(i), misoL);
   }
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindMisorientations Completed") );
+  notifyStatusMessage(getHumanLabel(), "FindMisorientations Completed");
 }
 

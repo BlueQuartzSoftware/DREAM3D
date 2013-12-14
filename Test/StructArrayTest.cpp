@@ -237,7 +237,7 @@ void TestResizeArray()
   Vec3IntListPointer_t nodes = initializeStructArray();
 
   // Resize to a smaller Array
-  nodes->Resize(RESIZE_SMALLER);
+  nodes->resize(RESIZE_SMALLER);
   size_t nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(RESIZE_SMALLER, nTuples)
   size_t size = nodes->GetSize();
@@ -255,7 +255,7 @@ void TestResizeArray()
   }
 
   // Resize to a larger Array
-  nodes->Resize(RESIZE_LARGER);
+  nodes->resize(RESIZE_LARGER);
   nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(RESIZE_LARGER, nTuples)
   size = nodes->GetSize();
@@ -279,7 +279,7 @@ void TestResizeArray()
 
 
   // Resize to a Zero Array
-  nodes->Resize(INIT_SIZE);
+  nodes->resize(INIT_SIZE);
   Vec3Int_t* ptr = reinterpret_cast<Vec3Int_t*>(nodes->GetVoidPointer(0));
   DREAM3D_REQUIRE_EQUAL(NULL, ptr);
   ptr = nodes->getPointer(0);

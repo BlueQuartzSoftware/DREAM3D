@@ -94,7 +94,7 @@ int EdgeDataContainer::writeEdgesToHDF5(hid_t dcGid)
     if (err < 0)
     {
 //      setErrorCondition(err);
-//      notifyErrorMessage("Error Writing Edge List to DREAM3D file", getErrorCondition());
+//      notifyErrorMessage(getHumanLabel(), "Error Writing Edge List to DREAM3D file", getErrorCondition());
     }
 
     //next write edge neighbors if they exist
@@ -131,7 +131,7 @@ int EdgeDataContainer::writeEdgesToHDF5(hid_t dcGid)
       err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::EdgeNeighbors, rank, dims, bufPtr);
       if (err < 0)
       {
-        notifyErrorMessage("Error writing the Edge Neighbors", -998);
+        notifyErrorMessage(getNameOfClass(), "Error writing the Edge Neighbors", -998);
         return err;
       }
     }
@@ -179,7 +179,7 @@ int EdgeDataContainer::writeEdgesToHDF5(hid_t dcGid)
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::EdgesContainingVert, rank, dims, bufPtr);
     if (err < 0)
     {
-      notifyErrorMessage("Error writing the Edges Containing Verts", -999);
+      notifyErrorMessage(getNameOfClass(), "Error writing the Edges Containing Verts", -999);
       return err;
     }
   }
@@ -295,7 +295,7 @@ int EdgeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
       if (err < 0)
       {
 //        setErrorCondition(err);
-//        notifyErrorMessage("Error Reading Edge List from DREAM3D file", getErrorCondition());
+//        notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
         return err;
       }
       setEdges(edgesPtr);
@@ -310,7 +310,7 @@ int EdgeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
         if(err < 0)
         {
 //          setErrorCondition(err);
-//          notifyErrorMessage("Error Reading Edge List from DREAM3D file", getErrorCondition());
+//          notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer edgeNeighbors = Int32DynamicListArray::New();
@@ -327,7 +327,7 @@ int EdgeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
         if(err < 0)
         {
 //          setErrorCondition(err);
-//          notifyErrorMessage("Error Reading Edge List from DREAM3D file", getErrorCondition());
+//          notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer edgesContainingVert = Int32DynamicListArray::New();

@@ -141,7 +141,7 @@ void FindSurfaceVoxelFractions::execute()
 
   find_surface_voxel_fractions();
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "FindSurfaceVoxelFractions Completed") );
+  notifyStatusMessage(getHumanLabel(), "FindSurfaceVoxelFractions Completed");
 }
 
 // -----------------------------------------------------------------------------

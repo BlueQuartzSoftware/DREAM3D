@@ -48,49 +48,9 @@ Observer::~Observer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updatePipelineProgressAndMessage(const char* msg, int progress)
+void Observer::processPipelineMessage(const PipelineMessage& pm) const
 {
-  std::cout << progress << "% " << msg << std::endl;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observer::updatePipelineProgressAndMessage(const QString& msg, int progress)
-{
-  std::cout << progress << "% " << msg.toStdString() << std::endl;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observer::updatePipelineProgress(int progress)
-{
-  std::cout << progress << "%" << std::endl;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observer::updatePipelineMessage(const QString& msg)
-{
-  std::cout << msg.toStdString() << std::endl;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observer::updatePipelineMessage(const char* msg)
-{
-  std::cout << msg << std::endl;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observer::sendPipelineMessage(PipelineMessage& msg)
-{
+  PipelineMessage msg = pm;
   QString str;
   QTextStream ss(&str);
   if(msg.getMessageType() == PipelineMessage::Error)
@@ -116,16 +76,4 @@ void Observer::sendPipelineMessage(PipelineMessage& msg)
   std::cout << msg.getFilterHumanLabel().toStdString() << ": " << str.toStdString() << std::endl;
 
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observer::sendPipelineMessages(QVector<PipelineMessage> msgs)
-{
-  for (QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter )
-  {
-    sendPipelineMessage(*iter);
-  }
-}
-
 

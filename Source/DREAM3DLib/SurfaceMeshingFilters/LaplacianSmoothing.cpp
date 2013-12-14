@@ -306,16 +306,14 @@ void LaplacianSmoothing::dataCheck()
   if(sm->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == NULL)
   {
     setErrorCondition(-385);
-    PipelineMessage em (getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
   if (sm->getAttributeMatrix(getEdgeAttributeMatrixName())->getAttributeArray(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
@@ -352,12 +350,12 @@ void LaplacianSmoothing::execute()
 
   if (err < 0)
   {
-    notifyErrorMessage("Error smoothing the surface mesh", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error smoothing the surface mesh", getErrorCondition());
     return;
   }
 
   /* Let the GUI know we are done with this filter */
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Complete") );
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -365,7 +363,7 @@ void LaplacianSmoothing::execute()
 // -----------------------------------------------------------------------------
 int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
 {
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Generating Lambda values") );
+  notifyStatusMessage(getHumanLabel(), "Generating Lambda values");
   VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
 
   int numNodes = nodesPtr->getNumberOfTuples();
@@ -443,7 +441,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   if (err < 0)
   {
     setErrorCondition(-557);
-    notifyErrorMessage("Error generating the Lambda Array", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error generating the Lambda Array", getErrorCondition());
     return err;
   }
   // Get a Pointer to the Lambda array for conveneince
@@ -459,7 +457,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
     QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
     conn->setMessagePrefix(ss);
     connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(emitFilterGeneratedMessage(const PipelineMessage&)));
+            this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
     conn->setDataContainerArray(getDataContainerArray());
     conn->setSurfaceDataContainerName(getSurfaceDataContainerName());
     conn->setEdgeAttributeMatrixName(getEdgeAttributeMatrixName());
@@ -473,7 +471,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   }
   if (getCancel() == true) { return -1; }
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting to Smooth Vertices") );
+  notifyStatusMessage(getHumanLabel(), "Starting to Smooth Vertices");
   // Get the unique Edges from the data container
 
   IDataArray::Pointer uniqueEdgesPtr = sm->getAttributeMatrix(getEdgeAttributeMatrixName())->getAttributeArray(m_SurfaceMeshUniqueEdgesArrayName);
@@ -481,7 +479,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   if (NULL == uniqueEdges)
   {
     setErrorCondition(-560);
-    notifyErrorMessage("Error retrieving the Unique Edge List", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error retrieving the Unique Edge List", getErrorCondition());
     return -560;
   }
   // Get a pointer to the Unique Edges
@@ -504,7 +502,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   {
     if (getCancel() == true) { return -1; }
     QString ss = QObject::tr("Iteration %1").arg(q);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
     for (int i = 0; i < nedges; i++)
     {
       int in_edge = 2 * i;
@@ -606,12 +604,12 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   if (err < 0)
   {
     setErrorCondition(-557);
-    notifyErrorMessage("Error generating the Lambda Array", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error generating the Lambda Array", getErrorCondition());
     return err;
   }
 
 
-  emit filterGeneratedMessage(PipelineMessage::CreateStatusMessage(getHumanLabel(), "Starting to Smooth Vertices") );
+  notifyStatusMessage(getHumanLabel(), "Starting to Smooth Vertices");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
@@ -630,7 +628,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   {
     if (getCancel() == true) { return -1; }
     QString ss = QObject::tr("Iteration %1").arg(q);
-    notifyStatusMessage(ss);
+    notifyStatusMessage(getHumanLabel(), ss);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
@@ -701,8 +699,7 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
   {
     setErrorCondition(-90123);
     QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
-    PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-    emit filterGeneratedMessage(em);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   Detail::ScopedFileMonitor vtkFileMonitor(vtkFile);
