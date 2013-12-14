@@ -33,6 +33,11 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _HDF5ScopedFileSentineal_H_
+#define _HDF5ScopedFileSentineal_H_
+
+
+
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
@@ -63,4 +68,23 @@ class H5Support_EXPORT HDF5ScopedFileSentinel
     void* _oldHDF_error_client_data;
 };
 
+class H5Support_EXPORT HDF5ScopedGroupSentinel
+{
+  public:
+    HDF5ScopedGroupSentinel(hid_t* gid, bool turnOffErrors);
+    virtual ~HDF5ScopedGroupSentinel();
+    void addGroupId(hid_t* gid);
 
+  private:
+    bool m_TurnOffErrors;
+    std::vector<hid_t*> m_Groups;
+
+    herr_t (*_oldHDF_error_func)(hid_t, void*);
+    void* _oldHDF_error_client_data;
+};
+
+
+
+
+
+#endif /* _HDF5ScopedFileSentineal_H_ */

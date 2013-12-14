@@ -236,17 +236,10 @@ int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
   int err;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
-    //    QString ss = QObject::tr("Writing Data '%1' to HDF5 File").arg(*iter);
-    //    notifyStatusMessage(getHumanLabel(), ss);
     IDataArray::Pointer d = iter.value();
     err = d->writeH5Data(parentId);
     if(err < 0)
     {
-      //      ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
-      //      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-      //      emit filterGeneratedMessage(em);
-      //      setErrorCondition(err);
-      H5Gclose(parentId); // Close the Cell Group
       return err;
     }
   }

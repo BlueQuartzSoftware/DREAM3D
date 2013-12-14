@@ -143,7 +143,7 @@ void TestEbsdCleanUpPipeline()
   {
     DataContainerWriter::Pointer f = DataContainerWriter::New();
     f->setOutputFile(outputDREAM3DFile());
-    f->setWriteXdmfFile(false);
+    f->setWriteXdmfFile(true);
     pipeline->pushBack(f);
   }
 

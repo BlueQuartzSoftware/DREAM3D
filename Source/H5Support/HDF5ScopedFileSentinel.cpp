@@ -99,3 +99,50 @@ void HDF5ScopedFileSentinel::addGroupId(hid_t* gid)
 {
   m_Groups.push_back(gid);
 }
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+HDF5ScopedGroupSentinel::HDF5ScopedGroupSentinel(hid_t* gid, bool turnOffErrors) :
+  m_TurnOffErrors(turnOffErrors)
+{
+  m_Groups.push_back(gid);
+  if (m_TurnOffErrors == true)
+  {
+    H5Eget_auto(H5E_DEFAULT, &_oldHDF_error_func, &_oldHDF_error_client_data);
+    H5Eset_auto(H5E_DEFAULT, NULL, NULL);
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+HDF5ScopedGroupSentinel::~HDF5ScopedGroupSentinel()
+{
+  if (m_TurnOffErrors == true)
+  {
+    H5Eset_auto(H5E_DEFAULT, _oldHDF_error_func, _oldHDF_error_client_data);
+  }
+  for(std::vector<hid_t*>::size_type i = 0; i < m_Groups.size(); ++i)
+  {
+    hid_t* temp = m_Groups[i];
+    if (*temp > 0) { H5Gclose(*temp); *temp = -1; }
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void HDF5ScopedGroupSentinel::addGroupId(hid_t* gid)
+{
+  m_Groups.push_back(gid);
+}

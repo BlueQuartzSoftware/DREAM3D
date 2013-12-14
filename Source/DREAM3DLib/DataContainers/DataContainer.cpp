@@ -37,6 +37,7 @@
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -200,28 +201,19 @@ int DataContainer::writeAttributeMatricesToHDF5(hid_t parentId)
     err = QH5Utilities::createGroupsFromPath(iter.key(), parentId);
     if(err < 0)
     {
-//      QString ss = QObject::tr("Error creating HDF Group ").arg(iter.key());
-//      setErrorCondition(-63);
-//      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-//      emit filterGeneratedMessage(em);
-      H5Gclose(parentId); // Close the Data Container Group
       return err;
     }
     attributeMatrixId = H5Gopen(parentId, iter.key().toLatin1().data(), H5P_DEFAULT);
+    HDF5ScopedGroupSentinel gSentinel(&attributeMatrixId, false);
+
     err = QH5Lite::writeScalarAttribute(parentId, iter.key(), DREAM3D::HDF5::AttributeMatrixType, (*iter)->getType());
     if(err < 0)
     {
-//      QString ss = QObject::tr("Error writing string attribute to HDF Group %1").arg(iter.key());
-//      setErrorCondition(-64);
-//      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-//      emit filterGeneratedMessage(em);
-      H5Gclose(parentId); // Close the Data Container Group
       return err;
     }
     err = (*iter)->writeAttributeArraysToHDF5(attributeMatrixId);
     if(err < 0)
     {
-      H5Gclose(parentId); // Close the Data Container Group
       return err;
     }
   }
@@ -244,20 +236,12 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QM
     err = QH5Lite::readScalarAttribute(dcGid, amName, DREAM3D::HDF5::AttributeMatrixType, amType);
     if (err < 0)
     {
-//      setErrorCondition(-109283);
-//      QString ss = QObject::tr("The AttributeMatrix is missing the 'AttirbuteMatrixType' attribute on the '%1' Attribute Matrix").arg(amNames[iter]);
-//      PipelineMessage em(getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-//emit filterGeneratedMessage(em);
       return -1;
     }
 
     hid_t amGid = H5Gopen(dcGid, amName.toLatin1().data(), H5P_DEFAULT );
     if (amGid < 0)
     {
-//      QString ss = QObject::tr("Error opening AttributeMatrix %1").arg(amName);
-//      setErrorCondition(-61);
-//      PipelineMessage em (getHumanLabel(), ss, getErrorCondition(), PipelineMessage::Error);
-// emit filterGeneratedMessage(em);
       return -1;
     }
 
@@ -273,7 +257,7 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QM
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
-//      setErrorCondition(err);
+      //      setErrorCondition(err);
       return -1;
     }
   }
