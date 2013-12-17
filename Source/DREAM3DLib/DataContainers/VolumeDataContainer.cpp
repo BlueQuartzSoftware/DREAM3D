@@ -214,9 +214,12 @@ int VolumeDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
     return -1;
   }
 
+  AttributeMatrixMap_t amMap = getAttributeMatrices();
+
   writeXdmfMeshStructure(*out, hdfFileName);
-  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = amMap.begin(); iter != amMap.end(); ++iter)
   {
+    std::cout << "attrMat Name: " << iter.key().toStdString() << std::endl;
     AttributeMatrix::Pointer attrMat = iter.value();
     uint32_t amType = attrMat->getType();
     // QString name = iter.key();

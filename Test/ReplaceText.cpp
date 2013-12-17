@@ -470,14 +470,14 @@ void scanDirIter(QDir dir)
 int main(int argc, char *argv[])
 {
 
-#if 0
-  QString header = argv[1];
-  QString source = argv[2];
-  buildInitializerList(header, source);
-#else
-  scanDirIter(UnitTest::DREAM3DProjDir + QString("/Source/DREAM3DLib"));
-  scanDirIter(UnitTest::DREAM3DProjDir + QString("/Source/Plugins"));
-#endif
+//#if 0
+//  QString header = argv[1];
+//  QString source = argv[2];
+//  buildInitializerList(header, source);
+//#else
+//  scanDirIter(UnitTest::DREAM3DProjDir + QString("/Source/DREAM3DLib"));
+//  scanDirIter(UnitTest::DREAM3DProjDir + QString("/Source/Plugins"));
+//#endif
 
   return 0;
 }
