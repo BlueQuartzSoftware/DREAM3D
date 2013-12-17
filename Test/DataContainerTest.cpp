@@ -267,8 +267,15 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
 
   // Now create an Array and add it to the Attribute Matrix
   typename T::Pointer p = T::CreateArray(5, "Test");
-  attrMat->addAttributeArray("Test", p);
-  // Now get it back out as the specific type that we put it in as
+  int err = attrMat->addAttributeArray("Test", p);
+  DREAM3D_REQUIRED(err, < , 0) // This should fail because the number of tuples in the array is different from that of the AttributeMatrix
+
+
+  attrMat->resizeAttributeArrays(5);
+  err = attrMat->addAttributeArray("Test", p);
+  DREAM3D_REQUIRED(err, >=, 0)
+
+	// Now get it back out as the specific type that we put it in as
   typename T::Pointer t = attrMat->getArray<T>("Test");
   DREAM3D_TEST_POINTER(t.get(), !=, NULL)
 

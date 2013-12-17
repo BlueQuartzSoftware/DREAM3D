@@ -41,6 +41,7 @@ set(_PrivateFilters
   ArraySelectionExample
   GenericExample
   TestFilters
+  MakeVolumeDataContainer
 )
 
 #-----------------
