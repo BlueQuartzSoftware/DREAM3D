@@ -249,6 +249,50 @@ int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int AttributeMatrix::addAttributeArrayFromHDF5(hid_t gid, QString name, bool preflight)
+{
+  int err = 0;
+  QString classType;
+  QH5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
+  //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
+  IDataArray::Pointer dPtr = IDataArray::NullPointer();
+
+  if(classType.startsWith("DataArray") == true)
+  {
+    dPtr = H5DataArrayReader::readIDataArray(gid, name, preflight);
+  }
+  else if(classType.compare("StringDataArray") == 0)
+  {
+    dPtr = H5DataArrayReader::readStringDataArray(gid, name, preflight);
+  }
+  else if(classType.compare("vector") == 0)
+  {
+
+  }
+  else if(classType.compare("NeighborList<T>") == 0)
+  {
+    dPtr = H5DataArrayReader::readNeighborListData(gid, name, preflight);
+  }
+  else if ( name.compare(DREAM3D::EnsembleData::Statistics) == 0)
+  {
+    StatsDataArray::Pointer statsData = StatsDataArray::New();
+    statsData->SetName(DREAM3D::EnsembleData::Statistics);
+    statsData->readH5Data(gid);
+    dPtr = statsData;
+  }
+
+  if (NULL != dPtr.get())
+  {
+    addAttributeArray(dPtr->GetName(), dPtr);
+  }
+
+  H5Gclose(gid); // Close the Cell Group
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QSet<QString>& namesToRead)
 {
   int err = 0;
