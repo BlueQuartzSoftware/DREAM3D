@@ -37,7 +37,6 @@
 #ifndef EBSDSegmentFeatures_H_
 #define EBSDSegmentFeatures_H_
 
-#include <vector>
 #include <QtCore/QString>
 
 
@@ -60,6 +59,7 @@
  */
 class DREAM3DLib_EXPORT EBSDSegmentFeatures : public SegmentFeatures
 {
+	Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(EBSDSegmentFeatures)
     DREAM3D_STATIC_NEW_MACRO(EBSDSegmentFeatures)

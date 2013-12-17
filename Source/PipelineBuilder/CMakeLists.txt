@@ -52,16 +52,16 @@ set(PipelineBuilderLib_HDRS
     ${PROJECT_SOURCE_DIR}/QFilterWidget.h
     ${PROJECT_SOURCE_DIR}/PipelineBuilderWidget.h
     ${PROJECT_SOURCE_DIR}/PipelineViewWidget.h
-    ${PROJECT_SOURCE_DIR}/QFilterPipeline.h
+ #   ${PROJECT_SOURCE_DIR}/QFilterPipeline.h
     ${PROJECT_SOURCE_DIR}/AddFavoriteWidget.h
-    ${PROJECT_SOURCE_DIR}/ArraySelectionWidget.h
-    ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.h
-    ${PROJECT_SOURCE_DIR}/ComparisonSelectionItemDelegate.h
-    ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.h
+  #  ${PROJECT_SOURCE_DIR}/ArraySelectionWidget.h
+  #  ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.h
+  #  ${PROJECT_SOURCE_DIR}/ComparisonSelectionItemDelegate.h
+  #  ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.h
     ${PROJECT_SOURCE_DIR}/PipelineTreeWidget.h
-    ${PROJECT_SOURCE_DIR}/AxisAngleWidget.h
-    ${PROJECT_SOURCE_DIR}/AxisAngleTableModel.h
-    ${PROJECT_SOURCE_DIR}/AxisAngleItemDelegate.h
+  #  ${PROJECT_SOURCE_DIR}/AxisAngleWidget.h
+ #   ${PROJECT_SOURCE_DIR}/AxisAngleTableModel.h
+ #   ${PROJECT_SOURCE_DIR}/AxisAngleItemDelegate.h
     ${PROJECT_SOURCE_DIR}/DREAM3DFileDragMessageBox.h
 )
 
@@ -69,14 +69,14 @@ set(PipelineBuilderLib_SRCS
     ${PROJECT_SOURCE_DIR}/QFilterWidget.cpp
     ${PROJECT_SOURCE_DIR}/PipelineBuilderWidget.cpp
     ${PROJECT_SOURCE_DIR}/PipelineViewWidget.cpp
-    ${PROJECT_SOURCE_DIR}/QFilterPipeline.cpp
+  #  ${PROJECT_SOURCE_DIR}/QFilterPipeline.cpp
     ${PROJECT_SOURCE_DIR}/AddFavoriteWidget.cpp
-    ${PROJECT_SOURCE_DIR}/ArraySelectionWidget.cpp
-    ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.cpp
-    ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.cpp
+  #  ${PROJECT_SOURCE_DIR}/ArraySelectionWidget.cpp
+  #  ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.cpp
+  #  ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.cpp
     ${PROJECT_SOURCE_DIR}/PipelineTreeWidget.cpp
-    ${PROJECT_SOURCE_DIR}/AxisAngleWidget.cpp
-    ${PROJECT_SOURCE_DIR}/AxisAngleTableModel.cpp
+ #   ${PROJECT_SOURCE_DIR}/AxisAngleWidget.cpp
+  #  ${PROJECT_SOURCE_DIR}/AxisAngleTableModel.cpp
     ${PROJECT_SOURCE_DIR}/DREAM3DFileDragMessageBox.cpp
 )
 
@@ -89,9 +89,9 @@ QT4_ADD_RESOURCES( PipelineBuilderLib_Generated_RC_SRCS ""  )
 QT4_WRAP_UI( PipelineBuilderLib_Generated_UI_HDRS
             ${PROJECT_SOURCE_DIR}/UI_Files/PipelineBuilderWidget.ui
             ${PROJECT_SOURCE_DIR}/UI_Files/AddFavoriteWidget.ui
-            ${PROJECT_SOURCE_DIR}/UI_Files/ArraySelectionWidget.ui
-            ${PROJECT_SOURCE_DIR}/UI_Files/AxisAngleWidget.ui
-            ${PROJECT_SOURCE_DIR}/UI_Files/ComparisonSelectionWidget.ui
+    #        ${PROJECT_SOURCE_DIR}/UI_Files/ArraySelectionWidget.ui
+    #        ${PROJECT_SOURCE_DIR}/UI_Files/AxisAngleWidget.ui
+    #        ${PROJECT_SOURCE_DIR}/UI_Files/ComparisonSelectionWidget.ui
             ${PROJECT_SOURCE_DIR}/UI_Files/DREAM3DFileDragMessageBox.ui
 )
 

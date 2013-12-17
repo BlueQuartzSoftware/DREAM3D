@@ -57,6 +57,7 @@
  */
 class DREAM3DLib_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
+	Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
     DREAM3D_STATIC_NEW_MACRO(RegularGridSampleSurfaceMesh)
