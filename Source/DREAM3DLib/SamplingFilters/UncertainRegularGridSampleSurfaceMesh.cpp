@@ -183,7 +183,6 @@ void UncertainRegularGridSampleSurfaceMesh::preflight()
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::execute()
 {
-  int err = 0;
   setErrorCondition(0);
 
   dataCheck();

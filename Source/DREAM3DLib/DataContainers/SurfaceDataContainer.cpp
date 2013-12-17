@@ -190,23 +190,28 @@ int SurfaceDataContainer::writeFacesToHDF5(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
+int SurfaceDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
   herr_t err = 0;
-  if (out == NULL)
-  {
-    return -1;
-  }
 
-  writeXdmfMeshStructure(*out, hdfFileName);
-  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
+  // Write the Mesh Structure to the XDMF file
+  writeXdmfMeshStructureHeader(out, hdfFileName);
+  // Get all of our AttributeMatrices
+  AttributeMatrixMap_t amMap = getAttributeMatrices();
+  // Loop over each AttributeMatrix and write the meta data to the Xdmf file
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = amMap.begin(); iter != amMap.end(); ++iter)
   {
-    if((*iter)->getType() == DREAM3D::AttributeMatrixType::Face)
+    AttributeMatrix::Pointer attrMat = iter.value();
+    uint32_t amType = attrMat->getType();
+    if(amType == DREAM3D::AttributeMatrixType::Face)
     {
-      (*iter)->generateXdmfText("Cell", getName(), hdfFileName);
+      QString xdmfText = attrMat->generateXdmfText("Cell", getName(), hdfFileName);
+      out << xdmfText;
     }
   }
-  writeXdmfGridFooter(*out);
+
+  // Write the Grid Footer to the Xdmf file
+  writeXdmfMeshStructureFooter(out);
 
   return err;
 }
@@ -214,7 +219,7 @@ int SurfaceDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::writeXdmfMeshStructure(QTextStream& out, QString hdfFileName)
+void SurfaceDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
   FaceArray::Pointer faces = getFaces();
   if (NULL == faces.get())
@@ -240,16 +245,6 @@ void SurfaceDataContainer::writeXdmfMeshStructure(QTextStream& out, QString hdfF
   out << "      </DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
   out << "" << "\n";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SurfaceDataContainer::writeXdmfGridFooter(QTextStream& xdmf)
-{
-  xdmf << "  </Grid>" << "\n";
-  xdmf << "    <!-- *************** END OF " << getName() << " *************** -->" << "\n";
-  xdmf << "\n";
 }
 
 // -----------------------------------------------------------------------------

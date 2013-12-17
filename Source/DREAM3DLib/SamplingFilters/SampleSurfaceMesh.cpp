@@ -202,7 +202,6 @@ void SampleSurfaceMesh::preflight()
 // -----------------------------------------------------------------------------
 void SampleSurfaceMesh::execute()
 {
-  int err = 0;
   setErrorCondition(0);
 
   dataCheck();
@@ -224,7 +223,7 @@ void SampleSurfaceMesh::execute()
 
   //create array to hold bounding vertices for each face
   VertexArray::Vert_t ll, ur;
-  VertexArray::Vert_t point;
+  //VertexArray::Vert_t point;
   VertexArray::Pointer faceBBs = VertexArray::CreateArray(2 * numFaces, "faceBBs");
 
   //walk through faces to see how many features there are
@@ -287,13 +286,13 @@ void SampleSurfaceMesh::execute()
   iArray->initializeWithZeros();
   int32_t* polyIds = iArray->getPointer(0);
 
-  char code;
-  float radius;
+//  char code;
+//  float radius;
 
-  int zStride, yStride;
+//  int zStride, yStride;
 
-  int count = 0;
-  float coords[3];
+//  int count = 0;
+//  float coords[3];
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)

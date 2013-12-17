@@ -200,7 +200,7 @@ IDataArray::Pointer findHistogram(IDataArray::Pointer inputData, int64_t ensembl
     }
   }
 
-  int ensemble, bin;
+  int bin;
   float min = 1000000.0f;
   float max = 0.0f;
   float value;

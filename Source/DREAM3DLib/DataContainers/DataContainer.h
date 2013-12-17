@@ -180,10 +180,18 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     typedef QMap<QString, AttributeMatrix::Pointer> AttributeMatrixMap_t;
 
-    // DREAM3D_VIRTUAL_INSTANCE_PROPERTY(AttributeMatrixMap_t, AttributeMatrices)
-
+    /**
+     * @brief getAttributeMatrices
+     * @return
+     */
     AttributeMatrixMap_t& getAttributeMatrices();
 
+
+    /**
+     * @brief Returns bool of whether a named array exists
+     * @param name The name of the data array
+     */
+    virtual bool doesAttributeMatrixExist(const QString& name);
 
     /**
      * @brief Creates an AttributeMatrix and automatically adds it to the DataContainer
@@ -191,12 +199,6 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @return
      */
     virtual AttributeMatrix* createAndAddAttributeMatrix(const QString& attrMatName);
-
-    /**
-     * @brief Returns bool of whether a named array exists
-     * @param name The name of the data array
-     */
-    virtual bool doesAttributeMatrixExist(const QString& name);
 
     /**
     * @brief Adds/overwrites the data for a named array
@@ -257,7 +259,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual int readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QMap<QString, QSet<QString> > arraysToRead);
 
     virtual int writeMeshToHDF5(hid_t dcGid);
-    virtual int writeXdmf(QTextStream* out, QString hdfFileName);
+    virtual int writeXdmf(QTextStream& out, QString hdfFileName);
     virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 
   protected:
