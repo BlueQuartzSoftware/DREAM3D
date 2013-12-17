@@ -113,7 +113,7 @@ void TestEbsdCleanUpPipeline()
     f->setInputFile(testFile1());
     pipeline->pushBack(f);
   }
-
+#if 0
   {
     FindCellQuats::Pointer f = FindCellQuats::New();
     pipeline->pushBack(f);
@@ -139,7 +139,7 @@ void TestEbsdCleanUpPipeline()
     f->setReferenceAngle(0.0);
     pipeline->pushBack(f);
   }
-
+#endif
   {
     DataContainerWriter::Pointer f = DataContainerWriter::New();
     f->setOutputFile(outputDREAM3DFile());

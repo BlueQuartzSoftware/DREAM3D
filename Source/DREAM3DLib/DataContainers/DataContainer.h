@@ -72,10 +72,9 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       return sharedPtr;
     }
 
-    typedef QMap<QString, AttributeMatrix::Pointer> AttributeMatrixMap_t;
 
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QString, Name)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(AttributeMatrixMap_t, AttributeMatrices)
+
 
     virtual unsigned int getDCType() {return DREAM3D::DataContainerType::UnknownDataContainer;}
 
@@ -179,6 +178,13 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       return attributeMatrix.get();
     }
 
+    typedef QMap<QString, AttributeMatrix::Pointer> AttributeMatrixMap_t;
+
+    // DREAM3D_VIRTUAL_INSTANCE_PROPERTY(AttributeMatrixMap_t, AttributeMatrices)
+
+    AttributeMatrixMap_t& getAttributeMatrices();
+
+
     /**
      * @brief Creates an AttributeMatrix and automatically adds it to the DataContainer
      * @param attrMatName
@@ -259,6 +265,9 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     explicit DataContainer(const QString name);
 
   private:
+
+    AttributeMatrixMap_t   m_AttributeMatrices;
+
     DataContainer(const DataContainer&); // Copy Constructor Not Implemented
     void operator=(const DataContainer&); // Operator '=' Not Implemented
 

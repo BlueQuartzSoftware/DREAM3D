@@ -285,7 +285,7 @@ void DataContainerWriter::execute()
     }
 
     hid_t dcGid = H5Gopen(dcaGid, dcNames[iter].toLatin1().data(), H5P_DEFAULT );
-    scopedFileSentinel.addGroupId(dcGid);
+    scopedFileSentinel.addGroupId(&dcGid);
    //QString ss = QObject::tr("%1 |--> Writing %2 DataContainer ").arg(getMessagePrefix()).arg(dcNames[iter]);
 
     // Have the DataContainer write all of its Attribute Matrices and its Mesh
