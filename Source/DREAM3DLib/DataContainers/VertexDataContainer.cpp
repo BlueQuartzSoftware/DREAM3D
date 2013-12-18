@@ -102,23 +102,28 @@ int VertexDataContainer::writeVerticesToHDF5(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
+int VertexDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
   herr_t err = 0;
-  if (out == NULL)
-  {
-    return -1;
-  }
 
-  writeXdmfMeshStructure(*out, hdfFileName);
-  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
+  // Write the Mesh Structure to the XDMF file
+  writeXdmfMeshStructureHeader(out, hdfFileName);
+  // Get all of our AttributeMatrices
+  AttributeMatrixMap_t amMap = getAttributeMatrices();
+  // Loop over each AttributeMatrix and write the meta data to the Xdmf file
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = amMap.begin(); iter != amMap.end(); ++iter)
   {
-    if((*iter)->getType() == DREAM3D::AttributeMatrixType::Vertex)
+    AttributeMatrix::Pointer attrMat = iter.value();
+    uint32_t amType = attrMat->getType();
+    if(amType == DREAM3D::AttributeMatrixType::Vertex)
     {
-      (*iter)->generateXdmfText("Node", getName(), hdfFileName);
+      QString xdmfText = attrMat->generateXdmfText("Node", getName(), hdfFileName);
+      out << xdmfText;
     }
   }
-  writeXdmfGridFooter(*out);
+
+  // Write the Grid Footer to the Xdmf file
+  writeXdmfMeshStructureFooter(out);
 
   return err;
 }
@@ -126,7 +131,7 @@ int VertexDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::writeXdmfMeshStructure(QTextStream& out, QString hdfFileName)
+void VertexDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
   VertexArray::Pointer verts = getVertices();
   if(NULL == verts.get())
@@ -152,7 +157,7 @@ void VertexDataContainer::writeXdmfMeshStructure(QTextStream& out, QString hdfFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::writeXdmfGridFooter(QTextStream& xdmf)
+void VertexDataContainer::writeXdmfMeshStructureFooter(QTextStream& xdmf)
 {
   xdmf << "  </Grid>" << "\n";
   xdmf << "    <!-- *************** END OF " << getName() << " *************** -->" << "\n";

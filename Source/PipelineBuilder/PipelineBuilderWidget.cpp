@@ -1137,7 +1137,7 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-  m_FilterPipeline = new QFilterPipeline(NULL);
+  m_FilterPipeline = new FilterPipeline(NULL);
 
   // Move the PipelineBuilder object into the thread that we just created.
   m_FilterPipeline->moveToThread(m_WorkerThread);

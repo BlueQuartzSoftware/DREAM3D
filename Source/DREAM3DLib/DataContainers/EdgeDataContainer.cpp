@@ -189,23 +189,28 @@ int EdgeDataContainer::writeEdgesToHDF5(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
+int EdgeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
   herr_t err = 0;
-  if (out == NULL)
-  {
-    return -1;
-  }
 
-  writeXdmfMeshStructure(*out, hdfFileName);
-  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
+  // Write the Mesh Structure to the XDMF file
+  writeXdmfMeshStructureHeader(out, hdfFileName);
+  // Get all of our AttributeMatrices
+  AttributeMatrixMap_t amMap = getAttributeMatrices();
+  // Loop over each AttributeMatrix and write the meta data to the Xdmf file
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = amMap.begin(); iter != amMap.end(); ++iter)
   {
-    if((*iter)->getType() == DREAM3D::AttributeMatrixType::Edge)
+    AttributeMatrix::Pointer attrMat = iter.value();
+    uint32_t amType = attrMat->getType();
+    if(amType == DREAM3D::AttributeMatrixType::Edge)
     {
-      (*iter)->generateXdmfText("Cell", getName(), hdfFileName);
+      QString xdmfText = attrMat->generateXdmfText("Cell", getName(), hdfFileName);
+      out << xdmfText;
     }
   }
-  writeXdmfGridFooter(*out);
+
+  // Write the Grid Footer to the Xdmf file
+  writeXdmfMeshStructureFooter(out);
 
   return err;
 }
@@ -213,7 +218,7 @@ int EdgeDataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::writeXdmfMeshStructure(QTextStream& out, QString hdfFileName)
+void EdgeDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
   EdgeArray::Pointer edges = getEdges();
   if (NULL == edges.get())
@@ -241,15 +246,6 @@ void EdgeDataContainer::writeXdmfMeshStructure(QTextStream& out, QString hdfFile
   out << "" << "\n";
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeDataContainer::writeXdmfGridFooter(QTextStream& xdmf)
-{
-  xdmf << "  </Grid>" << "\n";
-  xdmf << "    <!-- *************** END OF " << getName() << " *************** -->" << "\n";
-  xdmf << "\n";
-}
 
 // -----------------------------------------------------------------------------
 //

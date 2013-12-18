@@ -67,6 +67,14 @@ DataContainer::~DataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataContainer::AttributeMatrixMap_t& DataContainer::getAttributeMatrices()
+{
+  return m_AttributeMatrices;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool DataContainer::doesAttributeMatrixExist(const QString& name)
 {
   return  m_AttributeMatrices.contains(name);
@@ -279,7 +287,7 @@ int DataContainer::writeMeshToHDF5(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainer::writeXdmf(QTextStream* out, QString hdfFileName)
+int DataContainer::writeXdmf(QTextStream &out, QString hdfFileName)
 {
   BOOST_ASSERT(false);
   return -1;

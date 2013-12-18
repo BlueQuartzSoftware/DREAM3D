@@ -600,7 +600,7 @@ void FindDeformationStatistics::execute()
     fprintf(vtkFile, "%f %f %f\n", xFZ, yFZ, zFZ);
   }
 
-  fprintf(vtkFile, "CELLS %ld %ld\n", totalFeatures);
+  fprintf(vtkFile, "CELLS %ld %ld\n", totalFeatures, totalFeatures*3);
   //  Store the Feature Ids so we don't have to re-read the triangles file again
   for(size_t i = 1; i < totalFeatures; i++)
   {

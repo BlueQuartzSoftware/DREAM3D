@@ -249,7 +249,7 @@ void YSChoiAbaqusReader::execute()
 
   int xpoints, ypoints, zpoints, totalpoints = 0;
   float resx, resy, resz;
-  float** *mat;
+  float** *mat = NULL;
   //const unsigned int size(1024);
   // Read header from data file to figure out how many points there are
   QFile in(getInputFile());

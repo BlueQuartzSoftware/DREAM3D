@@ -66,7 +66,6 @@
 #define _M3CSliceBySlice_H_
 
 
-#include <vector>
 #include <QtCore/QString>
 
 
@@ -97,7 +96,7 @@
  */
 class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
 {
-
+	Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(M3CSliceBySlice)
     DREAM3D_STATIC_NEW_MACRO(M3CSliceBySlice)

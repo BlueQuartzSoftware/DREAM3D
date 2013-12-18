@@ -303,7 +303,7 @@ void DataContainerWriter::execute()
     }
     if (m_WriteXdmfFile == true)
     {
-      err = dc->writeXdmf(&out, m_OutputFile);
+      err = dc->writeXdmf(out, m_OutputFile);
       if (err < 0)
       {
         notifyErrorMessage(getHumanLabel(), "Error Writing Xdmf File", -805);

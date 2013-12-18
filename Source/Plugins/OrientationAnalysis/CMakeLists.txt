@@ -141,6 +141,7 @@ target_link_libraries(${PLUGIN_NAME}FilterLib
                     DREAM3DLib
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME}FilterLib PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
+if(DREAM3d_BUILD_DREAM3D)
 # --------------------------------------------------------------------
 # Add the FilterWidgetCodeGen program for this plugin. The program generates
 # all the GUI widgets for each filter
@@ -162,7 +163,7 @@ SET_TARGET_PROPERTIES(${PLUGIN_NAME}WidgetCodeGen PROPERTIES FOLDER ${PLUGIN_NAM
 add_custom_command(TARGET ${PLUGIN_NAME}WidgetCodeGen POST_BUILD
                     COMMAND $<TARGET_FILE:${PLUGIN_NAME}WidgetCodeGen> )
 # ******************************************************************************
-
+endif()
 
 add_definitions(-DDREAM3D_USE_QT)
 if(MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins

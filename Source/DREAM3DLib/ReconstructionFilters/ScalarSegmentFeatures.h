@@ -37,7 +37,6 @@
 #ifndef ScalarSegmentFeatures_H_
 #define ScalarSegmentFeatures_H_
 
-#include <vector>
 #include <QtCore/QString>
 
 
@@ -62,6 +61,7 @@ class CompareFunctor;
  */
 class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
 {
+	Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(ScalarSegmentFeatures)
     DREAM3D_STATIC_NEW_MACRO(ScalarSegmentFeatures)

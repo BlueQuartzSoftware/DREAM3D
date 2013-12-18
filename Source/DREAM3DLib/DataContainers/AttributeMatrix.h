@@ -297,8 +297,9 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @brief Adds/overwrites the data for a named array
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
+	* @return error code if the addition did not work
     */
-    virtual void addAttributeArray(const QString& name, IDataArray::Pointer data);
+    virtual int addAttributeArray(const QString& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
@@ -307,6 +308,11 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      */
     virtual IDataArray::Pointer getAttributeArray(const QString& name);
 
+	/**
+	* @brief returns a IDataArray based object that is stored in the attribute matrix by a
+	* given name.
+	* @param name The name of the array
+	*/
     template<class ArrayType>
     typename ArrayType::Pointer getArray(const QString& name)
     {

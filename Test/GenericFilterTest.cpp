@@ -41,6 +41,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/TestFilters/GenericExample.h"
+#include "DREAM3DLib/TestFilters/MakeVolumeDataContainer.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -60,15 +61,19 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 void TestGenericFilter()
 {
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
+  Observer obs; // Npte that this variale will go out of scope at the end of this method. This is NOT the
+  // way to add Observers into the FilterPipeline Object normally. We are careful here about the scope of
+  // the variable.
+
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  pipeline->addMessageReceiver(&obs);
+
+  // Insert a filter that simply creates an empty volume data container
+  MakeVolumeDataContainer::Pointer f = MakeVolumeDataContainer::New();
+  pipeline->pushBack(f);
 
   GenericExample::Pointer filter = GenericExample::New();
-
-  VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-  vdc->setName(filter->getDataContainerName());
-  filter->getDataContainerArray()->pushBack(vdc);
-
   pipeline->pushBack(filter);
 
   pipeline->preflightPipeline();
@@ -76,7 +81,7 @@ void TestGenericFilter()
 
   DREAM3D_REQUIRED(err, >=, 0)
 
-      pipeline->execute();
+  pipeline->execute();
   err = pipeline->getErrorCondition();
 
   DREAM3D_REQUIRE(err >= 0)

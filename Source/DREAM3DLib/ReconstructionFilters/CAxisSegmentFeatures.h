@@ -37,7 +37,6 @@
 #ifndef CAxisSegmentFeatures_H_
 #define CAxisSegmentFeatures_H_
 
-#include <vector>
 #include <QtCore/QString>
 
 
@@ -59,7 +58,8 @@
  * @version 1.0
  */
 class DREAM3DLib_EXPORT CAxisSegmentFeatures : public SegmentFeatures
-{
+{	
+	Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(CAxisSegmentFeatures)
     DREAM3D_STATIC_NEW_MACRO(CAxisSegmentFeatures)

@@ -121,7 +121,7 @@ bool AttributeMatrix::validateAttributeArraySizes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer data)
+int AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -130,10 +130,10 @@ void AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer
     qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
-  Q_ASSERT(m_NumTuples == data->getNumberOfTuples());
+  if (m_NumTuples != data->getNumberOfTuples()) { return -1; }
 
   m_AttributeArrays[name] = data;
-  m_NumTuples = data->getNumberOfTuples();
+  return 0;
 }
 
 // -----------------------------------------------------------------------------

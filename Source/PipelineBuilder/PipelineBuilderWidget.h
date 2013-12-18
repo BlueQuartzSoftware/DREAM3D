@@ -38,8 +38,10 @@
 
 #include "ui_PipelineBuilderWidget.h"
 
+#include "DREAM3DLib/Common/FilterPipeline.h"
+
 #include "QtSupport/DREAM3DPluginFrame.h"
-#include "PipelineBuilder/QFilterPipeline.h"
+
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
@@ -275,7 +277,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
   private:
     QList<QWidget*>             m_WidgetList;
-    QFilterPipeline*            m_FilterPipeline;
+    FilterPipeline*            m_FilterPipeline;
     QMenu*                      m_MenuPipeline;
     QThread*                    m_WorkerThread;
     bool                        m_DocErrorTabsIsOpen;
