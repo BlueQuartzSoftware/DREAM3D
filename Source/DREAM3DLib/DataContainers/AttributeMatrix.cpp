@@ -130,7 +130,7 @@ int AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer 
     qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
-  if (m_NumTuples != data->getNumberOfTuples()) { return -1; }
+  Q_ASSERT(m_NumTuples == data->getNumberOfTuples());
 
   m_AttributeArrays[name] = data;
   return 0;
@@ -249,7 +249,7 @@ int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AttributeMatrix::addAttributeArrayFromHDF5(hid_t gid, QString name, bool preflight)
+int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool preflight)
 {
   int err = 0;
   QString classType;
@@ -260,10 +260,12 @@ int AttributeMatrix::addAttributeArrayFromHDF5(hid_t gid, QString name, bool pre
   if(classType.startsWith("DataArray") == true)
   {
     dPtr = H5DataArrayReader::readIDataArray(gid, name, preflight);
+    if(preflight == true) dPtr->resize(m_NumTuples);
   }
   else if(classType.compare("StringDataArray") == 0)
   {
     dPtr = H5DataArrayReader::readStringDataArray(gid, name, preflight);
+    if(preflight == true) dPtr->resize(m_NumTuples);
   }
   else if(classType.compare("vector") == 0)
   {
@@ -272,6 +274,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5(hid_t gid, QString name, bool pre
   else if(classType.compare("NeighborList<T>") == 0)
   {
     dPtr = H5DataArrayReader::readNeighborListData(gid, name, preflight);
+    if(preflight == true) dPtr->resize(m_NumTuples);
   }
   else if ( name.compare(DREAM3D::EnsembleData::Statistics) == 0)
   {
@@ -279,6 +282,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5(hid_t gid, QString name, bool pre
     statsData->SetName(DREAM3D::EnsembleData::Statistics);
     statsData->readH5Data(gid);
     dPtr = statsData;
+    if(preflight == true) dPtr->resize(m_NumTuples);
   }
 
   if (NULL != dPtr.get())
@@ -286,7 +290,6 @@ int AttributeMatrix::addAttributeArrayFromHDF5(hid_t gid, QString name, bool pre
     addAttributeArray(dPtr->GetName(), dPtr);
   }
 
-  H5Gclose(gid); // Close the Cell Group
   return err;
 }
 

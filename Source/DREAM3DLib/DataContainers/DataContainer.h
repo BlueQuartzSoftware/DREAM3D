@@ -167,6 +167,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       if(NULL == attributeMatrix)
       {
         AttributeMatrix* attrMat = createAndAddAttributeMatrix(attributeMatrixName);
+        attrMat->setType(amType);
         return attrMat;
       }
       if(filter)

@@ -136,7 +136,7 @@ void InitializeSyntheticVolume::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
@@ -206,12 +206,19 @@ void InitializeSyntheticVolume::preflight()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5(amGid, "Statistics", true);
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5(amGid, "CrystalStructures", true);
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5(amGid, "PhaseTypes", true);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "Statistics", true);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "CrystalStructures", true);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", true);
 
   QVector<int> dims(1, 1);
   cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<uint32_t>, uint32_t>(DREAM3D::EnsembleData::ShapeTypes, 0, dims);
+
+  QList<QString> check = cellEnsembleAttrMat->getAttributeArrayNameList();
+  for(QList<QString>::iterator it = check.begin(); it != check.end(); ++it)
+  {
+    QString name = *(it);
+    int stop = 0;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -225,7 +232,16 @@ void InitializeSyntheticVolume::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
 
+  cellAttrMat->resizeAttributeArrays(m->getTotalPoints());
+
+  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
+  cellEnsembleAttrMat->resizeAttributeArrays(shapeTypes->getNumberOfTuples());
+  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+
+  //Now read the data out of the HDF5 file
   hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
@@ -244,15 +260,9 @@ void InitializeSyntheticVolume::execute()
   hid_t amGid = H5Gopen(dcGid, "CellEnsembleData", 0);
   scopedFileSentinel.addGroupId(&amGid);
 
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5(amGid, "Statistics", false);
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5(amGid, "CrystalStructures", false);
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5(amGid, "PhaseTypes", false);
-
-  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(m->getTotalPoints());
-
-  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
-  m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "Statistics", false);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "CrystalStructures", false);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", false);
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "InitializeSyntheticVolume Complete");

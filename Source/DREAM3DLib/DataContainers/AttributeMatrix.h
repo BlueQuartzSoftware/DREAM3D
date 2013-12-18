@@ -368,7 +368,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     }
 
     virtual int writeAttributeArraysToHDF5(hid_t parentId);
-    virtual int addAttributeArrayFromHDF5(hid_t gid, QString name, bool preflight);
+    virtual int addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool preflight);
     virtual int readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QSet<QString>& namesToRead);
     virtual QString generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName);
 

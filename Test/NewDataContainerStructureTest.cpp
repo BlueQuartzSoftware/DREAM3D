@@ -87,13 +87,19 @@
 
 void RunPipeline1()
 {
+  Observer obs;
+  // Send progress messages from PipelineBuilder to this object for display
+  qRegisterMetaType<PipelineMessage>();
+
+  // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  pipeline->addMessageReceiver(&obs);
 
   InitializeSyntheticVolume::Pointer isv = InitializeSyntheticVolume::New();
   isv->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
-  isv->setXVoxels(128);
-  isv->setYVoxels(128);
-  isv->setZVoxels(128);
+  isv->setXVoxels(64);
+  isv->setYVoxels(64);
+  isv->setZVoxels(64);
   isv->setXRes(0.1);
   isv->setYRes(0.1);
   isv->setZRes(0.1);

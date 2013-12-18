@@ -225,7 +225,8 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     float currentsizedisterror, oldsizedisterror;
 
     void dataCheck();
-
+    void updateCellInstancePointers();
+    void updateFeatureInstancePointers();
 
     PackPrimaryPhases(const PackPrimaryPhases&); // Copy Constructor Not Implemented
     void operator=(const PackPrimaryPhases&); // Operator '=' Not Implemented
