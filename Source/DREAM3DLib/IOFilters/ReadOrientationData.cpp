@@ -342,11 +342,19 @@ void ReadOrientationData::readAngFile()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
 
-  int64_t dims[3];
-  dims[0] = reader.getXDimension();
-  dims[1] = reader.getYDimension();
-  dims[2] = 1; // We are reading a single slice
-  m->setDimensions(dims[0], dims[1], dims[2]);
+  QVector<size_t> tDims(3,0);
+  tDims[0] = reader.getXDimension();
+  tDims[1] = reader.getYDimension();
+  tDims[2] = 1; // We are reading a single slice
+
+  AttributeMatrix::Pointer ebsdAttrMat = AttributeMatrix::New();
+  ebsdAttrMat->setName(getCellAttributeMatrixName());
+  ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
+  ebsdAttrMat->setTupleDimensions(tDims);
+
+
+  QVector<size_t> cDims(1,1);
+  m->setDimensions(tDims[0], tDims[1], tDims[2]);
   m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
   m->setOrigin(0.0f, 0.0f, 0.0f);
 
@@ -362,9 +370,6 @@ void ReadOrientationData::readAngFile()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
-  cellAttrMat->resizeAttributeArrays(totalPoints);
-
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Ang::PhaseData));
     for (int64_t i = 0; i < totalPoints; i++)
@@ -374,17 +379,17 @@ void ReadOrientationData::readAngFile()
         phasePtr[i] = 1;
       }
     }
-    iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    cellAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
+    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi1));
     f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi2));
-    QVector<size_t> dims(1, 3);
-    fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
+    cDims[0] = 3;
+    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
     for (int64_t i = 0; i < totalPoints; i++)
@@ -393,37 +398,40 @@ void ReadOrientationData::readAngFile()
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    cellAttrMat->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
+    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
 
+  cDims[0] = 1;
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::ImageQuality));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ImageQuality);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::ConfidenceIndex));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ConfidenceIndex);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     cellAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::SEMSignal));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::SEMSignal);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     cellAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Fit));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::Fit);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     cellAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
   }
 
+  AttributeMatrix::Pointer am = m->removeAttributeMatrix(getCellAttributeMatrixName());
+  m->addAttributeMatrix(getCellAttributeMatrixName(), ebsdAttrMat);
 }
 
 // -----------------------------------------------------------------------------
