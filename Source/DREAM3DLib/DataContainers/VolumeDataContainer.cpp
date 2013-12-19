@@ -209,6 +209,7 @@ int VolumeDataContainer::writeCellsToHDF5(hid_t dcGid)
 int VolumeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
   herr_t err = 0;
+  uint8_t gridType = DREAM3D::XdmfGridType::RectilinearGrid;
 
   // Write the Mesh Structure to the XDMF file
   writeXdmfMeshStructureHeader(out, hdfFileName);
@@ -221,7 +222,7 @@ int VolumeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
     uint32_t amType = attrMat->getType();
     if(amType == DREAM3D::AttributeMatrixType::Cell)
     {
-      QString xdmfText = attrMat->generateXdmfText("Cell", getName(), hdfFileName);
+      QString xdmfText = attrMat->generateXdmfText("Cell", getName(), hdfFileName, gridType);
       out << xdmfText;
     }
   }
@@ -237,30 +238,22 @@ int VolumeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 void VolumeDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
-  EdgeArray::Pointer edges = getEdges();
-  if (NULL == edges.get())
-  {
-    return;
-  }
-  VertexArray::Pointer verts = getVertices();
-  if(NULL == verts.get())
-  {
-    return;
-  }
+  int64_t volDims[3] =
+  { getXPoints(), getYPoints(), getZPoints() };
+  float spacing[3] =
+  { getXRes(), getYRes(), getZRes() };
+  float origin[3] =
+  { 0.0f, 0.0f, 0.0f };
+  getOrigin(origin);
 
-  out << "  <Grid Name=\"" << getName() << "\">" << "\n";
-  out << "    <Topology TopologyType=\"Polyline\" NodesPerElement=\"2\" NumberOfElements=\"" << edges->getNumberOfTuples() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << edges->getNumberOfTuples() << " 2\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Edges" << "\n";
-  out << "      </DataItem>" << "\n";
-  out << "    </Topology>" << "\n";
-
-  out << "    <Geometry Type=\"XYZ\">" << "\n";
-  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
-  out << "      </DataItem>" << "\n";
+  out << "\n  <Grid Name=\"" << getName() << "\" GridType=\"Uniform\">" << "\n";
+  out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << "\n";
+  out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" << "\n";
+  out << "      <!-- Origin -->" << "\n";
+  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << origin[2] << " " << origin[1] << " " << origin[0] <<  "</DataItem>" << "\n";
+  out << "      <!-- DxDyDz (Spacing/Resolution)-->" << "\n";
+  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << spacing[2] << " " << spacing[1] << " " << spacing[0] <<  "</DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
-  out << "" << "\n";
 }
 
 // -----------------------------------------------------------------------------

@@ -350,7 +350,7 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString AttributeMatrix::generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName)
+QString AttributeMatrix::generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType)
 {
   QString xdmfText;
   QString block;
@@ -359,7 +359,7 @@ QString AttributeMatrix::generateXdmfText(const QString& centering, const QStrin
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
     IDataArray::Pointer d = iter.value();
-    block = writeXdmfAttributeData(d, centering, dataContainerName, hdfFileName);
+    block = writeXdmfAttributeData(d, centering, dataContainerName, hdfFileName, gridType);
     out << block << "\n";
   }
   return xdmfText;
@@ -372,7 +372,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
                                                       const QString& dataContainerName,
                                                       IDataArray::Pointer array,
                                                       const QString& centering,
-                                                      int precision, const QString& xdmfTypeName, const QString& hdfFileName)
+                                                      int precision, const QString& xdmfTypeName, const QString& hdfFileName, const uint8_t gridType)
 {
   QString buf;
   QTextStream out(&buf);
@@ -439,7 +439,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName)
+QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType)
 {
   QString xdmfText;
   QTextStream out(&xdmfText);
@@ -456,7 +456,7 @@ QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const
   QString attrType = "Scalar";
   if(numComp > 2) { attrType = "Vector"; }
 
-  QString block = writeXdmfAttributeDataHelper(numComp, attrType, dataContainerName, array, centering, precision, xdmfTypeName, hdfFileName);
+  QString block = writeXdmfAttributeDataHelper(numComp, attrType, dataContainerName, array, centering, precision, xdmfTypeName, hdfFileName, gridType);
 
   out << block << "\n";
 

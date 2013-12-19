@@ -532,6 +532,12 @@ namespace DREAM3D
     const unsigned int Unknown = 999; //!<
   }
 
+  namespace XdmfGridType
+  {
+    const unsigned int PolyData = 0;
+    const unsigned int RectilinearGrid = 1;
+  }
+
   namespace ShapeType
   {
     const unsigned int EllipsoidShape = 0; //!<
