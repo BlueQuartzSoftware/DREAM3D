@@ -212,9 +212,6 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     virtual void SetRank(int rank);
     virtual int getRank();
 
-    virtual void setDims(QVector<int> dims);
-    virtual QVector<int> getDims();
-
     /**
      * @brief Returns the number of bytes that make up the data type.
      * 1 = char

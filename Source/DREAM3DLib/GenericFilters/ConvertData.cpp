@@ -69,7 +69,7 @@ namespace Detail
     size_t size = ptr->getSize();
 
 
-    QVector<int> dims(1, numberOfComponents);
+    QVector<size_t> dims(1, numberOfComponents);
     if (scalarType == Detail::Int8)
     {
       Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, dims, name);
@@ -305,7 +305,7 @@ void ConvertData::dataCheck(bool preflight)
   if (true == preflight)
   {
     IDataArray::Pointer p = IDataArray::NullPointer();
-    QVector<int> dims(1, numberOfComponents);
+    QVector<size_t> dims(1, numberOfComponents);
     int64_t voxels = cellAttrMat->getNumTuples();
     if (m_ScalarType == Detail::Int8)
     {

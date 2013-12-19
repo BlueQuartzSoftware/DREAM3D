@@ -178,7 +178,7 @@ void FlattenImage::dataCheck()
     }
   }
 
-  QVector<int> dims(1, numImageComp);
+  QVector<size_t> dims(1, numImageComp);
   m_ImageDataPtr = cellAttrMat->getPrereqArray<DataArray<unsigned char>, AbstractFilter>(this, m_ImageDataArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */

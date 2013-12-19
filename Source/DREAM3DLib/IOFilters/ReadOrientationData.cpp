@@ -161,7 +161,7 @@ void ReadOrientationData::dataCheck()
   }
   else if (m_InputFile.isEmpty() == false)
   {
-    QVector<int> dims(3, 0);
+    QVector<size_t> dims(3, 0);
 
     QString ext = fi.suffix();
     QVector<QString> names;
@@ -212,7 +212,7 @@ void ReadOrientationData::dataCheck()
       m->setOrigin(0.0f, 0.0f, 0.0f);
       CtfFields ctffeatures;
       names = ctffeatures.getFilterFeatures<QVector<QString> > ();
-      QVector<int> dims(1, 1);
+      QVector<size_t> dims(1, 1);
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -238,7 +238,7 @@ void ReadOrientationData::dataCheck()
       m->setOrigin(0.0f, 0.0f, 0.0f);
       MicFields micfeatures;
       names = micfeatures.getFilterFeatures<QVector<QString> > ();
-      QVector<int> dims(1, 1);
+      QVector<size_t> dims(1, 1);
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -259,7 +259,7 @@ void ReadOrientationData::dataCheck()
       return;
     }
 
-    QVector<int> dim(1, 3);
+    QVector<size_t> dim(1, 3);
     m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -383,7 +383,7 @@ void ReadOrientationData::readAngFile()
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi1));
     f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi2));
-    QVector<int> dims(1, 3);
+    QVector<size_t> dims(1, 3);
     fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
@@ -502,7 +502,7 @@ void ReadOrientationData::readCtfFile()
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ctf::Euler1));
     f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ctf::Euler2));
     f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ctf::Euler3));
-    QVector<int> dims(1, 3);
+    QVector<size_t> dims(1, 3);
     fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     int* cellPhases = iArray->getPointer(0);
@@ -622,7 +622,7 @@ void ReadOrientationData::readMicFile()
     cellAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
-  QVector<int> compDims(1, 3); // Initially set this up for the Euler Angle 1x3
+  QVector<size_t> compDims(1, 3); // Initially set this up for the Euler Angle 1x3
   {
     //  radianconversion = M_PI / 180.0;
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler1));

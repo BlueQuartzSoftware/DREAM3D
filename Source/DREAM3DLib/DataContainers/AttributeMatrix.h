@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     typename ArrayType::Pointer getPrereqArray(Filter* filter,
                                                QString attributeArrayName,
                                                int err,
-                                               QVector<int> dims)
+                                               QVector<size_t> dims)
     {
       QString ss;
       typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();

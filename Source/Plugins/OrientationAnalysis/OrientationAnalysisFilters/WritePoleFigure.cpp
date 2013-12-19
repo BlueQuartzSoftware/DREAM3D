@@ -264,7 +264,7 @@ void WritePoleFigure::dataCheck()
   }
   else
   {
-    QVector<int> dims(1, 3);
+    QVector<size_t> dims(1, 3);
     m_CellEulerAnglesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellEulerAnglesArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -280,7 +280,7 @@ void WritePoleFigure::dataCheck()
   }
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(NULL != m_GoodVoxelsPtr.lock().get())
   {
@@ -383,7 +383,7 @@ void WritePoleFigure::execute()
         }
       }
     }
-    int eulerCompDim = 3;
+    size_t eulerCompDim = 3;
     FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, 1, &eulerCompDim, "Eulers_Per_Phase");
     subEulers->initializeWithValues(-1);
     float* eu = subEulers->getPointer(0);

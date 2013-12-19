@@ -395,7 +395,7 @@ void FindGBCD::dataCheckSurfaceMesh()
   }
   else
   {
-    QVector<int> dims(1, 2);
+    QVector<size_t> dims(1, 2);
     m_SurfaceMeshFaceLabelsPtr = faceAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -430,7 +430,7 @@ void FindGBCD::dataCheckVoxel()
   AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0) { return; }
 
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   m_FeatureEulerAnglesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_FeatureEulerAnglesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -503,7 +503,7 @@ void FindGBCD::execute()
   gbcdLimitsArray->initializeWithZeros();
   gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
   gbcdSizesArray->initializeWithZeros();
-  QVector<int> dims(1, numMisoReps);
+  QVector<size_t> dims(1, numMisoReps);
   gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, dims, "GBCDBins");
   gbcdBinsArray->initializeWithZeros();
   gbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, dims, "GBCDHemiCheck");

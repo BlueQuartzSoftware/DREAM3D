@@ -126,7 +126,7 @@ void GenerateUniqueEdges::dataCheck()
 
   // We do not know the size of the array so we can not use the macro so we just manually call
   // the needed methods that will propagate these array additions to the pipeline
-  QVector<int> dims(1, 2);
+  QVector<size_t> dims(1, 2);
   DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, dims, m_SurfaceMeshUniqueEdgesArrayName);
   sm->getAttributeMatrix(getEdgeAttributeMatrixName())->addAttributeArray(m_SurfaceMeshUniqueEdgesArrayName, uniqueEdgesArray);
 }
@@ -205,7 +205,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
 
   notifyStatusMessage(getHumanLabel(), "Stage 1 of 2");
 // qDebug() << "uedges_id_set size: " << uedges_id_set.size() << "\n";
-  QVector<int> dims(1, 2);
+  QVector<size_t> dims(1, 2);
   DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), dims, m_SurfaceMeshUniqueEdgesArrayName);
   int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->getPointer(0);
   int index = 0;
@@ -327,7 +327,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   notifyStatusMessage(getHumanLabel(), "Generating edge list for mesh. Stage 2 of 2");
   // Now copy the unique Edges out of the map and into an array at the proper index (which is the "value" that goes with the "key" to the map.
   int index = 0;
-  QVector<int> dims(1, 2);
+  QVector<size_t> dims(1, 2);
   Int32ArrayType::Pointer uniqueEdgesArrayPtr = Int32ArrayType::CreateArray(uedges_id_map.size(), dims, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
   m_SurfaceMeshUniqueEdges = uniqueEdgesArrayPtr->getPointer(0);
 

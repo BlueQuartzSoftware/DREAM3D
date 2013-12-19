@@ -131,7 +131,7 @@ void FindFeatureClustering::dataCheck()
                        (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_ClusteringListArrayName).get());
   }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   m_EquivalentDiametersPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_EquivalentDiametersArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */

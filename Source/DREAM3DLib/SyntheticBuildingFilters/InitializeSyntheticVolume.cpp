@@ -141,7 +141,7 @@ void InitializeSyntheticVolume::dataCheck()
   AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   //Cell Data
   m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -210,7 +210,7 @@ void InitializeSyntheticVolume::preflight()
   cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "CrystalStructures", true);
   cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", true);
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<uint32_t>, uint32_t>(DREAM3D::EnsembleData::ShapeTypes, 0, dims);
 
   QList<QString> check = cellEnsembleAttrMat->getAttributeArrayNameList();

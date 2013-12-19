@@ -432,32 +432,6 @@ class ManagedArrayOfArrays : public IDataArray
     }
 
     /**
-     * @brief getRank
-     * @return
-     */
-    int getRank()
-    {
-      return 1;
-    }
-
-    // Description:
-    // Set/Get the dimensions of the array.
-    void setDims(QVector<int> dims)
-    {
-
-    }
-
-    /**
-     * @brief getDims
-     * @return
-     */
-    QVector<int> getDims()
-    {
-      QVector<int> dims(1, 1);
-      return dims;
-    }
-
-    /**
      * @brief Returns a void pointer pointing to the index of the array. NULL
      * pointers are entirely possible. No checks are performed to make sure
      * the index is with in the range of the internal data array.

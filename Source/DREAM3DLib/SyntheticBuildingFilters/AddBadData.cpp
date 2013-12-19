@@ -150,7 +150,7 @@ void AddBadData::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   // Cell Data
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   m_GBEuclideanDistancesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_GBEuclideanDistancesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GBEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */

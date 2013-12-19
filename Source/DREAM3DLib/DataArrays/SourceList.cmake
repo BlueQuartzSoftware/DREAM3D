@@ -11,7 +11,6 @@
 
 set(DREAM3DLib_DataArrays_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/DataArray.hpp
-  ${DREAM3DLib_SOURCE_DIR}/DataArrays/GbcdDataArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/IDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/ManagedArrayOfArrays.hpp
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/StatsDataArray.h

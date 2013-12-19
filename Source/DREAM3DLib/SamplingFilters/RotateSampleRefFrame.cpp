@@ -482,7 +482,7 @@ void RotateSampleRefFrame::execute()
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name.
-    QVector<int> dims(1, p->getNumberOfComponents());
+    QVector<size_t> dims(1, p->getNumberOfComponents());
     IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), dims, p->getName());
     void* source = NULL;
     void* destination = NULL;

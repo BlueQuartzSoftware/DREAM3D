@@ -305,9 +305,9 @@ class DataArray : public IDataArray
      */
     static Pointer FromQVector(QVector<T>& vec, const QString& name)
     {
-      
+
       Pointer p = CreateArray(vec.size(), name);
-      if (NULL != p->get())
+      if (NULL != p.get())
       {
         ::memcpy(p->getPointer(0), vec.data(), vec.size() * sizeof(T));
       }
@@ -326,7 +326,7 @@ class DataArray : public IDataArray
       QVector<size_t> tDims(1, vec.size());
       QVector<size_t> cDims(1, 1);
       Pointer p = CreateArray(tDims, cDims, name);
-      if (NULL != p->get())
+      if (NULL != p.get())
       {
         ::memcpy(p->getPointer(0), &(vec.front()), vec.size() * sizeof(T));
       }
@@ -343,7 +343,7 @@ class DataArray : public IDataArray
     static Pointer FromPointer(T* data, size_t size, const QString& name)
     {
       Pointer p = CreateArray(size, name);
-      if (NULL != p->get())
+      if (NULL != p.get())
       {
         ::memcpy(p->getPointer(0), data, size * sizeof(T));
       }
@@ -679,7 +679,7 @@ class DataArray : public IDataArray
 
     /**
     * @brief Returns the dimensions for the data residing at each Tuple. For example if you have a simple Scalar value
-    * at each tuple then this will return a single element QVector. If you have a 1x3 array (like EUler Angles) then 
+    * at each tuple then this will return a single element QVector. If you have a 1x3 array (like EUler Angles) then
     * this will return a 3 Element QVector.
     */
     virtual QVector<size_t> getComponentDimensions()
@@ -687,7 +687,7 @@ class DataArray : public IDataArray
       return m_CompDims;
     }
     /**
-    * @brief Returns the number component values at each Tuple location. For example if you have a 
+    * @brief Returns the number component values at each Tuple location. For example if you have a
     * 3 element component (vector) then this will be 3. If you are storing a small image of size 80x60
     * at each Tuple (like EBSD Kikuchi patterns) then the result would be 4800.
     */
@@ -1322,14 +1322,14 @@ class DataArray : public IDataArray
     //   unsigned long long int MUD_FLAP_3;
     QString m_Name;
     //  unsigned long long int MUD_FLAP_5;
-	
+
     QVector<size_t> m_TupleDims;
     size_t m_NumTuples;
 
     QVector<size_t> m_CompDims;
     size_t m_NumComponents;
-	
-	  T m_FillValue;
+
+    T m_FillValue;
 
     DataArray(const DataArray&); //Not Implemented
     void operator=(const DataArray&); //Not Implemented

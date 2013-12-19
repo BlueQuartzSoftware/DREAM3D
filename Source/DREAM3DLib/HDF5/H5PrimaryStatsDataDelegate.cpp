@@ -352,7 +352,7 @@ int H5PrimaryStatsDataDelegate::readVectorOfArrays(hid_t pid, VectorOfFloatArray
 int H5PrimaryStatsDataDelegate::readMDFWeights(hid_t pid, PrimaryStatsData* data)
 {
   int err = 0;
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   FloatArrayType::Pointer angles = FloatArrayType::CreateArray(1, dims, DREAM3D::StringConstants::Angle);
   FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::Weight);
   dims[0] = 3;

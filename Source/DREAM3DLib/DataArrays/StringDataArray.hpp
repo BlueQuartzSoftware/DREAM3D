@@ -211,23 +211,6 @@ class StringDataArray : public IDataArray
       return 1;
     }
 
-    // Description:
-    // Set/Get the dimensions of the array.
-    void setDims(QVector<int> dims)
-    {
-
-    }
-
-    /**
-     * @brief getDims
-     * @return
-     */
-    QVector<int> getDims()
-    {
-      QVector<int> dims(1, 1);
-      return dims;
-    }
-
     /**
      * @brief Returns the number of bytes that make up the data type.
      * 1 = char
