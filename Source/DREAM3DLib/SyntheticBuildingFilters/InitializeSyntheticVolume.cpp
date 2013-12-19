@@ -136,9 +136,9 @@ void InitializeSyntheticVolume::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
+  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
   QVector<int> dims(1, 1);
@@ -184,6 +184,7 @@ void InitializeSyntheticVolume::dataCheck()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
+  dataCheck();
 
   hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
@@ -196,37 +197,28 @@ void InitializeSyntheticVolume::preflight()
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
-
-  hid_t dcGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
-
+  hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
+  scopedFileSentinel.addGroupId(&dcaGid);
+  hid_t dcGid = H5Gopen(dcaGid, "VolumeDataContainer", 0);
   scopedFileSentinel.addGroupId(&dcGid);
+  hid_t amGid = H5Gopen(dcGid, "CellEnsembleData", 0);
+  scopedFileSentinel.addGroupId(&amGid);
 
-  DataContainerReader::Pointer read_data = DataContainerReader::New();
-  QMap<QString, QMap<QString, QSet<QString> > > inputDataToRead;
-  QMap<QString, QSet<QString> > inputArrayToRead;
-  QSet<QString> inputStatsArray;
-  m_InputStatsAttributeArrayName = "Statistics";
-  inputStatsArray.insert(m_InputStatsAttributeArrayName);
-  m_InputCrystalStructuresAttributeArrayName = "CrystalStructures";
-  inputStatsArray.insert(m_InputCrystalStructuresAttributeArrayName);
-  m_InputPhaseTypeAttributeArrayName = "PhaseTypes";
-  inputStatsArray.insert(m_InputPhaseTypeAttributeArrayName);
-  m_InputEnsembleAttributeMatrixName = "CellEnsembleData";
-  inputArrayToRead[m_InputEnsembleAttributeMatrixName] = inputStatsArray;
-  m_InputDataContainerName = "VolumeDataContainer";
-  inputDataToRead[m_InputDataContainerName] = inputArrayToRead;
-  read_data->setDataToRead(inputDataToRead);
-  read_data->setInputFile(m_InputFile);
-  read_data->preflight();
-  if (read_data->getErrorCondition() < 0)
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "Statistics", true);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "CrystalStructures", true);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", true);
+
+  QVector<int> dims(1, 1);
+  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<uint32_t>, uint32_t>(DREAM3D::EnsembleData::ShapeTypes, 0, dims);
+
+  QList<QString> check = cellEnsembleAttrMat->getAttributeArrayNameList();
+  for(QList<QString>::iterator it = check.begin(); it != check.end(); ++it)
   {
-    setErrorCondition(read_data->getErrorCondition());
+    QString name = *(it);
+    int stop = 0;
   }
-
-  dataCheck();
-
-  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 }
 
 // -----------------------------------------------------------------------------
@@ -240,7 +232,16 @@ void InitializeSyntheticVolume::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
 
+  cellAttrMat->resizeAttributeArrays(m->getTotalPoints());
+
+  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
+  cellEnsembleAttrMat->resizeAttributeArrays(shapeTypes->getNumberOfTuples());
+  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+
+  //Now read the data out of the HDF5 file
   hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
@@ -252,25 +253,16 @@ void InitializeSyntheticVolume::execute()
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+  hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
+  scopedFileSentinel.addGroupId(&dcaGid);
+  hid_t dcGid = H5Gopen(dcaGid, "VolumeDataContainer", 0);
+  scopedFileSentinel.addGroupId(&dcGid);
+  hid_t amGid = H5Gopen(dcGid, "CellEnsembleData", 0);
+  scopedFileSentinel.addGroupId(&amGid);
 
-  hid_t dcGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
-
-  DataContainerReader::Pointer read_data = DataContainerReader::New();
-  QMap<QString, QMap<QString, QSet<QString> > > inputDataToRead;
-  QMap<QString, QSet<QString> > inputArrayToRead;
-  QSet<QString> inputStatsArray;
-  inputStatsArray.insert(m_InputStatsAttributeArrayName);
-  inputArrayToRead[m_InputEnsembleAttributeMatrixName] = inputStatsArray;
-  inputDataToRead[m_InputDataContainerName] = inputArrayToRead;
-  read_data->setDataToRead(inputDataToRead);
-  read_data->execute();
-
-  m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
-  m->setResolution(m_XRes, m_YRes, m_ZRes);
-  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(m->getTotalPoints());
-
-  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
-  m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "Statistics", false);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "CrystalStructures", false);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", false);
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "InitializeSyntheticVolume Complete");

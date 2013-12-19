@@ -87,8 +87,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     /* Menu Slots */
     // File MENU
     void on_actionExit_triggered();
-    void on_actionOpenPipeline_triggered();
-    void on_actionSavePipeline_triggered();
+    void on_actionOpen_Pipeline_2_triggered();
+    void on_actionSave_Pipeline_2_triggered();
     void on_actionCheck_For_Updates_triggered();
 
     //Tools Menu

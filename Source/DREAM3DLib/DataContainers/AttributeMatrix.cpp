@@ -130,7 +130,7 @@ int AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer 
     qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
-  if (m_NumTuples != data->getNumberOfTuples()) { return -1; }
+  Q_ASSERT(m_NumTuples == data->getNumberOfTuples());
 
   m_AttributeArrays[name] = data;
   return 0;
@@ -249,6 +249,53 @@ int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool preflight)
+{
+  int err = 0;
+  QString classType;
+  QH5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
+  //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
+  IDataArray::Pointer dPtr = IDataArray::NullPointer();
+
+  if(classType.startsWith("DataArray") == true)
+  {
+    dPtr = H5DataArrayReader::readIDataArray(gid, name, preflight);
+    if(preflight == true) dPtr->resize(m_NumTuples);
+  }
+  else if(classType.compare("StringDataArray") == 0)
+  {
+    dPtr = H5DataArrayReader::readStringDataArray(gid, name, preflight);
+    if(preflight == true) dPtr->resize(m_NumTuples);
+  }
+  else if(classType.compare("vector") == 0)
+  {
+
+  }
+  else if(classType.compare("NeighborList<T>") == 0)
+  {
+    dPtr = H5DataArrayReader::readNeighborListData(gid, name, preflight);
+    if(preflight == true) dPtr->resize(m_NumTuples);
+  }
+  else if ( name.compare(DREAM3D::EnsembleData::Statistics) == 0)
+  {
+    StatsDataArray::Pointer statsData = StatsDataArray::New();
+    statsData->SetName(DREAM3D::EnsembleData::Statistics);
+    statsData->readH5Data(gid);
+    dPtr = statsData;
+    if(preflight == true) dPtr->resize(m_NumTuples);
+  }
+
+  if (NULL != dPtr.get())
+  {
+    addAttributeArray(dPtr->GetName(), dPtr);
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QSet<QString>& namesToRead)
 {
   int err = 0;
@@ -303,7 +350,7 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString AttributeMatrix::generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName)
+QString AttributeMatrix::generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType)
 {
   QString xdmfText;
   QString block;
@@ -312,7 +359,7 @@ QString AttributeMatrix::generateXdmfText(const QString& centering, const QStrin
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
     IDataArray::Pointer d = iter.value();
-    block = writeXdmfAttributeData(d, centering, dataContainerName, hdfFileName);
+    block = writeXdmfAttributeData(d, centering, dataContainerName, hdfFileName, gridType);
     out << block << "\n";
   }
   return xdmfText;
@@ -325,7 +372,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
                                                       const QString& dataContainerName,
                                                       IDataArray::Pointer array,
                                                       const QString& centering,
-                                                      int precision, const QString& xdmfTypeName, const QString& hdfFileName)
+                                                      int precision, const QString& xdmfTypeName, const QString& hdfFileName, const uint8_t gridType)
 {
   QString buf;
   QTextStream out(&buf);
@@ -392,7 +439,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName)
+QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType)
 {
   QString xdmfText;
   QTextStream out(&xdmfText);
@@ -409,7 +456,7 @@ QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const
   QString attrType = "Scalar";
   if(numComp > 2) { attrType = "Vector"; }
 
-  QString block = writeXdmfAttributeDataHelper(numComp, attrType, dataContainerName, array, centering, precision, xdmfTypeName, hdfFileName);
+  QString block = writeXdmfAttributeDataHelper(numComp, attrType, dataContainerName, array, centering, precision, xdmfTypeName, hdfFileName, gridType);
 
   out << block << "\n";
 

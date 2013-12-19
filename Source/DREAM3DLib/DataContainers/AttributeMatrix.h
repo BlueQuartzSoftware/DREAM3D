@@ -368,14 +368,15 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     }
 
     virtual int writeAttributeArraysToHDF5(hid_t parentId);
+    virtual int addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool preflight);
     virtual int readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QSet<QString>& namesToRead);
-    virtual QString generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName);
+    virtual QString generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType = 0);
 
   protected:
     AttributeMatrix();
 
-    virtual QString writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName);
-    virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& dataContainerName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName, const QString& hdfFileName);
+    virtual QString writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType = 0);
+    virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& dataContainerName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName, const QString& hdfFileName, const uint8_t gridType = 0);
 
   private:
     size_t m_NumTuples;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>658</width>
-    <height>627</height>
+    <width>1023</width>
+    <height>750</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,19 +17,110 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>DREAM.3D</string>
+   <string>ActiveDocument.txt</string>
   </property>
-  <property name="unifiedTitleAndToolBarOnMac">
-   <bool>false</bool>
+  <property name="styleSheet">
+   <string notr="true"> QStatusBar {
+     background: rgb(123, 123, 123);
+color: white;
+font-style: italic;
+ }
+
+ QStatusBar::item {
+     border: 1px solid red;
+     border-radius: 3px;
+ }</string>
   </property>
-  <widget class="QWidget" name="centerWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <property name="spacing">
      <number>0</number>
     </property>
     <property name="margin">
      <number>0</number>
     </property>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>26</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel
+{
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
+color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>Pipeline</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="PipelineViewWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>263</width>
+         <height>647</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Go</string>
+        </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -37,8 +128,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>658</width>
-     <height>26</height>
+     <width>1023</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -49,145 +140,375 @@
      <property name="title">
       <string>Recent Files</string>
      </property>
-     <addaction name="actionSomething"/>
+     <addaction name="actionREMOVE_ME"/>
     </widget>
-    <addaction name="actionOpen_Pipeline_2"/>
-    <addaction name="actionSave_Pipeline_2"/>
+    <addaction name="actionOpenPipeline"/>
+    <addaction name="actionImport"/>
+    <addaction name="actionSavePipeline"/>
+    <addaction name="actionSave_As"/>
     <addaction name="separator"/>
     <addaction name="menu_RecentFiles"/>
     <addaction name="separator"/>
-    <addaction name="actionExit"/>
+    <addaction name="actionExport"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionShow_Filter_Library"/>
+    <addaction name="actionShow_Prebuilt_Pipelines"/>
+    <addaction name="actionShowFavorites"/>
    </widget>
    <widget class="QMenu" name="menuPipeline">
     <property name="title">
      <string>Pipeline</string>
     </property>
+    <addaction name="actionClear"/>
+    <addaction name="actionExport_2"/>
+    <addaction name="actionImport_2"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="separator"/>
-    <addaction name="actionAbout"/>
-    <addaction name="actionLicense_Information"/>
-    <addaction name="separator"/>
-    <addaction name="actionShow_User_Manual"/>
-    <addaction name="separator"/>
-    <addaction name="actionCheck_For_Updates"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuView"/>
    <addaction name="menuPipeline"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen">
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="minimumSize">
+    <size>
+     <width>200</width>
+     <height>104</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QDockWidget
+{
+color: white;
+}
+
+QDockWidget::title 
+{
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
+text-align: center;
+padding-left: 5px;
+}
+</string>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllDockWidgetAreas</set>
+   </property>
+   <property name="windowTitle">
+    <string>Filter Library</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="margin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QTreeView" name="treeView"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2">
+   <property name="minimumSize">
+    <size>
+     <width>200</width>
+     <height>104</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QDockWidget
+{
+color: white;
+}
+
+QDockWidget::title 
+{
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
+text-align: center;
+padding-left: 5px;
+}
+</string>
+   </property>
+   <property name="windowTitle">
+    <string>Prebuilt Pipelines</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <property name="margin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QTreeView" name="treeView_2"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_3">
+   <property name="minimumSize">
+    <size>
+     <width>200</width>
+     <height>104</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QDockWidget
+{
+color: white;
+}
+
+QDockWidget::title 
+{
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
+text-align: center;
+padding-left: 5px;
+}
+</string>
+   </property>
+   <property name="windowTitle">
+    <string>Favorites</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <property name="margin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QTreeView" name="treeView_3"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_4">
+   <property name="styleSheet">
+    <string notr="true">QDockWidget
+{
+color: white;
+}
+
+QDockWidget::title 
+{
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
+text-align: center;
+padding-left: 5px;
+}
+</string>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string>Filter Parameters</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <property name="minimumSize">
+     <size>
+      <width>500</width>
+      <height>0</height>
+     </size>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="margin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>Inputs</string>
+        </attribute>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>Advanced Inputs</string>
+        </attribute>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_5">
+   <property name="styleSheet">
+    <string notr="true">QDockWidget
+{
+color: white;
+}
+
+QDockWidget::title 
+{
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
+text-align: center;
+padding-left: 5px;
+}
+</string>
+   </property>
+   <property name="windowTitle">
+    <string>Errors/Warnings</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="margin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QTableWidget" name="errorTableWidget">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>false</bool>
+       </property>
+       <property name="textElideMode">
+        <enum>Qt::ElideRight</enum>
+       </property>
+       <property name="verticalScrollMode">
+        <enum>QAbstractItemView::ScrollPerPixel</enum>
+       </property>
+       <property name="horizontalScrollMode">
+        <enum>QAbstractItemView::ScrollPerPixel</enum>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="cornerButtonEnabled">
+        <bool>false</bool>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>50</number>
+       </attribute>
+       <attribute name="horizontalHeaderMinimumSectionSize">
+        <number>60</number>
+       </attribute>
+       <attribute name="verticalHeaderDefaultSectionSize">
+        <number>30</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string notr="true">Filter Name</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string notr="true">Error Description</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string notr="true">Error Code</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="actionShow_Filter_Library">
    <property name="text">
-    <string>Open</string>
+    <string>Show Filter Library</string>
    </property>
   </action>
-  <action name="actionClose">
+  <action name="actionShow_Prebuilt_Pipelines">
    <property name="text">
-    <string>Close</string>
+    <string>Show Prebuilt Pipelines</string>
    </property>
   </action>
-  <action name="actionExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
-  <action name="actionSomething">
-   <property name="text">
-    <string>Something</string>
-   </property>
-  </action>
-  <action name="action_IconText">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Icon and Text</string>
-   </property>
-  </action>
-  <action name="action_IconOnly">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Icon Only</string>
-   </property>
-  </action>
-  <action name="action_TextOnly">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Text Only</string>
-   </property>
-  </action>
-  <action name="action_ShowPluginToolbar">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Show Toolbar</string>
-   </property>
-  </action>
-  <action name="actionDREAM_3D_Help">
-   <property name="text">
-    <string>DREAM.3D Help</string>
-   </property>
-  </action>
-  <action name="actionLicense_Information">
-   <property name="text">
-    <string>License Information</string>
-   </property>
-  </action>
-  <action name="actionAbout">
-   <property name="text">
-    <string>About</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
-  <action name="actionOpen_Pipeline">
+  <action name="actionOpenPipeline">
    <property name="text">
     <string>Open Pipeline</string>
    </property>
   </action>
-  <action name="actionOpen_Pipeline_2">
+  <action name="actionImport">
    <property name="text">
-    <string>Open Pipeline</string>
+    <string>Import</string>
    </property>
   </action>
-  <action name="actionSave_Pipeline_2">
+  <action name="actionExport">
+   <property name="text">
+    <string>Export</string>
+   </property>
+  </action>
+  <action name="actionSavePipeline">
    <property name="text">
     <string>Save Pipeline</string>
    </property>
   </action>
-  <action name="action_CheckForUpdates">
+  <action name="actionSave_As">
    <property name="text">
-    <string>Check for Updates</string>
+    <string>Save As...</string>
    </property>
   </action>
-  <action name="actionShow_User_Manual">
+  <action name="actionShowFavorites">
    <property name="text">
-    <string>Show User Manual</string>
+    <string>Show Favorites</string>
    </property>
   </action>
-  <action name="action_OpenStatsGenerator">
+  <action name="actionClear">
    <property name="text">
-    <string>Open StatsGenerator</string>
+    <string>Clear</string>
    </property>
   </action>
-  <action name="actionCheck_For_Updates">
+  <action name="actionExport_2">
    <property name="text">
-    <string>Check For Updates</string>
+    <string>Export</string>
+   </property>
+  </action>
+  <action name="actionImport_2">
+   <property name="text">
+    <string>Import</string>
+   </property>
+  </action>
+  <action name="actionREMOVE_ME">
+   <property name="text">
+    <string>REMOVE ME</string>
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PipelineViewWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">PipelineViewWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
