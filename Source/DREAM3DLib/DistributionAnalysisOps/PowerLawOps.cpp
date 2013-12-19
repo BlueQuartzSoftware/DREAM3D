@@ -80,8 +80,8 @@ int PowerLawOps::calculateParameters(QVector<float>& data, FloatArrayType::Point
     min = 0;
     alpha = 0;
   }
-  outputs->SetValue(0, alpha);
-  outputs->SetValue(1, min);
+  outputs->setValue(0, alpha);
+  outputs->setValue(1, min);
   return err;
 }
 // -----------------------------------------------------------------------------
@@ -113,8 +113,8 @@ int PowerLawOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, V
       min = 0;
       alpha = 0;
     }
-    outputs[0]->SetValue(i, alpha);
-    outputs[1]->SetValue(i, min);
+    outputs[0]->setValue(i, alpha);
+    outputs[1]->setValue(i, min);
   }
   return err;
 }

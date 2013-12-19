@@ -435,27 +435,27 @@ class StringDataArray : public IDataArray
       size_t count = srcPtr->getNumberOfTuples();
       for (size_t i = 0; i < count; ++i)
       {
-        m_Array.push_back( srcPtr->GetValue(i) );
+        m_Array.push_back( srcPtr->getValue(i) );
       }
       return err;
     }
 
     /**
-     * @brief SetValue
+     * @brief setValue
      * @param i
      * @param value
      */
-    void SetValue(size_t i, const QString& value)
+    void setValue(size_t i, const QString& value)
     {
       m_Array[i] = value;
     }
 
     /**
-     * @brief GetValue
+     * @brief getValue
      * @param i
      * @return
      */
-    QString GetValue(size_t i)
+    QString getValue(size_t i)
     {
       return m_Array.at(i);
     }

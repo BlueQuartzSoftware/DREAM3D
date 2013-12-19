@@ -141,7 +141,7 @@ class DataArray : public IDataArray
      * @return
      */
 
-    NumType GetType()
+    NumType getType()
     {
       T value = 0x00;
       if (typeid(value) == typeid(int8_t)) { return Int8;}
@@ -688,7 +688,7 @@ class DataArray : public IDataArray
      * @param i The index to return the value at
      * @return The value at index i
      */
-    virtual T GetValue(size_t i)
+    virtual T getValue(size_t i)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i < Size);}
@@ -701,7 +701,7 @@ class DataArray : public IDataArray
      * @param i The index of the value to set
      * @param value The new value to be set at the specified index
      */
-    void SetValue(size_t i, T value)
+    void setValue(size_t i, T value)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i < Size);}
@@ -711,7 +711,7 @@ class DataArray : public IDataArray
 
     //----------------------------------------------------------------------------
     // These can be overridden for more efficiency
-    T GetComponent(size_t i, int j)
+    T getComponent(size_t i, int j)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i * NumberOfComponents + j < Size);}
@@ -725,7 +725,7 @@ class DataArray : public IDataArray
      * @param j The Component index into the Tuple
      * @param c The value to set
      */
-    void SetComponent(size_t i, int j, T c)
+    void setComponent(size_t i, int j, T c)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i * NumberOfComponents + j < Size);}
@@ -757,7 +757,7 @@ class DataArray : public IDataArray
      */
     virtual int32_t resizeTotalElements(size_t size)
     {
-      if (this->ResizeAndExtend(size) || size == 0)
+      if (this->resizeAndExtend(size) || size == 0)
       {
         return 1;
       }
@@ -1137,7 +1137,7 @@ class DataArray : public IDataArray
      * @param size
      * @return Pointer to the internal array
      */
-    virtual T* ResizeAndExtend(size_t size)
+    virtual T* resizeAndExtend(size_t size)
     {
       T* newArray;
       size_t newSize;

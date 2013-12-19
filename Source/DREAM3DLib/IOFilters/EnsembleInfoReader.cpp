@@ -198,8 +198,8 @@ int EnsembleInfoReader::readFile()
   for(int i = 0; i < numphases; i++)
   {
     inFile >> pnum >> crystruct >> ptype;
-    m_XTalStructData->SetValue(pnum, crystruct);
-    m_PhaseTypeData->SetValue(pnum, ptype);
+    m_XTalStructData->setValue(pnum, crystruct);
+    m_PhaseTypeData->setValue(pnum, ptype);
   }
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, m_XTalStructData);
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypeData);

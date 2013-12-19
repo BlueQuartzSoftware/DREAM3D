@@ -84,8 +84,8 @@ int LogNormalOps::calculateParameters(QVector<float>& data, FloatArrayType::Poin
     avg = 0;
     stddev = 0;
   }
-  outputs->SetValue(0, avg);
-  outputs->SetValue(1, stddev);
+  outputs->setValue(0, avg);
+  outputs->setValue(1, stddev);
   return err;
 }
 // -----------------------------------------------------------------------------
@@ -124,8 +124,8 @@ int LogNormalOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, 
       avg = 0;
       stddev = 0;
     }
-    outputs[0]->SetValue(i, avg);
-    outputs[1]->SetValue(i, stddev);
+    outputs[0]->setValue(i, avg);
+    outputs[1]->setValue(i, stddev);
   }
   return err;
 }

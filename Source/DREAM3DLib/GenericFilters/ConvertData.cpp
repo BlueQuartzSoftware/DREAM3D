@@ -76,7 +76,7 @@ namespace Detail
       m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::UInt8)
@@ -85,7 +85,7 @@ namespace Detail
       m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::Int16)
@@ -94,7 +94,7 @@ namespace Detail
       m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::UInt16)
@@ -103,7 +103,7 @@ namespace Detail
       m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::Int32)
@@ -112,7 +112,7 @@ namespace Detail
       m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::UInt32)
@@ -121,7 +121,7 @@ namespace Detail
       m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::Int64)
@@ -130,7 +130,7 @@ namespace Detail
       m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::UInt64)
@@ -139,7 +139,7 @@ namespace Detail
       m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::Float)
@@ -153,7 +153,7 @@ namespace Detail
       m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
   }

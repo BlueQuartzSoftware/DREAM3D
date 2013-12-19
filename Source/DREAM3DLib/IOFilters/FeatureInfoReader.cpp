@@ -258,10 +258,10 @@ int FeatureInfoReader::readFile()
       featurePhaseData->resize(gnum + 1);
       featureEulerData->resize(gnum + 1);
     }
-    featureEulerData->SetValue(3 * gnum, ea1);
-    featureEulerData->SetValue(3 * gnum + 1, ea2);
-    featureEulerData->SetValue(3 * gnum + 2, ea3);
-    featurePhaseData->SetValue(gnum, phase);
+    featureEulerData->setValue(3 * gnum, ea1);
+    featureEulerData->setValue(3 * gnum + 1, ea2);
+    featureEulerData->setValue(3 * gnum + 2, ea3);
+    featurePhaseData->setValue(gnum, phase);
     if(phase > maxphase) { maxphase = phase; }
   }
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::EulerAngles, featureEulerData);
@@ -279,10 +279,10 @@ int FeatureInfoReader::readFile()
     for(int i = 0; i < totalPoints; i++)
     {
       gnum = m_FeatureIds[i];
-      cellEulerData->SetValue(3 * i, featureEulerData->GetValue(3 * gnum));
-      cellEulerData->SetValue(3 * i + 1, featureEulerData->GetValue(3 * gnum + 1));
-      cellEulerData->SetValue(3 * i + 2, featureEulerData->GetValue(3 * gnum + 2));
-      cellPhaseData->SetValue(i, featurePhaseData->GetValue(gnum));
+      cellEulerData->setValue(3 * i, featureEulerData->getValue(3 * gnum));
+      cellEulerData->setValue(3 * i + 1, featureEulerData->getValue(3 * gnum + 1));
+      cellEulerData->setValue(3 * i + 2, featureEulerData->getValue(3 * gnum + 2));
+      cellPhaseData->setValue(i, featurePhaseData->getValue(gnum));
     }
     m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, cellEulerData);
     m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, cellPhaseData);

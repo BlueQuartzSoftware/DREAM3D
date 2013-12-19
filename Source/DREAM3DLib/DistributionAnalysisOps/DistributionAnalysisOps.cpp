@@ -69,7 +69,7 @@ void DistributionAnalysisOps::determinebinnumbers(float& max, float& min, int& s
   float current = (float(iter * stepsize) + min);
   while(current < max)
   {
-    binnumbers->SetValue(iter, current);
+    binnumbers->setValue(iter, current);
     iter++;
     current = (float(iter * stepsize) + min);
   }

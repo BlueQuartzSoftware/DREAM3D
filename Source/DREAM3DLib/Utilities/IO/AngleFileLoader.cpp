@@ -190,9 +190,9 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
       e3 = e3 * DREAM3D::Constants::k_DegToRad;
     }
     // Store the values into our array
-    angles->SetComponent(i, 0, e1);
-    angles->SetComponent(i, 1, e2);
-    angles->SetComponent(i, 2, e3);
+    angles->setComponent(i, 0, e1);
+    angles->setComponent(i, 1, e2);
+    angles->setComponent(i, 2, e3);
     //   qDebug() << "reading line: " << i ;
   }
 

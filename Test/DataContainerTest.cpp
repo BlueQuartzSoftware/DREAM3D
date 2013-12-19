@@ -138,14 +138,14 @@ void TestDataContainerWriter()
   Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(size, DREAM3D::CellData::FeatureIds);
   for (int i = 0; i < size; ++i)
   {
-    featureIds->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
+    featureIds->setValue(i, i + UnitTest::DataContainerIOTest::Offset);
   }
   attrMat->addAttributeArray(DREAM3D::CellData::FeatureIds, featureIds);
 
   BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, DREAM3D::CellData::SurfaceVoxels);
   for (int i = 0; i < size; ++i)
   {
-    boolArray->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
+    boolArray->setValue(i, i + UnitTest::DataContainerIOTest::Offset);
   }
   attrMat->addAttributeArray(DREAM3D::CellData::SurfaceVoxels, boolArray);
 
@@ -153,9 +153,9 @@ void TestDataContainerWriter()
   FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(4, dims, DREAM3D::FeatureData::AxisEulerAngles);
   for(size_t i = 0; i < 4; ++i)
   {
-    avgEuler->SetComponent(i, 0, i * 0.665f);
-    avgEuler->SetComponent(i, 1, i * 0.665f);
-    avgEuler->SetComponent(i, 2, i * 0.665f);
+    avgEuler->setComponent(i, 0, i * 0.665f);
+    avgEuler->setComponent(i, 1, i * 0.665f);
+    avgEuler->setComponent(i, 2, i * 0.665f);
   }
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::AxisEulerAngles, avgEuler);
 
@@ -163,7 +163,7 @@ void TestDataContainerWriter()
   FloatArrayType::Pointer surfArea = FloatArrayType::CreateArray(4, DREAM3D::EnsembleData::TotalSurfaceAreas);
   for (int i = 0; i < 4; ++i)
   {
-    surfArea->SetValue(i, i + 41.2f);
+    surfArea->setValue(i, i + 41.2f);
   }
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::TotalSurfaceAreas, surfArea);
 
@@ -555,7 +555,7 @@ void TestDataContainer()
       }
       for (int i = 0; i < 5; ++i)
       {
-        std::cout << (int)(intPtr->GetValue(i)) << std::endl;
+        std::cout << (int)(intPtr->getValue(i)) << std::endl;
       }
     }
 

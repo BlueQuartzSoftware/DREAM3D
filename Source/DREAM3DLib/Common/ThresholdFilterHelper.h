@@ -68,7 +68,7 @@ class ThresholdFilterHelper : public IDataArrayFilter
       for (size_t i = 0; i < m_NumValues; ++i)
       {
         bool b = (data[i] < v);
-        m_Output->SetValue(i, b);
+        m_Output->setValue(i, b);
       }
     }
 
@@ -84,7 +84,7 @@ class ThresholdFilterHelper : public IDataArrayFilter
       for (size_t i = 0; i < m_NumValues; ++i)
       {
         bool b = (data[i] > v);
-        m_Output->SetValue(i, b);
+        m_Output->setValue(i, b);
       }
     }
 
@@ -100,7 +100,7 @@ class ThresholdFilterHelper : public IDataArrayFilter
       for (size_t i = 0; i < m_NumValues; ++i)
       {
         bool b = (data[i] == v);
-        m_Output->SetValue(i, b);
+        m_Output->setValue(i, b);
       }
     }
 

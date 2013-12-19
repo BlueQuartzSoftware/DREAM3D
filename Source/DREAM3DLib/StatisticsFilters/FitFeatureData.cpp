@@ -229,7 +229,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
     for (int j = 0; j < numComp; j++)
     {
       FloatArrayType::Pointer data = dist[i];
-      ePtr[numComp * i + j] = data->GetValue(j);
+      ePtr[numComp * i + j] = data->getValue(j);
     }
   }
   return ensembleArray;
