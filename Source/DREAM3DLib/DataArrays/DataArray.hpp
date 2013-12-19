@@ -57,7 +57,7 @@
   ptr[s] = ptr[d];\
   ptr[d] = t[0];
 
-/** @brief Resizes the DataArray Shared Array and assigns its internal data pointer
+/** @brief Resizes the DataArray Shared m_Array and assigns its internal data pointer
  *
  */
 #define RESIZE_ARRAY(sharedArray, pointer, size)\
@@ -328,7 +328,7 @@ class DataArray : public IDataArray
     virtual ~DataArray()
     {
       //qDebug() << "~DataArrayTemplate '" << m_Name << "'" ;
-      if ((NULL != this->Array) && (true == this->_ownsData))
+      if ((NULL != this->m_Array) && (true == this->m_OwnsData))
       {
         _deallocate();
       }
@@ -363,7 +363,7 @@ class DataArray : public IDataArray
      */
     virtual void takeOwnership()
     {
-      this->_ownsData = true;
+      this->m_OwnsData = true;
     }
 
     /**
@@ -373,7 +373,7 @@ class DataArray : public IDataArray
      */
     virtual void releaseOwnership()
     {
-      this->_ownsData = false;
+      this->m_OwnsData = false;
     }
 
     /**
@@ -382,32 +382,32 @@ class DataArray : public IDataArray
      */
     virtual int32_t Allocate()
     {
-      if ((NULL != this->Array) && (true == this->_ownsData))
+      if ((NULL != this->m_Array) && (true == this->m_OwnsData))
       {
         _deallocate();
       }
-      this->Array = NULL;
-      this->_ownsData = true;
+      this->m_Array = NULL;
+      this->m_OwnsData = true;
       m_IsAllocated = false;
-      if (this->Size == 0)
+      if (this->m_Size == 0)
       {
         initialize();
         return 1;
       }
 
 
-      size_t newSize = this->Size;
+      size_t newSize = this->m_Size;
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
-      Array = static_cast<T*>( _mm_malloc (newSize * sizeof(T), 16) );
+      m_Array = static_cast<T*>( _mm_malloc (newSize * sizeof(T), 16) );
 #else
-      this->Array = (T*)malloc(newSize * sizeof(T));
+      this->m_Array = (T*)malloc(newSize * sizeof(T));
 #endif
-      if (!this->Array)
+      if (!this->m_Array)
       {
         qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
         return -1;
       }
-      this->Size = newSize;
+      this->m_Size = newSize;
       m_IsAllocated = true;
 
       return 1;
@@ -419,14 +419,14 @@ class DataArray : public IDataArray
      */
     virtual void initialize()
     {
-      if (NULL != this->Array && true == this->_ownsData)
+      if (NULL != this->m_Array && true == this->m_OwnsData)
       {
         _deallocate();
       }
-      this->Array = NULL;
-      this->Size = 0;
-      this->_ownsData = true;
-      this->MaxId = 0;
+      this->m_Array = NULL;
+      this->m_Size = 0;
+      this->m_OwnsData = true;
+      this->m_MaxId = 0;
       m_IsAllocated = false;
 
       //   this->_dims[0] = _nElements;
@@ -437,9 +437,9 @@ class DataArray : public IDataArray
      */
     virtual void initializeWithValues(T value)
     {
-      for (size_t i = 0; i < this->Size; i++)
+      for (size_t i = 0; i < this->m_Size; i++)
       {
-        this->Array[i] = value;
+        this->m_Array[i] = value;
       }
     }
 
@@ -449,12 +449,12 @@ class DataArray : public IDataArray
     virtual void initializeWithZeros()
     {
       size_t typeSize = sizeof(T);
-      ::memset(this->Array, 0, this->Size * typeSize);
+      ::memset(this->m_Array, 0, this->m_Size * typeSize);
     }
 
     /**
-     * @brief Removes Tuples from the Array. If the size of the vector is Zero nothing is done. If the size of the
-     * vector is greater than or Equal to the number of Tuples then the Array is Resized to Zero. If there are
+     * @brief Removes Tuples from the m_Array. If the size of the vector is Zero nothing is done. If the size of the
+     * vector is greater than or Equal to the number of Tuples then the m_Array is Resized to Zero. If there are
      * indices that are larger than the size of the original (before erasing operations) then an error code (-100) is
      * returned from the program.
      * @param idxs The indices to remove
@@ -481,13 +481,13 @@ class DataArray : public IDataArray
       // off the end of the array and return an error code.
       for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
-        if (idxs[i] * this->NumberOfComponents > this->MaxId) { return -100; }
+        if (idxs[i] * this->NumberOfComponents > this->m_MaxId) { return -100; }
       }
 
       // Calculate the new size of the array to copy into
       size_t newSize = (getNumberOfTuples() - idxs.size()) * NumberOfComponents ;
 
-      // Create a new Array to copy into
+      // Create a new m_Array to copy into
       T* newArray = (T*)malloc(newSize * sizeof(T));
       // Splat AB across the array so we know if we are copying the values or not
       ::memset(newArray, 0xAB, newSize * sizeof(T));
@@ -512,13 +512,13 @@ class DataArray : public IDataArray
 
       if(k == idxs.size()) // Only front elements are being dropped
       {
-        T* currentSrc = Array + (j * NumberOfComponents);
+        T* currentSrc = m_Array + (j * NumberOfComponents);
         ::memcpy(currentDest, currentSrc, (getNumberOfTuples() - idxs.size()) * NumberOfComponents * sizeof(T));
-        _deallocate(); // We are done copying - delete the current Array
-        this->Size = newSize;
-        this->Array = newArray;
-        this->_ownsData = true;
-        this->MaxId = newSize - 1;
+        _deallocate(); // We are done copying - delete the current m_Array
+        this->m_Size = newSize;
+        this->m_Array = newArray;
+        this->m_OwnsData = true;
+        this->m_MaxId = newSize - 1;
         return 0;
       }
 
@@ -548,21 +548,21 @@ class DataArray : public IDataArray
       for (int i = 0; i < srcIdx.size(); ++i)
       {
         currentDest = newArray + destIdx[i];
-        T* currentSrc = Array + srcIdx[i];
+        T* currentSrc = m_Array + srcIdx[i];
         size_t bytes = copyElements[i] * sizeof(T);
         ::memcpy(currentDest, currentSrc, bytes);
       }
 
-      // We are done copying - delete the current Array
+      // We are done copying - delete the current m_Array
       _deallocate();
 
       // Allocation was successful.  Save it.
-      this->Size = newSize;
-      this->Array = newArray;
+      this->m_Size = newSize;
+      this->m_Array = newArray;
       // This object has now allocated its memory and owns it.
-      this->_ownsData = true;
+      this->m_OwnsData = true;
 
-      this->MaxId = newSize - 1;
+      this->m_MaxId = newSize - 1;
 
       return err;
     }
@@ -575,12 +575,12 @@ class DataArray : public IDataArray
      */
     virtual int copyTuple(size_t currentPos, size_t newPos)
     {
-      size_t max =  ((this->MaxId + 1) / this->NumberOfComponents);
+      size_t max =  ((this->m_MaxId + 1) / this->NumberOfComponents);
       if (currentPos >= max
           || newPos >= max )
       {return -1;}
-      T* src = this->Array + (currentPos * NumberOfComponents);
-      T* dest = this->Array + (newPos * NumberOfComponents);
+      T* src = this->m_Array + (currentPos * NumberOfComponents);
+      T* dest = this->m_Array + (newPos * NumberOfComponents);
       size_t bytes = sizeof(T) * NumberOfComponents;
       ::memcpy(dest, src, bytes);
       return 0;
@@ -604,13 +604,13 @@ class DataArray : public IDataArray
      */
     virtual size_t getNumberOfTuples()
     {
-      if (Size == 0) { return 0; }
-      return (this->MaxId + 1) / this->NumberOfComponents;
+      if (m_Size == 0) { return 0; }
+      return (this->m_MaxId + 1) / this->NumberOfComponents;
     }
 
     virtual size_t getSize()
     {
-      return Size;
+      return m_Size;
     }
 
     virtual int getNumberOfComponents()
@@ -662,9 +662,9 @@ class DataArray : public IDataArray
      */
     virtual void* getVoidPointer(size_t i)
     {
-      if (i >= Size) { return NULL;}
+      if (i >= m_Size) { return NULL;}
 
-      return (void*)(&(Array[i]));
+      return (void*)(&(m_Array[i]));
     }
 
 
@@ -678,9 +678,9 @@ class DataArray : public IDataArray
     virtual T* getPointer(size_t i)
     {
 #ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i < Size);}
+      if (m_Size > 0) { BOOST_ASSERT(i < m_Size);}
 #endif
-      return (T*)(&(Array[i]));
+      return (T*)(&(m_Array[i]));
     }
 
     /**
@@ -691,9 +691,9 @@ class DataArray : public IDataArray
     virtual T GetValue(size_t i)
     {
 #ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i < Size);}
+      if (m_Size > 0) { BOOST_ASSERT(i < m_Size);}
 #endif
-      return this->Array[i];
+      return this->m_Array[i];
     }
 
     /**
@@ -704,9 +704,9 @@ class DataArray : public IDataArray
     void SetValue(size_t i, T value)
     {
 #ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i < Size);}
+      if (m_Size > 0) { BOOST_ASSERT(i < m_Size);}
 #endif
-      this->Array[i] = value;
+      this->m_Array[i] = value;
     }
 
     //----------------------------------------------------------------------------
@@ -714,9 +714,9 @@ class DataArray : public IDataArray
     T GetComponent(size_t i, int j)
     {
 #ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i * NumberOfComponents + j < Size);}
+      if (m_Size > 0) { BOOST_ASSERT(i * NumberOfComponents + j < m_Size);}
 #endif
-      return Array[i * this->NumberOfComponents + j];
+      return m_Array[i * this->NumberOfComponents + j];
     }
 
     /**
@@ -728,9 +728,9 @@ class DataArray : public IDataArray
     void SetComponent(size_t i, int j, T c)
     {
 #ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i * NumberOfComponents + j < Size);}
+      if (m_Size > 0) { BOOST_ASSERT(i * NumberOfComponents + j < m_Size);}
 #endif
-      Array[i * this->NumberOfComponents + j] = c;
+      m_Array[i * this->NumberOfComponents + j] = c;
     }
 
     /**
@@ -741,12 +741,12 @@ class DataArray : public IDataArray
     void initializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i * NumberOfComponents < Size);}
+      if (m_Size > 0) { BOOST_ASSERT(i * NumberOfComponents < m_Size);}
 #endif
       T c = static_cast<T>(p);
       for (int j = 0; j < this->NumberOfComponents; ++j)
       {
-        Array[i * this->NumberOfComponents + j] = c;
+        m_Array[i * this->NumberOfComponents + j] = c;
       }
     }
 
@@ -777,13 +777,13 @@ class DataArray : public IDataArray
       for(int j = 0; j < NumberOfComponents; ++j)
       {
         if (j != 0) { out << delimiter; }
-        out << Array[i * NumberOfComponents + j];
+        out << m_Array[i * NumberOfComponents + j];
       }
     }
 
     virtual void printComponent(QTextStream& out, size_t i, int j)
     {
-      out << Array[i * NumberOfComponents + j];
+      out << m_Array[i * NumberOfComponents + j];
     }
 
     /**
@@ -874,9 +874,9 @@ class DataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-      if (Array == NULL) { return -85648; }
+      if (m_Array == NULL) { return -85648; }
       #if 0
-  return H5DataArrayWriter<T>::writeArray(parentId, getName(), getNumberOfTuples(), getNumberOfComponents(), getRank(), getDims(), getClassVersion(), Array, getFullNameOfClass());
+  return H5DataArrayWriter<T>::writeArray(parentId, getName(), getNumberOfTuples(), getNumberOfComponents(), getRank(), getDims(), getClassVersion(), m_Array, getFullNameOfClass());
       #else
         return H5DataArrayWriter::writeDataArray<Self>(parentId, this);
       #endif
@@ -891,7 +891,7 @@ class DataArray : public IDataArray
     virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
                                    const QString& groupPath, const QString& label)
     {
-      if (Array == NULL) { return -85648; }
+      if (m_Array == NULL) { return -85648; }
       QString dimStr;
       int precision = 0;
       QString xdmfTypeName;
@@ -942,9 +942,9 @@ class DataArray : public IDataArray
         return -1;
       }
       this->NumberOfComponents = p->getNumberOfComponents();
-      this->Size = p->getSize();
-      this->MaxId = (Size == 0) ? 0 : Size - 1;
-      this->Array = reinterpret_cast<T*>(p->getVoidPointer(0));
+      this->m_Size = p->getSize();
+      this->m_MaxId = (m_Size == 0) ? 0 : m_Size - 1;
+      this->m_Array = reinterpret_cast<T*>(p->getVoidPointer(0));
       p->releaseOwnership();
 
       return err;
@@ -955,10 +955,10 @@ class DataArray : public IDataArray
      */
     virtual void byteSwapElements()
     {
-      char* ptr = (char*)(Array);
+      char* ptr = (char*)(m_Array);
       char t[8];
       size_t size = getTypeSize();
-      for (uint64_t var = 0; var < Size; ++var)
+      for (uint64_t var = 0; var < m_Size; ++var)
       {
         if (sizeof(T) == 2)
         {
@@ -987,8 +987,8 @@ class DataArray : public IDataArray
       */
     inline T& operator[](size_t i)
     {
-      BOOST_ASSERT(i < Size);
-      return Array[i];
+      BOOST_ASSERT(i < m_Size);
+      return m_Array[i];
     }
 
   protected:
@@ -1003,17 +1003,17 @@ class DataArray : public IDataArray
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     DataArray(size_t numElements, bool ownsData = true) :
-      Array(NULL),
-      Size(numElements),
-      _ownsData(ownsData),
+      m_Array(NULL),
+      m_Size(numElements),
+      m_OwnsData(ownsData),
       m_IsAllocated(false)
     {
       NumberOfComponents = 1;
       Rank = 1;
       Dims.resize(1);
       Dims[0] = 1;
-      MaxId = (Size > 0) ? Size - 1 : Size;
-
+      m_MaxId = (m_Size > 0) ? m_Size - 1 : m_Size;
+      m_DefaultValue = static_cast<T>(0);
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
@@ -1025,8 +1025,8 @@ class DataArray : public IDataArray
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     DataArray(size_t numTuples, int rank, int* dims, bool ownsData = true) :
-      Array(NULL),
-      _ownsData(ownsData),
+      m_Array(NULL),
+      m_OwnsData(ownsData),
       m_IsAllocated(false)
     {
       Rank = rank;
@@ -1038,8 +1038,10 @@ class DataArray : public IDataArray
         NumberOfComponents *= dims[i];
         Dims[i] = dims[i];
       }
-      Size = numTuples * NumberOfComponents;
-      MaxId = (Size > 0) ? Size - 1 : Size;
+      m_Size = numTuples * NumberOfComponents;
+      m_MaxId = (m_Size > 0) ? m_Size - 1 : m_Size;
+      m_DefaultValue = static_cast<T>(0);
+
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
@@ -1051,8 +1053,8 @@ class DataArray : public IDataArray
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     DataArray(size_t numTuples, int rank, std::vector<int> dims, bool ownsData = true) :
-      Array(NULL),
-      _ownsData(ownsData),
+      m_Array(NULL),
+      m_OwnsData(ownsData),
       m_IsAllocated(false)
     {
       Rank = rank;
@@ -1064,8 +1066,10 @@ class DataArray : public IDataArray
         NumberOfComponents *= dims[i];
         Dims[i] = dims[i];
       }
-      Size = numTuples * NumberOfComponents;
-      MaxId = (Size > 0) ? Size - 1 : Size;
+      m_Size = numTuples * NumberOfComponents;
+      m_MaxId = (m_Size > 0) ? m_Size - 1 : m_Size;
+      m_DefaultValue = static_cast<T>(0);
+
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
@@ -1077,8 +1081,8 @@ class DataArray : public IDataArray
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     DataArray(size_t numTuples, int rank, QVector<int> dims, bool ownsData = true) :
-      Array(NULL),
-      _ownsData(ownsData),
+      m_Array(NULL),
+      m_OwnsData(ownsData),
       m_IsAllocated(false)
     {
       Rank = rank;
@@ -1089,8 +1093,10 @@ class DataArray : public IDataArray
       {
         NumberOfComponents *= dims[i];
       }
-      Size = numTuples * NumberOfComponents;
-      MaxId = (Size > 0) ? Size - 1 : Size;
+      m_Size = numTuples * NumberOfComponents;
+      m_MaxId = (m_Size > 0) ? m_Size - 1 : m_Size;
+      m_DefaultValue = static_cast<T>(0);
+
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
@@ -1100,10 +1106,10 @@ class DataArray : public IDataArray
     void _deallocate()
     {
       // We are going to splat 0xABABAB across the first value of the array as a debugging aid
-      unsigned char* cptr = reinterpret_cast<unsigned char*>(this->Array);
+      unsigned char* cptr = reinterpret_cast<unsigned char*>(this->m_Array);
       if(NULL != cptr)
       {
-        if(Size > 0)
+        if(m_Size > 0)
         {
           if (sizeof(T) >= 1) { cptr[0] = 0xAB; }
           if (sizeof(T) >= 2) { cptr[1] = 0xAB; }
@@ -1126,9 +1132,9 @@ class DataArray : public IDataArray
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
       _mm_free( this->m_buffer );
 #else
-      free(this->Array);
+      free(this->m_Array);
 #endif
-      this->Array = NULL;
+      this->m_Array = NULL;
       m_IsAllocated = false;
     }
 
@@ -1142,13 +1148,13 @@ class DataArray : public IDataArray
       T* newArray;
       size_t newSize;
 
-      if (size > this->Size)
+      if (size > this->m_Size)
       {
         newSize = size;
       }
-      else if (size == this->Size) // Requested size is equal to current size.  Do nothing.
+      else if (size == this->m_Size) // Requested size is equal to current size.  Do nothing.
       {
-        return this->Array;
+        return this->m_Array;
       }
       else // Requested size is smaller than current size.  Squeeze the memory.
       {
@@ -1159,7 +1165,7 @@ class DataArray : public IDataArray
       if (newSize == 0)
       {
         this->initialize();
-        return this->Array;
+        return this->m_Array;
       }
       // OS X's realloc does not free memory if the new block is smaller.  This
       // is a very serious problem and causes huge amount of memory to be
@@ -1170,7 +1176,7 @@ class DataArray : public IDataArray
 #endif
 
       // Allocate a new array if we DO NOT own the current array
-      if ((NULL != this->Array) && (false == this->_ownsData))
+      if ((NULL != this->m_Array) && (false == this->m_OwnsData))
       {
         // The old array is owned by the user so we cannot try to
         // reallocate it.  Just allocate new memory that we will own.
@@ -1182,12 +1188,12 @@ class DataArray : public IDataArray
         }
 
         // Copy the data from the old array.
-        memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
+        memcpy(newArray, this->m_Array, (newSize < this->m_Size ? newSize : this->m_Size) * sizeof(T));
       }
       else if (!dontUseRealloc)
       {
         // Try to reallocate with minimal memory usage and possibly avoid copying.
-        newArray = (T*)realloc(this->Array, newSize * sizeof(T));
+        newArray = (T*)realloc(this->m_Array, newSize * sizeof(T));
         if (!newArray)
         {
           qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
@@ -1204,41 +1210,43 @@ class DataArray : public IDataArray
         }
 
         // Copy the data from the old array.
-        if (this->Array != NULL)
+        if (this->m_Array != NULL)
         {
-          memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
+          memcpy(newArray, this->m_Array, (newSize < this->m_Size ? newSize : this->m_Size) * sizeof(T));
         }
         // Free the old array
         _deallocate();
       }
 
       // Allocation was successful.  Save it.
-      this->Size = newSize;
-      this->Array = newArray;
+      this->m_Size = newSize;
+      this->m_Array = newArray;
       // This object has now allocated its memory and owns it.
-      this->_ownsData = true;
+      this->m_OwnsData = true;
 
-      this->MaxId = newSize - 1;
+      this->m_MaxId = newSize - 1;
       m_IsAllocated = true;
-      return this->Array;
+      return this->m_Array;
     }
 
 
   private:
 
     //  unsigned long long int MUD_FLAP_0;
-    T* Array;
+    T* m_Array;
     //  unsigned long long int MUD_FLAP_1;
-    size_t Size;
+    size_t m_Size;
     //  unsigned long long int MUD_FLAP_4;
-    bool _ownsData;
+    bool m_OwnsData;
     //  unsigned long long int MUD_FLAP_2;
-    size_t MaxId;
+    size_t m_MaxId;
 
     bool m_IsAllocated;
     //   unsigned long long int MUD_FLAP_3;
     QString m_Name;
     //  unsigned long long int MUD_FLAP_5;
+	
+	T m_DefaultValue;
 
     DataArray(const DataArray&); //Not Implemented
     void operator=(const DataArray&); //Not Implemented
