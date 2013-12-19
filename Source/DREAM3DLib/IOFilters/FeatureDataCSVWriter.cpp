@@ -215,13 +215,13 @@ void FeatureDataCSVWriter::execute()
     IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
-      if (p->GetNumberOfComponents() == 1)
+      if (p->getNumberOfComponents() == 1)
       {
         outFile << m_Delimiter << (*iter);
       }
       else // There are more than a single component so we need to add multiple header values
       {
-        for(int k = 0; k < p->GetNumberOfComponents(); ++k)
+        for(int k = 0; k < p->getNumberOfComponents(); ++k)
         {
           outFile << m_Delimiter << (*iter) << "_" << k;
         }

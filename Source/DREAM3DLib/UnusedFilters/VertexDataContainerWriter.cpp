@@ -181,13 +181,13 @@ QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, con
   QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
   QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
 
-  out << "    <Attribute Name=\"" << array->GetName() << "\" ";
+  out << "    <Attribute Name=\"" << array->getName() << "\" ";
   out << "AttributeType=\"" << attrType << "\" ";
   out << "Center=\"" << centering << "\">" << "\n";
   // Open the <DataItem> Tag
   out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
   out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->getName() << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Attribute>" << "\n" << "\n";
 
@@ -219,7 +219,7 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const QString& groupName,
   array->GetXdmfTypeAndSize(xdmfTypeName, precision);
   if (0 == precision)
   {
-    out << "<!-- " << array->GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
+    out << "<!-- " << array->getName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
     return;
   }
   int numComp = array->GetNumberOfComponents();

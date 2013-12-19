@@ -412,15 +412,15 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupNam
     {
       if(groupName.compare(H5_EDGE_DATA_GROUP_NAME) == 0)
       {
-        dc->addEdgeData(dPtr->GetName(), dPtr);
+        dc->addEdgeData(dPtr->getName(), dPtr);
       }
       else if(groupName.compare(H5_EDGE_FIELD_DATA_GROUP_NAME) == 0)
       {
-        dc->addEdgeFeatureData(dPtr->GetName(), dPtr);
+        dc->addEdgeFeatureData(dPtr->getName(), dPtr);
       }
       else if(groupName.compare(H5_EDGE_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        dc->addEdgeEnsembleData(dPtr->GetName(), dPtr);
+        dc->addEdgeEnsembleData(dPtr->getName(), dPtr);
       }
     }
 

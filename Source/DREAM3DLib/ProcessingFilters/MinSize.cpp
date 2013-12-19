@@ -352,7 +352,7 @@ void MinSize::assign_badpoints()
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-            p->CopyTuple(neighbor, j);
+            p->copyTuple(neighbor, j);
           }
         }
       }

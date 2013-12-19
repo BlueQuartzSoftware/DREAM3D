@@ -76,7 +76,7 @@ namespace Detail
     // Allocate an array of memory based on the dimensions
     ptr = GbcdDataArray<T>::CreateArray(gDims, datasetPath, true);
     // Get the pointer to the actual memory location
-    T* data = (T*)(ptr->GetVoidPointer(0));
+    T* data = (T*)(ptr->getVoidPointer(0));
     // Read the file into that memory location
     err = QH5Lite::readPointerDataset(locId, datasetPath, data);
     if(err < 0)

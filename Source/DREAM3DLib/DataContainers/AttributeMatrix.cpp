@@ -123,12 +123,12 @@ bool AttributeMatrix::validateAttributeArraySizes()
 // -----------------------------------------------------------------------------
 int AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer data)
 {
-  if (data->GetName().compare(name) != 0)
+  if (data->getName().compare(name) != 0)
   {
     qDebug() << "Adding Attribute Array with different array name than key name" << "\n";
     qDebug() << "Key name: " << name << "\n";
-    qDebug() << "Array Name:" << data->GetName() << "\n";
-    data->SetName(name);
+    qDebug() << "Array Name:" << data->getName() << "\n";
+    data->setName(name);
   }
   Q_ASSERT(m_NumTuples == data->getNumberOfTuples());
 
@@ -178,7 +178,7 @@ bool AttributeMatrix::renameAttributeArray(const QString& oldname, const QString
     return false;
   }
   IDataArray::Pointer p = it.value();
-  p->SetName(newname);
+  p->setName(newname);
   removeAttributeArray(oldname);
   addAttributeArray(newname, p);
   return true;
@@ -279,7 +279,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   else if ( name.compare(DREAM3D::EnsembleData::Statistics) == 0)
   {
     StatsDataArray::Pointer statsData = StatsDataArray::New();
-    statsData->SetName(DREAM3D::EnsembleData::Statistics);
+    statsData->setName(DREAM3D::EnsembleData::Statistics);
     statsData->readH5Data(gid);
     dPtr = statsData;
     if(preflight == true) dPtr->resize(m_NumTuples);
@@ -287,7 +287,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
 
   if (NULL != dPtr.get())
   {
-    addAttributeArray(dPtr->GetName(), dPtr);
+    addAttributeArray(dPtr->getName(), dPtr);
   }
 
   return err;
@@ -332,14 +332,14 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, QS
     else if ( (*iter).compare(DREAM3D::EnsembleData::Statistics) == 0)
     {
       StatsDataArray::Pointer statsData = StatsDataArray::New();
-      statsData->SetName(DREAM3D::EnsembleData::Statistics);
+      statsData->setName(DREAM3D::EnsembleData::Statistics);
       statsData->readH5Data(amGid);
       dPtr = statsData;
     }
 
     if (NULL != dPtr.get())
     {
-      addAttributeArray(dPtr->GetName(), dPtr);
+      addAttributeArray(dPtr->getName(), dPtr);
     }
 
   }
@@ -377,31 +377,31 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
   QString buf;
   QTextStream out(&buf);
 
-  QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
-  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents() / 2);
+  QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->getNumberOfComponents());
+  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->getNumberOfComponents() / 2);
 
   if((numComp % 2) == 1)
   {
-    out << "    <Attribute Name=\"" << array->GetName() << "\" ";
+    out << "    <Attribute Name=\"" << array->getName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
     out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-    out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->GetName() << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->getName() << "\n";
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";
   }
   else
   {
     //First Slab
-    out << "    <Attribute Name=\"" << array->GetName() << " (Feature 0)\" ";
+    out << "    <Attribute Name=\"" << array->getName() << " (Feature 0)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
 
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStrHalf <<  "\" ";
-    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Feature 0)\" >" << "\n";
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->getName() << " (Feature 0)\" >" << "\n";
     out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
     out << "          0        0" << "\n";
     out << "          1        1" << "\n";
@@ -409,26 +409,26 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
     out << "\n";
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
 
-    out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->GetName() << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->getName() << "\n";
     out << "        </DataItem>" << "\n";
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";
 
     //Second Slab
-    out << "    <Attribute Name=\"" << array->GetName() << " (Feature 1)\" ";
+    out << "    <Attribute Name=\"" << array->getName() << " (Feature 1)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
 
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStrHalf <<  "\" ";
-    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Feature 1)\" >" << "\n";
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->getName() << " (Feature 1)\" >" << "\n";
     out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
-    out << "          0        " << (array->GetNumberOfComponents() / 2) << "\n";
+    out << "          0        " << (array->getNumberOfComponents() / 2) << "\n";
     out << "          1        1" << "\n";
     out << "          " << dimStrHalf << " </DataItem>" << "\n";
     out << "\n";
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-    out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->GetName() << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->getName() << "\n";
     out << "        </DataItem>" << "\n";
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";
@@ -446,13 +446,13 @@ QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const
 
   int precision = 0;
   QString xdmfTypeName;
-  array->GetXdmfTypeAndSize(xdmfTypeName, precision);
+  array->getXdmfTypeAndSize(xdmfTypeName, precision);
   if (0 == precision)
   {
-    out << "<!-- " << array->GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
+    out << "<!-- " << array->getName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
     return xdmfText;
   }
-  int numComp = array->GetNumberOfComponents();
+  int numComp = array->getNumberOfComponents();
   QString attrType = "Scalar";
   if(numComp > 2) { attrType = "Vector"; }
 

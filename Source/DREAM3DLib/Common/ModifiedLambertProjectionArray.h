@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -171,8 +171,8 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     /* **************** This is the interface for the IDataArray Class which MUST
      *  Be implemented. Most of it is useless and will simply ASSERT if called. */
 
-    void SetName(const QString& name);
-    QString GetName();
+    void setName(const QString& name);
+    QString getName();
 
     /**
      * @brief Makes this class responsible for freeing the memory.
@@ -193,7 +193,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param i The index to have the returned pointer pointing to.
      * @return Void Pointer. Possibly NULL.
      */
-    virtual void* GetVoidPointer(size_t i);
+    virtual void* getVoidPointer(size_t i);
 
     /**
      * @brief Returns the number of Tuples in the array.
@@ -204,16 +204,16 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @brief Return the number of elements in the array
      * @return
      */
-    virtual size_t GetSize();
+    virtual size_t getSize();
 
     virtual void SetNumberOfComponents(int nc);
-    virtual int GetNumberOfComponents();
+    virtual int getNumberOfComponents();
 
     virtual void SetRank(int rank);
-    virtual int GetRank();
+    virtual int getRank();
 
-    virtual void SetDims(QVector<int> dims);
-    virtual QVector<int> GetDims();
+    virtual void setDims(QVector<int> dims);
+    virtual QVector<int> getDims();
 
     /**
      * @brief Returns the number of bytes that make up the data type.
@@ -222,7 +222,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t GetTypeSize();
+    virtual size_t getTypeSize();
 
 
     /**
@@ -233,7 +233,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t>& idxs);
+    virtual int eraseTuples(QVector<size_t>& idxs);
 
     /**
      * @brief Copies a Tuple from one position to another.
@@ -241,14 +241,14 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param newPos The destination index to place the copied data
      * @return
      */
-    virtual int CopyTuple(size_t currentPos, size_t newPos);
+    virtual int copyTuple(size_t currentPos, size_t newPos);
 
     /**
      * @brief Splats the same value c across all values in the Tuple
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
      */
-    virtual void InitializeTuple(size_t i, double p);
+    virtual void initializeTuple(size_t i, double p);
 
     /**
      * @brief Sets all the values to zero.

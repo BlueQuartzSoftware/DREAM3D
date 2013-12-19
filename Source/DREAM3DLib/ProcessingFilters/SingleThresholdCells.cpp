@@ -210,7 +210,7 @@ void SingleThresholdCells::execute()
 
   filter.execute(inputData.get(), goodVoxelsPtr.get());
 
-  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(goodVoxelsPtr->GetName(), goodVoxelsPtr);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(goodVoxelsPtr->getName(), goodVoxelsPtr);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

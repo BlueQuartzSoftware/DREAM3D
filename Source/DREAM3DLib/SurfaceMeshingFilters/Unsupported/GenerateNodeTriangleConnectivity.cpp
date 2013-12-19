@@ -258,7 +258,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
     }
   }
 
-  getSurfaceMeshDataContainer()->addCellData(nodeTriangleArray->GetName(), nodeTriangleArray);
+  getSurfaceMeshDataContainer()->addCellData(nodeTriangleArray->getName(), nodeTriangleArray);
   return;
 }
 

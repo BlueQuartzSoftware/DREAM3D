@@ -71,7 +71,7 @@ class StructArray : public IDataArray
         delete d;
         return StructArray<T>::NullPointer();
       }
-      d->SetName(name);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
@@ -128,7 +128,7 @@ class StructArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -158,7 +158,7 @@ class StructArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const QString& name)
+    void setName(const QString& name)
     {
       m_Name = name;
     }
@@ -167,7 +167,7 @@ class StructArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    QString GetName()
+    QString getName()
     {
       return m_Name;
     }
@@ -271,7 +271,7 @@ class StructArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t>& idxs)
+    virtual int eraseTuples(QVector<size_t>& idxs)
     {
 
       int err = 0;
@@ -386,7 +386,7 @@ class StructArray : public IDataArray
      * @param newPos
      * @return
      */
-    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    virtual int copyTuple(size_t currentPos, size_t newPos)
     {
       size_t max =  ((this->MaxId + 1));
       if (currentPos >= max
@@ -407,7 +407,7 @@ class StructArray : public IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t GetTypeSize()
+    virtual size_t getTypeSize()
     {
       return sizeof(T);
     }
@@ -422,19 +422,19 @@ class StructArray : public IDataArray
     }
 
     /**
-     * @brief GetSize
+     * @brief getSize
      * @return
      */
-    virtual size_t GetSize()
+    virtual size_t getSize()
     {
       return Size;
     }
 
     /**
-     * @brief GetNumberOfComponents
+     * @brief getNumberOfComponents
      * @return
      */
-    int GetNumberOfComponents()
+    int getNumberOfComponents()
     {
       return 1;
     }
@@ -448,26 +448,26 @@ class StructArray : public IDataArray
     }
 
     /**
-     * @brief GetRank
+     * @brief getRank
      * @return
      */
-    int GetRank()
+    int getRank()
     {
       return 1;
     }
 
     // Description:
     // Set/Get the dimensions of the array.
-    void SetDims(QVector<int> dims)
+    void setDims(QVector<int> dims)
     {
 
     }
 
     /**
-     * @brief GetDims
+     * @brief getDims
      * @return
      */
-    QVector<int> GetDims()
+    QVector<int> getDims()
     {
       QVector<int> dims(1, 1);
       return dims;
@@ -480,7 +480,7 @@ class StructArray : public IDataArray
      * @param i The index to have the returned pointer pointing to.
      * @return Void Pointer. Possibly NULL.
      */
-    virtual void* GetVoidPointer(size_t i)
+    virtual void* getVoidPointer(size_t i)
     {
       if (i >= Size) { return NULL;}
 
@@ -508,7 +508,7 @@ class StructArray : public IDataArray
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
      */
-    void InitializeTuple(size_t i, double p)
+    void initializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i < Size);}

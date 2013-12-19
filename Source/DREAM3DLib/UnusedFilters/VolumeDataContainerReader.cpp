@@ -468,15 +468,15 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupN
     {
       if(groupName.compare(H5_CELL_DATA_GROUP_NAME) == 0)
       {
-        dc->addCellData(dPtr->GetName(), dPtr);
+        dc->addCellData(dPtr->getName(), dPtr);
       }
       else if(groupName.compare(H5_CELL_FIELD_DATA_GROUP_NAME) == 0)
       {
-        dc->addCellFeatureData(dPtr->GetName(), dPtr);
+        dc->addCellFeatureData(dPtr->getName(), dPtr);
       }
       else if(groupName.compare(H5_CELL_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        dc->addCellEnsembleData(dPtr->GetName(), dPtr);
+        dc->addCellEnsembleData(dPtr->getName(), dPtr);
       }
     }
 

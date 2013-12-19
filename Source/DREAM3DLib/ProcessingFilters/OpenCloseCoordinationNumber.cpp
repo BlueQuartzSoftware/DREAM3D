@@ -269,7 +269,7 @@ void OpenCloseCoordinationNumber::execute()
             {
               QString name = *iter;
               IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-              p->CopyTuple(neighbor, point);
+              p->copyTuple(neighbor, point);
             }
           }
           for (int l = 0; l < 6; l++)

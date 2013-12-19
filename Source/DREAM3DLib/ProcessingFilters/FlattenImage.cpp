@@ -174,7 +174,7 @@ void FlattenImage::dataCheck()
     UInt8ArrayType* imageDataPtr = UInt8ArrayType::SafePointerDownCast(iDataArray.get());
     if (NULL != imageDataPtr)
     {
-      numImageComp = imageDataPtr->GetNumberOfComponents();
+      numImageComp = imageDataPtr->getNumberOfComponents();
     }
   }
 
@@ -230,7 +230,7 @@ void FlattenImage::execute()
   bool doParallel = true;
 #endif
 
-  size_t comp = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_ImageDataArrayName)->GetNumberOfComponents();
+  size_t comp = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_ImageDataArrayName)->getNumberOfComponents();
 
   //  qDebug() << "FlattenImage: " << m_ConversionFactor << "\n";
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

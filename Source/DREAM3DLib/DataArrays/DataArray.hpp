@@ -111,7 +111,7 @@ class DataArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -183,7 +183,7 @@ class DataArray : public IDataArray
         delete d;
         return DataArray<T>::NullPointer();
       }
-      d->SetName(name);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
@@ -206,7 +206,7 @@ class DataArray : public IDataArray
         delete d;
         return DataArray<T>::NullPointer();
       }
-      d->SetName(name);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
@@ -228,7 +228,7 @@ class DataArray : public IDataArray
         delete d;
         return DataArray<T>::NullPointer();
       }
-      d->SetName(name);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
@@ -250,7 +250,7 @@ class DataArray : public IDataArray
         delete d;
         return DataArray<T>::NullPointer();
       }
-      d->SetName(name);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
@@ -344,7 +344,7 @@ class DataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    virtual void SetName(const QString& name)
+    virtual void setName(const QString& name)
     {
       m_Name = name;
     }
@@ -353,7 +353,7 @@ class DataArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    virtual QString GetName()
+    virtual QString getName()
     {
       return m_Name;
     }
@@ -460,7 +460,7 @@ class DataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t>& idxs)
+    virtual int eraseTuples(QVector<size_t>& idxs)
     {
 
       int err = 0;
@@ -573,7 +573,7 @@ class DataArray : public IDataArray
      * @param newPos
      * @return
      */
-    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    virtual int copyTuple(size_t currentPos, size_t newPos)
     {
       size_t max =  ((this->MaxId + 1) / this->NumberOfComponents);
       if (currentPos >= max
@@ -593,7 +593,7 @@ class DataArray : public IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t GetTypeSize()
+    virtual size_t getTypeSize()
     {
       return sizeof(T);
     }
@@ -608,12 +608,12 @@ class DataArray : public IDataArray
       return (this->MaxId + 1) / this->NumberOfComponents;
     }
 
-    virtual size_t GetSize()
+    virtual size_t getSize()
     {
       return Size;
     }
 
-    virtual int GetNumberOfComponents()
+    virtual int getNumberOfComponents()
     {
       return this->NumberOfComponents;
     }
@@ -629,14 +629,14 @@ class DataArray : public IDataArray
 //      Rank = rank;
 //    }
 
-    virtual int GetRank()
+    virtual int getRank()
     {
       return this->Rank;
     }
 
     // Description:
     // Set/Get the dimensions of the array.
-    virtual void SetDims(QVector<int> dims)
+    virtual void setDims(QVector<int> dims)
     {
       BOOST_ASSERT(dims.size() > 0);
       this->Dims = dims;
@@ -648,7 +648,7 @@ class DataArray : public IDataArray
       Rank = Dims.size();
     }
 
-    virtual QVector<int> GetDims()
+    virtual QVector<int> getDims()
     {
       return this->Dims;
     }
@@ -660,7 +660,7 @@ class DataArray : public IDataArray
      * @param i The index to have the returned pointer pointing to.
      * @return Void Pointer. Possibly NULL.
      */
-    virtual void* GetVoidPointer(size_t i)
+    virtual void* getVoidPointer(size_t i)
     {
       if (i >= Size) { return NULL;}
 
@@ -738,7 +738,7 @@ class DataArray : public IDataArray
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
      */
-    void InitializeTuple(size_t i, double p)
+    void initializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i * NumberOfComponents < Size);}
@@ -876,7 +876,7 @@ class DataArray : public IDataArray
     {
       if (Array == NULL) { return -85648; }
       #if 0
-  return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), GetRank(), GetDims(), getClassVersion(), Array, getFullNameOfClass());
+  return H5DataArrayWriter<T>::writeArray(parentId, getName(), getNumberOfTuples(), getNumberOfComponents(), getRank(), getDims(), getClassVersion(), Array, getFullNameOfClass());
       #else
         return H5DataArrayWriter::writeDataArray<Self>(parentId, this);
       #endif
@@ -895,15 +895,15 @@ class DataArray : public IDataArray
       QString dimStr;
       int precision = 0;
       QString xdmfTypeName;
-      GetXdmfTypeAndSize(xdmfTypeName, precision);
+      getXdmfTypeAndSize(xdmfTypeName, precision);
       if (0 == precision)
       {
-        out << "<!-- " << GetName() << " has unknown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
+        out << "<!-- " << getName() << " has unknown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
         return -100;
       }
 
-      int numComp = GetNumberOfComponents();
-      out << "    <Attribute Name=\"" << GetName() << label  << "\" ";
+      int numComp = getNumberOfComponents();
+      out << "    <Attribute Name=\"" << getName() << label  << "\" ";
       if (numComp == 1)
       {
         out << "AttributeType=\"Scalar\" ";
@@ -920,7 +920,7 @@ class DataArray : public IDataArray
       out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >\n" ;
 
 
-      out << "        " << hdfFileName << groupPath << "/" << GetName() << "\n";
+      out << "        " << hdfFileName << groupPath << "/" << getName() << "\n";
       out << "      </DataItem>" << "\n";
       out << "    </Attribute>" << "\n";
       return 1;
@@ -936,15 +936,15 @@ class DataArray : public IDataArray
       int err = 0;
 
       this->resize(0);
-      IDataArray::Pointer p = H5DataArrayReader::readIDataArray(parentId, GetName());
+      IDataArray::Pointer p = H5DataArrayReader::readIDataArray(parentId, getName());
       if (p.get() == NULL)
       {
         return -1;
       }
-      this->NumberOfComponents = p->GetNumberOfComponents();
-      this->Size = p->GetSize();
+      this->NumberOfComponents = p->getNumberOfComponents();
+      this->Size = p->getSize();
       this->MaxId = (Size == 0) ? 0 : Size - 1;
-      this->Array = reinterpret_cast<T*>(p->GetVoidPointer(0));
+      this->Array = reinterpret_cast<T*>(p->getVoidPointer(0));
       p->releaseOwnership();
 
       return err;
@@ -957,7 +957,7 @@ class DataArray : public IDataArray
     {
       char* ptr = (char*)(Array);
       char t[8];
-      size_t size = GetTypeSize();
+      size_t size = getTypeSize();
       for (uint64_t var = 0; var < Size; ++var)
       {
         if (sizeof(T) == 2)

@@ -107,7 +107,7 @@ FloatArrayType::Pointer TransformationStatsData::generateBinNumbers()
   }
   // Copy this into the DataArray<float>
   m_BinNumbers = FloatArrayType::CreateArray(bins.size(), DREAM3D::StringConstants::BinNumber );
-  ::memcpy(m_BinNumbers->GetVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
+  ::memcpy(m_BinNumbers->getVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
   return m_BinNumbers;
 }
 

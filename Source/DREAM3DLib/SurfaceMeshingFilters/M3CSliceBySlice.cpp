@@ -429,8 +429,8 @@ void M3CSliceBySlice::dataCheck()
 
   sm->setVertices(vertices);
   sm->setFaces(triangles);
-  faceAttrMat->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
-  vertexAttrMat->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
+  faceAttrMat->addAttributeArray(faceLabelPtr->getName(), faceLabelPtr);
+  vertexAttrMat->addAttributeArray(nodeTypePtr->getName(), nodeTypePtr);
 }
 
 // -----------------------------------------------------------------------------

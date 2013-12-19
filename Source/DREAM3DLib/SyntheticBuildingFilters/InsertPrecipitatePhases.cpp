@@ -523,9 +523,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   {
     phase = precipitatephases[i];
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
-    clusteringdist[i].resize(pp->getBinNumbers()->GetSize());
+    clusteringdist[i].resize(pp->getBinNumbers()->getSize());
 //    int binNumbers = pp->getBinNumbers();
-    simclusteringdist[i].resize(pp->getBinNumbers()->GetSize());
+    simclusteringdist[i].resize(pp->getBinNumbers()->getSize());
     VectorOfFloatArray Neighdist = pp->getFeatureSize_Clustering();
     float normalizer = 0;
     for (size_t j = 0; j < clusteringdist[i].size(); j++)
@@ -851,7 +851,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int seed, Precip* 
   float totaldensity = 0;
   int bin = 0;
   FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
-  while (random > totaldensity && bin < static_cast<int>(axisodf->GetSize()))
+  while (random > totaldensity && bin < static_cast<int>(axisodf->getSize()))
   {
     totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;
@@ -1933,13 +1933,13 @@ void InsertPrecipitatePhases::write_goal_attributes()
     IDataArray::Pointer p = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
-      if (p->GetNumberOfComponents() == 1)
+      if (p->getNumberOfComponents() == 1)
       {
         dStream << space << (*iter);
       }
       else // There are more than a single component so we need to add multiple header values
       {
-        for(int k = 0; k < p->GetNumberOfComponents(); ++k)
+        for(int k = 0; k < p->getNumberOfComponents(); ++k)
         {
           dStream << space << (*iter) << "_" << k;
         }

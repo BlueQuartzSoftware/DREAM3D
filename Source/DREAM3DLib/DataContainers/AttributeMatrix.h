@@ -234,24 +234,24 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         return false;
       }
       // Make sure the sizes are equal to what is being asked for
-      if (getNumTuples() * numComp != iDataArray->GetSize())
+      if (getNumTuples() * numComp != iDataArray->getSize())
       {
         if (NULL != filter)
         {
           QString ss = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Compoenets = %3. The currently available array "
-                                   " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples() * numComp)).arg(iDataArray->GetSize());
+                                   " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples() * numComp)).arg(iDataArray->getSize());
           filter->setErrorCondition(-501);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
       // Make sure the number of components match
-      if (numComp != iDataArray->GetNumberOfComponents())
+      if (numComp != iDataArray->getNumberOfComponents())
       {
         if (NULL != filter)
         {
           QString ss = QObject::tr("Filter '%1' requires an array where the number of components is %2 but the currently available array"
-                                   " that was supplied has %3.").arg(filter->getHumanLabel()).arg(numComp).arg(iDataArray->GetNumberOfComponents());
+                                   " that was supplied has %3.").arg(filter->getHumanLabel()).arg(numComp).arg(iDataArray->getNumberOfComponents());
           filter->setErrorCondition(-502);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
@@ -297,7 +297,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @brief Adds/overwrites the data for a named array
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
-	* @return error code if the addition did not work
+  * @return error code if the addition did not work
     */
     virtual int addAttributeArray(const QString& name, IDataArray::Pointer data);
 
@@ -308,11 +308,11 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      */
     virtual IDataArray::Pointer getAttributeArray(const QString& name);
 
-	/**
-	* @brief returns a IDataArray based object that is stored in the attribute matrix by a
-	* given name.
-	* @param name The name of the array
-	*/
+  /**
+  * @brief returns a IDataArray based object that is stored in the attribute matrix by a
+  * given name.
+  * @param name The name of the array
+  */
     template<class ArrayType>
     typename ArrayType::Pointer getArray(const QString& name)
     {

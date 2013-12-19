@@ -211,7 +211,7 @@ void SingleThresholdFeatures::execute()
 
   filter.execute(inputData.get(), goodFeaturesPtr.get());
 
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(goodFeaturesPtr->GetName(), goodFeaturesPtr);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(goodFeaturesPtr->getName(), goodFeaturesPtr);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

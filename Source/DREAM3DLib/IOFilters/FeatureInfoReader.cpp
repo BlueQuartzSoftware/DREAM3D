@@ -252,7 +252,7 @@ int FeatureInfoReader::readFile()
   for(int i = 0; i < numfeatures; i++)
   {
     inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
-    if(gnum >= featureActive->GetSize())
+    if(gnum >= featureActive->getSize())
     {
       featureActive->resize(gnum + 1);
       featurePhaseData->resize(gnum + 1);

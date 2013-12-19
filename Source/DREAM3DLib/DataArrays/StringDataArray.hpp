@@ -69,7 +69,7 @@ class StringDataArray : public IDataArray
         return NullPointer();
       }
       StringDataArray* d = new StringDataArray(numElements, true);
-      d->SetName(name);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
@@ -113,7 +113,7 @@ class StringDataArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -129,7 +129,7 @@ class StringDataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const QString& name)
+    void setName(const QString& name)
     {
       m_Name = name;
     }
@@ -138,7 +138,7 @@ class StringDataArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    QString GetName()
+    QString getName()
     {
       return m_Name;
     }
@@ -166,7 +166,7 @@ class StringDataArray : public IDataArray
     * @param i The index to have the returned pointer pointing to.
     * @return Void Pointer. Possibly NULL.
     */
-    virtual void* GetVoidPointer ( size_t i)
+    virtual void* getVoidPointer ( size_t i)
     {
       return static_cast<void*>( &(m_Array[i]));
     }
@@ -184,12 +184,12 @@ class StringDataArray : public IDataArray
      * @brief Return the number of elements in the array
      * @return
      */
-    virtual size_t GetSize()
+    virtual size_t getSize()
     {
       return m_Array.size();
     }
 
-    virtual int GetNumberOfComponents()
+    virtual int getNumberOfComponents()
     {
       return 1;
     }
@@ -203,26 +203,26 @@ class StringDataArray : public IDataArray
     }
 
     /**
-     * @brief GetRank
+     * @brief getRank
      * @return
      */
-    int GetRank()
+    int getRank()
     {
       return 1;
     }
 
     // Description:
     // Set/Get the dimensions of the array.
-    void SetDims(QVector<int> dims)
+    void setDims(QVector<int> dims)
     {
 
     }
 
     /**
-     * @brief GetDims
+     * @brief getDims
      * @return
      */
-    QVector<int> GetDims()
+    QVector<int> getDims()
     {
       QVector<int> dims(1, 1);
       return dims;
@@ -235,7 +235,7 @@ class StringDataArray : public IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t GetTypeSize()
+    virtual size_t getTypeSize()
     {
       return sizeof(QString);
     }
@@ -248,7 +248,7 @@ class StringDataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t>& idxs)
+    virtual int eraseTuples(QVector<size_t>& idxs)
     {
 
       int err = 0;
@@ -297,7 +297,7 @@ class StringDataArray : public IDataArray
      * @param newPos The destination index to place the copied data
      * @return
      */
-    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    virtual int copyTuple(size_t currentPos, size_t newPos)
     {
       QString s = m_Array[currentPos];
       m_Array[newPos] = s;
@@ -310,7 +310,7 @@ class StringDataArray : public IDataArray
      * @param pos The index of the Tuple
      * @param value pointer to value
      */
-    virtual void InitializeTuple(size_t pos, double value)
+    virtual void initializeTuple(size_t pos, double value)
     {
 
     }
@@ -399,7 +399,7 @@ class StringDataArray : public IDataArray
       }
 
       QVector<int> dim(1, 1);
-      return H5DataArrayWriter::writeArray<int8_t>(parentId, GetName(), totalSize, 1, 1, dim, getClassVersion(), strPtr->getPointer(0), getFullNameOfClass());
+      return H5DataArrayWriter::writeArray<int8_t>(parentId, getName(), totalSize, 1, 1, dim, getClassVersion(), strPtr->getPointer(0), getFullNameOfClass());
     }
 
     /**
@@ -426,7 +426,7 @@ class StringDataArray : public IDataArray
     {
       int err = 0;
       this->resize(0);
-      IDataArray::Pointer p = H5DataArrayReader::readStringDataArray(parentId, GetName());
+      IDataArray::Pointer p = H5DataArrayReader::readStringDataArray(parentId, getName());
       if (p.get() == NULL)
       {
         return -1;

@@ -207,7 +207,7 @@ void  AddBadData::add_noise()
         {
           QString name = *iter;
           IDataArray::Pointer p = m->getAttributeMatrix(m_CellAttributeMatrixName)->getAttributeArray(*iter);
-          p->InitializeTuple(i, 0);
+          p->initializeTuple(i, 0);
         }
       }
     }
@@ -220,7 +220,7 @@ void  AddBadData::add_noise()
         {
           QString name = *iter;
           IDataArray::Pointer p = m->getAttributeMatrix(m_CellAttributeMatrixName)->getAttributeArray(*iter);
-          p->InitializeTuple(i, 0);
+          p->initializeTuple(i, 0);
         }
       }
     }

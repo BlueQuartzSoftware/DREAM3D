@@ -482,24 +482,24 @@ void RotateSampleRefFrame::execute()
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name.
-    QVector<int> dims(1, p->GetNumberOfComponents());
-    IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), dims, p->GetName());
+    QVector<int> dims(1, p->getNumberOfComponents());
+    IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), dims, p->getName());
     void* source = NULL;
     void* destination = NULL;
     int64_t newIndicies_I = 0;
-    int nComp = data->GetNumberOfComponents();
+    int nComp = data->getNumberOfComponents();
     for (size_t i = 0; i < static_cast<size_t>(newNumCellTuples); i++)
     {
       newIndicies_I = newindicies[i];
       if(newIndicies_I >= 0)
       {
-        source = p->GetVoidPointer((nComp * newIndicies_I));
-        destination = data->GetVoidPointer((data->GetNumberOfComponents() * i));
-        ::memcpy(destination, source, p->GetTypeSize() * data->GetNumberOfComponents());
+        source = p->getVoidPointer((nComp * newIndicies_I));
+        destination = data->getVoidPointer((data->getNumberOfComponents() * i));
+        ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
       }
       else
       {
-        data->InitializeTuple(i, 0);
+        data->initializeTuple(i, 0);
       }
     }
     m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(*iter, data);

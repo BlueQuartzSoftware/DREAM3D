@@ -82,7 +82,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
 #if WRITE_LAMBERT_SQUARE_COORD_VTK
   QString ss;
   QString filename("/tmp/");
-  filename.append("ModifiedLambert_Square_Coords_").append(coords->GetName()).append(".vtk");
+  filename.append("ModifiedLambert_Square_Coords_").append(coords->getName()).append(".vtk");
   FILE* f = NULL;
   f = fopen(filename.toLatin1().data(), "wb");
   if(NULL == f)

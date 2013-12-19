@@ -138,7 +138,7 @@ void FindSlipTransmissionMetrics::dataCheck()
   }
 
   NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();
-  f1Ptr->SetName(DREAM3D::FeatureData::F1);
+  f1Ptr->setName(DREAM3D::FeatureData::F1);
   f1Ptr->resize(cellFeatureAttrMat->getNumTuples());
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::F1, f1Ptr);
   if (f1Ptr.get() == NULL)
@@ -149,7 +149,7 @@ void FindSlipTransmissionMetrics::dataCheck()
   }
 
   NeighborList<float>::Pointer f1sptPtr = NeighborList<float>::New();
-  f1sptPtr->SetName(DREAM3D::FeatureData::F1spt);
+  f1sptPtr->setName(DREAM3D::FeatureData::F1spt);
   f1sptPtr->resize(cellFeatureAttrMat->getNumTuples());
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::F1spt, f1sptPtr);
   if (f1sptPtr.get() == NULL)
@@ -160,7 +160,7 @@ void FindSlipTransmissionMetrics::dataCheck()
   }
 
   NeighborList<float>::Pointer f7Ptr = NeighborList<float>::New();
-  f7Ptr->SetName(DREAM3D::FeatureData::F7);
+  f7Ptr->setName(DREAM3D::FeatureData::F7);
   f7Ptr->resize(cellFeatureAttrMat->getNumTuples());
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::F7, f7Ptr);
   if (f7Ptr.get() == NULL)
@@ -171,7 +171,7 @@ void FindSlipTransmissionMetrics::dataCheck()
   }
 
   NeighborList<float>::Pointer mPrimePtr = NeighborList<float>::New();
-  mPrimePtr->SetName(DREAM3D::FeatureData::mPrime);
+  mPrimePtr->setName(DREAM3D::FeatureData::mPrime);
   mPrimePtr->resize(cellFeatureAttrMat->getNumTuples());
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::mPrime, mPrimePtr);
   if (mPrimePtr.get() == NULL)

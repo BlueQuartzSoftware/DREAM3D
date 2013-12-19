@@ -106,7 +106,7 @@ class GbcdDataArray : public IDataArray
         delete d;
         return GbcdDataArray<T>::NullPointer();
       }
-      d->SetName(name);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
@@ -128,7 +128,7 @@ class GbcdDataArray : public IDataArray
         delete d;
         return GbcdDataArray<T>::NullPointer();
       }
-      d->SetName(name);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
@@ -205,7 +205,7 @@ class GbcdDataArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       //   T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -263,7 +263,7 @@ class GbcdDataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    virtual void SetName(const QString& name)
+    virtual void setName(const QString& name)
     {
       m_Name = name;
     }
@@ -272,7 +272,7 @@ class GbcdDataArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    virtual QString GetName()
+    virtual QString getName()
     {
       return m_Name;
     }
@@ -296,10 +296,10 @@ class GbcdDataArray : public IDataArray
     }
 
     /**
-     * @brief GetSize
+     * @brief getSize
      * @return
      */
-    virtual size_t GetSize()
+    virtual size_t getSize()
     {
       return Size;
     }
@@ -385,7 +385,7 @@ class GbcdDataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t>& idxs)
+    virtual int eraseTuples(QVector<size_t>& idxs)
     {
       int err = -1;
       return err;
@@ -397,7 +397,7 @@ class GbcdDataArray : public IDataArray
      * @param newPos
      * @return
      */
-    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    virtual int copyTuple(size_t currentPos, size_t newPos)
     {
       int err = -1;
       return err;
@@ -410,7 +410,7 @@ class GbcdDataArray : public IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t GetTypeSize()
+    virtual size_t getTypeSize()
     {
       return sizeof(T);
     }
@@ -425,7 +425,7 @@ class GbcdDataArray : public IDataArray
       return 1;
     }
 
-    virtual int GetNumberOfComponents()
+    virtual int getNumberOfComponents()
     {
       return this->Size;
     }
@@ -439,26 +439,26 @@ class GbcdDataArray : public IDataArray
     }
 
     /**
-     * @brief GetRank
+     * @brief getRank
      * @return
      */
-    int GetRank()
+    int getRank()
     {
       return 1;
     }
 
     // Description:
     // Set/Get the dimensions of the array.
-    void SetDims(QVector<int> dims)
+    void setDims(QVector<int> dims)
     {
 
     }
 
     /**
-     * @brief GetDims
+     * @brief getDims
      * @return
      */
-    QVector<int> GetDims()
+    QVector<int> getDims()
     {
       QVector<int> dims(1, 1);
       return dims;
@@ -471,7 +471,7 @@ class GbcdDataArray : public IDataArray
      * @param i The index to have the returned pointer pointing to.
      * @return Void Pointer. Possibly NULL.
      */
-    virtual void* GetVoidPointer(size_t i)
+    virtual void* getVoidPointer(size_t i)
     {
       if (i >= Size) { return NULL;}
 
@@ -499,7 +499,7 @@ class GbcdDataArray : public IDataArray
     /**
      * @brief This function makes no sense for this class and will ASSERT if used
      */
-    void InitializeTuple(size_t i, double p)
+    void initializeTuple(size_t i, double p)
     {
       BOOST_ASSERT(false);
 //#ifndef NDEBUG
@@ -632,7 +632,7 @@ class GbcdDataArray : public IDataArray
     virtual int writeH5Data(hid_t parentId)
     {
       if (Array == NULL) { return -85648; }
-      return H5GBCDArrayWriter<T>::writeArray(parentId, GetName(), m_Dims, Array, getFullNameOfClass());
+      return H5GBCDArrayWriter<T>::writeArray(parentId, getName(), m_Dims, Array, getFullNameOfClass());
     }
 
     /**
@@ -658,7 +658,7 @@ class GbcdDataArray : public IDataArray
       int err = 0;
 
       this->resize(0);
-      IDataArray::Pointer p = H5GbcdArrayReader::readIDataArray(parentId, GetName());
+      IDataArray::Pointer p = H5GbcdArrayReader::readIDataArray(parentId, getName());
       if (p.get() == NULL)
       {
         return -1;
@@ -669,9 +669,9 @@ class GbcdDataArray : public IDataArray
         return -1;
       }
       ptr->GetGbcdDimension(this->m_Dims);
-      this->Size = p->GetSize();
+      this->Size = p->getSize();
       this->MaxId = (Size == 0) ? 0 : Size - 1;
-      this->Array = reinterpret_cast<T*>(p->GetVoidPointer(0));
+      this->Array = reinterpret_cast<T*>(p->getVoidPointer(0));
       p->releaseOwnership();
 
       return err;

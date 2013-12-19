@@ -70,7 +70,7 @@
 
 #define TEST_DATA_CONTAINER(Type, DCType)\
   {  IDataArray::Pointer t_##Type = Type::CreateArray(5);\
-    t_##Type->SetName( #Type );\
+    t_##Type->setName( #Type );\
     m->add##DCType(#Type, t_##Type);\
     IDataArray::Pointer t = m->get##DCType(#Type);\
     DREAM3D_TEST_POINTER(ptr, !=, NULL);\
@@ -169,7 +169,7 @@ void TestDataContainerWriter()
 
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
-  neighborlistPtr->SetName(DREAM3D::FeatureData::NeighborList);
+  neighborlistPtr->setName(DREAM3D::FeatureData::NeighborList);
   neighborlistPtr->setNumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::NeighborList, neighborlistPtr);
 

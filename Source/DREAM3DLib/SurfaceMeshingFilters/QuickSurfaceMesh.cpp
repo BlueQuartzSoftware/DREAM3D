@@ -118,8 +118,8 @@ void QuickSurfaceMesh::dataCheck()
 
   sm->setVertices(vertices);
   sm->setFaces(triangles);
-  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->getName(), faceLabelPtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->getName(), nodeTypePtr);
 }
 
 
@@ -903,9 +903,9 @@ void QuickSurfaceMesh::execute()
   }
 
   sm->setFaces(triangles);
-  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->getName(), faceLabelPtr);
   sm->setVertices(vertices);
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->getName(), nodeTypePtr);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }

@@ -51,7 +51,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DSetgetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 
@@ -101,11 +101,11 @@ class NeighborList : public IDataArray
 
 
     /**
-     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * @brief getTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -135,15 +135,15 @@ class NeighborList : public IDataArray
      */
     virtual QString getTypeAsString() { return NeighborList<T>::ClassName();}
 
-    void SetName(const QString& name) { m_Name = name; }
-    QString GetName() { return m_Name; }
+    void setName(const QString& name) { m_Name = name; }
+    QString getName() { return m_Name; }
 
 
     void takeOwnership() {    }
     void releaseOwnership()  { }
 
 
-    void* GetVoidPointer(size_t i) { return NULL; }
+    void* getVoidPointer(size_t i) { return NULL; }
 
     /**
      * @brief Removes Tuples from the Array. If the size of the vector is Zero nothing is done. If the size of the
@@ -153,7 +153,7 @@ class NeighborList : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t>& idxs)
+    virtual int eraseTuples(QVector<size_t>& idxs)
     {
       int err = 0;
       // If nothing is to be erased just return
@@ -196,7 +196,7 @@ class NeighborList : public IDataArray
       return err;
     }
 
-    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    virtual int copyTuple(size_t currentPos, size_t newPos)
     {
       _data[newPos] = _data[currentPos];
       return 0;
@@ -207,7 +207,7 @@ class NeighborList : public IDataArray
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
      */
-    void InitializeTuple(size_t i, double p)
+    void initializeTuple(size_t i, double p)
     {
       BOOST_ASSERT(false);
     }
@@ -217,11 +217,11 @@ class NeighborList : public IDataArray
     size_t getNumberOfTuples() {   return _data.size(); }
 
     /**
-     * @brief GetSize Returns the total number of data items that are being stored. This is the sum of all the sizes
+     * @brief getSize Returns the total number of data items that are being stored. This is the sum of all the sizes
      * of the internal storage arrays for this class.
      * @return
      */
-    size_t GetSize()
+    size_t getSize()
     {
       size_t total = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
@@ -232,24 +232,24 @@ class NeighborList : public IDataArray
     }
 
 
-    void SetNumberOfComponents(int nc) { }
+    void setNumberOfComponents(int nc) { }
 
 
-    int GetNumberOfComponents() { return 1; }
+    int getNumberOfComponents() { return 1; }
 
     void SetRank(int rnk) { }
 
-    int GetRank() { return 1; }
+    int getRank() { return 1; }
 
-    void SetDims(QVector<int> dims) { }
+    void setDims(QVector<int> dims) { }
 
-    QVector<int> GetDims()
+    QVector<int> getDims()
     {
       QVector<int> dims(1, 1);
       return dims;
     }
 
-    size_t GetTypeSize()  { return sizeof(SharedVectorType); }
+    size_t getTypeSize()  { return sizeof(SharedVectorType); }
 
 
     void initializeWithZeros() { _data.clear(); }
@@ -394,8 +394,8 @@ class NeighborList : public IDataArray
       {
         size_t nEle = _data[dIdx]->size();
         if (nEle == 0) { continue; }
-        T* start = &(_data[dIdx]->front()); // Get the pointer to the front of the array
-        //    T* end = start + nEle; // Get the pointer to the end of the array
+        T* start = &(_data[dIdx]->front()); // get the pointer to the front of the array
+        //    T* end = start + nEle; // get the pointer to the end of the array
         T* dst = &(flat.front()) + currentStart;
         ::memcpy(dst, start, nEle * sizeof(T));
 
@@ -407,24 +407,24 @@ class NeighborList : public IDataArray
       hsize_t dims[1] = { total };
       if (total > 0)
       {
-        err = QH5Lite::writePointerDataset(parentId, GetName(), rank, dims, &(flat.front()));
+        err = QH5Lite::writePointerDataset(parentId, getName(), rank, dims, &(flat.front()));
         if(err < 0)
         {
           return -605;
         }
-        err = QH5Lite::writeScalarAttribute(parentId, GetName(), DREAM3D::HDF5::NumComponents, 1);
+        err = QH5Lite::writeScalarAttribute(parentId, getName(), DREAM3D::HDF5::NumComponents, 1);
         if(err < 0)
         {
           return -606;
         }
 
-        err = QH5Lite::writeStringAttribute(parentId, GetName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
+        err = QH5Lite::writeStringAttribute(parentId, getName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
         if(err < 0)
         {
           return -607;
         }
 
-        err = QH5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);
+        err = QH5Lite::writeStringAttribute(parentId, getName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);
         if(err < 0)
         {
           return -608;
@@ -446,12 +446,12 @@ class NeighborList : public IDataArray
     {
       int precision = 0;
       QString xdmfTypeName;
-      GetXdmfTypeAndSize(xdmfTypeName, precision);
+      getXdmfTypeAndSize(xdmfTypeName, precision);
 
-      out << "    <Attribute Name=\"" << GetName() << label << "\" AttributeType=\"Scalar\" Center=\"Node\">";
+      out << "    <Attribute Name=\"" << getName() << label << "\" AttributeType=\"Scalar\" Center=\"Node\">";
       out << "      <DataItem Format=\"HDF\" Dimensions=\"" << volDims[0] << " " << volDims[1] << " " << volDims[2] << "\" ";
       out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >";
-      out << "        " << hdfFileName.toLatin1().data() << groupPath.toLatin1().data() << "/" << GetName();
+      out << "        " << hdfFileName.toLatin1().data() << groupPath.toLatin1().data() << "/" << getName();
       out << "      </DataItem>";
       out << "    </Attribute>";
       return 1;
@@ -486,7 +486,7 @@ class NeighborList : public IDataArray
       }
 
       std::vector<T> flat;
-      err = QH5Lite::readVectorDataset(parentId, GetName(), flat);
+      err = QH5Lite::readVectorDataset(parentId, getName(), flat);
       if (err < 0)
       {
         return err;
@@ -502,8 +502,8 @@ class NeighborList : public IDataArray
         {
           _data[dIdx] = SharedVectorType(new VectorType(numNeighbors[dIdx]));
 
-          T* dst = &(_data[dIdx]->front()); // Get the pointer to the front of the array
-          //    T* end = start + nEle; // Get the pointer to the end of the array
+          T* dst = &(_data[dIdx]->front()); // get the pointer to the front of the array
+          //    T* end = start + nEle; // get the pointer to the end of the array
           T* start = &(flat.front()) + currentStart;
           ::memcpy(dst, start, nEle * sizeof(T));
           currentStart += nEle;

@@ -365,7 +365,7 @@ void CropVolume::execute()
         {
           QString name = *iter;
           IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-          p->CopyTuple(index_old, index);
+          p->copyTuple(index_old, index);
         }
       }
     }

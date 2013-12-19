@@ -228,7 +228,7 @@ void AlignSections::execute()
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-            p->CopyTuple(currentPosition, newPosition);
+            p->copyTuple(currentPosition, newPosition);
           }
         }
         if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
@@ -238,7 +238,7 @@ void AlignSections::execute()
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-            p->InitializeTuple(newPosition, 0.0);
+            p->initializeTuple(newPosition, 0.0);
           }
         }
       }

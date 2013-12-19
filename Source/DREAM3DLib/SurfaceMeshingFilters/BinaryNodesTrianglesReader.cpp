@@ -306,8 +306,8 @@ int BinaryNodesTrianglesReader::read()
 
   sm->setVertices(m_NodeListPtr);
   sm->setFaces(m_TriangleListPtr);
-  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->getName(), faceLabelPtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->getName(), nodeTypePtr);
 
   // The ScopedFileMonitor classes will take care of closing the files
 

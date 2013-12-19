@@ -206,9 +206,9 @@ void RenumberFeatures::execute()
       }
       else
       {
-        p->EraseTuples(RemoveList);
+        p->eraseTuples(RemoveList);
       }
-      //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;
+      //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->getNumberOfComponents()  ;
     }
     totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
     dataCheck();

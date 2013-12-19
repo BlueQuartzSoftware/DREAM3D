@@ -216,7 +216,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
     surfaceMeshUniqueEdges[index * 2 + 1] = edge.v1;
     ++index;
   }
-  sm->getAttributeMatrix(getEdgeAttributeMatrixName())->addAttributeArray(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
+  sm->getAttributeMatrix(getEdgeAttributeMatrixName())->addAttributeArray(uniqueEdgesArrayPtr->getName(), uniqueEdgesArrayPtr);
 }
 
 
@@ -369,8 +369,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   }
 
   // Finally push both the arrays into the Data Container for the pipeline
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(edgeTriangleArray->GetName(), edgeTriangleArray);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(uniqueEdgesArrayPtr->getName(), uniqueEdgesArrayPtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(edgeTriangleArray->getName(), edgeTriangleArray);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
   return;

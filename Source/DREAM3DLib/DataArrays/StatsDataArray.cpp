@@ -61,14 +61,14 @@ StatsDataArray::~StatsDataArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::SetName(const QString& name)
+void StatsDataArray::setName(const QString& name)
 {
   m_Name = name;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString StatsDataArray::GetName()
+QString StatsDataArray::getName()
 {
   return m_Name;
 }
@@ -90,7 +90,7 @@ void StatsDataArray::releaseOwnership()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* StatsDataArray::GetVoidPointer(size_t i)
+void* StatsDataArray::getVoidPointer(size_t i)
 {
 #ifndef NDEBUG
   if(m_StatsDataArray.size() > 0)
@@ -116,7 +116,7 @@ size_t StatsDataArray::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t StatsDataArray::GetSize()
+size_t StatsDataArray::getSize()
 {
   return m_StatsDataArray.size();
 }
@@ -124,7 +124,7 @@ size_t StatsDataArray::GetSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataArray::GetNumberOfComponents()
+int StatsDataArray::getNumberOfComponents()
 {
   return 1;
 }
@@ -140,7 +140,7 @@ void StatsDataArray::SetRank(int rnk)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataArray::GetRank()
+int StatsDataArray::getRank()
 {
   return 1;
 }
@@ -148,7 +148,7 @@ int StatsDataArray::GetRank()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::SetDims(QVector<int> dims)
+void StatsDataArray::setDims(QVector<int> dims)
 {
 
 }
@@ -156,7 +156,7 @@ void StatsDataArray::SetDims(QVector<int> dims)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int> StatsDataArray::GetDims()
+QVector<int> StatsDataArray::getDims()
 {
   QVector<int> dims(1, 1);
   return dims;
@@ -165,7 +165,7 @@ QVector<int> StatsDataArray::GetDims()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t StatsDataArray::GetTypeSize()
+size_t StatsDataArray::getTypeSize()
 {
   return sizeof(StatsData);
 }
@@ -173,7 +173,7 @@ size_t StatsDataArray::GetTypeSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataArray::EraseTuples(QVector<size_t>& idxs)
+int StatsDataArray::eraseTuples(QVector<size_t>& idxs)
 {
   int err = 0;
 
@@ -220,7 +220,7 @@ int StatsDataArray::EraseTuples(QVector<size_t>& idxs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataArray::CopyTuple(size_t currentPos, size_t newPos)
+int StatsDataArray::copyTuple(size_t currentPos, size_t newPos)
 {
   m_StatsDataArray[newPos] = m_StatsDataArray[currentPos];
   return 0;
@@ -229,7 +229,7 @@ int StatsDataArray::CopyTuple(size_t currentPos, size_t newPos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::InitializeTuple(size_t i, double p)
+void StatsDataArray::initializeTuple(size_t i, double p)
 {
   BOOST_ASSERT(false);
 }

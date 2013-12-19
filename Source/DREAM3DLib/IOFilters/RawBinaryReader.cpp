@@ -104,7 +104,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, in
   int err = 0;
   QFileInfo fi(filename);
   uint64_t fileSize = fi.size();
-  size_t allocatedBytes = p->GetSize() * sizeof(T);
+  size_t allocatedBytes = p->getSize() * sizeof(T);
   err = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, skipHeaderBytes);
 
   if (err < 0)
@@ -120,7 +120,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, in
   }
 
   ScopedFileMonitor monitor(f);
-  size_t numElements = p->getNumberOfTuples() * p->GetNumberOfComponents();
+  size_t numElements = p->getNumberOfTuples() * p->getNumberOfComponents();
   size_t numRead = 0;
 
   T* ptr = p->getPointer(0);
@@ -640,7 +640,7 @@ void RawBinaryReader::execute()
 
   if (NULL != array.get())
   {
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(array->GetName(), array);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(array->getName(), array);
   }
   else if(err == RBR_FILE_NOT_OPEN )
   {

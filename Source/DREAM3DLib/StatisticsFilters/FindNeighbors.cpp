@@ -129,7 +129,7 @@ void FindNeighbors::dataCheck()
   if(m_NeighborList == NULL)
   {
     NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
-    neighborlistPtr->SetName(m_NeighborListArrayName);
+    neighborlistPtr->setName(m_NeighborListArrayName);
     neighborlistPtr->resize(cellFeatureAttrMat->getNumTuples());
     neighborlistPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborListArrayName, neighborlistPtr);
@@ -159,7 +159,7 @@ void FindNeighbors::dataCheck()
   if(m_SharedSurfaceAreaList == NULL)
   {
     NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
-    sharedSurfaceAreaListPtr->SetName(m_SharedSurfaceAreaListArrayName);
+    sharedSurfaceAreaListPtr->setName(m_SharedSurfaceAreaListArrayName);
     sharedSurfaceAreaListPtr->resize(cellFeatureAttrMat->getNumTuples());
     sharedSurfaceAreaListPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);

@@ -334,13 +334,13 @@ void MatchCrystallography::initializeArrays(int ensem)
     return;
   }
 
-  simodf = FloatArrayType::CreateArray(actualodf->GetSize(), DREAM3D::StringConstants::ODF);
-  simmdf = FloatArrayType::CreateArray(actualmdf->GetSize(), DREAM3D::StringConstants::MisorientationBins);
-  for (size_t j = 0; j < simodf->GetSize(); j++)
+  simodf = FloatArrayType::CreateArray(actualodf->getSize(), DREAM3D::StringConstants::ODF);
+  simmdf = FloatArrayType::CreateArray(actualmdf->getSize(), DREAM3D::StringConstants::MisorientationBins);
+  for (size_t j = 0; j < simodf->getSize(); j++)
   {
     simodf->SetValue(j, 0.0);
   }
-  for (size_t j = 0; j < simmdf->GetSize(); j++)
+  for (size_t j = 0; j < simmdf->getSize(); j++)
   {
     simmdf->SetValue(j, 0.0);
   }

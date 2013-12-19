@@ -341,15 +341,15 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString& groupN
     {
       if(groupName.compare(H5_VERTEX_DATA_GROUP_NAME) == 0)
       {
-        dc->addVertexData(dPtr->GetName(), dPtr);
+        dc->addVertexData(dPtr->getName(), dPtr);
       }
       else if(groupName.compare(H5_VERTEX_FIELD_DATA_GROUP_NAME) == 0)
       {
-        dc->addVertexFeatureData(dPtr->GetName(), dPtr);
+        dc->addVertexFeatureData(dPtr->getName(), dPtr);
       }
       else if(groupName.compare(H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        dc->addVertexEnsembleData(dPtr->GetName(), dPtr);
+        dc->addVertexEnsembleData(dPtr->getName(), dPtr);
       }
     }
 

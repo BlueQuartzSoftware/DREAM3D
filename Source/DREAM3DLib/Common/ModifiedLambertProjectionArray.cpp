@@ -61,14 +61,14 @@ ModifiedLambertProjectionArray::~ModifiedLambertProjectionArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::SetName(const QString& name)
+void ModifiedLambertProjectionArray::setName(const QString& name)
 {
   m_Name = name;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ModifiedLambertProjectionArray::GetName()
+QString ModifiedLambertProjectionArray::getName()
 {
   return m_Name;
 }
@@ -90,7 +90,7 @@ void ModifiedLambertProjectionArray::releaseOwnership()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* ModifiedLambertProjectionArray::GetVoidPointer(size_t i)
+void* ModifiedLambertProjectionArray::getVoidPointer(size_t i)
 {
 #ifndef NDEBUG
   if(m_ModifiedLambertProjectionArray.size() > 0)
@@ -116,7 +116,7 @@ size_t ModifiedLambertProjectionArray::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t ModifiedLambertProjectionArray::GetSize()
+size_t ModifiedLambertProjectionArray::getSize()
 {
   return m_ModifiedLambertProjectionArray.size();
 }
@@ -135,7 +135,7 @@ void ModifiedLambertProjectionArray::SetNumberOfComponents(int nc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::GetNumberOfComponents()
+int ModifiedLambertProjectionArray::getNumberOfComponents()
 {
   return 1;
 }
@@ -151,7 +151,7 @@ void ModifiedLambertProjectionArray::SetRank(int rnk)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::GetRank()
+int ModifiedLambertProjectionArray::getRank()
 {
   return 1;
 }
@@ -159,7 +159,7 @@ int ModifiedLambertProjectionArray::GetRank()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::SetDims(QVector<int> dims)
+void ModifiedLambertProjectionArray::setDims(QVector<int> dims)
 {
 
 }
@@ -167,7 +167,7 @@ void ModifiedLambertProjectionArray::SetDims(QVector<int> dims)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int> ModifiedLambertProjectionArray::GetDims()
+QVector<int> ModifiedLambertProjectionArray::getDims()
 {
   QVector<int> dims(1, 1);
   return dims;
@@ -176,7 +176,7 @@ QVector<int> ModifiedLambertProjectionArray::GetDims()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t ModifiedLambertProjectionArray::GetTypeSize()
+size_t ModifiedLambertProjectionArray::getTypeSize()
 {
   return sizeof(ModifiedLambertProjection);
 }
@@ -184,7 +184,7 @@ size_t ModifiedLambertProjectionArray::GetTypeSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::EraseTuples(QVector<size_t>& idxs)
+int ModifiedLambertProjectionArray::eraseTuples(QVector<size_t>& idxs)
 {
   int err = 0;
 
@@ -231,7 +231,7 @@ int ModifiedLambertProjectionArray::EraseTuples(QVector<size_t>& idxs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::CopyTuple(size_t currentPos, size_t newPos)
+int ModifiedLambertProjectionArray::copyTuple(size_t currentPos, size_t newPos)
 {
   m_ModifiedLambertProjectionArray[newPos] = m_ModifiedLambertProjectionArray[currentPos];
   return 0;
@@ -240,7 +240,7 @@ int ModifiedLambertProjectionArray::CopyTuple(size_t currentPos, size_t newPos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::InitializeTuple(size_t i, double p)
+void ModifiedLambertProjectionArray::initializeTuple(size_t i, double p)
 {
   BOOST_ASSERT(false);
 }

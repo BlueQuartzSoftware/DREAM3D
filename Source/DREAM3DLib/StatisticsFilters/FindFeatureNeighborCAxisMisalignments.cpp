@@ -149,7 +149,7 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
   if(NULL == misalignmentPtr.get())
   {
     NeighborList<float>::Pointer misalignmentListPtr = NeighborList<float>::New();
-    misalignmentListPtr->SetName(m_CAxisMisalignmentListArrayName);
+    misalignmentListPtr->setName(m_CAxisMisalignmentListArrayName);
     misalignmentListPtr->resize(cellFeatureAttrMat->getNumTuples());
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_CAxisMisalignmentListArrayName, misalignmentListPtr);
     m_CAxisMisalignmentList = misalignmentListPtr.get();

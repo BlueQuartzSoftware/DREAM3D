@@ -359,7 +359,7 @@ void writePointScalarData(DataContainer* dc, const QString& vertexAttributeMatri
   QString ss;
   if (NULL != data.get())
   {
-    T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
+    T* m = reinterpret_cast<T*>(data->getVoidPointer(0));
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "SCALARS %s %s\n", dataName.toLatin1().data(), dataType.toLatin1().data());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
@@ -397,7 +397,7 @@ void writePointVectorData(DataContainer* dc, const QString& vertexAttributeMatri
   QString ss;
   if (NULL != data.get())
   {
-    T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
+    T* m = reinterpret_cast<T*>(data->getVoidPointer(0));
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.toLatin1().data(), dataName.toLatin1().data(), dataType.toLatin1().data());
     for(int i = 0; i < nT; ++i)
@@ -516,7 +516,7 @@ void writeCellScalarData(DataContainer* dc, const QString& faceAttributeMatrixNa
   QTextStream ss(&buf);
   if (NULL != data.get())
   {
-    T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
+    T* m = reinterpret_cast<T*>(data->getVoidPointer(0));
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.toLatin1().data(), dataType.toLatin1().data());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
@@ -563,7 +563,7 @@ void writeCellVectorData(DataContainer* dc, const QString& faceAttributeMatrixNa
   QTextStream ss(&buf);
   if (NULL != data.get())
   {
-    T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
+    T* m = reinterpret_cast<T*>(data->getVoidPointer(0));
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.toLatin1().data(), dataName.toLatin1().data(), dataType.toLatin1().data());
     for(int i = 0; i < nT; ++i)
@@ -617,7 +617,7 @@ void writeCellNormalData(DataContainer* dc, const QString& faceAttributeMatrixNa
   QTextStream ss(&buf);
   if (NULL != data.get())
   {
-    T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
+    T* m = reinterpret_cast<T*>(data->getVoidPointer(0));
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "NORMALS %s %s\n", dataName.toLatin1().data(), dataType.toLatin1().data());
     for(int i = 0; i < nT; ++i)

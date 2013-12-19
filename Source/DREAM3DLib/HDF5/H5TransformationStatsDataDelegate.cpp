@@ -314,7 +314,7 @@ int H5TransformationStatsDataDelegate::writeVectorOfArrays(hid_t pid,
   {
     //qDebug() << "Writing Dataset:" << hdf5GroupName << "/" << columnHeaders[c] ;
     err = -1;
-    if(NULL != colData[c].get() && colData[c]->GetSize() > 0)
+    if(NULL != colData[c].get() && colData[c]->getSize() > 0)
     {
       err = colData[c]->writeH5Data(pid);
       if(err < 0)

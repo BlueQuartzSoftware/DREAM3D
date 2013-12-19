@@ -771,8 +771,8 @@ void PackPrimaryPhases::execute()
   {
     phase = primaryphases[i];
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
-    neighbordist[i].resize(pp->getBinNumbers()->GetSize());
-    simneighbordist[i].resize(pp->getBinNumbers()->GetSize());
+    neighbordist[i].resize(pp->getBinNumbers()->getSize());
+    simneighbordist[i].resize(pp->getBinNumbers()->getSize());
     VectorOfFloatArray Neighdist = pp->getFeatureSize_Neighbors();
     float normalizer = 0;
     for (size_t j = 0; j < neighbordist[i].size(); j++)
@@ -1286,7 +1286,7 @@ void PackPrimaryPhases::generate_feature(int phase, int Seed, Feature* feature, 
   float totaldensity = 0;
   int bin = 0;
   FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
-  while (random > totaldensity && bin < static_cast<int>(axisodf->GetSize()) )
+  while (random > totaldensity && bin < static_cast<int>(axisodf->getSize()) )
   {
     totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;
@@ -2485,13 +2485,13 @@ void PackPrimaryPhases::write_goal_attributes()
     IDataArray::Pointer p = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
-      if (p->GetNumberOfComponents() == 1)
+      if (p->getNumberOfComponents() == 1)
       {
         dStream << space << (*iter);
       }
       else // There are more than a single component so we need to add multiple header values
       {
-        for(int k = 0; k < p->GetNumberOfComponents(); ++k)
+        for(int k = 0; k < p->getNumberOfComponents(); ++k)
         {
           dStream << space << (*iter) << "_" << k;
         }

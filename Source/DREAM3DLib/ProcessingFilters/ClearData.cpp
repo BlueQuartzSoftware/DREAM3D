@@ -275,7 +275,7 @@ void ClearData::execute()
         {
           QString name = *iter;
           IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-          p->InitializeTuple(index, 0);
+          p->initializeTuple(index, 0);
         }
       }
     }

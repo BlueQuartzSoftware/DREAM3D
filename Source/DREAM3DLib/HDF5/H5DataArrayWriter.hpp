@@ -64,36 +64,36 @@ class H5DataArrayWriter
     static int writeDataArray(hid_t gid, T* dataArray)
     {
       int err = 0;
-      hsize_t localRank = dataArray->GetRank() + 1;
+      hsize_t localRank = dataArray->getRank() + 1;
       QVector<hsize_t> dims(localRank, 0 );
       dims[0] = dataArray->getNumberOfTuples();
-      QVector<int> arrayDims = dataArray->GetDims();
+      QVector<int> arrayDims = dataArray->getDims();
       for(int i=1;i<dims.size();i++)
       {
         dims[i] = arrayDims[i-1];
       }
 
-      if (QH5Lite::datasetExists(gid, dataArray->GetName()) == false)
+      if (QH5Lite::datasetExists(gid, dataArray->getName()) == false)
       {
-        err = QH5Lite::writePointerDataset(gid, dataArray->GetName(), localRank, dims.data(), dataArray->getPointer(0));
+        err = QH5Lite::writePointerDataset(gid, dataArray->getName(), localRank, dims.data(), dataArray->getPointer(0));
         if(err < 0)
         {
           return err;
         }
       }
 
-      err = QH5Lite::writeScalarAttribute(gid, dataArray->GetName(), DREAM3D::HDF5::NumComponents, dataArray->GetNumberOfComponents());
+      err = QH5Lite::writeScalarAttribute(gid, dataArray->getName(), DREAM3D::HDF5::NumComponents, dataArray->getNumberOfComponents());
       if(err < 0)
       {
         return err;
       }
 
-      err = QH5Lite::writeScalarAttribute(gid, dataArray->GetName(), DREAM3D::HDF5::DataArrayVersion, dataArray->getClassVersion());
+      err = QH5Lite::writeScalarAttribute(gid, dataArray->getName(), DREAM3D::HDF5::DataArrayVersion, dataArray->getClassVersion());
       if(err < 0)
       {
         return err;
       }
-      err = QH5Lite::writeStringAttribute(gid, dataArray->GetName(), DREAM3D::HDF5::ObjectType, dataArray->getFullNameOfClass());
+      err = QH5Lite::writeStringAttribute(gid, dataArray->getName(), DREAM3D::HDF5::ObjectType, dataArray->getFullNameOfClass());
       if(err < 0)
       {
         return err;

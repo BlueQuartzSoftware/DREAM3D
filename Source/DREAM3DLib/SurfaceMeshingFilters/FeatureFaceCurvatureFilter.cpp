@@ -391,21 +391,21 @@ void FeatureFaceCurvatureFilter::execute()
 
   AttributeMatrix::Pointer faceAttrMat = sm->getAttributeMatrix(getFaceAttributeMatrixName());
 
-  faceAttrMat->addAttributeArray(principalCurvature1->GetName(), principalCurvature1);
-  faceAttrMat->addAttributeArray(principalCurvature2->GetName(), principalCurvature2);
+  faceAttrMat->addAttributeArray(principalCurvature1->getName(), principalCurvature1);
+  faceAttrMat->addAttributeArray(principalCurvature2->getName(), principalCurvature2);
   if (m_ComputePrincipalDirectionVectors == true)
   {
-    faceAttrMat->addAttributeArray(principalDirection1->GetName(), principalDirection1);
-    faceAttrMat->addAttributeArray(principalDirection2->GetName(), principalDirection2);
+    faceAttrMat->addAttributeArray(principalDirection1->getName(), principalDirection1);
+    faceAttrMat->addAttributeArray(principalDirection2->getName(), principalDirection2);
   }
 
   if (m_ComputeGaussianCurvature == true)
   {
-    faceAttrMat->addAttributeArray(gaussianCurvature->GetName(), gaussianCurvature);
+    faceAttrMat->addAttributeArray(gaussianCurvature->getName(), gaussianCurvature);
   }
   if (m_ComputeMeanCurvature == true)
   {
-    faceAttrMat->addAttributeArray(meanCurvature->GetName(), meanCurvature);
+    faceAttrMat->addAttributeArray(meanCurvature->getName(), meanCurvature);
   }
 
   faceAttrMat->removeAttributeArray(DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
