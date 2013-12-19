@@ -88,7 +88,7 @@ int writeVtkFile(FloatArrayType* xyz, const QString& filename)
   size_t count = xyz->getNumberOfTuples();
   for(int i = 0; i < count; ++i)
   {
-    ss << xyz->GetComponent(i, 0) << " " << xyz->GetComponent(i, 1) << " " << xyz->GetComponent(i, 2) << "\n";
+    ss << xyz->getComponent(i, 0) << " " << xyz->getComponent(i, 1) << " " << xyz->getComponent(i, 2) << "\n";
   }
   return 0;
 }

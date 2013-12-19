@@ -264,7 +264,7 @@ void GenerateMisorientationColors::execute()
       {
         idx = 12;
       }
-      notSupported->SetValue(idx, 1);
+      notSupported->setValue(idx, 1);
       m_MisorientationColor[index] = 0;
       m_MisorientationColor[index + 1] = 0;
       m_MisorientationColor[index + 2] = 0;
@@ -283,14 +283,14 @@ void GenerateMisorientationColors::execute()
 
   for(size_t i = 0; i < notSupported->getNumberOfTuples() - 1; i++)
   {
-    if (notSupported->GetValue(i) == 1)
+    if (notSupported->getValue(i) == 1)
     {
       QString ss = QObject::tr("The Symmetry of %1  is not currently supported for Misorientation Coloring. Voxels with this symmetry have been set to black.").arg(ops[i]->getSymmetryName());
       notifyErrorMessage(getHumanLabel(), ss, -500);
     }
   }
 
-  if (notSupported->GetValue(12) == 1)
+  if (notSupported->getValue(12) == 1)
   {
     QString ss("There were voxels with an unknown crystal symmetry due most likely being marked as a 'Bad Voxel'. These voxels have been colored black BUT black is a valid color for Misorientation coloring. Please understand this when visualizing your data.");
     notifyErrorMessage(getHumanLabel(), ss, -500);

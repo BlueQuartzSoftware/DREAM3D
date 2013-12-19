@@ -261,7 +261,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
       for(int k = 0; k < numComp; k++)
       {
         VectorOfFloatArray data = dist[i];
-        ePtr[(numComp * numBins * i) + (numComp * j) + k] = data[k]->GetValue(j);
+        ePtr[(numComp * numBins * i) + (numComp * j) + k] = data[k]->getValue(j);
       }
     }
   }

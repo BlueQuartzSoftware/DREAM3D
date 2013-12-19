@@ -89,8 +89,8 @@ void __TestcopyTuples()
 
   for(size_t i = 0; i < NUM_TUPLES_2; ++i)
   {
-    array->SetComponent(i, 0, static_cast<T>(i));
-    array->SetComponent(i, 1, static_cast<T>(i));
+    array->setComponent(i, 0, static_cast<T>(i));
+    array->setComponent(i, 1, static_cast<T>(i));
   }
 
   err = array->copyTuple(0, 1);
@@ -104,14 +104,14 @@ void __TestcopyTuples()
   err = array->copyTuple(18, 19);
   DREAM3D_REQUIRE_EQUAL(-1, err);
 
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(1, 0), 0);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(1, 1), 0);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(2, 0), 3);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(2, 1), 3);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 4);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 4);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(9, 0), 8);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(9, 1), 8);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(1, 0), 0);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(1, 1), 0);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(2, 0), 3);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(2, 1), 3);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 0), 4);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 1), 4);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(9, 0), 8);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(9, 1), 8);
 }
 
 
@@ -144,7 +144,7 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_ELEMENTS; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i) );
+      array->setComponent(i, 0, static_cast<T>(i) );
     }
 
     QVector<size_t> eraseElements;
@@ -153,9 +153,9 @@ void __TestEraseElements()
 
     array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetValue(0), 2);
-    DREAM3D_REQUIRE_EQUAL(array->GetValue(1), 3);
-    DREAM3D_REQUIRE_EQUAL(array->GetValue(2), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getValue(0), 2);
+    DREAM3D_REQUIRE_EQUAL(array->getValue(1), 3);
+    DREAM3D_REQUIRE_EQUAL(array->getValue(2), 4);
   }
 
   // Test Dropping of internal elements
@@ -165,8 +165,8 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
@@ -176,12 +176,12 @@ void __TestEraseElements()
 
     array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 0), 9);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 1), 9);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 0), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 1), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 0), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 1), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(6, 0), 9);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(6, 1), 9);
   }
 
   // Test Dropping of internal elements
@@ -191,8 +191,8 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
@@ -201,12 +201,12 @@ void __TestEraseElements()
     eraseElements.push_back(9);
     array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 0), 8);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 1), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 0), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 1), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 0), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 1), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(6, 0), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(6, 1), 8);
   }
 
   // Test Dropping of internal continuous elements
@@ -216,8 +216,8 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
@@ -226,12 +226,12 @@ void __TestEraseElements()
     eraseElements.push_back(5);
     array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 6);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 6);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 0), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 1), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 8);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 0), 6);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 1), 6);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(4, 0), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(4, 1), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 0), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 1), 8);
   }
 
   // Test Dropping of Front and Back Elements
@@ -241,8 +241,8 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
@@ -251,10 +251,10 @@ void __TestEraseElements()
 
     array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(0, 0), 1);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(0, 1), 1);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(7, 0), 8);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(7, 1), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(0, 0), 1);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(0, 1), 1);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(7, 0), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(7, 1), 8);
   }
 
   // Test Dropping of Back Elements
@@ -264,8 +264,8 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
@@ -274,10 +274,10 @@ void __TestEraseElements()
     eraseElements.push_back(9);
     array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 0), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 1), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 5);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 5);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(4, 0), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(4, 1), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 0), 5);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 1), 5);
   }
 
   // Test Dropping of indices larger than the number of tuples
@@ -287,8 +287,8 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
@@ -355,7 +355,7 @@ void TestDataArray()
     {
       for (int c = 0; c < NUM_COMPONENTS; ++c)
       {
-        int32Array->SetComponent(i, c, i + c);
+        int32Array->setComponent(i, c, i + c);
       }
     }
 
@@ -370,7 +370,7 @@ void TestDataArray()
     {
       for (int c = 0; c < NUM_COMPONENTS; ++c)
       {
-        DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i + c))
+        DREAM3D_REQUIRE_EQUAL( (int32Array->getComponent(i, c)), (i + c))
       }
     }
 
@@ -385,7 +385,7 @@ void TestDataArray()
     {
       for (int c = 0; c < NUM_COMPONENTS; ++c)
       {
-        DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i + c))
+        DREAM3D_REQUIRE_EQUAL( (int32Array->getComponent(i, c)), (i + c))
       }
     }
 
@@ -399,7 +399,7 @@ void TestDataArray()
     int32Array->initializeTuple(0, temp );
     for (int c = 0; c < NUM_COMPONENTS; ++c)
     {
-      DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(0, c)), (9999))
+      DREAM3D_REQUIRE_EQUAL( (int32Array->getComponent(0, c)), (9999))
     }
 
 

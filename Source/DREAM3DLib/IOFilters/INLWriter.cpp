@@ -275,10 +275,10 @@ int INLWriter::writeFile()
   int32_t count = static_cast<int32_t>(materialNamePtr->getNumberOfTuples());
   for(int32_t i = 1; i < count; ++i)
   {
-    QString matName = materialNames->GetValue(i);
+    QString matName = materialNames->getValue(i);
     fprintf(f, "# Phase_%d: %s\r\n", i, matName.toLatin1().data());
     symmetry = m_CrystalStructures[i];
-    fprintf(f, "# Phase_%u: %s\r\n", i, materialNames->GetValue(i).toLatin1().data());
+    fprintf(f, "# Phase_%u: %s\r\n", i, materialNames->getValue(i).toLatin1().data());
     if(symmetry == Ebsd::CrystalStructure::Cubic_High)
     {
       symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;

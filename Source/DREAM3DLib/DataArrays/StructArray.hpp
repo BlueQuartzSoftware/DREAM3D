@@ -529,7 +529,7 @@ class StructArray : public IDataArray
      */
     virtual int32_t resizeTotalElements(size_t size)
     {
-      if (this->ResizeAndExtend(size) || size == 0)
+      if (this->resizeAndExtend(size) || size == 0)
       {
         return 1;
       }
@@ -689,7 +689,7 @@ class StructArray : public IDataArray
      * @param size
      * @return Pointer to the internal array
      */
-    virtual T* ResizeAndExtend(size_t size)
+    virtual T* resizeAndExtend(size_t size)
     {
       T* newArray;
       size_t newSize;

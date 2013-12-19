@@ -339,7 +339,7 @@ void GenerateEnsembleStatistics::execute()
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
     for(int r = 0; r < totalEnsembles; ++r)
     {
-      phaseTypes->SetValue(r, m_PhaseTypeArray[r]);
+      phaseTypes->setValue(r, m_PhaseTypeArray[r]);
     }
     m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(phaseTypes->getName(), phaseTypes);
     m_PhaseTypes = phaseTypes->getPointer(0);
@@ -750,7 +750,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
       eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::StringConstants::ODF);
       for (unsigned long long j = 0; j < dims; j++)
       {
-        eulerodf[i]->SetValue(j, 0.0);
+        eulerodf[i]->setValue(j, 0.0);
       }
     }
     else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic_High)
@@ -759,7 +759,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
       eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::StringConstants::ODF);
       for (unsigned long long j = 0; j < dims; j++)
       {
-        eulerodf[i]->SetValue(j, 0.0);
+        eulerodf[i]->setValue(j, 0.0);
       }
     }
   }
@@ -782,7 +782,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
       phase = m_CrystalStructures[m_FeaturePhases[i]];
       OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
-      eulerodf[m_FeaturePhases[i]]->SetValue(bin, (eulerodf[m_FeaturePhases[i]]->GetValue(bin) + (m_Volumes[i] / totalvol[m_FeaturePhases[i]])));
+      eulerodf[m_FeaturePhases[i]]->setValue(bin, (eulerodf[m_FeaturePhases[i]]->getValue(bin) + (m_Volumes[i] / totalvol[m_FeaturePhases[i]])));
     }
   }
 
@@ -855,7 +855,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
     // Now initialize all bins to 0.0
     for (int j = 0; j < numbins; j++)
     {
-      misobin[i]->SetValue(j, 0.0);
+      misobin[i]->setValue(j, 0.0);
     }
   }
   size_t nname;
@@ -878,7 +878,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
         {
           mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);
           nsa = neighborsurfacearealist[i][j];
-          misobin[m_FeaturePhases[i]]->SetValue(mbin, (misobin[m_FeaturePhases[i]]->GetValue(mbin) + nsa));
+          misobin[m_FeaturePhases[i]]->setValue(mbin, (misobin[m_FeaturePhases[i]]->getValue(mbin) + nsa));
           totalSurfaceArea[m_FeaturePhases[i]] = totalSurfaceArea[m_FeaturePhases[i]] + nsa;
         }
       }
@@ -890,7 +890,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   {
     for(size_t j = 0; j < misobin[i]->getSize(); j++)
     {
-      misobin[i]->SetValue(j, (misobin[i]->GetValue(j) / totalSurfaceArea[i]));
+      misobin[i]->setValue(j, (misobin[i]->getValue(j) / totalSurfaceArea[i]));
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
@@ -937,7 +937,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
     axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::StringConstants::AxisOrientation);
     for (int j = 0; j < (36 * 36 * 36); j++)
     {
-      axisodf[i]->SetValue(j, 0.0);
+      axisodf[i]->setValue(j, 0.0);
     }
   }
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
@@ -958,7 +958,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
       OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
-      axisodf[m_FeaturePhases[i]]->SetValue(bin, (axisodf[m_FeaturePhases[i]]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FeaturePhases[i]]))));
+      axisodf[m_FeaturePhases[i]]->setValue(bin, (axisodf[m_FeaturePhases[i]]->getValue(bin) + static_cast<float>((1.0 / totalaxes[m_FeaturePhases[i]]))));
     }
   }
   // int err;

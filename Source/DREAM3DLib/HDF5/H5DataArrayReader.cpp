@@ -165,7 +165,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
             if(buf[i] == 0)
             {
               QString str( &(buf[start]) );
-              strArray->SetValue(index, str);
+              strArray->setValue(index, str);
               ++index;
               start = i + 1;
             }

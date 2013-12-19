@@ -195,13 +195,13 @@ void SharedFeatureFaceFilter::execute()
     {
       faceSizeMap[*faceId_64] = 1;
       faceIdMap[*faceId_64] = index;
-      featureFaceId->SetValue(t, index);
+      featureFaceId->setValue(t, index);
       ++index;
     }
     else
     {
       faceSizeMap[*faceId_64]++;
-      featureFaceId->SetValue(t, faceIdMap[*faceId_64]);
+      featureFaceId->setValue(t, faceIdMap[*faceId_64]);
     }
   }
 
@@ -233,7 +233,7 @@ void SharedFeatureFaceFilter::execute()
     }
     index = faceIdMap[*faceId_64];
 #else
-    index = featureFaceId->GetValue(t);
+    index = featureFaceId->getValue(t);
 #endif
     faces[index].push_back(t);
   }

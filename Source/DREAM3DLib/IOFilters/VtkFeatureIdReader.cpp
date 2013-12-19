@@ -417,7 +417,7 @@ int VtkFeatureIdReader::readFile()
         // the vtk binary file into what ever system we are running.
         for (size_t i = 0; i < totalVoxels; ++i)
         {
-          t = m_FeatureIdsPtr.lock()->GetValue(i);
+          t = m_FeatureIdsPtr.lock()->getValue(i);
           DREAM3D::Endian::FromSystemToBig::convert(t);
           m_FeatureIds[i] = t;
         }

@@ -513,7 +513,7 @@ class ManagedArrayOfArrays : public IDataArray
      */
     virtual int32_t resizeTotalElements(size_t size)
     {
-      if (this->ResizeAndExtend(size) || size == 0)
+      if (this->resizeAndExtend(size) || size == 0)
       {
         return 1;
       }
@@ -662,7 +662,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param size
      * @return Pointer to the internal array
      */
-    virtual Data_t* ResizeAndExtend(size_t size)
+    virtual Data_t* resizeAndExtend(size_t size)
     {
       Data_t* newArray;
       size_t newSize;
