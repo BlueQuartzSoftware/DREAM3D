@@ -102,7 +102,7 @@ int  ReadPHFile(QString FileName, QVector<int> &data, int &nx, int &ny, int &nz)
   data.resize(count);
   for(size_t i = 0; i < count; ++i)
   {
-    data[i] = featureIds->GetValue(i);
+    data[i] = featureIds->getValue(i);
   }
 
 

@@ -85,11 +85,11 @@ void forwardAndReverse()
   size_t dims[3] = {1001, 1001, 1};
   float res[3] = { 1.0, 1.0, 1.0};
   DoubleArrayType::Pointer lambertSquare = lambert->getNorthSquare();
-  lambertSquare->SetName(QString("North_") + QString("lambert_from_orig_stereo"));
+  lambertSquare->setName(QString("North_") + QString("lambert_from_orig_stereo"));
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/North_lambert_from_orig_stereo.vtk", lambertSquare.get(), dims, res, "double", true);
 
   lambertSquare = lambert->getSouthSquare();
-  lambertSquare->SetName(QString("South_") + QString("lambert_from_orig_stereo"));
+  lambertSquare->setName(QString("South_") + QString("lambert_from_orig_stereo"));
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/South_lambert_from_orig_stereo.vtk", lambertSquare.get(), dims, res, "double", true);
 
 

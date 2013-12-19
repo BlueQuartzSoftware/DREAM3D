@@ -133,9 +133,9 @@ void GoldfeatherReader::dataCheck()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* amV = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), DREAM3D::AttributeMatrixType::Vertex);
+  AttributeMatrix* vertAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* amF = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), DREAM3D::AttributeMatrixType::Face);
+  AttributeMatrix* faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), DREAM3D::AttributeMatrixType::Face);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -162,33 +162,33 @@ void GoldfeatherReader::dataCheck()
   QVector<int> dims(1, 3);
   DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(1, dims, DREAM3D::VertexData::SurfaceMeshNodeNormals);
   //addCreatedCellData( normalsPtr->getName());
-  amV->addAttributeArray(normalsPtr->getName(), normalsPtr);
+  vertAttrMat->addAttributeArray(normalsPtr->getName(), normalsPtr);
 
   DoubleArrayType::Pointer pcurv1Ptr = DoubleArrayType::CreateArray(1, "Principal_Curvature_1");
   //addCreatedCellData( pcurv1Ptr->getName());
-  amV->addAttributeArray(pcurv1Ptr->getName(), pcurv1Ptr);
+  vertAttrMat->addAttributeArray(pcurv1Ptr->getName(), pcurv1Ptr);
 
   DoubleArrayType::Pointer pcurv2Ptr = DoubleArrayType::CreateArray(1, "Principal_Curvature_2");
 // addCreatedCellData( pcurv2Ptr->getName());
-  amV->addAttributeArray(pcurv2Ptr->getName(), pcurv2Ptr);
+  vertAttrMat->addAttributeArray(pcurv2Ptr->getName(), pcurv2Ptr);
 
   DoubleArrayType::Pointer pDirection1Ptr = DoubleArrayType::CreateArray(1, dims, "Principal_Direction_1");
 // addCreatedCellData( pDirection1Ptr->getName());
-  amV->addAttributeArray(pDirection1Ptr->getName(), pDirection1Ptr);
+  vertAttrMat->addAttributeArray(pDirection1Ptr->getName(), pDirection1Ptr);
 
   DoubleArrayType::Pointer pDirection2Ptr = DoubleArrayType::CreateArray(1, dims, "Principal_Direction_2");
 //  addCreatedCellData( pDirection2Ptr->getName());
-  amV->addAttributeArray(pDirection2Ptr->getName(), pDirection2Ptr);
+  vertAttrMat->addAttributeArray(pDirection2Ptr->getName(), pDirection2Ptr);
 
   dims[0] = 2;
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
 //  addCreatedFeatureData( faceLabelPtr->getName());
-  amF->addAttributeArray(faceLabelPtr->getName(), faceLabelPtr);
+  faceAttrMat->addAttributeArray(faceLabelPtr->getName(), faceLabelPtr);
 
   dims[0] = 3;
   DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceNormals);
 //  addCreatedFeatureData( triNormalsPtr->getName());
-  amF->addAttributeArray(triNormalsPtr->getName(), triNormalsPtr);
+  faceAttrMat->addAttributeArray(triNormalsPtr->getName(), triNormalsPtr);
 
 }
 
