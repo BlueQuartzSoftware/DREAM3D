@@ -352,6 +352,9 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
   return ++index; // we want to return the next index that was just written to
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::updateCellInstancePointers()
 {
   setErrorCondition(0);
@@ -361,6 +364,7 @@ void PackPrimaryPhases::updateCellInstancePointers()
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

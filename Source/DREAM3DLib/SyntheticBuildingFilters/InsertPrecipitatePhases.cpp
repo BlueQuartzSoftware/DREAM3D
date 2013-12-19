@@ -188,6 +188,48 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::updateCellInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_SurfaceVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceVoxels = m_SurfaceVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::updateFeatureInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::dataCheck()
 {
   setErrorCondition(0);
@@ -293,18 +335,6 @@ void InsertPrecipitatePhases::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
-  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
-  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
-
-  sizex = m->getXPoints() * m->getXRes();
-  sizey = m->getYPoints() * m->getYRes();
-  sizez = m->getZPoints() * m->getZRes();
-
-  totalvol = sizex * sizey * sizez;
-
   notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Generating and Placing Precipitates");
 // this initializes the arrays to hold the details of the locations of all of the features during packing
   Int32ArrayType::Pointer featureOwnersPtr = initialize_packinggrid();
@@ -331,11 +361,8 @@ void InsertPrecipitatePhases::execute()
     return;
   }
 
-  totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
-  totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
-  totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
-
-  dataCheck();
+  updateCellInstancePointers();
+  updateFeatureInstancePointers();
 
   notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Filling Gaps");
   assign_gaps();
@@ -362,13 +389,14 @@ void InsertPrecipitatePhases::execute()
     write_goal_attributes();
   }
 
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_EquivalentDiametersArrayName);
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_Omega3sArrayName);
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_AxisEulerAnglesArrayName);
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_AxisLengthsArrayName);
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_VolumesArrayName);
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_CentroidsArrayName);
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->removeAttributeArray(m_NumCellsArrayName);
+  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getDataContainer(getDataContainerName())->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  cellFeatureAttrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
+  cellFeatureAttrMat->removeAttributeArray(m_Omega3sArrayName);
+  cellFeatureAttrMat->removeAttributeArray(m_AxisEulerAnglesArrayName);
+  cellFeatureAttrMat->removeAttributeArray(m_AxisLengthsArrayName);
+  cellFeatureAttrMat->removeAttributeArray(m_VolumesArrayName);
+  cellFeatureAttrMat->removeAttributeArray(m_CentroidsArrayName);
+  cellFeatureAttrMat->removeAttributeArray(m_NumCellsArrayName);
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "InsertPrecipitatePhases Completed");
@@ -416,7 +444,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   if(currentnumfeatures == 0)
   {
     m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(1);
-    dataCheck();
+    updateFeatureInstancePointers();
     currentnumfeatures = 1;
   }
   firstPrecipitateFeature = currentnumfeatures;
@@ -503,7 +531,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
         notifyStatusMessage(getHumanLabel(), ss);
 
         m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(currentnumfeatures + 1);
-        dataCheck();
+        updateFeatureInstancePointers();
         m_Active[currentnumfeatures] = true;
         transfer_attributes(currentnumfeatures, &precip);
         oldsizedisterror = currentsizedisterror;
