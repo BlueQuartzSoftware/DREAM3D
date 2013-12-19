@@ -171,7 +171,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     typename ArrayType::Pointer createNonPrereqArray(Filter* filter,
                                                      const QString& attributeArrayName,
                                                      T initValue,
-                                                     QVector<int> dims)
+                                                     QVector<size_t> dims)
     {
       typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
 
@@ -204,7 +204,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @param dims The size the data on each tuple
     */
     template<class ArrayType, typename T>
-    void createAndAddAttributeArray(const QString& name, T initValue, QVector<int> dims)
+    void createAndAddAttributeArray(const QString& name, T initValue, QVector<size_t> dims)
     {
       typename ArrayType::Pointer attributeArray = ArrayType::CreateArray(getNumTuples(), dims, name);
       attributeArray->initializeWithValues(initValue);

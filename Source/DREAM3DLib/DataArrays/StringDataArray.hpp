@@ -81,19 +81,19 @@ class StringDataArray : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
     {
       IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name);
       return p;
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name)
     {
       IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name);
       return p;
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name)
     {
       IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name);
       return p;
@@ -383,12 +383,15 @@ class StringDataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
+
+      // Convert the QVector of Strings into a flat list of strings separated by NULL characters
+      // and write that flat array into the HDF5 file.
       size_t totalSize = 0;
       for(int i = 0; i < m_Array.size(); ++i)
       {
         totalSize += 1 + m_Array[i].size();
       }
-      DataArray<int8_t>::Pointer strPtr = DataArray<int8_t>::CreateArray(totalSize, "Strings");
+      Int8ArrayType::Pointer strPtr = Int8ArrayType::CreateArray(totalSize, getName());
       strPtr->initializeWithZeros();
       int8_t* str = strPtr->getPointer(0);
 
@@ -398,8 +401,7 @@ class StringDataArray : public IDataArray
         str = str + m_Array[i].size() + 1;
       }
 
-      QVector<int> dim(1, 1);
-      return H5DataArrayWriter::writeArray<int8_t>(parentId, getName(), totalSize, 1, 1, dim, getClassVersion(), strPtr->getPointer(0), getFullNameOfClass());
+      return H5DataArrayWriter::writeDataArray<Int8ArrayType>(parentId, strPtr.get());
     }
 
     /**

@@ -82,17 +82,17 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
     DREAM3D_INSTANCE_PROPERTY(QVector<StatsData::Pointer>, StatsDataArray)
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+      virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
     {
       return StatsDataArray::New();
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name)
     {
       return StatsDataArray::New();
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name)
     {
       return StatsDataArray::New();
     }
