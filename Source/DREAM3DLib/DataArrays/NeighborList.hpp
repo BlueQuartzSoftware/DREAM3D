@@ -74,17 +74,17 @@ class NeighborList : public IDataArray
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
     {
       return NeighborList<T>::New();
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name)
     {
       return NeighborList<T>::New();
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name)
     {
       return NeighborList<T>::New();
     }
@@ -240,14 +240,6 @@ class NeighborList : public IDataArray
     void SetRank(int rnk) { }
 
     int getRank() { return 1; }
-
-    void setDims(QVector<int> dims) { }
-
-    QVector<int> getDims()
-    {
-      QVector<int> dims(1, 1);
-      return dims;
-    }
 
     size_t getTypeSize()  { return sizeof(SharedVectorType); }
 

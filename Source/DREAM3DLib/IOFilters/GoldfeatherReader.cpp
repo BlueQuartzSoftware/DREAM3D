@@ -159,7 +159,7 @@ void GoldfeatherReader::dataCheck()
   sm->setVertices(vertices);
   sm->setFaces(triangles);
 
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(1, dims, DREAM3D::VertexData::SurfaceMeshNodeNormals);
   //addCreatedCellData( normalsPtr->getName());
   vertAttrMat->addAttributeArray(normalsPtr->getName(), normalsPtr);
@@ -233,7 +233,7 @@ void GoldfeatherReader::execute()
   VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
 
 
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(nNodes, dims, DREAM3D::VertexData::SurfaceMeshNodeNormals);
   double* normals = normalsPtr->getPointer(0);
 

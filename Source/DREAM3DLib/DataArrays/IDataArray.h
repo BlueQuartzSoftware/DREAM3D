@@ -69,9 +69,9 @@ class DREAM3DLib_EXPORT IDataArray
     virtual void setName(const QString& name) = 0;
     virtual QString getName() = 0;
 
-    virtual Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name) = 0;
-    virtual Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name) = 0;
-    virtual Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name) = 0;
 
     virtual int getClassVersion() = 0;
 
@@ -115,11 +115,6 @@ class DREAM3DLib_EXPORT IDataArray
 
     virtual int getNumberOfComponents() = 0;
 
-    // virtual void SetRank(int rnk) = 0;
-    virtual int getRank() = 0;
-
-    virtual void setDims(QVector<int> rnk) = 0;
-    virtual QVector<int> getDims() = 0;
 
     /**
      * @brief Returns the number of bytes that make up the data type.

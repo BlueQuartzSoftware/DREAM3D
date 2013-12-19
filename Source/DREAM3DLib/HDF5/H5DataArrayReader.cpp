@@ -74,7 +74,7 @@ namespace Detail
     herr_t err = -1;
     IDataArray::Pointer ptr;
     size_t numTuples = dims[0];
-    QVector<int> arrayDims(dims.size() - 1);
+    QVector<size_t> arrayDims(dims.size() - 1);
     for (size_t i = 1; i < dims.size(); ++i)
     {
       arrayDims[i - 1] = dims[i];
@@ -228,7 +228,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
 
     int numTuples = dims[0];
 
-    QVector<int> arrayDims(dims.size() - 1);
+    QVector<size_t> arrayDims(dims.size() - 1);
     if(version < 2 && arrayDims.size() == 0)
     {
       arrayDims.resize(1);

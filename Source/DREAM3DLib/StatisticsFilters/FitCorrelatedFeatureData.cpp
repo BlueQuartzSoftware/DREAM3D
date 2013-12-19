@@ -178,7 +178,7 @@ void FitCorrelatedFeatureData::dataCheck()
   }
   if(m_RemoveBiasedFeatures == true)
   {
-    QVector<int> dims(1, 1);
+    QVector<size_t> dims(1, 1);
     m_BiasedFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_BiasedFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -221,7 +221,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   else if (dType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
 
   ss = selectedFeatureArrayName + distType + QString("Fit");
-  QVector<int> dims(2);
+  QVector<size_t> dims(2);
   dims[0] = numBins;
   dims[1] = numComp;
   typename DataArray<float>::Pointer ensembleArray = DataArray<float>::CreateArray(ensembles, dims, ss);

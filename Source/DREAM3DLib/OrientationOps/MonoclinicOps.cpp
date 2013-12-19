@@ -581,7 +581,7 @@ QVector<UInt8ArrayType::Pointer> MonoclinicOps::generatePoleFigure(PoleFigureCon
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::Monoclinic::symSize0, dims, label0 + QString("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
   FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::Monoclinic::symSize1, dims, label1 + QString("xyzCoords"));

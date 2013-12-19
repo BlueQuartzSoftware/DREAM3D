@@ -275,7 +275,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   err = attrMat->addAttributeArray("Test", p);
   DREAM3D_REQUIRED(err, >=, 0)
 
-	// Now get it back out as the specific type that we put it in as
+  // Now get it back out as the specific type that we put it in as
   typename T::Pointer t = attrMat->getArray<T>("Test");
   DREAM3D_TEST_POINTER(t.get(), !=, NULL)
 
@@ -283,7 +283,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   IDataArray::Pointer ida = attrMat->getAttributeArray("Test");
   DREAM3D_TEST_POINTER(ida.get(), !=, NULL);
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   t = attrMat->getPrereqArray<T, AbstractFilter>(NULL, "Test", -723, dims);
   DREAM3D_TEST_POINTER(t.get(), !=, NULL);
 

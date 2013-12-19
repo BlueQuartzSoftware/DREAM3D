@@ -152,10 +152,11 @@ void ModifiedLambertProjection::initializeSquares(int dims, float sphereRadius)
   m_HalfDimension = static_cast<float>(m_Dimension) / 2.0;
   m_HalfDimensionTimesStepSize = m_HalfDimension * m_StepSize;
 
-  QVector<int> dim(1, 1);
-  m_NorthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, dim, "ModifiedLambert_NorthSquare");
+  QVector<size_t> tDims(2, m_Dimension);
+  QVector<size_t> cDims(1, 1);
+  m_NorthSquare = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambert_NorthSquare");
   m_NorthSquare->initializeWithZeros();
-  m_SouthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, dim, "ModifiedLambert_SouthSquare");
+  m_SouthSquare = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambert_SouthSquare");
   m_SouthSquare->initializeWithZeros();
 
 
@@ -532,8 +533,9 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
 // -----------------------------------------------------------------------------
 DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjection(int dim)
 {
-  QVector<int> dims(1, 1);
-  DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(dim * dim, dims, "ModifiedLambertProjection_StereographicProjection");
+  QVector<size_t> tDims(2, dim);
+  QVector<size_t> cDims(1, 1);
+  DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambertProjection_StereographicProjection");
   stereoIntensity->initializeWithZeros();
   createStereographicProjection(dim, stereoIntensity.get());
   return stereoIntensity;

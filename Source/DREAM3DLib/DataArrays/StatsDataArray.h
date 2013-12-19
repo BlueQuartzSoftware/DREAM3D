@@ -82,17 +82,17 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
     DREAM3D_INSTANCE_PROPERTY(QVector<StatsData::Pointer>, StatsDataArray)
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+      virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
     {
       return StatsDataArray::New();
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name)
     {
       return StatsDataArray::New();
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name)
     {
       return StatsDataArray::New();
     }
@@ -217,12 +217,6 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     virtual size_t getSize();
 
     virtual int getNumberOfComponents();
-
-    virtual void SetRank(int rank);
-    virtual int getRank();
-
-    virtual void setDims(QVector<int> dims);
-    virtual QVector<int> getDims();
 
     /**
      * @brief Returns the number of bytes that make up the data type.

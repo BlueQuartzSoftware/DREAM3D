@@ -53,7 +53,7 @@ ImageUtilities::~ImageUtilities() {}
 // -----------------------------------------------------------------------------
 UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const QString& name, double min, double max)
 {
-  QVector<int> dims(1, 4);
+  QVector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(width * height, dims, name);
   PoleFigureConfiguration_t config;
   config.imageDim = width;

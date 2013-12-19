@@ -202,7 +202,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
       DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
       StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
-      QVector<int> dims(1, 6);
+      QVector<size_t> dims(1, 6);
       FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, getLatticeConstantsArrayName());
 
       // Initialize the zero'th element to unknowns. The other elements will

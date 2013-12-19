@@ -140,7 +140,7 @@ void LinkFeatureMapToCellArray::dataCheck()
   }
 
   cellFeatureAttrMat->clearAttributeArrays();
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   cellFeatureAttrMat->createAndAddAttributeArray<DataArray<bool>, bool>(DREAM3D::FeatureData::Active, false, dims);
 }
 

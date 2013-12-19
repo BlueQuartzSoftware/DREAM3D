@@ -159,23 +159,6 @@ int ModifiedLambertProjectionArray::getRank()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::setDims(QVector<int> dims)
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QVector<int> ModifiedLambertProjectionArray::getDims()
-{
-  QVector<int> dims(1, 1);
-  return dims;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 size_t ModifiedLambertProjectionArray::getTypeSize()
 {
   return sizeof(ModifiedLambertProjection);

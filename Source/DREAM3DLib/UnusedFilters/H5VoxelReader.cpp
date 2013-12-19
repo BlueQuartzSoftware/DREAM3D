@@ -209,7 +209,7 @@ int H5VoxelReader::readVoxelData(int* feature_indicies,
 #endif
 
   // Allocate an Array for the Euler Data with is nRows X 3 Columns
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   DataArray<float>::Pointer fData = DataArray<float>::CreateArray(totalpoints, dims, DREAM3D::CellData::EulerAngles);
   err = readScalarData(DREAM3D::CellData::EulerAngles, eulerangles);
   if(err < 0)

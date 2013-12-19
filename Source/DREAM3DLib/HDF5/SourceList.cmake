@@ -13,7 +13,6 @@ set(DREAM3DLib_HDF5_HDRS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5BoundaryStatsDataDelegate.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayWriter.hpp
-  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5GbcdArrayReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5Macros.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5MatrixStatsDataDelegate.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrecipitateStatsDataDelegate.h
@@ -27,7 +26,6 @@ set(DREAM3DLib_HDF5_HDRS
 set(DREAM3DLib_HDF5_SRCS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5BoundaryStatsDataDelegate.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayReader.cpp
-  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5GbcdArrayReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5MatrixStatsDataDelegate.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrecipitateStatsDataDelegate.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrimaryStatsDataDelegate.cpp
