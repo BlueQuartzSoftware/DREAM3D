@@ -51,7 +51,7 @@
 #include "DREAM3DLib/Common/FilterPipeline.h"
 
 
-#include "PipelineBuilder/QFilterWidget.h"
+#include "QFilterWidget.h"
 
 class QScrollArea;
 

@@ -44,7 +44,7 @@
 * execution. This class is here to simply wrap the methods with Qt's signals and
 * slots mechanism to push messages and progress to the Qt based GUI.
 */
-class QFilterPipeline : public QObject, public FilterPipeline
+class QFilterPipeline : public FilterPipeline
 {
     Q_OBJECT
   public:

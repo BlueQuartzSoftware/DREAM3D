@@ -69,6 +69,8 @@
 #include "QtSupport/UpdateCheck.h"
 
 #include "PipelineViewWidget.h"
+#include "QFilterLibraryDockWidget.h"
+
 
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
@@ -91,7 +93,6 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_ActivePlugin(NULL),
   m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
-  m_PipelineBuilderWidget(NULL),
   m_UpdateCheckThread(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
@@ -396,6 +397,10 @@ void DREAM3D_UI::setupGui()
 //  connect(m_PipelineBuilderWidget, SIGNAL(fireReadSettings()),
 //          this, SLOT(readSettings() ) );
 
+
+  m_QFilterLibraryDockWidget = new QFilterLibraryDockWidget(this);
+  m_QFilterLibraryDockWidget->setObjectName(QString::fromUtf8("m_QFilterLibraryDockWidget"));
+  addDockWidget(static_cast<Qt::DockWidgetArea>(1), m_QFilterLibraryDockWidget);
 
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
   actionOpenPipeline->setShortcut(actionOpenKeySeq);
