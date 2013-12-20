@@ -91,22 +91,89 @@ void BuildNewDream3dFile()
 {
   DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-  QVector<size_t> tDims(1, 0);
+  dca->pushBack(vdc);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = 128;
+  tDims[1] = 128;
+  tDims[2] = 128;
   AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New(tDims, "CellData", DREAM3D::AttributeMatrixType::Cell);
   vdc->addAttributeMatrix("CellData", cellAttrMat);
+  QVector<size_t> dims(1, 1);
+  cellAttrMat->createAndAddAttributeArray<DataArray<int64_t>, int64_t>("Ids", 1, dims);
+
+  DataArray<int64_t>::WeakPointer m_FeatureIdsPtr;
+  int64_t* m_FeatureIds;
+  AbstractFilter::Pointer filt = AbstractFilter::New();
+  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int64_t>, AbstractFilter>(filt.get(), "Ids", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  
+  for(int i=0;i<(128*128*128); i++)
+  {
+    m_FeatureIds[i] = i;
+  }
   AttributeMatrix::Pointer cellFeatureAttrMat = AttributeMatrix::New(tDims, "CellFeatureData", DREAM3D::AttributeMatrixType::CellFeature);
   vdc->addAttributeMatrix("CellFeatureData", cellFeatureAttrMat);
+  tDims.resize(1);
   tDims[0] = 2;
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, "CellEnsembleData", DREAM3D::AttributeMatrixType::CellEnsemble);
-  QVector<size_t> dims(1, 1);
-  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("PhaseTypes", DREAM3D::PhaseType::PrimaryPhase, dims);
-  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("ShapeTypes", DREAM3D::ShapeType::EllipsoidShape, dims);
-  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("CrystalStructures", Ebsd::CrystalStructure::Cubic_High, dims);
   vdc->addAttributeMatrix("CellEnsembleData", cellEnsembleAttrMat);
+
+  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("PhaseTypes", DREAM3D::PhaseType::PrimaryPhase, dims);
+  DataArray<unsigned int>::WeakPointer m_PhaseTypesPtr;
+  unsigned int* m_PhaseTypes;
+  m_PhaseTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(filt.get(), "PhaseTypes", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_PhaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;
+
+  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("ShapeTypes", DREAM3D::ShapeType::EllipsoidShape, dims);
+  DataArray<unsigned int>::WeakPointer m_ShapeTypesPtr;
+  unsigned int* m_ShapeTypes;
+  m_ShapeTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(filt.get(), "ShapeTypes", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ShapeTypes[0] = DREAM3D::ShapeType::UnknownShapeType;
+
+  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("CrystalStructures", Ebsd::CrystalStructure::Cubic_High, dims);
+  DataArray<unsigned int>::WeakPointer m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures;
+  m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(filt.get(), "CrystalStructures", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructures[0] = Ebsd::CrystalStructure::UnknownCrystalStructure;
+
+  StatsDataArray* m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(cellEnsembleAttrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
+  if(m_StatsDataArray == NULL)
+  {
+    StatsDataArray::Pointer p = StatsDataArray::New();
+    m_StatsDataArray = p.get();
+    m_StatsDataArray->fillArrayWithNewStatsData(cellEnsembleAttrMat->getNumTuples(), m_PhaseTypes);
+    cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, p);
+  }
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[1].get());
+  pp->setPhaseFraction(1);
+  VectorOfFloatArray sizedist;
+  sizedist[0]->setValue(0, 1);
+  sizedist[1]->setValue(0, 0.1);
+  pp->setFeatureSizeDistribution(sizedist);
+  float maxdiam = 4.48169;
+  float mindiam = 1.64872;
+  float binSize = 0.5;
+  int numbins = int(((maxdiam-mindiam)/binSize)+1);
+  pp->setFeatureDiameterInfo(binSize, maxdiam, mindiam);
+  FloatArrayType::Pointer binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
+  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, binSize, binnumbers);
+  pp->setBinNumbers(binnumbers);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
   dcw->setWriteXdmfFile(false);
+  dcw->setDataContainerArray(dca);
+  dcw->setPreviousFilter(AbstractFilter::NullPointer());
   dcw->execute();
 }
 

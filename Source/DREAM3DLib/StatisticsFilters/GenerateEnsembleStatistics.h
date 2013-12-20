@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
     virtual const QString getHumanLabel() { return "Generate Ensemble Statistics"; }
 
-    DREAM3D_INSTANCE_PROPERTY(int, SizeCorrelationResolution)
+    DREAM3D_INSTANCE_PROPERTY(float, SizeCorrelationResolution)
     DREAM3D_INSTANCE_PROPERTY(bool, SizeDistribution)
     DREAM3D_INSTANCE_PROPERTY(int, SizeDistributionFitType)
     DREAM3D_INSTANCE_PROPERTY(bool, AspectRatioDistribution)

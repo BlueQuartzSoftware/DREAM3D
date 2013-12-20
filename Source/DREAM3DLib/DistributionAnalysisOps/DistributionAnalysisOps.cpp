@@ -63,7 +63,7 @@ void DistributionAnalysisOps::determinemaxandminvalues(QVector<float>& data, flo
     if(value < min) { min = value; }
   }
 }
-void DistributionAnalysisOps::determinebinnumbers(float& max, float& min, int& stepsize, FloatArrayType::Pointer binnumbers)
+void DistributionAnalysisOps::determinebinnumbers(float& max, float& min, float& stepsize, FloatArrayType::Pointer binnumbers)
 {
   size_t iter = 0;
   float current = (float(iter * stepsize) + min);
