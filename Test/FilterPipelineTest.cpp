@@ -66,15 +66,15 @@
 // -----------------------------------------------------------------------------
 QString testFile1()
 {
-  return UnitTest::DataDir + QString("/EbsdTestFiles/Test_1.ang");
+  return UnitTest::DataDir + QString("/SmallIN100/Slice_1.ang");
 }
 QString testFile2()
 {
-  return UnitTest::DataDir + QString("/EbsdTestFiles/Test_2.ang");
+  return UnitTest::DataDir + QString("/SmallIN100/Slice_1.ang");
 }
 QString testFile3()
 {
-  return UnitTest::DataDir + QString("/EbsdTestFiles/Test_3.ang");
+  return UnitTest::DataDir + QString("/SmallIN100/Slice_1.ang");
 }
 
 // -----------------------------------------------------------------------------
