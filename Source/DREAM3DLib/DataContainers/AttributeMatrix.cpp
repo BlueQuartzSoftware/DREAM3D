@@ -61,12 +61,12 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrix::AttributeMatrix() :
-  m_NumTuples(0),
-  m_Type(DREAM3D::AttributeMatrixType::Unknown)
+AttributeMatrix::AttributeMatrix(QVector<size_t> tDims, const QString& name, unsigned int attrType) :
+  m_TupleDims(tDims),
+  m_Name(name),
+  m_Type(attrType)
 {
-  setName(DREAM3D::Defaults::AttributeMatrixName);
-  //  setType(DREAM3D::AttributeMatrixType::Unknown);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -189,14 +189,21 @@ bool AttributeMatrix::renameAttributeArray(const QString& oldname, const QString
 // -----------------------------------------------------------------------------
 void AttributeMatrix::setTupleDimensions(QVector<size_t> tupleDims)
 {
-  size_t total = tupleDims[0];
+  m_NumTuples = tupleDims[0];
   for(int i = 1; i < tupleDims.size(); i++)
   {
-    total = total + tupleDims[i];
+    m_NumTuples = m_NumTuples + tupleDims[i];
     }
-    resizeAttributeArrays(total);
+    resizeAttributeArrays(m_NumTuples);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+size_t AttributeMatrix::getNumTuples()
+{
+  return m_NumTuples;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

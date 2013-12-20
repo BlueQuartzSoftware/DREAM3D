@@ -199,7 +199,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @param attrMatName
      * @return
      */
-    virtual AttributeMatrix* createAndAddAttributeMatrix(const QString& attrMatName);
+    virtual AttributeMatrix* createAndAddAttributeMatrix(QVector<size_t> tDims, const QString& attrMatName, unsigned int attrType);
 
     /**
     * @brief Adds/overwrites the data for a named array
