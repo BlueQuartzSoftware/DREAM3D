@@ -232,7 +232,7 @@ void MatrixPhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, int ind
 
   iDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get();
   UInt32ArrayType* data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
-  m_CrystalStructure = data->GetValue(index);
+  m_CrystalStructure = data->getValue(index);
 
   iDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
   data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);

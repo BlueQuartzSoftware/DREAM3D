@@ -183,7 +183,7 @@ int StatsGenPlotWidget::extractStatsData(VolumeDataContainer::Pointer m, int ind
   {
     QVector<float> col(static_cast<int>(arrays[i]->getNumberOfTuples()));
     if (arrays[i]->getNumberOfTuples() > 0) {
-      ::memcpy( &(col.front()), arrays[i]->GetVoidPointer(0), sizeof(float)*col.size() );
+      ::memcpy( &(col.front()), arrays[i]->getVoidPointer(0), sizeof(float)*col.size() );
     }
     data.push_back(col);
   }

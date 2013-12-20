@@ -125,19 +125,19 @@ void SGAxisODFWidget::extractStatsData(VolumeDataContainer::Pointer m, int index
   }
   if (arrays.size() > 0 ) {
     QVector<float> e1(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
+    ::memcpy( &(e1.front()), arrays[0]->getVoidPointer(0), sizeof(float)*e1.size() );
 
     QVector<float> e2(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(e2.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e2.size() );
+    ::memcpy( &(e2.front()), arrays[0]->getVoidPointer(0), sizeof(float)*e2.size() );
 
     QVector<float> e3(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(e3.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e3.size() );
+    ::memcpy( &(e3.front()), arrays[0]->getVoidPointer(0), sizeof(float)*e3.size() );
 
     QVector<float> weights(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
+    ::memcpy( &(weights.front()), arrays[0]->getVoidPointer(0), sizeof(float)*weights.size() );
 
     QVector<float> sigmas(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(sigmas.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
+    ::memcpy( &(sigmas.front()), arrays[0]->getVoidPointer(0), sizeof(float)*sigmas.size() );
 
     if(e1.size() > 0)
     {
