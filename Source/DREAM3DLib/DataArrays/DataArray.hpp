@@ -281,7 +281,7 @@ class DataArray : public IDataArray
       {
         return NullPointer();
       }
-      size_t numTumples = tDims[0];
+      size_t numTuples = tDims[0];
       for(int i = 1; i < tDims.size(); i++)
       {
         numTuples *= tDims[i];
