@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 {
   public:
     DREAM3D_SHARED_POINTERS(AttributeMatrix)
-    DREAM3D_STATIC_NEW_MACRO(AttributeMatrix)
+ //   DREAM3D_STATIC_NEW_MACRO(AttributeMatrix)
     DREAM3D_TYPE_MACRO_SUPER(AttributeMatrix, Observable)
 
     virtual ~AttributeMatrix();
@@ -82,10 +82,9 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      * @param name The name of the AttributeMatrix
      * @return
      */
-    static Pointer New(const QString name)
+    static Pointer New(QVector<size_t> tupleDims, const QString& name, unsigned int attrType)
     {
-      Pointer sharedPtr(new AttributeMatrix);
-      sharedPtr->setName(name);
+      Pointer sharedPtr(new AttributeMatrix(tupleDims, name, attrType));
       return sharedPtr;
     }
 
@@ -103,7 +102,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     typename ArrayType::Pointer getPrereqArray(Filter* filter,
                                                QString attributeArrayName,
                                                int err,
-                                               QVector<int> dims)
+                                               QVector<size_t> dims)
     {
       QString ss;
       typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
@@ -171,7 +170,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     typename ArrayType::Pointer createNonPrereqArray(Filter* filter,
                                                      const QString& attributeArrayName,
                                                      T initValue,
-                                                     QVector<int> dims)
+                                                     QVector<size_t> dims)
     {
       typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
 
@@ -204,9 +203,9 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @param dims The size the data on each tuple
     */
     template<class ArrayType, typename T>
-    void createAndAddAttributeArray(const QString& name, T initValue, QVector<int> dims)
+    void createAndAddAttributeArray(const QString& name, T initValue, QVector<size_t> compDims)
     {
-      typename ArrayType::Pointer attributeArray = ArrayType::CreateArray(getNumTuples(), dims, name);
+      typename ArrayType::Pointer attributeArray = ArrayType::CreateArray(getNumTuples(), compDims, name);
       attributeArray->initializeWithValues(initValue);
       addAttributeArray(name, attributeArray);
     }
@@ -234,24 +233,24 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         return false;
       }
       // Make sure the sizes are equal to what is being asked for
-      if (getNumTuples() * numComp != iDataArray->GetSize())
+      if (getNumTuples() * numComp != iDataArray->getSize())
       {
         if (NULL != filter)
         {
           QString ss = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Compoenets = %3. The currently available array "
-                                   " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples() * numComp)).arg(iDataArray->GetSize());
+                                   " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples() * numComp)).arg(iDataArray->getSize());
           filter->setErrorCondition(-501);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
       // Make sure the number of components match
-      if (numComp != iDataArray->GetNumberOfComponents())
+      if (numComp != iDataArray->getNumberOfComponents())
       {
         if (NULL != filter)
         {
           QString ss = QObject::tr("Filter '%1' requires an array where the number of components is %2 but the currently available array"
-                                   " that was supplied has %3.").arg(filter->getHumanLabel()).arg(numComp).arg(iDataArray->GetNumberOfComponents());
+                                   " that was supplied has %3.").arg(filter->getHumanLabel()).arg(numComp).arg(iDataArray->getNumberOfComponents());
           filter->setErrorCondition(-502);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
@@ -297,7 +296,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @brief Adds/overwrites the data for a named array
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
-	* @return error code if the addition did not work
+  * @return error code if the addition did not work
     */
     virtual int addAttributeArray(const QString& name, IDataArray::Pointer data);
 
@@ -308,11 +307,11 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      */
     virtual IDataArray::Pointer getAttributeArray(const QString& name);
 
-	/**
-	* @brief returns a IDataArray based object that is stored in the attribute matrix by a
-	* given name.
-	* @param name The name of the array
-	*/
+  /**
+  * @brief returns a IDataArray based object that is stored in the attribute matrix by a
+  * given name.
+  * @param name The name of the array
+  */
     template<class ArrayType>
     typename ArrayType::Pointer getArray(const QString& name)
     {
@@ -337,7 +336,9 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @brief Resizes an array from the Data Container
     * @param size The new size of the array
     */
-    void resizeAttributeArrays(size_t numTuples);
+    void resizeAttributeArrays(QVector<size_t> numTuples);
+
+    void setTupleDimensions(QVector<size_t> tupleDims);
 
     /**
      * @brief Removes all the Cell Arrays
@@ -362,10 +363,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * in during a set of filtering operations then the a value of '32' would be returned.
     * @return
     */
-    size_t getNumTuples()
-    {
-      return m_NumTuples;
-    }
+    size_t getNumTuples();
 
     virtual int writeAttributeArraysToHDF5(hid_t parentId);
     virtual int addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool preflight);
@@ -373,13 +371,13 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     virtual QString generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType = 0);
 
   protected:
-    AttributeMatrix();
+    AttributeMatrix(QVector<size_t> tDims, const QString& name, unsigned int attrType);
 
     virtual QString writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType = 0);
     virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& dataContainerName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName, const QString& hdfFileName, const uint8_t gridType = 0);
 
   private:
-    size_t m_NumTuples;
+    QVector<size_t> m_TupleDims;
     QMap<QString, IDataArray::Pointer> m_AttributeArrays;
     uint32_t m_Type;
 

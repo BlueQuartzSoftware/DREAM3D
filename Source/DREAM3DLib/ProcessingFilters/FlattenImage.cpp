@@ -164,7 +164,7 @@ void FlattenImage::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FlattenImage>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   int numImageComp = 1;
@@ -174,11 +174,11 @@ void FlattenImage::dataCheck()
     UInt8ArrayType* imageDataPtr = UInt8ArrayType::SafePointerDownCast(iDataArray.get());
     if (NULL != imageDataPtr)
     {
-      numImageComp = imageDataPtr->GetNumberOfComponents();
+      numImageComp = imageDataPtr->getNumberOfComponents();
     }
   }
 
-  QVector<int> dims(1, numImageComp);
+  QVector<size_t> dims(1, numImageComp);
   m_ImageDataPtr = cellAttrMat->getPrereqArray<DataArray<unsigned char>, AbstractFilter>(this, m_ImageDataArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -230,7 +230,7 @@ void FlattenImage::execute()
   bool doParallel = true;
 #endif
 
-  size_t comp = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_ImageDataArrayName)->GetNumberOfComponents();
+  size_t comp = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_ImageDataArrayName)->getNumberOfComponents();
 
   //  qDebug() << "FlattenImage: " << m_ConversionFactor << "\n";
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

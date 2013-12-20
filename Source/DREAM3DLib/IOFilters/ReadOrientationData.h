@@ -178,33 +178,33 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 
       DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, m_CrystalStructuresArrayName);
       StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, m_MaterialNameArrayName);
-      QVector<int> dims(1, 6);
+      QVector<size_t> dims(1, 6);
       FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, m_LatticeConstantsArrayName);
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
-      crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-      materialNames->SetValue(0, "Invalid Phase");
-      latticeConstants->SetComponent(0, 0, 0.0f);
-      latticeConstants->SetComponent(0, 1, 0.0f);
-      latticeConstants->SetComponent(0, 2, 0.0f);
-      latticeConstants->SetComponent(0, 3, 0.0f);
-      latticeConstants->SetComponent(0, 4, 0.0f);
-      latticeConstants->SetComponent(0, 5, 0.0f);
+      crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+      materialNames->setValue(0, "Invalid Phase");
+      latticeConstants->setComponent(0, 0, 0.0f);
+      latticeConstants->setComponent(0, 1, 0.0f);
+      latticeConstants->setComponent(0, 2, 0.0f);
+      latticeConstants->setComponent(0, 3, 0.0f);
+      latticeConstants->setComponent(0, 4, 0.0f);
+      latticeConstants->setComponent(0, 5, 0.0f);
 
       for(size_t i = 0; i < phases.size(); i++)
       {
         int phaseID = phases[i]->getPhaseIndex();
-        crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );
-        materialNames->SetValue(phaseID, phases[i]->getMaterialName());
+        crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure() );
+        materialNames->setValue(phaseID, phases[i]->getMaterialName());
         QVector<float> lc = phases[i]->getLatticeConstants();
 
-        latticeConstants->SetComponent(phaseID, 0, lc[0]);
-        latticeConstants->SetComponent(phaseID, 1, lc[1]);
-        latticeConstants->SetComponent(phaseID, 2, lc[2]);
-        latticeConstants->SetComponent(phaseID, 3, lc[3]);
-        latticeConstants->SetComponent(phaseID, 4, lc[4]);
-        latticeConstants->SetComponent(phaseID, 5, lc[5]);
+        latticeConstants->setComponent(phaseID, 0, lc[0]);
+        latticeConstants->setComponent(phaseID, 1, lc[1]);
+        latticeConstants->setComponent(phaseID, 2, lc[2]);
+        latticeConstants->setComponent(phaseID, 3, lc[3]);
+        latticeConstants->setComponent(phaseID, 4, lc[4]);
+        latticeConstants->setComponent(phaseID, 5, lc[5]);
 
       }
       VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -213,7 +213,8 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
       if(NULL == attrMatrix.get() ) { return -2; }
 
       // Resize the AttributeMatrix based on the size of the crystal structures array
-      attrMatrix->resizeAttributeArrays(crystalStructures->getNumberOfTuples());
+      QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
+      attrMatrix->resizeAttributeArrays(tDims);
       // Now add the attributeArray to the AttributeMatrix
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);

@@ -228,9 +228,10 @@ void ScalarSegmentFeatures::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
+  QVector<size_t> tDims(1, 0);  
+  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   if(m_ScalarArrayName.isEmpty() == true)
@@ -239,7 +240,7 @@ void ScalarSegmentFeatures::dataCheck()
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -268,7 +269,8 @@ void ScalarSegmentFeatures::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
+  QVector<size_t> tDims(1, 1);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
   // This runs a subfilter
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
@@ -291,53 +293,53 @@ void ScalarSegmentFeatures::execute()
   }
 
   QString dType = m_InputData->getTypeAsString();
-  if(m_InputData->GetNumberOfComponents() != 1)
+  if(m_InputData->getNumberOfComponents() != 1)
   {
     m_Compare = new CompareFunctor(); // The default CompareFunctor which ALWAYS returns false for the comparison
   }
   else if (dType.compare("int8_t") == 0)
   {
-    m_Compare = new TSpecificCompareFunctor<int8_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare = new TSpecificCompareFunctor<int8_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<uint8_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare =  new TSpecificCompareFunctor<uint8_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
   else if (dType.compare("bool") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<bool>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare =  new TSpecificCompareFunctor<bool>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<int16_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare =  new TSpecificCompareFunctor<int16_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<uint16_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare =  new TSpecificCompareFunctor<uint16_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<int32_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare =  new TSpecificCompareFunctor<int32_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<uint32_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare =  new TSpecificCompareFunctor<uint32_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<int64_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare =  new TSpecificCompareFunctor<int64_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<uint64_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare =  new TSpecificCompareFunctor<uint64_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
   else if (dType.compare("float") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<float>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare =  new TSpecificCompareFunctor<float>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
   else if (dType.compare("double") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<double>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
+    m_Compare =  new TSpecificCompareFunctor<double>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
 
   SegmentFeatures::execute();
@@ -427,9 +429,8 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
   if (seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
-    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(gnum + 1);
-//    int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-//    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+    QVector<size_t> tDims(1, gnum+1);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     dataCheck();
   }
   return seed;

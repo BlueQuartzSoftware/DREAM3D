@@ -62,14 +62,14 @@ Funtions to test:
 *  initialize()
 *  initializeWithZeros()
 *  initializeWithValues()
-InitializeTuple()
-EraseTuples()
-CopyTuple()
-*  GetTypeSize()
+initializeTuple()
+eraseTuples()
+copyTuple()
+*  getTypeSize()
 *  getNumberOfTuples()
-*  GetSize()
-*  GetNumberOfComponents()
-*  GetVoidPointer()
+*  getSize()
+*  getNumberOfComponents()
+*  getVoidPointer()
 *  getPointer()
 
 *  RawResize()
@@ -107,13 +107,13 @@ Vec3IntListPointer_t initializeStructArray()
   bool isAllocated = nodes->isAllocated();
   DREAM3D_REQUIRE_EQUAL(isAllocated, true)
 
-  int nComp = nodes->GetNumberOfComponents();
+  int nComp = nodes->getNumberOfComponents();
   DREAM3D_REQUIRE_EQUAL(1, nComp)
 
-  size_t size = nodes->GetSize();
+  size_t size = nodes->getSize();
   DREAM3D_REQUIRE_EQUAL(ARRAY_SIZE, size)
 
-  int typeSize = nodes->GetTypeSize();
+  int typeSize = nodes->getTypeSize();
   DREAM3D_REQUIRE_EQUAL(typeSize, sizeof(Vec3Int_t));
 
   // Add some known data into the arrays
@@ -126,8 +126,8 @@ Vec3IntListPointer_t initializeStructArray()
   }
 
   QString name = "foo";
-  nodes->SetName(name);
-  QString retName = nodes->GetName();
+  nodes->setName(name);
+  QString retName = nodes->getName();
 
   DREAM3D_REQUIRE_EQUAL(name, retName);
 
@@ -150,7 +150,7 @@ void TestOperatorOverloads()
 {
   Vec3IntListPointer_t nodes = initializeStructArray();
 
-  size_t size = nodes->GetSize();
+  size_t size = nodes->getSize();
   DREAM3D_REQUIRE_EQUAL(ARRAY_SIZE, size)
 
   // Check data using the operator[] overload
@@ -174,24 +174,24 @@ void TestInitialization()
 {
   Vec3IntListPointer_t nodes = initializeStructArray();
 
-  size_t size = nodes->GetSize();
+  size_t size = nodes->getSize();
   DREAM3D_REQUIRE_EQUAL(ARRAY_SIZE, size)
 
 
   // Test Reinitializing the Array to Zero Size
   nodes->initialize();
-  Vec3Int_t* ptr = reinterpret_cast<Vec3Int_t*>(nodes->GetVoidPointer(0));
+  Vec3Int_t* ptr = reinterpret_cast<Vec3Int_t*>(nodes->getVoidPointer(0));
   DREAM3D_REQUIRE_EQUAL(NULL, ptr);
   ptr = nodes->getPointer(0);
   DREAM3D_REQUIRE_EQUAL(NULL, ptr);
   size_t nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(INIT_SIZE, nTuples)
-  size = nodes->GetSize();
+  size = nodes->getSize();
   DREAM3D_REQUIRE_EQUAL(INIT_SIZE, size)
 
   // Try another test by initializing the struct array with a known value across all the structs
   nodes = initializeStructArray();
-  size = nodes->GetSize();
+  size = nodes->getSize();
   DREAM3D_REQUIRE_EQUAL(ARRAY_SIZE, size)
 
   Vec3Int_t test; // Create a struct with some know values
@@ -240,7 +240,7 @@ void TestResizeArray()
   nodes->resize(RESIZE_SMALLER);
   size_t nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(RESIZE_SMALLER, nTuples)
-  size_t size = nodes->GetSize();
+  size_t size = nodes->getSize();
   DREAM3D_REQUIRE_EQUAL(RESIZE_SMALLER, size)
 
 
@@ -258,7 +258,7 @@ void TestResizeArray()
   nodes->resize(RESIZE_LARGER);
   nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(RESIZE_LARGER, nTuples)
-  size = nodes->GetSize();
+  size = nodes->getSize();
   DREAM3D_REQUIRE_EQUAL(RESIZE_LARGER, size)
   // Assign some known Data to each of the structures in the Struct Array
   for (size_t i = 0; i < size; ++i)
@@ -280,13 +280,13 @@ void TestResizeArray()
 
   // Resize to a Zero Array
   nodes->resize(INIT_SIZE);
-  Vec3Int_t* ptr = reinterpret_cast<Vec3Int_t*>(nodes->GetVoidPointer(0));
+  Vec3Int_t* ptr = reinterpret_cast<Vec3Int_t*>(nodes->getVoidPointer(0));
   DREAM3D_REQUIRE_EQUAL(NULL, ptr);
   ptr = nodes->getPointer(0);
   DREAM3D_REQUIRE_EQUAL(NULL, ptr);
   nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(INIT_SIZE, nTuples)
-  size = nodes->GetSize();
+  size = nodes->getSize();
   DREAM3D_REQUIRE_EQUAL(INIT_SIZE, size)
 
 
@@ -301,16 +301,16 @@ void TestTupleCopy()
   Vec3IntListPointer_t nodes = initializeStructArray();
 
   // Try to put in a range that is Too large
-  int err = nodes->CopyTuple(0, ARRAY_SIZE + 1);
+  int err = nodes->copyTuple(0, ARRAY_SIZE + 1);
   DREAM3D_REQUIRE_EQUAL(err, -1)
-  err = nodes->CopyTuple(ARRAY_SIZE + 1, 0);
+  err = nodes->copyTuple(ARRAY_SIZE + 1, 0);
   DREAM3D_REQUIRE_EQUAL(err, -1)
 
   // Copy the values from Index 0 to Index 1 in the Struct Array and Check values
   {
     uint32_t from = 0;
     uint32_t to = 1;
-    err = nodes->CopyTuple(from, to);
+    err = nodes->copyTuple(from, to);
     DREAM3D_REQUIRE_EQUAL(err, 0)
     Vec3Int_t* ptr0 = nodes->getPointer(from);
     Vec3Int_t* ptr1 = nodes->getPointer(to);
@@ -327,7 +327,7 @@ void TestTupleCopy()
   {
     uint32_t from = 6;
     uint32_t to = 5;
-    err = nodes->CopyTuple(from, to);
+    err = nodes->copyTuple(from, to);
     DREAM3D_REQUIRE_EQUAL(err, 0)
     Vec3Int_t* ptr0 = nodes->getPointer(from);
     Vec3Int_t* ptr1 = nodes->getPointer(to);
@@ -344,7 +344,7 @@ void TestTupleCopy()
   {
     uint32_t from = 8;
     uint32_t to = 8;
-    err = nodes->CopyTuple(from, to);
+    err = nodes->copyTuple(from, to);
     DREAM3D_REQUIRE_EQUAL(err, 0)
     Vec3Int_t* ptr0 = nodes->getPointer(from);
     Vec3Int_t* ptr1 = nodes->getPointer(to);
@@ -368,19 +368,19 @@ void TestTupleErase()
   Vec3IntListPointer_t nodes = initializeStructArray();
   QVector<size_t> idxs(ARRAY_SIZE + 1, 0);
   // Try to erase more indices than there are in the struct array
-  int err = nodes->EraseTuples(idxs);
+  int err = nodes->eraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, 0)
   DREAM3D_REQUIRE_EQUAL(nodes->getNumberOfTuples(), 0);
 
   idxs.resize(0);
   nodes = initializeStructArray();
-  err = nodes->EraseTuples(idxs);
+  err = nodes->eraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, 0)
   DREAM3D_REQUIRE_EQUAL(nodes->getNumberOfTuples(), ARRAY_SIZE);
 
   //Erase the first Element
   idxs.push_back(0);
-  err = nodes->EraseTuples(idxs);
+  err = nodes->eraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, 0)
   size_t nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(nTuples, ARRAY_SIZE - 1);
@@ -398,7 +398,7 @@ void TestTupleErase()
   idxs.push_back(4);
   idxs.push_back(6);
   idxs.push_back(8);
-  err = nodes->EraseTuples(idxs);
+  err = nodes->eraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, 0)
   nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(nTuples, ARRAY_SIZE - 5);
@@ -413,14 +413,14 @@ void TestTupleErase()
   // Try to erase an index that is larger than the number of tuples in the array
   idxs.resize(0);
   idxs.push_back(ARRAY_SIZE - 1);
-  err = nodes->EraseTuples(idxs);
+  err = nodes->eraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, -100)
 
   // Remove the last Struct from the Array
   nodes = initializeStructArray();
   idxs.resize(0);
   idxs.push_back(ARRAY_SIZE - 1);
-  err = nodes->EraseTuples(idxs);
+  err = nodes->eraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, 0)
   nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(nTuples, ARRAY_SIZE - 1);

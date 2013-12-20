@@ -192,7 +192,7 @@ void FeatureFaceCurvatureFilter::dataCheck()
 
   // We do not know the size of the array so we can not use the macro so we just manually call
   // the needed methods that will propagate these array additions to the pipeline
-  QVector<int> dims(1, 2);
+  QVector<size_t> dims(1, 2);
   DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, dims, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
   edgeAttrMat->addAttributeArray(DREAM3D::EdgeData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
 
@@ -216,7 +216,7 @@ void FeatureFaceCurvatureFilter::dataCheck()
 
   if (m_ComputePrincipalDirectionVectors == true)
   {
-    QVector<int> dims(1, 3);
+    QVector<size_t> dims(1, 3);
     DoubleArrayType::Pointer prinDir1 = DoubleArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshPrincipalDirection1);
     faceAttrMat->addAttributeArray(DREAM3D::FaceData::SurfaceMeshPrincipalDirection1, prinDir1);
 
@@ -303,7 +303,7 @@ void FeatureFaceCurvatureFilter::execute()
   DoubleArrayType::Pointer principalDirection2;
   if (m_ComputePrincipalDirectionVectors == true)
   {
-    QVector<int> dims(1, 3);
+    QVector<size_t> dims(1, 3);
     principalDirection1 = DoubleArrayType::CreateArray(numTriangles, dims, DREAM3D::FaceData::SurfaceMeshPrincipalDirection1);
     principalDirection1->initializeWithZeros();
 
@@ -391,21 +391,21 @@ void FeatureFaceCurvatureFilter::execute()
 
   AttributeMatrix::Pointer faceAttrMat = sm->getAttributeMatrix(getFaceAttributeMatrixName());
 
-  faceAttrMat->addAttributeArray(principalCurvature1->GetName(), principalCurvature1);
-  faceAttrMat->addAttributeArray(principalCurvature2->GetName(), principalCurvature2);
+  faceAttrMat->addAttributeArray(principalCurvature1->getName(), principalCurvature1);
+  faceAttrMat->addAttributeArray(principalCurvature2->getName(), principalCurvature2);
   if (m_ComputePrincipalDirectionVectors == true)
   {
-    faceAttrMat->addAttributeArray(principalDirection1->GetName(), principalDirection1);
-    faceAttrMat->addAttributeArray(principalDirection2->GetName(), principalDirection2);
+    faceAttrMat->addAttributeArray(principalDirection1->getName(), principalDirection1);
+    faceAttrMat->addAttributeArray(principalDirection2->getName(), principalDirection2);
   }
 
   if (m_ComputeGaussianCurvature == true)
   {
-    faceAttrMat->addAttributeArray(gaussianCurvature->GetName(), gaussianCurvature);
+    faceAttrMat->addAttributeArray(gaussianCurvature->getName(), gaussianCurvature);
   }
   if (m_ComputeMeanCurvature == true)
   {
-    faceAttrMat->addAttributeArray(meanCurvature->GetName(), meanCurvature);
+    faceAttrMat->addAttributeArray(meanCurvature->getName(), meanCurvature);
   }
 
   faceAttrMat->removeAttributeArray(DREAM3D::FaceData::SurfaceMeshFeatureFaceId);

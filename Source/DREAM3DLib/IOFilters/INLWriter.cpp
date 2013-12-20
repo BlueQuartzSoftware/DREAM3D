@@ -151,7 +151,7 @@ void INLWriter::dataCheck()
     setErrorCondition(-387);
   }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -275,10 +275,10 @@ int INLWriter::writeFile()
   int32_t count = static_cast<int32_t>(materialNamePtr->getNumberOfTuples());
   for(int32_t i = 1; i < count; ++i)
   {
-    QString matName = materialNames->GetValue(i);
+    QString matName = materialNames->getValue(i);
     fprintf(f, "# Phase_%d: %s\r\n", i, matName.toLatin1().data());
     symmetry = m_CrystalStructures[i];
-    fprintf(f, "# Phase_%u: %s\r\n", i, materialNames->GetValue(i).toLatin1().data());
+    fprintf(f, "# Phase_%u: %s\r\n", i, materialNames->getValue(i).toLatin1().data());
     if(symmetry == Ebsd::CrystalStructure::Cubic_High)
     {
       symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;

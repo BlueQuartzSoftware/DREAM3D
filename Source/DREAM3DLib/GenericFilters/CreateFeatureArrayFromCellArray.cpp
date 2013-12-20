@@ -117,7 +117,7 @@ void CreateFeatureArrayFromCellArray::dataCheck()
   AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -147,20 +147,20 @@ void CreateFeatureArrayFromCellArray::preflight()
 template<typename T>
 IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int64_t features, int32_t* featureIds)
 {
-  QString featureArrayName = inputData->GetName();
+  QString featureArrayName = inputData->getName();
 
   DataArray<T>* cell = DataArray<T>::SafePointerDownCast(inputData.get());
   if (NULL == cell)
   {
     return IDataArray::NullPointer();
   }
-  QVector<int> dims(1, inputData->GetNumberOfComponents());
+  QVector<size_t> dims(1, inputData->getNumberOfComponents());
   typename DataArray<T>::Pointer feature = DataArray<T>::CreateArray(features, dims, featureArrayName);
 
   T* fPtr = feature->getPointer(0);
   T* cPtr = cell->getPointer(0);
 
-  int32_t numComp = cell->GetNumberOfComponents();
+  int32_t numComp = cell->getNumberOfComponents();
   int32_t featureIdx = 0;
 
   int64_t cells = inputData->getNumberOfTuples();
@@ -252,7 +252,7 @@ void CreateFeatureArrayFromCellArray::execute()
 
   if (p.get() != NULL)
   {
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->GetName(), p);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->getName(), p);
   }
   else
   {

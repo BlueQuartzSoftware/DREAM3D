@@ -302,7 +302,7 @@ void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(DataContainerArr
 #if __APPLE__
 #warning THIS NEEDS TO BE FIXED
 #endif
-    //vldc->addCellEnsembleData(phaseTypes->GetName(), phaseTypes);
+    //vldc->addCellEnsembleData(phaseTypes->getName(), phaseTypes);
   }
 }
 

@@ -146,11 +146,14 @@ void YSChoiAbaqusReader::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
+  tDims.resize(1);
+  tDims[0] = 0;
+  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -209,7 +212,7 @@ void YSChoiAbaqusReader::dataCheck()
     }
   }
 
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -313,9 +316,16 @@ void YSChoiAbaqusReader::execute()
   buf = in2.readLine();
   QList<QByteArray> tokens = buf.split(' ');
 //  in2 >> word >> word >> word >> word >> word >> word;
-  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(totalpoints);
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(numfeatures + 1);
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->resizeAttributeArrays(2);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = xpoints;
+  tDims[1] = ypoints;
+  tDims[2] = zpoints;
+  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
+  tDims.resize(1);
+  tDims[0] = numfeatures+1;
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
+  tDims[0] = 2;
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->resizeAttributeArrays(tDims);
   dataCheck();
   //Read data file
   int gnum = 0;

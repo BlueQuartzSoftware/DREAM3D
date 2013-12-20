@@ -45,6 +45,7 @@
 #include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
@@ -84,6 +85,30 @@
 
 #include "TestFileLocations.h"
 
+
+
+void BuildNewDream3dFile()
+{
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New(tDims, "CellData", DREAM3D::AttributeMatrixType::Cell);
+  vdc->addAttributeMatrix("CellData", cellAttrMat);
+  AttributeMatrix::Pointer cellFeatureAttrMat = AttributeMatrix::New(tDims, "CellFeatureData", DREAM3D::AttributeMatrixType::CellFeature);
+  vdc->addAttributeMatrix("CellFeatureData", cellFeatureAttrMat);
+  tDims[0] = 2;
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, "CellEnsembleData", DREAM3D::AttributeMatrixType::CellEnsemble);
+  QVector<size_t> dims(1, 1);
+  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("PhaseTypes", DREAM3D::PhaseType::PrimaryPhase, dims);
+  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("ShapeTypes", DREAM3D::ShapeType::EllipsoidShape, dims);
+  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("CrystalStructures", Ebsd::CrystalStructure::Cubic_High, dims);
+  vdc->addAttributeMatrix("CellEnsembleData", cellEnsembleAttrMat);
+
+  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+  dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
+  dcw->setWriteXdmfFile(false);
+  dcw->execute();
+}
 
 void RunPipeline1()
 {
@@ -413,7 +438,8 @@ int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 
-  RunPipeline1();
+  BuildNewDream3dFile();
+//  RunPipeline1();
 //  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();

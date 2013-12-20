@@ -383,22 +383,22 @@ int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
       case DREAM3D::SurfaceMesh::NodeType::Unused:
         break;
       case DREAM3D::SurfaceMesh::NodeType::Default:
-        lambdas->SetValue(i, m_Lambda);
+        lambdas->setValue(i, m_Lambda);
         break;
       case DREAM3D::SurfaceMesh::NodeType::TriplePoint:
-        lambdas->SetValue(i, m_TripleLineLambda);
+        lambdas->setValue(i, m_TripleLineLambda);
         break;
       case DREAM3D::SurfaceMesh::NodeType::QuadPoint:
-        lambdas->SetValue(i, m_QuadPointLambda);
+        lambdas->setValue(i, m_QuadPointLambda);
         break;
       case DREAM3D::SurfaceMesh::NodeType::SurfaceDefault:
-        lambdas->SetValue(i, m_SurfacePointLambda);
+        lambdas->setValue(i, m_SurfacePointLambda);
         break;
       case DREAM3D::SurfaceMesh::NodeType::SurfaceTriplePoint:
-        lambdas->SetValue(i, m_SurfaceTripleLineLambda);
+        lambdas->setValue(i, m_SurfaceTripleLineLambda);
         break;
       case DREAM3D::SurfaceMesh::NodeType::SurfaceQuadPoint:
-        lambdas->SetValue(i, m_SurfaceQuadPointLambda);
+        lambdas->setValue(i, m_SurfaceQuadPointLambda);
         break;
       default:
         break;
@@ -495,7 +495,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   numConnections->initializeWithZeros();
   int* ncon = numConnections->getPointer(0);
 
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   DataArray<double>::Pointer deltaArray = DataArray<double>::CreateArray(nvert, dims, "Laplacian_Smoothing_Delta_Array");
   deltaArray->initializeWithZeros();
   double* delta = deltaArray->getPointer(0);

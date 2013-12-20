@@ -133,7 +133,7 @@ void H5VoxelFileReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  QVector<int> dim(1, 3);
+  QVector<size_t> dim(1, 3);
   m_CellEulerAnglesPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_CellAttributeMatrixName,  m_CellEulerAnglesArrayName, 0, voxels, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -244,7 +244,7 @@ void H5VoxelFileReader::execute()
 
   size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
   // Create an DataArray to hold the data
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   DataArray<int>::Pointer featureIds = DataArray<int>::CreateArray(totalpoints, dims, DREAM3D::CellData::FeatureIds);
   DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, dims, DREAM3D::CellData::Phases);
   dims[0] = 3;

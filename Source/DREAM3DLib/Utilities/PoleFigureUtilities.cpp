@@ -88,7 +88,7 @@ int writeVtkFile(FloatArrayType* xyz, const QString& filename)
   size_t count = xyz->getNumberOfTuples();
   for(int i = 0; i < count; ++i)
   {
-    ss << xyz->GetComponent(i, 0) << " " << xyz->GetComponent(i, 1) << " " << xyz->GetComponent(i, 2) << "\n";
+    ss << xyz->getComponent(i, 0) << " " << xyz->getComponent(i, 1) << " " << xyz->getComponent(i, 2) << "\n";
   }
   return 0;
 }
@@ -106,7 +106,7 @@ void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lam
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for HEX ONLY, <0001> Family
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer xyz0001 = FloatArrayType::CreateArray(numOrientations * 2, dims, "TEMP_<0001>_xyzCoords");
   // this is size for HEX ONLY, <1010> Family
   FloatArrayType::Pointer xyz1010 = FloatArrayType::CreateArray(numOrientations * 6, dims, "TEMP_<1010>_xyzCoords");
@@ -130,7 +130,7 @@ void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lam
   ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz0001.get(), lambertDimension, sphereRadius);
   // Now create the intensity image that will become the actual Pole figure image
   DoubleArrayType::Pointer poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
-  poleFigurePtr->SetName("PoleFigure_<0001>");
+  poleFigurePtr->setName("PoleFigure_<0001>");
   intensity0001.swap(poleFigurePtr);
 
 #if WRITE_LAMBERT_SQUARES
@@ -146,13 +146,13 @@ void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lam
 // Generate the <011> pole figure which will generate a new set of Lambert Squares
   lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz1010.get(), lambertDimension, sphereRadius);
   poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
-  poleFigurePtr->SetName("PoleFigure_<1010>");
+  poleFigurePtr->setName("PoleFigure_<1010>");
   intensity1010.swap(poleFigurePtr);
 
   // Generate the <111> pole figure which will generate a new set of Lambert Squares
   lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz1120.get(), lambertDimension, sphereRadius);
   poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
-  poleFigurePtr->SetName("PoleFigure_<1120>");
+  poleFigurePtr->setName("PoleFigure_<1120>");
   intensity1120.swap(poleFigurePtr);
 }
 
@@ -169,7 +169,7 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for ORTHO ONLY, <100> Family
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer xyz100 = FloatArrayType::CreateArray(numOrientations * 2, dims, "TEMP_<100>_xyzCoords");
   // this is size for ORTHO ONLY, <010> Family
   FloatArrayType::Pointer xyz010 = FloatArrayType::CreateArray(numOrientations * 2, dims, "TEMP_<010>_xyzCoords");
@@ -193,7 +193,7 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
   ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz100.get(), lambertDimension, sphereRadius);
   // Now create the intensity image that will become the actual Pole figure image
   DoubleArrayType::Pointer poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
-  poleFigurePtr->SetName("PoleFigure_<100>");
+  poleFigurePtr->setName("PoleFigure_<100>");
   intensity100.swap(poleFigurePtr);
 
 #if WRITE_LAMBERT_SQUARES
@@ -209,12 +209,12 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
 // Generate the <011> pole figure which will generate a new set of Lambert Squares
   lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz010.get(), lambertDimension, sphereRadius);
   poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
-  poleFigurePtr->SetName("PoleFigure_<010>");
+  poleFigurePtr->setName("PoleFigure_<010>");
   intensity010.swap(poleFigurePtr);
 
   // Generate the <111> pole figure which will generate a new set of Lambert Squares
   lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), lambertDimension, sphereRadius);
   poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
-  poleFigurePtr->SetName("PoleFigure_<001>");
+  poleFigurePtr->setName("PoleFigure_<001>");
   intensity001.swap(poleFigurePtr);
 }

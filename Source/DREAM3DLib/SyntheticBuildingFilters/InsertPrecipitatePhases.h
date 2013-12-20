@@ -219,6 +219,8 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     float currentsizedisterror, oldsizedisterror;
 
     void dataCheck();
+    void updateCellInstancePointers();
+    void updateFeatureInstancePointers();
 
     InsertPrecipitatePhases(const InsertPrecipitatePhases&); // Copy Constructor Not Implemented
     void operator=(const InsertPrecipitatePhases&); // Operator '=' Not Implemented

@@ -116,9 +116,10 @@ void ParaDisReader::dataCheck()
   setErrorCondition(0);
   EdgeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<EdgeDataContainer, AbstractFilter>(this, getEdgeDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* amV = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), DREAM3D::AttributeMatrixType::Vertex);
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix* amV = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* amE = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEdgeAttributeMatrixName(), DREAM3D::AttributeMatrixType::Edge);
+  AttributeMatrix* amE = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEdgeAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Edge);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -135,7 +136,7 @@ void ParaDisReader::dataCheck()
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   m_NumberOfArmsPtr = amV->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NumberOfArmsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumberOfArmsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumberOfArms = m_NumberOfArmsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -352,7 +353,8 @@ int ParaDisReader::readFile()
   numVerts = verticesPtr->getNumberOfTuples();
 
   // Resize the vertex attribute matrix to the number of vertices
-  m->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(numVerts);
+  QVector<size_t> tDims(1, numVerts);
+  m->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(tDims);
   // Rerun the data check in order to allocate the array to store the data.
   dataCheck();
 
@@ -464,7 +466,8 @@ int ParaDisReader::readFile()
   EdgeArray::Edge_t* edge = edges.get()->getPointer(0);
 
   // Resize the edge attribute matrix to the number of vertices
-  m->getAttributeMatrix(getEdgeAttributeMatrixName())->resizeAttributeArrays(numEdges);
+  tDims[0] = numEdges;
+  m->getAttributeMatrix(getEdgeAttributeMatrixName())->resizeAttributeArrays(tDims);
   // Rerun the data check in order to allocate the array to store the data.
   dataCheck();
 

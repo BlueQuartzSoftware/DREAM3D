@@ -74,7 +74,7 @@ namespace Detail
     herr_t err = -1;
     IDataArray::Pointer ptr;
     size_t numTuples = dims[0];
-    QVector<int> arrayDims(dims.size() - 1);
+    QVector<size_t> arrayDims(dims.size() - 1);
     for (size_t i = 1; i < dims.size(); ++i)
     {
       arrayDims[i - 1] = dims[i];
@@ -86,7 +86,7 @@ namespace Detail
     }
     ptr = DataArray<T>::CreateArray(numTuples, arrayDims, datasetPath);
 
-    T* data = (T*)(ptr->GetVoidPointer(0));
+    T* data = (T*)(ptr->getVoidPointer(0));
     err = QH5Lite::readPointerDataset(locId, datasetPath, data);
     if(err < 0)
     {
@@ -142,7 +142,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
       if (preflightOnly == false)
       {
         IDataArray::Pointer bufferPtr = Detail::readH5Dataset<char>(gid, name, dims);
-        const char* buf = reinterpret_cast<char*>(bufferPtr->GetVoidPointer(0));
+        const char* buf = reinterpret_cast<char*>(bufferPtr->getVoidPointer(0));
         // count the number of 0x00 characters which are the 'null termination' of each string
 
         size_t size = bufferPtr->getNumberOfTuples();
@@ -165,7 +165,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
             if(buf[i] == 0)
             {
               QString str( &(buf[start]) );
-              strArray->SetValue(index, str);
+              strArray->setValue(index, str);
               ++index;
               start = i + 1;
             }
@@ -228,7 +228,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
 
     int numTuples = dims[0];
 
-    QVector<int> arrayDims(dims.size() - 1);
+    QVector<size_t> arrayDims(dims.size() - 1);
     if(version < 2 && arrayDims.size() == 0)
     {
       arrayDims.resize(1);
@@ -386,7 +386,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
           NeighborList<uint8_t>::Pointer ptr = NeighborList<uint8_t>::New();
-          ptr->SetName(name);
+          ptr->setName(name);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -396,7 +396,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         else if(H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId, H5T_STD_U16LE))
         {
           NeighborList<uint16_t>::Pointer ptr = NeighborList<uint16_t>::New();
-          ptr->SetName(name);
+          ptr->setName(name);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -406,7 +406,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         else if(H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId, H5T_STD_U32LE))
         {
           NeighborList<uint32_t>::Pointer ptr = NeighborList<uint32_t>::New();
-          ptr->SetName(name);
+          ptr->setName(name);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -416,7 +416,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         else if(H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId, H5T_STD_U64LE))
         {
           NeighborList<uint64_t>::Pointer ptr = NeighborList<uint64_t>::New();
-          ptr->SetName(name);
+          ptr->setName(name);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -426,7 +426,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         else if(H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE))
         {
           NeighborList<int8_t>::Pointer ptr = NeighborList<int8_t>::New();
-          ptr->SetName(name);
+          ptr->setName(name);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -436,7 +436,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         else if(H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId, H5T_STD_I16LE))
         {
           NeighborList<int16_t>::Pointer ptr = NeighborList<int16_t>::New();
-          ptr->SetName(name);
+          ptr->setName(name);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -446,7 +446,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         else if(H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId, H5T_STD_I32LE))
         {
           NeighborList<int32_t>::Pointer ptr = NeighborList<int32_t>::New();
-          ptr->SetName(name);
+          ptr->setName(name);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -456,7 +456,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         else if(H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId, H5T_STD_I64LE))
         {
           NeighborList<int64_t>::Pointer ptr = NeighborList<int64_t>::New();
-          ptr->SetName(name);
+          ptr->setName(name);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -473,7 +473,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         if(attr_size == 4)
         {
           NeighborList<float>::Pointer ptr = NeighborList<float>::New();
-          ptr->SetName(name);
+          ptr->setName(name);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -483,7 +483,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         else if(attr_size == 8)
         {
           NeighborList<double>::Pointer ptr = NeighborList<double>::New();
-          ptr->SetName(name);
+          ptr->setName(name);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);

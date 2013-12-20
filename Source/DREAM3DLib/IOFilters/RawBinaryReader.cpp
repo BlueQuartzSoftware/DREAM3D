@@ -104,7 +104,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, in
   int err = 0;
   QFileInfo fi(filename);
   uint64_t fileSize = fi.size();
-  size_t allocatedBytes = p->GetSize() * sizeof(T);
+  size_t allocatedBytes = p->getSize() * sizeof(T);
   err = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, skipHeaderBytes);
 
   if (err < 0)
@@ -120,7 +120,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, in
   }
 
   ScopedFileMonitor monitor(f);
-  size_t numElements = p->getNumberOfTuples() * p->GetNumberOfComponents();
+  size_t numElements = p->getNumberOfTuples() * p->getNumberOfComponents();
   size_t numRead = 0;
 
   T* ptr = p->getPointer(0);
@@ -367,7 +367,8 @@ void RawBinaryReader::dataCheck(bool preflight)
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -416,7 +417,7 @@ void RawBinaryReader::dataCheck(bool preflight)
   {
     size_t allocatedBytes = 0;
     IDataArray::Pointer p = IDataArray::NullPointer();
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     if (m_ScalarType == Detail::Int8)
     {
       attrMat->createAndAddAttributeArray<DataArray<int8_t>, int8_t>(m_OutputArrayName, 0, dims);
@@ -529,7 +530,7 @@ void RawBinaryReader::execute()
   array = IDataArray::NullPointer();
   if (m_ScalarType == Detail::Int8)
   {
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     err = ReadBinaryFile<int8_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -540,7 +541,7 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::UInt8)
   {
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     err = ReadBinaryFile<uint8_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -551,7 +552,7 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::Int16)
   {
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     err = ReadBinaryFile<int16_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -562,7 +563,7 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::UInt16)
   {
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     err = ReadBinaryFile<uint16_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -573,7 +574,7 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::Int32)
   {
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     err = ReadBinaryFile<int32_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -584,7 +585,7 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::UInt32)
   {
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     err = ReadBinaryFile<uint32_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -595,7 +596,7 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::Int64)
   {
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     err = ReadBinaryFile<int64_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -606,7 +607,7 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::UInt64)
   {
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     err = ReadBinaryFile<uint64_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -617,7 +618,7 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::Float)
   {
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     err = ReadBinaryFile<float>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -628,7 +629,7 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::Double)
   {
-    QVector<int> dims(1, m_NumberOfComponents);
+    QVector<size_t> dims(1, m_NumberOfComponents);
     DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     err = ReadBinaryFile<double>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -640,7 +641,7 @@ void RawBinaryReader::execute()
 
   if (NULL != array.get())
   {
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(array->GetName(), array);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(array->getName(), array);
   }
   else if(err == RBR_FILE_NOT_OPEN )
   {

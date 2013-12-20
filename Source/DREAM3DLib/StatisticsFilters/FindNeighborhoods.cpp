@@ -136,7 +136,7 @@ void FindNeighborhoods::dataCheck()
   if(m_NeighborhoodList == NULL)
   {
     NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
-    neighborhoodlistPtr->SetName(m_NeighborhoodListArrayName);
+    neighborhoodlistPtr->setName(m_NeighborhoodListArrayName);
     neighborhoodlistPtr->resize(cellFeatureAttrMat->getNumTuples());
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborhoodListArrayName, neighborhoodlistPtr);
@@ -161,7 +161,7 @@ void FindNeighborhoods::dataCheck()
     addCreatedArrayHelpIndexEntry(e);
   }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   m_EquivalentDiametersPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_EquivalentDiametersArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */

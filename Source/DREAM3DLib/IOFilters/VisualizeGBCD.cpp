@@ -199,11 +199,11 @@ void VisualizeGBCD::dataCheckSurfaceMesh()
     }
     else
     {
-      QVector<int> dims(1, 5);
+      QVector<size_t> dims(1, 5);
       m_GBCDdimensionsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_GBCDdimensionsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_GBCDdimensionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_GBCDdimensions = m_GBCDdimensionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-      int numComp = iDataArray->GetNumberOfComponents();
+      int numComp = iDataArray->getNumberOfComponents();
       dims[0] = numComp;
       m_GBCDPtr = attrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_GBCDArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -325,7 +325,7 @@ void VisualizeGBCD::execute()
   poleFigureCountsArray->initializeWithValues(0);
   float* poleFigureCounts = poleFigureCountsArray->getPointer(0);
   FloatArrayType::Pointer vecsArray = FloatArrayType::NullPointer();
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   vecsArray = FloatArrayType::CreateArray(xpoints * ypoints, dims, "Vecs");
   vecsArray->initializeWithValues(-1000);
   float* vecs = vecsArray->getPointer(0);

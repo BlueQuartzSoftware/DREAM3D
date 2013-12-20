@@ -242,7 +242,7 @@ int BinaryNodesTrianglesReader::read()
   VertexArray::Pointer m_NodeListPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   VertexArray::Vert_t* m_NodeList = m_NodeListPtr->getPointer(0);
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   Int8ArrayType::Pointer nodeTypePtr = Int8ArrayType::CreateArray(nNodes, dims, DREAM3D::VertexData::SurfaceMeshNodeType);
   nodeTypePtr->initializeWithZeros();
   int8_t* nodeType = nodeTypePtr->getPointer(0);
@@ -279,7 +279,7 @@ int BinaryNodesTrianglesReader::read()
   FaceArray::Face_t* m_TriangleList = m_TriangleListPtr->getPointer(0);
   ::memset(m_TriangleList, 0xAB, sizeof(FaceArray::Face_t) * nTriangles);
 
-  QVector<int> dim(1, 2);
+  QVector<size_t> dim(1, 2);
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, dim, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   int32_t* faceLabels = faceLabelPtr->getPointer(0);
   faceLabelPtr->initializeWithZeros();
@@ -306,8 +306,8 @@ int BinaryNodesTrianglesReader::read()
 
   sm->setVertices(m_NodeListPtr);
   sm->setFaces(m_TriangleListPtr);
-  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->GetName(), faceLabelPtr);
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->GetName(), nodeTypePtr);
+  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->getName(), faceLabelPtr);
+  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->getName(), nodeTypePtr);
 
   // The ScopedFileMonitor classes will take care of closing the files
 

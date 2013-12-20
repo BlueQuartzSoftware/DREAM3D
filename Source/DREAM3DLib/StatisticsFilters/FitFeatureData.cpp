@@ -153,7 +153,7 @@ void FitFeatureData::dataCheck()
   }
   if(m_RemoveBiasedFeatures == true)
   {
-    QVector<int> dims(1, 1);
+    QVector<size_t> dims(1, 1);
     m_BiasedFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_BiasedFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -196,7 +196,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   else if (dType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
 
   ss = selectedFeatureArrayName + distType + QString("Fit");
-  QVector<int> dims(1, numComp);
+  QVector<size_t> dims(1, numComp);
   typename DataArray<float>::Pointer ensembleArray = DataArray<float>::CreateArray(ensembles, dims, ss);
 
   T* fPtr = featureArray->getPointer(0);
@@ -229,7 +229,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
     for (int j = 0; j < numComp; j++)
     {
       FloatArrayType::Pointer data = dist[i];
-      ePtr[numComp * i + j] = data->GetValue(j);
+      ePtr[numComp * i + j] = data->getValue(j);
     }
   }
   return ensembleArray;
@@ -306,7 +306,7 @@ void FitFeatureData::execute()
     p = fitData<bool>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
 
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->GetName(), p);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->getName(), p);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

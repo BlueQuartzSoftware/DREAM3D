@@ -123,7 +123,8 @@ void VtkFeatureIdReader::dataCheck()
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, VtkFeatureIdReader>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -140,7 +141,7 @@ void VtkFeatureIdReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -372,7 +373,11 @@ int VtkFeatureIdReader::readFile()
 
   //Cell Data is one less in each direction
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
-  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(totalVoxels);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = dims[0];
+  tDims[1] = dims[1];
+  tDims[2] = dims[2];
+  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   dataCheck();
 
   buf = instream.readLine();
@@ -417,7 +422,7 @@ int VtkFeatureIdReader::readFile()
         // the vtk binary file into what ever system we are running.
         for (size_t i = 0; i < totalVoxels; ++i)
         {
-          t = m_FeatureIdsPtr.lock()->GetValue(i);
+          t = m_FeatureIdsPtr.lock()->getValue(i);
           DREAM3D::Endian::FromSystemToBig::convert(t);
           m_FeatureIds[i] = t;
         }

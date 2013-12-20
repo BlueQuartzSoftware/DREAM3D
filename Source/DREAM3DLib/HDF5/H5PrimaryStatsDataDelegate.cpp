@@ -269,7 +269,8 @@ int H5PrimaryStatsDataDelegate::writePrimaryStatsData(PrimaryStatsData* data, hi
   // Write the Misorientation Bins
   if (NULL != data->getMisorientationBins().get())
   {
-    err = data->getMisorientationBins()->writeH5Data(groupId);
+    QVector<size_t> tDims(1, data->getMisorientationBins()->getNumberOfTuples());
+    err = data->getMisorientationBins()->writeH5Data(groupId, tDims);
   }
 
   err = writeWeightsData(groupId, DREAM3D::StringConstants::MDFWeights, data->getMDF_Weights());
@@ -278,7 +279,8 @@ int H5PrimaryStatsDataDelegate::writePrimaryStatsData(PrimaryStatsData* data, hi
   // Write the ODF
   if (NULL != data->getODF().get())
   {
-    err = data->getODF()->writeH5Data(groupId);
+    QVector<size_t> tDims(1, data->getODF()->getNumberOfTuples());
+    err = data->getODF()->writeH5Data(groupId, tDims);
   }
   err = writeWeightsData(groupId, DREAM3D::StringConstants::ODFWeights, data->getODF_Weights());
 
@@ -286,7 +288,8 @@ int H5PrimaryStatsDataDelegate::writePrimaryStatsData(PrimaryStatsData* data, hi
   // Write the Axis ODF
   if (NULL != data->getAxisOrientation().get())
   {
-    err = data->getAxisOrientation()->writeH5Data(groupId);
+    QVector<size_t> tDims(1, data->getAxisOrientation()->getNumberOfTuples());
+    err = data->getAxisOrientation()->writeH5Data(groupId, tDims);
   }
   err = writeWeightsData(groupId, DREAM3D::StringConstants::AxisODFWeights, data->getAxisODF_Weights());
 
@@ -308,9 +311,10 @@ int H5PrimaryStatsDataDelegate::writeVectorOfArrays(hid_t pid,
   {
     //qDebug() << "Writing Dataset:" << hdf5GroupName << "/" << columnHeaders[c] ;
     err = -1;
-    if(NULL != colData[c].get() && colData[c]->GetSize() > 0)
+    if(NULL != colData[c].get() && colData[c]->getSize() > 0)
     {
-      err = colData[c]->writeH5Data(pid);
+      QVector<size_t> tDims(1, colData[c]->getNumberOfTuples());
+      err = colData[c]->writeH5Data(pid, tDims);
       if(err < 0)
       {
         retErr = err;
@@ -352,7 +356,7 @@ int H5PrimaryStatsDataDelegate::readVectorOfArrays(hid_t pid, VectorOfFloatArray
 int H5PrimaryStatsDataDelegate::readMDFWeights(hid_t pid, PrimaryStatsData* data)
 {
   int err = 0;
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   FloatArrayType::Pointer angles = FloatArrayType::CreateArray(1, dims, DREAM3D::StringConstants::Angle);
   FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::Weight);
   dims[0] = 3;
@@ -655,7 +659,8 @@ int H5PrimaryStatsDataDelegate::writeBinNumbers(PrimaryStatsData* data, hid_t gr
   {
     data->generateBinNumbers();
   }
-  return data->getBinNumbers()->writeH5Data(groupId);
+  QVector<size_t> tDims(1, data->getBinNumbers()->getNumberOfTuples());
+  return data->getBinNumbers()->writeH5Data(groupId, tDims);
 }
 
 // -----------------------------------------------------------------------------

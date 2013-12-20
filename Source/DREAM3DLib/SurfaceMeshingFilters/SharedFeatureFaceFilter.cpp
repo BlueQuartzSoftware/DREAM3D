@@ -125,7 +125,7 @@ void SharedFeatureFaceFilter::dataCheck()
     notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
-  QVector<int> dims(1, 2);
+  QVector<size_t> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = faceAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -195,13 +195,13 @@ void SharedFeatureFaceFilter::execute()
     {
       faceSizeMap[*faceId_64] = 1;
       faceIdMap[*faceId_64] = index;
-      featureFaceId->SetValue(t, index);
+      featureFaceId->setValue(t, index);
       ++index;
     }
     else
     {
       faceSizeMap[*faceId_64]++;
-      featureFaceId->SetValue(t, faceIdMap[*faceId_64]);
+      featureFaceId->setValue(t, faceIdMap[*faceId_64]);
     }
   }
 
@@ -233,7 +233,7 @@ void SharedFeatureFaceFilter::execute()
     }
     index = faceIdMap[*faceId_64];
 #else
-    index = featureFaceId->GetValue(t);
+    index = featureFaceId->getValue(t);
 #endif
     faces[index].push_back(t);
   }

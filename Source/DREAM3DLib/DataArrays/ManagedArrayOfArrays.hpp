@@ -74,7 +74,7 @@ class ManagedArrayOfArrays : public IDataArray
         delete d;
         return ManagedArrayOfArrays<T>::NullPointer();
       }
-      d->SetName(name);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
@@ -86,19 +86,19 @@ class ManagedArrayOfArrays : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
     {
       IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
       return p;
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name)
     {
       IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
       return p;
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name)
     {
       IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
       return p;
@@ -131,7 +131,7 @@ class ManagedArrayOfArrays : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -142,7 +142,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const QString& name)
+    void setName(const QString& name)
     {
       m_Name = name;
     }
@@ -151,7 +151,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    QString GetName()
+    QString getName()
     {
       return m_Name;
     }
@@ -265,7 +265,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(QVector<size_t>& idxs)
+    virtual int eraseTuples(QVector<size_t>& idxs)
     {
 
       int err = 0;
@@ -379,7 +379,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param newPos
      * @return
      */
-    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    virtual int copyTuple(size_t currentPos, size_t newPos)
     {
       size_t max =  ((this->MaxId + 1));
       if (currentPos >= max
@@ -399,7 +399,7 @@ class ManagedArrayOfArrays : public IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t GetTypeSize()
+    virtual size_t getTypeSize()
     {
       return sizeof(Data_t);
     }
@@ -413,12 +413,12 @@ class ManagedArrayOfArrays : public IDataArray
       return (this->MaxId + 1);
     }
 
-    virtual size_t GetSize()
+    virtual size_t getSize()
     {
       return Size;
     }
 
-    int GetNumberOfComponents()
+    int getNumberOfComponents()
     {
       return 1;
     }
@@ -432,39 +432,13 @@ class ManagedArrayOfArrays : public IDataArray
     }
 
     /**
-     * @brief GetRank
-     * @return
-     */
-    int GetRank()
-    {
-      return 1;
-    }
-
-    // Description:
-    // Set/Get the dimensions of the array.
-    void SetDims(QVector<int> dims)
-    {
-
-    }
-
-    /**
-     * @brief GetDims
-     * @return
-     */
-    QVector<int> GetDims()
-    {
-      QVector<int> dims(1, 1);
-      return dims;
-    }
-
-    /**
      * @brief Returns a void pointer pointing to the index of the array. NULL
      * pointers are entirely possible. No checks are performed to make sure
      * the index is with in the range of the internal data array.
      * @param i The index to have the returned pointer pointing to.
      * @return Void Pointer. Possibly NULL.
      */
-    virtual void* GetVoidPointer(size_t i)
+    virtual void* getVoidPointer(size_t i)
     {
       if (i >= Size) { return NULL;}
 
@@ -492,7 +466,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
      */
-    void InitializeTuple(size_t i, double p)
+    void initializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i < Size);}
@@ -513,7 +487,7 @@ class ManagedArrayOfArrays : public IDataArray
      */
     virtual int32_t resizeTotalElements(size_t size)
     {
-      if (this->ResizeAndExtend(size) || size == 0)
+      if (this->resizeAndExtend(size) || size == 0)
       {
         return 1;
       }
@@ -549,11 +523,11 @@ class ManagedArrayOfArrays : public IDataArray
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId)
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
       BOOST_ASSERT(false);
       return -1;
-      //   return H5ManagedArrayOfArraysWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
+      //   return H5ManagedArrayOfArraysWriter<T>::writeArray(parentId, getName(), getNumberOfTuples(), getNumberOfComponents(), Array, getFullNameOfClass());
     }
 
     /**
@@ -582,15 +556,15 @@ class ManagedArrayOfArrays : public IDataArray
       int err = -1;
 
       //      this->Resize(0);
-      //      IManagedArrayOfArrays::Pointer p = H5ManagedArrayOfArraysReader::readIManagedArrayOfArrays(parentId, GetName());
+      //      IManagedArrayOfArrays::Pointer p = H5ManagedArrayOfArraysReader::readIManagedArrayOfArrays(parentId, getName());
       //      if (p.get() == NULL)
       //      {
       //        return -1;
       //      }
-      //      this->NumberOfComponents = p->GetNumberOfComponents();
-      //      this->Size = p->GetSize();
+      //      this->NumberOfComponents = p->getNumberOfComponents();
+      //      this->Size = p->getSize();
       //      this->MaxId = (Size == 0) ? 0 : Size -1;
-      //      this->Array = reinterpret_cast<T*>(p->GetVoidPointer(0));
+      //      this->Array = reinterpret_cast<T*>(p->getVoidPointer(0));
       //      p->releaseOwnership();
 
       return err;
@@ -662,7 +636,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param size
      * @return Pointer to the internal array
      */
-    virtual Data_t* ResizeAndExtend(size_t size)
+    virtual Data_t* resizeAndExtend(size_t size)
     {
       Data_t* newArray;
       size_t newSize;

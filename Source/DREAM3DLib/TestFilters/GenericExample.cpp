@@ -588,7 +588,7 @@ void GenericExample::dataCheck()
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   // Require the following Cell Data
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -627,7 +627,6 @@ void GenericExample::dataCheck2()
 
   vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(QString("Test Container"));
 
-  vdc = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(QString("Test Container"), QString("Test AttributeMatrix") );
   DataContainer::Pointer removedDataContainer = getDataContainerArray()->removeDataContainer("Test Container");
   removedDataContainer = DataContainer::NullPointer(); // this is just here to quiet the compiler about unused variables.
 }

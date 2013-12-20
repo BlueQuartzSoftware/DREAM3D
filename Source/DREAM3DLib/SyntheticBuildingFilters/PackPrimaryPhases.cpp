@@ -352,6 +352,9 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
   return ++index; // we want to return the next index that was just written to
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::updateCellInstancePointers()
 {
   setErrorCondition(0);
@@ -361,6 +364,7 @@ void PackPrimaryPhases::updateCellInstancePointers()
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -399,12 +403,13 @@ void PackPrimaryPhases::dataCheck()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
+  QVector<size_t> tDims(1, 0);  
+  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0) { return; }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   //Cell Data
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeatureIdsArrayName, -301, dims);
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -588,7 +593,7 @@ void PackPrimaryPhases::execute()
   // this initializes the arrays to hold the details of the locations of all of the features during packing
   initialize_packinggrid();
 
-  QVector<int> dim(1, 1);
+  QVector<size_t> dim(1, 1);
   Int32ArrayType::Pointer featureOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, dim, "PackPrimaryFeatures::feature_owners");
   featureOwnersPtr->initializeWithZeros();
   BoolArrayType::Pointer exclusionZonesPtr = BoolArrayType::CreateArray(m_TotalPackingPoints, dim, "PackPrimaryFeatures::exclusions_zones");
@@ -613,8 +618,8 @@ void PackPrimaryPhases::execute()
     float input = 0;
     float previoustotal = 0;
     VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
-    float avg = GSdist[0]->GetValue(0);
-    float stdev = GSdist[1]->GetValue(0);
+    float avg = GSdist[0]->getValue(0);
+    float stdev = GSdist[1]->getValue(0);
     float denominatorConst = 1.0 / sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
     for (size_t j = 0; j < featuresizedist[i].size(); j++)
     {
@@ -645,7 +650,8 @@ void PackPrimaryPhases::execute()
 
   // Estimate the total Number of features here
   int estNumFeatures = estimate_numfeatures((int)(udims[0]), (int)(udims[1]), (int)(udims[2]), xRes, yRes, zRes);
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(estNumFeatures);
+  QVector<size_t> tDims(1, estNumFeatures);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
   //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
 
@@ -674,7 +680,8 @@ void PackPrimaryPhases::execute()
         notifyStatusMessage(getHumanLabel(), ss);
         if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()))
         {
-          m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(gid + 1);
+          tDims[0] = gid+1;
+          m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
           //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
           updateFeatureInstancePointers();
         }
@@ -724,7 +731,8 @@ void PackPrimaryPhases::execute()
           notifyStatusMessage(getHumanLabel(), ss);
           if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()) )
           {
-            m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(gid + 1);
+            tDims[0] = gid+1;
+            m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
             //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
             updateFeatureInstancePointers();
           }
@@ -747,7 +755,8 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(gid);
+  tDims[0] = gid;
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
   totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
   //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
@@ -771,8 +780,8 @@ void PackPrimaryPhases::execute()
   {
     phase = primaryphases[i];
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
-    neighbordist[i].resize(pp->getBinNumbers()->GetSize());
-    simneighbordist[i].resize(pp->getBinNumbers()->GetSize());
+    neighbordist[i].resize(pp->getBinNumbers()->getSize());
+    simneighbordist[i].resize(pp->getBinNumbers()->getSize());
     VectorOfFloatArray Neighdist = pp->getFeatureSize_Neighbors();
     float normalizer = 0;
     for (size_t j = 0; j < neighbordist[i].size(); j++)
@@ -780,8 +789,8 @@ void PackPrimaryPhases::execute()
       neighbordist[i][j].resize(40);
       float input = 0;
       float previoustotal = 0;
-      float avg = Neighdist[0]->GetValue(j);
-      float stdev = Neighdist[1]->GetValue(j);
+      float avg = Neighdist[0]->getValue(j);
+      float stdev = Neighdist[1]->getValue(j);
       neighbordiststep[i] = 2;
       float denominatorConst = 1.0 / sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
       for (size_t k = 0; k < neighbordist[i][j].size(); k++)
@@ -1247,8 +1256,8 @@ void PackPrimaryPhases::generate_feature(int phase, int Seed, Feature* feature, 
   float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi)) / 8.0f);
   PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
-  float avg = GSdist[0]->GetValue(0);
-  float stdev = GSdist[1]->GetValue(0);
+  float avg = GSdist[0]->getValue(0);
+  float stdev = GSdist[1]->getValue(0);
   while (volgood == 0)
   {
     volgood = 1;
@@ -1265,20 +1274,20 @@ void PackPrimaryPhases::generate_feature(int phase, int Seed, Feature* feature, 
   while (r2 < r3)
   {
     r2 = 0, r3 = 0;
-    a2 = bovera[0]->GetValue(diameter);
-    b2 = bovera[1]->GetValue(diameter);
+    a2 = bovera[0]->getValue(diameter);
+    b2 = bovera[1]->getValue(diameter);
     if(a2 == 0)
     {
-      a2 = bovera[0]->GetValue(diameter - 1);
-      b2 = bovera[1]->GetValue(diameter - 1);
+      a2 = bovera[0]->getValue(diameter - 1);
+      b2 = bovera[1]->getValue(diameter - 1);
     }
     r2 = static_cast<float>(rg.genrand_beta(a2, b2));
-    a3 = covera[0]->GetValue(diameter);
-    b3 = covera[1]->GetValue(diameter);
+    a3 = covera[0]->getValue(diameter);
+    b3 = covera[1]->getValue(diameter);
     if(a3 == 0)
     {
-      a3 = covera[0]->GetValue(diameter - 1);
-      b3 = covera[1]->GetValue(diameter - 1);
+      a3 = covera[0]->getValue(diameter - 1);
+      b3 = covera[1]->getValue(diameter - 1);
     }
     r3 = static_cast<float>( rg.genrand_beta(a3, b3) );
   }
@@ -1286,15 +1295,15 @@ void PackPrimaryPhases::generate_feature(int phase, int Seed, Feature* feature, 
   float totaldensity = 0;
   int bin = 0;
   FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
-  while (random > totaldensity && bin < static_cast<int>(axisodf->GetSize()) )
+  while (random > totaldensity && bin < static_cast<int>(axisodf->getSize()) )
   {
-    totaldensity = totaldensity + axisodf->GetValue(bin);
+    totaldensity = totaldensity + axisodf->getValue(bin);
     bin++;
   }
   m_OrthoOps->determineEulerAngles(bin, phi1, PHI, phi2);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
-  float mf = omega3[0]->GetValue(diameter);
-  float s = omega3[1]->GetValue(diameter);
+  float mf = omega3[0]->getValue(diameter);
+  float s = omega3[1]->getValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
   if(shapeclass == DREAM3D::ShapeType::EllipsoidShape) { omega3f = 1; }
 
@@ -2384,7 +2393,7 @@ int PackPrimaryPhases::estimate_numfeatures(int xpoints, int ypoints, int zpoint
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
-    if(phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase)
+    if(phaseType->getValue(i) == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryPhasesLocal.push_back(i);
@@ -2418,8 +2427,8 @@ int PackPrimaryPhases::estimate_numfeatures(int xpoints, int ypoints, int zpoint
         // u = rg.genrand_res53();
         if(pp->getFeatureSize_DistType() == DREAM3D::DistributionType::LogNormal)
         {
-          float avgdiam = pp->getFeatureSizeDistribution().at(0)->GetValue(0);
-          float sddiam = pp->getFeatureSizeDistribution().at(1)->GetValue(0);
+          float avgdiam = pp->getFeatureSizeDistribution().at(0)->getValue(0);
+          float sddiam = pp->getFeatureSizeDistribution().at(1)->getValue(0);
           diam = rg.genrand_norm(avgdiam, sddiam);
           diam = exp(diam);
           if(diam >= pp->getMaxFeatureDiameter()) { volgood = 0; }
@@ -2485,13 +2494,13 @@ void PackPrimaryPhases::write_goal_attributes()
     IDataArray::Pointer p = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
-      if (p->GetNumberOfComponents() == 1)
+      if (p->getNumberOfComponents() == 1)
       {
         dStream << space << (*iter);
       }
       else // There are more than a single component so we need to add multiple header values
       {
-        for(int k = 0; k < p->GetNumberOfComponents(); ++k)
+        for(int k = 0; k < p->getNumberOfComponents(); ++k)
         {
           dStream << space << (*iter) << "_" << k;
         }

@@ -44,7 +44,6 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataArrays/GbcdDataArray.hpp"
 
 #include "UnitTestSupport.hpp"
 
@@ -80,56 +79,56 @@ void RemoveTestFiles()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void __TestCopyTuples()
+void __TestcopyTuples()
 {
   int err = 0;
-  QVector<int> dims(1, NUM_COMPONENTS_2);
-  typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_TUPLES_2, dims, "TestCopyTuples");
+  QVector<size_t> dims(1, NUM_COMPONENTS_2);
+  typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_TUPLES_2, dims, "TestcopyTuples");
   DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
 
   for(size_t i = 0; i < NUM_TUPLES_2; ++i)
   {
-    array->SetComponent(i, 0, static_cast<T>(i));
-    array->SetComponent(i, 1, static_cast<T>(i));
+    array->setComponent(i, 0, static_cast<T>(i));
+    array->setComponent(i, 1, static_cast<T>(i));
   }
 
-  err = array->CopyTuple(0, 1);
+  err = array->copyTuple(0, 1);
   DREAM3D_REQUIRE_EQUAL(0, err);
-  err = array->CopyTuple(3, 2);
+  err = array->copyTuple(3, 2);
   DREAM3D_REQUIRE_EQUAL(0, err);
-  err = array->CopyTuple(4, 5);
+  err = array->copyTuple(4, 5);
   DREAM3D_REQUIRE_EQUAL(0, err);
-  err = array->CopyTuple(8, 9);
+  err = array->copyTuple(8, 9);
   DREAM3D_REQUIRE_EQUAL(0, err);
-  err = array->CopyTuple(18, 19);
+  err = array->copyTuple(18, 19);
   DREAM3D_REQUIRE_EQUAL(-1, err);
 
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(1, 0), 0);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(1, 1), 0);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(2, 0), 3);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(2, 1), 3);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 4);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 4);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(9, 0), 8);
-  DREAM3D_REQUIRE_EQUAL(array->GetComponent(9, 1), 8);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(1, 0), 0);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(1, 1), 0);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(2, 0), 3);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(2, 1), 3);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 0), 4);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 1), 4);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(9, 0), 8);
+  DREAM3D_REQUIRE_EQUAL(array->getComponent(9, 1), 8);
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestCopyTuples()
+void TestcopyTuples()
 {
-  __TestCopyTuples<int8_t>();
-  __TestCopyTuples<uint8_t>();
-  __TestCopyTuples<int16_t>();
-  __TestCopyTuples<uint16_t>();
-  __TestCopyTuples<int32_t>();
-  __TestCopyTuples<uint32_t>();
-  __TestCopyTuples<int64_t>();
-  __TestCopyTuples<uint64_t>();
-  __TestCopyTuples<float>();
-  __TestCopyTuples<double>();
+  __TestcopyTuples<int8_t>();
+  __TestcopyTuples<uint8_t>();
+  __TestcopyTuples<int16_t>();
+  __TestcopyTuples<uint16_t>();
+  __TestcopyTuples<int32_t>();
+  __TestcopyTuples<uint32_t>();
+  __TestcopyTuples<int64_t>();
+  __TestcopyTuples<uint64_t>();
+  __TestcopyTuples<float>();
+  __TestcopyTuples<double>();
 }
 
 // -----------------------------------------------------------------------------
@@ -144,29 +143,29 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_ELEMENTS; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i) );
+      array->setComponent(i, 0, static_cast<T>(i) );
     }
 
     QVector<size_t> eraseElements;
     eraseElements.push_back(0);
     eraseElements.push_back(1);
 
-    array->EraseTuples(eraseElements);
+    array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetValue(0), 2);
-    DREAM3D_REQUIRE_EQUAL(array->GetValue(1), 3);
-    DREAM3D_REQUIRE_EQUAL(array->GetValue(2), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getValue(0), 2);
+    DREAM3D_REQUIRE_EQUAL(array->getValue(1), 3);
+    DREAM3D_REQUIRE_EQUAL(array->getValue(2), 4);
   }
 
   // Test Dropping of internal elements
   {
-    QVector<int> dims(1, NUM_COMPONENTS_2);
+    QVector<size_t> dims(1, NUM_COMPONENTS_2);
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, dims, "Test2");
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
@@ -174,134 +173,134 @@ void __TestEraseElements()
     eraseElements.push_back(6);
     eraseElements.push_back(8);
 
-    array->EraseTuples(eraseElements);
+    array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 0), 9);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 1), 9);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 0), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 1), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 0), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 1), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(6, 0), 9);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(6, 1), 9);
   }
 
   // Test Dropping of internal elements
   {
-    QVector<int> dims(1, NUM_COMPONENTS_2);
+    QVector<size_t> dims(1, NUM_COMPONENTS_2);
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, dims, "Test3");
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
     eraseElements.push_back(3);
     eraseElements.push_back(6);
     eraseElements.push_back(9);
-    array->EraseTuples(eraseElements);
+    array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 0), 8);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 1), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 0), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 1), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 0), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 1), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(6, 0), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(6, 1), 8);
   }
 
   // Test Dropping of internal continuous elements
   {
-    QVector<int> dims(1, NUM_COMPONENTS_2);
+    QVector<size_t> dims(1, NUM_COMPONENTS_2);
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, dims, "Test4");
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
     eraseElements.push_back(3);
     eraseElements.push_back(4);
     eraseElements.push_back(5);
-    array->EraseTuples(eraseElements);
+    array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 6);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 6);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 0), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 1), 7);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 8);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 0), 6);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(3, 1), 6);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(4, 0), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(4, 1), 7);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 0), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 1), 8);
   }
 
   // Test Dropping of Front and Back Elements
   {
-    QVector<int> dims(1, NUM_COMPONENTS_2);
+    QVector<size_t> dims(1, NUM_COMPONENTS_2);
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, dims, "Test5");
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
     eraseElements.push_back(0);
     eraseElements.push_back(9);
 
-    array->EraseTuples(eraseElements);
+    array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(0, 0), 1);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(0, 1), 1);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(7, 0), 8);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(7, 1), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(0, 0), 1);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(0, 1), 1);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(7, 0), 8);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(7, 1), 8);
   }
 
   // Test Dropping of Back Elements
   {
-    QVector<int> dims(1, NUM_COMPONENTS_2);
+    QVector<size_t> dims(1, NUM_COMPONENTS_2);
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, dims, "Test6");
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
     eraseElements.push_back(7);
     eraseElements.push_back(8);
     eraseElements.push_back(9);
-    array->EraseTuples(eraseElements);
+    array->eraseTuples(eraseElements);
 
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 0), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 1), 4);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 5);
-    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 5);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(4, 0), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(4, 1), 4);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 0), 5);
+    DREAM3D_REQUIRE_EQUAL(array->getComponent(5, 1), 5);
   }
 
   // Test Dropping of indices larger than the number of tuples
   {
-    QVector<int> dims(1, NUM_COMPONENTS_2);
+    QVector<size_t> dims(1, NUM_COMPONENTS_2);
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_TUPLES_2, dims, "Test6");
     DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, static_cast<T>(i));
-      array->SetComponent(i, 1, static_cast<T>(i));
+      array->setComponent(i, 0, static_cast<T>(i));
+      array->setComponent(i, 1, static_cast<T>(i));
     }
 
     QVector<size_t> eraseElements;
     eraseElements.push_back(10);
-    int err = array->EraseTuples(eraseElements);
+    int err = array->eraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , -100)
 
     eraseElements.clear();
-    err = array->EraseTuples(eraseElements);
+    err = array->eraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , 0)
 
     eraseElements.resize(20);
-    err = array->EraseTuples(eraseElements);
+    err = array->eraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , 0)
     size_t nTuples = array->getNumberOfTuples();
     DREAM3D_REQUIRE_EQUAL(nTuples, 0)
@@ -336,7 +335,7 @@ void TestDataArray()
   int32_t* ptr = NULL;
   {
     Int32ArrayType::Pointer d = Int32ArrayType::CreateArray(0, "Test7");
-    DREAM3D_REQUIRE_EQUAL(0, d->GetSize());
+    DREAM3D_REQUIRE_EQUAL(0, d->getSize());
     DREAM3D_REQUIRE_EQUAL(0, d->getNumberOfTuples());
     ptr = d->getPointer(0);
     DREAM3D_REQUIRE_EQUAL(ptr, 0);
@@ -344,25 +343,25 @@ void TestDataArray()
   }
 
   {
-    QVector<int> dims(1, NUM_COMPONENTS);
+    QVector<size_t> dims(1, NUM_COMPONENTS);
     Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS, dims, "Test8");
     ptr = int32Array->getPointer(0);
     DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->getNumberOfTuples());
-    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS * NUM_COMPONENTS, int32Array->GetSize());
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS * NUM_COMPONENTS, int32Array->getSize());
 
     for (int i = 0; i < NUM_TUPLES; ++i)
     {
       for (int c = 0; c < NUM_COMPONENTS; ++c)
       {
-        int32Array->SetComponent(i, c, i + c);
+        int32Array->setComponent(i, c, i + c);
       }
     }
 
     // Resize Larger
     int32Array->resize(NUM_TUPLES_2);
     DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_2, int32Array->getNumberOfTuples());
-    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_2, int32Array->GetSize());
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_2, int32Array->getSize());
     DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
 
     // This should have saved our data so lets look at the data and compare it
@@ -370,14 +369,14 @@ void TestDataArray()
     {
       for (int c = 0; c < NUM_COMPONENTS; ++c)
       {
-        DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i + c))
+        DREAM3D_REQUIRE_EQUAL( (int32Array->getComponent(i, c)), (i + c))
       }
     }
 
     // Resize Smaller - Which should have still saved some of our data
     int32Array->resize(NUM_TUPLES_3);
     DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_3, int32Array->getNumberOfTuples());
-    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_3, int32Array->GetSize());
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_3, int32Array->getSize());
     DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
 
     // This should have saved our data so lets look at the data and compare it
@@ -385,21 +384,21 @@ void TestDataArray()
     {
       for (int c = 0; c < NUM_COMPONENTS; ++c)
       {
-        DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i + c))
+        DREAM3D_REQUIRE_EQUAL( (int32Array->getComponent(i, c)), (i + c))
       }
     }
 
     // Change number of components
-    dims[0] = NUM_COMPONENTS_4;
-    int32Array->SetDims(dims);
-    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4, int32Array->getNumberOfTuples());
-    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4, int32Array->GetSize());
+//    dims[0] = NUM_COMPONENTS_4;
+//    int32Array->setDims(dims);
+//    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4, int32Array->getNumberOfTuples());
+//    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4, int32Array->getSize());
 
     double temp = 9999;
-    int32Array->InitializeTuple(0, temp );
+    int32Array->initializeTuple(0, temp );
     for (int c = 0; c < NUM_COMPONENTS; ++c)
     {
-      DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(0, c)), (9999))
+      DREAM3D_REQUIRE_EQUAL( (int32Array->getComponent(0, c)), (9999))
     }
 
 
@@ -415,7 +414,7 @@ template<typename T>
 void __TestNeighborList()
 {
   typename NeighborList<T>::Pointer n = NeighborList<T>::New();
-  n->SetName("Test");
+  n->setName("Test");
 
   for(int i = 0; i < 4; ++i)
   {
@@ -437,7 +436,7 @@ void __TestNeighborList()
   eraseElements.push_back(0);
   eraseElements.push_back(1);
 
-  n->EraseTuples(eraseElements);
+  n->eraseTuples(eraseElements);
   for(int i = 0; i < 2; ++i)
   {
     v = n->getList(i);
@@ -461,7 +460,7 @@ void __TestNeighborList()
   eraseElements.clear();
   eraseElements.push_back(2);
   eraseElements.push_back(3);
-  n->EraseTuples(eraseElements);
+  n->eraseTuples(eraseElements);
   for(int i = 0; i < 2; ++i)
   {
     v = n->getList(i);
@@ -485,7 +484,7 @@ void __TestNeighborList()
   eraseElements.clear();
   eraseElements.push_back(1);
   eraseElements.push_back(2);
-  n->EraseTuples(eraseElements);
+  n->eraseTuples(eraseElements);
   int i = 0;
   v = n->getList(i);
   DREAM3D_REQUIRE_NE(v.get(), 0);
@@ -522,103 +521,6 @@ void TestNeighborList()
   __TestNeighborList<double>();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestGbcdDataArray()
-{
-
-  size_t dims[5] = {60, 29, 60, 60, 29};
-  size_t size = dims[0] * dims[1] * dims[2] * dims[3] * dims[4];
-  GBCDFloatArrayType::Pointer m_GBCD = GBCDFloatArrayType::CreateArray(dims, "GBCD Data", false);
-
-  size_t retDims[5];
-  m_GBCD->GetGbcdDimension(retDims);
-  DREAM3D_REQUIRE_EQUAL(retDims[0], dims[0])
-  DREAM3D_REQUIRE_EQUAL(retDims[1], dims[1])
-  DREAM3D_REQUIRE_EQUAL(retDims[2], dims[2])
-  DREAM3D_REQUIRE_EQUAL(retDims[3], dims[3])
-  DREAM3D_REQUIRE_EQUAL(retDims[4], dims[4])
-  DREAM3D_REQUIRE_EQUAL(false, m_GBCD->isAllocated())
-
-  DREAM3D_REQUIRE_EQUAL(size, m_GBCD->GetSize())
-
-  // This will test writing an array that has not been allocated which should return an
-  // negative error code.
-  {
-    hid_t fid = QH5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
-    DREAM3D_REQUIRE(fid > 0)
-    int err = m_GBCD->writeH5Data(fid);
-    DREAM3D_REQUIRE(err < 0)
-    QH5Utilities::closeFile(fid);
-  }
-
-  // Now allocate all the memory we need
-  m_GBCD->Allocate();
-  DREAM3D_REQUIRE_EQUAL(true, m_GBCD->isAllocated())
-  float* ptr = m_GBCD->getPointer(0);
-  size_t idx = 0;
-  // Now dump some actual data in the arrays
-  for(size_t i = 0; i < dims[0]; ++i)
-  {
-    for(size_t j = 0; j < dims[1]; ++j)
-    {
-      for(size_t k = 0; k < dims[2]; ++k)
-      {
-        for(size_t l = 0; l < dims[3]; ++l)
-        {
-          for(size_t m = 0; m < dims[4]; ++m)
-          {
-            ptr[idx] = static_cast<float>(i + j + k + l + m);
-            idx++;
-          }
-        }
-      }
-    }
-  }
-
-
-  // This will test writing an array that has been allocated which should return an
-  // Zero or Positive error code.
-  {
-    hid_t fid = QH5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
-    DREAM3D_REQUIRE(fid > 0)
-    int err = m_GBCD->writeH5Data(fid);
-    DREAM3D_REQUIRE(err >= 0)
-    QH5Utilities::closeFile(fid);
-  }
-
-  {
-    hid_t fid = QH5Utilities::openFile(UnitTest::DataArrayTest::TestFile, true);
-    DREAM3D_REQUIRE(fid > 0)
-    m_GBCD->initializeWithZeros();
-    int err = m_GBCD->readH5Data(fid);
-    DREAM3D_REQUIRE(err >= 0)
-    QH5Utilities::closeFile(fid);
-    ptr = m_GBCD->getPointer(0);
-    idx = 0;
-    // Now dump some actual data in the arrays
-    for(size_t i = 0; i < dims[0]; ++i)
-    {
-      for(size_t j = 0; j < dims[1]; ++j)
-      {
-        for(size_t k = 0; k < dims[2]; ++k)
-        {
-          for(size_t l = 0; l < dims[3]; ++l)
-          {
-            for(size_t m = 0; m < dims[4]; ++m)
-            {
-              DREAM3D_REQUIRE(ptr[idx] == i + j + k + l + m)
-              idx++;
-            }
-          }
-        }
-      }
-    }
-
-  }
-
-}
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
@@ -636,9 +538,8 @@ int main(int argc, char** argv)
 
   DREAM3D_REGISTER_TEST( TestDataArray() )
   DREAM3D_REGISTER_TEST( TestEraseElements() )
-  DREAM3D_REGISTER_TEST( TestCopyTuples() )
+  DREAM3D_REGISTER_TEST( TestcopyTuples() )
   DREAM3D_REGISTER_TEST( TestNeighborList() )
-  DREAM3D_REGISTER_TEST( TestGbcdDataArray() )
 
 #if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )

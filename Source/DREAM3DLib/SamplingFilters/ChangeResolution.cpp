@@ -203,20 +203,20 @@ void ChangeResolution::execute()
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name. At least in theory
-    QVector<int> dims(1, p->GetNumberOfComponents());
-    IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), dims, p->GetName());
+    QVector<size_t> dims(1, p->getNumberOfComponents());
+    IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), dims, p->getName());
     data->resize(totalPoints);
     void* source = NULL;
     void* destination = NULL;
     size_t newIndicies_I = 0;
-    int nComp = data->GetNumberOfComponents();
+    int nComp = data->getNumberOfComponents();
     for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
     {
       newIndicies_I = newindicies[i];
 
-      source = p->GetVoidPointer((nComp * newIndicies_I));
-      destination = data->GetVoidPointer((data->GetNumberOfComponents() * i));
-      ::memcpy(destination, source, p->GetTypeSize() * data->GetNumberOfComponents());
+      source = p->getVoidPointer((nComp * newIndicies_I));
+      destination = data->getVoidPointer((data->getNumberOfComponents() * i));
+      ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
     }
     m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(*iter, data);
   }

@@ -147,7 +147,7 @@ void FindFeatureHistogram::dataCheck()
   }
   if(m_RemoveBiasedFeatures == true)
   {
-    QVector<int> dims(1, 1);
+    QVector<size_t> dims(1, 1);
     m_BiasedFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_BiasedFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -179,7 +179,7 @@ IDataArray::Pointer findHistogram(IDataArray::Pointer inputData, int64_t ensembl
   int numComp = NumBins;
 
   ss = selectedFeatureArrayName + QString("Histogram");
-  QVector<int> dims(1, numComp);
+  QVector<size_t> dims(1, numComp);
   typename DataArray<float>::Pointer ensembleArray = DataArray<float>::CreateArray(ensembles, dims, ss);
 
   T* fPtr = featureArray->getPointer(0);
@@ -301,7 +301,7 @@ void FindFeatureHistogram::execute()
     p = findHistogram<bool>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
 
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->GetName(), p);
+  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->getName(), p);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

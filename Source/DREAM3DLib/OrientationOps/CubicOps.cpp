@@ -1390,7 +1390,7 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize0, dims, label0 + QString("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
   FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize1, dims, label1 + QString("xyzCoords"));
@@ -1501,11 +1501,11 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
 #if 0
   size_t dim[3] = {config.imageDim, config.imageDim, 1};
   float res[3] = {1.0, 1.0, 1.0};
-  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity001->GetName() + ".vtk",
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity001->getName() + ".vtk",
                                                  intensity001.get(), dim, res, "double", true );
-  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity011->GetName() + ".vtk",
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity011->getName() + ".vtk",
                                                  intensity011.get(), dim, res, "double", true );
-  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity111->GetName() + ".vtk",
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity111->getName() + ".vtk",
                                                  intensity111.get(), dim, res, "double", true );
 #endif
   return poleFigures;
@@ -1517,7 +1517,7 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
 UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 {
 
-  QVector<int> dims(1, 4);
+  QVector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, "Cubic High IPF Triangle Legend");
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
@@ -1708,7 +1708,7 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& 
 // -----------------------------------------------------------------------------
 UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float angle, int n1, int n2, int imageDim)
 {
-  QVector<int> dims(1, 4);
+  QVector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, "Cubic High Misorientation Triangle Legend");
   //uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 

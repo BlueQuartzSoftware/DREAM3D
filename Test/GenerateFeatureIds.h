@@ -46,7 +46,11 @@ class GenerateFeatureIds : public AbstractFilter
       VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
 
       int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
-      m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(size);
+      QVector<size_t> tDims(3, 0);
+      tDims[0] = UnitTest::FeatureIdsTest::XSize;
+      tDims[1] = UnitTest::FeatureIdsTest::YSize;
+      tDims[2] = UnitTest::FeatureIdsTest::ZSize;
+      m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
 
       dataCheck();
       // Set the default data into the FeatureIds
@@ -96,7 +100,7 @@ class GenerateFeatureIds : public AbstractFilter
        AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
       if(getErrorCondition() < 0) { return; }
 
-      QVector<int> dims(1, 1);
+      QVector<size_t> dims(1, 1);
       m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -188,7 +192,11 @@ class CreateVolumeDataContainer : public AbstractFilter
       int64_t nz = UnitTest::FeatureIdsTest::ZSize;
       m->setDimensions(nx, ny, nz);
       getDataContainerArray()->pushBack(m);
-      AttributeMatrix::Pointer attrMat = AttributeMatrix::New(DREAM3D::Defaults::CellAttributeMatrixName);
+      QVector<size_t> tDims(3, 0);
+      tDims[0] = nx;
+      tDims[1] = ny;
+      tDims[2] = nz;
+      AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
       m->addAttributeMatrix(attrMat->getName(), attrMat);
     }
 

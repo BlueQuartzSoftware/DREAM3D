@@ -153,7 +153,8 @@ void FeatureInfoReader::dataCheck()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -170,7 +171,7 @@ void FeatureInfoReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -242,7 +243,7 @@ int FeatureInfoReader::readFile()
   featureActive->initializeWithValues(true);
 
   // Initialize arrays to hold the data for the Euler Data
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer featureEulerData = FloatArrayType::CreateArray(numfeatures + 1, dims, DREAM3D::FeatureData::EulerAngles);
   featureEulerData->initializeWithZeros();
 
@@ -252,16 +253,16 @@ int FeatureInfoReader::readFile()
   for(int i = 0; i < numfeatures; i++)
   {
     inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
-    if(gnum >= featureActive->GetSize())
+    if(gnum >= featureActive->getSize())
     {
       featureActive->resize(gnum + 1);
       featurePhaseData->resize(gnum + 1);
       featureEulerData->resize(gnum + 1);
     }
-    featureEulerData->SetValue(3 * gnum, ea1);
-    featureEulerData->SetValue(3 * gnum + 1, ea2);
-    featureEulerData->SetValue(3 * gnum + 2, ea3);
-    featurePhaseData->SetValue(gnum, phase);
+    featureEulerData->setValue(3 * gnum, ea1);
+    featureEulerData->setValue(3 * gnum + 1, ea2);
+    featureEulerData->setValue(3 * gnum + 2, ea3);
+    featurePhaseData->setValue(gnum, phase);
     if(phase > maxphase) { maxphase = phase; }
   }
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::EulerAngles, featureEulerData);
@@ -271,7 +272,7 @@ int FeatureInfoReader::readFile()
   if (m_CreateCellLevelArrays == true)
   {
     int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-    QVector<int> dims(1, 3);
+    QVector<size_t> dims(1, 3);
     FloatArrayType::Pointer cellEulerData = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::FeatureData::EulerAngles);
     cellEulerData->initializeWithZeros();
     Int32ArrayType::Pointer cellPhaseData = Int32ArrayType::CreateArray(totalPoints, DREAM3D::FeatureData::Phases);
@@ -279,10 +280,10 @@ int FeatureInfoReader::readFile()
     for(int i = 0; i < totalPoints; i++)
     {
       gnum = m_FeatureIds[i];
-      cellEulerData->SetValue(3 * i, featureEulerData->GetValue(3 * gnum));
-      cellEulerData->SetValue(3 * i + 1, featureEulerData->GetValue(3 * gnum + 1));
-      cellEulerData->SetValue(3 * i + 2, featureEulerData->GetValue(3 * gnum + 2));
-      cellPhaseData->SetValue(i, featurePhaseData->GetValue(gnum));
+      cellEulerData->setValue(3 * i, featureEulerData->getValue(3 * gnum));
+      cellEulerData->setValue(3 * i + 1, featureEulerData->getValue(3 * gnum + 1));
+      cellEulerData->setValue(3 * i + 2, featureEulerData->getValue(3 * gnum + 2));
+      cellPhaseData->setValue(i, featurePhaseData->getValue(gnum));
     }
     m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, cellEulerData);
     m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, cellPhaseData);

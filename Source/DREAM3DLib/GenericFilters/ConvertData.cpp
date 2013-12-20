@@ -64,96 +64,96 @@ namespace Detail
   template<typename T>
   void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const QString attributeMatrixName, const QString& name)
   {
-    int numberOfComponents = ptr->GetNumberOfComponents();
+    int numberOfComponents = ptr->getNumberOfComponents();
     int voxels = ptr->getNumberOfTuples();
-    size_t size = ptr->GetSize();
+    size_t size = ptr->getSize();
 
 
-    QVector<int> dims(1, numberOfComponents);
+    QVector<size_t> dims(1, numberOfComponents);
     if (scalarType == Detail::Int8)
     {
       Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, dims, name);
-      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::UInt8)
     {
       UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, dims, name);
-      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::Int16)
     {
       Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, dims, name);
-      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::UInt16)
     {
       UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, dims, name);
-      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::Int32)
     {
       Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, dims, name);
-      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::UInt32)
     {
       UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, dims, name);
-      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::Int64)
     {
       Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, dims, name);
-      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::UInt64)
     {
       UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, dims, name);
-      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
     else if (scalarType == Detail::Float)
     {
       FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, dims, name);
-      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
     }
     else if (scalarType == Detail::Double)
     {
       DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, dims, name);
-      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->GetName(), p);
+      m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
       for(size_t v = 0; v < size; ++v)
       {
-        p->SetValue(v, ptr->GetValue(v) );
+        p->setValue(v, ptr->getValue(v) );
       }
     }
   }
@@ -299,13 +299,13 @@ void ConvertData::dataCheck(bool preflight)
   IDataArray::Pointer iArray = cellAttrMat->getAttributeArray(m_SelectedCellArrayName);
   if (NULL != iArray)
   {
-    numberOfComponents = iArray->GetNumberOfComponents();
+    numberOfComponents = iArray->getNumberOfComponents();
   }
 
   if (true == preflight)
   {
     IDataArray::Pointer p = IDataArray::NullPointer();
-    QVector<int> dims(1, numberOfComponents);
+    QVector<size_t> dims(1, numberOfComponents);
     int64_t voxels = cellAttrMat->getNumTuples();
     if (m_ScalarType == Detail::Int8)
     {
@@ -347,7 +347,7 @@ void ConvertData::dataCheck(bool preflight)
     {
       p = DoubleArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->GetName(), p);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->getName(), p);
   }
 }
 

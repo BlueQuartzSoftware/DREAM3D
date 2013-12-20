@@ -140,7 +140,7 @@ void ImportImageStack::dataCheck()
   }
   else
   {
-    QVector<int> arraydims(1, 1);
+    QVector<size_t> arraydims(1, 1);
     // This would be for a gray scale image
     m_ImageDataPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_ImageDataArrayName, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -255,7 +255,7 @@ void ImportImageStack::execute()
       {
         pixelBytes = 4;
       }
-      QVector<int> compDims(3, 0);
+      QVector<size_t> compDims(3, 0);
       compDims[0] = height;
       compDims[1] = width;
       compDims[2] = pixelBytes;
@@ -281,7 +281,7 @@ void ImportImageStack::execute()
     }
   }
 
-  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(data->GetName(), data);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(data->getName(), data);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

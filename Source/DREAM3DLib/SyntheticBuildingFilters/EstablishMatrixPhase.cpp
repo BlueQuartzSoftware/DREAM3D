@@ -106,12 +106,13 @@ void EstablishMatrixPhase::dataCheck()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
+  QVector<size_t> tDims(1, 0);  
+  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0) { return; }
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   // Cell Data
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -207,9 +208,10 @@ void  EstablishMatrixPhase::establish_matrix()
   int64_t totalPoints = m->getTotalPoints();
   size_t currentnumfeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
   size_t numensembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
+  QVector<size_t> tDims(1, 1);
   if(currentnumfeatures == 0)
   {
-    m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(1);
+    m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
     dataCheck();
     currentnumfeatures = 1;
   }
@@ -250,7 +252,8 @@ void  EstablishMatrixPhase::establish_matrix()
       }
       if(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples() <= (firstMatrixFeature + j))
       {
-        m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays((firstMatrixFeature + j) + 1);
+        tDims[0] = (firstMatrixFeature + j) + 1;
+        m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
         dataCheck();
       }
       m_FeatureIds[i] = (firstMatrixFeature + j);

@@ -70,7 +70,7 @@
 
 #define TEST_DATA_CONTAINER(Type, DCType)\
   {  IDataArray::Pointer t_##Type = Type::CreateArray(5);\
-    t_##Type->SetName( #Type );\
+    t_##Type->setName( #Type );\
     m->add##DCType(#Type, t_##Type);\
     IDataArray::Pointer t = m->get##DCType(#Type);\
     DREAM3D_TEST_POINTER(ptr, !=, NULL);\
@@ -138,14 +138,14 @@ void TestDataContainerWriter()
   Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(size, DREAM3D::CellData::FeatureIds);
   for (int i = 0; i < size; ++i)
   {
-    featureIds->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
+    featureIds->setValue(i, i + UnitTest::DataContainerIOTest::Offset);
   }
   attrMat->addAttributeArray(DREAM3D::CellData::FeatureIds, featureIds);
 
   BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, DREAM3D::CellData::SurfaceVoxels);
   for (int i = 0; i < size; ++i)
   {
-    boolArray->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
+    boolArray->setValue(i, i + UnitTest::DataContainerIOTest::Offset);
   }
   attrMat->addAttributeArray(DREAM3D::CellData::SurfaceVoxels, boolArray);
 
@@ -153,9 +153,9 @@ void TestDataContainerWriter()
   FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(4, dims, DREAM3D::FeatureData::AxisEulerAngles);
   for(size_t i = 0; i < 4; ++i)
   {
-    avgEuler->SetComponent(i, 0, i * 0.665f);
-    avgEuler->SetComponent(i, 1, i * 0.665f);
-    avgEuler->SetComponent(i, 2, i * 0.665f);
+    avgEuler->setComponent(i, 0, i * 0.665f);
+    avgEuler->setComponent(i, 1, i * 0.665f);
+    avgEuler->setComponent(i, 2, i * 0.665f);
   }
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::AxisEulerAngles, avgEuler);
 
@@ -163,13 +163,13 @@ void TestDataContainerWriter()
   FloatArrayType::Pointer surfArea = FloatArrayType::CreateArray(4, DREAM3D::EnsembleData::TotalSurfaceAreas);
   for (int i = 0; i < 4; ++i)
   {
-    surfArea->SetValue(i, i + 41.2f);
+    surfArea->setValue(i, i + 41.2f);
   }
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::TotalSurfaceAreas, surfArea);
 
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
-  neighborlistPtr->SetName(DREAM3D::FeatureData::NeighborList);
+  neighborlistPtr->setName(DREAM3D::FeatureData::NeighborList);
   neighborlistPtr->setNumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::NeighborList, neighborlistPtr);
 
@@ -262,7 +262,8 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   DREAM3D_TEST_POINTER(attrMatrix.get(), ==, NULL)
 
   // Now add an AttributeMatrix to the DataContainer
-  AttributeMatrix* attrMat = m->createAndAddAttributeMatrix(getCellAttributeMatrixName());
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix* attrMat = m->createAndAddAttributeMatrix(tDims, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
   DREAM3D_TEST_POINTER(attrMat, !=, NULL)
 
   // Now create an Array and add it to the Attribute Matrix
@@ -270,12 +271,12 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   int err = attrMat->addAttributeArray("Test", p);
   DREAM3D_REQUIRED(err, < , 0) // This should fail because the number of tuples in the array is different from that of the AttributeMatrix
 
-
-  attrMat->resizeAttributeArrays(5);
+  tDims[0] = 5;
+  attrMat->resizeAttributeArrays(tDims);
   err = attrMat->addAttributeArray("Test", p);
   DREAM3D_REQUIRED(err, >=, 0)
 
-	// Now get it back out as the specific type that we put it in as
+  // Now get it back out as the specific type that we put it in as
   typename T::Pointer t = attrMat->getArray<T>("Test");
   DREAM3D_TEST_POINTER(t.get(), !=, NULL)
 
@@ -283,7 +284,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   IDataArray::Pointer ida = attrMat->getAttributeArray("Test");
   DREAM3D_TEST_POINTER(ida.get(), !=, NULL);
 
-  QVector<int> dims(1, 1);
+  QVector<size_t> dims(1, 1);
   t = attrMat->getPrereqArray<T, AbstractFilter>(NULL, "Test", -723, dims);
   DREAM3D_TEST_POINTER(t.get(), !=, NULL);
 
@@ -555,7 +556,7 @@ void TestDataContainer()
       }
       for (int i = 0; i < 5; ++i)
       {
-        std::cout << (int)(intPtr->GetValue(i)) << std::endl;
+        std::cout << (int)(intPtr->getValue(i)) << std::endl;
       }
     }
 

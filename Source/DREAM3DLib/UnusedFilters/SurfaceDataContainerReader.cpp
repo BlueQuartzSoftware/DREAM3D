@@ -408,15 +408,15 @@ int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString& group
     {
       if(groupName.compare(H5_FACE_DATA_GROUP_NAME) == 0)
       {
-        dc->addFaceData(dPtr->GetName(), dPtr);
+        dc->addFaceData(dPtr->getName(), dPtr);
       }
       else if(groupName.compare(H5_FACE_FIELD_DATA_GROUP_NAME) == 0)
       {
-        dc->addFaceFeatureData(dPtr->GetName(), dPtr);
+        dc->addFaceFeatureData(dPtr->getName(), dPtr);
       }
       else if(groupName.compare(H5_FACE_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        dc->addFaceEnsembleData(dPtr->GetName(), dPtr);
+        dc->addFaceEnsembleData(dPtr->getName(), dPtr);
       }
     }
 

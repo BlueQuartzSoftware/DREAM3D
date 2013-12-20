@@ -163,13 +163,13 @@ void CalculateTriangleGroupCurvatures::operator()() const
     DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, m_SurfaceMeshFaceNormals->getPointer(0), QString("Patch_Normals"));
 
     // Translate the patch to the 0,0,0 origin
-    double sub[3] = {patchCentroids->GetComponent(0, 0), patchCentroids->GetComponent(0, 1), patchCentroids->GetComponent(0, 2)};
+    double sub[3] = {patchCentroids->getComponent(0, 0), patchCentroids->getComponent(0, 1), patchCentroids->getComponent(0, 2)};
     subtractVector3d(patchCentroids, sub);
 
-    double np[3] = {patchNormals->GetComponent(0, 0), patchNormals->GetComponent(0, 1), patchNormals->GetComponent(0, 2) };
+    double np[3] = {patchNormals->getComponent(0, 0), patchNormals->getComponent(0, 1), patchNormals->getComponent(0, 2) };
 
-    double seedCentroid[3] = {patchCentroids->GetComponent(0, 0), patchCentroids->GetComponent(0, 1), patchCentroids->GetComponent(0, 2) };
-    double firstCentroid[3] = {patchCentroids->GetComponent(1, 0), patchCentroids->GetComponent(1, 1), patchCentroids->GetComponent(1, 2) };
+    double seedCentroid[3] = {patchCentroids->getComponent(0, 0), patchCentroids->getComponent(0, 1), patchCentroids->getComponent(0, 2) };
+    double firstCentroid[3] = {patchCentroids->getComponent(1, 0), patchCentroids->getComponent(1, 1), patchCentroids->getComponent(1, 2) };
 
     double temp[3] = {firstCentroid[0] - seedCentroid[0], firstCentroid[1] - seedCentroid[1], firstCentroid[2] - seedCentroid[2]};
     double vp[3] = {0.0, 0.0, 0.0};
@@ -217,9 +217,9 @@ void CalculateTriangleGroupCurvatures::operator()() const
       double x, y, z;
       for(int m = 0; m < rows; ++m)
       {
-        x = patchCentroids->GetComponent(m, 0);
-        y = patchCentroids->GetComponent(m, 1);
-        z = patchCentroids->GetComponent(m, 2);
+        x = patchCentroids->getComponent(m, 0);
+        y = patchCentroids->getComponent(m, 1);
+        z = patchCentroids->getComponent(m, 2);
 
         A(m) = 0.5 * x * x;  // 1/2 x^2
         A(m + rows) = x * y; // x*y
@@ -261,16 +261,16 @@ void CalculateTriangleGroupCurvatures::operator()() const
       double kappa1 = eValues(0) * -1;// Kappa 1
       double kappa2 = eValues(1) * -1; //kappa 2
       BOOST_ASSERT(kappa1 >= kappa2);
-      m_PrincipleCurvature1->SetValue(triId, kappa1);
-      m_PrincipleCurvature2->SetValue(triId, kappa2);
+      m_PrincipleCurvature1->setValue(triId, kappa1);
+      m_PrincipleCurvature2->setValue(triId, kappa2);
 
       if (computeGaussian == true)
       {
-        m_GaussianCurvature->SetValue(triId, kappa1 * kappa2);
+        m_GaussianCurvature->setValue(triId, kappa1 * kappa2);
       }
       if (computeMean == true)
       {
-        m_MeanCurvature->SetValue(triId, (kappa1 + kappa2) / 2.0);
+        m_MeanCurvature->setValue(triId, (kappa1 + kappa2) / 2.0);
       }
 
       if (computeDirection == true)
@@ -302,23 +302,23 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
     double* data,
     const QString& name) const
 {
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size(), dims, name);
   // This little chunk makes sure the current seed triangles centroid and normal data appear
   // first in the returned arrays which makes the next steps a tad easier.
   int i = 0;
-  extractedData->SetComponent(i, 0, data[triId * 3]);
-  extractedData->SetComponent(i, 1, data[triId * 3 + 1]);
-  extractedData->SetComponent(i, 2, data[triId * 3 + 2]);
+  extractedData->setComponent(i, 0, data[triId * 3]);
+  extractedData->setComponent(i, 1, data[triId * 3 + 1]);
+  extractedData->setComponent(i, 2, data[triId * 3 + 2]);
   ++i;
   triPatch.remove(triId);
 
   for(QSet<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
   {
     int32_t t = *iter;
-    extractedData->SetComponent(i, 0, data[t * 3]);
-    extractedData->SetComponent(i, 1, data[t * 3 + 1]);
-    extractedData->SetComponent(i, 2, data[t * 3 + 2]);
+    extractedData->setComponent(i, 0, data[t * 3]);
+    extractedData->setComponent(i, 1, data[t * 3 + 1]);
+    extractedData->setComponent(i, 2, data[t * 3 + 2]);
     ++i;
   }
   triPatch.insert(triId);

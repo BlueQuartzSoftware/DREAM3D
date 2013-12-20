@@ -141,9 +141,12 @@ void ReadOrientationData::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
+  tDims.resize(1);
+  tDims[0] = 0;
+  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(m_InputFile);
@@ -161,7 +164,7 @@ void ReadOrientationData::dataCheck()
   }
   else if (m_InputFile.isEmpty() == false)
   {
-    QVector<int> dims(3, 0);
+    QVector<size_t> dims(3, 0);
 
     QString ext = fi.suffix();
     QVector<QString> names;
@@ -212,7 +215,7 @@ void ReadOrientationData::dataCheck()
       m->setOrigin(0.0f, 0.0f, 0.0f);
       CtfFields ctffeatures;
       names = ctffeatures.getFilterFeatures<QVector<QString> > ();
-      QVector<int> dims(1, 1);
+      QVector<size_t> dims(1, 1);
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -238,7 +241,7 @@ void ReadOrientationData::dataCheck()
       m->setOrigin(0.0f, 0.0f, 0.0f);
       MicFields micfeatures;
       names = micfeatures.getFilterFeatures<QVector<QString> > ();
-      QVector<int> dims(1, 1);
+      QVector<size_t> dims(1, 1);
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -259,7 +262,7 @@ void ReadOrientationData::dataCheck()
       return;
     }
 
-    QVector<int> dim(1, 3);
+    QVector<size_t> dim(1, 3);
     m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -340,13 +343,19 @@ void ReadOrientationData::readAngFile()
     return;
   }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+  AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
 
-  int64_t dims[3];
-  dims[0] = reader.getXDimension();
-  dims[1] = reader.getYDimension();
-  dims[2] = 1; // We are reading a single slice
-  m->setDimensions(dims[0], dims[1], dims[2]);
+  QVector<size_t> tDims(3,0); // Create an array for the Tuple Dimensions
+  tDims[0] = reader.getXDimension();
+  tDims[1] = reader.getYDimension();
+  tDims[2] = 1; // We are reading a single slice
+
+  ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
+  ebsdAttrMat->setTupleDimensions(tDims);
+
+
+  QVector<size_t> cDims(1,1);
+  m->setDimensions(tDims[0], tDims[1], tDims[2]);
   m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
   m->setOrigin(0.0f, 0.0f, 0.0f);
 
@@ -362,9 +371,8 @@ void ReadOrientationData::readAngFile()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
-  cellAttrMat->resizeAttributeArrays(totalPoints);
 
+  //// Adjust the values of the 'phase' data to correct for invalid values
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Ang::PhaseData));
     for (int64_t i = 0; i < totalPoints; i++)
@@ -374,17 +382,18 @@ void ReadOrientationData::readAngFile()
         phasePtr[i] = 1;
       }
     }
-    iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    cellAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
+    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
+  //// Condense the Euler Angles from 3 separate arrays into a single 1x3 array
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi1));
     f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Phi2));
-    QVector<int> dims(1, 3);
-    fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
+    cDims[0] = 3;
+    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
     for (int64_t i = 0; i < totalPoints; i++)
@@ -393,37 +402,40 @@ void ReadOrientationData::readAngFile()
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    cellAttrMat->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
+    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
 
+  cDims[0] = 1;
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::ImageQuality));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ImageQuality);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::ConfidenceIndex));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ConfidenceIndex);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::SEMSignal));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::SEMSignal);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ang::Fit));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::Fit);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
   }
 
+  AttributeMatrix::Pointer am = m->removeAttributeMatrix(getCellAttributeMatrixName());
+  m->addAttributeMatrix(getCellAttributeMatrixName(), ebsdAttrMat);
 }
 
 // -----------------------------------------------------------------------------
@@ -473,7 +485,11 @@ void ReadOrientationData::readCtfFile()
 
   int64_t totalPoints = m->getTotalPoints();
   // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
-  cellAttrMat->resizeAttributeArrays(totalPoints);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m->getXPoints();
+  tDims[1] = m->getYPoints();
+  tDims[2] = m->getZPoints();
+  cellAttrMat->resizeAttributeArrays(tDims);
   {
     /* Take from H5CtfVolumeReader.cpp
     * For HKL OIM Files if there is a single phase then the value of the phase
@@ -502,7 +518,7 @@ void ReadOrientationData::readCtfFile()
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ctf::Euler1));
     f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ctf::Euler2));
     f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Ctf::Euler3));
-    QVector<int> dims(1, 3);
+    QVector<size_t> dims(1, 3);
     fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     int* cellPhases = iArray->getPointer(0);
@@ -592,7 +608,11 @@ void ReadOrientationData::readMicFile()
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   int64_t totalPoints = m->getTotalPoints();
   // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
-  cellAttrMat->resizeAttributeArrays(totalPoints);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m->getXPoints();
+  tDims[1] = m->getYPoints();
+  tDims[2] = m->getZPoints();
+  cellAttrMat->resizeAttributeArrays(tDims);
 
   float x, y;
   float xMin = 10000000;
@@ -622,7 +642,7 @@ void ReadOrientationData::readMicFile()
     cellAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
-  QVector<int> compDims(1, 3); // Initially set this up for the Euler Angle 1x3
+  QVector<size_t> compDims(1, 3); // Initially set this up for the Euler Angle 1x3
   {
     //  radianconversion = M_PI / 180.0;
     f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler1));

@@ -82,8 +82,8 @@ int BetaOps::calculateParameters(QVector<float>& data, FloatArrayType::Pointer o
     alpha = 0;
     beta = 0;
   }
-  outputs->SetValue(0, alpha);
-  outputs->SetValue(1, beta);
+  outputs->setValue(0, alpha);
+  outputs->setValue(1, beta);
   return err;
 }
 // -----------------------------------------------------------------------------
@@ -120,8 +120,8 @@ int BetaOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, Vecto
       alpha = 0;
       beta = 0;
     }
-    outputs[0]->SetValue(i, alpha);
-    outputs[1]->SetValue(i, beta);
+    outputs[0]->setValue(i, alpha);
+    outputs[1]->setValue(i, beta);
   }
   return err;
 }

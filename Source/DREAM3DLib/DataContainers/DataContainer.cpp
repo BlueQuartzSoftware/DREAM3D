@@ -83,9 +83,9 @@ bool DataContainer::doesAttributeMatrixExist(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrix* DataContainer::createAndAddAttributeMatrix(const QString& attrMatName)
+AttributeMatrix* DataContainer::createAndAddAttributeMatrix(QVector<size_t> tDims, const QString& attrMatName, unsigned int attrType)
 {
-  AttributeMatrix::Pointer attrMat = AttributeMatrix::New(attrMatName);
+  AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, attrMatName, attrType);
   addAttributeMatrix(attrMatName, attrMat);
   return attrMat.get(); // Return the wrapped pointer
 }
@@ -235,6 +235,7 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QM
 {
   int err = 0;
   unsigned int amType = DREAM3D::AttributeMatrixType::Unknown;
+  QVector<size_t> tDims;
 
   QString amName;
   for(QMap<QString, QSet<QString> >::iterator iter = arraysToRead.begin(); iter != arraysToRead.end(); ++iter)
@@ -242,6 +243,7 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QM
     amName = iter.key();
     amType = DREAM3D::AttributeMatrixType::Unknown;
     err = QH5Lite::readScalarAttribute(dcGid, amName, DREAM3D::HDF5::AttributeMatrixType, amType);
+    err = QH5Lite::readVectorAttribute(dcGid, amName, DREAM3D::HDF5::TupleDimensions, tDims);
     if (err < 0)
     {
       return -1;
@@ -255,9 +257,7 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QM
 
     if(getAttributeMatrix(amName) == NULL)
     {
-      AttributeMatrix::Pointer am = AttributeMatrix::New();
-      am->setType(amType);
-      am->setName(amName);
+      AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, amName, amType);
       addAttributeMatrix(amName, am);
     }
 

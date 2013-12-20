@@ -174,7 +174,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       {
         qDebug() << "Could not open file for writing" ;
         qDebug() << "  FileName: " << filename ;
-        qDebug() << "  Dataset Name: " << data->GetName() ;
+        qDebug() << "  Dataset Name: " << data->getName() ;
         return -1;
       }
       // Write the correct header
@@ -193,10 +193,10 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       VtkRectilinearGridWriter::WriteCoords(f, "Z_COORDINATES", "float", dims[2] + 1, 0.0f - res[2] * 0.5f, (float)(dims[2] + 1 * res[2]), res[2], writeBinary);
 
       size_t total = dims[0] * dims[1] * dims[2];
-      int numComp = data->GetNumberOfComponents();
+      int numComp = data->getNumberOfComponents();
       fprintf(f, "CELL_DATA %d\n", (int)total);
 
-      fprintf(f, "SCALARS %s %s %d\n", data->GetName().toLatin1().data(), dataType.toLatin1().data(), numComp);
+      fprintf(f, "SCALARS %s %s %d\n", data->getName().toLatin1().data(), dataType.toLatin1().data(), numComp);
       fprintf(f, "LOOKUP_TABLE default\n");
 #ifdef DREAM3D_LITTLE_ENDIAN
       data->byteSwapElements();
@@ -206,7 +206,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       {
         qDebug() << "Error Writing Binary VTK Data:" ;
         qDebug() << "  FileName: " << filename ;
-        qDebug() << "  Dataset Name: " << data->GetName() ;
+        qDebug() << "  Dataset Name: " << data->getName() ;
       }
 #ifdef DREAM3D_LITTLE_ENDIAN
       data->byteSwapElements();

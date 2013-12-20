@@ -59,19 +59,19 @@ class DREAM3DLib_EXPORT IDataArray
       {
         return 0;
       }
-      return reinterpret_cast<Raw>(x->GetVoidPointer(0));
+      return reinterpret_cast<Raw>(x->getVoidPointer(0));
     }
 
 
     IDataArray();
     virtual ~IDataArray();
 
-    virtual void SetName(const QString& name) = 0;
-    virtual QString GetName() = 0;
+    virtual void setName(const QString& name) = 0;
+    virtual QString getName() = 0;
 
-    virtual Pointer createNewArray(size_t numElements, int rank, int* dims, const QString& name) = 0;
-    virtual Pointer createNewArray(size_t numElements, std::vector<int> dims, const QString& name) = 0;
-    virtual Pointer createNewArray(size_t numElements, QVector<int> dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name) = 0;
 
     virtual int getClassVersion() = 0;
 
@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT IDataArray
      * @param i The index to have the returned pointer pointing to.
      * @return Void Pointer. Possibly NULL.
      */
-    virtual void* GetVoidPointer ( size_t i) = 0;
+    virtual void* getVoidPointer ( size_t i) = 0;
 
     /**
     * @brief Returns the number of Tuples in the array.
@@ -111,15 +111,10 @@ class DREAM3DLib_EXPORT IDataArray
      * @brief Return the number of elements in the array
      * @return
      */
-    virtual size_t GetSize() = 0;
+    virtual size_t getSize() = 0;
 
-    virtual int GetNumberOfComponents() = 0;
+    virtual int getNumberOfComponents() = 0;
 
-    // virtual void SetRank(int rnk) = 0;
-    virtual int GetRank() = 0;
-
-    virtual void SetDims(QVector<int> rnk) = 0;
-    virtual QVector<int> GetDims() = 0;
 
     /**
      * @brief Returns the number of bytes that make up the data type.
@@ -128,21 +123,21 @@ class DREAM3DLib_EXPORT IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t GetTypeSize() = 0;
+    virtual size_t getTypeSize() = 0;
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    virtual void GetXdmfTypeAndSize(QString& xdmfTypeName, int& precision) = 0;
+    virtual void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision) = 0;
 
     /**
      * @brief Erases tuples based on a list of specific Tuple indices
      * @param idxs The indices to erase
      * @return
      */
-    virtual int EraseTuples(QVector<size_t>& idxs) = 0;
+    virtual int eraseTuples(QVector<size_t>& idxs) = 0;
 
     /**
      * @brief Copies a Tuple from one position to another.
@@ -150,7 +145,7 @@ class DREAM3DLib_EXPORT IDataArray
      * @param newPos The destination index to place the copied data
      * @return
      */
-    virtual int CopyTuple(size_t currentPos, size_t newPos) = 0;
+    virtual int copyTuple(size_t currentPos, size_t newPos) = 0;
 
 
     /**
@@ -158,7 +153,7 @@ class DREAM3DLib_EXPORT IDataArray
      * @param pos The index of the Tuple
      * @param value pointer to value
      */
-    virtual void InitializeTuple(size_t pos, double value) = 0;
+    virtual void initializeTuple(size_t pos, double value) = 0;
 
     /**
      * @brief Sets all the values to zero.
@@ -189,7 +184,7 @@ class DREAM3DLib_EXPORT IDataArray
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId) = 0;
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims) = 0;
     virtual int readH5Data(hid_t parentId) = 0;
 
     virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName, const QString& groupPath, const QString& label) = 0;

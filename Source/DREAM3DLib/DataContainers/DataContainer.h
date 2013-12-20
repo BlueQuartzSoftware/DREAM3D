@@ -148,6 +148,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     template<class Filter>
     AttributeMatrix* createNonPrereqAttributeMatrix(Filter* filter,
                                                     const QString& attributeMatrixName,
+                                                    QVector<size_t> tDims, 
                                                     unsigned int amType)
     {
       typename AttributeMatrix::Pointer attributeMatrix = AttributeMatrix::NullPointer();
@@ -166,8 +167,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       attributeMatrix = getAttributeMatrix(attributeMatrixName);
       if(NULL == attributeMatrix)
       {
-        AttributeMatrix* attrMat = createAndAddAttributeMatrix(attributeMatrixName);
-        attrMat->setType(amType);
+        AttributeMatrix* attrMat = createAndAddAttributeMatrix(tDims, attributeMatrixName, amType);
         return attrMat;
       }
       if(filter)
@@ -199,7 +199,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @param attrMatName
      * @return
      */
-    virtual AttributeMatrix* createAndAddAttributeMatrix(const QString& attrMatName);
+    virtual AttributeMatrix* createAndAddAttributeMatrix(QVector<size_t> tDims, const QString& attrMatName, unsigned int attrType);
 
     /**
     * @brief Adds/overwrites the data for a named array
