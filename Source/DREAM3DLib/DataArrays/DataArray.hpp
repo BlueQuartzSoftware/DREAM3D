@@ -176,9 +176,8 @@ class DataArray : public IDataArray
       {
         return NullPointer();
       }
-      QVector<size_t> tDims(1, numElements);
       QVector<size_t> cDims(1,1);
-      DataArray<T>* d = new DataArray<T>(tDims, cDims, name, 0, true);
+      DataArray<T>* d = new DataArray<T>(numElements, cDims, name, 0, true);
       if (d->Allocate() < 0)
       {
         // Could not allocate enough memory, reset the pointer to null and return
@@ -203,13 +202,12 @@ class DataArray : public IDataArray
       {
         return NullPointer();
       }
-      QVector<size_t> tDims(1, numTuples);
       QVector<size_t> cDims(rank);
       for (int i = 0; i < rank; i++)
       {
         cDims[i] = dims[i];
       }
-      DataArray<T>* d = new DataArray<T>(tDims, cDims, name, 0, true);
+      DataArray<T>* d = new DataArray<T>(numTuples, cDims, name, 0, true);
 
       if (d->Allocate() < 0)
       {
@@ -234,8 +232,7 @@ class DataArray : public IDataArray
       {
         return NullPointer();
       }
-      QVector<size_t> tDims(1, numTuples);
-      DataArray<T>* d = new DataArray<T>(tDims, QVector<size_t>::fromStdVector(cDims), name, 0, true);
+      DataArray<T>* d = new DataArray<T>(numTuples, QVector<size_t>::fromStdVector(cDims), name, 0, true);
       if (d->Allocate() < 0)
       {
         // Could not allocate enough memory, reset the pointer to null and return
@@ -259,8 +256,7 @@ class DataArray : public IDataArray
       {
         return NullPointer();
       }
-      QVector<size_t> tDims(1, numTuples);
-      DataArray<T>* d = new DataArray<T>(tDims, cDims, name, true, 0);
+      DataArray<T>* d = new DataArray<T>(numTuples, cDims, name, true, 0);
       if (d->Allocate() < 0)
       {
         // Could not allocate enough memory, reset the pointer to null and return
@@ -285,7 +281,12 @@ class DataArray : public IDataArray
       {
         return NullPointer();
       }
-      DataArray<T>* d = new DataArray<T>(tDims, cDims, name, true, 0);
+      size_t numTumples = tDims[0];
+      for(int i = 1; i < tDims.size(); i++)
+      {
+        numTuples *= tDims[i];
+      }
+      DataArray<T>* d = new DataArray<T>(numTuples, cDims, name, true, 0);
       if (d->Allocate() < 0)
       {
         // Could not allocate enough memory, reset the pointer to null and return
@@ -323,9 +324,8 @@ class DataArray : public IDataArray
      */
     static Pointer FromStdVector(std::vector<T>& vec, const QString& name)
     {
-      QVector<size_t> tDims(1, vec.size());
       QVector<size_t> cDims(1, 1);
-      Pointer p = CreateArray(tDims, cDims, name);
+      Pointer p = CreateArray(vec.size(), cDims, name);
       if (NULL != p.get())
       {
         ::memcpy(p->getPointer(0), &(vec.front()), vec.size() * sizeof(T));
@@ -666,15 +666,6 @@ class DataArray : public IDataArray
     virtual size_t getSize()
     {
       return m_Size;
-    }
-
-    /**
-    * @brief Returns Dimensions of the Tuples. For example if this array represents a 3D volume then the returned
-    * QVector will have 3 elements where each element is the size of the dimension for that axis.
-    */
-    virtual QVector<size_t> getTupleDimensions()
-    {
-      return m_TupleDims;
     }
 
     /**
@@ -1043,7 +1034,7 @@ class DataArray : public IDataArray
     * @param dims The actual dimensions the attribute on each Tuple has.
     * @param takeOwnership Will the class clean up the memory. Default=true
     */
-    DataArray(QVector<size_t> tupleDims, QVector<size_t> compDims, const QString& name, bool ownsData = true, T fillValue = 0 ) :
+    DataArray(size_t numTuples, QVector<size_t> compDims, const QString& name, bool ownsData = true, T fillValue = 0 ) :
       m_Array(NULL),
       m_OwnsData(ownsData),
       m_IsAllocated(false),
@@ -1051,12 +1042,7 @@ class DataArray : public IDataArray
       m_FillValue(fillValue)
     {
       // Set the Tuple Dimensions and compute the number of Tuples for caching
-      m_TupleDims = tupleDims;
-      m_NumTuples = m_TupleDims[0];
-      for (int i = 1; i < m_TupleDims.size(); i++)
-      {
-        m_NumTuples = m_NumTuples + m_TupleDims[i];
-      }
+      m_NumTuples = numTuples;
 
       // Set the Component Dimensions and compute the number of components at each tuple for caching
       m_CompDims = compDims;
@@ -1323,7 +1309,6 @@ class DataArray : public IDataArray
     QString m_Name;
     //  unsigned long long int MUD_FLAP_5;
 
-    QVector<size_t> m_TupleDims;
     size_t m_NumTuples;
 
     QVector<size_t> m_CompDims;
