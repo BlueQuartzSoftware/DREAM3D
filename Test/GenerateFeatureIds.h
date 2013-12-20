@@ -46,7 +46,11 @@ class GenerateFeatureIds : public AbstractFilter
       VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
 
       int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
-      m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(size);
+      QVector<size_t> tDims(3, 0);
+      tDims[0] = UnitTest::FeatureIdsTest::XSize;
+      tDims[1] = UnitTest::FeatureIdsTest::YSize;
+      tDims[2] = UnitTest::FeatureIdsTest::ZSize;
+      m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
 
       dataCheck();
       // Set the default data into the FeatureIds
@@ -188,7 +192,11 @@ class CreateVolumeDataContainer : public AbstractFilter
       int64_t nz = UnitTest::FeatureIdsTest::ZSize;
       m->setDimensions(nx, ny, nz);
       getDataContainerArray()->pushBack(m);
-      AttributeMatrix::Pointer attrMat = AttributeMatrix::New(DREAM3D::Defaults::CellAttributeMatrixName);
+      QVector<size_t> tDims(3, 0);
+      tDims[0] = nx;
+      tDims[1] = ny;
+      tDims[2] = nz;
+      AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
       m->addAttributeMatrix(attrMat->getName(), attrMat);
     }
 

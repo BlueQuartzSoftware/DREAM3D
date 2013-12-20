@@ -141,9 +141,12 @@ void ReadOrientationData::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
+  tDims.resize(1);
+  tDims[0] = 0;
+  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(m_InputFile);
@@ -482,7 +485,11 @@ void ReadOrientationData::readCtfFile()
 
   int64_t totalPoints = m->getTotalPoints();
   // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
-  cellAttrMat->resizeAttributeArrays(totalPoints);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m->getXPoints();
+  tDims[1] = m->getYPoints();
+  tDims[2] = m->getZPoints();
+  cellAttrMat->resizeAttributeArrays(tDims);
   {
     /* Take from H5CtfVolumeReader.cpp
     * For HKL OIM Files if there is a single phase then the value of the phase
@@ -601,7 +608,11 @@ void ReadOrientationData::readMicFile()
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   int64_t totalPoints = m->getTotalPoints();
   // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
-  cellAttrMat->resizeAttributeArrays(totalPoints);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m->getXPoints();
+  tDims[1] = m->getYPoints();
+  tDims[2] = m->getZPoints();
+  cellAttrMat->resizeAttributeArrays(tDims);
 
   float x, y;
   float xMin = 10000000;

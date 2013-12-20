@@ -244,9 +244,12 @@ void ReadH5Ebsd::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
+  tDims.resize(1);
+  tDims[0] = 0;
+  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(m_InputFile);

@@ -275,7 +275,8 @@ int H5TransformationStatsDataDelegate::writeTransformationStatsData(Transformati
   // Write the Misorientation Bins
   if (NULL != data->getMisorientationBins().get())
   {
-    err = data->getMisorientationBins()->writeH5Data(groupId);
+    QVector<size_t> tDims(1, data->getMisorientationBins()->getNumberOfTuples());
+    err = data->getMisorientationBins()->writeH5Data(groupId, tDims);
   }
 
   err = writeWeightsData(groupId, DREAM3D::StringConstants::MDFWeights, data->getMDF_Weights());
@@ -284,7 +285,8 @@ int H5TransformationStatsDataDelegate::writeTransformationStatsData(Transformati
   // Write the ODF
   if (NULL != data->getODF().get())
   {
-    err = data->getODF()->writeH5Data(groupId);
+    QVector<size_t> tDims(1, data->getODF()->getNumberOfTuples());
+    err = data->getODF()->writeH5Data(groupId, tDims);
   }
   err = writeWeightsData(groupId, DREAM3D::StringConstants::ODFWeights, data->getODF_Weights());
 
@@ -292,7 +294,8 @@ int H5TransformationStatsDataDelegate::writeTransformationStatsData(Transformati
   // Write the Axis ODF
   if (NULL != data->getAxisOrientation().get())
   {
-    err = data->getAxisOrientation()->writeH5Data(groupId);
+    QVector<size_t> tDims(1, data->getAxisOrientation()->getNumberOfTuples());
+    err = data->getAxisOrientation()->writeH5Data(groupId, tDims);
   }
   err = writeWeightsData(groupId, DREAM3D::StringConstants::AxisODFWeights, data->getAxisODF_Weights());
 
@@ -316,7 +319,8 @@ int H5TransformationStatsDataDelegate::writeVectorOfArrays(hid_t pid,
     err = -1;
     if(NULL != colData[c].get() && colData[c]->getSize() > 0)
     {
-      err = colData[c]->writeH5Data(pid);
+      QVector<size_t> tDims(1, colData[c]->getNumberOfTuples());
+      err = colData[c]->writeH5Data(pid, tDims);
       if(err < 0)
       {
         retErr = err;
@@ -677,7 +681,8 @@ int H5TransformationStatsDataDelegate::writeBinNumbers(TransformationStatsData* 
   {
     data->generateBinNumbers();
   }
-  return data->getBinNumbers()->writeH5Data(groupId);
+  QVector<size_t> tDims(1, data->getBinNumbers()->getNumberOfTuples());
+  return data->getBinNumbers()->writeH5Data(groupId, tDims);
 }
 
 // -----------------------------------------------------------------------------

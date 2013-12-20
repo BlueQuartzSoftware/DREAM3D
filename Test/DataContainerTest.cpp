@@ -262,7 +262,8 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   DREAM3D_TEST_POINTER(attrMatrix.get(), ==, NULL)
 
   // Now add an AttributeMatrix to the DataContainer
-  AttributeMatrix* attrMat = m->createAndAddAttributeMatrix(getCellAttributeMatrixName());
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix* attrMat = m->createAndAddAttributeMatrix(tDims, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
   DREAM3D_TEST_POINTER(attrMat, !=, NULL)
 
   // Now create an Array and add it to the Attribute Matrix
@@ -270,8 +271,8 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   int err = attrMat->addAttributeArray("Test", p);
   DREAM3D_REQUIRED(err, < , 0) // This should fail because the number of tuples in the array is different from that of the AttributeMatrix
 
-
-  attrMat->resizeAttributeArrays(5);
+  tDims[0] = 5;
+  attrMat->resizeAttributeArrays(tDims);
   err = attrMat->addAttributeArray("Test", p);
   DREAM3D_REQUIRED(err, >=, 0)
 

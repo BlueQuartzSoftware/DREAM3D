@@ -274,7 +274,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId);
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims);
     virtual int readH5Data(hid_t parentId);
 
     /**

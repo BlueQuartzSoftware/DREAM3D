@@ -403,7 +403,8 @@ void PackPrimaryPhases::dataCheck()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
+  QVector<size_t> tDims(1, 0);  
+  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0) { return; }
@@ -649,7 +650,8 @@ void PackPrimaryPhases::execute()
 
   // Estimate the total Number of features here
   int estNumFeatures = estimate_numfeatures((int)(udims[0]), (int)(udims[1]), (int)(udims[2]), xRes, yRes, zRes);
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(estNumFeatures);
+  QVector<size_t> tDims(1, estNumFeatures);
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
   //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
 
@@ -678,7 +680,8 @@ void PackPrimaryPhases::execute()
         notifyStatusMessage(getHumanLabel(), ss);
         if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()))
         {
-          m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(gid + 1);
+          tDims[0] = gid+1;
+          m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
           //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
           updateFeatureInstancePointers();
         }
@@ -728,7 +731,8 @@ void PackPrimaryPhases::execute()
           notifyStatusMessage(getHumanLabel(), ss);
           if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()) )
           {
-            m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(gid + 1);
+            tDims[0] = gid+1;
+            m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
             //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
             updateFeatureInstancePointers();
           }
@@ -751,7 +755,8 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(gid);
+  tDims[0] = gid;
+  m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
   totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
   //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();

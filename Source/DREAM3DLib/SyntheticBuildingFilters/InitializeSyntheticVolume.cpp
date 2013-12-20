@@ -136,9 +136,12 @@ void InitializeSyntheticVolume::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix* cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);
+  tDims.resize(1);
+  tDims[0] = 0;
+  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 1);
@@ -235,10 +238,16 @@ void InitializeSyntheticVolume::execute()
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
 
-  cellAttrMat->resizeAttributeArrays(m->getTotalPoints());
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m->getXPoints();
+  tDims[1] = m->getYPoints();
+  tDims[2] = m->getZPoints();
+  cellAttrMat->resizeAttributeArrays(tDims);
 
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
-  cellEnsembleAttrMat->resizeAttributeArrays(shapeTypes->getNumberOfTuples());
+  tDims.resize(1);
+  tDims[0] = shapeTypes->getNumberOfTuples();
+  cellEnsembleAttrMat->resizeAttributeArrays(tDims);
   cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   //Now read the data out of the HDF5 file

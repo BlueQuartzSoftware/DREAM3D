@@ -292,7 +292,8 @@ int VASPReader::readFile()
   totalAtoms = verticesPtr->getNumberOfTuples();
 
   // Resize the vertex attribute matrix
-  m->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(totalAtoms);
+  QVector<size_t> tDims(1, totalAtoms);
+  m->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(tDims);
   dataCheck();
 
   if (getErrorCondition() < 0)

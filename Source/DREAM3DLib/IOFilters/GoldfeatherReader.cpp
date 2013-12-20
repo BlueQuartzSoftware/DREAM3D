@@ -133,9 +133,10 @@ void GoldfeatherReader::dataCheck()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* vertAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), DREAM3D::AttributeMatrixType::Vertex);
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix* vertAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), DREAM3D::AttributeMatrixType::Face);
+  AttributeMatrix* faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());

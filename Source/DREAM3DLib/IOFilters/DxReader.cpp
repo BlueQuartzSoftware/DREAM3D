@@ -143,7 +143,8 @@ void DxReader::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -354,7 +355,11 @@ int DxReader::readFile()
   int64_t totalPoints = m->getTotalPoints();
 
   // Reseize the Cell Attribute Matrix based on the number of points about to be read.
-  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(totalPoints);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m->getXPoints();
+  tDims[1] = m->getYPoints();
+  tDims[2] = m->getZPoints();
+  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
 
   QVector<size_t> dims(1, 1);

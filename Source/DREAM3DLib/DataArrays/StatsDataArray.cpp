@@ -249,7 +249,7 @@ void StatsDataArray::printComponent(QTextStream& out, size_t i, int j)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataArray::writeH5Data(hid_t parentId)
+int StatsDataArray::writeH5Data(hid_t parentId, QVector<size_t> tDims)
 {
   herr_t err = 0;
   hid_t gid = QH5Utilities::createGroup(parentId, DREAM3D::StringConstants::Statistics);

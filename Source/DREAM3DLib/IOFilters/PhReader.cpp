@@ -151,11 +151,11 @@ int PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 void PhReader::dataCheck()
 {
-
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, PhReader>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -279,7 +279,11 @@ int  PhReader::readFile()
 
   size_t totalPoints = m->getTotalPoints();
 
-  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(totalPoints);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m->getXPoints();
+  tDims[1] = m->getYPoints();
+  tDims[2] = m->getZPoints();
+  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   dataCheck();
 
   for(size_t n = 0; n < totalPoints; ++n)

@@ -178,7 +178,8 @@ void TriangleDihedralAngleFilter::dataCheck()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), DREAM3D::AttributeMatrixType::Face);
+  QVector<size_t> tDims(1, 0);  
+  AttributeMatrix* faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes

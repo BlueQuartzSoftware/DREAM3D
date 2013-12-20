@@ -238,7 +238,8 @@ void InsertPrecipitatePhases::dataCheck()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
+  QVector<size_t> tDims(1, 0);  
+  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0) { return; }
@@ -441,9 +442,10 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
   int64_t currentnumfeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
   int64_t numensembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
+  QVector<size_t> tDims(1, 1);
   if(currentnumfeatures == 0)
   {
-    m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(1);
+    m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
     currentnumfeatures = 1;
   }
@@ -530,7 +532,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
         QString ss = QObject::tr("Packing Precipitates - Generating Feature #%1").arg(currentnumfeatures);
         notifyStatusMessage(getHumanLabel(), ss);
 
-        m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(currentnumfeatures + 1);
+        tDims[0] = currentnumfeatures+1;
+        m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
         updateFeatureInstancePointers();
         m_Active[currentnumfeatures] = true;
         transfer_attributes(currentnumfeatures, &precip);

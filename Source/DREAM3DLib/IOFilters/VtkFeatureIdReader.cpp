@@ -123,7 +123,8 @@ void VtkFeatureIdReader::dataCheck()
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, VtkFeatureIdReader>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix* attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -372,7 +373,11 @@ int VtkFeatureIdReader::readFile()
 
   //Cell Data is one less in each direction
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
-  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(totalVoxels);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = dims[0];
+  tDims[1] = dims[1];
+  tDims[2] = dims[2];
+  m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   dataCheck();
 
   buf = instream.readLine();

@@ -164,24 +164,6 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       return dataContainer.get();
     }
 
-    /**
-     * @brief This function will create a new DataContainer of type <T> with an AttributeMatrix
-     * @param dataContainerName The name of the DataContainer. Must not be empty or this method will ASSERT()
-     * @param attributeMatrixName The name of the AttributeMatrix. Must not be empty or this method will ASSERT()
-     * @return
-     */
-    template<class DataContainerType>
-    DataContainerType* createDataContainerWithAttributeMatrix(const QString& dataContainerName, const QString& attributeMatrixName)
-    {
-      Q_ASSERT(dataContainerName.isEmpty() == false);
-      Q_ASSERT(attributeMatrixName.isEmpty() == false);
-      typename DataContainerType::Pointer dataContainer = DataContainerType::New(dataContainerName);
-      AttributeMatrix* attrMat = dataContainer->createAndAddAttributeMatrix(attributeMatrixName);
-      attrMat = NULL; /* THis is just here to quiet the compiler */
-      pushBack(dataContainer);
-      return dataContainer.get();
-    }
-
 
   protected:
     DataContainerArray();

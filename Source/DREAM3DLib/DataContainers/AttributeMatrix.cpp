@@ -130,7 +130,7 @@ int AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer 
     qDebug() << "Array Name:" << data->getName() << "\n";
     data->setName(name);
   }
-  Q_ASSERT(m_NumTuples == data->getNumberOfTuples());
+  Q_ASSERT(getNumTuples() == data->getNumberOfTuples());
 
   m_AttributeArrays[name] = data;
   return 0;
@@ -189,12 +189,7 @@ bool AttributeMatrix::renameAttributeArray(const QString& oldname, const QString
 // -----------------------------------------------------------------------------
 void AttributeMatrix::setTupleDimensions(QVector<size_t> tupleDims)
 {
-  m_NumTuples = tupleDims[0];
-  for(int i = 1; i < tupleDims.size(); i++)
-  {
-    m_NumTuples = m_NumTuples + tupleDims[i];
-    }
-    resizeAttributeArrays(m_NumTuples);
+  resizeAttributeArrays(m_TupleDims);
 }
 
 // -----------------------------------------------------------------------------
@@ -202,21 +197,32 @@ void AttributeMatrix::setTupleDimensions(QVector<size_t> tupleDims)
 // -----------------------------------------------------------------------------
 size_t AttributeMatrix::getNumTuples()
 {
-  return m_NumTuples;
+  size_t numTuples = m_TupleDims[0];
+  for(int i = 1; i < m_TupleDims.size(); i++)
+  {
+    numTuples *= m_TupleDims[i];
+  }
+  return numTuples;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AttributeMatrix::resizeAttributeArrays(size_t numTuples)
+void AttributeMatrix::resizeAttributeArrays(QVector<size_t> tupleDims)
 {
   // int success = 0;
+  m_TupleDims = tupleDims;
+  size_t numTuples = m_TupleDims[0];
+  for(int i = 1; i < m_TupleDims.size(); i++)
+  {
+    numTuples *= m_TupleDims[i];
+  }
+
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
     IDataArray::Pointer d = iter.value();
     d->resize(numTuples);
   }
-  m_NumTuples = numTuples;
 }
 
 // -----------------------------------------------------------------------------
@@ -257,7 +263,7 @@ int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
   {
     IDataArray::Pointer d = iter.value();
-    err = d->writeH5Data(parentId);
+    err = d->writeH5Data(parentId, m_TupleDims);
     if(err < 0)
     {
       return err;
@@ -280,12 +286,12 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   if(classType.startsWith("DataArray") == true)
   {
     dPtr = H5DataArrayReader::readIDataArray(gid, name, preflight);
-    if(preflight == true) dPtr->resize(m_NumTuples);
+    if(preflight == true) dPtr->resize(getNumTuples());
   }
   else if(classType.compare("StringDataArray") == 0)
   {
     dPtr = H5DataArrayReader::readStringDataArray(gid, name, preflight);
-    if(preflight == true) dPtr->resize(m_NumTuples);
+    if(preflight == true) dPtr->resize(getNumTuples());
   }
   else if(classType.compare("vector") == 0)
   {
@@ -294,7 +300,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   else if(classType.compare("NeighborList<T>") == 0)
   {
     dPtr = H5DataArrayReader::readNeighborListData(gid, name, preflight);
-    if(preflight == true) dPtr->resize(m_NumTuples);
+    if(preflight == true) dPtr->resize(getNumTuples());
   }
   else if ( name.compare(DREAM3D::EnsembleData::Statistics) == 0)
   {
@@ -302,7 +308,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
     statsData->setName(DREAM3D::EnsembleData::Statistics);
     statsData->readH5Data(gid);
     dPtr = statsData;
-    if(preflight == true) dPtr->resize(m_NumTuples);
+    if(preflight == true) dPtr->resize(getNumTuples());
   }
 
   if (NULL != dPtr.get())

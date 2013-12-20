@@ -627,7 +627,6 @@ void GenericExample::dataCheck2()
 
   vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(QString("Test Container"));
 
-  vdc = getDataContainerArray()->createDataContainerWithAttributeMatrix<VolumeDataContainer>(QString("Test Container"), QString("Test AttributeMatrix") );
   DataContainer::Pointer removedDataContainer = getDataContainerArray()->removeDataContainer("Test Container");
   removedDataContainer = DataContainer::NullPointer(); // this is just here to quiet the compiler about unused variables.
 }

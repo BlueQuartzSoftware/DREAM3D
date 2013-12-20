@@ -105,9 +105,10 @@ void QuickSurfaceMesh::dataCheck()
 
   SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), DREAM3D::AttributeMatrixType::Vertex);
+  QVector<size_t> tDims(1, 0);  
+  AttributeMatrix* vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* faceAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), DREAM3D::AttributeMatrixType::Face);
+  AttributeMatrix* faceAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
   if(getErrorCondition() < 0) { return; }
 
   VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);

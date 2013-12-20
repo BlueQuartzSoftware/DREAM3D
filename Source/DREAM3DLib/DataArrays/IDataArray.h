@@ -184,7 +184,7 @@ class DREAM3DLib_EXPORT IDataArray
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId) = 0;
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims) = 0;
     virtual int readH5Data(hid_t parentId) = 0;
 
     virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName, const QString& groupPath, const QString& label) = 0;

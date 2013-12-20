@@ -213,7 +213,8 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
       if(NULL == attrMatrix.get() ) { return -2; }
 
       // Resize the AttributeMatrix based on the size of the crystal structures array
-      attrMatrix->resizeAttributeArrays(crystalStructures->getNumberOfTuples());
+      QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
+      attrMatrix->resizeAttributeArrays(tDims);
       // Now add the attributeArray to the AttributeMatrix
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);

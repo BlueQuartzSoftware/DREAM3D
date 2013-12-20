@@ -907,13 +907,13 @@ class DataArray : public IDataArray
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId)
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
       if (m_Array == NULL) { return -85648; }
       #if 0
   return H5DataArrayWriter<T>::writeArray(parentId, getName(), getNumberOfTuples(), getNumberOfComponents(), getRank(), getDims(), getClassVersion(), m_Array, getFullNameOfClass());
       #else
-        return H5DataArrayWriter::writeDataArray<Self>(parentId, this);
+        return H5DataArrayWriter::writeDataArray<Self>(parentId, this, tDims);
       #endif
     }
 

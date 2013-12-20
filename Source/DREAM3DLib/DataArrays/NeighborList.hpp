@@ -289,7 +289,7 @@ class NeighborList : public IDataArray
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId)
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
       int err = 0;
 

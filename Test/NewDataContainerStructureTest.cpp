@@ -91,19 +91,14 @@ void BuildNewDream3dFile()
 {
   DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-  AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New();
-  cellAttrMat->setName("CellData");
-  cellAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New(tDims, "CellData", DREAM3D::AttributeMatrixType::Cell);
   vdc->addAttributeMatrix("CellData", cellAttrMat);
-  AttributeMatrix::Pointer cellFeatureAttrMat = AttributeMatrix::New();
-  cellFeatureAttrMat->setName("CellFeatureData");
-  cellFeatureAttrMat->setType(DREAM3D::AttributeMatrixType::CellFeature);
+  AttributeMatrix::Pointer cellFeatureAttrMat = AttributeMatrix::New(tDims, "CellFeatureData", DREAM3D::AttributeMatrixType::CellFeature);
   vdc->addAttributeMatrix("CellFeatureData", cellFeatureAttrMat);
-  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New();
-  cellEnsembleAttrMat->setName("CellEnsembleData");
-  cellEnsembleAttrMat->setType(DREAM3D::AttributeMatrixType::CellEnsemble);
-  cellEnsembleAttrMat->resizeAttributeArrays(2);
-  QVector<uint> dims(1, 1);
+  tDims[0] = 2;
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, "CellEnsembleData", DREAM3D::AttributeMatrixType::CellEnsemble);
+  QVector<size_t> dims(1, 1);
   cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("PhaseTypes", DREAM3D::PhaseType::PrimaryPhase, dims);
   cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("ShapeTypes", DREAM3D::ShapeType::EllipsoidShape, dims);
   cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("CrystalStructures", Ebsd::CrystalStructure::Cubic_High, dims);

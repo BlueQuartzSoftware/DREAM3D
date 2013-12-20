@@ -228,7 +228,8 @@ void ScalarSegmentFeatures::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
+  QVector<size_t> tDims(1, 0);  
+  AttributeMatrix* cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
@@ -268,7 +269,8 @@ void ScalarSegmentFeatures::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(1);
+  QVector<size_t> tDims(1, 1);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
   // This runs a subfilter
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
@@ -427,9 +429,8 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
   if (seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
-    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(gnum + 1);
-//    int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-//    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+    QVector<size_t> tDims(1, gnum+1);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     dataCheck();
   }
   return seed;

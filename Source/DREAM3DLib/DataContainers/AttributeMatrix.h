@@ -336,7 +336,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @brief Resizes an array from the Data Container
     * @param size The new size of the array
     */
-    void resizeAttributeArrays(size_t numTuples);
+    void resizeAttributeArrays(QVector<size_t> numTuples);
 
     void setTupleDimensions(QVector<size_t> tupleDims);
 

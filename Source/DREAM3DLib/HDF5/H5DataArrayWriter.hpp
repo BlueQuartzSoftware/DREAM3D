@@ -62,12 +62,10 @@ class H5DataArrayWriter
     virtual ~H5DataArrayWriter() {}
 
     template<class T>
-    static int writeDataArray(hid_t gid, T* dataArray)
+    static int writeDataArray(hid_t gid, T* dataArray, QVector<size_t> tDims)
     {
       int err = 0;
 
-
-      QVector<size_t> tDims = dataArray->getTupleDimensions();
       QVector<size_t> cDims = dataArray->getComponentDimensions();
       hsize_t h5Rank = tDims.size() + cDims.size();
 

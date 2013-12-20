@@ -428,7 +428,7 @@ void Create2DExpandableDataset(hid_t gid, const QString& dsetName, int lambertSi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
+int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId, QVector<size_t> tDims)
 {
   herr_t err = 0;
   if (m_ModifiedLambertProjectionArray.size() == 0)

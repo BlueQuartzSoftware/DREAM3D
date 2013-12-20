@@ -364,7 +364,7 @@ class StringDataArray : public IDataArray
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId)
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
 
       // Convert the QVector of Strings into a flat list of strings separated by NULL characters
@@ -384,7 +384,7 @@ class StringDataArray : public IDataArray
         str = str + m_Array[i].size() + 1;
       }
 
-      return H5DataArrayWriter::writeDataArray<Int8ArrayType>(parentId, strPtr.get());
+      return H5DataArrayWriter::writeDataArray<Int8ArrayType>(parentId, strPtr.get(), tDims);
     }
 
     /**
