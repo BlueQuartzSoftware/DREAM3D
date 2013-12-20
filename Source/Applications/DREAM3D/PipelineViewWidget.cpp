@@ -60,11 +60,9 @@
 #include "DREAM3DLib/DREAM3DFilters.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
+#include "QtSupport/QDroppableScrollArea.h"
 
-#include "FilterWidgetManager.h"
 #include "QFilterPipeline.h"
-#include "QDroppableScrollArea.h"
-
 
 
 // -----------------------------------------------------------------------------
@@ -296,10 +294,10 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString nam
 QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 {
 
-  FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
-  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName);
-  if (NULL == wf) { return NULL;}
-  QFilterWidget* w = wf->createWidget();
+//  FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
+//  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName);
+//  if (NULL == wf) { return NULL;}
+  QFilterWidget* w = new QFilterWidget;
   if (index < 0) // If the programmer wants to add it to the end of the list
   {
     index = filterCount();
@@ -388,9 +386,6 @@ void PipelineViewWidget::preflightPipeline()
     if (fw)
     {
       fw->setHasPreflightErrors(false);
-      fw->setHasPreflightWarnings(false);
-      fw->preflightAboutToExecute(dca);
-
       AbstractFilter::Pointer filter = fw->getFilter(false);
 
       filter->setDataContainerArray(dca);
@@ -417,8 +412,6 @@ void PipelineViewWidget::preflightPipeline()
         }
       }
 
-      // Tell the widget that we have arrays and to possibly update its gui
-      fw->preflightDoneExecuting(dca);
     }
   }
 

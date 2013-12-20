@@ -85,7 +85,7 @@ color: white;
          <x>0</x>
          <y>0</y>
          <width>263</width>
-         <height>647</height>
+         <height>656</height>
         </rect>
        </property>
       </widget>
@@ -129,7 +129,7 @@ color: white;
      <x>0</x>
      <y>0</y>
      <width>1023</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -178,47 +178,6 @@ color: white;
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="dockWidget">
-   <property name="minimumSize">
-    <size>
-     <width>200</width>
-     <height>104</height>
-    </size>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QDockWidget
-{
-color: white;
-}
-
-QDockWidget::title 
-{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
-text-align: center;
-padding-left: 5px;
-}
-</string>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::AllDockWidgetAreas</set>
-   </property>
-   <property name="windowTitle">
-    <string>Filter Library</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QGridLayout" name="gridLayout">
-     <property name="margin">
-      <number>0</number>
-     </property>
-     <item row="0" column="0">
-      <widget class="QTreeView" name="treeView"/>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="dockWidget_2">
    <property name="minimumSize">
     <size>
@@ -252,7 +211,13 @@ padding-left: 5px;
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <widget class="QTreeView" name="treeView_2"/>
+      <widget class="QTreeWidget" name="treeWidget">
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -261,7 +226,7 @@ padding-left: 5px;
    <property name="minimumSize">
     <size>
      <width>200</width>
-     <height>104</height>
+     <height>109</height>
     </size>
    </property>
    <property name="styleSheet">
@@ -290,7 +255,13 @@ padding-left: 5px;
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <widget class="QTreeView" name="treeView_3"/>
+      <widget class="QTreeWidget" name="treeWidget_2">
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
+      </widget>
      </item>
     </layout>
    </widget>
