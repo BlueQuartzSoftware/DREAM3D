@@ -62,8 +62,6 @@
 
 #include "QtSupport/QDroppableScrollArea.h"
 
-#include "QFilterPipeline.h"
-
 
 // -----------------------------------------------------------------------------
 //

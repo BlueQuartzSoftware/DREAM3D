@@ -70,7 +70,7 @@
 
 #include "PipelineViewWidget.h"
 #include "QFilterLibraryDockWidget.h"
-
+#include "QPrebuiltPipelinesDockWidget.h"
 
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
@@ -96,6 +96,11 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_UpdateCheckThread(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
+
+  // Register all of the Filters we know about - the rest will be loaded through plugins
+  //  which all should have been loaded by now.
+  m_FilterManager = FilterManager::Instance();
+  m_FilterManager->RegisterKnownFilters(m_FilterManager.get());
 
   // Calls the Parent Class to do all the Widget Initialization that were created
   // using the QDesigner program
@@ -376,10 +381,7 @@ void DREAM3D_UI::setupGui()
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
-  // Register all of the Filters we know about - the rest will be loaded through plugins
-  //  which all should have been loaded by now.
-  m_FilterManager = FilterManager::Instance();
-  m_FilterManager->RegisterKnownFilters(m_FilterManager.get());
+
 
 #if 0
   FilterWidgetsLib::RegisterKnownQFilterWidgets();
@@ -398,9 +400,15 @@ void DREAM3D_UI::setupGui()
 //          this, SLOT(readSettings() ) );
 
 
+#if 0
   m_QFilterLibraryDockWidget = new QFilterLibraryDockWidget(this);
   m_QFilterLibraryDockWidget->setObjectName(QString::fromUtf8("m_QFilterLibraryDockWidget"));
-  addDockWidget(static_cast<Qt::DockWidgetArea>(1), m_QFilterLibraryDockWidget);
+  addDockWidget(static_cast<Qt::DockWidgetArea>(0), m_QFilterLibraryDockWidget);
+
+  m_QPrebuiltPipelinesWidget = new QPrebuiltPipelinesDockWidget(this);
+  m_QPrebuiltPipelinesWidget->setObjectName(QString::fromUtf8("m_QPrebuiltPipelinesWidget"));
+  addDockWidget(static_cast<Qt::DockWidgetArea>(1), m_QPrebuiltPipelinesWidget);
+#endif
 
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
   actionOpenPipeline->setShortcut(actionOpenKeySeq);

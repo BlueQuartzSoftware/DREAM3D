@@ -73,10 +73,16 @@ void QFilterLibraryDockWidget::setupGui()
 
     // Clear out the default stuff
     filterLibraryTree->clear();
+
+#if 1
     QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
     library->setText(0, DREAM3D::Settings::Library);
     library->setIcon(0, QIcon(":/cubes.png"));
-
+#else
+    QTreeWidgetItem* library = filterLibraryTree->invisibleRootItem();
+    library->setText(0, DREAM3D::Settings::Library);
+    library->setIcon(0, QIcon(":/cubes.png"));
+#endif
     for(QSet<QString>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
     {
       //   qDebug() << *iter << "\n";
@@ -103,6 +109,10 @@ void QFilterLibraryDockWidget::setupGui()
     }
     library->setExpanded(true);
 
+    //
+    filterList->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(filterList, SIGNAL(customContextMenuRequested(const QPoint&)),
+            this, SLOT(onFilterListCustomContextMenuRequested(const QPoint&)));
 
 }
 
@@ -112,32 +122,6 @@ void QFilterLibraryDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 void QFilterLibraryDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
-  // Get the QFilterWidget Manager Instance
-  FilterManager::Pointer fm = FilterManager::Instance();
-  FilterManager::Collection factories;
-  QTreeWidgetItem* parent = item->parent();
-  while(NULL != parent)
-  {
-    if (NULL == parent->parent() )
-    {
-      break;
-    }
-    parent = parent->parent();
-  }
-  if (parent == NULL)
-  {
-    return;
-  }
-
-  QString itemText = parent->text(0);
-
-#if 0
-  if (itemText.compare(Detail::Library) == 0)
-  {
-    factories = fm->getFactories();
-    updateFilterGroupList(factories);
-  }
-#endif
 
 }
 
