@@ -17,7 +17,6 @@
 //-- STL Includes
 #include <string>
 #include <list>
-#include <map>
 #include <sstream>
 #include <iostream>
 #include <algorithm>
@@ -97,7 +96,7 @@ static bool stringToNum(T &t, const std::string &s)
 // -----------------------------------------------------------------------------
 static std::string numToString(int num)
 {
-	std::stringstream converter;
+  std::stringstream converter;
   converter << num;
   return converter.str();
 }

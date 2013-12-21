@@ -42,9 +42,7 @@
 
 
 //-- C++ includes
-#include <vector>
-#include <map>
-#include <sstream>
+#include <string>
 #include <list>
 
 //-- EBSD Lib Includes
@@ -109,12 +107,12 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     virtual IDataArray::Pointer removeVertexData(const std::string &name);
 
     /**
-    * @brief Renames a Vertex data array from the Data Container 
+    * @brief Renames a Vertex data array from the Data Container
     * @param name The name of the array
     */
     virtual bool renameVertexData(const std::string &oldname, const std::string &newname);
 
-	/**
+  /**
      * @brief Removes all the Vertex Arrays
      */
     virtual void clearVertexData();
@@ -162,12 +160,12 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     virtual IDataArray::Pointer removeEdgeData(const std::string &name);
 
     /**
-    * @brief Renames a Edge data array from the Data Container 
+    * @brief Renames a Edge data array from the Data Container
     * @param name The name of the array
     */
     virtual bool renameEdgeData(const std::string &oldname, const std::string &newname);
 
-	/**
+  /**
      * @brief Removes all the Edge Arrays
      */
     virtual void clearEdgeData();
@@ -215,12 +213,12 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     virtual IDataArray::Pointer removeFaceData(const std::string &name);
 
     /**
-    * @brief Renames a Face data array from the Data Container 
+    * @brief Renames a Face data array from the Data Container
     * @param name The name of the array
     */
     virtual bool renameFaceData(const std::string &oldname, const std::string &newname);
 
-	/**
+  /**
      * @brief Removes all the Face Arrays
      */
     virtual void clearFaceData();
@@ -268,12 +266,12 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     virtual IDataArray::Pointer removeCellData(const std::string &name);
 
     /**
-    * @brief Renames a cell data array from the Data Container 
+    * @brief Renames a cell data array from the Data Container
     * @param name The name of the array
     */
     virtual bool renameCellData(const std::string &oldname, const std::string &newname);
 
-	/**
+  /**
      * @brief Removes all the Cell Arrays
      */
     virtual void clearCellData();
@@ -321,12 +319,12 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     virtual IDataArray::Pointer removeFieldData(const std::string &name);
 
     /**
-    * @brief Renames a field data array from the Data Container 
+    * @brief Renames a field data array from the Data Container
     * @param name The name of the array
     */
     virtual bool renameFieldData(const std::string &oldname, const std::string &newname);
 
-	/**
+  /**
      * @brief Removes all the Field Arrays
      */
     virtual void clearFieldData();

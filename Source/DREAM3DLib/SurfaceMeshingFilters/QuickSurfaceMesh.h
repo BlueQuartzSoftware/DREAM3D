@@ -53,35 +53,39 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(QuickSurfaceMesh)
-     DREAM3D_STATIC_NEW_MACRO(QuickSurfaceMesh)
-     DREAM3D_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
+    DREAM3D_STATIC_NEW_MACRO(QuickSurfaceMesh)
+    DREAM3D_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
 
-     virtual ~QuickSurfaceMesh();
+    virtual ~QuickSurfaceMesh();
 
-   //------ Required Cell Data
-  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+
+    DREAM3D_INSTANCE_PROPERTY(bool, TransferPhaseId)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
-     virtual const std::string getHumanLabel() { return "Quick Surface Mesh"; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
+    virtual const std::string getHumanLabel() { return "Quick Surface Mesh"; }
 
-  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader);
 
-  virtual void execute();
-     virtual void preflight();
+    virtual void setupFilterParameters();
+    virtual void execute();
+    virtual void preflight();
 
-   protected:
-     QuickSurfaceMesh();
+  protected:
+    QuickSurfaceMesh();
 
-   private:
+  private:
     int32_t* m_GrainIds;
-
+    int32_t* m_CellPhases;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
