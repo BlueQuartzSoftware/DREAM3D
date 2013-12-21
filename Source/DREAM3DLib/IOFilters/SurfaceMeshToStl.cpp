@@ -36,6 +36,7 @@
 
 #include "SurfaceMeshToStl.h"
 
+#include <map>
 #include <set>
 
 #include "MXA/MXA.h"
@@ -48,8 +49,13 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshToStl::SurfaceMeshToStl() :
   AbstractFilter(),
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshPhaseLabelsArrayName(DREAM3D::FaceData::SurfaceMeshPhaseLabels),
   m_OutputStlDirectory(""),
-  m_OutputStlPrefix("")
+  m_OutputStlPrefix(""),
+  m_GroupByPhase(false),
+  m_SurfaceMeshFaceLabels(NULL),
+  m_SurfaceMeshPhaseLabels(NULL)
 {
   setupFilterParameters();
 }
@@ -83,6 +89,14 @@ void SurfaceMeshToStl::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Group Files By Phase");
+    option->setPropertyName("GroupByPhase");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -101,6 +115,7 @@ void SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->writeValue("OutputStlDirectory", getOutputStlDirectory() );
   writer->writeValue("OutputStlPrefix", getOutputStlPrefix() );
+  writer->writeValue("GroupByPhase", getGroupByPhase() );
 }
 
 // -----------------------------------------------------------------------------
@@ -112,25 +127,33 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, s
   if (m_OutputStlDirectory.empty() == true)
   {
     setErrorCondition(-1003);
-    addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
+    addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -382);
   }
 
-    SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if (NULL == sm)
   {
-      addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
-  else {
+  else
+  {
     if (sm->getFaces().get() == NULL)
     {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-        setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -384);
+      setErrorCondition(-384);
     }
     if (sm->getVertices().get() == NULL)
     {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-        setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -385);
+      setErrorCondition(-384);
+    }
+    std::stringstream ss;
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -30, int32_t, Int32ArrayType, sm->getNumFaceTuples(), 2)
+
+        if(m_GroupByPhase == true)
+    {
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshPhaseLabels, ss, -30, int32_t, Int32ArrayType, sm->getNumFaceTuples(), 2)
     }
   }
 }
@@ -151,16 +174,10 @@ void SurfaceMeshToStl::preflight()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToStl::execute()
 {
- int err = 0;
+  int err = 0;
   std::stringstream ss;
 
-    SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshDataContainer Object was NULL", -999);
-    return;
-  }
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
 
 
   dataCheck(false, 1, 1, 1);
@@ -169,36 +186,56 @@ void SurfaceMeshToStl::execute()
     return;
   }
 
+
+
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   if(!MXADir::mkdir(getOutputStlDirectory(), true))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << getOutputStlDirectory() << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    ss << "Error creating parent path '" << getOutputStlDirectory() << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
   }
 
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
   DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = sm->getFaces();
   DREAM3D::SurfaceMesh::Face_t* triangles = trianglePtr->GetPointer(0);
-  // Get the Labels(GrainIds or Region Ids) for the triangles
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  // Get the Labels(feature ids) for the triangles
+  IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
-  int nTriangles = trianglePtr->GetNumberOfTuples();
-
-  // Store all the unique Spins
-  std::set<int> uniqueSpins;
-  for (int i = 0; i < nTriangles; i++)
+  Int32ArrayType::Pointer phaseLabelsPtr = Int32ArrayType::NullPointer();
+  int32_t* phaseLabels = NULL;
+  if (m_GroupByPhase == true)
   {
-    uniqueSpins.insert(faceLabels[i*2]);
-    uniqueSpins.insert(faceLabels[i*2+1]);
+    phaseLabelsPtr = boost::dynamic_pointer_cast<Int32ArrayType>(sm->getFaceData(DREAM3D::FaceData::SurfaceMeshPhaseLabels));
+    phaseLabels = phaseLabelsPtr->GetPointer(0);
   }
 
+  int nTriangles = trianglePtr->GetNumberOfTuples();
+
+  typedef std::pair<int, int> PairType;
+  // Store all the unique Feature Ids
+  std::map<int, int> uniqueGrainIdtoPhase;
+  if (m_GroupByPhase == true) {
+    for (int i = 0; i < nTriangles; i++)
+    {
+      uniqueGrainIdtoPhase.insert(PairType(faceLabels[i*2], phaseLabels[i*2]));
+      uniqueGrainIdtoPhase.insert(PairType(faceLabels[i*2+1], phaseLabels[i*2]));
+    }
+  }
+  else
+  {
+    for (int i = 0; i < nTriangles; i++)
+    {
+      uniqueGrainIdtoPhase.insert(PairType(faceLabels[i*2], 0));
+      uniqueGrainIdtoPhase.insert(PairType(faceLabels[i*2+1], 0));
+    }
+  }
   unsigned char data[50];
   float* normal = (float*)data;
   float* vert1 = (float*)(data + 12);
@@ -211,26 +248,36 @@ void SurfaceMeshToStl::execute()
   float u[3], w[3];
   float length;
 
-  int spin = 0;
+  int grainId = 0;
   int triCount = 0;
 
-  //Loop over the unique Spins
-  for (std::set<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  //Loop over the unique Feature Ids
+  for (std::map<int, int>::iterator spinIter = uniqueGrainIdtoPhase.begin(); spinIter != uniqueGrainIdtoPhase.end(); ++spinIter )
   {
-    spin = *spinIter;
+    PairType grainPhase = *spinIter;
+    grainId = grainPhase.first;
     ss.str("");
     // Generate the output file name
-    ss << getOutputStlDirectory() << MXADir::Separator << getOutputStlPrefix() << spin << ".stl";
+    ss << getOutputStlDirectory() << MXADir::Separator << getOutputStlPrefix();
+    if(m_GroupByPhase == true)
+    {
+      ss << "Phase_" << grainPhase.second << "_";
+    }
+    ss << "Grain_" << grainId << ".stl";
+
     std::string filename = ss.str();
     FILE* f = fopen(filename.c_str(), "wb");
 
     ss.str("");
-    ss << "Writing STL for Grain Id " << spin;
+    ss << "Writing STL for Grain Id " << grainId;
     notifyStatusMessage(ss.str());
 
 
     ss.str("");
-    ss << "DREAM3D Generated For Grain ID " << spin;
+    ss << "DREAM3D Generated For Grain ID " << grainId;
+    if (m_GroupByPhase == true) {
+      ss << " Phase " << grainPhase.second;
+    }
     err = writeHeader(f, ss.str(), 0);
     triCount = 0; // Reset this to Zero. Increment for every triangle written
 
@@ -247,11 +294,11 @@ void SurfaceMeshToStl::execute()
       vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
       vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
 
-      if (faceLabels[t*2] == spin)
+      if (faceLabels[t*2] == grainId)
       {
         winding = 0; // 0 = Write it using forward spin
       }
-      else if (faceLabels[t*2+1] == spin)
+      else if (faceLabels[t*2+1] == grainId)
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices
@@ -295,7 +342,7 @@ void SurfaceMeshToStl::execute()
       if (totalWritten != 50)
       {
         ss.str("");
-        ss << "Error Writing STL File. Not enough elements written for grain id " << spin << " Wrote " << totalWritten << " of 50.";
+        ss << "Error Writing STL File. Not enough elements written for grain id " << grainId << " Wrote " << totalWritten << " of 50.";
         notifyErrorMessage(ss.str(), -1201);
       }
       triCount++;

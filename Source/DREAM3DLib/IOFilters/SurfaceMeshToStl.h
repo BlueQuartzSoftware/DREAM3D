@@ -56,15 +56,19 @@
 class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshToStl);
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshToStl);
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToStl, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(SurfaceMeshToStl)
+    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshToStl)
+    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToStl, AbstractFilter)
 
     virtual ~SurfaceMeshToStl();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshPhaseLabelsArrayName)
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory);
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlPrefix);
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlPrefix)
+    DREAM3D_INSTANCE_PROPERTY(bool, GroupByPhase)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -91,7 +95,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -125,6 +129,9 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
   private:
     int writeHeader(FILE* f, const std::string &header, int triCount);
     int writeNumTrianglesToFile(const std::string &filename, int triCount);
+
+    int32_t* m_SurfaceMeshFaceLabels;
+    int32_t* m_SurfaceMeshPhaseLabels;
 
     SurfaceMeshToStl(const SurfaceMeshToStl&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshToStl&); // Operator '=' Not Implemented
