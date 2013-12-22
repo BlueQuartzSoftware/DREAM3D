@@ -55,7 +55,9 @@ SurfaceMeshToStl::SurfaceMeshToStl() :
   m_OutputStlDirectory(""),
   m_OutputStlPrefix(""),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceLabels(NULL)
+  m_SurfaceMeshFaceLabels(NULL),
+  m_SurfaceMeshPhaseLabelsArrayName(DREAM3D::FaceData::SurfaceMeshPhaseLabels),
+  m_SurfaceMeshPhaseLabels(NULL)
 {
   setupFilterParameters();
 }
@@ -87,6 +89,14 @@ void SurfaceMeshToStl::setupFilterParameters()
     option->setPropertyName("OutputStlPrefix");
     option->setWidgetType(FilterParameter::StringWidget);
     option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Group Files By Phase");
+    option->setPropertyName("GroupByPhase");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -149,7 +159,11 @@ void SurfaceMeshToStl::dataCheck()
   m_SurfaceMeshFaceLabelsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
+  if (m_GroupByPhase == true) {
+      m_SurfaceMeshPhaseLabelsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshPhaseLabelsArrayName, -387, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if( NULL != m_SurfaceMeshPhaseLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      { m_SurfaceMeshPhaseLabels = m_SurfaceMeshPhaseLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 
@@ -191,12 +205,23 @@ void SurfaceMeshToStl::execute()
   int nTriangles = triangles.getNumberOfTuples();
 
   // Store all the unique Spins
-  QSet<int> uniqueSpins;
-  for (int i = 0; i < nTriangles; i++)
-  {
-    uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2]);
-    uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2 + 1]);
+  QMap<int, int> uniqueGrainIdtoPhase;
+  if (m_GroupByPhase == true) {
+    for (int i = 0; i < nTriangles; i++)
+    {
+      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2], m_SurfaceMeshPhaseLabels[i*2]);
+      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2+1], m_SurfaceMeshPhaseLabels[i*2]);
+    }
   }
+  else
+  {
+    for (int i = 0; i < nTriangles; i++)
+    {
+      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2], 0);
+      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2+1], 0);
+    }
+  }
+
 
   unsigned char data[50];
   float* normal = (float*)data;
@@ -214,12 +239,18 @@ void SurfaceMeshToStl::execute()
   int triCount = 0;
 
   //Loop over the unique Spins
-  for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  for (QMap<int, int>::iterator spinIter = uniqueGrainIdtoPhase.begin(); spinIter != uniqueGrainIdtoPhase.end(); ++spinIter )
   {
-    spin = *spinIter;
+    spin = spinIter.key();
+
 
     // Generate the output file name
-    QString filename = getOutputStlDirectory() + "/" + getOutputStlPrefix() + QString::number(spin) + ".stl";
+    QString filename = getOutputStlDirectory() + "/" + getOutputStlPrefix();
+    if(m_GroupByPhase == true)
+    {
+      filename = filename + QString("Phase_") + QString::number(spinIter.value()) + QString("_");
+    }
+    filename = filename + QString("Grain_") + QString::number(spin) + ".stl";
     FILE* f = fopen(filename.toLatin1().data(), "wb");
 
     {
@@ -228,6 +259,9 @@ void SurfaceMeshToStl::execute()
     }
 
     QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);
+    if (m_GroupByPhase == true) {
+      header = header + " Phase " + QString::number(spinIter.value());
+    }
     err = writeHeader(f, header, 0);
     if(err < 0)
     {

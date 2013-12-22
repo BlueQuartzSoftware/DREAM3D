@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "WriteAbaqusSurfaceMesh.h"
+#include "AbaqusSurfaceMeshWriter.h"
 
 #include <stdio.h>
 
@@ -45,11 +45,12 @@
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 
+#define TRI_ELEMENT_TYPE "SFM3D3"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteAbaqusSurfaceMesh::WriteAbaqusSurfaceMesh() :
+AbaqusSurfaceMeshWriter::AbaqusSurfaceMeshWriter() :
   AbstractFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
@@ -63,14 +64,14 @@ WriteAbaqusSurfaceMesh::WriteAbaqusSurfaceMesh() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteAbaqusSurfaceMesh::~WriteAbaqusSurfaceMesh()
+AbaqusSurfaceMeshWriter::~AbaqusSurfaceMeshWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::setupFilterParameters()
+void AbaqusSurfaceMeshWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
@@ -88,7 +89,7 @@ void WriteAbaqusSurfaceMesh::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void AbaqusSurfaceMeshWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -101,7 +102,7 @@ void WriteAbaqusSurfaceMesh::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int AbaqusSurfaceMeshWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile() );
@@ -112,7 +113,7 @@ int WriteAbaqusSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::dataCheck()
+void AbaqusSurfaceMeshWriter::dataCheck()
 {
   setErrorCondition(0);
   if (m_OutputFile.isEmpty() == true)
@@ -136,9 +137,7 @@ void WriteAbaqusSurfaceMesh::dataCheck()
     QVector<size_t> dims(1, 2);
     m_SurfaceMeshFaceLabelsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    {
-      m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   if (sm->getVertices().get() == NULL)
   {
@@ -151,7 +150,7 @@ void WriteAbaqusSurfaceMesh::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::preflight()
+void AbaqusSurfaceMeshWriter::preflight()
 {
   dataCheck();
 }
@@ -159,7 +158,7 @@ void WriteAbaqusSurfaceMesh::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::execute()
+void AbaqusSurfaceMeshWriter::execute()
 {
   int err = 0;
 
@@ -208,15 +207,19 @@ void WriteAbaqusSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, int featureCount)
+int AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int nodeCount, int triCount, int featureCount)
 {
   if (NULL == f)
   {
     return -1;
   }
   fprintf(f, "*HEADING\n");
-  fprintf(f, "** File Created with DREAM3D Version %s.%s\n", DREAM3DLib::Version::Major().toLatin1().data(), DREAM3DLib::Version::Minor().toLatin1().data());
-  fprintf(f, "**Number of Nodes: %d     Number of Triangles: %d   Number of Features: %d\n", nodeCount, triCount, featureCount);
+  fprintf(f, "** File Created with DREAM3D Version %s\n", DREAM3DLib::Version::Complete().toStdString().c_str());
+  fprintf(f, "** There are 3 Sections to this INP File: Nodes, Elements and Sets of Elements for each grain\n");
+  fprintf(f, "** This file represents a trianguglar based mesh. The element type selected is %s for the triangles\n", TRI_ELEMENT_TYPE);
+  fprintf(f, "** This file is an experimental output from DREAM3D. The user is responsible for verifying all elements in Abaqus\n");
+  fprintf(f, "** We have selected to use a 'shell' element type currently. No boundary elements are written\n");
+  fprintf(f, "**Number of Nodes: %d     Number of Triangles: %d   Number of Grains: %d\n", nodeCount, triCount, featureCount);
   fprintf(f, "*PREPRINT,ECHO=NO,HISTORY=NO,MODEL=NO\n");
   return 0;
 }
@@ -224,14 +227,14 @@ int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
+int AbaqusSurfaceMeshWriter::writeNodes(FILE* f)
 {
   VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
   VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
   size_t numNodes = nodesPtr->getNumberOfTuples();
   int err = 0;
   fprintf(f, "*Node,NSET=NALL\n");
-//1, 72.520433763730, 70.306420652241, 100.000000000000
+  //1, 72.520433763730, 70.306420652241, 100.000000000000
 
 
   for(size_t i = 1; i <= numNodes; ++i)
@@ -246,13 +249,13 @@ int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
+int AbaqusSurfaceMeshWriter::writeTriangles(FILE* f)
 {
   int err = 0;
   FaceArray& triangles = *(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces());
   size_t numTri = triangles.getNumberOfTuples();
 
-  fprintf(f, "*ELEMENT, TYPE=SFM3D3\n");
+  fprintf(f, "*ELEMENT, TYPE=%s\n", TRI_ELEMENT_TYPE);
   for(size_t i = 1; i <= numTri; ++i)
   {
     // When we get the node index, add 1 to it because Abaqus number is 1 based.
@@ -267,11 +270,11 @@ int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeFeatures(FILE* f)
+int AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 {
 
-//*Elset, elset=Feature1
-//1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+  //*Elset, elset=Feature1
+  //1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
 
   int err = 0;
 

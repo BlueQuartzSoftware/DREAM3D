@@ -19,7 +19,7 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}"  "IO Fil
 # List your public filters here
 
 set(_PublicFilters
-
+  AbaqusSurfaceMeshWriter
   AvizoRectilinearCoordinateWriter
   AvizoUniformCoordinateWriter
   DataContainerReader
@@ -49,7 +49,6 @@ set(_PublicFilters
   VisualizeGBCD
   VtkFeatureIdReader
   VtkRectilinearGridWriter
-  WriteAbaqusSurfaceMesh
   YSChoiAbaqusReader
 )
 

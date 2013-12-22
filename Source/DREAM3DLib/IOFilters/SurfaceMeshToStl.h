@@ -57,18 +57,21 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshToStl);
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshToStl);
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToStl, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(SurfaceMeshToStl)
+    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshToStl)
+    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToStl, AbstractFilter)
 
     virtual ~SurfaceMeshToStl();
+    
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
 
+    
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory);
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlPrefix);
-
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlPrefix)
+    DREAM3D_INSTANCE_PROPERTY(bool, GroupByPhase)
+    
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
@@ -127,6 +130,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshPhaseLabels)
 
     int writeHeader(FILE* f, const QString& header, int triCount);
     int writeNumTrianglesToFile(const QString& filename, int triCount);

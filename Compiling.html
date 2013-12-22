@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8">
   <title>ReadMe.txt</title>
-  
+
 </head>
 <body>
 This toolkit was developed under United States Air Force Contract FA8650-07-D-5800.
@@ -22,35 +22,35 @@ dream3d@bluequartz.net
 The software contained in this project requires the following third party libraries:
 <ul>
 <li>CMake (www.cmake.org) Version 2.8.12 or greater</li>
-<li>Boost (www.boost.org) Version 1.44 or greater</li>
-<li>Qt (www.qtsoftware.com) Version 4.8.4 ONLY. NOT Qt Version 5</li>
+<li>Boost (www.boost.org) Version 1.55.0 or greater</li>
+<li>Qt (www.qtsoftware.com) Version 4.8.5 ONLY. NOT Qt Version 5</li>
 <li>Qwt (qwt.sourceforge.net) Version 5.2.2 or Greater</li>
-<li>HDF5 (www.hdfgroup.org) Version 1.8.11 or Greater</li>
+<li>HDF5 (www.hdfgroup.org) Version 1.8.12 or Greater</li>
 </ul>
 
 <h3>CMake</h3>
-   You will need to install CMake from <a href="http://www.cmake.org">www.cmake.org</a> in 
-order to configure the source codes for your operating system and compiler tools. Simply 
+   You will need to install CMake from <a href="http://www.cmake.org">www.cmake.org</a> in
+order to configure the source codes for your operating system and compiler tools. Simply
 download CMake from the website and use the installer to install CMake onto your system.
 The minimum version of CMake that is needed is <b>Version 2.8.12</b>.
 
 
 <h3>HDF5</h3>
-The minimal version needed is HDF5 Version 1.8.11 <p>
+The minimal version needed is HDF5 Version 1.8.12 <p>
   Download and compile HDF5 and install on your system somewhere.
 
 
 <h3>Boost</h3>
-One should use a minimum version of 1.44 in order to compile the source
-codes. One can download the boost sources from www.boost.org. On all platforms the 
-user should strive to compile boost as static libraries with dynamic linkage to 
-the C and C++ standard libraries. 
+One should use a minimum version of 1.55.0 in order to compile the source
+codes. One can download the boost sources from www.boost.org. On all platforms the
+user should strive to compile boost as static libraries with dynamic linkage to
+the C and C++ standard libraries.
 This can be accomplished using the following scheme.
 <p>
-1: First download or otherwise compile and install bjam which comes with the Boost 
-source code distribution. After bjam.exe is compiled and available in your path 
+1: First download or otherwise compile and install bjam which comes with the Boost
+source code distribution. After bjam.exe is compiled and available in your path
 open a Visual Studio Command prompt and  change directories into the top level of
-the boost source distribution. 
+the boost source distribution.
 <p>
 <h4>Windows Command Prompt invocation to compile Boost</h4>
  Note that in the following command, the <tt>"toolset=xxxxx"</tt> should match the version of Visual Studio that you have installed on your system.
@@ -65,7 +65,7 @@ and libraries will be installed into.
 <p>
 <pre>
 bjam.exe toolset=msvc-9.0 --with-program_options --with-date_time --with-thread
- --prefix=C:\Developer\VS9\boost_1_39 variant=release,debug threading=multi
+ --prefix=C:\Developer\VS9\boost_1_55.0 variant=release,debug threading=multi
   link=static runtime-link=shared install
 </pre>
 
@@ -74,36 +74,29 @@ The following command can be used to compile boost on OS X and other Unix
 like Systems. This also assumes that bjam is already compiled and ready to go.
 <pre>
 bjam toolset=darwin --with-program_options --with-thread variant=release,debug threading=multi
- link=static runtime-link=shared --prefix=/Users/Shared/Toolkits/boost-1_39/ 
+ link=static runtime-link=shared --prefix=/Users/Shared/Toolkits/boost-1_55.0/
  architecture=combined address-model=32_64 install
 </pre>
 
-<h4>CMake Version of Boost</h4>
-There is a subset of Boost version 1.44 located at http://scm.bluequartz.net/support-libraries/MXABoost
-that can be used to build DREAM3D programs. This version uses CMake instead of BJam to
-configure itself.
-
-
-
 <h3>Qt</h3>
 Typically the latest version of Qt is compatible with the code although for reference the
-development code was written using Qt version 4.8.4 where Qt Version 4.8.4 is current
+development code was written using Qt version 4.8.5 where Qt Version 4.8.5 is current
 as of this writing.
 <p>
-Download the source code for Qt from <a href="http://www.qtsoftware.com">Nokia</a>. For versions starting with 4.8.4 the file
-is in a single archive file "qt-everywhere-opensource-src-4.8.4.tar.gz". You may have
+Download the source code for Qt from <a href="http://www.qtsoftware.com">Nokia</a>. For versions starting with 4.8.5 the file
+is in a single archive file "qt-everywhere-opensource-src-4.8.5.tar.gz". You may have
 to download the source from pt-project.org in order to get a specific
 version of the sources.
 <p>
-Uncompress the source codes and open either <b>Terminal.app</b> on OS X, an <b>XTerm</b> on Linux 
-or a <b>Visual Studio Command Prompt</b> on Windows. Change directories into the top 
+Uncompress the source codes and open either <b>Terminal.app</b> on OS X, an <b>XTerm</b> on Linux
+or a <b>Visual Studio Command Prompt</b> on Windows. Change directories into the top
 level of the uncompressed source code and do one of the following based on your
-operating system. 
+operating system.
 
 <h5>WINDOWS SPECIAL NOTE</h5> You should locate the Qt source code directory in its FINAL
 location on your file system including any naming of the top level directory. For
 instance on the development system the Qt libraries are compiled into
-C:\Developer\i386\Qt-4.8.4 for the 32 bit version and C:\Developer\x64\Qt-4.8.4
+C:\Developer\i386\Qt-4.8.5 for the 32 bit version and C:\Developer\x64\Qt-4.8.5
 for the 64 bit version.
 <h5>WINDOWS SPECIAL NOTE II</h5> In order to compile a 64 bit version of Qt you MUST be
 running a 64 bit version of Windows. This is because during the compilation, the
@@ -113,13 +106,13 @@ that supports 64 bit compiles. Visual Studio Express (as of VS 2010 Express) doe
 directly support 64 bit compiles.
 <h5>WINDOWS SPECIAL NOTE III</h5> Technically it is possible to move the qt directory after
 all the compiles are complete but this involves lots of unsupported hacks, work-
-arounds and other "trickery" to get it to work. Google is your friend if you 
+arounds and other "trickery" to get it to work. Google is your friend if you
 want to try this.
 
 <h4>Qt Configuration and Compile</h4>
 <b> Windows Visual Studio</b>
 <pre>
-configure -nomake demos -nomake examples -debug-and-release -shared -fast -exceptions -stl -no-qt3-support -no-webkit 
+configure -nomake demos -nomake examples -debug-and-release -shared -fast -exceptions -stl -no-qt3-support -no-webkit
 </pre>
 
 <b>OS X, Linux, Unix</b>
@@ -140,12 +133,12 @@ from the following web site: <a href="http://www.github.com/dream3d/DREAM3D">
 http://www.github.com/dream3d/DREAM3D</a>.
 <p>
 <p>
-Once the source codes are downloaded onto your system launch "CMake-Gui.exe" (Windows) or 
+Once the source codes are downloaded onto your system launch "CMake-Gui.exe" (Windows) or
 CMake-Gui.app (OS X) depending on your system. This will present a Window to the user
 with 2 text fields that need to be filled out:
 <p>
 <i>"Where is the source code"</i> should point to the DREAM3D directory:<br>
-<i>"Where to build the binaries"</i> should point to a DIFFERENT directory. 
+<i>"Where to build the binaries"</i> should point to a DIFFERENT directory.
 <p>
 Some developers
 prefer to have CMake create a new directory located inside the DREAM3D
@@ -158,9 +151,9 @@ most directory of that particular installation or to a particular executable.
 <li><b>HDF5_INSTALL</b>:<i>/Users/Shared/Toolkits/hdf5-1.8.11</i></li>
 <li><b>BOOST_ROOT</b>:<i>/Users/Shared/Toolkits/MXABoost-1.44</i></li>
 <li><b>QWT_INSTALL</b>:<i>/Users/Shared/Toolkits/Qwt-5.2.2</i></li>
-<li><b>QT_QMAKE_EXECUTABLE</b>:<i>/Users/Shared/Toolkits/Qt-4.8.4/bin/qmake</i></li>
-</ul>  
-  
+<li><b>QT_QMAKE_EXECUTABLE</b>:<i>/Users/Shared/Toolkits/Qt-4.8.5/bin/qmake</i></li>
+</ul>
+
   After those are filled out click the "Configure" button. A new window will appear
 asking you to select the type of generator you want to run. Simply select the type
 that matches the type of compile tools that you have installed. On Windows systems
@@ -174,7 +167,7 @@ will be enabled. Click the "Generate" button and wait for the process to complet
 occured during the configuration step. Most likely CMake could not located either
 Boost or Qt. In order to help CMake find boost you can click the "Add Entry" button
 and add a new CMake variable "Boost_ROOT" with a value that points to the location
-of the boost installation. To help CMake find Qt you need to manually set the 
+of the boost installation. To help CMake find Qt you need to manually set the
 QT_QMAKE_EXECUTABLE to the qmake executable program located in the bin directory
 of the Qt installation.<p>
 
@@ -183,7 +176,7 @@ file on Windows, DREAM3D.xcodeproj on OS X or if you selected to generate
 makefiles you would open a terminal, navigate to the build directory and execute the
 "make" command.<p>
 
-  After the successful compilation of DREAM3D there will be several 
+  After the successful compilation of DREAM3D there will be several
 executables available to run.
 </body>
 </html>

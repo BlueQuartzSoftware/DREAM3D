@@ -264,6 +264,7 @@ namespace DREAM3D
     const DREAM3D_STRING SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
     const DREAM3D_STRING SurfaceMeshFaceMisorientationColors("SurfaceMeshFaceMisorientationColors");
     const DREAM3D_STRING SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
+    const DREAM3D_STRING SurfaceMeshPhaseLabels("SurfaceMeshPhaseLabels");
     const DREAM3D_STRING SurfaceMeshF1s("SurfaceMeshF1s");
     const DREAM3D_STRING SurfaceMeshF1spts("SurfaceMeshF1spts");
     const DREAM3D_STRING SurfaceMeshF7s("SurfaceMeshF7s");
@@ -316,6 +317,7 @@ namespace DREAM3D
   {
     const DREAM3D_STRING FileVersion("6.0");
     const DREAM3D_STRING FileVersionName("FileVersion");
+    const DREAM3D_STRING DREAM3DVersion("DREAM3D Version");
     const DREAM3D_STRING ObjectType("ObjectType");
     const DREAM3D_STRING Rank("Rank");
     const DREAM3D_STRING NumComponents("NumComponents");
