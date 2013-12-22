@@ -91,7 +91,8 @@ void PhReader::setupFilterParameters()
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
-    option->setFileExtension("*.dx");
+    option->setFileExtension("*.ph");
+    option->setFileType("CMU Grain Growth");
     option->setValueType("string");
     parameters.push_back(option);
   }
