@@ -19,6 +19,7 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}"  "IO Fil
 # List your public filters here
 
 set(_PublicFilters
+  AbaqusSurfaceMeshWriter
   AvizoRectilinearCoordinateWriter
   AvizoUniformCoordinateWriter
   DataContainerReader
@@ -31,25 +32,25 @@ set(_PublicFilters
   FieldInfoReader
   H5VoxelFileReader
   INLWriter
+  LosAlamosFFTWriter
   NodesTrianglesToStl
   NodesTrianglesToVtk
   PhReader
   PhWriter
+  RawBinaryReader
   ReadH5Ebsd
+  ReadOrientationData
+  SPParksWriter
+  SolidMeshToVtk
   SurfaceMeshToNodesTrianglesEdges
+  SurfaceMeshToNonconformalVtk
   SurfaceMeshToStl
   SurfaceMeshToVtk
-  SurfaceMeshToNonconformalVtk
+  VisualizeGBCD
+  VtkGrainIdReader
   VtkRectilinearGridWriter
   YSChoiAbaqusReader
-  RawBinaryReader
-  VtkGrainIdReader
-  SolidMeshToVtk
-  SPParksWriter
-  VisualizeGBCD
-  ReadOrientationData
-  LosAlamosFFTWriter
-  WriteAbaqusSurfaceMesh
+
 )
 
 

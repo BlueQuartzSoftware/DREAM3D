@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "WriteAbaqusSurfaceMesh.h"
+#include "AbaqusSurfaceMeshWriter.h"
 
 #include <stdio.h>
 #include "MXA/MXA.h"
@@ -44,13 +44,16 @@
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 
+#define TRI_ELEMENT_TYPE "SFM3D3"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteAbaqusSurfaceMesh::WriteAbaqusSurfaceMesh() :
+AbaqusSurfaceMeshWriter::AbaqusSurfaceMeshWriter() :
   AbstractFilter(),
-  m_OutputFile("")
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_OutputFile(""),
+  m_SurfaceMeshFaceLabels(NULL)
 {
   setupFilterParameters();
 }
@@ -58,14 +61,14 @@ WriteAbaqusSurfaceMesh::WriteAbaqusSurfaceMesh() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteAbaqusSurfaceMesh::~WriteAbaqusSurfaceMesh()
+AbaqusSurfaceMeshWriter::~AbaqusSurfaceMeshWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::setupFilterParameters()
+void AbaqusSurfaceMeshWriter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
@@ -83,14 +86,14 @@ void WriteAbaqusSurfaceMesh::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reader)
+void AbaqusSurfaceMeshWriter::readFilterParameters(AbstractFilterParametersReader* reader)
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void AbaqusSurfaceMeshWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 
 {
   writer->writeValue("OutputFile", getOutputFile() );
@@ -99,7 +102,7 @@ void WriteAbaqusSurfaceMesh::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AbaqusSurfaceMeshWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   if (m_OutputFile.empty() == true)
@@ -125,6 +128,8 @@ void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fie
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
+    std::stringstream ss;
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -30, int32_t, Int32ArrayType, sm->getNumFaceTuples(), 2)
   }
 }
 
@@ -132,7 +137,7 @@ void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fie
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::preflight()
+void AbaqusSurfaceMeshWriter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -142,20 +147,12 @@ void WriteAbaqusSurfaceMesh::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteAbaqusSurfaceMesh::execute()
+void AbaqusSurfaceMeshWriter::execute()
 {
   int err = 0;
   std::stringstream ss;
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshDataContainer Object was NULL", -999);
-    return;
-  }
-
-
   dataCheck(false, 1, 1, 1);
   if(getErrorCondition() < 0)
   {
@@ -178,8 +175,7 @@ void WriteAbaqusSurfaceMesh::execute()
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = sm->getFaces();
 
   // Get the Labels(GrainIds or Region Ids) for the triangles
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  Int32ArrayType::Pointer faceLabelsPtr = boost::dynamic_pointer_cast<Int32ArrayType>(sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels));
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   // Store all the unique Spins
@@ -207,14 +203,18 @@ void WriteAbaqusSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, int grainCount)
+int AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int nodeCount, int triCount, int grainCount)
 {
   if (NULL == f)
   {
     return -1;
   }
   fprintf(f, "*HEADING\n");
-  fprintf(f, "** File Created with DREAM3D Version %s.%s\n", DREAM3DLib::Version::Major().c_str(), DREAM3DLib::Version::Minor().c_str());
+  fprintf(f, "** File Created with DREAM3D Version %s\n", DREAM3DLib::Version::Complete().c_str());
+  fprintf(f, "** There are 3 Sections to this INP File: Nodes, Elements and Sets of Elements for each grain\n");
+  fprintf(f, "** This file represents a trianguglar based mesh. The element type selected is %s for the triangles\n", TRI_ELEMENT_TYPE);
+  fprintf(f, "** This file is an experimental output from DREAM3D. The user is responsible for verifying all elements in Abaqus\n");
+  fprintf(f, "** We have selected to use a 'shell' element type currently. No boundary elements are written\n");
   fprintf(f, "**Number of Nodes: %d     Number of Triangles: %d   Number of Grains: %d\n", nodeCount, triCount, grainCount);
   fprintf(f, "*PREPRINT,ECHO=NO,HISTORY=NO,MODEL=NO\n");
   return 0;
@@ -223,7 +223,7 @@ int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
+int AbaqusSurfaceMeshWriter::writeNodes(FILE* f)
 {
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
   DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
@@ -245,14 +245,14 @@ int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
+int AbaqusSurfaceMeshWriter::writeTriangles(FILE* f)
 {
   int err = 0;
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = getSurfaceMeshDataContainer()->getFaces();
   DREAM3D::SurfaceMesh::Face_t* triangles = trianglePtr->GetPointer(0);
   size_t numTri = trianglePtr->GetNumberOfTuples();
 
-  fprintf(f, "*ELEMENT, TYPE=SFM3D3\n");
+  fprintf(f, "*ELEMENT, TYPE=%s\n", TRI_ELEMENT_TYPE);
   for(size_t i = 1; i <= numTri; ++i)
   {
 
@@ -268,7 +268,7 @@ int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
+int AbaqusSurfaceMeshWriter::writeGrains(FILE* f)
 {
 
 //*Elset, elset=Grain1
@@ -277,16 +277,13 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
   int err = 0;
 
   std::stringstream ss;
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = sm->getFaces();
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = getSurfaceMeshDataContainer()->getFaces();
   // Get the Labels(GrainIds or Region Ids) for the triangles
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  Int32ArrayType::Pointer faceLabelsPtr = boost::dynamic_pointer_cast<Int32ArrayType>(sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels));
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
-
-
-
 
   int nTriangles = trianglePtr->GetNumberOfTuples();
 

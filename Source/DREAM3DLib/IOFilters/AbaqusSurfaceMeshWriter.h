@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _WriteAbaqusSurfaceMesh_H_
-#define _WriteAbaqusSurfaceMesh_H_
+#ifndef _AbaqusSurfaceMeshWriter_H_
+#define _AbaqusSurfaceMeshWriter_H_
 
 #include <string>
 
@@ -46,20 +46,22 @@
 
 
 /**
- * @class WriteAbaqusSurfaceMesh WriteAbaqusSurfaceMesh.h IOFilters/Code/IOFiltersFilters/WriteAbaqusSurfaceMesh.h
+ * @class AbaqusSurfaceMeshWriter AbaqusSurfaceMeshWriter.h IOFilters/Code/IOFiltersFilters/AbaqusSurfaceMeshWriter.h
  * @brief This filter will create an Abaqus Input file that is a Surface Mesh using S3 element types
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT WriteAbaqusSurfaceMesh : public AbstractFilter
+class DREAM3DLib_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(WriteAbaqusSurfaceMesh)
-    DREAM3D_STATIC_NEW_MACRO(WriteAbaqusSurfaceMesh)
-    DREAM3D_TYPE_MACRO_SUPER(WriteAbaqusSurfaceMesh, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(AbaqusSurfaceMeshWriter)
+    DREAM3D_STATIC_NEW_MACRO(AbaqusSurfaceMeshWriter)
+    DREAM3D_TYPE_MACRO_SUPER(AbaqusSurfaceMeshWriter, AbstractFilter)
 
-    virtual ~WriteAbaqusSurfaceMesh();
+    virtual ~AbaqusSurfaceMeshWriter();
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
@@ -108,7 +110,7 @@ class DREAM3DLib_EXPORT WriteAbaqusSurfaceMesh : public AbstractFilter
     virtual void preflight();
 
   protected:
-    WriteAbaqusSurfaceMesh();
+    AbaqusSurfaceMeshWriter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -126,8 +128,10 @@ class DREAM3DLib_EXPORT WriteAbaqusSurfaceMesh : public AbstractFilter
     int writeTriangles(FILE* f);
     int writeGrains(FILE* f);
 
-    WriteAbaqusSurfaceMesh(const WriteAbaqusSurfaceMesh&); // Copy Constructor Not Implemented
-    void operator=(const WriteAbaqusSurfaceMesh&); // Operator '=' Not Implemented
+    int32_t* m_SurfaceMeshFaceLabels;
+
+    AbaqusSurfaceMeshWriter(const AbaqusSurfaceMeshWriter&); // Copy Constructor Not Implemented
+    void operator=(const AbaqusSurfaceMeshWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _WriteAbaqusSurfaceMesh_H_ */
+#endif /* _AbaqusSurfaceMeshWriter_H_ */

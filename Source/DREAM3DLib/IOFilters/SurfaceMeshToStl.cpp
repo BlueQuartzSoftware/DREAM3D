@@ -151,7 +151,7 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, s
     std::stringstream ss;
     GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -30, int32_t, Int32ArrayType, sm->getNumFaceTuples(), 2)
 
-        if(m_GroupByPhase == true)
+    if(m_GroupByPhase == true)
     {
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshPhaseLabels, ss, -30, int32_t, Int32ArrayType, sm->getNumFaceTuples(), 2)
     }
@@ -178,8 +178,6 @@ void SurfaceMeshToStl::execute()
   std::stringstream ss;
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-
-
   dataCheck(false, 1, 1, 1);
   if(getErrorCondition() < 0)
   {
@@ -204,8 +202,7 @@ void SurfaceMeshToStl::execute()
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = sm->getFaces();
   DREAM3D::SurfaceMesh::Face_t* triangles = trianglePtr->GetPointer(0);
   // Get the Labels(feature ids) for the triangles
-  IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  Int32ArrayType::Pointer faceLabelsPtr = boost::dynamic_pointer_cast<Int32ArrayType>(sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels));
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   Int32ArrayType::Pointer phaseLabelsPtr = Int32ArrayType::NullPointer();
