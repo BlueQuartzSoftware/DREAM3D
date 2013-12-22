@@ -44,7 +44,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-
+#include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerWriter.h"
@@ -110,15 +110,6 @@ void DataContainerWriter::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
-//  {
-//    FilterParameter::Pointer option = FilterParameter::New();
-//    option->setHumanLabel("Write Solid Mesh");
-//    option->setPropertyName("WriteSolidMeshData");
-//    option->setWidgetType(FilterParameter::BooleanWidget);
-//    option->setValueType("bool");
-//    parameters.push_back(option);
-//  }
-
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Xdmf File");
@@ -237,6 +228,7 @@ void DataContainerWriter::execute()
 
   // Write our File Version string to the Root "/" group
   H5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+  H5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::DREAM3DVersion, DREAM3DLib::Version::Complete() );
 
   std::ofstream xdmf;
   if (m_WriteXdmfFile == true)
