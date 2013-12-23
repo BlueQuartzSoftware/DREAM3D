@@ -481,7 +481,7 @@ class DataArray : public IDataArray
       this->m_OwnsData = true;
       this->m_MaxId = 0;
       m_IsAllocated = false;
-
+      m_NumTuples = 0;
       //   this->_dims[0] = _nElements;
     }
 
@@ -804,7 +804,9 @@ class DataArray : public IDataArray
 
     virtual int32_t resize(size_t numTuples)
     {
-      return resizeTotalElements(numTuples * this->m_NumComponents);
+      int32_t check = resizeTotalElements(numTuples * this->m_NumComponents);
+      if(check > 0) m_NumTuples = numTuples;
+      return check;
     }
 
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
@@ -1247,7 +1249,7 @@ class DataArray : public IDataArray
         if (!newArray)
         {
           qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
-          return 0;
+          return NULL;
         }
 
         // Copy the data from the old array.
@@ -1260,7 +1262,7 @@ class DataArray : public IDataArray
         if (!newArray)
         {
           qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
-          return 0;
+          return NULL;
         }
       }
       else
@@ -1269,7 +1271,7 @@ class DataArray : public IDataArray
         if (!newArray)
         {
           qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
-          return 0;
+          return NULL;
         }
 
         // Copy the data from the old array.

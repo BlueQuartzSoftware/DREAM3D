@@ -217,11 +217,6 @@ void InitializeSyntheticVolume::preflight()
   cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<uint32_t>, uint32_t>(DREAM3D::EnsembleData::ShapeTypes, 0, dims);
 
   QList<QString> check = cellEnsembleAttrMat->getAttributeArrayNameList();
-  for(QList<QString>::iterator it = check.begin(); it != check.end(); ++it)
-  {
-    QString name = *(it);
-    int stop = 0;
-  }
 }
 
 // -----------------------------------------------------------------------------

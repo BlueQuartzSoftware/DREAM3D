@@ -403,8 +403,13 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
   QString buf;
   QTextStream out(&buf);
 
-  QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->getNumberOfComponents());
-  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->getNumberOfComponents() / 2);
+  QString tupleStr;
+  for(int i = 0; i < m_TupleDims.size(); i++)
+  {
+    tupleStr = tupleStr + QString::number(m_TupleDims[i]) + QString(" ");
+  }
+  QString dimStr = tupleStr + QString::number(array->getNumberOfComponents());
+  QString dimStrHalf = tupleStr + QString::number(array->getNumberOfComponents() / 2);
 
   if((numComp % 2) == 1)
   {

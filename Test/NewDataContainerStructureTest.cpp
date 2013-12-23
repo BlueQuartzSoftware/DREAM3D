@@ -156,7 +156,7 @@ void BuildNewDream3dFile()
 
   PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[1].get());
   pp->setPhaseFraction(1);
-  VectorOfFloatArray sizedist;
+  VectorOfFloatArray sizedist = statsDataArray[1]->CreateCorrelatedDistributionArrays(DREAM3D::DistributionType::LogNormal, 1);
   sizedist[0]->setValue(0, 1);
   sizedist[1]->setValue(0, 0.1);
   pp->setFeatureSizeDistribution(sizedist);
@@ -168,6 +168,71 @@ void BuildNewDream3dFile()
   FloatArrayType::Pointer binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
   DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, binSize, binnumbers);
   pp->setBinNumbers(binnumbers);
+  VectorOfFloatArray boveras = statsDataArray[1]->CreateCorrelatedDistributionArrays(DREAM3D::DistributionType::Beta, numbins);
+  VectorOfFloatArray coveras = statsDataArray[1]->CreateCorrelatedDistributionArrays(DREAM3D::DistributionType::Beta, numbins);
+  boveras[0]->setValue(0, 15.0425);
+  boveras[1]->setValue(0, 1.26719);
+  boveras[0]->setValue(1, 15.9438);
+  boveras[1]->setValue(1, 1.44586);
+  boveras[0]->setValue(2, 15.4206);
+  boveras[1]->setValue(2, 1.6027);
+  boveras[0]->setValue(3, 15.3367);
+  boveras[1]->setValue(3, 1.47998);
+  boveras[0]->setValue(4, 15.7276);
+  boveras[1]->setValue(4, 1.64522);
+  boveras[0]->setValue(5, 15.9084);
+  boveras[1]->setValue(5, 1.71922);
+  pp->setFeatureSize_BOverA(boveras);
+  coveras[0]->setValue(0, 15.0425);
+  coveras[1]->setValue(0, 1.26719);
+  coveras[0]->setValue(1, 15.9438);
+  coveras[1]->setValue(1, 1.44586);
+  coveras[0]->setValue(2, 15.4206);
+  coveras[1]->setValue(2, 1.6027);
+  coveras[0]->setValue(3, 15.3367);
+  coveras[1]->setValue(3, 1.47998);
+  coveras[0]->setValue(4, 15.7276);
+  coveras[1]->setValue(4, 1.64522);
+  coveras[0]->setValue(5, 15.9084);
+  coveras[1]->setValue(5, 1.71922);
+  pp->setFeatureSize_COverA(coveras);
+  VectorOfFloatArray omega3s = statsDataArray[1]->CreateCorrelatedDistributionArrays(DREAM3D::DistributionType::Beta, numbins);
+  omega3s[0]->setValue(0, 15.0425);
+  omega3s[1]->setValue(0, 1.26719);
+  omega3s[0]->setValue(1, 15.9438);
+  omega3s[1]->setValue(1, 1.44586);
+  omega3s[0]->setValue(2, 15.4206);
+  omega3s[1]->setValue(2, 1.6027);
+  omega3s[0]->setValue(3, 15.3367);
+  omega3s[1]->setValue(3, 1.47998);
+  omega3s[0]->setValue(4, 15.7276);
+  omega3s[1]->setValue(4, 1.64522);
+  omega3s[0]->setValue(5, 15.9084);
+  omega3s[1]->setValue(5, 1.71922);
+  pp->setFeatureSize_Omegas(omega3s);
+  VectorOfFloatArray neighborhoods = statsDataArray[1]->CreateCorrelatedDistributionArrays(DREAM3D::DistributionType::LogNormal, numbins);
+  neighborhoods[0]->setValue(0, 2.07944);
+  neighborhoods[1]->setValue(0, 0.4);
+  neighborhoods[0]->setValue(1, 2.30259);
+  neighborhoods[1]->setValue(1, 0.36666);
+  neighborhoods[0]->setValue(2, 2.48491);
+  neighborhoods[1]->setValue(2, 0.33333);
+  neighborhoods[0]->setValue(3, 2.63906);
+  neighborhoods[1]->setValue(3, 0.3);
+  neighborhoods[0]->setValue(4, 2.77259);
+  neighborhoods[1]->setValue(4, 0.26666);
+  neighborhoods[0]->setValue(5, 2.89037);
+  neighborhoods[1]->setValue(5, 0.23333);
+  pp->setFeatureSize_Neighbors(neighborhoods);
+  FloatArrayType::Pointer axisodf;
+  axisodf = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::StringConstants::AxisOrientation);
+  float val = 1.0/(36.0*36.0*36.0);
+  for (int j = 0; j < (36 * 36 * 36); j++)
+  {
+    axisodf->setValue(j, val);
+  }
+  pp->setAxisOrientation(axisodf);
+
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
@@ -207,17 +272,17 @@ void RunPipeline1()
   pipeline->pushBack(ppp);
 
   FindNeighbors::Pointer fn = FindNeighbors::New();
-  pipeline->pushBack(fn);
+//  pipeline->pushBack(fn);
 
   FindNumFeatures::Pointer fnf = FindNumFeatures::New();
-  pipeline->pushBack(fnf);
+//  pipeline->pushBack(fnf);
 
   MatchCrystallography::Pointer mc = MatchCrystallography::New();
   mc->setMaxIterations(100000);
-  pipeline->pushBack(mc);
+//  pipeline->pushBack(mc);
 
   GenerateIPFColors::Pointer gipfc = GenerateIPFColors::New();
-  pipeline->pushBack(gipfc);
+//  pipeline->pushBack(gipfc);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
@@ -505,8 +570,8 @@ int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 
-  BuildNewDream3dFile();
-//  RunPipeline1();
+//  BuildNewDream3dFile();
+  RunPipeline1();
 //  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();
