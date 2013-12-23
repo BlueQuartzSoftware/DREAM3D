@@ -85,7 +85,7 @@ DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
   if (hasPrefSetting == false)
   {
     // Set to manually check. The US Govt Agencies do not like it when you automatically check a web site.
-    updatePrefs.setValue(Detail::UpdateFrequencyKey, QVariant(UpdateCheckManual));
+    updatePrefs.setValue(Detail::UpdateFrequencyKey, QVariant(UpdateCheckMonthly));
   }
   updatePrefs.endGroup();
 
