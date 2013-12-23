@@ -51,6 +51,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QListWidget>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QToolButton>
 
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DVersion.h"
@@ -381,7 +382,15 @@ void DREAM3D_UI::setupGui()
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
+  pipelineViewWidget->setInputParametersWidget(filterInputDockWidget);
 
+  // Hook up signals from the DockWidgets
+  connect(documentsDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
+          pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
+          pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
+  connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&, int)),
+          pipelineViewWidget, SLOT(addFilter(const QString&, int)) );
 
 #if 0
   FilterWidgetsLib::RegisterKnownQFilterWidgets();
@@ -389,26 +398,13 @@ void DREAM3D_UI::setupGui()
   loadPlugins(m_FilterManager.get());
 #endif
 
-  // Now create our central widget
-//  m_PipelineBuilderWidget = new PipelineBuilderWidget(this->menuPipeline, m_FilterManager.get(), this);
-//  m_PipelineBuilderWidget->setStatusBar(this->statusBar());
-//  centralwidget->layout()->addWidget(m_PipelineBuilderWidget);
+  QToolButton* showPrebuilts = new QToolButton(this);
+  showPrebuilts->setText("Prebuilt Pipelines");
+  showPrebuilts->setCheckable(true);
+  connect(showPrebuilts, SIGNAL(clicked(bool)),
+          prebuiltPipelinesDockWidget, SLOT(setHidden(bool)));
+  statusBar()->insertPermanentWidget(0, showPrebuilts, 0);
 
-//  connect(m_PipelineBuilderWidget, SIGNAL(fireWriteSettings()),
-//          this, SLOT(writeSettings()) );
-//  connect(m_PipelineBuilderWidget, SIGNAL(fireReadSettings()),
-//          this, SLOT(readSettings() ) );
-
-
-#if 0
-  m_QFilterLibraryDockWidget = new QFilterLibraryDockWidget(this);
-  m_QFilterLibraryDockWidget->setObjectName(QString::fromUtf8("m_QFilterLibraryDockWidget"));
-  addDockWidget(static_cast<Qt::DockWidgetArea>(0), m_QFilterLibraryDockWidget);
-
-  m_QPrebuiltPipelinesWidget = new QPrebuiltPipelinesDockWidget(this);
-  m_QPrebuiltPipelinesWidget->setObjectName(QString::fromUtf8("m_QPrebuiltPipelinesWidget"));
-  addDockWidget(static_cast<Qt::DockWidgetArea>(1), m_QPrebuiltPipelinesWidget);
-#endif
 
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
   actionOpenPipeline->setShortcut(actionOpenKeySeq);

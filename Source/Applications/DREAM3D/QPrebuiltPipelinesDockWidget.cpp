@@ -43,6 +43,7 @@
 
 #include <QtGui/QListWidget>
 #include <QtGui/QListWidgetItem>
+#include <QtGui/QTreeWidgetItem>
 
 
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
@@ -169,7 +170,7 @@ void QPrebuiltPipelinesDockWidget::addFiltersRecursively(QDir currentDir, QTreeW
         pbPref.endGroup();
         //qDebug() << pbinfo.absoluteFilePath() << "\n";
         // Add tree widget for this Prebuilt Pipeline
-        QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(currentDirItem, ItemType::Prebuilt_Item_Type);
+        QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(currentDirItem, Prebuilt_Item_Type);
         prebuiltItem->setText(0, pbName);
         prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
         prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
@@ -278,22 +279,25 @@ void QPrebuiltPipelinesDockWidget::on_filterLibraryTree_currentItemChanged(QTree
 // -----------------------------------------------------------------------------
 void QPrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
-    QTreeWidgetItem* parent = item->parent();
+  QTreeWidgetItem* parent = item->parent();
 
-    while(NULL != parent)
+  while(NULL != parent)
+  {
+    if (NULL == parent->parent() )
     {
-        if (NULL == parent->parent() )
-        {
-            break;
-        }
-        parent = parent->parent();
+      break;
     }
-    if (parent == NULL)
-    {
-        return;
-    }
+    parent = parent->parent();
+  }
+  if (parent == NULL)
+  {
+    return;
+  }
 
-    QString itemText = parent->text(0);
-
+  QString pipelinePath = item->data(0, Qt::UserRole).toString();
+  if (pipelinePath.isEmpty() == false)
+  {
+    emit pipelineFileActivated(pipelinePath);
+  }
 }
 

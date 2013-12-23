@@ -58,12 +58,12 @@
 
 
 class DREAM3DPluginInterface;
-class HelpDialog;
 class QFilterLibraryDockWidget;
+class QPrebuiltPipelinesDockWidget;
 class DREAM3DUpdateCheckDialog;
 class UpdateCheckData;
 class UpdateCheck;
-class QPrebuiltPipelinesDockWidget;
+class HelpDialog;
 
 /**
 * @class DREAM3D_UI DREAM3D_UI Applications/DREAM3D/DREAM3D_UI.h

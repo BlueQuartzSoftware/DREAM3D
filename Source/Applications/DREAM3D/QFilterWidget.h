@@ -77,7 +77,7 @@
   QFILTERWIDGET_SET_PROPERTY(type, prpty)\
   public:\
   QFILTERWIDGET_GET_PROPERTY(type, prpty)\
-   
+
 #endif
 
 
@@ -108,9 +108,9 @@ class QFilterWidget : public QGroupBox
     QFilterWidget(QWidget* parent = NULL);
     virtual ~QFilterWidget();
 
-    virtual void setupGui();
+    virtual void initializeWithFilter(QString filterClassName);
 
-    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
+    virtual AbstractFilter::Pointer getFilter();
 
     virtual void setBorderColorStyle(QString s);
     virtual QString getBorderColorStyle();
@@ -171,7 +171,7 @@ class QFilterWidget : public QGroupBox
     void actionRemoveFilter_triggered();
 
   signals:
-    void widgetSelected(QFilterWidget* w);
+    void widgetSelected(AbstractFilter* filter);
 
 
   protected:
@@ -196,7 +196,9 @@ class QFilterWidget : public QGroupBox
     QAction*                  m_actionFilterHelp;
     QAction*                  m_actionRemoveFilter;
 
-
+    AbstractFilter::Pointer   m_Filter;
+    QString m_FilterGroup;
+    QString m_FilterSubGroup;
 
 
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented

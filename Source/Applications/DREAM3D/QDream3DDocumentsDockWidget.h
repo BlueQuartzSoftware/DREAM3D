@@ -48,6 +48,9 @@
 
 class QListWidget;
 class QListWidgetItem;
+class QTreeWidgetItem;
+
+
 
 class QDream3DDocumentsDockWidget : public QDockWidget, private Ui::QDream3DDocumentsDockWidget
 {
@@ -60,19 +63,32 @@ class QDream3DDocumentsDockWidget : public QDockWidget, private Ui::QDream3DDocu
     };
 
     Q_OBJECT
-public:
+  public:
     QDream3DDocumentsDockWidget(QWidget* parent = NULL);
     virtual ~QDream3DDocumentsDockWidget();
 
     virtual void setupGui();
 
 
-protected:
+  protected:
 
     void addFavorite(QString favoriteTitle);
     void readFavoritePipelines(QTreeWidgetItem *m_favorites);
-protected slots:
+    QStringList generateFilterListFromPipelineFile(QString path);
+    void populateFilterList(QStringList filterNames);
+    bool checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
+    QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
+    bool hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
+    bool hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
 
+  protected slots:
+    //// Slots to catch signals from the QTreeWidget
+    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
+    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
+    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
+    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
+
+    //// Slots to catch signals from main menu or context menu
     void actionAddFavorite_triggered();
     void actionUpdateFavorite_triggered();
     void removeFavorite(QTreeWidgetItem* item);
@@ -82,12 +98,12 @@ protected slots:
     void actionShowInFileSystem_triggered();
 
 
-signals:
+  signals:
 
+    void fireWriteSettings();
+    void pipelineFileActivated(const QString &filePath);
 
-
-
-private:
+  private:
 
     QDream3DDocumentsDockWidget(const QDream3DDocumentsDockWidget&); // Copy Constructor Not Implemented
     void operator=(const QDream3DDocumentsDockWidget&); // Operator '=' Not Implemented

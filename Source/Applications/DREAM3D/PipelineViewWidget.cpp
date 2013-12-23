@@ -57,7 +57,9 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
-#include "DREAM3DLib/DREAM3DFilters.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
 #include "QtSupport/QDroppableScrollArea.h"
@@ -75,7 +77,8 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   m_EmptyPipelineLabel(NULL),
   errorTableWidget(NULL),
   m_AutoScroll(false),
-  m_AutoScrollMargin(10)
+  m_AutoScrollMargin(10),
+  m_InputParametersWidget(NULL)
 {
   setupGui();
   m_LastDragPoint = QPoint(-1, -1);
@@ -165,6 +168,14 @@ void PipelineViewWidget::setErrorsTextArea(QTableWidget* t)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::setInputParametersWidget(QWidget* w)
+{
+  m_InputParametersWidget = w;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int PipelineViewWidget::filterCount()
 {
   int count = 0;
@@ -234,8 +245,19 @@ void PipelineViewWidget::clearWidgets()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::loadPipelineFile(const QString& filePath)
+{
+#warning THIS NEEDS TO BE IMPLEMENTED
+  std::cout << " PipelineViewWidget::loadPipelineFile() filePath=" << filePath.toStdString() << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineViewWidget::loadPipeline(FilterPipeline::Pointer pipeline, bool append)
 {
+#warning IMPLEMENT THIS
+#if 0
   // Clear the Pipeline First
   if (false == append) { clearWidgets(); }
   // get a reference to the filters which are in some type of container object.
@@ -253,6 +275,7 @@ void PipelineViewWidget::loadPipeline(FilterPipeline::Pointer pipeline, bool app
     // Now preflight the pipeline for this filter.
     preflightPipeline();
   }
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -277,11 +300,11 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString nam
     QFilterWidget* fw = filterWidgetAt(i);
     if (fw)
     {
-//      QString groupName = QString::number(i);
-//      prefs->beginGroup(groupName);
-      AbstractFilter::Pointer filter = fw->getFilter(false);
+      //      QString groupName = QString::number(i);
+      //      prefs->beginGroup(groupName);
+      AbstractFilter::Pointer filter = fw->getFilter();
       filter->writeFilterParameters(writer.get(), i);
-//      prefs->endGroup();
+      //      prefs->endGroup();
     }
   }
 }
@@ -289,13 +312,13 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString nam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
+void PipelineViewWidget::addFilter(const QString& filterName, int index)
 {
 
-//  FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
-//  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName);
-//  if (NULL == wf) { return NULL;}
+
   QFilterWidget* w = new QFilterWidget;
+  w->initializeWithFilter(filterName);
+
   if (index < 0) // If the programmer wants to add it to the end of the list
   {
     index = filterCount();
@@ -329,29 +352,29 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
   w->setParent(this);
   connect(w, SIGNAL(clicked(bool)),
           this, SLOT(removeFilterWidget()) );
-  connect(w, SIGNAL(widgetSelected(QFilterWidget*)),
-          this, SLOT(setSelectedFilterWidget(QFilterWidget*)) );
+  if(NULL != m_InputParametersWidget) {
+    connect(w, SIGNAL(widgetSelected(AbstractFilter*)),
+            m_InputParametersWidget, SLOT(setSelectedFilterWidget(AbstractFilter*)) );
+  }
   connect(w, SIGNAL(dragStarted(QFilterWidget*)),
           this, SLOT(setFilterBeingDragged(QFilterWidget*)) );
   connect(w, SIGNAL(parametersChanged()),
           this, SLOT(preflightPipeline()));
 
   setSelectedFilterWidget(w);
-  //preflightPipeline();
 
-  return w;
 }
 
 
 #define CONVERT_STD_LIST_TO_QLIST(dataContainer, type, filterWidget)\
-  {\
-    QList<QString> theList = dataContainer->get##type##ArrayNameList();\
-    QList<QString> list;\
-    for(QList<QString>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
-      list << (*iter);\
-    }\
-    PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
-    if (NULL != ptr) { ptr->setPossible##type##ArrayNames(list); }\
+{\
+  QList<QString> theList = dataContainer->get##type##ArrayNameList();\
+  QList<QString> list;\
+  for(QList<QString>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
+  list << (*iter);\
+  }\
+  PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
+  if (NULL != ptr) { ptr->setPossible##type##ArrayNames(list); }\
   }\
 
 // -----------------------------------------------------------------------------
@@ -372,9 +395,6 @@ void PipelineViewWidget::preflightPipeline()
   // Create the DataContainerArray object
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
-
-
-
   // Build up the pipeline
   bool pipelineHasErrors = false;
   qint32 count = filterCount();
@@ -384,7 +404,7 @@ void PipelineViewWidget::preflightPipeline()
     if (fw)
     {
       fw->setHasPreflightErrors(false);
-      AbstractFilter::Pointer filter = fw->getFilter(false);
+      AbstractFilter::Pointer filter = fw->getFilter();
 
       filter->setDataContainerArray(dca);
 

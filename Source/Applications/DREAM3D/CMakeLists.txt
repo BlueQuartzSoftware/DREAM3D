@@ -69,7 +69,8 @@ set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/QFilterLibraryDockWidget.cpp
   ${DREAM3D_SOURCE_DIR}/QPrebuiltPipelinesDockWidget.cpp
   ${DREAM3D_SOURCE_DIR}/QDream3DDocumentsDockWidget.cpp
-    ${DREAM3D_SOURCE_DIR}/AddFavoriteWidget.cpp
+  ${DREAM3D_SOURCE_DIR}/AddFavoriteWidget.cpp
+  ${DREAM3D_SOURCE_DIR}/QFilterInputDockWidget.cpp
   )
 
 #------------------------------------------------------------------
@@ -88,6 +89,7 @@ SET(DREAM3D_MOC_HDRS
   ${DREAM3D_SOURCE_DIR}/QPrebuiltPipelinesDockWidget.h
   ${DREAM3D_SOURCE_DIR}/QDream3DDocumentsDockWidget.h
   ${DREAM3D_SOURCE_DIR}/AddFavoriteWidget.h
+  ${DREAM3D_SOURCE_DIR}/QFilterInputDockWidget.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3D" "${DREAM3D_HDRS};${DREAM3D_MOC_HDRS}" "${DREAM3D_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -98,6 +100,7 @@ SET(DREAM3D_UIS
   ${DREAM3D_SOURCE_DIR}/UI_Files/QPrebuiltPipelinesDockWidget.ui
   ${DREAM3D_SOURCE_DIR}/UI_Files/QDream3DDocumentsDockWidget.ui
   ${DREAM3D_SOURCE_DIR}/UI_Files/AddFavoriteWidget.ui
+  ${DREAM3D_SOURCE_DIR}/UI_Files/QFilterInputDockWidget.ui
 )
 cmp_IDE_GENERATED_PROPERTIES("DREAM3D/UI_Files" "${DREAM3D_UIS}" "")
 

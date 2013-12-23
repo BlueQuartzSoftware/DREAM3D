@@ -71,7 +71,7 @@ protected:
 
 signals:
 
-  void filterItemDoubleClicked(const QString& filterName);
+  void filterItemDoubleClicked(const QString& filterName, int index);
 
 
 private:

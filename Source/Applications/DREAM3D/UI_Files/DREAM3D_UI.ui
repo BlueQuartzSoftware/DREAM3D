@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1023</width>
-    <height>750</height>
+    <width>1333</width>
+    <height>929</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -79,13 +79,13 @@ color: white;
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
-      <widget class="PipelineViewWidget" name="scrollAreaWidgetContents">
+      <widget class="PipelineViewWidget" name="pipelineViewWidget">
        <property name="geometry">
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>433</width>
-         <height>630</height>
+         <width>826</width>
+         <height>823</height>
         </rect>
        </property>
       </widget>
@@ -110,6 +110,13 @@ color: white;
        </spacer>
       </item>
       <item>
+       <widget class="QToolButton" name="toolButton">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pushButton">
         <property name="text">
          <string>Go</string>
@@ -128,8 +135,8 @@ color: white;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1023</width>
-     <height>21</height>
+     <width>1333</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -186,63 +193,13 @@ color: white;
     <number>1</number>
    </attribute>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_4">
-   <property name="styleSheet">
-    <string notr="true">QDockWidget
-{
-color: white;
-}
-
-QDockWidget::title 
-{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
-text-align: center;
-padding-left: 5px;
-}
-</string>
-   </property>
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
-   </property>
+  <widget class="QFilterInputDockWidget" name="filterInputDockWidget">
    <property name="windowTitle">
-    <string>Filter Parameters</string>
+    <string>Filter Inputs</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_4">
-    <property name="minimumSize">
-     <size>
-      <width>500</width>
-      <height>0</height>
-     </size>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <property name="margin">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QTabWidget" name="tabWidget">
-       <property name="currentIndex">
-        <number>1</number>
-       </property>
-       <widget class="QWidget" name="tab">
-        <attribute name="title">
-         <string>Inputs</string>
-        </attribute>
-       </widget>
-       <widget class="QWidget" name="tab_2">
-        <attribute name="title">
-         <string>Advanced Inputs</string>
-        </attribute>
-       </widget>
-      </widget>
-     </item>
-    </layout>
-   </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_5">
    <property name="styleSheet">
@@ -251,7 +208,7 @@ padding-left: 5px;
 color: white;
 }
 
-QDockWidget::title 
+QDockWidget::title
 {
 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
 text-align: center;
@@ -336,7 +293,7 @@ padding-left: 5px;
     <string>Prebuilt Pipelines</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>4</number>
+    <number>1</number>
    </attribute>
   </widget>
   <widget class="QFilterLibraryDockWidget" name="filterLibraryDockWidget">
@@ -344,7 +301,7 @@ padding-left: 5px;
     <string>Filter Library</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>4</number>
+    <number>1</number>
    </attribute>
   </widget>
   <action name="actionShow_Filter_Library">
@@ -431,6 +388,12 @@ padding-left: 5px;
    <class>QDream3DDocumentsDockWidget</class>
    <extends>QDockWidget</extends>
    <header location="global">QDream3DDocumentsDockWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QFilterInputDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header location="global">QFilterInputDockWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -171,27 +171,8 @@ void QFilterLibraryDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidg
 // -----------------------------------------------------------------------------
 void QFilterLibraryDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
-  QTreeWidgetItem* parent = item->parent();
-
-  while(NULL != parent)
-  {
-    if (NULL == parent->parent() )
-    {
-      break;
-    }
-    parent = parent->parent();
-  }
-  if (parent == NULL)
-  {
-    return;
-  }
-
-  QString itemText = parent->text(0);
 
 }
-
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -320,5 +301,6 @@ void QFilterLibraryDockWidget::on_filterList_currentItemChanged ( QListWidgetIte
 // -----------------------------------------------------------------------------
 void QFilterLibraryDockWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
 {
-  emit filterItemDoubleClicked(item->data(Qt::UserRole).toString());
+  int index = -1; // Put this filter at the end of the pipeline
+  emit filterItemDoubleClicked(item->data(Qt::UserRole).toString(), index);
 }

@@ -83,7 +83,7 @@ protected slots:
 signals:
 
     void filterItemDoubleClicked(const QString& filterName);
-
+    void pipelineFileActivated(const QString& filePath);
 
 private:
    // QListWidget* filterList;

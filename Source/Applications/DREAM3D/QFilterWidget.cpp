@@ -40,31 +40,38 @@
 
 #include <QtCore/QTimer>
 #include <QtCore/QResource>
+#include <QtCore/QDir>
 
-#include <QtGui/QFrame>
-#include <QtGui/QSpinBox>
+//#include <QtGui/QFrame>
+//#include <QtGui/QSpinBox>
 #include <QtGui/QLabel>
-#include <QtGui/QCheckBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QIntValidator>
-#include <QtGui/QDoubleValidator>
-#include <QtGui/QComboBox>
-#include <QtGui/QApplication>
-#include <QtGui/QHBoxLayout>
+//#include <QtGui/QCheckBox>
+//#include <QtGui/QLineEdit>
+//#include <QtGui/QIntValidator>
+//#include <QtGui/QDoubleValidator>
+//#include <QtGui/QComboBox>
+//#include <QtGui/QApplication>
+//#include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QFormLayout>
-#include <QtGui/QGridLayout>
-#include <QtGui/QPainter>
-#include <QtGui/QPushButton>
-#include <QtGui/QFileDialog>
+//#include <QtGui/QGridLayout>
+//#include <QtGui/QPainter>
+//#include <QtGui/QPushButton>
+//#include <QtGui/QFileDialog>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QDesktopServices>
-#include <QtGui/QMessageBox>
+//#include <QtGui/QDesktopServices>
+//#include <QtGui/QMessageBox>
+#include <QtGui/QPainter>
 
 
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QFSDropLineEdit.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
+
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
+
 
 #if 0
 #include "ArraySelectionWidget.h"
@@ -130,6 +137,8 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   connect(this,
           SIGNAL(customContextMenuRequested(const QPoint&)),
           SLOT(onCustomContextMenuRequested(const QPoint&)));
+
+  m_Filter = AbstractFilter::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -400,8 +409,24 @@ void QFilterWidget::updateWidgetStyle()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::setupGui()
+void QFilterWidget::initializeWithFilter(QString filterClassName)
 {
+
+  FilterManager::Pointer wm = FilterManager::Instance();
+  if(NULL == wm.get() ) { return; }
+  IFilterFactory::Pointer wf = wm->getFactoryForFilter(filterClassName);
+  if (NULL == wf.get()) { return; }
+
+  // Create an instance of the filter. Since we are dealing with the AbstractFilter interface we can not
+  // actually use the actual filter class. We are going to have to rely on QProperties or Signals/Slots
+  // to communicate changes back to the filter.
+  m_Filter = wf->create();
+  m_FilterGroup = m_Filter->getGroupName();
+  m_FilterSubGroup = m_Filter->getSubGroupName();
+  setTitle(m_Filter->getHumanLabel());
+
+  // We need to initialize each of the parameter widgets with the default values from the filter instance
+
   setCheckable(true);
 
   delete layout();
@@ -412,44 +437,19 @@ void QFilterWidget::setupGui()
   sizePolicy2.setVerticalStretch(0);
   setSizePolicy(sizePolicy2);
 
-
-  setTitle((getFilter(true)->getHumanLabel()));
-#if 0
-  QVBoxLayout* vertLayout_0 = new QVBoxLayout(this);
-
-  QTabWidget* tabWidget = new QTabWidget(this);
-  tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
-  // Create a QWidget to hold the Parameters
-  QWidget* parameterTab = new QWidget();
-  parameterTab->setObjectName(QString::fromUtf8("parameterTab"));
-  tabWidget->addTab(parameterTab, "Parameters");
-
-  // Create a QWidget to hold the Array Selection Widget
-  m_ArraySelectionTab = new PipelineArraySelectionWidget();
-  m_ArraySelectionTab->setObjectName(QString::fromUtf8("arrayTab"));
-  tabWidget->addTab(m_ArraySelectionTab, "Array Selection");
-  tabWidget->setCurrentIndex(0);
-
-
-  // Add the TabWidget to the top level Vertical Layout
-  vertLayout_0->addWidget(tabWidget);
-  QVBoxLayout* vertLayout = new QVBoxLayout(parameterTab);
-#else
-
   QVBoxLayout* vertLayout = new QVBoxLayout(this);
-#endif
 
   QFormLayout* frmLayout = new QFormLayout();
   vertLayout->addLayout(frmLayout);
   frmLayout->setObjectName("QFilterWidget QFormLayout Layout");
 
   setIsSelected(false);
-  bool ok = false;
 
-  QVector<FilterParameter::Pointer> options = getFilter(true)->getFilterParameters();
+  QVector<FilterParameter::Pointer> options = m_Filter->getFilterParameters();
   int optIndex = 0;
   for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
+  #if 0
     FilterParameter* option = (*iter).get();
     FilterParameter::WidgetType wType = option->getWidgetType();
 
@@ -460,6 +460,18 @@ void QFilterWidget::setupGui()
     }
     QLabel* label = new QLabel(labelName, this);
 
+    // if (wType == FilterParameter::StringWidget)
+    {
+      QLineEdit* le = new QLineEdit(this);
+      le->setObjectName(option->getPropertyName());
+
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
+      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
+      //connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditStringValue(const QString &)));
+      //QVariant v = property(option->getPropertyName());
+      le->setText(option->getPropertyName());
+    }
+#endif
     ++optIndex;
   }
 
@@ -468,9 +480,9 @@ void QFilterWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QFilterWidget::getFilter(bool defaultValues)
+AbstractFilter::Pointer QFilterWidget::getFilter()
 {
-  return AbstractFilter::NullPointer();
+  return m_Filter;
 }
 
 
@@ -512,7 +524,7 @@ void QFilterWidget::mouseReleaseEvent(QMouseEvent* event)
   }
   else
   {
-    emit widgetSelected(this);
+    emit widgetSelected(getFilter().get());
     setIsSelected(true);
     event->setAccepted(true);
   }
