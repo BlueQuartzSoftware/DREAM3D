@@ -15,7 +15,22 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 **Note: This pipeline will OVERWRITE the existing DREAM3D File if both the input and output files are the same file.**
 
+## Issue Tracker ##
+ The official DREAM3D issue tracker is located at https://github.com/DREAM3D/DREAM3D/issues
+
 ## Version 4.2 Bugs Fixed & Features Added ##
+
+
+### Version 4.2.4695 ###
++ Fixed issue no. *132*: Fixing issue where .ang files would error out on reading due to the file not being long enough based on the header information. The error has been changed to a warning for the user.
++ Fixed issue no. *134* Adding missing checks for FaceLabels array (GrainIds or Feature Ids) and presenting errors if that array is not found.
++ Fixed issue no. *133*: Adding option to group STL files by Phase by encoding the Phase index into the file name and the header of the STL file.
++ Fixed issue no. *135*: Ph reader only would read .dx file extensions.
++ Misc Fixes/Enhancements: 
+  + Fixing issue where the git commit hash always had a ‘g’ as the first character
+  + Updating the Compile documents with the latest 3rd party library requirements
+  + Adding an additional piece of meta data to write the exact version of DREAM3D as an attribute to the .dream3d file
+  + Renaming the AbaqusFileWriter class to be more consistent with other naming schemes. Added some comments to the output Abaqus file regarding the type of elements being used.
 
 ## Version 4.2.4685 ###
 + Updating issue no. *114*: Adding Experimental "Write Pole Figure" filter which is only allowable for some Laue groups
