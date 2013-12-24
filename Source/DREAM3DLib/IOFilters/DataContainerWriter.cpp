@@ -303,7 +303,9 @@ void DataContainerWriter::execute()
     }
     if (m_WriteXdmfFile == true)
     {
-      err = dc->writeXdmf(out, m_OutputFile);
+      QString hdfFileName = QH5Utilities::fileNameFromFileId(m_FileId);
+
+      err = dc->writeXdmf(out, hdfFileName);
       if (err < 0)
       {
         notifyErrorMessage(getHumanLabel(), "Error Writing Xdmf File", -805);
