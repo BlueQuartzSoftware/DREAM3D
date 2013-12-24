@@ -384,13 +384,17 @@ void DREAM3D_UI::setupGui()
 
   pipelineViewWidget->setInputParametersWidget(filterInputDockWidget);
 
+
+  topSideBarWidget->setComboboxSelectedIndex(0);
+  bottomSideBarWidget->setComboboxSelectedIndex(3);
+
   // Hook up signals from the DockWidgets
-  connect(documentsDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
+  connect(topSideBarWidget, SIGNAL(pipelineFileActivated(const QString&)),
           pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
-          pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
-  connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&, int)),
-          pipelineViewWidget, SLOT(addFilter(const QString&, int)) );
+//  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
+//          pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
+//  connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&, int)),
+//          pipelineViewWidget, SLOT(addFilter(const QString&, int)) );
 
 #if 0
   FilterWidgetsLib::RegisterKnownQFilterWidgets();
@@ -398,12 +402,12 @@ void DREAM3D_UI::setupGui()
   loadPlugins(m_FilterManager.get());
 #endif
 
-  QToolButton* showPrebuilts = new QToolButton(this);
-  showPrebuilts->setText("Prebuilt Pipelines");
-  showPrebuilts->setCheckable(true);
-  connect(showPrebuilts, SIGNAL(clicked(bool)),
-          prebuiltPipelinesDockWidget, SLOT(setHidden(bool)));
-  statusBar()->insertPermanentWidget(0, showPrebuilts, 0);
+//  QToolButton* showPrebuilts = new QToolButton(this);
+//  showPrebuilts->setText("Prebuilt Pipelines");
+//  showPrebuilts->setCheckable(true);
+//  connect(showPrebuilts, SIGNAL(clicked(bool)),
+//          prebuiltPipelinesDockWidget, SLOT(setHidden(bool)));
+//  statusBar()->insertPermanentWidget(0, showPrebuilts, 0);
 
 
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);

@@ -37,7 +37,7 @@
 #define _QprebuiltPipelinesDockWIDGET_H_
 
 #include <QtCore/QFileInfo>
-#include <QtGui/QDockWidget>
+#include <QtGui/QWidget>
 #include <QtGui/QTreeWidgetItem>
 
 
@@ -49,7 +49,7 @@
 class QListWidget;
 class QListWidgetItem;
 
-class QPrebuiltPipelinesDockWidget : public QDockWidget, private Ui::QPrebuiltPipelinesDockWidget
+class QPrebuiltPipelinesDockWidget : public QWidget, private Ui::QPrebuiltPipelinesDockWidget
 {
 
     enum ItemType

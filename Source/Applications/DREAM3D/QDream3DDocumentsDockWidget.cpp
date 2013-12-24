@@ -61,7 +61,7 @@
 //
 // -----------------------------------------------------------------------------
 QDream3DDocumentsDockWidget::QDream3DDocumentsDockWidget(QWidget* parent) :
-  QDockWidget(parent)
+  QWidget(parent)
 {
   setupUi(this);
   setupGui();

@@ -37,7 +37,7 @@
 #define _QDREAM3D_DOCUMENTS_DOCKWIDGET_H_
 
 #include <QtCore/QFileInfo>
-#include <QtGui/QDockWidget>
+#include <QtGui/QWidget>
 #include <QtGui/QTreeWidgetItem>
 
 
@@ -52,7 +52,7 @@ class QTreeWidgetItem;
 
 
 
-class QDream3DDocumentsDockWidget : public QDockWidget, private Ui::QDream3DDocumentsDockWidget
+class QDream3DDocumentsDockWidget : public QWidget, private Ui::QDream3DDocumentsDockWidget
 {
 
     enum ItemType

@@ -54,7 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 QPrebuiltPipelinesDockWidget::QPrebuiltPipelinesDockWidget(QWidget* parent) :
-    QDockWidget(parent)
+    QWidget(parent)
 {
     setupUi(this);
     setupGui();
