@@ -113,25 +113,19 @@ void RenumberFeatures::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, RenumberFeatures>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
   AttributeMatrix* cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix* cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {
-    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  {m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);} /* Now assign the raw pointer to data from the DataArray<T> object */
   m_ActivePtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_ActiveArrayName, -306, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {
-    m_Active = m_ActivePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  {m_Active = m_ActivePtr.lock()->getPointer(0);} /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -171,7 +165,6 @@ void RenumberFeatures::execute()
   std::vector<size_t> NewNames;
   NewNames.resize(totalFeatures, 0);
 
-
   ss = QObject::tr(" - Generating Active Feature List");
   notifyStatusMessage(getHumanLabel(), ss);
   QVector<size_t> RemoveList;
@@ -188,7 +181,6 @@ void RenumberFeatures::execute()
       goodcount++;
     }
   }
-
 
   if(RemoveList.size() > 0)
   {
@@ -208,9 +200,9 @@ void RenumberFeatures::execute()
       {
         p->eraseTuples(RemoveList);
       }
-      //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->getNumberOfComponents()  ;
     }
-    totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+    QVector<size_t> tDims(1, (totalFeatures - RemoveList.size()));
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->setTupleDimensions(tDims);
     dataCheck();
 
     // Loop over all the points and correct all the feature names
@@ -218,14 +210,12 @@ void RenumberFeatures::execute()
     notifyStatusMessage(getHumanLabel(), ss);
     for (int i = 0; i < totalPoints; i++)
     {
-      //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
       if(m_FeatureIds[i] > 0)
       {
         m_FeatureIds[i] = static_cast<int32_t>( NewNames[m_FeatureIds[i]] );
       }
     }
   }
-
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

@@ -187,9 +187,17 @@ bool AttributeMatrix::renameAttributeArray(const QString& oldname, const QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QVector<size_t> AttributeMatrix::getTupleDimensions()
+{
+  return m_TupleDims;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AttributeMatrix::setTupleDimensions(QVector<size_t> tupleDims)
 {
-  resizeAttributeArrays(m_TupleDims);
+  resizeAttributeArrays(tupleDims);
 }
 
 // -----------------------------------------------------------------------------

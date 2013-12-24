@@ -340,6 +340,8 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     void setTupleDimensions(QVector<size_t> tupleDims);
 
+    QVector<size_t> getTupleDimensions();
+
     /**
      * @brief Removes all the Cell Arrays
      */

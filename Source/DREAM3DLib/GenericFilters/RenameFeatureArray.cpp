@@ -80,7 +80,6 @@ void RenameFeatureArray::setupFilterParameters()
     parameter->setValueType("string");
     parameters.push_back(parameter);
   }
-
   setFilterParameters(parameters);
 }
 

@@ -434,8 +434,6 @@ void ReadOrientationData::readAngFile()
     ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
   }
 
-  AttributeMatrix::Pointer am = m->removeAttributeMatrix(getCellAttributeMatrixName());
-  m->addAttributeMatrix(getCellAttributeMatrixName(), ebsdAttrMat);
 }
 
 // -----------------------------------------------------------------------------

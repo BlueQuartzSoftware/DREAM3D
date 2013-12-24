@@ -66,7 +66,6 @@ class UpdateVerticesImpl
 
     void generate(size_t start, size_t end) const
     {
-
       VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
       for (size_t i = start; i < end; i++)
       {
@@ -74,7 +73,6 @@ class UpdateVerticesImpl
         nodes[i].pos[1] = m_Min[1] + (nodes[i].pos[1] - m_Min[1]) * m_ScaleFactor.y;
         nodes[i].pos[2] = m_Min[2] + (nodes[i].pos[2] - m_Min[2]) * m_ScaleFactor.z;
       }
-
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -97,7 +95,6 @@ ScaleVolume::ScaleVolume() :
   m_ApplyToVoxelVolume(true),
   m_ApplyToSurfaceMesh(true)
 {
-
   m_ScaleFactor.x = 1.0f;
   m_ScaleFactor.y = 1.0f;
   m_ScaleFactor.z = 1.0f;
@@ -216,7 +213,6 @@ void ScaleVolume::preflight()
 // -----------------------------------------------------------------------------
 void ScaleVolume::execute()
 {
-
   setErrorCondition(0);
   QString ss;
 
@@ -254,7 +250,6 @@ void ScaleVolume::updateSurfaceMesh()
   setErrorCondition(err);
   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
-  setErrorCondition(0);
   notifyStatusMessage(getHumanLabel(), "Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -287,7 +282,6 @@ void ScaleVolume::updateSurfaceMesh()
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
                       UpdateVerticesImpl(nodesPtr, min, m_ScaleFactor), tbb::auto_partitioner());
-
   }
   else
 #endif
@@ -295,6 +289,5 @@ void ScaleVolume::updateSurfaceMesh()
     UpdateVerticesImpl serial(nodesPtr, min, m_ScaleFactor);
     serial.generate(0, count);
   }
-
 }
 

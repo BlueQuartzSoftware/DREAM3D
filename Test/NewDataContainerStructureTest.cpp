@@ -60,6 +60,7 @@
 #include "DREAM3DLib/StatisticsFilters/FindNumFeatures.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/MatchCrystallography.h"
 #include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
+#include "DREAM3DLib/SamplingFilters/ChangeResolution.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
@@ -254,9 +255,9 @@ void RunPipeline1()
 
   InitializeSyntheticVolume::Pointer isv = InitializeSyntheticVolume::New();
   isv->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
-  isv->setXVoxels(64);
-  isv->setYVoxels(64);
-  isv->setZVoxels(64);
+  isv->setXVoxels(128);
+  isv->setYVoxels(128);
+  isv->setZVoxels(128);
   isv->setXRes(0.1);
   isv->setYRes(0.1);
   isv->setZRes(0.1);
@@ -283,6 +284,11 @@ void RunPipeline1()
 
   GenerateIPFColors::Pointer gipfc = GenerateIPFColors::New();
 //  pipeline->pushBack(gipfc);
+
+  ChangeResolution::Pointer cr = ChangeResolution::New();
+  FloatVec3Widget_t res = {0.2, 0.2, 0.2};
+  cr->setResolution(res);
+  pipeline->pushBack(cr);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
