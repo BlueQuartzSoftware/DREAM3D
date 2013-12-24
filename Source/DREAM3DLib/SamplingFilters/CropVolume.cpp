@@ -281,7 +281,12 @@ void CropVolume::preflight()
     setErrorCondition(-5557);
   }
 
-  m->setDimensions((getXMax() - getXMin()) + 1, (getYMax() - getYMin()) + 1, (getZMax() - getZMin()) + 1);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = (getXMax() - getXMin()) + 1;
+  tDims[1] = (getYMax() - getYMin()) + 1;
+  tDims[2] = (getZMax() - getZMin()) + 1;
+  m->getAttributeMatrix(getCellAttributeMatrixName())->setTupleDimensions(tDims);
+  m->setDimensions(tDims[0], tDims[1], tDims[2]);
 }
 
 // -----------------------------------------------------------------------------
@@ -372,15 +377,11 @@ void CropVolume::execute()
   }
   m->setDimensions(static_cast<size_t>(m_XP), static_cast<size_t>(m_YP), static_cast<size_t>(m_ZP));
   totalPoints = m->getTotalPoints();
-
-
-  // Resize all the other Voxel Arrays
-  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-  {
-    QString name = *iter;
-    IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-    err = p->resize(totalPoints);
-  }
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m_XP;
+  tDims[1] = m_YP;
+  tDims[2] = m_ZP;
+  m->getAttributeMatrix(getCellAttributeMatrixName())->setTupleDimensions(tDims);
 
   // Feature Ids MUST already be renumbered.
   if (m_RenumberFeatures == true)

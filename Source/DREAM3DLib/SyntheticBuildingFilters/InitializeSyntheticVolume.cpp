@@ -146,7 +146,7 @@ void InitializeSyntheticVolume::dataCheck()
 
   QVector<size_t> dims(1, 1);
   //Cell Data
-  m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_CellPhasesPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -217,11 +217,6 @@ void InitializeSyntheticVolume::preflight()
   cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<uint32_t>, uint32_t>(DREAM3D::EnsembleData::ShapeTypes, 0, dims);
 
   QList<QString> check = cellEnsembleAttrMat->getAttributeArrayNameList();
-  for(QList<QString>::iterator it = check.begin(); it != check.end(); ++it)
-  {
-    QString name = *(it);
-    int stop = 0;
-  }
 }
 
 // -----------------------------------------------------------------------------

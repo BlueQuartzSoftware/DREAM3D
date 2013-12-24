@@ -504,7 +504,7 @@ void PrimaryPhaseWidget::calculateNumberOfBins()
     return;
   }
 
-  
+
   int n = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
   m_NumberBinsGenerated->setText(QString::number(n));
 }
@@ -515,7 +515,7 @@ void PrimaryPhaseWidget::calculateNumberOfBins()
 int PrimaryPhaseWidget::calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize)
 {
   float max, min; // Only needed for the method. Not used otherwise.
-  
+
   return StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
 }
 
@@ -535,7 +535,7 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   int err = 0;
   int size = 250;
 
-  
+
   err = StatsGen::GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
   if (err == 1)
   {
@@ -790,8 +790,8 @@ int PrimaryPhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
     FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::StandardDeviation);
     data.push_back(d1);
     data.push_back(d2);
-    d1->SetValue(0, avglogdiam);
-    d2->SetValue(0, sdlogdiam);
+    d1->setValue(0, avglogdiam);
+    d2->setValue(0, sdlogdiam);
     primaryStatsData->setFeatureSizeDistribution(data);
     primaryStatsData->setFeatureSize_DistType(DREAM3D::DistributionType::LogNormal);
   }
@@ -853,7 +853,7 @@ void PrimaryPhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, int in
 
   iDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get();
   UInt32ArrayType* data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
-  m_CrystalStructure = data->GetValue(index);
+  m_CrystalStructure = data->getValue(index);
 
   iDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
   data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
@@ -894,8 +894,8 @@ void PrimaryPhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, int in
 
   /* Set the Feature_Size_Distribution Data */
   VectorOfFloatArray distData = primaryStatsData->getFeatureSizeDistribution();
-  mu = distData[0]->GetValue(0);
-  sigma = distData[1]->GetValue(0);
+  mu = distData[0]->getValue(0);
+  sigma = distData[1]->getValue(0);
   m_Mu_SizeDistribution->blockSignals(true);
   m_Sigma_SizeDistribution->blockSignals(true);
 

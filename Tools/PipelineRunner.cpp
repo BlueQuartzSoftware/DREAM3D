@@ -110,6 +110,9 @@ int main (int argc, char  *argv[])
     return EXIT_FAILURE;
   }
   Observer obs;
+  // Send progress messages from PipelineBuilder to this object for display
+  qRegisterMetaType<PipelineMessage>();
+
   int err = 0;
 
   FilterManager::Pointer filtManager = FilterManager::Instance();
@@ -121,6 +124,7 @@ int main (int argc, char  *argv[])
   qDebug() << "Current Path: " << QDir::currentPath();
 
   FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(argv[1], QSettings::IniFormat);
+  pipeline->addMessageReceiver(&obs);
 
   err = pipeline->preflightPipeline();
 

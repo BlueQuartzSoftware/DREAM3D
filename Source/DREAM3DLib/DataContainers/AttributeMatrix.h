@@ -207,6 +207,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     {
       typename ArrayType::Pointer attributeArray = ArrayType::CreateArray(getNumTuples(), compDims, name);
       attributeArray->initializeWithValues(initValue);
+      attributeArray->setInitValue(initValue);
       addAttributeArray(name, attributeArray);
     }
 
@@ -339,6 +340,8 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     void resizeAttributeArrays(QVector<size_t> numTuples);
 
     void setTupleDimensions(QVector<size_t> tupleDims);
+
+    QVector<size_t> getTupleDimensions();
 
     /**
      * @brief Removes all the Cell Arrays

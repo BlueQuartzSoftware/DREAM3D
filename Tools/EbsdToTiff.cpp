@@ -126,7 +126,7 @@ int writeColorTiff(const std::string filename, DataArray<uint8_t>::Pointer image
 
    // Write the information to the file
    area = (tsize_t)( width *  height * 3);
-   err = TIFFWriteEncodedStrip(out, 0, image->GetVoidPointer(0), area);
+   err = TIFFWriteEncodedStrip(out, 0, image->getVoidPointer(0), area);
    if (err != area)
    {
      err = -1;

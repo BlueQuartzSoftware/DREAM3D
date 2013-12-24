@@ -177,7 +177,7 @@ class DataArray : public IDataArray
         return NullPointer();
       }
       QVector<size_t> cDims(1,1);
-      DataArray<T>* d = new DataArray<T>(numElements, cDims, name, 0, true);
+      DataArray<T>* d = new DataArray<T>(numElements, cDims, name, true);
       if (d->Allocate() < 0)
       {
         // Could not allocate enough memory, reset the pointer to null and return
@@ -207,7 +207,7 @@ class DataArray : public IDataArray
       {
         cDims[i] = dims[i];
       }
-      DataArray<T>* d = new DataArray<T>(numTuples, cDims, name, 0, true);
+      DataArray<T>* d = new DataArray<T>(numTuples, cDims, name, true);
 
       if (d->Allocate() < 0)
       {
@@ -232,7 +232,7 @@ class DataArray : public IDataArray
       {
         return NullPointer();
       }
-      DataArray<T>* d = new DataArray<T>(numTuples, QVector<size_t>::fromStdVector(cDims), name, 0, true);
+      DataArray<T>* d = new DataArray<T>(numTuples, QVector<size_t>::fromStdVector(cDims), name, true);
       if (d->Allocate() < 0)
       {
         // Could not allocate enough memory, reset the pointer to null and return
@@ -256,7 +256,7 @@ class DataArray : public IDataArray
       {
         return NullPointer();
       }
-      DataArray<T>* d = new DataArray<T>(numTuples, cDims, name, true, 0);
+      DataArray<T>* d = new DataArray<T>(numTuples, cDims, name, true);
       if (d->Allocate() < 0)
       {
         // Could not allocate enough memory, reset the pointer to null and return
@@ -286,7 +286,7 @@ class DataArray : public IDataArray
       {
         numTuples *= tDims[i];
       }
-      DataArray<T>* d = new DataArray<T>(numTuples, cDims, name, true, 0);
+      DataArray<T>* d = new DataArray<T>(numTuples, cDims, name, true);
       if (d->Allocate() < 0)
       {
         // Could not allocate enough memory, reset the pointer to null and return
@@ -397,6 +397,15 @@ class DataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
+    virtual void setInitValue(T initValue)
+    {
+      m_InitValue = initValue;
+    }
+
+    /**
+     * @brief Gives this array a human readable name
+     * @param name The name of this array
+     */
     virtual void setName(const QString& name)
     {
       m_Name = name;
@@ -481,7 +490,7 @@ class DataArray : public IDataArray
       this->m_OwnsData = true;
       this->m_MaxId = 0;
       m_IsAllocated = false;
-
+      m_NumTuples = 0;
       //   this->_dims[0] = _nElements;
     }
 
@@ -503,6 +512,17 @@ class DataArray : public IDataArray
     {
       size_t typeSize = sizeof(T);
       ::memset(this->m_Array, 0, this->m_Size * typeSize);
+    }
+
+    /**
+     * @brief Sets all the values to value.
+     */
+    virtual void initializeFromTuple(size_t tuple, T initValue)
+    {
+      for (size_t i = tuple; i < this->m_Size; i++)
+      {
+        this->m_Array[i] = initValue;
+      }
     }
 
     /**
@@ -804,7 +824,9 @@ class DataArray : public IDataArray
 
     virtual int32_t resize(size_t numTuples)
     {
-      return resizeTotalElements(numTuples * this->m_NumComponents);
+      int32_t check = resizeTotalElements(numTuples * this->m_NumComponents);
+      if(check > 0) m_NumTuples = numTuples;
+      return check;
     }
 
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
@@ -1034,12 +1056,11 @@ class DataArray : public IDataArray
     * @param dims The actual dimensions the attribute on each Tuple has.
     * @param takeOwnership Will the class clean up the memory. Default=true
     */
-    DataArray(size_t numTuples, QVector<size_t> compDims, const QString& name, bool ownsData = true, T fillValue = 0 ) :
+    DataArray(size_t numTuples, QVector<size_t> compDims, const QString& name, bool ownsData = true) :
       m_Array(NULL),
       m_OwnsData(ownsData),
       m_IsAllocated(false),
-      m_Name(name),
-      m_FillValue(fillValue)
+      m_Name(name)
     {
       // Set the Tuple Dimensions and compute the number of Tuples for caching
       m_NumTuples = numTuples;
@@ -1210,19 +1231,14 @@ class DataArray : public IDataArray
     {
       T* newArray;
       size_t newSize;
+      size_t oldSize;
 
-      if (size > this->m_Size)
-      {
-        newSize = size;
-      }
-      else if (size == this->m_Size) // Requested size is equal to current size.  Do nothing.
+      if (size == this->m_Size) // Requested size is equal to current size.  Do nothing.
       {
         return this->m_Array;
       }
-      else // Requested size is smaller than current size.  Squeeze the memory.
-      {
-        newSize = size;
-      }
+      newSize = size;
+      oldSize = this->m_Size;
 
       // Wipe out the array completely if new size is zero.
       if (newSize == 0)
@@ -1247,7 +1263,7 @@ class DataArray : public IDataArray
         if (!newArray)
         {
           qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
-          return 0;
+          return NULL;
         }
 
         // Copy the data from the old array.
@@ -1260,7 +1276,7 @@ class DataArray : public IDataArray
         if (!newArray)
         {
           qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
-          return 0;
+          return NULL;
         }
       }
       else
@@ -1269,7 +1285,7 @@ class DataArray : public IDataArray
         if (!newArray)
         {
           qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
-          return 0;
+          return NULL;
         }
 
         // Copy the data from the old array.
@@ -1284,6 +1300,13 @@ class DataArray : public IDataArray
       // Allocation was successful.  Save it.
       this->m_Size = newSize;
       this->m_Array = newArray;
+
+      // Initialize the new tuples if newSize is larger than old size
+      if(newSize > oldSize)
+      {
+        this->initializeFromTuple(oldSize, this->m_InitValue);
+      }
+
       // This object has now allocated its memory and owns it.
       this->m_OwnsData = true;
 
@@ -1314,7 +1337,7 @@ class DataArray : public IDataArray
     QVector<size_t> m_CompDims;
     size_t m_NumComponents;
 
-    T m_FillValue;
+    T m_InitValue;
 
     DataArray(const DataArray&); //Not Implemented
     void operator=(const DataArray&); //Not Implemented

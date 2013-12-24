@@ -61,7 +61,7 @@ class DREAM3DLib_EXPORT DistributionAnalysisOps
     virtual int calculateCorrelatedParameters(QVector<QVector<float> >& data, VectorOfFloatArray outputs) = 0;
 
     static void determinemaxandminvalues(QVector<float>& data, float& max, float& min);
-    static void determinebinnumbers(float& max, float& min, int& numbins, FloatArrayType::Pointer binnumbers);
+    static void determinebinnumbers(float& max, float& min, float& numbins, FloatArrayType::Pointer binnumbers);
 
   protected:
     DistributionAnalysisOps();

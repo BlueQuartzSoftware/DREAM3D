@@ -651,11 +651,11 @@ void StatsGeneratorUI::on_actionSave_triggered()
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, statsDataArray);
 
   UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::CrystalStructures);
-  crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+  crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
 
   UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::PhaseTypes);
-  phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
+  phaseTypes->setValue(0, DREAM3D::PhaseType::UnknownPhaseType);
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 
   // Loop on all the phases

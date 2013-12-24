@@ -675,7 +675,6 @@ void PackPrimaryPhases::execute()
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
       {
-
         QString ss = QObject::tr("Packing Features (1/2) - Generating Feature #%1").arg(gid);
         notifyStatusMessage(getHumanLabel(), ss);
         if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()))
@@ -700,10 +699,8 @@ void PackPrimaryPhases::execute()
         setErrorCondition(-1);
         return;
       }
-
     }
   }
-
 
   if(m_PeriodicBoundaries == false)
   {
@@ -726,7 +723,6 @@ void PackPrimaryPhases::execute()
         change = (currentsizedisterror) - (oldsizedisterror);
         if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
         {
-
           QString ss = QObject::tr("Packing Features (2/2) - Generating Feature #").arg(gid);
           notifyStatusMessage(getHumanLabel(), ss);
           if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()) )
@@ -736,7 +732,6 @@ void PackPrimaryPhases::execute()
             //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
             updateFeatureInstancePointers();
           }
-
           m_Active[gid] = true;
           transfer_attributes(gid, &feature);
           oldsizedisterror = currentsizedisterror;
@@ -763,7 +758,6 @@ void PackPrimaryPhases::execute()
 
   if (getCancel() == true)
   {
-
     QString ss = QObject::tr("Filter Cancelled.");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
@@ -882,7 +876,6 @@ void PackPrimaryPhases::execute()
 
     if (getCancel() == true)
     {
-
       QString ss = QObject::tr("Filter Cancelled.");
       notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
@@ -905,7 +898,6 @@ void PackPrimaryPhases::execute()
     currentMillis = QDateTime::currentMSecsSinceEpoch();
     if (currentMillis - millis > 1000)
     {
-
       QString ss = QObject::tr("Determining Neighbors %1/%2").arg(i).arg(totalFeatures);
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalFeatures - i) / timeDiff;
@@ -931,7 +923,6 @@ void PackPrimaryPhases::execute()
     currentMillis = QDateTime::currentMSecsSinceEpoch();
     if (currentMillis - millis > 5000)
     {
-
       QString ss = QObject::tr("Swapping/Moving/Adding/Removing Features Iteration %1/%2").arg(iteration).arg(totalAdjustments);
       timeDiff = ((float)iteration / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalAdjustments - iteration) / timeDiff;
@@ -948,7 +939,6 @@ void PackPrimaryPhases::execute()
 
     if (getCancel() == true)
     {
-
       QString ss = QObject::tr("Filter Cancelled.");
       notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
@@ -1122,7 +1112,6 @@ void PackPrimaryPhases::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_features2->getErrorCondition());
-
     return;
   }
 
@@ -1907,12 +1896,12 @@ void PackPrimaryPhases::assign_voxels()
   float res[3] = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "newowners");
-  int32_t* newowners = newownersPtr->getPointer(0);
   newownersPtr->initializeWithValues(-1);
+  int32_t* newowners = newownersPtr->getPointer(0);
 
   FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totalPoints, "ellipfuncs");
-  float* ellipfuncs = ellipfuncsPtr->getPointer(0);
   ellipfuncsPtr->initializeWithValues(-1);
+  float* ellipfuncs = ellipfuncsPtr->getPointer(0);
 
   float featuresPerTime = 0;
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
@@ -2043,12 +2032,11 @@ void PackPrimaryPhases::assign_voxels()
   }
 
   totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
-  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
-  //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
-  updateCellInstancePointers();
+
+  //need to update pointers after resize, but do not need to run full data check because pointers are still valid
+  updateFeatureInstancePointers();
   if (getCancel() == true)
   {
-
     QString ss = QObject::tr("Filter Cancelled.");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
@@ -2101,8 +2089,8 @@ void PackPrimaryPhases::assign_gaps_only()
   neighpoints[5] = xPoints * yPoints;
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getTotalPoints(), "Neighbors");
-  m_Neighbors = neighborsPtr->getPointer(0);
   neighborsPtr->initializeWithValues(-1);
+  m_Neighbors = neighborsPtr->getPointer(0);
 
   QVector<int > n(totalFeatures + 1, 0);
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();

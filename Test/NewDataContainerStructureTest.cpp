@@ -60,6 +60,7 @@
 #include "DREAM3DLib/StatisticsFilters/FindNumFeatures.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/MatchCrystallography.h"
 #include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
+#include "DREAM3DLib/SamplingFilters/ChangeResolution.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
@@ -91,22 +92,154 @@ void BuildNewDream3dFile()
 {
   DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
-  QVector<size_t> tDims(1, 0);
+  dca->pushBack(vdc);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = 128;
+  tDims[1] = 128;
+  tDims[2] = 128;
   AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New(tDims, "CellData", DREAM3D::AttributeMatrixType::Cell);
   vdc->addAttributeMatrix("CellData", cellAttrMat);
+  QVector<size_t> dims(1, 1);
+  cellAttrMat->createAndAddAttributeArray<DataArray<int64_t>, int64_t>("Ids", 1, dims);
+
+  DataArray<int64_t>::WeakPointer m_FeatureIdsPtr;
+  int64_t* m_FeatureIds;
+  AbstractFilter::Pointer filt = AbstractFilter::New();
+  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int64_t>, AbstractFilter>(filt.get(), "Ids", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  
+  for(int i=0;i<(128*128*128); i++)
+  {
+    m_FeatureIds[i] = i;
+  }
   AttributeMatrix::Pointer cellFeatureAttrMat = AttributeMatrix::New(tDims, "CellFeatureData", DREAM3D::AttributeMatrixType::CellFeature);
   vdc->addAttributeMatrix("CellFeatureData", cellFeatureAttrMat);
+  tDims.resize(1);
   tDims[0] = 2;
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, "CellEnsembleData", DREAM3D::AttributeMatrixType::CellEnsemble);
-  QVector<size_t> dims(1, 1);
-  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("PhaseTypes", DREAM3D::PhaseType::PrimaryPhase, dims);
-  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("ShapeTypes", DREAM3D::ShapeType::EllipsoidShape, dims);
-  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("CrystalStructures", Ebsd::CrystalStructure::Cubic_High, dims);
   vdc->addAttributeMatrix("CellEnsembleData", cellEnsembleAttrMat);
+
+  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("PhaseTypes", DREAM3D::PhaseType::PrimaryPhase, dims);
+  DataArray<unsigned int>::WeakPointer m_PhaseTypesPtr;
+  unsigned int* m_PhaseTypes;
+  m_PhaseTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(filt.get(), "PhaseTypes", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_PhaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;
+
+  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("ShapeTypes", DREAM3D::ShapeType::EllipsoidShape, dims);
+  DataArray<unsigned int>::WeakPointer m_ShapeTypesPtr;
+  unsigned int* m_ShapeTypes;
+  m_ShapeTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(filt.get(), "ShapeTypes", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ShapeTypes[0] = DREAM3D::ShapeType::UnknownShapeType;
+
+  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("CrystalStructures", Ebsd::CrystalStructure::Cubic_High, dims);
+  DataArray<unsigned int>::WeakPointer m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures;
+  m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(filt.get(), "CrystalStructures", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructures[0] = Ebsd::CrystalStructure::UnknownCrystalStructure;
+
+  StatsDataArray* m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(cellEnsembleAttrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
+  if(m_StatsDataArray == NULL)
+  {
+    StatsDataArray::Pointer p = StatsDataArray::New();
+    m_StatsDataArray = p.get();
+    m_StatsDataArray->fillArrayWithNewStatsData(cellEnsembleAttrMat->getNumTuples(), m_PhaseTypes);
+    cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, p);
+  }
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[1].get());
+  pp->setPhaseFraction(1);
+  VectorOfFloatArray sizedist = statsDataArray[1]->CreateCorrelatedDistributionArrays(DREAM3D::DistributionType::LogNormal, 1);
+  sizedist[0]->setValue(0, 1);
+  sizedist[1]->setValue(0, 0.1);
+  pp->setFeatureSizeDistribution(sizedist);
+  float maxdiam = 4.48169;
+  float mindiam = 1.64872;
+  float binSize = 0.5;
+  int numbins = int(((maxdiam-mindiam)/binSize)+1);
+  pp->setFeatureDiameterInfo(binSize, maxdiam, mindiam);
+  FloatArrayType::Pointer binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
+  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, binSize, binnumbers);
+  pp->setBinNumbers(binnumbers);
+  VectorOfFloatArray boveras = statsDataArray[1]->CreateCorrelatedDistributionArrays(DREAM3D::DistributionType::Beta, numbins);
+  VectorOfFloatArray coveras = statsDataArray[1]->CreateCorrelatedDistributionArrays(DREAM3D::DistributionType::Beta, numbins);
+  boveras[0]->setValue(0, 15.0425);
+  boveras[1]->setValue(0, 1.26719);
+  boveras[0]->setValue(1, 15.9438);
+  boveras[1]->setValue(1, 1.44586);
+  boveras[0]->setValue(2, 15.4206);
+  boveras[1]->setValue(2, 1.6027);
+  boveras[0]->setValue(3, 15.3367);
+  boveras[1]->setValue(3, 1.47998);
+  boveras[0]->setValue(4, 15.7276);
+  boveras[1]->setValue(4, 1.64522);
+  boveras[0]->setValue(5, 15.9084);
+  boveras[1]->setValue(5, 1.71922);
+  pp->setFeatureSize_BOverA(boveras);
+  coveras[0]->setValue(0, 15.0425);
+  coveras[1]->setValue(0, 1.26719);
+  coveras[0]->setValue(1, 15.9438);
+  coveras[1]->setValue(1, 1.44586);
+  coveras[0]->setValue(2, 15.4206);
+  coveras[1]->setValue(2, 1.6027);
+  coveras[0]->setValue(3, 15.3367);
+  coveras[1]->setValue(3, 1.47998);
+  coveras[0]->setValue(4, 15.7276);
+  coveras[1]->setValue(4, 1.64522);
+  coveras[0]->setValue(5, 15.9084);
+  coveras[1]->setValue(5, 1.71922);
+  pp->setFeatureSize_COverA(coveras);
+  VectorOfFloatArray omega3s = statsDataArray[1]->CreateCorrelatedDistributionArrays(DREAM3D::DistributionType::Beta, numbins);
+  omega3s[0]->setValue(0, 15.0425);
+  omega3s[1]->setValue(0, 1.26719);
+  omega3s[0]->setValue(1, 15.9438);
+  omega3s[1]->setValue(1, 1.44586);
+  omega3s[0]->setValue(2, 15.4206);
+  omega3s[1]->setValue(2, 1.6027);
+  omega3s[0]->setValue(3, 15.3367);
+  omega3s[1]->setValue(3, 1.47998);
+  omega3s[0]->setValue(4, 15.7276);
+  omega3s[1]->setValue(4, 1.64522);
+  omega3s[0]->setValue(5, 15.9084);
+  omega3s[1]->setValue(5, 1.71922);
+  pp->setFeatureSize_Omegas(omega3s);
+  VectorOfFloatArray neighborhoods = statsDataArray[1]->CreateCorrelatedDistributionArrays(DREAM3D::DistributionType::LogNormal, numbins);
+  neighborhoods[0]->setValue(0, 2.07944);
+  neighborhoods[1]->setValue(0, 0.4);
+  neighborhoods[0]->setValue(1, 2.30259);
+  neighborhoods[1]->setValue(1, 0.36666);
+  neighborhoods[0]->setValue(2, 2.48491);
+  neighborhoods[1]->setValue(2, 0.33333);
+  neighborhoods[0]->setValue(3, 2.63906);
+  neighborhoods[1]->setValue(3, 0.3);
+  neighborhoods[0]->setValue(4, 2.77259);
+  neighborhoods[1]->setValue(4, 0.26666);
+  neighborhoods[0]->setValue(5, 2.89037);
+  neighborhoods[1]->setValue(5, 0.23333);
+  pp->setFeatureSize_Neighbors(neighborhoods);
+  FloatArrayType::Pointer axisodf;
+  axisodf = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::StringConstants::AxisOrientation);
+  float val = 1.0/(36.0*36.0*36.0);
+  for (int j = 0; j < (36 * 36 * 36); j++)
+  {
+    axisodf->setValue(j, val);
+  }
+  pp->setAxisOrientation(axisodf);
+
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
   dcw->setWriteXdmfFile(false);
+  dcw->setDataContainerArray(dca);
+  dcw->setPreviousFilter(AbstractFilter::NullPointer());
   dcw->execute();
 }
 
@@ -122,9 +255,9 @@ void RunPipeline1()
 
   InitializeSyntheticVolume::Pointer isv = InitializeSyntheticVolume::New();
   isv->setInputFile(UnitTest::NewDataContainerStructureTest::SyntheticInputFile);
-  isv->setXVoxels(64);
-  isv->setYVoxels(64);
-  isv->setZVoxels(64);
+  isv->setXVoxels(128);
+  isv->setYVoxels(128);
+  isv->setZVoxels(128);
   isv->setXRes(0.1);
   isv->setYRes(0.1);
   isv->setZRes(0.1);
@@ -140,17 +273,22 @@ void RunPipeline1()
   pipeline->pushBack(ppp);
 
   FindNeighbors::Pointer fn = FindNeighbors::New();
-  pipeline->pushBack(fn);
+//  pipeline->pushBack(fn);
 
   FindNumFeatures::Pointer fnf = FindNumFeatures::New();
-  pipeline->pushBack(fnf);
+//  pipeline->pushBack(fnf);
 
   MatchCrystallography::Pointer mc = MatchCrystallography::New();
   mc->setMaxIterations(100000);
-  pipeline->pushBack(mc);
+//  pipeline->pushBack(mc);
 
   GenerateIPFColors::Pointer gipfc = GenerateIPFColors::New();
-  pipeline->pushBack(gipfc);
+//  pipeline->pushBack(gipfc);
+
+  ChangeResolution::Pointer cr = ChangeResolution::New();
+  FloatVec3Widget_t res = {0.2, 0.2, 0.2};
+  cr->setResolution(res);
+  pipeline->pushBack(cr);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
@@ -438,8 +576,8 @@ int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 
-  BuildNewDream3dFile();
-//  RunPipeline1();
+//  BuildNewDream3dFile();
+  RunPipeline1();
 //  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();

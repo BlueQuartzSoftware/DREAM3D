@@ -104,10 +104,10 @@ void RemoveArrays::dataCheck()
     for(MapOfAttributeArrays_t::iterator iter = mapOfArraysToRemove.begin(); iter != mapOfArraysToRemove.end(); ++iter)
     {
       AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(iter.key());
-      if(NULL == m)
+      if(NULL == attrMatrix)
       {
         setErrorCondition(-999);
-        notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), "The Attribute Matrix Object was NULL", getErrorCondition());
         return;
       }
       QSet<QString> arraysToRemove = iter.value();
@@ -119,14 +119,11 @@ void RemoveArrays::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RemoveArrays::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   dataCheck();
 }
 
@@ -144,5 +141,3 @@ void RemoveArrays::execute()
   if(getErrorCondition() < 0) { return; }
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
-

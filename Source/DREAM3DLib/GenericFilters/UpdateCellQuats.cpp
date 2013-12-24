@@ -112,7 +112,6 @@ void UpdateCellQuats::dataCheck()
 // -----------------------------------------------------------------------------
 void UpdateCellQuats::preflight()
 {
-
   dataCheck();
 }
 

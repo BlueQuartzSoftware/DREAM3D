@@ -114,6 +114,16 @@ void ChangeResolution::dataCheck()
 {
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ChangeResolution::preflight()
+{
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t dims[3];
   m->getDimensions(dims);
@@ -127,13 +137,12 @@ void ChangeResolution::dataCheck()
 
   m->setDimensions(m_XP, m_YP, m_ZP);
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ChangeResolution::preflight()
-{
-  dataCheck();
+
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m_XP;
+  tDims[1] = m_YP;
+  tDims[2] = m_ZP;
+  m->getAttributeMatrix(getCellAttributeMatrixName())->setTupleDimensions(tDims);
 }
 
 // -----------------------------------------------------------------------------
@@ -158,7 +167,6 @@ void ChangeResolution::execute()
 
   size_t dims[3];
   m->getDimensions(dims);
-
 
   float sizex = (dims[0]) * m->getXRes();
   float sizey = (dims[1]) * m->getYRes();
@@ -195,6 +203,13 @@ void ChangeResolution::execute()
     }
   }
 
+  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m_XP;
+  tDims[1] = m_YP;
+  tDims[2] = m_ZP;
+  AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, cellAttrMat->getName(), cellAttrMat->getType());
+
   QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
@@ -218,10 +233,13 @@ void ChangeResolution::execute()
       destination = data->getVoidPointer((data->getNumberOfComponents() * i));
       ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
     }
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(*iter, data);
+    cellAttrMat->removeAttributeArray(*iter);
+    newCellAttrMat->addAttributeArray(*iter, data);
   }
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setDimensions(m_XP, m_YP, m_ZP);
+  m->removeAttributeMatrix(getCellAttributeMatrixName());
+  m->addAttributeMatrix(getCellAttributeMatrixName(), newCellAttrMat);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }

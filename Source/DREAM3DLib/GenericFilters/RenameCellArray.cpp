@@ -148,7 +148,6 @@ void RenameCellArray::preflight()
   dataCheck();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -171,4 +170,3 @@ void RenameCellArray::execute()
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
-

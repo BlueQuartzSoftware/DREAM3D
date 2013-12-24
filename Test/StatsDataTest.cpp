@@ -368,7 +368,7 @@ StatsDataArray::Pointer createStatsDataArray()
   size_t nBins = binsizes.size();
   // Copy this into the DataArray<float>
   FloatArrayType::Pointer binNumbers = FloatArrayType::CreateArray(nBins, DREAM3D::StringConstants::BinNumber);
-  ::memcpy(binNumbers->GetVoidPointer(0), &(binsizes.front()), binsizes.size() * sizeof(float));
+  ::memcpy(binNumbers->getVoidPointer(0), &(binsizes.front()), binsizes.size() * sizeof(float));
 
 
   // Phase 1
