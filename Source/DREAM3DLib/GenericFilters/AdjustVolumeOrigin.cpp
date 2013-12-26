@@ -246,7 +246,6 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   setErrorCondition(err);
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
-  setErrorCondition(0);
   notifyStatusMessage(getHumanLabel(), "Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -260,15 +259,10 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   // First get the min/max coords.
 
   float min[3] = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
-  //  float max[3] = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
 
   size_t count = nodesPtr->getNumberOfTuples();
   for (size_t i = 0; i < count; i++)
   {
-    //    if (nodes[i].pos[0] > max[0]) { max[0] = nodes[i].pos[0]; }
-    //    if (nodes[i].pos[1] > max[1]) { max[1] = nodes[i].pos[1]; }
-    //    if (nodes[i].pos[2] > max[2]) { max[2] = nodes[i].pos[2]; }
-
     if (nodes[i].pos[0] < min[0]) { min[0] = nodes[i].pos[0]; }
     if (nodes[i].pos[1] < min[1]) { min[1] = nodes[i].pos[1]; }
     if (nodes[i].pos[2] < min[2]) { min[2] = nodes[i].pos[2]; }
@@ -280,7 +274,6 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
                       Detail::UpdateVerticesImpl(nodesPtr, delta), tbb::auto_partitioner());
-
   }
   else
 #endif
@@ -288,7 +281,6 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
     Detail::UpdateVerticesImpl serial(nodesPtr, delta);
     serial.generate(0, count);
   }
-
 }
 
 

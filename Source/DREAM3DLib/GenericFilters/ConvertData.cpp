@@ -300,6 +300,7 @@ void ConvertData::dataCheck(bool preflight)
   if (NULL != iArray)
   {
     numberOfComponents = iArray->getNumberOfComponents();
+    
   }
 
   if (true == preflight)

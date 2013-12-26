@@ -423,6 +423,12 @@ class ManagedArrayOfArrays : public IDataArray
       return 1;
     }
 
+    QVector<size_t> getComponentDimensions()
+    {
+      QVector<size_t> dims(1, 1);
+      return dims;
+    }
+
     // Description:
     // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
     // this is set before allocation.

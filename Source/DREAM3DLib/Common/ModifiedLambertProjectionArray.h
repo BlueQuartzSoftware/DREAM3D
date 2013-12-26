@@ -208,6 +208,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
 
     virtual void SetNumberOfComponents(int nc);
     virtual int getNumberOfComponents();
+    virtual QVector<size_t> getComponentDimensions();
 
     virtual void SetRank(int rank);
     virtual int getRank();

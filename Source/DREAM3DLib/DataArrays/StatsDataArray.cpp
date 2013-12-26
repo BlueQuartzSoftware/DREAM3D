@@ -132,6 +132,15 @@ int StatsDataArray::getNumberOfComponents()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QVector<size_t> StatsDataArray::getComponentDimensions()
+{
+  QVector<size_t> dims(1, 1);
+  return dims;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 size_t StatsDataArray::getTypeSize()
 {
   return sizeof(StatsData);

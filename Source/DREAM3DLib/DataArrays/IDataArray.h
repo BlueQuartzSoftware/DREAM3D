@@ -114,6 +114,7 @@ class DREAM3DLib_EXPORT IDataArray
     virtual size_t getSize() = 0;
 
     virtual int getNumberOfComponents() = 0;
+    virtual QVector<size_t> getComponentDimensions() = 0;
 
 
     /**
