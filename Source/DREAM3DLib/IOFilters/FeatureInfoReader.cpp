@@ -240,7 +240,7 @@ int FeatureInfoReader::readFile()
 
   // Create and initialize the Feature Active Array with a default value of true
   BoolArrayType::Pointer featureActive = BoolArrayType::CreateArray(numfeatures + 1, DREAM3D::FeatureData::Active);
-  featureActive->initializeWithValues(true);
+  featureActive->initializeWithValue(true);
 
   // Initialize arrays to hold the data for the Euler Data
   QVector<size_t> dims(1, 3);
@@ -249,7 +249,7 @@ int FeatureInfoReader::readFile()
 
   // Create and initialize the Feature Phase Array with a default value of the "Unkown Phase Type"
   Int32ArrayType::Pointer featurePhaseData = Int32ArrayType::CreateArray(numfeatures + 1, DREAM3D::FeatureData::Phases);
-  featurePhaseData->initializeWithValues(999);
+  featurePhaseData->initializeWithValue(999);
   for(int i = 0; i < numfeatures; i++)
   {
     inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
@@ -276,7 +276,7 @@ int FeatureInfoReader::readFile()
     FloatArrayType::Pointer cellEulerData = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::FeatureData::EulerAngles);
     cellEulerData->initializeWithZeros();
     Int32ArrayType::Pointer cellPhaseData = Int32ArrayType::CreateArray(totalPoints, DREAM3D::FeatureData::Phases);
-    cellPhaseData->initializeWithValues(999);
+    cellPhaseData->initializeWithValue(999);
     for(int i = 0; i < totalPoints; i++)
     {
       gnum = m_FeatureIds[i];

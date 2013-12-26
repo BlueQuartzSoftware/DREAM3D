@@ -32,6 +32,7 @@
 #include <stdlib.h>
 
 #include <iostream>
+#include <vector>
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -64,6 +65,12 @@
 #define NUM_ELEMENTS_4   16
 #define NUM_COMPONENTS_4 4
 #define NUM_TUPLES_4     4
+
+#define RANK     3
+#define DIM0     2
+#define DIM1     3
+#define DIM2     4
+
 
 // -----------------------------------------------------------------------------
 //
@@ -295,14 +302,14 @@ void __TestEraseElements()
     int err = array->eraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , -100)
 
-    eraseElements.clear();
+        eraseElements.clear();
     err = array->eraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , 0)
 
-    eraseElements.resize(20);
+        eraseElements.resize(20);
     err = array->eraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , 0)
-    size_t nTuples = array->getNumberOfTuples();
+        size_t nTuples = array->getNumberOfTuples();
     DREAM3D_REQUIRE_EQUAL(nTuples, 0)
   }
 
@@ -389,10 +396,10 @@ void TestDataArray()
     }
 
     // Change number of components
-//    dims[0] = NUM_COMPONENTS_4;
-//    int32Array->setDims(dims);
-//    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4, int32Array->getNumberOfTuples());
-//    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4, int32Array->getSize());
+    //    dims[0] = NUM_COMPONENTS_4;
+    //    int32Array->setDims(dims);
+    //    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4, int32Array->getNumberOfTuples());
+    //    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4, int32Array->getSize());
 
     double temp = 9999;
     int32Array->initializeTuple(0, temp );
@@ -521,6 +528,210 @@ void TestNeighborList()
   __TestNeighborList<double>();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+int __ValidateArray(typename DataArray<T>::Pointer array, size_t numTuples, int numComp)
+{
+  int err = 0;
+  DREAM3D_REQUIRED(true, ==, array->isAllocated() );
+  size_t nt = array->getNumberOfTuples();
+  DREAM3D_REQUIRED(nt, ==, numTuples);
+  int nc = array->getNumberOfComponents();
+  DREAM3D_REQUIRED(nc, ==, numComp );
+
+  size_t typeSize = array->getTypeSize();
+  DREAM3D_REQUIRE_EQUAL(sizeof(T), typeSize);
+
+  size_t numElements = array->getSize();
+  DREAM3D_REQUIRED(numElements, ==, (nt*nc) );
+  // initialize the array with zeros to get a baseline
+  array->initializeWithZeros();
+  // Get a pointer to the data and loop through the array making sure all values are Zero
+  T* ptr = array->getPointer(0);
+  for(size_t i = 0; i < numElements; i++)
+  {
+    DREAM3D_REQUIRE_EQUAL(0, ptr[i]);
+  }
+  //Splat another value across the array starting at an offset into the array
+  //and test those values made it into the array correctly
+  array->initializeWithValue(static_cast<T>(1), numComp);
+  for(size_t i = numComp; i < numElements; i++)
+  {
+    DREAM3D_REQUIRE_EQUAL(static_cast<T>(1), ptr[i]);
+  }
+  // Initialize the entire array with a value (offset = 0);
+  array->initializeWithValue(static_cast<T>(2), 0);
+  for(size_t i = 0; i < numElements; i++)
+  {
+    DREAM3D_REQUIRE_EQUAL(static_cast<T>(2), ptr[i]);
+  }
+
+  // Initialize the entire array with a value (offset = 0), this time using the default value for the offset
+  array->initializeWithValue(static_cast<T>(3));
+  ptr = array->getPointer(0);
+  for(size_t i = 0; i < numElements; i++)
+  {
+    DREAM3D_REQUIRE_EQUAL(static_cast<T>(3), ptr[i]);
+    array->setValue(i, static_cast<T>(4));
+    T val = array->getValue(i);
+    DREAM3D_REQUIRE_EQUAL(val, static_cast<T>(4))
+  }
+
+
+  // Test setting of a Tuple with a value, which means all components of that tuple will have the same value
+  size_t index = 0;
+  array->initializeWithZeros();
+  for(size_t t = 0; t < numTuples; t++)
+  {
+    array->initializeTuple(t, 6.0);
+    for(int j = 0; j < numComp; j++)
+    {
+      T val = array->getComponent(t, j);
+      DREAM3D_REQUIRE_EQUAL(val, (static_cast<T>(6)) )
+    }
+  }
+
+  // Test setting individual components to a specific value
+  index = 0;
+  array->initializeWithZeros();
+  for(size_t t = 0; t < numTuples; t++)
+  {
+    for(int j = 0; j < numComp; j++)
+    {
+      index = t*numComp + j;
+      array->setComponent(t, j, static_cast<T>(t+j) );
+      T val = array->getComponent(t, j);
+      DREAM3D_REQUIRE_EQUAL(val, t+j)
+      val = array->getValue(index);
+      DREAM3D_REQUIRE_EQUAL(val, t+j)
+    }
+  }
+
+
+  ///     virtual QVector<size_t> getComponentDimensions()
+  // Test resizing the array based on a give number of tuples. The number of Components will stay the same at each tuple
+  array->resize(numTuples * 2);
+  array->initializeWithZeros(); // Init the grown array to all Zeros
+  nt = array->getNumberOfTuples();
+  DREAM3D_REQUIRED(nt, ==, (numTuples * 2) );
+  nc = array->getNumberOfComponents();
+  DREAM3D_REQUIRED(nc, ==, numComp );
+
+  // Test resizing the array to a smaller size
+  array->resize(numTuples);
+  array->initializeWithZeros(); // Init the grown array to all Zeros
+  nt = array->getNumberOfTuples();
+  DREAM3D_REQUIRED(nt, ==, (numTuples) );
+  nc = array->getNumberOfComponents();
+  DREAM3D_REQUIRED(nc, ==, numComp );
+
+
+  ////clear()
+
+  // This resizes the array to Zero destroying all the data in the process.
+  array->clear();
+  DREAM3D_REQUIRED(false, ==, array->isAllocated() );
+  nt = array->getNumberOfTuples();
+  DREAM3D_REQUIRED(nt, ==, 0);
+  nc = array->getNumberOfComponents();
+  DREAM3D_REQUIRED(nc, ==, numComp);
+  nt = array->getSize();
+  DREAM3D_REQUIRED(nt, ==, 0);
+  ptr = array->getPointer(0);
+  DREAM3D_REQUIRED(ptr, ==, NULL);
+
+
+    // Test resizing the array to a any larger size
+  array->resize(numTuples);
+  array->initializeWithZeros(); // Init the grown array to all Zeros
+  nt = array->getNumberOfTuples();
+  DREAM3D_REQUIRED(nt, ==, (numTuples) );
+  nc = array->getNumberOfComponents();
+  DREAM3D_REQUIRED(nc, ==, numComp );
+  ptr = array->getPointer(0);
+  DREAM3D_REQUIRED(ptr, !=, NULL);
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void __TestArrayCreation()
+{
+  int err = 0;
+  size_t numTuples = NUM_TUPLES;
+  int rank = RANK;
+  size_t dims[RANK] = { DIM0, DIM1, DIM2};
+  int numComp = 1;
+  {
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(numTuples, "TEST");
+    err = __ValidateArray<T>(array, numTuples, numComp);
+    DREAM3D_REQUIRED(err, >=, 0)
+  }
+
+  {
+    numComp = DIM0 * DIM1 * DIM2;
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(numTuples, rank, dims, "TEST");
+    err = __ValidateArray<T>(array, numTuples, numComp);
+    DREAM3D_REQUIRED(err, >=, 0)
+  }
+
+  {
+    numComp = DIM0 * DIM1 * DIM2;
+    std::vector<size_t> vDims(3, 0);
+    vDims[0] = DIM0; vDims[1] = DIM1; vDims[2] = DIM2;
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(numTuples, vDims, "TEST");
+    err = __ValidateArray<T>(array, numTuples, numComp);
+    DREAM3D_REQUIRED(err, >=, 0)
+  }
+
+  {
+    numComp = DIM0 * DIM1 * DIM2;
+    QVector<size_t> vDims(3, 0);
+    vDims[0] = DIM0; vDims[1] = DIM1; vDims[2] = DIM2;
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(numTuples, vDims, "TEST");
+    err = __ValidateArray<T>(array, numTuples, numComp);
+    DREAM3D_REQUIRED(err, >=, 0)
+  }
+
+
+  {
+    QVector<size_t> tDims(2, 4);
+    QVector<size_t> vDims(3, 0);
+    vDims[0] = DIM0; vDims[1] = DIM1; vDims[2] = DIM2;
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(tDims, vDims, "TEST");
+    err = __ValidateArray<T>(array, tDims[0]*tDims[1], numComp);
+    DREAM3D_REQUIRED(err, >=, 0)
+  }
+
+
+  ////FromQVector(QVector<T>& vec, const QString& name)
+  ///FromStdVector(std::vector<T>& vec, const QString& name)
+  /// FromPointer(T* data, size_t size, const QString& name)
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestArrayCreation()
+{
+  __TestArrayCreation<int8_t>();
+  __TestArrayCreation<uint8_t>();
+  __TestArrayCreation<int16_t>();
+  __TestArrayCreation<uint16_t>();
+  __TestArrayCreation<int32_t>();
+  __TestArrayCreation<uint32_t>();
+  __TestArrayCreation<int64_t>();
+  __TestArrayCreation<uint64_t>();
+  __TestArrayCreation<float>();
+  __TestArrayCreation<double>();
+}
+
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
@@ -534,19 +745,20 @@ int main(int argc, char** argv)
 
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-#endif
+    #endif
 
-  DREAM3D_REGISTER_TEST( TestDataArray() )
-  DREAM3D_REGISTER_TEST( TestEraseElements() )
-  DREAM3D_REGISTER_TEST( TestcopyTuples() )
-  DREAM3D_REGISTER_TEST( TestNeighborList() )
+      DREAM3D_REGISTER_TEST( TestArrayCreation() )
+      DREAM3D_REGISTER_TEST( TestDataArray() )
+      DREAM3D_REGISTER_TEST( TestEraseElements() )
+      DREAM3D_REGISTER_TEST( TestcopyTuples() )
+      DREAM3D_REGISTER_TEST( TestNeighborList() )
 
-#if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-#endif
+    #if REMOVE_TEST_FILES
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    #endif
 
 
-  PRINT_TEST_SUMMARY();
+      PRINT_TEST_SUMMARY();
   return err;
 }
 

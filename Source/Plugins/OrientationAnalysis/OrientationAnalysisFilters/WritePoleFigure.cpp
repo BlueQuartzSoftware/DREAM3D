@@ -385,7 +385,7 @@ void WritePoleFigure::execute()
     }
     size_t eulerCompDim = 3;
     FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, 1, &eulerCompDim, "Eulers_Per_Phase");
-    subEulers->initializeWithValues(-1);
+    subEulers->initializeWithValue(-1);
     float* eu = subEulers->getPointer(0);
     //  std::cout << count << std::endl;
 
