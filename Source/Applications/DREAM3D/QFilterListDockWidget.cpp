@@ -33,7 +33,7 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "FilterListWidget.h"
+#include "QFilterListDockWidget.h"
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QTreeWidgetItem>
@@ -45,8 +45,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterListWidget::FilterListWidget(QWidget* parent) :
-  QWidget(parent)
+QFilterListDockWidget::QFilterListDockWidget(QWidget* parent) :
+  QDockWidget(parent)
 {
   setupUi(this);
 
@@ -56,14 +56,14 @@ FilterListWidget::FilterListWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterListWidget::~FilterListWidget()
+QFilterListDockWidget::~QFilterListDockWidget()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListWidget::setupGui()
+void QFilterListDockWidget::setupGui()
 {
 
   //
@@ -75,7 +75,7 @@ void FilterListWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListWidget::updateFilterList(const QStringList& list)
+void QFilterListDockWidget::updateFilterList(const QStringList& list)
 {
 
   FilterManager::Pointer fm = FilterManager::Instance();
@@ -115,7 +115,7 @@ void FilterListWidget::updateFilterList(const QStringList& list)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListWidget::on_filterSearch_textChanged (const QString& text)
+void QFilterListDockWidget::on_filterSearch_textChanged (const QString& text)
 {
 
 #if 0
@@ -191,7 +191,7 @@ void FilterListWidget::on_filterSearch_textChanged (const QString& text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListWidget::on_filterList_currentItemChanged ( QListWidgetItem* item, QListWidgetItem* previous )
+void QFilterListDockWidget::on_filterList_currentItemChanged ( QListWidgetItem* item, QListWidgetItem* previous )
 {
 
 }
@@ -199,7 +199,7 @@ void FilterListWidget::on_filterList_currentItemChanged ( QListWidgetItem* item,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
+void QFilterListDockWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
 {
   int index = -1; // Put this filter at the end of the pipeline
   emit filterItemDoubleClicked(item->data(Qt::UserRole).toString(), index);

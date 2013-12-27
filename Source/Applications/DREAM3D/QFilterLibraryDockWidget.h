@@ -37,14 +37,14 @@
 #define _QFILTERLIBRARYWIDGET_H_
 
 
-#include <QtGui/QWidget>
+#include <QtGui/QDockWidget>
 
 #include "DREAM3DLib/Common/FilterManager.h"
 
 
 #include "ui_QFilterLibraryDockWidget.h"
 
-class QFilterLibraryDockWidget : public QWidget, private Ui::QFilterLibraryDockWidget
+class QFilterLibraryDockWidget : public QDockWidget, private Ui::QFilterLibraryDockWidget
 {
 
     Q_OBJECT

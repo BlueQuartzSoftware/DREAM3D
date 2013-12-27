@@ -39,7 +39,7 @@
 #include "QFilterLibraryDockWidget.h"
 #include "QDream3DDocumentsDockWidget.h"
 #include "QPrebuiltPipelinesDockWidget.h"
-#include "FilterListWidget.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -72,8 +72,7 @@ void SideBarWidget::setupGui()
   m_FavoritePipelines->setVisible(false);
   m_PrebuiltPipelines = new QPrebuiltPipelinesDockWidget(this);
   m_PrebuiltPipelines->setVisible(false);
-  m_FilterListWidget = new FilterListWidget(this);
-  m_FilterListWidget->setVisible(false);
+
 
 
   // Stick in the Filter Library Widget
@@ -121,10 +120,5 @@ void SideBarWidget::on_widgetSelection_currentIndexChanged(int index)
     gridLayout->addWidget(m_PrebuiltPipelines, 2, 0, 1, 2);
     m_CurrentWidget = m_PrebuiltPipelines;
   }
-  else if (index == FilterList)
-  {
-    m_FilterListWidget->setVisible(true);
-    gridLayout->addWidget(m_FilterListWidget, 2, 0, 1, 2);
-    m_CurrentWidget = m_FilterListWidget;
-  }
+
 }

@@ -47,7 +47,7 @@
 //
 // -----------------------------------------------------------------------------
 QFilterLibraryDockWidget::QFilterLibraryDockWidget(QWidget* parent) :
-QWidget(parent)
+QDockWidget(parent)
 {
   setupUi(this);
   setupGui();

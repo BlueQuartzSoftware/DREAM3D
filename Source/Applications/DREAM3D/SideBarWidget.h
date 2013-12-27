@@ -46,7 +46,6 @@
 class QFilterLibraryDockWidget;
 class QDream3DDocumentsDockWidget;
 class QPrebuiltPipelinesDockWidget;
-class FilterListWidget;
 
 class SideBarWidget : public QWidget, private Ui::SideBarWidget
 {
@@ -79,7 +78,6 @@ public slots:
     QFilterLibraryDockWidget*  m_FilterLibrary;
     QDream3DDocumentsDockWidget*  m_FavoritePipelines;
     QPrebuiltPipelinesDockWidget* m_PrebuiltPipelines;
-    FilterListWidget*             m_FilterListWidget;
     QWidget*                      m_CurrentWidget;
 
     SideBarWidget(const SideBarWidget&); // Copy Constructor Not Implemented

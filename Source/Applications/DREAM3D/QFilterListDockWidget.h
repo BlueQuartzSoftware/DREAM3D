@@ -33,25 +33,25 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _FilterListWidget_H_
-#define _FilterListWidget_H_
+#ifndef _QFilterListDockWidget_H_
+#define _QFilterListDockWidget_H_
 
 #include <QtGui/QWidget>
 
 
 
-#include "ui_FilterListWidget.h"
+#include "ui_QFilterListDockWidget.h"
 
 
 
-class FilterListWidget : public QWidget, private Ui::FilterListWidget
+class QFilterListDockWidget : public QDockWidget, private Ui::QFilterListDockWidget
 {
 
     Q_OBJECT
 
   public:
-    FilterListWidget(QWidget* parent = NULL);
-    virtual ~FilterListWidget();
+    QFilterListDockWidget(QWidget* parent = NULL);
+    virtual ~QFilterListDockWidget();
 
 
   public slots:
@@ -74,9 +74,9 @@ class FilterListWidget : public QWidget, private Ui::FilterListWidget
   private:
 
 
-    FilterListWidget(const FilterListWidget&); // Copy Constructor Not Implemented
-    void operator=(const FilterListWidget&); // Operator '=' Not Implemented
+    QFilterListDockWidget(const QFilterListDockWidget&); // Copy Constructor Not Implemented
+    void operator=(const QFilterListDockWidget&); // Operator '=' Not Implemented
 };
 
 
-#endif /* _FilterListWidget_H_ */
+#endif /* _QFilterListDockWidget_H_ */

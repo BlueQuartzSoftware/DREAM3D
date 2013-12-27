@@ -72,7 +72,7 @@ set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/AddFavoriteWidget.cpp
   ${DREAM3D_SOURCE_DIR}/QFilterInputDockWidget.cpp
   ${DREAM3D_SOURCE_DIR}/SideBarWidget.cpp
-  ${DREAM3D_SOURCE_DIR}/FilterListWidget.cpp
+  ${DREAM3D_SOURCE_DIR}/QFilterListDockWidget.cpp
   )
 
 #------------------------------------------------------------------
@@ -93,7 +93,7 @@ SET(DREAM3D_MOC_HDRS
   ${DREAM3D_SOURCE_DIR}/AddFavoriteWidget.h
   ${DREAM3D_SOURCE_DIR}/QFilterInputDockWidget.h
   ${DREAM3D_SOURCE_DIR}/SideBarWidget.h
-  ${DREAM3D_SOURCE_DIR}/FilterListWidget.h
+  ${DREAM3D_SOURCE_DIR}/QFilterListDockWidget.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3D" "${DREAM3D_HDRS};${DREAM3D_MOC_HDRS}" "${DREAM3D_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -106,7 +106,7 @@ SET(DREAM3D_UIS
   ${DREAM3D_SOURCE_DIR}/UI_Files/AddFavoriteWidget.ui
   ${DREAM3D_SOURCE_DIR}/UI_Files/QFilterInputDockWidget.ui
   ${DREAM3D_SOURCE_DIR}/UI_Files/SideBarWidget.ui
-  ${DREAM3D_SOURCE_DIR}/UI_Files/FilterListWidget.ui
+  ${DREAM3D_SOURCE_DIR}/UI_Files/QFilterListDockWidget.ui
 )
 cmp_IDE_GENERATED_PROPERTIES("DREAM3D/UI_Files" "${DREAM3D_UIS}" "")
 

@@ -154,12 +154,12 @@ void DREAM3D_UI::on_actionExit_triggered()
 void DREAM3D_UI::on_actionOpenPipeline_triggered()
 {
 
-//FIXME: Implement on_actionOpenPipeline_triggered()
-//  QString file = QFileDialog::getOpenFileName(this, tr("Select Pipeline File"),
-//                                              this->getLastDirectory(),
-//                                              tr("Pipeline File (*.txt *.ini)") );
-//  if ( true == file.isEmpty() ) { return; }
-//  m_PipelineBuilderWidget->openPipelineFile(file);
+  //FIXME: Implement on_actionOpenPipeline_triggered()
+  //  QString file = QFileDialog::getOpenFileName(this, tr("Select Pipeline File"),
+  //                                              this->getLastDirectory(),
+  //                                              tr("Pipeline File (*.txt *.ini)") );
+  //  if ( true == file.isEmpty() ) { return; }
+  //  m_PipelineBuilderWidget->openPipelineFile(file);
 }
 
 // -----------------------------------------------------------------------------
@@ -168,29 +168,29 @@ void DREAM3D_UI::on_actionOpenPipeline_triggered()
 void DREAM3D_UI::on_actionSavePipeline_triggered()
 {
 
-//FIXME: Implement on_actionSavePipeline_triggered()
+  //FIXME: Implement on_actionSavePipeline_triggered()
 
 
-//  QString proposedFile = m_PipelineBuilderWidget->getLastDirectory() + QDir::separator() + "Untitled.txt";
-//  QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
-//                                                  proposedFile,
-//                                                  tr("Pipeline File (*.txt *.ini)") );
-//  if ( true == filePath.isEmpty() ) { return; }
+  //  QString proposedFile = m_PipelineBuilderWidget->getLastDirectory() + QDir::separator() + "Untitled.txt";
+  //  QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
+  //                                                  proposedFile,
+  //                                                  tr("Pipeline File (*.txt *.ini)") );
+  //  if ( true == filePath.isEmpty() ) { return; }
 
-//  //If the filePath already exists - delete it so that we get a clean write to the file
-//  QFileInfo fi(filePath);
-//  if (fi.exists() == true)
-//  {
-//    QFile f(filePath);
-//    if (f.remove() == false)
-//    {
-//      QMessageBox::warning ( this, QString::fromAscii("File Save Error"),
-//                             QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
-//      return;
-//    }
-//  }
+  //  //If the filePath already exists - delete it so that we get a clean write to the file
+  //  QFileInfo fi(filePath);
+  //  if (fi.exists() == true)
+  //  {
+  //    QFile f(filePath);
+  //    if (f.remove() == false)
+  //    {
+  //      QMessageBox::warning ( this, QString::fromAscii("File Save Error"),
+  //                             QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
+  //      return;
+  //    }
+  //  }
 
-//  m_PipelineBuilderWidget->getPipelineViewWidget()->savePipeline(filePath, fi.baseName());
+  //  m_PipelineBuilderWidget->getPipelineViewWidget()->savePipeline(filePath, fi.baseName());
 }
 
 // -----------------------------------------------------------------------------
@@ -339,7 +339,7 @@ void DREAM3D_UI::checkForUpdatesAtStartup()
   m_UpdateCheck = new UpdateCheck(this);
 
   connect(m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ),
-           this, SLOT( versionCheckReply(UpdateCheckData*) ) );
+          this, SLOT( versionCheckReply(UpdateCheckData*) ) );
 
   m_UpdateCheck->checkVersion(Detail::UpdateWebSite);
 }
@@ -385,16 +385,13 @@ void DREAM3D_UI::setupGui()
   pipelineViewWidget->setInputParametersWidget(filterInputDockWidget);
 
 
-  topSideBarWidget->setComboboxSelectedIndex(0);
-  bottomSideBarWidget->setComboboxSelectedIndex(3);
-
   // Hook up signals from the DockWidgets
-  connect(topSideBarWidget, SIGNAL(pipelineFileActivated(const QString&)),
-          pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
-//  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
-//          pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
-//  connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&, int)),
-//          pipelineViewWidget, SLOT(addFilter(const QString&, int)) );
+  //  connect(topSideBarWidget, SIGNAL(pipelineFileActivated(const QString&)),
+  //          pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
+  //  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
+  //          pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
+  //  connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&, int)),
+  //          pipelineViewWidget, SLOT(addFilter(const QString&, int)) );
 
 #if 0
   FilterWidgetsLib::RegisterKnownQFilterWidgets();
@@ -402,13 +399,12 @@ void DREAM3D_UI::setupGui()
   loadPlugins(m_FilterManager.get());
 #endif
 
-//  QToolButton* showPrebuilts = new QToolButton(this);
-//  showPrebuilts->setText("Prebuilt Pipelines");
-//  showPrebuilts->setCheckable(true);
-//  connect(showPrebuilts, SIGNAL(clicked(bool)),
-//          prebuiltPipelinesDockWidget, SLOT(setHidden(bool)));
-//  statusBar()->insertPermanentWidget(0, showPrebuilts, 0);
 
+
+  makeStatusBarButton("Filter Library", filterLibraryDockWidget, 0);
+  makeStatusBarButton("Favorites", documentsDockWidget , 1);
+  makeStatusBarButton("PreBuilt", prebuiltPipelinesDockWidget, 2);
+  makeStatusBarButton("Issues", issuesDockWidget, 3);
 
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
   actionOpenPipeline->setShortcut(actionOpenKeySeq);
@@ -416,6 +412,23 @@ void DREAM3D_UI::setupGui()
   QKeySequence actionSaveKeySeq(Qt::CTRL + Qt::Key_S);
   actionSavePipeline->setShortcut(actionSaveKeySeq);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::makeStatusBarButton(QString text, QWidget* dockWidget, int index)
+{
+  QToolButton* btn = new QToolButton(this);
+  btn->setText(text);
+  btn->setCheckable(true);
+
+  btn->setStyleSheet(QString("QPushButton { font-size: 12px; font-style: bold;}"));
+  connect(btn, SIGNAL(clicked(bool)),
+          dockWidget, SLOT(setHidden(bool)));
+  btn->setChecked(true);
+  statusBar()->insertPermanentWidget(index, btn, 0);
+}
+
 
 // -----------------------------------------------------------------------------
 //

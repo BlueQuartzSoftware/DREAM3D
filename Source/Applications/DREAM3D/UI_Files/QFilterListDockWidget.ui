@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FilterListWidget</class>
- <widget class="QWidget" name="FilterListWidget">
+ <class>QFilterListDockWidget</class>
+ <widget class="QDockWidget" name="QFilterListDockWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,19 +11,20 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Filter List</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>1</number>
-   </property>
-   <property name="margin">
-    <number>0</number>
-   </property>
-   <item>
-    <widget class="QLineEdit" name="filterSearch">
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>1</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QLineEdit" name="filterSearch">
+      <property name="styleSheet">
+       <string notr="true">QLineEdit {
     color: rgb(127, 0, 63);
     selection-color: white;   
     border: 2px groove gray;
@@ -45,16 +46,17 @@ QLineEdit:edit-focus {
     border-radius: 10px;
     padding: 2px 4px;
 }</string>
-     </property>
-     <property name="text">
-      <string>Search</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFilterListWidget" name="filterList"/>
-   </item>
-  </layout>
+      </property>
+      <property name="text">
+       <string>Search</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFilterListWidget" name="filterList"/>
+    </item>
+   </layout>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
