@@ -154,7 +154,7 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int64_t features
   {
     return IDataArray::NullPointer();
   }
-  QVector<size_t> dims(1, inputData->getNumberOfComponents());
+  QVector<size_t> dims = inputData->getComponentDimensions();
   typename DataArray<T>::Pointer feature = DataArray<T>::CreateArray(features, dims, featureArrayName);
 
   T* fPtr = feature->getPointer(0);

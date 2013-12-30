@@ -62,14 +62,11 @@ namespace Detail
   //
   // -----------------------------------------------------------------------------
   template<typename T>
-  void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const QString attributeMatrixName, const QString& name)
+  void ConvertData(T* ptr, QVector<size_t> dims, VolumeDataContainer* m, int32_t scalarType, const QString attributeMatrixName, const QString& name)
   {
-    int numberOfComponents = ptr->getNumberOfComponents();
     int voxels = ptr->getNumberOfTuples();
     size_t size = ptr->getSize();
 
-
-    QVector<size_t> dims(1, numberOfComponents);
     if (scalarType == Detail::Int8)
     {
       Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, dims, name);
@@ -163,7 +160,8 @@ namespace Detail
   if(false == completed) {\
     Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
     if (NULL != Type##Ptr) {\
-      Detail::ConvertData<Type>(Type##Ptr, DataContainer, ScalarType, AttributeMatrixName, OutputName);\
+      QVector<size_t> dims = Array->getComponentDimensions();\
+      Detail::ConvertData<Type>(Type##Ptr, dims, DataContainer, ScalarType, AttributeMatrixName, OutputName);\
       completed = true;\
     }\
   }
@@ -306,7 +304,7 @@ void ConvertData::dataCheck(bool preflight)
   if (true == preflight)
   {
     IDataArray::Pointer p = IDataArray::NullPointer();
-    QVector<size_t> dims(1, numberOfComponents);
+    QVector<size_t> dims = p->getComponentDimensions();
     int64_t voxels = cellAttrMat->getNumTuples();
     if (m_ScalarType == Detail::Int8)
     {

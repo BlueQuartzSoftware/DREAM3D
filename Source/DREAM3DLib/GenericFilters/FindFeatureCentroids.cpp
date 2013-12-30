@@ -116,7 +116,6 @@ void FindFeatureCentroids::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureCentroids::preflight()
 {
-
   dataCheck();
 }
 
