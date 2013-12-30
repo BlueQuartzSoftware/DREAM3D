@@ -42,7 +42,9 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-#include "QFilterWidget.h"
+#include "QFilterListDockWidget.h"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -61,7 +63,15 @@ QFilterLibraryDockWidget::~QFilterLibraryDockWidget()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterLibraryDockWidget::connectFilterList(QFilterListDockWidget* filterListWidget)
+{
+  connect(this, SIGNAL(filterListGenerated(const QStringList&)),
+          filterListWidget, SLOT(updateFilterList(const QStringList&) ) );
 
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -108,9 +118,6 @@ void QFilterLibraryDockWidget::setupGui()
       }
     }
     library->setExpanded(true);
-
-
-
 }
 
 
@@ -129,7 +136,6 @@ void QFilterLibraryDockWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem
 {
 
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -183,5 +189,5 @@ void QFilterLibraryDockWidget::updateFilterGroupList(FilterManager::Collection& 
   {
     filterNames << factory.key();
   }
-  emit filterListUpdated(filterNames);
+  emit filterListGenerated(filterNames);
 }

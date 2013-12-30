@@ -40,8 +40,9 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QString>
+#include <QtCore/QSettings>
 
-#include <QtGui/QListWidget>
+#include <QtGui/QTreeWidget>
 #include <QtGui/QListWidgetItem>
 #include <QtGui/QTreeWidgetItem>
 
@@ -49,7 +50,9 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-#include "QFilterWidget.h"
+
+#include "QFilterListDockWidget.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -68,7 +71,15 @@ QPrebuiltPipelinesDockWidget::~QPrebuiltPipelinesDockWidget()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QPrebuiltPipelinesDockWidget::connectFilterList(QFilterListDockWidget* filterListWidget)
+{
+  connect(this, SIGNAL(filterListGenerated(const QStringList&)),
+          filterListWidget, SLOT(updateFilterList(const QStringList&) ) );
 
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -91,10 +102,7 @@ void QPrebuiltPipelinesDockWidget::setupGui()
 #endif
 
     readPrebuiltPipelines(filterLibraryTree->invisibleRootItem());
-    //
-    filterList->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(filterList, SIGNAL(customContextMenuRequested(const QPoint&)),
-            this, SLOT(onFilterListCustomContextMenuRequested(const QPoint&)));
+
 }
 
 // -----------------------------------------------------------------------------
@@ -187,7 +195,7 @@ void QPrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidget
   //QString prebuiltName = item->text(0);
   QString prebuiltPath = item->data(0, Qt::UserRole).toString();
   QStringList filterList = generateFilterListFromPipelineFile(prebuiltPath);
-  populateFilterList(filterList);
+  emit filterListGenerated(filterList);
 }
 
 // -----------------------------------------------------------------------------
@@ -215,47 +223,6 @@ QStringList QPrebuiltPipelinesDockWidget::generateFilterListFromPipelineFile(QSt
     return filterNames;
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QPrebuiltPipelinesDockWidget::populateFilterList(QStringList filterNames)
-{
-    FilterManager::Pointer fm = FilterManager::Instance();
-
-    // Clear all the current items from the list
-    filterList->clear();
-    filterList->setSortingEnabled(false);
-
-    for(int i = 0; i < filterNames.size(); ++i)
-    {
-        QString filterName = filterNames[i];
-        IFilterFactory::Pointer wigFactory = fm->getFactoryForFilter(filterName);
-        if (NULL == wigFactory.get() )
-        {
-            continue;
-        }
-        QString humanName = (wigFactory->getFilterHumanLabel());
-        QString iconName(":/");
-        iconName.append( (wigFactory->getFilterGroup()));
-        iconName.append("_Icon.png");
-
-        // Validate the icon is in the resource system
-        QFileInfo iconInfo(iconName);
-        if (iconInfo.exists() == false)
-        {
-            iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
-        }
-
-        QIcon icon(iconName);
-        // Create the QListWidgetItem and add it to the filterList
-        QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
-        // Set an "internal" QString that is the name of the filter. We need this value
-        // when the item is clicked in order to retreive the Filter Widget from the
-        // filter widget manager.
-        filterItem->setData( Qt::UserRole, filterName);
-    }
-}
 
 // -----------------------------------------------------------------------------
 //

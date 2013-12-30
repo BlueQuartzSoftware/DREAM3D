@@ -40,6 +40,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QString>
+#include <QtCore/QUrl>
 
 #include <QtGui/QListWidget>
 #include <QtGui/QListWidgetItem>
@@ -56,7 +57,9 @@
 
 #include "AddFavoriteWidget.h"
 
-#include "QFilterWidget.h"
+#include "QFilterListDockWidget.h"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -76,6 +79,15 @@ QDream3DDocumentsDockWidget::~QDream3DDocumentsDockWidget()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QDream3DDocumentsDockWidget::connectFilterList(QFilterListDockWidget* filterListWidget)
+{
+  connect(this, SIGNAL(filterListGenerated(const QStringList&)),
+          filterListWidget, SLOT(updateFilterList(const QStringList&) ) );
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -100,10 +112,7 @@ void QDream3DDocumentsDockWidget::setupGui()
   filterLibraryTree->blockSignals(true);
   readFavoritePipelines(m_favorites);
   filterLibraryTree->blockSignals(false);
-  //
-  filterList->setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(filterList, SIGNAL(customContextMenuRequested(const QPoint&)),
-          this, SLOT(onFilterListCustomContextMenuRequested(const QPoint&)));
+
 }
 
 
@@ -175,49 +184,7 @@ void QDream3DDocumentsDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetI
 {
   QString favoritePath = item->data(0, Qt::UserRole).toString();
   QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
-  populateFilterList(filterList);
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QDream3DDocumentsDockWidget::populateFilterList(QStringList filterNames)
-{
-  FilterManager::Pointer fm = FilterManager::Instance();
-
-  // Clear all the current items from the list
-  filterList->clear();
-  filterList->setSortingEnabled(false);
-
-  for(int i = 0; i < filterNames.size(); ++i)
-  {
-    QString filterName = filterNames[i];
-    IFilterFactory::Pointer wigFactory = fm->getFactoryForFilter(filterName);
-    if (NULL == wigFactory.get() )
-    {
-      continue;
-    }
-    QString humanName = (wigFactory->getFilterHumanLabel());
-    QString iconName(":/");
-    iconName.append( (wigFactory->getFilterGroup()));
-    iconName.append("_Icon.png");
-
-    // Validate the icon is in the resource system
-    QFileInfo iconInfo(iconName);
-    if (iconInfo.exists() == false)
-    {
-      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
-    }
-
-    QIcon icon(iconName);
-    // Create the QListWidgetItem and add it to the filterList
-    QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
-    // Set an "internal" QString that is the name of the filter. We need this value
-    // when the item is clicked in order to retreive the Filter Widget from the
-    // filter widget manager.
-    filterItem->setData( Qt::UserRole, filterName);
-  }
+    emit filterListGenerated(filterList);
 }
 
 

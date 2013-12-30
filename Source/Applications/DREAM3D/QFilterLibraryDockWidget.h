@@ -44,6 +44,9 @@
 
 #include "ui_QFilterLibraryDockWidget.h"
 
+class QFilterListDockWidget;
+
+
 class QFilterLibraryDockWidget : public QDockWidget, private Ui::QFilterLibraryDockWidget
 {
 
@@ -53,6 +56,8 @@ class QFilterLibraryDockWidget : public QDockWidget, private Ui::QFilterLibraryD
     virtual ~QFilterLibraryDockWidget();
 
     virtual void setupGui();
+
+    void connectFilterList(QFilterListDockWidget *filterListWidget);
 
   protected:
     void updateFilterGroupList(FilterManager::Collection& factories);
@@ -69,7 +74,7 @@ class QFilterLibraryDockWidget : public QDockWidget, private Ui::QFilterLibraryD
 
 
 
-    void filterListUpdated(const QStringList& list);
+    void filterListGenerated(const QStringList& filterList);
 
   private:
 

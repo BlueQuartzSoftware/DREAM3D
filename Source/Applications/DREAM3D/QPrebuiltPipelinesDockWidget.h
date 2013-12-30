@@ -36,9 +36,9 @@
 #ifndef _QprebuiltPipelinesDockWIDGET_H_
 #define _QprebuiltPipelinesDockWIDGET_H_
 
-#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 #include <QtGui/QDockWidget>
-#include <QtGui/QTreeWidgetItem>
+
 
 
 #include "DREAM3DLib/Common/FilterManager.h"
@@ -46,8 +46,10 @@
 
 #include "ui_QPrebuiltPipelinesDockWidget.h"
 
-class QListWidget;
-class QListWidgetItem;
+
+class QTreeWidget;
+class QTreeWidgetItem;
+class QFilterListDockWidget;
 
 class QPrebuiltPipelinesDockWidget : public QDockWidget, private Ui::QPrebuiltPipelinesDockWidget
 {
@@ -66,13 +68,14 @@ public:
 
     virtual void setupGui();
 
+    void connectFilterList(QFilterListDockWidget *filterListWidget);
 
 protected:
 
     virtual void readPrebuiltPipelines(QTreeWidgetItem *prebuiltTreeWidgetItem);
     virtual void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem);
     virtual QStringList generateFilterListFromPipelineFile(QString path);
-    virtual void populateFilterList(QStringList filterNames);
+
 
 protected slots:
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
@@ -84,6 +87,8 @@ signals:
 
     void filterItemDoubleClicked(const QString& filterName);
     void pipelineFileActivated(const QString& filePath);
+
+    void filterListGenerated(const QStringList& filterList);
 
 private:
    // QListWidget* filterList;

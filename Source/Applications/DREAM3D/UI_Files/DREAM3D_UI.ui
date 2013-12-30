@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1333</width>
-    <height>929</height>
+    <width>882</width>
+    <height>673</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -28,94 +28,128 @@
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_3">
-    <property name="spacing">
-     <number>0</number>
-    </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
     <property name="margin">
      <number>0</number>
     </property>
-    <item>
-     <widget class="QLabel" name="label">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>26</height>
-       </size>
+    <item row="0" column="0">
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QLabel
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>26</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel
 {
 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
 color: white;
 }</string>
-      </property>
-      <property name="text">
-       <string>Pipeline</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="PipelineViewWidget" name="pipelineViewWidget">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>794</width>
-         <height>826</height>
-        </rect>
+          </property>
+          <property name="text">
+           <string>Pipeline</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="PipelineViewWidget" name="pipelineViewWidget">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>415</width>
+             <height>347</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Go</string>
+            </property>
+            <property name="default">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QFilterInputDockWidget" name="filterInputWidget" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
       </widget>
      </widget>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>Go</string>
-        </property>
-        <property name="default">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
    </layout>
   </widget>
@@ -124,7 +158,7 @@ color: white;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1333</width>
+     <width>882</width>
      <height>22</height>
     </rect>
    </property>
@@ -176,18 +210,10 @@ color: white;
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDream3DDocumentsDockWidget" name="documentsDockWidget">
    <property name="windowTitle">
-    <string>DREAM3D Favorite Pipelines</string>
+    <string>Favorite Pipelines</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
-   </attribute>
-  </widget>
-  <widget class="QFilterInputDockWidget" name="filterInputDockWidget">
-   <property name="windowTitle">
-    <string>Filter Inputs</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
    </attribute>
   </widget>
   <widget class="QDockWidget" name="issuesDockWidget">
@@ -209,7 +235,7 @@ padding-left: 5px;
     <string>Errors/Warnings</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>2</number>
+    <number>8</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_5">
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -293,6 +319,14 @@ padding-left: 5px;
     <number>1</number>
    </attribute>
   </widget>
+  <widget class="QFilterListDockWidget" name="filterListDockWidget">
+   <property name="windowTitle">
+    <string>Filter List</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+  </widget>
   <action name="actionShow_Filter_Library">
    <property name="text">
     <string>Show Filter Library</string>
@@ -362,12 +396,6 @@ padding-left: 5px;
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>QFilterInputDockWidget</class>
-   <extends>QDockWidget</extends>
-   <header location="global">QFilterInputDockWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>QPrebuiltPipelinesDockWidget</class>
    <extends>QDockWidget</extends>
    <header location="global">QPrebuiltPipelinesDockWidget.h</header>
@@ -383,6 +411,18 @@ padding-left: 5px;
    <class>QDream3DDocumentsDockWidget</class>
    <extends>QDockWidget</extends>
    <header location="global">QDream3DDocumentsDockWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QFilterListDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header location="global">QFilterListDockWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QFilterInputDockWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QFilterInputDockWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

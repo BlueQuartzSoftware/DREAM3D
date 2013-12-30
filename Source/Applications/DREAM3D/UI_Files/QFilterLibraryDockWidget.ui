@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>531</width>
-    <height>333</height>
+    <width>250</width>
+    <height>323</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>249</width>
-    <height>272</height>
+    <width>250</width>
+    <height>76</height>
    </size>
   </property>
   <property name="styleSheet">
@@ -54,8 +54,8 @@ padding-left: 5px;
       </property>
       <property name="minimumSize">
        <size>
-        <width>150</width>
-        <height>150</height>
+        <width>250</width>
+        <height>50</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -101,57 +101,9 @@ padding-left: 5px;
       </column>
      </widget>
     </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <property name="spacing">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QLineEdit" name="filterSearch">
-        <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    color: rgb(127, 0, 63);
-    selection-color: white;   
-    border: 2px groove gray;
-    border-radius: 10px;
-    padding: 2px 4px;
-}
-QLineEdit:focus {
-    color: rgb(127, 0, 63);
-    selection-color: white;   
-    border: 2px groove gray;
-    border-radius: 10px;
-    padding: 2px 4px;
-}
-
-QLineEdit:edit-focus {
-    color: rgb(127, 0, 63);
-    selection-color: white;   
-    border: 2px groove gray;
-    border-radius: 10px;
-    padding: 2px 4px;
-}</string>
-        </property>
-        <property name="text">
-         <string>Search</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QFilterListWidget" name="filterList"/>
-      </item>
-     </layout>
-    </item>
    </layout>
   </widget>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QFilterListWidget</class>
-   <extends>QListWidget</extends>
-   <header location="global">QFilterListWidget.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

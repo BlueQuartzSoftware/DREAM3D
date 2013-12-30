@@ -65,7 +65,7 @@ class QFilterListDockWidget : public QDockWidget, private Ui::QFilterListDockWid
 
   signals:
 
-    void filterItemDoubleClicked(const QString& filterName, int index);
+    void filterItemDoubleClicked(const QString& filterName);
 
 
   protected:

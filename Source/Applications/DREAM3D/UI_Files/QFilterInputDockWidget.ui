@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>QFilterInputDockWidget</class>
- <widget class="QDockWidget" name="QFilterInputDockWidget">
+ <widget class="QWidget" name="QFilterInputDockWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -27,47 +27,37 @@ padding-left: 5px;
 }
 </string>
   </property>
-  <widget class="QWidget" name="dockWidgetContents">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>201</width>
-     <height>84</height>
-    </rect>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>2</number>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <property name="spacing">
-     <number>0</number>
-    </property>
-    <item row="0" column="0">
-     <widget class="QTabWidget" name="filterInputTabWidget">
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="basicInputs">
-       <attribute name="title">
-        <string>Inputs</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="text">
-           <string>PushButton</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="advancedInputs">
-       <attribute name="title">
-        <string>Advanced Inputs</string>
-       </attribute>
-      </widget>
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="filterInputTabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="basicInputs">
+      <attribute name="title">
+       <string>Inputs</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
-    </item>
-   </layout>
-  </widget>
+     <widget class="QWidget" name="advancedInputs">
+      <attribute name="title">
+       <string>Advanced Inputs</string>
+      </attribute>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

@@ -49,7 +49,7 @@
 class QListWidget;
 class QListWidgetItem;
 class QTreeWidgetItem;
-
+class QFilterListDockWidget;
 
 
 class QDream3DDocumentsDockWidget : public QDockWidget, private Ui::QDream3DDocumentsDockWidget
@@ -69,6 +69,7 @@ class QDream3DDocumentsDockWidget : public QDockWidget, private Ui::QDream3DDocu
 
     virtual void setupGui();
 
+    void connectFilterList(QFilterListDockWidget *filterListWidget);
 
   protected:
 
@@ -102,6 +103,8 @@ class QDream3DDocumentsDockWidget : public QDockWidget, private Ui::QDream3DDocu
 
     void fireWriteSettings();
     void pipelineFileActivated(const QString &filePath);
+
+    void filterListGenerated(const QStringList& filterList);
 
   private:
 

@@ -77,6 +77,7 @@ void QFilterListDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 void QFilterListDockWidget::updateFilterList(const QStringList& list)
 {
+  filterList->clear();
 
   FilterManager::Pointer fm = FilterManager::Instance();
 
@@ -201,6 +202,5 @@ void QFilterListDockWidget::on_filterList_currentItemChanged ( QListWidgetItem* 
 // -----------------------------------------------------------------------------
 void QFilterListDockWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
 {
-  int index = -1; // Put this filter at the end of the pipeline
-  emit filterItemDoubleClicked(item->data(Qt::UserRole).toString(), index);
+  emit filterItemDoubleClicked(item->data(Qt::UserRole).toString());
 }

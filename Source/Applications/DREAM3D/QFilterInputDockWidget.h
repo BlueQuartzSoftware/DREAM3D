@@ -37,14 +37,14 @@
 #define _QFilterInputDockWidget_H_
 
 
-#include <QtGui/QDockWidget>
+#include <QtGui/QWidget>
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
 #include "ui_QFilterInputDockWidget.h"
 
-class QFilterInputDockWidget : public QDockWidget, private Ui::QFilterInputDockWidget
+class QFilterInputDockWidget : public QWidget, private Ui::QFilterInputDockWidget
 {
 
   Q_OBJECT

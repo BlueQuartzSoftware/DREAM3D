@@ -198,7 +198,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void setupGui();
 
-    void makeStatusBarButton(QString text, QWidget* dockWidget, int index);
+    void makeStatusBarButton(QString text, QDockWidget *dockWidget, int index);
 
 
     /**

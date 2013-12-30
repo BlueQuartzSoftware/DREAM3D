@@ -378,7 +378,7 @@ void QFilterWidget::updateWidgetStyle()
   style.append(getBorderColorStyle());
 
   style.append("border-radius: 10px;");
-  style.append("padding: 30 0 0 0px;");
+  style.append("padding: 0 0 0 0px;");
 #if defined(Q_WS_WIN)
   style.append("font: 85 italic 10pt \"Arial\";");
 #elif defined(Q_WS_MAC)

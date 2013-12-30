@@ -382,7 +382,7 @@ void DREAM3D_UI::setupGui()
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
-  pipelineViewWidget->setInputParametersWidget(filterInputDockWidget);
+  pipelineViewWidget->setInputParametersWidget(filterInputWidget);
 
 
   // Hook up signals from the DockWidgets
@@ -405,6 +405,17 @@ void DREAM3D_UI::setupGui()
   makeStatusBarButton("Favorites", documentsDockWidget , 1);
   makeStatusBarButton("PreBuilt", prebuiltPipelinesDockWidget, 2);
   makeStatusBarButton("Issues", issuesDockWidget, 3);
+  makeStatusBarButton("Filters", filterListDockWidget, 0);
+
+  // Make the connections between the gui elements
+  filterLibraryDockWidget->connectFilterList(filterListDockWidget);
+  documentsDockWidget->connectFilterList(filterListDockWidget);
+  prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
+
+  connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
+          pipelineViewWidget, SLOT(addFilter(const QString&)) );
+
+
 
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
   actionOpenPipeline->setShortcut(actionOpenKeySeq);
@@ -416,16 +427,21 @@ void DREAM3D_UI::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::makeStatusBarButton(QString text, QWidget* dockWidget, int index)
+void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, int index)
 {
   QToolButton* btn = new QToolButton(this);
   btn->setText(text);
   btn->setCheckable(true);
 
-  btn->setStyleSheet(QString("QPushButton { font-size: 12px; font-style: bold;}"));
-  connect(btn, SIGNAL(clicked(bool)),
-          dockWidget, SLOT(setHidden(bool)));
-  btn->setChecked(true);
+#if 0
+  btn->setStyleSheet(QString::fromUtf8("QToolButton { color: black; border-radius: 2px; font-size: 12px; font-style: bold;\n"
+  "	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(150, 150, 150, 255), stop:0.497537 rgba(225, 225, 225, 255), stop:0.517241 rgba(190, 190, 190, 255), stop:0.990148 rgba(160, 160, 160, 255));\n"
+"selection-background-color: rgb(100, 100, 100);\n"
+"}"));
+#endif
+  connect(btn, SIGNAL(toggled(bool)),
+          dockWidget, SLOT(setVisible(bool)));
+  btn->setChecked(!dockWidget->isVisible());
   statusBar()->insertPermanentWidget(index, btn, 0);
 }
 

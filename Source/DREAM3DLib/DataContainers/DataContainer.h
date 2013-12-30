@@ -48,6 +48,7 @@
 #include <QtCore/QVector>
 #include <QtCore/QMap>
 
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
@@ -148,7 +149,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     template<class Filter>
     AttributeMatrix* createNonPrereqAttributeMatrix(Filter* filter,
                                                     const QString& attributeMatrixName,
-                                                    QVector<size_t> tDims, 
+                                                    QVector<size_t> tDims,
                                                     unsigned int amType)
     {
       typename AttributeMatrix::Pointer attributeMatrix = AttributeMatrix::NullPointer();
