@@ -511,7 +511,7 @@ void M3CSliceBySlice::execute()
   int NSP = wrappedDims[0] * wrappedDims[1];
 
   DataArray<int32_t>::Pointer voxelsPtr = DataArray<int32_t>::CreateArray( 2 * NSP + 1, "M3CSliceBySlice_Working_Voxels");
-  voxelsPtr->initializeWithValues(-3);
+  voxelsPtr->initializeWithValue(-3);
   int32_t* voxels = voxelsPtr->getPointer(0);
 
   StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr = StructArray<SurfaceMesh::M3C::Neighbor>::CreateArray(2 * NSP + 1, "M3CSliceBySlice_SurfaceMesh::M3C::Neighbor_Array");
@@ -530,7 +530,7 @@ void M3CSliceBySlice::execute()
   cVertexNodeIdPtr->initializeWithZeros();
 
   DataArray<int8_t>::Pointer cVertexNodeTypePtr = DataArray<int8_t>::CreateArray(2 * 7 * NSP, "M3CSliceBySlice_Node_NodeKind_Array");
-  cVertexNodeTypePtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Unused);
+  cVertexNodeTypePtr->initializeWithValue(DREAM3D::SurfaceMesh::NodeType::Unused);
 
   StructArray<SurfaceMesh::M3C::Patch>::Pointer  cTrianglePtr = StructArray<SurfaceMesh::M3C::Patch>::CreateArray(0, "M3CSliceBySlice_Triangle_Array");
   cTrianglePtr->initializeWithZeros();

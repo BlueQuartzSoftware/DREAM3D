@@ -33,49 +33,63 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QFILTERLIBRARYWIDGET_H_
-#define _QFILTERLIBRARYWIDGET_H_
+#ifndef _QprebuiltPipelinesDockWIDGET_H_
+#define _QprebuiltPipelinesDockWIDGET_H_
 
-
+#include <QtCore/QFileInfo>
 #include <QtGui/QWidget>
+#include <QtGui/QTreeWidgetItem>
+
 
 #include "DREAM3DLib/Common/FilterManager.h"
 
 
-#include "ui_QFilterLibraryDockWidget.h"
+#include "ui_QPrebuiltPipelinesDockWidget.h"
 
-class QFilterLibraryDockWidget : public QWidget, private Ui::QFilterLibraryDockWidget
+class QListWidget;
+class QListWidgetItem;
+
+class QPrebuiltPipelinesDockWidget : public QWidget, private Ui::QPrebuiltPipelinesDockWidget
 {
 
+    enum ItemType
+    {
+      Default_Item_Type = 0,
+      Prebuilt_Item_Type = 2,
+      Prebuilt_Category_Item_Type = 4
+    };
+
     Q_OBJECT
-  public:
-    QFilterLibraryDockWidget(QWidget* parent = NULL);
-    virtual ~QFilterLibraryDockWidget();
+public:
+    QPrebuiltPipelinesDockWidget(QWidget* parent = NULL);
+    virtual ~QPrebuiltPipelinesDockWidget();
 
     virtual void setupGui();
 
-  protected:
-    void updateFilterGroupList(FilterManager::Collection& factories);
 
-  protected slots:
+protected:
+
+    virtual void readPrebuiltPipelines(QTreeWidgetItem *prebuiltTreeWidgetItem);
+    virtual void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem);
+    virtual QStringList generateFilterListFromPipelineFile(QString path);
+    virtual void populateFilterList(QStringList filterNames);
+
+protected slots:
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
     void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
 
+signals:
 
+    void filterItemDoubleClicked(const QString& filterName);
+    void pipelineFileActivated(const QString& filePath);
 
-  signals:
+private:
+   // QListWidget* filterList;
 
-
-
-    void filterListUpdated(const QStringList& list);
-
-  private:
-
-
-    QFilterLibraryDockWidget(const QFilterLibraryDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterLibraryDockWidget&); // Operator '=' Not Implemented
+    QPrebuiltPipelinesDockWidget(const QPrebuiltPipelinesDockWidget&); // Copy Constructor Not Implemented
+    void operator=(const QPrebuiltPipelinesDockWidget&); // Operator '=' Not Implemented
 
 
 };

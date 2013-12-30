@@ -69,7 +69,7 @@ class PipelineViewWidget : public QFrame
     int filterCount();
     QFilterWidget* filterWidgetAt(int index);
     void clearWidgets();
-    QFilterWidget* addFilter(QString filterName, int index = -1);
+
 
     void loadPipeline(FilterPipeline::Pointer pipeline, bool append = false);
     void savePipeline(const QString& filePath, const QString name, QSettings::Format = QSettings::IniFormat);
@@ -106,6 +106,8 @@ class PipelineViewWidget : public QFrame
 
 
     void setErrorsTextArea(QTableWidget* t);
+    void setInputParametersWidget(QWidget* w);
+
     void newEmptyPipelineViewLayout();
     void resetLayout();
     void setScrollArea(QScrollArea* sa);
@@ -123,6 +125,9 @@ class PipelineViewWidget : public QFrame
      * @brief doAutoScroll This does the actual scrolling of the Widget
      */
     void doAutoScroll();
+
+    void loadPipelineFile(const QString& filePath);
+    void addFilter(const QString& filterName, int index = -1);
 
   signals:
     void addPlaceHolderFilter(QPoint p);
@@ -154,6 +159,7 @@ class PipelineViewWidget : public QFrame
     bool            m_AutoScroll;
     int             m_AutoScrollMargin;
     int             m_autoScrollCount;
+    QWidget*        m_InputParametersWidget;
 
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented

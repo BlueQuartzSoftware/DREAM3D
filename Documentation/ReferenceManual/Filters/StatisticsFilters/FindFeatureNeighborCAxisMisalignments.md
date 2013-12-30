@@ -1,4 +1,4 @@
-Find Feature Neighbor C-Axis Misalignments {#findFeatureneighborcaxismisalignments}
+Find Feature Neighbor C-Axis Misalignments {#findfeatureneighborcaxismisalignments}
 ==========
 
 ## Group (Subgroup) ##
@@ -11,7 +11,7 @@ This Filter determines, for each **Feature**, the c-axis misalignments with the 
 
 | Name | Type |
 |-------|------|
-|Find Average C-Axis Mialignment | Boolean |  
+|Find Average C-Axis Mialignment | Boolean |
 
 ## Required DataContainers ##
 Volume
@@ -29,7 +29,7 @@ Volume
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Feature | CAxisMisalignmentList | List of the c-axis misalignment angles with the contiguous neighboring **Features** for a given **Feature** |  |  
+| Feature | CAxisMisalignmentList | List of the c-axis misalignment angles with the contiguous neighboring **Features** for a given **Feature** |  |
 | Feature | AvgCAxisMisalignments | Number weighted average of neighbor c-axis misalignments. | Only created if Find Average C-Axis Misalignments IS checked. |
 
 ## Authors ##

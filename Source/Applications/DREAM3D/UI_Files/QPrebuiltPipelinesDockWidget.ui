@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QFilterLibraryDockWidget</class>
- <widget class="QWidget" name="QFilterLibraryDockWidget">
+ <class>QPrebuiltPipelinesDockWidget</class>
+ <widget class="QWidget" name="QPrebuiltPipelinesDockWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>326</width>
-    <height>309</height>
+    <width>329</width>
+    <height>346</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>249</width>
-    <height>272</height>
+    <width>253</width>
+    <height>225</height>
    </size>
   </property>
   <property name="windowTitle">
-   <string>Filter Library</string>
+   <string>Prebuilt Pipelines</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QDockWidget
@@ -27,13 +27,13 @@ color: white;
 
 QDockWidget::title 
 {
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 125, 255), stop:0.00985222 rgba(166, 166, 198, 255), stop:0.433498 rgba(117, 117, 149, 255), stop:0.448276 rgba(103, 103, 136, 255), stop:0.985222 rgba(102, 102, 134, 255), stop:1 rgba(69, 69, 101, 255));
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
 text-align: center;
 padding-left: 5px;
 }
 </string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>1</number>
    </property>
@@ -51,7 +51,7 @@ padding-left: 5px;
      <property name="minimumSize">
       <size>
        <width>150</width>
-       <height>150</height>
+       <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -75,6 +75,9 @@ padding-left: 5px;
      <property name="verticalScrollMode">
       <enum>QAbstractItemView::ScrollPerPixel</enum>
      </property>
+     <property name="rootIsDecorated">
+      <bool>true</bool>
+     </property>
      <property name="uniformRowHeights">
       <bool>true</bool>
      </property>
@@ -97,9 +100,10 @@ padding-left: 5px;
      </column>
     </widget>
    </item>
+   <item>
+    <widget class="QListWidget" name="filterList"/>
+   </item>
   </layout>
-  <zorder>dockWidgetContents</zorder>
-  <zorder>filterList</zorder>
  </widget>
  <resources/>
  <connections/>

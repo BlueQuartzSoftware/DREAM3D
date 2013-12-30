@@ -449,7 +449,7 @@ void RotateSampleRefFrame::execute()
 
 
   DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, "RotateSampleRef_NewIndicies");
-  newIndiciesPtr->initializeWithValues(-1);
+  newIndiciesPtr->initializeWithValue(-1);
   int64_t* newindicies = newIndiciesPtr->getPointer(0);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

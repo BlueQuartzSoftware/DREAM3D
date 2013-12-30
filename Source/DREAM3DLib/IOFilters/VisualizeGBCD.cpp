@@ -318,16 +318,16 @@ void VisualizeGBCD::execute()
 
   DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
   poleFigureArray = DoubleArrayType::CreateArray(xpoints * ypoints, "PoleFigure");
-  poleFigureArray->initializeWithValues(0);
+  poleFigureArray->initializeWithValue(0);
   double* poleFigure = poleFigureArray->getPointer(0);
   FloatArrayType::Pointer poleFigureCountsArray = FloatArrayType::NullPointer();
   poleFigureCountsArray = FloatArrayType::CreateArray(xpoints * ypoints, "PoleFigureCounts");
-  poleFigureCountsArray->initializeWithValues(0);
+  poleFigureCountsArray->initializeWithValue(0);
   float* poleFigureCounts = poleFigureCountsArray->getPointer(0);
   FloatArrayType::Pointer vecsArray = FloatArrayType::NullPointer();
   QVector<size_t> dims(1, 3);
   vecsArray = FloatArrayType::CreateArray(xpoints * ypoints, dims, "Vecs");
-  vecsArray->initializeWithValues(-1000);
+  vecsArray->initializeWithValue(-1000);
   float* vecs = vecsArray->getPointer(0);
 
   int count = 0;

@@ -58,12 +58,15 @@
 
 
 class DREAM3DPluginInterface;
-class HelpDialog;
+
 class QFilterLibraryDockWidget;
+class QDream3DDocumentsDockWidget;
+class QPrebuiltPipelinesDockWidget;
+class FilterListWidget;
 class DREAM3DUpdateCheckDialog;
 class UpdateCheckData;
 class UpdateCheck;
-
+class HelpDialog;
 
 /**
 * @class DREAM3D_UI DREAM3D_UI Applications/DREAM3D/DREAM3D_UI.h
@@ -228,7 +231,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     FilterManager::Pointer      m_FilterManager;
 
 
-    QFilterLibraryDockWidget*    m_QFilterLibraryDockWidget;
+    QFilterLibraryDockWidget*     m_FilterLibrary;
+    QDream3DDocumentsDockWidget*  m_FavoritePipelines;
+    QPrebuiltPipelinesDockWidget* m_PrebuiltPipelines;
+    FilterListWidget*             m_FilterListWidget;
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
     void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented

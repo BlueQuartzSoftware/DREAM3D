@@ -431,7 +431,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   {
     // The node type array does not exist so create one with the default node type populated
     nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->getNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
-    nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
+    nodeTypeSharedPtr->initializeWithValue(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
   else
@@ -594,7 +594,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   {
     // The node type array does not exist so create one with the default node type populated
     nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(vertsPtr->getNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
-    nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
+    nodeTypeSharedPtr->initializeWithValue(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
   else

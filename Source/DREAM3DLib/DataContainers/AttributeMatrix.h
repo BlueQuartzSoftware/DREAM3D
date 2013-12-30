@@ -206,7 +206,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     void createAndAddAttributeArray(const QString& name, T initValue, QVector<size_t> compDims)
     {
       typename ArrayType::Pointer attributeArray = ArrayType::CreateArray(getNumTuples(), compDims, name);
-      attributeArray->initializeWithValues(initValue);
+      attributeArray->initializeWithValue(initValue);
       attributeArray->setInitValue(initValue);
       addAttributeArray(name, attributeArray);
     }

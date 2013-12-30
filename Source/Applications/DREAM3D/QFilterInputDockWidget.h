@@ -33,51 +33,44 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QFILTERLIBRARYWIDGET_H_
-#define _QFILTERLIBRARYWIDGET_H_
+#ifndef _QFilterInputDockWidget_H_
+#define _QFilterInputDockWidget_H_
 
 
-#include <QtGui/QWidget>
+#include <QtGui/QDockWidget>
 
-#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 
 
-#include "ui_QFilterLibraryDockWidget.h"
+#include "ui_QFilterInputDockWidget.h"
 
-class QFilterLibraryDockWidget : public QWidget, private Ui::QFilterLibraryDockWidget
+class QFilterInputDockWidget : public QDockWidget, private Ui::QFilterInputDockWidget
 {
 
-    Q_OBJECT
-  public:
-    QFilterLibraryDockWidget(QWidget* parent = NULL);
-    virtual ~QFilterLibraryDockWidget();
+  Q_OBJECT
+public:
+  QFilterInputDockWidget(QWidget* parent = NULL);
+  virtual ~QFilterInputDockWidget();
 
-    virtual void setupGui();
+  virtual void setupGui();
 
-  protected:
-    void updateFilterGroupList(FilterManager::Collection& factories);
+protected:
 
   protected slots:
-    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
-    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
+
+    void setSelectedFilterWidget(AbstractFilter* filter);
+
+signals:
 
 
 
-  signals:
+private:
 
 
-
-    void filterListUpdated(const QStringList& list);
-
-  private:
-
-
-    QFilterLibraryDockWidget(const QFilterLibraryDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterLibraryDockWidget&); // Operator '=' Not Implemented
+  QFilterInputDockWidget(const QFilterInputDockWidget&); // Copy Constructor Not Implemented
+  void operator=(const QFilterInputDockWidget&); // Operator '=' Not Implemented
 
 
 };
 
-#endif
+#endif /* end QFilterInputDockWidget */

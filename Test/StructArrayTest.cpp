@@ -198,7 +198,7 @@ void TestInitialization()
   test.pos[0] = 10;
   test.pos[1] = 20;
   test.pos[2] = 30;
-  nodes->initializeWithValues(test); // init our struct array with this struct
+  nodes->initializeWithValue(test); // init our struct array with this struct
   {
     // Check data using the operator[] overload
     Vec3IntList_t& vertices = *nodes; // Dereference the Shared_Pointer using the * operator which allows the [] operators

@@ -30,54 +30,53 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QFILTERLIBRARYWIDGET_H_
-#define _QFILTERLIBRARYWIDGET_H_
-
+#ifndef _FilterListWidget_H_
+#define _FilterListWidget_H_
 
 #include <QtGui/QWidget>
 
-#include "DREAM3DLib/Common/FilterManager.h"
 
 
-#include "ui_QFilterLibraryDockWidget.h"
+#include "ui_FilterListWidget.h"
 
-class QFilterLibraryDockWidget : public QWidget, private Ui::QFilterLibraryDockWidget
+
+
+class FilterListWidget : public QWidget, private Ui::FilterListWidget
 {
 
     Q_OBJECT
+
   public:
-    QFilterLibraryDockWidget(QWidget* parent = NULL);
-    virtual ~QFilterLibraryDockWidget();
-
-    virtual void setupGui();
-
-  protected:
-    void updateFilterGroupList(FilterManager::Collection& factories);
-
-  protected slots:
-    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
-    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
+    FilterListWidget(QWidget* parent = NULL);
+    virtual ~FilterListWidget();
 
 
+  public slots:
+
+    void on_filterList_itemDoubleClicked( QListWidgetItem* item );
+    void on_filterList_currentItemChanged( QListWidgetItem* item, QListWidgetItem* previous );
+
+    void on_filterSearch_textChanged (const QString& text);
+
+    void updateFilterList(const QStringList& list);
 
   signals:
 
+    void filterItemDoubleClicked(const QString& filterName, int index);
 
 
-    void filterListUpdated(const QStringList& list);
+  protected:
+    void setupGui();
 
   private:
 
 
-    QFilterLibraryDockWidget(const QFilterLibraryDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterLibraryDockWidget&); // Operator '=' Not Implemented
-
-
+    FilterListWidget(const FilterListWidget&); // Copy Constructor Not Implemented
+    void operator=(const FilterListWidget&); // Operator '=' Not Implemented
 };
 
-#endif
+
+#endif /* _FilterListWidget_H_ */

@@ -62,8 +62,8 @@
 //
 // -----------------------------------------------------------------------------
 AttributeMatrix::AttributeMatrix(QVector<size_t> tDims, const QString& name, unsigned int attrType) :
-  m_TupleDims(tDims),
   m_Name(name),
+  m_TupleDims(tDims),
   m_Type(attrType)
 {
 

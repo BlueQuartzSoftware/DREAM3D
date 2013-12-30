@@ -47,7 +47,7 @@
 //
 // -----------------------------------------------------------------------------
 QFilterLibraryDockWidget::QFilterLibraryDockWidget(QWidget* parent) :
-QDockWidget(parent)
+QWidget(parent)
 {
   setupUi(this);
   setupGui();
@@ -73,10 +73,16 @@ void QFilterLibraryDockWidget::setupGui()
 
     // Clear out the default stuff
     filterLibraryTree->clear();
+
+#if 1
     QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
     library->setText(0, DREAM3D::Settings::Library);
     library->setIcon(0, QIcon(":/cubes.png"));
-
+#else
+    QTreeWidgetItem* library = filterLibraryTree->invisibleRootItem();
+    library->setText(0, DREAM3D::Settings::Library);
+    library->setIcon(0, QIcon(":/cubes.png"));
+#endif
     for(QSet<QString>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
     {
       //   qDebug() << *iter << "\n";
@@ -104,6 +110,7 @@ void QFilterLibraryDockWidget::setupGui()
     library->setExpanded(true);
 
 
+
 }
 
 
@@ -112,32 +119,6 @@ void QFilterLibraryDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 void QFilterLibraryDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
-  // Get the QFilterWidget Manager Instance
-  FilterManager::Pointer fm = FilterManager::Instance();
-  FilterManager::Collection factories;
-  QTreeWidgetItem* parent = item->parent();
-  while(NULL != parent)
-  {
-    if (NULL == parent->parent() )
-    {
-      break;
-    }
-    parent = parent->parent();
-  }
-  if (parent == NULL)
-  {
-    return;
-  }
-
-  QString itemText = parent->text(0);
-
-#if 0
-  if (itemText.compare(Detail::Library) == 0)
-  {
-    factories = fm->getFactories();
-    updateFilterGroupList(factories);
-  }
-#endif
 
 }
 
@@ -187,154 +168,20 @@ void QFilterLibraryDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidg
 // -----------------------------------------------------------------------------
 void QFilterLibraryDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
-  QTreeWidgetItem* parent = item->parent();
-
-  while(NULL != parent)
-  {
-    if (NULL == parent->parent() )
-    {
-      break;
-    }
-    parent = parent->parent();
-  }
-  if (parent == NULL)
-  {
-    return;
-  }
-
-  QString itemText = parent->text(0);
 
 }
-
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void QFilterLibraryDockWidget::updateFilterGroupList(FilterManager::Collection& factories)
 {
-  // Clear all the current items from the list
-  filterList->clear();
-  filterList->setSortingEnabled(true);
+
+  QStringList filterNames;
 
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-    IFilterFactory::Pointer wigFactory = factory.value();
-    if (NULL == wigFactory.get() )
-    {
-      continue;
-    }
-    QString humanName = (wigFactory->getFilterHumanLabel());
-    QString iconName(":/");
-    iconName.append( (wigFactory->getFilterGroup()));
-    iconName.append("_Icon.png");
-
-    // Validate the icon is in the resource system
-    QFileInfo iconInfo(iconName);
-    if (iconInfo.exists() == false)
-    {
-      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
-    }
-
-    QIcon icon(iconName);
-    // Create the QListWidgetItem and add it to the filterList
-    QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
-    // Set an "internal" QString that is the name of the filter. We need this value
-    // when the item is clicked in order to retreive the Filter Widget from the
-    // filter widget manager.
-    QString filterName = (factory.key());
-    filterItem->setData( Qt::UserRole, filterName);
+    filterNames << factory.key();
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterLibraryDockWidget::on_filterSearch_textChanged (const QString& text)
-{
-
-  FilterManager::Pointer fm = FilterManager::Instance();
-  FilterManager::Collection factories = fm->getFactories(); // Get all the Factories
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  if (item->parent() == NULL && item->text(0).compare(DREAM3D::Settings::Library) == 0)
-  {
-    factories = fm->getFactories();
-  }
-  else if (item->parent() != NULL && item->parent()->text(0).compare(DREAM3D::Settings::Library) == 0)
-  {
-    factories = fm->getFactories(item->text(0));
-  }
-  else if (item->parent()->parent() != NULL && item->parent()->parent()->text(0).compare(DREAM3D::Settings::Library) == 0)
-  {
-    factories = fm->getFactories(item->parent()->text(0), item->text(0));
-  }
-
-  // Nothing was in the search Feature so just reset to what was listed before
-  if (text.isEmpty() == true)
-  {
-    updateFilterGroupList(factories);
-    return;
-  }
-
-  // The user is typing something in the search box so lets search the filter class name and human label
-  filterList->clear();
-  for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
-  {
-    IFilterFactory::Pointer wigFactory = factory.value();
-    if (NULL == wigFactory.get() )
-    {
-      continue;
-    }
-    QString humanName = (wigFactory->getFilterHumanLabel());
-    bool match = false;
-    if (humanName.contains(text, Qt::CaseInsensitive) == true)
-    {
-      match = true;
-    }
-    QString filterName = (factory.key());
-    if (filterName.contains(text, Qt::CaseInsensitive) == true)
-    {
-      match = true;
-    }
-    // Nothing matched the string
-    if (false == match) { continue; }
-
-    QString iconName(":/");
-    iconName.append( (wigFactory->getFilterGroup()));
-    iconName.append("_Icon.png");
-
-    // Validate the icon is in the resource system
-    QFileInfo iconInfo(iconName);
-    if (iconInfo.exists() == false)
-    {
-      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
-    }
-
-    QIcon icon(iconName);
-    // Create the QListWidgetItem and add it to the filterList
-    QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
-    // Set an "internal" QString that is the name of the filter. We need this value
-    // when the item is clicked in order to retreive the Filter Widget from the
-    // filter widget manager.
-    filterItem->setData( Qt::UserRole, filterName);
-  }
-
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterLibraryDockWidget::on_filterList_currentItemChanged ( QListWidgetItem* item, QListWidgetItem* previous )
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterLibraryDockWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
-{
-  emit filterItemDoubleClicked(item->data(Qt::UserRole).toString());
+  emit filterListUpdated(filterNames);
 }

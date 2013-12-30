@@ -1,6 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Joseph B. Kleingers (Student Research Assistant)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
+ * the US Air Force, BlueQuartz Software nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without specific
+ * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -33,51 +34,28 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QFILTERLIBRARYWIDGET_H_
-#define _QFILTERLIBRARYWIDGET_H_
 
+#ifndef _ADDFAVORITEWIDGET_H_
+#define _ADDFAVORITEWIDGET_H_
 
-#include <QtGui/QWidget>
+#include "ui_AddFavoriteWidget.h"
 
-#include "DREAM3DLib/Common/FilterManager.h"
-
-
-#include "ui_QFilterLibraryDockWidget.h"
-
-class QFilterLibraryDockWidget : public QWidget, private Ui::QFilterLibraryDockWidget
+class AddFavoriteWidget : public QDialog, public Ui::Dialog
 {
-
     Q_OBJECT
+
   public:
-    QFilterLibraryDockWidget(QWidget* parent = NULL);
-    virtual ~QFilterLibraryDockWidget();
-
-    virtual void setupGui();
-
-  protected:
-    void updateFilterGroupList(FilterManager::Collection& factories);
+    AddFavoriteWidget(QWidget* parent = 0);
+    bool getBtnClicked();
+    QString getFavoriteName();
 
   protected slots:
-    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
-    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
-
-
-
-  signals:
-
-
-
-    void filterListUpdated(const QStringList& list);
+    void on_addfavoriteOKButton_clicked();
+    void on_addfavoriteCancelButton_clicked();
+    void on_favoriteName_textChanged(const QString& text);
 
   private:
-
-
-    QFilterLibraryDockWidget(const QFilterLibraryDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterLibraryDockWidget&); // Operator '=' Not Implemented
-
-
+    bool BtnClicked;
 };
 
-#endif
+#endif /* _AddFavoriteWidget_H */

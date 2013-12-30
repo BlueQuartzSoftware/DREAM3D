@@ -63,6 +63,8 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, TransferPhaseId)
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
     virtual const QString getHumanLabel() { return "Quick Surface Mesh"; }
@@ -75,6 +77,7 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+    virtual void setupFilterParameters();
     virtual void execute();
     virtual void preflight();
 
@@ -83,6 +86,7 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
 
     void dataCheck();
 

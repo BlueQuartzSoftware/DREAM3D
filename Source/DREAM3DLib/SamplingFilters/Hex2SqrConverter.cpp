@@ -178,7 +178,7 @@ void Hex2SqrConverter::execute()
    * which is going to cause problems because the data is going to be placed
    * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
    */
-// int totalSlicesImported = 0;
+  // int totalSlicesImported = 0;
   for (QVector<QString>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
     QString ebsdFName = *filepath;
@@ -200,7 +200,7 @@ void Hex2SqrConverter::execute()
       reader.setFileName(ebsdFName);
       reader.setReadHexGrid(true);
       err = reader.readFile();
-      if(err < 0)
+      if(err < 0 && err != -600)
       {
         setErrorCondition(reader.getErrorCode());
         notifyErrorMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());
@@ -216,6 +216,10 @@ void Hex2SqrConverter::execute()
       }
       else
       {
+        if (err == -600)
+        {
+          notifyWarningMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode() );
+        }
         QString origHeader = reader.getOriginalHeader();
         if (origHeader.isEmpty() == true)
         {

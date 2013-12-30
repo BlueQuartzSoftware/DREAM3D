@@ -1562,7 +1562,7 @@ void InsertPrecipitatePhases::assign_gaps()
 
   FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totpoints, "ellipfuncs");
   float* ellipfuncs = ellipfuncsPtr->getPointer(0);
-  ellipfuncsPtr->initializeWithValues(-1);
+  ellipfuncsPtr->initializeWithValue(-1);
 
   int64_t numEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
   while (unassignedcount != 0)

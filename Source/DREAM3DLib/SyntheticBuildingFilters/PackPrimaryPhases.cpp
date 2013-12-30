@@ -597,7 +597,7 @@ void PackPrimaryPhases::execute()
   Int32ArrayType::Pointer featureOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, dim, "PackPrimaryFeatures::feature_owners");
   featureOwnersPtr->initializeWithZeros();
   BoolArrayType::Pointer exclusionZonesPtr = BoolArrayType::CreateArray(m_TotalPackingPoints, dim, "PackPrimaryFeatures::exclusions_zones");
-  exclusionZonesPtr->initializeWithValues(false);
+  exclusionZonesPtr->initializeWithValue(false);
 
   // Get a pointer to the Feature Owners that was just initialized in the initialize_packinggrid() method
   int32_t* featureOwners = featureOwnersPtr->getPointer(0);
@@ -1896,11 +1896,11 @@ void PackPrimaryPhases::assign_voxels()
   float res[3] = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "newowners");
-  newownersPtr->initializeWithValues(-1);
+  newownersPtr->initializeWithValue(-1);
   int32_t* newowners = newownersPtr->getPointer(0);
 
   FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totalPoints, "ellipfuncs");
-  ellipfuncsPtr->initializeWithValues(-1);
+  ellipfuncsPtr->initializeWithValue(-1);
   float* ellipfuncs = ellipfuncsPtr->getPointer(0);
 
   float featuresPerTime = 0;
@@ -2089,7 +2089,7 @@ void PackPrimaryPhases::assign_gaps_only()
   neighpoints[5] = xPoints * yPoints;
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getTotalPoints(), "Neighbors");
-  neighborsPtr->initializeWithValues(-1);
+  neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 
   QVector<int > n(totalFeatures + 1, 0);

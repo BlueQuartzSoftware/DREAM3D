@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SideBarWidget</class>
+ <widget class="QWidget" name="SideBarWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>1</number>
+   </property>
+   <item row="0" column="1">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>235</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="0">
+    <widget class="QComboBox" name="widgetSelection">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <item>
+      <property name="text">
+       <string>Filter Library</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Favorite Pipelines</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Prebuilt Pipelines</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Filter List</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

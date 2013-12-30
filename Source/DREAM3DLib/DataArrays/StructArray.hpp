@@ -255,9 +255,9 @@ class StructArray : public IDataArray
     /**
      * @brief Sets all the values to value.
      */
-    void initializeWithValues(T value)
+    void initializeWithValue(T value, size_t offset = 0)
     {
-      for (size_t i = 0; i < this->Size; i++)
+      for (size_t i = offset; i < this->Size; i++)
       {
         this->Array[i] = value;
       }

@@ -227,7 +227,7 @@ void DataContainerWriter::execute()
 
   // Write our File Version string to the Root "/" group
   QH5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
-
+  QH5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::DREAM3DVersion, DREAM3DLib::Version::Complete() );
   QFile xdmfFile;
   QTextStream out(&xdmfFile);
   if (m_WriteXdmfFile == true)

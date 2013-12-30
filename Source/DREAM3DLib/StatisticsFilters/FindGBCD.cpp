@@ -507,7 +507,7 @@ void FindGBCD::execute()
   gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, dims, "GBCDBins");
   gbcdBinsArray->initializeWithZeros();
   gbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, dims, "GBCDHemiCheck");
-  gbcdHemiCheckArray->initializeWithValues(false);
+  gbcdHemiCheckArray->initializeWithValue(false);
   float* m_GBCDdeltas = gbcdDeltasArray->getPointer(0);
   int32_t* m_GBCDsizes = gbcdSizesArray->getPointer(0);
   float* m_GBCDlimits = gbcdLimitsArray->getPointer(0);

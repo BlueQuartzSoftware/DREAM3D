@@ -30,54 +30,61 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QFILTERLIBRARYWIDGET_H_
-#define _QFILTERLIBRARYWIDGET_H_
 
+#ifndef _SideBarWidget_H_
+#define _SideBarWidget_H_
 
 #include <QtGui/QWidget>
 
-#include "DREAM3DLib/Common/FilterManager.h"
 
 
-#include "ui_QFilterLibraryDockWidget.h"
+#include "ui_SideBarWidget.h"
 
-class QFilterLibraryDockWidget : public QWidget, private Ui::QFilterLibraryDockWidget
+class QFilterLibraryDockWidget;
+class QDream3DDocumentsDockWidget;
+class QPrebuiltPipelinesDockWidget;
+class FilterListWidget;
+
+class SideBarWidget : public QWidget, private Ui::SideBarWidget
 {
 
     Q_OBJECT
+  enum WidgetSelection {
+    FilterLibraryIndex = 0,
+    FavoritePipelines = 1,
+    PrebuiltPipelines = 2,
+    FilterList = 3
+    };
+
   public:
-    QFilterLibraryDockWidget(QWidget* parent = NULL);
-    virtual ~QFilterLibraryDockWidget();
+    SideBarWidget(QWidget* parent = NULL);
+    virtual ~SideBarWidget();
 
-    virtual void setupGui();
+    void setComboboxSelectedIndex(int index);
 
-  protected:
-    void updateFilterGroupList(FilterManager::Collection& factories);
-
-  protected slots:
-    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
-    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
-
-
-
-  signals:
-
-
+signals:
 
     void filterListUpdated(const QStringList& list);
 
+public slots:
+  void on_widgetSelection_currentIndexChanged(int index);
+
+  protected:
+    void setupGui();
+
   private:
+    QFilterLibraryDockWidget*  m_FilterLibrary;
+    QDream3DDocumentsDockWidget*  m_FavoritePipelines;
+    QPrebuiltPipelinesDockWidget* m_PrebuiltPipelines;
+    FilterListWidget*             m_FilterListWidget;
+    QWidget*                      m_CurrentWidget;
 
-
-    QFilterLibraryDockWidget(const QFilterLibraryDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterLibraryDockWidget&); // Operator '=' Not Implemented
-
-
+    SideBarWidget(const SideBarWidget&); // Copy Constructor Not Implemented
+    void operator=(const SideBarWidget&); // Operator '=' Not Implemented
 };
 
-#endif
+
+#endif /* _SideBarWidget_H_ */
