@@ -72,7 +72,7 @@ QFilterParametersReader::~QFilterParametersReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString filePath, QSettings::Format format)
+FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString filePath, QSettings::Format format, Observer* obs)
 {
   FilterManager::Pointer filtManager = FilterManager::Instance();
   QFilterParametersReader::Pointer paramsReader = QFilterParametersReader::New();

@@ -133,14 +133,95 @@ if(UNIX AND NOT APPLE)
 endif()
 
 # --------------------------------------------------------------------
-# This is just a library that gets compiled that is just the filter sources for this project
-add_library(${PLUGIN_NAME}FilterLib STATIC ${${PLUGIN_NAME}_Project_SRCS})
-target_link_libraries(${PLUGIN_NAME}FilterLib
+#
+# --------------------------------------------------------------------
+set(${PLUGIN_NAME}_HDRS
+  ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
+)
+
+set(${PLUGIN_NAME}_SRCS
+ ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
+
+# --------------------------------------------------------------------
+#
+# --------------------------------------------------------------------
+QT4_WRAP_CPP( ${PLUGIN_NAME}_MODULE_MOC_SRCS ${${PLUGIN_NAME}_HDRS} )
+set_source_files_properties( ${${PLUGIN_NAME}_MODULE_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+# --------------------------------------------------------------------
+# Group all the generated source files in IDE's that support it. Makes it clear
+# to the user of the IDE what is generated and what is not.
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "${${PLUGIN_NAME}_GEN_HDRS}" "${${PLUGIN_NAME}_Generated_MOC_SRCS};${${PLUGIN_NAME}_MOC_SRCS};${${PLUGIN_NAME}_GEN_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${${PLUGIN_NAME}_Generated_UI_HDRS}" "" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRCS}" "" "0")
+
+
+# --------------------------------------------------------------------
+#
+# --------------------------------------------------------------------
+set(${PLUGIN_NAME}_MODULE_SRCS
+  ${${PLUGIN_NAME}_Project_SRCS}  # These sources come from the SourceList.cmake file and include .h/.cpp/moc/uic files
+  ${${PLUGIN_NAME}_HDRS}
+  ${${PLUGIN_NAME}_SRCS}
+  ${${PLUGIN_NAME}_MODULE_MOC_SRCS}
+)
+
+# --------------------------------------------------------------------
+# Setup output Directory for the plugin
+if(NOT MSVC)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
+endif()
+
+
+
+add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
+target_link_libraries(${PLUGIN_NAME}
                     ${QT_QTCORE_LIBRARY}
-                    ${QT_QTGUI_LIBRARY}
                     DREAM3DLib
+                    ${QT_QTGUI_LIBRARY}
+                    QtSupport
                     )
-SET_TARGET_PROPERTIES(${PLUGIN_NAME}FilterLib PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
+SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
+
+# --------------------------------------------------------------------
+# Set some additional properties of the plugin like its output name
+PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
+                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
+
+
+# --------------------------------------------------------------------
+# Put back the output directory
+if(NOT MSVC)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
+endif()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if(0)
@@ -167,7 +248,7 @@ if(0)
   # ******************************************************************************
 endif()
 
-add_definitions(-DDREAM3D_USE_QT)
+
 if(MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
 endif()

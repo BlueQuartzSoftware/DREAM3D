@@ -8,8 +8,8 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-#include "PipelineBuilder/FilterWidgetManager.h"
-#include "FilterWidgets/QFilterWidgetFactory.hpp"
+//#include "PipelineBuilder/FilterWidgetManager.h"
+//#include "FilterWidgets/QFilterWidgetFactory.hpp"
 
 #include "moc_ImageImportPlugin.cxx"
 
@@ -61,5 +61,5 @@ void ImageImportPlugin::readSettings(QSettings& prefs)
 
 }
 
-#include "ImageImportPluginFilters/RegisterKnownFilterWidgets.cpp"
-#include "ImageImportPluginFilters/RegisterKnownFilters.cpp"
+//#include "ImageImportPluginFilters/RegisterKnownFilterWidgets.cpp"
+#include "ImageImportFilters/RegisterKnownFilters.cpp"

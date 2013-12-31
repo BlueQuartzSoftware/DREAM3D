@@ -302,7 +302,7 @@ endfunction()
 #-----------------
 # These are the core plugins
 set(DREAM3D_PLUGIN_LIST
-     ImageImportPlugin
+     ImageImport
      OrientationAnalysis
 )
 
