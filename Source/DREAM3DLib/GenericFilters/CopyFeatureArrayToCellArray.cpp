@@ -157,7 +157,7 @@ IDataArray::Pointer copyData(IDataArray::Pointer inputData, int64_t voxels, int3
   {
     return IDataArray::NullPointer();
   }
-  QVector<size_t> dims(1, inputData->getNumberOfComponents());
+  QVector<size_t> dims = inputData->getComponentDimensions();
   typename DataArray<T>::Pointer cell = DataArray<T>::CreateArray(voxels, dims, cellArrayName);
 
   T* fPtr = feature->getPointer(0);

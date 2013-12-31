@@ -143,6 +143,15 @@ int ModifiedLambertProjectionArray::getNumberOfComponents()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QVector<size_t> ModifiedLambertProjectionArray::getComponentDimensions()
+{
+  QVector<size_t> dims(1, 1);
+  return dims;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ModifiedLambertProjectionArray::SetRank(int rnk)
 {
 

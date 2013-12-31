@@ -231,14 +231,18 @@ class NeighborList : public IDataArray
       return total;
     }
 
-
     void setNumberOfComponents(int nc) { }
-
 
     int getNumberOfComponents() { return 1; }
 
-    void SetRank(int rnk) { }
+    QVector<size_t> getComponentDimensions()
+    { 
+      QVector<size_t> dims(1, 1);
+      return dims; 
+    }
 
+    void SetRank(int rnk) { }
+    
     int getRank() { return 1; }
 
     size_t getTypeSize()  { return sizeof(SharedVectorType); }

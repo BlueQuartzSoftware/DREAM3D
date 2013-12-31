@@ -217,6 +217,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     virtual size_t getSize();
 
     virtual int getNumberOfComponents();
+    virtual QVector<size_t> getComponentDimensions();
 
     /**
      * @brief Returns the number of bytes that make up the data type.
