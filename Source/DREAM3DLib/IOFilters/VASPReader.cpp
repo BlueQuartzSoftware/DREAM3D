@@ -113,7 +113,7 @@ void VASPReader::dataCheck()
   setErrorCondition(0);
   VertexDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VertexDataContainer, AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* vertexAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer vertexAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());

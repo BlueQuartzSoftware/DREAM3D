@@ -316,7 +316,7 @@ void LaplacianSmoothing::dataCheck()
     notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
-  AttributeMatrix* attrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(NULL, getEdgeAttributeMatrixName(), -386);
+  AttributeMatrix::Pointer attrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(NULL, getEdgeAttributeMatrixName(), -386);
   if (NULL != attrMat)
   {
     if (attrMat->getAttributeArray(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)

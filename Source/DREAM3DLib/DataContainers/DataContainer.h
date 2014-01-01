@@ -67,12 +67,22 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     virtual ~DataContainer();
 
+    /**
+     * @brief AttributeMatrixMap_t
+     */
+    typedef QMap<QString, AttributeMatrix::Pointer> AttributeMatrixMap_t;
+
+    /**
+     * @brief Creates a new shared pointer instance of this class
+     * @param name The name to give to the DataContainer and must NOT be empty.
+     * @return Shared Pointer to a DataContainer instance.
+     */
     static Pointer New(const QString& name)
     {
+      if(name.isEmpty() == true) { return NullPointer(); }
       Pointer sharedPtr(new DataContainer(name));
       return sharedPtr;
     }
-
 
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QString, Name)
 
@@ -80,17 +90,16 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual unsigned int getDCType() {return DREAM3D::DataContainerType::UnknownDataContainer;}
 
     /**
-     * @brief getPrereqArray
-     * @param filter
-     * @param attributeMatrixName
-     * @param attributeArrayName
-     * @param err
-     * @param size
-     * @param dims
-     * @return
+     * @brief This method will check for the existance of a named AttributeMatrix. If that AttributeMatrix with the
+     * given name does exist, the attributeMatrix will be checked for validity and if it passes the attribute matrix
+     * will be returned. if any of the tests fail a Shared Pointer wrapping a NULL value will be returned.
+     * @param filter The filter object to use for error messages. Can be NULL.
+     * @param attributeMatrixName The name of the AttributeMatrix to look for. must NOT be NULL.
+     * @param err The unique error value to generate derived error values from. This helps debugging.
+     * @return Shared Pointer to an AttributeMatrix object.
      */
     template<class Filter>
-    AttributeMatrix* getPrereqAttributeMatrix(Filter* filter,
+    AttributeMatrix::Pointer getPrereqAttributeMatrix(Filter* filter,
                                               QString attributeMatrixName,
                                               int err)
     {
@@ -107,11 +116,11 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
           ss = QObject::tr("DataContainer:'%1' The name of the AttributeMatrix was empty. Please provide a name for this AttributeMatrix").arg(getName());
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
-        return attributeMatrix.get();
+        return attributeMatrix;
       }
       // Now attempt to get the AttributeMatrix which could still come back NULL because the name does not match.
       attributeMatrix = getAttributeMatrix(attributeMatrixName);
-      if(NULL == attributeMatrix)
+      if(NULL == attributeMatrix.get())
       {
         if(filter)
         {
@@ -119,7 +128,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
           ss = QObject::tr("DataContainer:'%1' An AttributeMatrix with name '%2' does not exist and is required for this filter to execute.").arg(getName()).arg(attributeMatrixName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
-        return attributeMatrix.get();
+        return attributeMatrix;
       }
       if(false == attributeMatrix->validateAttributeArraySizes())
       {
@@ -129,25 +138,23 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
           ss = QObject::tr("DataContainer:'%1' AttributeMatrix: '%2' Attribute Matrix has Attribute Arrays with mismatched number of objects.").arg(getName()).arg(attributeMatrixName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
-        return attributeMatrix.get();
+        return attributeMatrix;
       }
-      return attributeMatrix.get();
+      return attributeMatrix;
     }
 
     /**
-     * @brief createNonPrereqArray This method will create a new DataArray in the named AttributeMatrix. The conditions for this
-     * method to work properly are that an AttributeMatrix with the give name exists in the data container and the name
-     * of the attribute array is not empty
-     * @param filter The instance of the filter the filter that is requesting the new array
-     * @param attributeMatrixName The name of the AttributeMatrix
-     * @param attributeArrayName The name of the AttributeArray to create
-     * @param initValue The initial value of all the elements of the array
-     * @param size The number of tuples in the Array
-     * @param dims The dimensions of the components of the AttributeArray
-     * @return A Shared Pointer to the newly created array
+     * @brief createNonPrereqAttributeMatrix This method will create a new AttributeMatrix with the given tuple dimensions
+     * and type. If the name is empty or an attribute matrix with the given name already exists the method will return
+     * a NULL shared pointer.
+     * @param filter The object to report errors through
+     * @param attributeMatrixName The name of the AttributeMatrix to create
+     * @param tDims The Tuple Dimensions of the Attribute Matrix
+     * @param amType The Type of AttributeMatrix
+     * @return A Shared Pointer to the AttributeMatrix
      */
     template<class Filter>
-    AttributeMatrix* createNonPrereqAttributeMatrix(Filter* filter,
+    AttributeMatrix::Pointer createNonPrereqAttributeMatrix(Filter* filter,
                                                     const QString& attributeMatrixName,
                                                     QVector<size_t> tDims,
                                                     unsigned int amType)
@@ -163,24 +170,23 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
           ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
-        return attributeMatrix.get();
+        return attributeMatrix;
       }
       attributeMatrix = getAttributeMatrix(attributeMatrixName);
-      if(NULL == attributeMatrix)
+      if(NULL == attributeMatrix.get())
       {
-        AttributeMatrix* attrMat = createAndAddAttributeMatrix(tDims, attributeMatrixName, amType);
-        return attrMat;
+        attributeMatrix = createAndAddAttributeMatrix(tDims, attributeMatrixName, amType);
+        return attributeMatrix;
       }
-      if(filter)
+      else if(filter) // If the filter object is NOT null (is valid) then set the error condition and send an error message
       {
         filter->setErrorCondition(-10002);
         ss = QObject::tr("An Attribute Matrix already exists with the name %1").arg(attributeMatrixName);
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
-      return attributeMatrix.get();
+      return attributeMatrix;
     }
 
-    typedef QMap<QString, AttributeMatrix::Pointer> AttributeMatrixMap_t;
 
     /**
      * @brief getAttributeMatrices
@@ -196,11 +202,15 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual bool doesAttributeMatrixExist(const QString& name);
 
     /**
-     * @brief Creates an AttributeMatrix and automatically adds it to the DataContainer
-     * @param attrMatName
+     * @brief Creates an AttributeMatrix and automatically adds it to the DataContainer. NO Checks are done if the AttributeMatrix
+     * already exists in the DataContainer object. If an AttributeMatrix already exists then the current AttributeMatrix
+     * is over written with the new one. If you need the checks use the @see createNonPrereqAttributeMatrix() method instead
+     * @param tDims The tuple Dimensions of the new AttributeMatrix
+     * @param attrMatName The name of the new AttributeMatrix
+     * @param attrType The Type of AttributeMatrix to create
      * @return
      */
-    virtual AttributeMatrix* createAndAddAttributeMatrix(QVector<size_t> tDims, const QString& attrMatName, unsigned int attrType);
+    virtual AttributeMatrix::Pointer createAndAddAttributeMatrix(QVector<size_t> tDims, const QString& attrMatName, unsigned int attrType);
 
     /**
     * @brief Adds/overwrites the data for a named array

@@ -83,11 +83,11 @@ bool DataContainer::doesAttributeMatrixExist(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrix* DataContainer::createAndAddAttributeMatrix(QVector<size_t> tDims, const QString& attrMatName, unsigned int attrType)
+AttributeMatrix::Pointer DataContainer::createAndAddAttributeMatrix(QVector<size_t> tDims, const QString& attrMatName, unsigned int attrType)
 {
   AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, attrMatName, attrType);
   addAttributeMatrix(attrMatName, attrMat);
-  return attrMat.get(); // Return the wrapped pointer
+  return attrMat; // Return the shared pointer
 }
 
 // -----------------------------------------------------------------------------
@@ -97,9 +97,10 @@ void DataContainer::addAttributeMatrix(const QString& name, AttributeMatrix::Poi
 {
   if (data->getName().compare(name) != 0)
   {
-    qDebug() << "Adding Attribute Array with different array name than key name" << "\n";
-    qDebug() << "Key name: " << name << "\n";
-    qDebug() << "Array Name:" << data->getName() << "\n";
+    qDebug() << "Adding Attribute Array with different array name than key name";
+    qDebug() << "Key name: " << name;
+    qDebug() << "Array Name:" << data->getName();
+    qDebug() << "This action is NOT typical of DREAM3D Usage. Are you sure you want to be doing this?";
     data->setName(name);
   }
   m_AttributeMatrices[name] = data;
@@ -214,7 +215,7 @@ int DataContainer::writeAttributeMatricesToHDF5(hid_t parentId)
     attributeMatrixId = H5Gopen(parentId, iter.key().toLatin1().data(), H5P_DEFAULT);
     HDF5ScopedGroupSentinel gSentinel(&attributeMatrixId, false);
 
-    err = QH5Lite::writeScalarAttribute(parentId, iter.key(), DREAM3D::HDF5::AttributeMatrixType, (*iter)->getType());
+    err = QH5Lite::writeScalarAttribute(parentId, iter.key(), DREAM3D::StringConstants::AttributeMatrixType, (*iter)->getType());
     if(err < 0)
     {
       return err;
@@ -242,7 +243,7 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QM
   {
     amName = iter.key();
     amType = DREAM3D::AttributeMatrixType::Unknown;
-    err = QH5Lite::readScalarAttribute(dcGid, amName, DREAM3D::HDF5::AttributeMatrixType, amType);
+    err = QH5Lite::readScalarAttribute(dcGid, amName, DREAM3D::StringConstants::AttributeMatrixType, amType);
     err = QH5Lite::readVectorAttribute(dcGid, amName, DREAM3D::HDF5::TupleDimensions, tDims);
     if (err < 0)
     {

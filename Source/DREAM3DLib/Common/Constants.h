@@ -323,7 +323,7 @@ namespace DREAM3D
     const DREAM3D_STRING NumComponents("NumComponents");
     const DREAM3D_STRING TupleDimensions("TupleDimensions");
     const DREAM3D_STRING ComponentDimensions("ComponentDimensions");
-    const DREAM3D_STRING AttributeMatrixType("AttributeMatrixType");
+
     const DREAM3D_STRING DataArrayVersion("DataArrayVersion");
   }
 
@@ -348,6 +348,7 @@ namespace DREAM3D
     const DREAM3D_STRING CrystalStructure("CrystalStructure");
     const DREAM3D_STRING DataContainerGroupName("DataContainers");
     const DREAM3D_STRING DataContainerType("DataContainerType");
+    const DREAM3D_STRING AttributeMatrixType("AttributeMatrixType");
 
     const DREAM3D_STRING Dims("Dims");
     const DREAM3D_STRING DistributionType("Distribution Type");

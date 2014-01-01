@@ -240,7 +240,7 @@ void MovingFiniteElementSmoothing::dataCheck()
 
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix* vertexAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer vertexAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes

@@ -910,14 +910,14 @@ class DataArray : public IDataArray
       if (typeid(value) == typeid(unsigned long int)) { return "unsigned long int"; }
 #endif
 
-
+      if (typeid(value) == typeid(int64_t)) { return "int64_t"; }
+      if (typeid(value) == typeid(uint64_t)) { return "uint64_t"; }
 #if (CMP_SIZEOF_LONG_LONG == 8)
       if (typeid(value) == typeid(long long int)) { return "long long int"; }
       if (typeid(value) == typeid(signed long long int)) { return "signed long long int"; }
       if (typeid(value) == typeid(unsigned long long int)) { return "unsigned long long int"; }
 #endif
-      if (typeid(value) == typeid(int64_t)) { return "int64_t"; }
-      if (typeid(value) == typeid(uint64_t)) { return "uint64_t"; }
+
 
       if (typeid(value) == typeid(bool)) { return "bool"; }
 

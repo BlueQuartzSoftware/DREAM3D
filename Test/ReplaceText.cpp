@@ -413,12 +413,12 @@ void fixDataCheck(QString hFile, QString cppFile)
           out << line << "\n";
           if(needCellAttrGet)
           {
-            out << "  AttributeMatrix* cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);\n";
+            out << "  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);\n";
             out << "  if(getErrorCondition() < 0) { return; }\n";
           }
           if(needCellAttrCreate)
           {
-            out << "  AttributeMatrix* cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);\n";
+            out << "  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellEnsemble);\n";
             out << "  if(getErrorCondition() < 0) { return; }\n";
           }
 

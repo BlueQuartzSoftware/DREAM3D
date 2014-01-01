@@ -101,16 +101,7 @@ namespace UnitTest
     const QString VtkOutputFile("@TEST_TEMP_DIR@/FindNeighborTest/FindNeighborTest.vtk");
   }
 
-  namespace DataContainerIOTest
-  {
-    static const size_t Offset = 800;
-    static const size_t XSize = 5;
-    static const size_t YSize = 4;
-    static const size_t ZSize = 3;
-    const QString TestDir("@TEST_TEMP_DIR@/DataContainerIOTest");
-    const QString TestFile("@TEST_TEMP_DIR@/DataContainerIOTest/DataContainerIOTest.h5");
-    const QString TestFile2("@TEST_TEMP_DIR@/DataContainerIOTest/DataContainerIOTest_Rewrite.h5");
-  }
+
 
   namespace StatsDataTest
   {
