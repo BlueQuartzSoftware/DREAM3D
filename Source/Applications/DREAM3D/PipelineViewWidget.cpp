@@ -247,7 +247,9 @@ void PipelineViewWidget::clearWidgets()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::loadPipelineFile(const QString& filePath)
 {
+#ifdef __APPLE__
 #warning THIS NEEDS TO BE IMPLEMENTED
+#endif
   std::cout << " PipelineViewWidget::loadPipelineFile() filePath=" << filePath.toStdString() << std::endl;
 }
 
@@ -256,7 +258,9 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::loadPipeline(FilterPipeline::Pointer pipeline, bool append)
 {
-#warning IMPLEMENT THIS
+#ifdef __APPLE__
+#warning IMPLEMENT PipelineViewWidget::loadPipeline
+#endif
 #if 0
   // Clear the Pipeline First
   if (false == append) { clearWidgets(); }

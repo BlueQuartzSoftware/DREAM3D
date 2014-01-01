@@ -434,7 +434,9 @@ void QDream3DDocumentsDockWidget::addFavorite(QString favoriteTitle)
 
     if(newParentPrefPathDir.mkpath(newParentPrefPath))
     {
+#ifdef __APPLE__
 #warning PipelineViewWidget needs to save the actual pipeline
+#endif
       //m_PipelineViewWidget->savePipeline(newPrefPath, favoriteTitle);
     }
   }
@@ -563,7 +565,9 @@ void QDream3DDocumentsDockWidget::actionAppendFavorite_triggered()
     QFileInfo fi(pipelinePath);
     if (fi.exists() == false) { return; }
     FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(pipelinePath, QSettings::IniFormat);
-#warning PipelineViewWidget needs to load the pipeline
+#if __APPLE__
+#warning  QDream3DDocumentsDockWidget::actionAppendFavorite_triggered  PipelineViewWidget needs to load the pipeline
+#endif
     //m_PipelineViewWidget->loadPipeline(pipeline, true);
   }
 }
