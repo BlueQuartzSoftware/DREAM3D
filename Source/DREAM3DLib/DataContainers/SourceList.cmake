@@ -13,7 +13,6 @@
 # Any Class that inherits from QObject, either directly or through the heirarchy needs to have its header listed here
 set(DREAM3DLib_DataContainers_Moc_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArray.h
- # ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.h
 )
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
@@ -33,6 +32,9 @@ set(DREAM3DLib_DataContainers_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DynamicListArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/MeshStructs.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexArray.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerProxy.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/AttributeMatrixProxy.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayProxy.h
 )
 
 set(DREAM3DLib_DataContainers_SRCS

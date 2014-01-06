@@ -48,12 +48,17 @@
 #include <QtCore/QVector>
 #include <QtCore/QMap>
 
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataContainers/AttributeMatrix.h"
+#include "DREAM3DLib/DataContainers/DataContainerProxy.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
+
 
 /**
  * @brief The DataContainer class
@@ -84,9 +89,23 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       return sharedPtr;
     }
 
+    /**
+     * @brief ReadDataContainerStructure
+     * @param dcArrayGroupId
+     * @param proxy
+     * @param h5InternalPath
+     */
+    static void ReadDataContainerStructure(hid_t dcArrayGroupId, DataContainerArrayProxy &proxy, QString h5InternalPath);
+
+    /**
+    * @brief
+    */
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QString, Name)
 
-
+    /**
+     * @brief getDCType
+     * @return
+     */
     virtual unsigned int getDCType() {return DREAM3D::DataContainerType::UnknownDataContainer;}
 
     /**
@@ -100,8 +119,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      */
     template<class Filter>
     AttributeMatrix::Pointer getPrereqAttributeMatrix(Filter* filter,
-                                              QString attributeMatrixName,
-                                              int err)
+                                                      QString attributeMatrixName,
+                                                      int err)
     {
       QString ss;
       typename AttributeMatrix::Pointer attributeMatrix = AttributeMatrix::NullPointer();
@@ -155,9 +174,9 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      */
     template<class Filter>
     AttributeMatrix::Pointer createNonPrereqAttributeMatrix(Filter* filter,
-                                                    const QString& attributeMatrixName,
-                                                    QVector<size_t> tDims,
-                                                    unsigned int amType)
+                                                            const QString& attributeMatrixName,
+                                                            QVector<size_t> tDims,
+                                                            unsigned int amType)
     {
       typename AttributeMatrix::Pointer attributeMatrix = AttributeMatrix::NullPointer();
 
@@ -270,8 +289,27 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     */
     virtual int readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QMap<QString, QSet<QString> > arraysToRead);
 
+    /**
+     * @brief writeMeshToHDF5
+     * @param dcGid
+     * @return
+     */
     virtual int writeMeshToHDF5(hid_t dcGid);
+
+    /**
+     * @brief writeXdmf
+     * @param out
+     * @param hdfFileName
+     * @return
+     */
     virtual int writeXdmf(QTextStream& out, QString hdfFileName);
+
+    /**
+     * @brief readMeshDataFromHDF5
+     * @param dcGid
+     * @param preflight
+     * @return
+     */
     virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 
   protected:

@@ -330,3 +330,38 @@ void DataContainerReader::readData(bool preflight)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
+{
+  DataContainerArrayProxy proxy(false);
+  herr_t err = 0;
+  hid_t fileId = QH5Utilities::openFile(getInputFile(), true);
+  if(fileId < 0) { return proxy; }
+  HDF5ScopedFileSentinel sentinel(&fileId, false); // Make sure the file gets closed automatically if we return early
+
+  //Check the DREAM3D File Version to make sure we are reading the proper version
+  QString d3dVersion;
+  err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::DREAM3DVersion, d3dVersion);
+  if (err < 0) { std::cout << "Attribute '" << DREAM3D::HDF5::DREAM3DVersion.toStdString() << " was not found" << std::endl; }
+  else { std::cout << DREAM3D::HDF5::DREAM3DVersion.toStdString() << ":" << d3dVersion.toStdString() << std::endl; }
+  QString fileVersion;
+  err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
+  if (err < 0) { std::cout << "Attribute '" << DREAM3D::HDF5::FileVersionName.toStdString() << " was not found" << std::endl; }
+  else { std::cout << DREAM3D::HDF5::FileVersionName.toStdString() << ":" << fileVersion.toStdString() << std::endl; }
+
+  hid_t dcArrayGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toAscii().constData(), H5P_DEFAULT);
+  if (dcArrayGroupId < 0) { return proxy; }
+  sentinel.addGroupId(&dcArrayGroupId);
+
+
+  QString h5InternalPath = QString("/") + DREAM3D::StringConstants::DataContainerGroupName;
+
+  // Read the entire structure of the file into the proxy
+  DataContainer::ReadDataContainerStructure(dcArrayGroupId, proxy, h5InternalPath);
+  proxy.isValid = true; // Make the DataContainerArrayProxy valid
+
+  return proxy;
+}
+

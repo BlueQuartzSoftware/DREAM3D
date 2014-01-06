@@ -50,11 +50,17 @@
 //-- EBSD Lib Includes
 #include "EbsdLib/EbsdConstants.h"
 
+
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
+
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/DataContainers/DataContainerProxy.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 
@@ -71,7 +77,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 {
   public:
     DREAM3D_SHARED_POINTERS(AttributeMatrix)
- //   DREAM3D_STATIC_NEW_MACRO(AttributeMatrix)
+    //   DREAM3D_STATIC_NEW_MACRO(AttributeMatrix)
     DREAM3D_TYPE_MACRO_SUPER(AttributeMatrix, Observable)
 
     virtual ~AttributeMatrix();
@@ -87,6 +93,14 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       Pointer sharedPtr(new AttributeMatrix(tupleDims, name, attrType));
       return sharedPtr;
     }
+
+    /**
+     * @brief ReadAttributeMatrixStructure
+     * @param containerId
+     * @param dataContainer
+     * @param h5InternalPath
+     */
+    static void ReadAttributeMatrixStructure(hid_t containerId, DataContainerProxy& dataContainer, QString h5InternalPath);
 
     /**
      * @brief getPrereqArray
@@ -264,7 +278,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         typename ArrayType::Pointer dat = ArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
         QString ss = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"
                                  "An Array with name '%4' is stored in the %5 but is of type %6\n")
-                     .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
+            .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
         if (NULL != filter)
         {
           filter->setErrorCondition(-502);
@@ -308,7 +322,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      */
     virtual IDataArray::Pointer getAttributeArray(const QString& name);
 
-  /**
+    /**
   * @brief returns a IDataArray based object that is stored in the attribute matrix by a
   * given name.
   * @param name The name of the array

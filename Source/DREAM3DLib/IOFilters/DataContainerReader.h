@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/DataContainers/DataContainerProxy.h"
 
 /**
  * @class DataContainerReader DataContainerReader.h DREAM3DLib/IOFilters/DataContainerReader.h
@@ -66,9 +67,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(bool, OverwriteExistingDataContainers)
 
-    typedef QMap<QString, QSet<QString> > MapOfAttributeArrays_t;
-    typedef QMap<QString, MapOfAttributeArrays_t> MapOfAttributeMatrices_t;
-    DREAM3D_INSTANCE_PROPERTY(MapOfAttributeMatrices_t, DataToRead)
+    DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
@@ -111,6 +110,14 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
      */
     int writeExistingPipelineToFile(AbstractFilterParametersWriter* writer, int index);
 
+    /**
+     * @brief Reads the structure of the DataContainer Array from the hdf5 based .dream3d file. For this method to work
+     * the member variable for the file path should have been set prior to calling this method.
+     * @return
+     */
+    DataContainerArrayProxy readDataContainerArrayStructure();
+
+
   protected:
     DataContainerReader();
 
@@ -128,6 +135,32 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
   private:
     FilterPipeline::Pointer m_PipelineFromFile;
+
+    /**
+     * @brief readDataContainers
+     * @param dcArrayGroupId
+     * @param proxy
+     * @param h5InternalPath
+     */
+    void readDataContainers(hid_t dcArrayGroupId, DataContainerArrayProxy &proxy, QString h5InternalPath);
+
+    /**
+     * @brief readAttributeMatrix
+     * @param containerId
+     * @param dataContainer
+     * @param h5InternalPath
+     */
+    void readAttributeMatrix(hid_t containerId, DataContainerProxy& dataContainer, QString h5InternalPath);
+
+    /**
+     * @brief readDataArrays
+     * @param attrMatGid
+     * @param attrMatrix
+     * @param h5InternalPath
+     */
+    void readDataArrays(hid_t attrMatGid, AttributeMatrixProxy &attrMatrix, QString h5InternalPath);
+
+
 
     DataContainerReader(const DataContainerReader&); // Copy Constructor Not Implemented
     void operator=(const DataContainerReader&); // Operator '=' Not Implemented
