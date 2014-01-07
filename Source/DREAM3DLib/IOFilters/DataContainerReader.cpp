@@ -254,77 +254,20 @@ void DataContainerReader::readData(bool preflight)
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
     scopedFileSentinel.addGroupId(&dcaGid);
 
-
-    QList<QString> dcNames;
-    err = QH5Utilities::getGroupObjects(dcaGid, H5Utilities::H5Support_GROUP, dcNames);
     DataContainerArray::Pointer dca = getDataContainerArray();
+    err = dca->readDataContainersFromHDF5(preflight, dcaGid, m_DataContainerArrayProxy);
 
-    uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
-    for(int iter = 0; iter < dcNames.size(); iter++)
+    if(err < 0)
     {
-      if (dca->contains(dcNames[iter]) == true )
+      if(preflight == true)
       {
-        setErrorCondition(-10987);
-        QString ss = QObject::tr("A Data Container with name %1 already exists in Memory. Reading a Data Container with the same name would over write the one in memory. Currently this is not allowed.").arg(dcNames[iter]);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), "The data was not available in the data file.", getErrorCondition());
+      }
+      else
+      {
+        notifyErrorMessage(getHumanLabel(), "Error Reading Data", -100);
         return;
       }
-      err = QH5Lite::readScalarAttribute(dcaGid, dcNames[iter], DREAM3D::StringConstants::DataContainerType, dcType);
-      if (err < 0)
-      {
-        setErrorCondition(-109283);
-        QString ss = QObject::tr("The DataContainer is missing the 'DataContainerType' attribute on the '%1' Data Container").arg(dcNames[iter]);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-      if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
-      {
-        VolumeDataContainer::Pointer dc = VolumeDataContainer::New();
-        dc->setName(dcNames[iter]);
-        getDataContainerArray()->pushBack(dc);
-      }
-      if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer)
-      {
-        SurfaceDataContainer::Pointer dc = SurfaceDataContainer::New();
-        dc->setName(dcNames[iter]);
-        getDataContainerArray()->pushBack(dc);
-      }
-      if(dcType == DREAM3D::DataContainerType::EdgeDataContainer)
-      {
-        EdgeDataContainer::Pointer dc = EdgeDataContainer::New();
-        dc->setName(dcNames[iter]);
-        getDataContainerArray()->pushBack(dc);
-      }
-      if(dcType == DREAM3D::DataContainerType::VertexDataContainer)
-      {
-        VertexDataContainer::Pointer dc = VertexDataContainer::New();
-        dc->setName(dcNames[iter]);
-        getDataContainerArray()->pushBack(dc);
-      }
-      hid_t dcGid = H5Gopen(dcaGid, dcNames[iter].toLatin1().data(), H5P_DEFAULT );
-      if (dcGid < 0)
-      {
-        QString ss = QObject::tr("Error opening Group %1").arg(dcNames[iter]);
-        setErrorCondition(-61);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-//      MapOfAttributeMatrices_t::Iterator it = m_DataToRead.find(dcNames[iter]);
-//      MapOfAttributeArrays_t arraysToRead = it.value();
-//      getDataContainerArray()->getDataContainer(dcNames[iter])->readMeshDataFromHDF5(dcGid, preflight);
-//      err = getDataContainerArray()->getDataContainer(dcNames[iter])->readAttributeMatricesFromHDF5(preflight, dcGid, arraysToRead);
-//      if(err < 0)
-//      {
-//        if(preflight == true)
-//        {
-//          notifyErrorMessage(getHumanLabel(), "The data was not available in the data file.", getErrorCondition());
-//        }
-//        else
-//        {
-//          notifyErrorMessage(getHumanLabel(), "Error Reading Data", -100);
-//          return;
-//        }
-//      }
     }
 
     err = H5Gclose(dcaGid);

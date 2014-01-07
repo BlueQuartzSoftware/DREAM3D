@@ -284,10 +284,10 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual int writeAttributeMatricesToHDF5(hid_t parentId);
 
     /**
-    * @brief Writes all the Attribute Matrices to HDF5 file
+    * @brief Reads desired Attribute Matrices from HDF5 file
     * @return
     */
-    virtual int readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QMap<QString, QSet<QString> > arraysToRead);
+    virtual int readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, const DataContainerProxy& dcProxy);
 
     /**
      * @brief writeMeshToHDF5
