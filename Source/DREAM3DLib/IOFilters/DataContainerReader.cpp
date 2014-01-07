@@ -82,7 +82,7 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile() ) );
-
+  //setDataContainerArrayProxy(reader->readValue("DataContainerArrayProxy", getDataContainerArrayProxy() ) );
   reader->closeFilterGroup();
 }
 
@@ -95,6 +95,8 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
+  DataContainerArrayProxy dcaProxy = getDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
+  writer->writeValue("DataContainerArrayProxy", dcaProxy );
 
 
   writer->closeFilterGroup();
@@ -307,22 +309,22 @@ void DataContainerReader::readData(bool preflight)
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
-      MapOfAttributeMatrices_t::Iterator it = m_DataToRead.find(dcNames[iter]);
-      MapOfAttributeArrays_t arraysToRead = it.value();
-      getDataContainerArray()->getDataContainer(dcNames[iter])->readMeshDataFromHDF5(dcGid, preflight);
-      err = getDataContainerArray()->getDataContainer(dcNames[iter])->readAttributeMatricesFromHDF5(preflight, dcGid, arraysToRead);
-      if(err < 0)
-      {
-        if(preflight == true)
-        {
-          notifyErrorMessage(getHumanLabel(), "The data was not available in the data file.", getErrorCondition());
-        }
-        else
-        {
-          notifyErrorMessage(getHumanLabel(), "Error Reading Data", -100);
-          return;
-        }
-      }
+//      MapOfAttributeMatrices_t::Iterator it = m_DataToRead.find(dcNames[iter]);
+//      MapOfAttributeArrays_t arraysToRead = it.value();
+//      getDataContainerArray()->getDataContainer(dcNames[iter])->readMeshDataFromHDF5(dcGid, preflight);
+//      err = getDataContainerArray()->getDataContainer(dcNames[iter])->readAttributeMatricesFromHDF5(preflight, dcGid, arraysToRead);
+//      if(err < 0)
+//      {
+//        if(preflight == true)
+//        {
+//          notifyErrorMessage(getHumanLabel(), "The data was not available in the data file.", getErrorCondition());
+//        }
+//        else
+//        {
+//          notifyErrorMessage(getHumanLabel(), "Error Reading Data", -100);
+//          return;
+//        }
+//      }
     }
 
     err = H5Gclose(dcaGid);

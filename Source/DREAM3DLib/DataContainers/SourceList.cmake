@@ -48,6 +48,7 @@ set(DREAM3DLib_DataContainers_SRCS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VolumeDataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/AttributeMatrix.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexArray.cpp
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/DataContainers" "${DREAM3DLib_DataContainers_HDRS}" "${DREAM3DLib_DataContainers_SRCS}" "0")

@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
 /*
  *
@@ -95,6 +96,7 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     virtual int writeValue(const QString name, QVector<AxisAngleInput_t> v);
     virtual int writeValue(const QString name, AxisAngleInput_t v, int notUsed);
     virtual int writeArraySelections(const QString name, QSet<QString> v);
+    virtual int writeValue(const QString name, DataContainerArrayProxy& v);
 
   protected:
     H5FilterParametersWriter();
