@@ -54,19 +54,20 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
 {
   DataContainerArray::Pointer dcArray = DataContainerArray::New();
 
-  QMapIterator<QString, DataContainerProxy> dcIter(dcaProxy);
+  QListIterator<DataContainerProxy> dcIter(dcaProxy.list);
   while (dcIter.hasNext()) // DataContainerLevel
   {
-    dcIter.next();
-    std::cout << "Found " << dcIter.key().toStdString() << ": " << std::endl;
 
-    const DataContainerProxy& dcProxy = dcIter.value();
+
+
+    const DataContainerProxy& dcProxy =  dcIter.next();
+     std::cout << "Found " << dcProxy.name.toStdString() << ": " << std::endl;
     if(dcProxy.read == false) { continue; } // Skip to the next DataContainer if we are not reading this one.
 
-    std::cout << "  reading " << dcIter.key().toStdString() << ": " << std::endl;
+    std::cout << "  reading " << dcProxy.name.toStdString() << ": " << std::endl;
     // Create the real DataContainer Object and push it into the DataContainerArray object
     DataContainer::Pointer dataContainer = DataContainer::New();
-    dataContainer->setName(dcIter.key());
+    dataContainer->setName(dcProxy.name);
     dcArray->pushBack(dataContainer);
 
     QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
@@ -128,7 +129,8 @@ DataContainerArray::Pointer DREAM3DFileStructure::ReadFileStructure(const QStrin
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(filePath);
 
-  DataContainerArrayProxy proxy = reader->readDataContainerStructure();
+  // Read the structure of the Data container from the file marking all elements as readable.
+  DataContainerArrayProxy proxy = reader->readDataContainerArrayStructure();
 
 
 // This would create the actual DataContainerArray instance. The above function does most of the work but will

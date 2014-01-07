@@ -32,6 +32,7 @@ set(DREAM3DLib_DataContainers_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DynamicListArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/MeshStructs.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexArray.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/AttributeMatrixProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayProxy.h
@@ -41,7 +42,6 @@ set(DREAM3DLib_DataContainers_SRCS
   ${DREAM3DLib_DataContainers_Generated_MOC_SRCS}  # Add the generated source files here so they get compiled.
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArray.cpp
-#  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/EdgeDataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/SurfaceDataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexDataContainer.cpp

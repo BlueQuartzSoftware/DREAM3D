@@ -56,7 +56,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataContainers/AttributeMatrix.h"
-#include "DREAM3DLib/DataContainers/DataContainerProxy.h"
+#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 
