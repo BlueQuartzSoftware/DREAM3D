@@ -96,6 +96,12 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     virtual void printDataContainerNames(QTextStream& out);
 
     /**
+    * @brief Reads desired the DataContainers from HDF5 file
+    * @return
+    */
+    virtual int readDataContainersFromHDF5(bool preflight, hid_t dcaGid, DataContainerArrayProxy& dcaProxy);
+
+    /**
      * @brief getDataContainerAs
      * @param name
      * @return

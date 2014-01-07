@@ -261,14 +261,15 @@ int DataContainer::writeAttributeMatricesToHDF5(hid_t parentId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, QMap<QString, QSet<QString> > arraysToRead)
+int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, const DataContainerProxy& dcProxy)
 {
   int err = 0;
-  unsigned int amType = DREAM3D::AttributeMatrixType::Unknown;
   QVector<size_t> tDims;
 
+  QMap<QString, AttributeMatrixProxy> attrMatsToRead = dcProxy.attributeMatricies;
+  unsigned int amType = DREAM3D::AttributeMatrixType::Unknown;
   QString amName;
-  for(QMap<QString, QSet<QString> >::iterator iter = arraysToRead.begin(); iter != arraysToRead.end(); ++iter)
+  for(QMap<QString, AttributeMatrixProxy>::iterator iter = attrMatsToRead.begin(); iter != attrMatsToRead.end(); ++iter)
   {
     amName = iter.key();
     amType = DREAM3D::AttributeMatrixType::Unknown;
