@@ -128,7 +128,7 @@
   if (m_##Name##ArrayName.empty() == true)\
   {\
     setErrorCondition(-10000);\
-    ss.str(""); ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array." << std::endl; \
+    ss.str(""); ss << "The name of the array for the " << #NameSpace << "::" << #DType << "::" << #Name << " was empty. Please provide a name for this array." << std::endl; \
     addErrorMessage(getHumanLabel(), ss.str(), -10000);\
   }\
   std::string _s(#Name);\
