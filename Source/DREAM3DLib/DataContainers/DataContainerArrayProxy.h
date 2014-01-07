@@ -33,77 +33,59 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _DataContainerProxy_H_
-#define _DataContainerProxy_H_
-
+#ifndef _DataContainerArrayProxy_H_
+#define _DataContainerArrayProxy_H_
 
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
-#include <QtCore/QMap>
+#include <QtCore/QList>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/AttributeMatrixProxy.h"
-
+#include "DREAM3DLib/DataContainers/DataContainerProxy.h"
 
 /**
- * @brief The DataContainerProxy class
+ * @brief DataContainerArrayProxy
  */
-class DataContainerProxy
+class DataContainerArrayProxy
 {
   public:
     /**
-     * @brief DataContainerProxy
+     * @brief DataContainerArrayProxy
      */
-    DataContainerProxy() :
-      read(false),
-      name(""),
-      dcType(DREAM3D::DataContainerType::UnknownDataContainer)
-    {}
+    DataContainerArrayProxy() : isValid(false) {}
 
     /**
-     * @brief DataContainerProxy
-     * @param dc_name
-     * @param read_dc
-     * @param dc_type
+     * @brief DataContainerArrayProxy
+     * @param is_valid
      */
-    DataContainerProxy(QString dc_name, bool read_dc = true, unsigned int dc_type = DREAM3D::DataContainerType::UnknownDataContainer) :
-      read(read_dc),
-      name(dc_name),
-      dcType(dc_type) {}
+    explicit DataContainerArrayProxy(bool is_valid) : isValid(is_valid) {}
 
     /**
-    * @brief Copy Constructor
-    */
-    DataContainerProxy(const DataContainerProxy& amp)
+     * @brief DataContainerArrayProxy
+     * @param rhs
+     */
+    DataContainerArrayProxy(const DataContainerArrayProxy& rhs)
     {
-      read = amp.read;
-      name = amp.name;
-      dcType = amp.dcType;
-      attributeMatricies = amp.attributeMatricies;
+      isValid = rhs.isValid;
+      list = rhs.list;
     }
 
     /**
-    * @brief operator = method
-    */
-    void operator=(const DataContainerProxy& amp)
+     * @brief operator =
+     * @param rhs
+     */
+    void operator=(const DataContainerArrayProxy& rhs)
     {
-      read = amp.read;
-      name = amp.name;
-      dcType = amp.dcType;
-      attributeMatricies = amp.attributeMatricies;
+      isValid = rhs.isValid;
+      list = rhs.list;
     }
 
     //----- Our variables, publicly available
-    bool read;
-    QString name;
-    unsigned int dcType;
-    QMap<QString, AttributeMatrixProxy> attributeMatricies;
-
+    QList<DataContainerProxy>  list;
+    bool isValid;
 };
 
-Q_DECLARE_METATYPE(DataContainerProxy)
+Q_DECLARE_METATYPE(DataContainerArrayProxy)
 
-
-
-#endif /* _DataContainerProxy_H_ */
+#endif /* _DataContainerArrayProxy_H_ */

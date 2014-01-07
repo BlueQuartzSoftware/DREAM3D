@@ -32,6 +32,7 @@ set(DREAM3DLib_DataContainers_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DynamicListArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/MeshStructs.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexArray.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/AttributeMatrixProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayProxy.h
