@@ -43,7 +43,9 @@
 //
 // -----------------------------------------------------------------------------
 ThresholdExample::ThresholdExample() :
-  AbstractFilter()
+  AbstractFilter(),
+      m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName)
+
 //  m_CellComparisonInputs(FIX_ME<<<<<<<<),
 //  m_FeatureComparisonInputs(FIX_ME<<<<<<<<),
 //  m_EnsembleComparisonInputs(FIX_ME<<<<<<<<),
@@ -134,12 +136,12 @@ void ThresholdExample::readFilterParameters(AbstractFilterParametersReader* read
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
   reader->openFilterGroup(this, index);
-  setCellComparisonInputs(reader->readValue("CellComparisonInputs", getCellComparisonInputs()));
-  setFeatureComparisonInputs(reader->readValue("FeatureComparisonInputs", getFeatureComparisonInputs()));
-  setEnsembleComparisonInputs(reader->readValue("EnsembleComparisonInputs", getEnsembleComparisonInputs()));
-  setPointComparisonInputs(reader->readValue("PointComparisonInputs", getPointComparisonInputs()));
-  setFaceComparisonInputs(reader->readValue("FaceComparisonInputs", getFaceComparisonInputs()));
-  setEdgeComparisonInputs(reader->readValue("EdgeComparisonInputs", getEdgeComparisonInputs()));
+//  setCellComparisonInputs(reader->readValue("CellComparisonInputs", getCellComparisonInputs()));
+//  setFeatureComparisonInputs(reader->readValue("FeatureComparisonInputs", getFeatureComparisonInputs()));
+//  setEnsembleComparisonInputs(reader->readValue("EnsembleComparisonInputs", getEnsembleComparisonInputs()));
+//  setPointComparisonInputs(reader->readValue("PointComparisonInputs", getPointComparisonInputs()));
+//  setFaceComparisonInputs(reader->readValue("FaceComparisonInputs", getFaceComparisonInputs()));
+//  setEdgeComparisonInputs(reader->readValue("EdgeComparisonInputs", getEdgeComparisonInputs()));
   reader->closeFilterGroup();
 }
 
@@ -212,16 +214,12 @@ void ThresholdExample::preflight()
 // -----------------------------------------------------------------------------
 void ThresholdExample::execute()
 {
-  int err = 0;
+ int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
-    return;
-  }
-  setErrorCondition(0);
+
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   /* Place all your code to execute your filter here. */
 

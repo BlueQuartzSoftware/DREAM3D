@@ -42,7 +42,8 @@
 //
 // -----------------------------------------------------------------------------
 ArraySelectionExample::ArraySelectionExample() :
-  AbstractFilter()
+  AbstractFilter(),
+    m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName)
 //  m_SelectedVolumeVertexArrays(FIX_ME<<<<<<<<),
 //  m_SelectedVolumeEdgeArrays(FIX_ME<<<<<<<<),
 //  m_SelectedVolumeFaceArrays(FIX_ME<<<<<<<<),
@@ -99,17 +100,17 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
   reader->openFilterGroup(this, index);
-  setSelectedVolumeCellArrays( reader->readValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() ) );
-  setSelectedVolumeCellFeatureArrays( reader->readValue("SelectedVolumeCellFeatureArrays", getSelectedVolumeCellFeatureArrays() ) );
-  setSelectedVolumeCellEnsembleArrays( reader->readValue("SelectedVolumeCellEnsembleArrays", getSelectedVolumeCellEnsembleArrays() ) );
-  setSelectedSurfaceVertexArrays( reader->readValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() ) );
-  setSelectedSurfaceFaceArrays( reader->readValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() ) );
-  setSelectedSurfaceEdgeArrays( reader->readValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() ) );
-  setSelectedSurfaceFaceFeatureArrays( reader->readValue("SelectedSurfaceFaceFeatureArrays", getSelectedSurfaceFaceFeatureArrays() ) );
-  setSelectedSurfaceFaceEnsembleArrays( reader->readValue("SelectedSurfaceFaceEnsembleArrays", getSelectedSurfaceFaceEnsembleArrays() ) );
-  setSelectedVertexVertexArrays( reader->readValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() ) );
-  setSelectedVertexVertexFeatureArrays( reader->readValue("SelectedVertexVertexFeatureArrays", getSelectedVertexVertexFeatureArrays() ) );
-  setSelectedVertexVertexEnsembleArrays( reader->readValue("SelectedVertexVertexEnsembleArrays", getSelectedVertexVertexEnsembleArrays() ) );
+//  setSelectedVolumeCellArrays( reader->readValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() ) );
+//  setSelectedVolumeCellFeatureArrays( reader->readValue("SelectedVolumeCellFeatureArrays", getSelectedVolumeCellFeatureArrays() ) );
+//  setSelectedVolumeCellEnsembleArrays( reader->readValue("SelectedVolumeCellEnsembleArrays", getSelectedVolumeCellEnsembleArrays() ) );
+//  setSelectedSurfaceVertexArrays( reader->readValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() ) );
+//  setSelectedSurfaceFaceArrays( reader->readValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() ) );
+//  setSelectedSurfaceEdgeArrays( reader->readValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() ) );
+//  setSelectedSurfaceFaceFeatureArrays( reader->readValue("SelectedSurfaceFaceFeatureArrays", getSelectedSurfaceFaceFeatureArrays() ) );
+//  setSelectedSurfaceFaceEnsembleArrays( reader->readValue("SelectedSurfaceFaceEnsembleArrays", getSelectedSurfaceFaceEnsembleArrays() ) );
+//  setSelectedVertexVertexArrays( reader->readValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() ) );
+//  setSelectedVertexVertexFeatureArrays( reader->readValue("SelectedVertexVertexFeatureArrays", getSelectedVertexVertexFeatureArrays() ) );
+//  setSelectedVertexVertexEnsembleArrays( reader->readValue("SelectedVertexVertexEnsembleArrays", getSelectedVertexVertexEnsembleArrays() ) );
   reader->closeFilterGroup();
 }
 
@@ -119,17 +120,17 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
 int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() );
-  writer->writeValue("SelectedVolumeCellFeatureArrays", getSelectedVolumeCellFeatureArrays() );
-  writer->writeValue("SelectedVolumeCellEnsembleArrays", getSelectedVolumeCellEnsembleArrays() );
-  writer->writeValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() );
-  writer->writeValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() );
-  writer->writeValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() );
-  writer->writeValue("SelectedSurfaceFaceFeatureArrays", getSelectedSurfaceFaceFeatureArrays() );
-  writer->writeValue("SelectedSurfaceFaceEnsembleArrays", getSelectedSurfaceFaceEnsembleArrays() );
-  writer->writeValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() );
-  writer->writeValue("SelectedVertexVertexFeatureArrays", getSelectedVertexVertexFeatureArrays() );
-  writer->writeValue("SelectedVertexVertexEnsembleArrays", getSelectedVertexVertexEnsembleArrays() );
+//  writer->writeValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() );
+//  writer->writeValue("SelectedVolumeCellFeatureArrays", getSelectedVolumeCellFeatureArrays() );
+//  writer->writeValue("SelectedVolumeCellEnsembleArrays", getSelectedVolumeCellEnsembleArrays() );
+//  writer->writeValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() );
+//  writer->writeValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() );
+//  writer->writeValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() );
+//  writer->writeValue("SelectedSurfaceFaceFeatureArrays", getSelectedSurfaceFaceFeatureArrays() );
+//  writer->writeValue("SelectedSurfaceFaceEnsembleArrays", getSelectedSurfaceFaceEnsembleArrays() );
+//  writer->writeValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() );
+//  writer->writeValue("SelectedVertexVertexFeatureArrays", getSelectedVertexVertexFeatureArrays() );
+//  writer->writeValue("SelectedVertexVertexEnsembleArrays", getSelectedVertexVertexEnsembleArrays() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -222,16 +223,12 @@ void ArraySelectionExample::preflight()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::execute()
 {
-  int err = 0;
+ int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
-    return;
-  }
-  setErrorCondition(0);
+
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   /* Place all your code to execute your filter here. */
 

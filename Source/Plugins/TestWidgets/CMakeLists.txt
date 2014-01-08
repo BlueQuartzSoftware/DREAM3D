@@ -2,9 +2,9 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-project(ExamplePlugin)
+project(TestWidgets)
 
-set(PLUGIN_NAME ExamplePlugin)
+set(PLUGIN_NAME TestWidgets)
 
 # --------------------------------------------------------------------
 # Look for Qt 4 as we need it for the plugin GUI to be generated
@@ -99,6 +99,7 @@ include_directories( ${${PLUGIN_NAME}_BINARY_DIR} )
 include_directories( ${${PLUGIN_NAME}_SOURCE_DIR}/.. )
 include_directories( ${${PLUGIN_NAME}_SOURCE_DIR})
 
+
 # ******************************************************************************
 # Create our custom executable that will generate most of our QFilterWidget
 # classes from information stored in the Filters themselves.
@@ -132,29 +133,10 @@ if(UNIX AND NOT APPLE)
   set_source_files_properties(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
 
-add_executable(${PLUGIN_NAME}WidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
-                                            ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetCodeGen.h
-                                            ${${PLUGIN_NAME}_Project_SRCS}
-                                            )
-target_link_libraries(${PLUGIN_NAME}WidgetCodeGen ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} EbsdLib DREAM3DLib)
-
-
-# Now run the code to generate the header files which will over write the place
-# holder files that were generated from above
-add_custom_command(TARGET ${PLUGIN_NAME}WidgetCodeGen POST_BUILD
-                    COMMAND $<TARGET_FILE:${PLUGIN_NAME}WidgetCodeGen> )
-# ******************************************************************************
-
-
-add_definitions(-DDREAM3D_USE_QT)
-if(MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
-endif()
-
 
 # --------------------------------------------------------------------
-# These are the NON-Filter but Qt derived sources of the plugin. In case you have
-# additional Qt source files that you need compiled.
+#
+# --------------------------------------------------------------------
 set(${PLUGIN_NAME}_HDRS
   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
 )
@@ -164,38 +146,11 @@ set(${PLUGIN_NAME}_SRCS
 )
 cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
 
-
 # --------------------------------------------------------------------
-# This section is for a Custom GUI for a Filter. We need to add the Header, Source and UI file here so that
-# they do not get auto generated during cmake and build time.
-set(${PLUGIN_NAME}_CustomWidgets_HDRS
-  # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.h
-)
-
-set(${PLUGIN_NAME}_CustomWidgets_SRCS
-  # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.cpp
-)
-
-QT4_WRAP_UI( ${PLUGIN_NAME}_Generated_UI_HDRS
-  # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.ui
-)
-
-
+#
 # --------------------------------------------------------------------
-# We need to run Qt's moc system on our Qt based files (Anything deriving from QObject)
-# This cmake code sets up moc to be run.
-QT4_WRAP_CPP( ${PLUGIN_NAME}_Generated_MOC_SRCS ${${PLUGIN_NAME}Widget_GEN_HDRS} )
-QT4_WRAP_CPP( ${PLUGIN_NAME}_MOC_SRCS ${${PLUGIN_NAME}_HDRS} ${${PLUGIN_NAME}_CustomWidgets_HDRS})
-
-# These generated moc files will be #include in the FilterWidget source file that
-# are generated so we need to tell the build system to NOT compile these files
-set_source_files_properties( ${${PLUGIN_NAME}_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
-set_source_files_properties( ${${PLUGIN_NAME}_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
-
-# --------------------------------------------------------------------
-# -- Create a Qt Resource header file of the documentation html files
-#QT4_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS "${HtmlDocQrcFile}"  )
-
+QT4_WRAP_CPP( ${PLUGIN_NAME}_MODULE_MOC_SRCS ${${PLUGIN_NAME}_HDRS} )
+set_source_files_properties( ${${PLUGIN_NAME}_MODULE_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 # --------------------------------------------------------------------
 # Group all the generated source files in IDE's that support it. Makes it clear
 # to the user of the IDE what is generated and what is not.
@@ -205,27 +160,14 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRC
 
 
 # --------------------------------------------------------------------
-# Create an install rule for the headers. If you do NOT want your headers
-# installed for a deployment to other machines then change the PROJECT_INSTALL_HEADERS
-# to a Zero
-if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL(FILES ${${PLUGIN_NAME}_HDRS} DESTINATION include/${PLUGIN_NAME}/${PLUGIN_NAME} COMPONENT Headers)
-endif()
-
-
-set(${PLUGIN_NAME}_Project_SRCS
-   ${${PLUGIN_NAME}_Project_SRCS}
-   ${${PLUGIN_NAME}_HDRS}
-   ${${PLUGIN_NAME}_SRCS}
-   ${${PLUGIN_NAME}_CustomWidgets_HDRS}
-   ${${PLUGIN_NAME}_CustomWidgets_SRCS}
-   ${${PLUGIN_NAME}_Generated_UI_HDRS}
-   ${${PLUGIN_NAME}Widget_GEN_HDRS}
-   ${${PLUGIN_NAME}Widget_GEN_SRCS}
-   ${${PLUGIN_NAME}_Generated_MOC_SRCS}
-   ${${PLUGIN_NAME}_MOC_SRCS}
-   ${${PLUGIN_NAME}_Generated_RC_SRCS}
-   )
+#
+# --------------------------------------------------------------------
+set(${PLUGIN_NAME}_MODULE_SRCS
+  ${${PLUGIN_NAME}_Project_SRCS}  # These sources come from the SourceList.cmake file and include .h/.cpp/moc/uic files
+  ${${PLUGIN_NAME}_HDRS}
+  ${${PLUGIN_NAME}_SRCS}
+  ${${PLUGIN_NAME}_MODULE_MOC_SRCS}
+)
 
 # --------------------------------------------------------------------
 # Setup output Directory for the plugin
@@ -233,28 +175,22 @@ if(NOT MSVC)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
 endif()
 
-# --------------------------------------------------------------------
-# Add the plugin as a MODULE
-add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_Project_SRCS})
-# --------------------------------------------------------------------
-# Link the plugin with other DREAM3D Libraries.
+
+
+add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
                     ${QT_QTCORE_LIBRARY}
-                    ${QT_QTGUI_LIBRARY}
                     DREAM3DLib
+                    ${QT_QTGUI_LIBRARY}
                     QtSupport
-                    PipelineBuilderLib
                     )
-
-# --------------------------------------------------------------------
-# Add a dependency on the code generation step to make sure the code is
-# generated before we try to compile the plugin
-add_dependencies(${PLUGIN_NAME} ${PLUGIN_NAME}WidgetCodeGen)
+SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
 
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
 PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
+
 
 # --------------------------------------------------------------------
 # Put back the output directory
@@ -262,4 +198,142 @@ if(NOT MSVC)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 
-#add_subdirectory(${${PLUGIN_NAME}_SOURCE_DIR}/Test ${${PLUGIN_NAME}_BINARY_DIR}/Test )
+
+
+
+
+
+
+if(0)
+  add_executable(${PLUGIN_NAME}WidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
+                                              ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetCodeGen.h
+                                              ${${PLUGIN_NAME}_Project_SRCS}
+                                              )
+  target_link_libraries(${PLUGIN_NAME}WidgetCodeGen ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} EbsdLib DREAM3DLib)
+
+
+  # Now run the code to generate the header files which will over write the place
+  # holder files that were generated from above
+  add_custom_command(TARGET ${PLUGIN_NAME}WidgetCodeGen POST_BUILD
+                      COMMAND $<TARGET_FILE:${PLUGIN_NAME}WidgetCodeGen> )
+  # ******************************************************************************
+
+
+  add_definitions(-DDREAM3D_USE_QT)
+  if(MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
+    set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
+  endif()
+
+
+  # --------------------------------------------------------------------
+  # These are the NON-Filter but Qt derived sources of the plugin. In case you have
+  # additional Qt source files that you need compiled.
+  set(${PLUGIN_NAME}_HDRS
+    ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
+  )
+
+  set(${PLUGIN_NAME}_SRCS
+   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
+  )
+  cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
+
+
+  # --------------------------------------------------------------------
+  # This section is for a Custom GUI for a Filter. We need to add the Header, Source and UI file here so that
+  # they do not get auto generated during cmake and build time.
+  set(${PLUGIN_NAME}_CustomWidgets_HDRS
+    # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.h
+  )
+
+  set(${PLUGIN_NAME}_CustomWidgets_SRCS
+    # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.cpp
+  )
+
+  QT4_WRAP_UI( ${PLUGIN_NAME}_Generated_UI_HDRS
+    # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.ui
+  )
+
+
+  # --------------------------------------------------------------------
+  # We need to run Qt's moc system on our Qt based files (Anything deriving from QObject)
+  # This cmake code sets up moc to be run.
+  QT4_WRAP_CPP( ${PLUGIN_NAME}_Generated_MOC_SRCS ${${PLUGIN_NAME}Widget_GEN_HDRS} )
+  QT4_WRAP_CPP( ${PLUGIN_NAME}_MOC_SRCS ${${PLUGIN_NAME}_HDRS} ${${PLUGIN_NAME}_CustomWidgets_HDRS})
+
+  # These generated moc files will be #include in the FilterWidget source file that
+  # are generated so we need to tell the build system to NOT compile these files
+  set_source_files_properties( ${${PLUGIN_NAME}_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+  set_source_files_properties( ${${PLUGIN_NAME}_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
+  # --------------------------------------------------------------------
+  # -- Create a Qt Resource header file of the documentation html files
+  #QT4_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS "${HtmlDocQrcFile}"  )
+
+  # --------------------------------------------------------------------
+  # Group all the generated source files in IDE's that support it. Makes it clear
+  # to the user of the IDE what is generated and what is not.
+  cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "${${PLUGIN_NAME}_GEN_HDRS}" "${${PLUGIN_NAME}_Generated_MOC_SRCS};${${PLUGIN_NAME}_MOC_SRCS};${${PLUGIN_NAME}_GEN_SRCS}" "0")
+  cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${${PLUGIN_NAME}_Generated_UI_HDRS}" "" "0")
+  cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRCS}" "" "0")
+
+
+  # --------------------------------------------------------------------
+  # Create an install rule for the headers. If you do NOT want your headers
+  # installed for a deployment to other machines then change the PROJECT_INSTALL_HEADERS
+  # to a Zero
+  if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
+      INSTALL(FILES ${${PLUGIN_NAME}_HDRS} DESTINATION include/${PLUGIN_NAME}/${PLUGIN_NAME} COMPONENT Headers)
+  endif()
+
+
+  set(${PLUGIN_NAME}_Project_SRCS
+     ${${PLUGIN_NAME}_Project_SRCS}
+     ${${PLUGIN_NAME}_HDRS}
+     ${${PLUGIN_NAME}_SRCS}
+     ${${PLUGIN_NAME}_CustomWidgets_HDRS}
+     ${${PLUGIN_NAME}_CustomWidgets_SRCS}
+     ${${PLUGIN_NAME}_Generated_UI_HDRS}
+     ${${PLUGIN_NAME}Widget_GEN_HDRS}
+     ${${PLUGIN_NAME}Widget_GEN_SRCS}
+     ${${PLUGIN_NAME}_Generated_MOC_SRCS}
+     ${${PLUGIN_NAME}_MOC_SRCS}
+     ${${PLUGIN_NAME}_Generated_RC_SRCS}
+     )
+
+  # --------------------------------------------------------------------
+  # Setup output Directory for the plugin
+  if(NOT MSVC)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
+  endif()
+
+  # --------------------------------------------------------------------
+  # Add the plugin as a MODULE
+  add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_Project_SRCS})
+  # --------------------------------------------------------------------
+  # Link the plugin with other DREAM3D Libraries.
+  target_link_libraries(${PLUGIN_NAME}
+                      ${QT_QTCORE_LIBRARY}
+                      ${QT_QTGUI_LIBRARY}
+                      DREAM3DLib
+                      QtSupport
+                      PipelineBuilderLib
+                      )
+
+  # --------------------------------------------------------------------
+  # Add a dependency on the code generation step to make sure the code is
+  # generated before we try to compile the plugin
+  add_dependencies(${PLUGIN_NAME} ${PLUGIN_NAME}WidgetCodeGen)
+
+  # --------------------------------------------------------------------
+  # Set some additional properties of the plugin like its output name
+  PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
+                  "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
+
+  # --------------------------------------------------------------------
+  # Put back the output directory
+  if(NOT MSVC)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
+  endif()
+
+  #add_subdirectory(${${PLUGIN_NAME}_SOURCE_DIR}/Test ${${PLUGIN_NAME}_BINARY_DIR}/Test )
+endif()

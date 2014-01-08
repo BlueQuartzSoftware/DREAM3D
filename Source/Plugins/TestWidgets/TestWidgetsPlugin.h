@@ -2,29 +2,29 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _ExamplePlugin_H_
-#define _ExamplePlugin_H_
+#ifndef _TestWidgets_H_
+#define _TestWidgets_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
-#include "QtSupport/DREAM3DPluginInterface.h"
+#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
 
 
 /**
- * @class ExamplePluginPlugin ExamplePluginPlugin.h SurfaceMeshing/ExamplePluginPlugin.h
+ * @class TestWidgetsPlugin TestWidgetsPlugin.h SurfaceMeshing/TestWidgetsPlugin.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date May 10, 2012
  * @version 1.0
  */
-class ExamplePluginPlugin : public QObject, public DREAM3DPluginInterface
+class TestWidgetsPlugin : public QObject, public DREAM3DPluginInterface
 {
-    Q_OBJECT;
+    Q_OBJECT
     Q_INTERFACES(DREAM3DPluginInterface)
 
   public:
-    ExamplePluginPlugin();
-    virtual ~ExamplePluginPlugin();
+    TestWidgetsPlugin();
+    virtual ~TestWidgetsPlugin();
     /**
      * @brief Returns the name of the plugin
      */
@@ -33,7 +33,7 @@ class ExamplePluginPlugin : public QObject, public DREAM3DPluginInterface
     /**
      * @brief Register all the filters with the FilterWidgetFactory
      */
-    virtual void registerFilterWidgets();
+    //virtual void registerFilterWidgets();
 
     /**
     * @brief Registers all the filters that this plugin implements with the FilterManger so they are available else where.
@@ -55,8 +55,8 @@ class ExamplePluginPlugin : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings& prefs);
 
   private:
-    ExamplePluginPlugin(const ExamplePluginPlugin&); // Copy Constructor Not Implemented
-    void operator=(const ExamplePluginPlugin&); // Operator '=' Not Implemented
+    TestWidgetsPlugin(const TestWidgetsPlugin&); // Copy Constructor Not Implemented
+    void operator=(const TestWidgetsPlugin&); // Operator '=' Not Implemented
 };
 
-#endif /* _ExamplePlugin_H_ */
+#endif /* _TestWidgets_H_ */

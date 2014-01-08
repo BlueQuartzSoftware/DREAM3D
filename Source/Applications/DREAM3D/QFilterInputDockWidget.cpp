@@ -83,6 +83,8 @@ void QFilterInputDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 void QFilterInputDockWidget::setSelectedFilterWidget(AbstractFilter* filter)
 {
+
+// Remove all existing QWidgets from this Widget
   QObjectList objs = basicInputs->children();
   for(int i = 0; i < objs.size(); i++)
   {
@@ -90,13 +92,12 @@ void QFilterInputDockWidget::setSelectedFilterWidget(AbstractFilter* filter)
   }
 
 
-
+  // Remove the Layout itself
   QLayoutItem* wItem = basicInputs->layout()->takeAt(0);
   while (wItem != NULL) {
     delete wItem;
     wItem = basicInputs->layout()->takeAt(0);
   }
-
   delete basicInputs->layout();
 
 

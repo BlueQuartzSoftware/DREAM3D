@@ -2,30 +2,30 @@
  * Your License or Copyright Information can go here
  */
 
-#include "ExamplePluginPlugin.h"
+#include "TestWidgetsPlugin.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-#include "PipelineBuilder/FilterWidgetManager.h"
-#include "FilterWidgets/QFilterWidgetFactory.hpp"
+//#include "PipelineBuilder/FilterWidgetManager.h"
+//#include "FilterWidgets/QFilterWidgetFactory.hpp"
 
-#include "moc_ExamplePluginPlugin.cxx"
+#include "moc_TestWidgetsPlugin.cxx"
 
-Q_EXPORT_PLUGIN2(ExamplePluginPlugin, ExamplePluginPlugin)
+Q_EXPORT_PLUGIN2(TestWidgetsPlugin, TestWidgetsPlugin)
 
 namespace Detail
 {
-  const QString ExamplePluginPluginFile("ExamplePluginPlugin");
-  const QString ExamplePluginPluginDisplayName("ExamplePluginPlugin");
-  const QString ExamplePluginPluginBaseName("ExamplePluginPlugin");
+  const QString TestWidgetsPluginFile("TestWidgetsPlugin");
+  const QString TestWidgetsPluginDisplayName("TestWidgetsPlugin");
+  const QString TestWidgetsPluginBaseName("TestWidgetsPlugin");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ExamplePluginPlugin::ExamplePluginPlugin()
+TestWidgetsPlugin::TestWidgetsPlugin()
 {
 
 }
@@ -33,22 +33,22 @@ ExamplePluginPlugin::ExamplePluginPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ExamplePluginPlugin::~ExamplePluginPlugin()
+TestWidgetsPlugin::~TestWidgetsPlugin()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ExamplePluginPlugin::getPluginName()
+QString TestWidgetsPlugin::getPluginName()
 {
-  return (Detail::ExamplePluginPluginDisplayName);
+  return (Detail::TestWidgetsPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExamplePluginPlugin::writeSettings(QSettings& prefs)
+void TestWidgetsPlugin::writeSettings(QSettings& prefs)
 {
 
 }
@@ -56,11 +56,11 @@ void ExamplePluginPlugin::writeSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExamplePluginPlugin::readSettings(QSettings& prefs)
+void TestWidgetsPlugin::readSettings(QSettings& prefs)
 {
 
 }
 
-#include "ExamplePluginFilters/RegisterKnownFilterWidgets.cpp"
-#include "ExamplePluginFilters/RegisterKnownFilters.cpp"
+//#include "TestWidgetsFilters/RegisterKnownFilterWidgets.cpp"
+#include "TestWidgetsFilters/RegisterKnownFilters.cpp"
 

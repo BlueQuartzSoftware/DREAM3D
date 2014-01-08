@@ -2,12 +2,12 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-set(_filterGroupName ExamplePluginFilters)
+set(_filterGroupName TestWidgetsFilters)
 set(${_filterGroupName}_FILTERS_HDRS "")
 
 #--------
 # This macro must come first before we start adding any filters
-START_FILTER_GROUP(${ExamplePlugin_BINARY_DIR} "${_filterGroupName}" "ExamplePlugin")
+START_FILTER_GROUP(${TestWidgets_BINARY_DIR} "${_filterGroupName}" "TestWidgets")
 
 
 #---------
@@ -23,9 +23,9 @@ set(_PublicFilters
 # Loop on all the filters adding each one. In this loop we default to making each filter exposed in the user
 # interface in DREAM3D. If you want to have the filter compiled but NOT exposed to the user then use the next loop
 foreach(f ${_PublicFilters} )
-  ADD_DREAM3D_FILTER(  "ExamplePlugin" "ExamplePlugin"
+  ADD_DREAM3D_FILTER(  "TestWidgets" "TestWidgets"
                         ${_filterGroupName} ${f}
-                        ${ExamplePlugin_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE)
+                        ${TestWidgets_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE)
 endforeach()
 
 
@@ -38,7 +38,7 @@ set(_PrivateFilters
 #-----------------
 # Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.
 foreach(f ${_PrivateFilters} )
-  ADD_DREAM3D_FILTER(  "ExamplePlugin" "ExamplePlugin"
+  ADD_DREAM3D_FILTER(  "TestWidgets" "TestWidgets"
                         ${_filterGroupName} ${f}
                         ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
 endforeach()
@@ -47,5 +47,5 @@ endforeach()
 
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.
-END_FILTER_GROUP(${ExamplePlugin_BINARY_DIR} "${_filterGroupName}" "ExamplePlugin")
+END_FILTER_GROUP(${TestWidgets_BINARY_DIR} "${_filterGroupName}" "TestWidgets")
 
