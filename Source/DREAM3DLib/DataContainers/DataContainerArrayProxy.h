@@ -47,7 +47,7 @@
 /**
  * @brief DataContainerArrayProxy
  */
-class DataContainerArrayProxy
+class DREAM3DLib_EXPORT DataContainerArrayProxy
 {
   public:
     /**

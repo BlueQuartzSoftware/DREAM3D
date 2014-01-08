@@ -245,6 +245,8 @@ int DataContainer::writeAttributeMatricesToHDF5(hid_t parentId)
     HDF5ScopedGroupSentinel gSentinel(&attributeMatrixId, false);
 
     err = QH5Lite::writeScalarAttribute(parentId, iter.key(), DREAM3D::StringConstants::AttributeMatrixType, (*iter)->getType());
+    hsize_t size = (*iter)->getTupleDimensions().size();
+    err = QH5Lite::writePointerAttribute(parentId, iter.key(), DREAM3D::HDF5::TupleDimensions, 1, &size, (*iter)->getTupleDimensions().data());
     if(err < 0)
     {
       return err;
