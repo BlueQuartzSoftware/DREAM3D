@@ -330,7 +330,6 @@ void TestDataContainerWriter()
   DREAM3D_REQUIRE_EQUAL(err, 0);
 }
 
-#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -340,57 +339,38 @@ void TestDataContainerReader()
   size_t ny = 0;
   size_t nz = 0;
 
-
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  dca->pushBack(m);
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(DataContainerIOTest::TestFile());
   reader->setDataContainerArray(dca);
-
+  DataContainerArrayProxy dcaProxy = reader->readDataContainerArrayStructure();
+  reader->setDataContainerArrayProxy(dcaProxy);
   reader->execute();
   int err = reader->getErrorCondition();
-  DREAM3D_REQUIRE(err < 0)
-      m = VolumeDataContainer::NullPointer();
-  dca->clear(); // Remove all the data containers
-  reader->execute();
-  err = reader->getErrorCondition();
   DREAM3D_REQUIRE(err >= 0)
 
+  Observer obs;
+  // Send progress messages from PipelineBuilder to this object for display
+  qRegisterMetaType<PipelineMessage>();
 
-      VolumeDataContainer* mPtr = dca->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
-  mPtr->getDimensions(nx, ny, nz);
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setDataContainerArray(dca);
+  writer->setOutputFile(DataContainerIOTest::TestFile2());
 
-  DREAM3D_REQUIRE_EQUAL(mPtr->getNumCellArrays(), 2);
-  DREAM3D_REQUIRE_EQUAL(mPtr->getNumCellFeatureArrays(), 3);
-  DREAM3D_REQUIRE_EQUAL(mPtr->getNumCellEnsembleArrays(), 1);
+  // Since we are NOT using the Pipeline Object to execute the filter but instead we are directly executing the filter
+  // and we want to know about any error/warning/progress messages we need to connect the filter to our Observer object
+  // manually. Normally the Pipeline Object would do this for us. We are NOT using a Pipeline Object because using the
+  // Pipeline Object would over write the DataContainer Array that we have created with a blank one thus defeating the
+  // entire purpose of the test.
+  QObject::connect(writer.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+                   &obs, SLOT(processPipelineMessage(const PipelineMessage&)) );
 
-
-  // Validate the NeighborList Data
-  NeighborList<int32_t>* neighborlistPtr
-      = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(mPtr->getCellFeatureData(DREAM3D::FeatureData::NeighborList).get());
-  DREAM3D_REQUIRE_NE(NULL, neighborlistPtr);
-  NeighborList<int32_t>::SharedVectorType vec;
-  size_t nLists = neighborlistPtr->getNumberOfTuples();
-  DREAM3D_REQUIRE_EQUAL(nLists, 4);
-  for(size_t l = 0; l < nLists; ++l)
-  {
-    vec = neighborlistPtr->getList(l);
-    for(int j = 0; j < (int)(l + 4); ++j)
-    {
-      DREAM3D_REQUIRE_EQUAL(vec->at(j), (int32_t)((j * l + 3)) );
-    }
-
-  }
+  writer->execute();
+  err = writer->getErrorCondition();
 
   DREAM3D_REQUIRE_EQUAL(err, 0);
-  DREAM3D_REQUIRE_EQUAL(nx, DataContainerIOTest::XSize);
-  DREAM3D_REQUIRE_EQUAL(ny, DataContainerIOTest::YSize);
-  DREAM3D_REQUIRE_EQUAL(nz, DataContainerIOTest::ZSize);
 }
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -743,7 +723,7 @@ int main(int argc, char** argv)
       DREAM3D_REGISTER_TEST( TestInsertDelete() )
 
       DREAM3D_REGISTER_TEST( TestDataContainerWriter() )
-      //  DREAM3D_REGISTER_TEST( TestDataContainerReader() )
+      DREAM3D_REGISTER_TEST( TestDataContainerReader() )
 
     #if REMOVE_TEST_FILES
       //DREAM3D_REGISTER_TEST( RemoveTestFiles() )

@@ -199,7 +199,7 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight, hid_t dcaGid,
   QListIterator<DataContainerProxy> dcIter(dcsToRead);
   while (dcIter.hasNext()) // DataContainerLevel
   {
-    const DataContainerProxy& dcProxy =  dcIter.next();  for (QList<DataContainerProxy>::iterator iter = dcsToRead.begin(); iter != dcsToRead.end(); ++iter)
+    const DataContainerProxy& dcProxy =  dcIter.next();
     if (this->contains(dcProxy.name) == true )
     {
       //setErrorCondition(-10987);
