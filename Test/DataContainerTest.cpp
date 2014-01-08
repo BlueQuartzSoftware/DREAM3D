@@ -54,6 +54,10 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -107,6 +111,11 @@ namespace DataContainerIOTest
   {
     return TestDir() + QString::fromAscii("/DataContainerIOTest_Subset.h5");
   }
+
+  QString IniFile()
+  {
+    return TestDir() + QString::fromAscii("/DataContainerIOTest.txt");
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -118,6 +127,7 @@ void RemoveTestFiles()
   QFile::remove(DataContainerIOTest::TestFile());
   QFile::remove(DataContainerIOTest::TestFile2());
   QFile::remove(DataContainerIOTest::TestFile3());
+  QFile::remove(DataContainerIOTest::IniFile());
 #endif
 }
 
@@ -482,6 +492,49 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TestDataContainerArrayProxy()
+{
+  // Create an instance of the DataContainerReader
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(DataContainerIOTest::TestFile());
+
+  // Read the structure of the Data container from the file marking all elements as readable.
+  DataContainerArrayProxy proxy = reader->readDataContainerArrayStructure();
+
+  reader->setDataContainerArrayProxy(proxy);
+
+  // Now create a QSettings based writer to write the parameters to a .ini file
+  QFilterParametersWriter::Pointer qWriter = QFilterParametersWriter::New();
+  QString iniFile(DataContainerIOTest::IniFile());
+  QFileInfo fi(iniFile);
+  if (fi.exists() == true)
+  {
+    QFile(iniFile).remove();
+  }
+  qWriter->openFile(DataContainerIOTest::IniFile(), QSettings::IniFormat);
+  // Write the Filter Parameters to the file
+  reader->writeFilterParameters(qWriter.get(), 0);
+  qWriter->closeFile();
+
+  // Read it back into a DataContainerArrayProxy
+  QFilterParametersReader::Pointer qReader = QFilterParametersReader::New();
+  qReader->openFile(DataContainerIOTest::IniFile(), QSettings::IniFormat);
+  reader->readFilterParameters(qReader.get(), 0);
+  qReader->closeFile();
+
+  DataContainerArrayProxy dcaProxyFromIni = reader->getDataContainerArrayProxy();
+  //FIXME: This should be validated
+
+  // This would create the actual DataContainerArray instance. The above function does most of the work but will
+  // fail to create the data Arrays properly. THis code is just here as an example
+
+  //DataContainerArray::Pointer dcArray = _createDataContainerArray(dcaProxyFromIni);
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TestInsertDelete()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
@@ -773,6 +826,8 @@ int main(int argc, char** argv)
       DREAM3D_REGISTER_TEST( TestInsertDelete() )
 
       DREAM3D_REGISTER_TEST( TestDataContainerWriter() )
+      DREAM3D_REGISTER_TEST( TestDataContainerArrayProxy() )
+
       DREAM3D_REGISTER_TEST( TestDataContainerReader() )
 
     #if REMOVE_TEST_FILES
