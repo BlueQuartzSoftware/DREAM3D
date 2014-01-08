@@ -767,3 +767,55 @@ QSet<QString> QFilterParametersReader::readArraySelections(const QString name, Q
   return values;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+
+  DataContainerArrayProxy dcaProxy;
+  QString defValue;
+  int count = m_Prefs->beginReadArray(name + "_DataContainerNames");
+  if (count == 0) { return v; } // If there is nothing to read return the default value
+  // First, gather the list of DataContainers
+
+  for(int i = 0; i < count; i++)
+  {
+    m_Prefs->setArrayIndex(i);
+    QString data = m_Prefs->value("Name", defValue).toString();
+    DataContainerProxy dcProxy(data, true);
+    dcaProxy.list.push_back(dcProxy);
+   // qDebug() << "Found DataContainer: " << data;
+  }
+  m_Prefs->endArray();
+
+  //Next, we are going to loop over all the DataContainers and read up their attribute matricies.
+  for(int i = 0; i < dcaProxy.list.size(); i++)
+  {
+    DataContainerProxy& dcProxy = dcaProxy.list[i];
+    count = m_Prefs->beginReadArray(name + "_" + dcProxy.name);
+    for(int a = 0; a < count; a++)
+    {
+      m_Prefs->setArrayIndex(a);
+
+      QString data = m_Prefs->value("ArrayName", defValue).toString(); // This gives the combined AttributeMatrixName + DataArrayName
+      // Split the string into 2 parts using the '/' charater. First is the name of the AttributeMatrix, second is the data array
+      QStringList tokens = data.split("/");
+      if(dcProxy.attributeMatricies.find(tokens[0]) == dcProxy.attributeMatricies.end() ) // AttributeMatrix does not exist.
+      {
+        AttributeMatrixProxy amProxy(tokens[0], true);
+        dcProxy.attributeMatricies[tokens[0]] = amProxy; // Add it to the DataContainerProxy
+      }
+
+      AttributeMatrixProxy& amProxy = dcProxy.attributeMatricies[tokens[0]];
+      QString path = DREAM3D::StringConstants::DataContainerGroupName + "/" + dcProxy.name + "/" + amProxy.name;
+      DataArrayProxy daProxy(path, tokens[1], true);
+      amProxy.dataArrays.insert(daProxy.name, daProxy);
+     // qDebug() << "Found AttributeMatrix/DataArray: " << data;
+    }
+    m_Prefs->endArray();
+  }
+  dcaProxy.isValid = true;
+  return dcaProxy;
+}

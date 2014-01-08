@@ -45,6 +45,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
 
 /*
@@ -118,6 +119,8 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos);
     virtual QVector<AxisAngleInput_t> readAxisAngles(const QString name, QVector<AxisAngleInput_t> defValue);
     virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v);
+
+    virtual DataContainerArrayProxy readDataContainerArrayProxy(const QString &name, DataContainerArrayProxy v);
 
   protected:
     H5FilterParametersReader();

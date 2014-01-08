@@ -82,7 +82,7 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile() ) );
-  //setDataContainerArrayProxy(reader->readValue("DataContainerArrayProxy", getDataContainerArrayProxy() ) );
+  setDataContainerArrayProxy(reader->readDataContainerArrayProxy("DataContainerArrayProxy", getDataContainerArrayProxy() ) );
   reader->closeFilterGroup();
 }
 

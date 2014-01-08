@@ -529,12 +529,12 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
     m_Prefs->endArray();
   }
 
+// Reset the iterator to the start of the QList
   dcIter.toFront();
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
     if(dcProxy.read == false) { continue; } // Skip to the next DataContainer if we are not reading this one.
-   // m_Prefs->beginGroup(dcProxy.name);
     QStringList flat;
     QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
     while(amIter.hasNext()) // AttributeMatrixLevel
@@ -568,11 +568,7 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
       count++;
     }
     m_Prefs->endArray();
-  //  m_Prefs->endGroup();
   }
-
-
-
 
   return err;
 }

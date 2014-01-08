@@ -375,7 +375,7 @@ void TestDataContainerReader()
   err = writer->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
-  QList<DataContainerProxy> dcsToRead = dcaProxy.list;
+  QList<DataContainerProxy>& dcsToRead = dcaProxy.list;
   uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
   for(int i=(dcsToRead.size()-1); i>=0; i--)
   {
@@ -383,15 +383,15 @@ void TestDataContainerReader()
     if (dcProxy.name.compare(DREAM3D::Defaults::VolumeDataContainerName) != 0) dcProxy.read = false;
     else
     {
-      QMap<QString, AttributeMatrixProxy> attrMatsToRead = dcProxy.attributeMatricies;
+      QMap<QString, AttributeMatrixProxy>& attrMatsToRead = dcProxy.attributeMatricies;
       QString amName;
       for(QMap<QString, AttributeMatrixProxy>::iterator iter = attrMatsToRead.begin(); iter != attrMatsToRead.end(); ++iter)
       {
         amName = iter.key();
         if (amName.compare(getCellFeatureAttributeMatrixName()) != 0) iter.value().read = false;
-        else 
+        else
         {
-          QMap<QString, DataArrayProxy> dasToRead = iter.value().dataArrays;
+          QMap<QString, DataArrayProxy>& dasToRead = iter.value().dataArrays;
           for (QMap<QString, DataArrayProxy>::iterator iter2 = dasToRead.begin(); iter2 != dasToRead.end(); ++iter2)
           {
             if(iter2->name.compare(DREAM3D::CellData::FeatureIds) != 0 && iter2->name.compare(DREAM3D::FeatureData::AxisEulerAngles) != 0) iter2->read = false;
