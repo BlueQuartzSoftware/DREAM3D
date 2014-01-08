@@ -200,6 +200,7 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight, hid_t dcaGid,
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
+    if(dcProxy.read == false) continue;
     if (this->contains(dcProxy.name) == true )
     {
       //setErrorCondition(-10987);

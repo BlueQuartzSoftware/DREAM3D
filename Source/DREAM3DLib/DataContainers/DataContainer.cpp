@@ -273,6 +273,7 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, co
   QString amName;
   for(QMap<QString, AttributeMatrixProxy>::iterator iter = attrMatsToRead.begin(); iter != attrMatsToRead.end(); ++iter)
   {
+    if(iter.value().read == false) continue;
     amName = iter.key();
     amType = DREAM3D::AttributeMatrixType::Unknown;
     err = QH5Lite::readScalarAttribute(dcGid, amName, DREAM3D::StringConstants::AttributeMatrixType, amType);

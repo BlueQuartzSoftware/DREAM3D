@@ -103,6 +103,10 @@ namespace DataContainerIOTest
     return TestDir() + QString::fromAscii("/DataContainerIOTest_Rewrite.h5");
   }
 
+  QString TestFile3()
+  {
+    return TestDir() + QString::fromAscii("/DataContainerIOTest_Subset.h5");
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -113,6 +117,7 @@ void RemoveTestFiles()
 #if REMOVE_TEST_FILES
   QFile::remove(DataContainerIOTest::TestFile());
   QFile::remove(DataContainerIOTest::TestFile2());
+  QFile::remove(DataContainerIOTest::TestFile3());
 #endif
 }
 
@@ -268,7 +273,7 @@ void TestDataContainerWriter()
   dca->pushBack(m);
 
   m->setDimensions(nx, ny, nz);
-  AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(tupleDims, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(tupleDims, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
   m->addAttributeMatrix(getCellFeatureAttributeMatrixName(), attrMatrix);
 
   int size = nx * ny * nz;
@@ -368,7 +373,52 @@ void TestDataContainerReader()
 
   writer->execute();
   err = writer->getErrorCondition();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
 
+  QList<DataContainerProxy> dcsToRead = dcaProxy.list;
+  uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+  for(int i=(dcsToRead.size()-1); i>=0; i--)
+  {
+    DataContainerProxy& dcProxy = dcsToRead[i];
+    if (dcProxy.name.compare(DREAM3D::Defaults::VolumeDataContainerName) != 0) dcProxy.read = false;
+    else
+    {
+      QMap<QString, AttributeMatrixProxy> attrMatsToRead = dcProxy.attributeMatricies;
+      QString amName;
+      for(QMap<QString, AttributeMatrixProxy>::iterator iter = attrMatsToRead.begin(); iter != attrMatsToRead.end(); ++iter)
+      {
+        amName = iter.key();
+        if (amName.compare(getCellFeatureAttributeMatrixName()) != 0) iter.value().read = false;
+        else 
+        {
+          QMap<QString, DataArrayProxy> dasToRead = iter.value().dataArrays;
+          for (QMap<QString, DataArrayProxy>::iterator iter2 = dasToRead.begin(); iter2 != dasToRead.end(); ++iter2)
+          {
+            if(iter2->name.compare(DREAM3D::CellData::FeatureIds) != 0 && iter2->name.compare(DREAM3D::FeatureData::AxisEulerAngles) != 0) iter2->read = false;
+          }
+        }
+      }
+    }
+  }
+
+  DataContainerArray::Pointer dca2 = DataContainerArray::New();
+
+  DataContainerReader::Pointer reader2 = DataContainerReader::New();
+  reader2->setInputFile(DataContainerIOTest::TestFile());
+  reader2->setDataContainerArray(dca2);
+  reader2->setDataContainerArrayProxy(dcaProxy);
+  reader2->execute();
+  err = reader2->getErrorCondition();
+  DREAM3D_REQUIRE(err >= 0)
+
+  DataContainerWriter::Pointer writer2 = DataContainerWriter::New();
+  writer2->setDataContainerArray(dca2);
+  writer2->setOutputFile(DataContainerIOTest::TestFile3());
+  QObject::connect(writer.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+                   &obs, SLOT(processPipelineMessage(const PipelineMessage&)) );
+
+  writer2->execute();
+  err = writer2->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
 }
 

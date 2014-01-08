@@ -368,6 +368,7 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
   QString classType;
   for (QMap<QString, DataArrayProxy>::iterator iter = dasToRead.begin(); iter != dasToRead.end(); ++iter)
   {
+    if(iter->read == false) continue;
     QH5Lite::readStringAttribute(amGid, iter->name, DREAM3D::HDF5::ObjectType, classType);
     //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
