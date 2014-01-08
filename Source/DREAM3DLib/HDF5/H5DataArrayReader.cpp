@@ -69,22 +69,13 @@ namespace Detail
   template<typename T>
   IDataArray::Pointer readH5Dataset(hid_t locId,
                                     const QString& datasetPath,
-                                    const QVector<hsize_t>& dims)
+                                    const QVector<size_t>& tDims,
+                                    const QVector<size_t>& cDims)
   {
     herr_t err = -1;
     IDataArray::Pointer ptr;
-    size_t numTuples = dims[0];
-    QVector<size_t> arrayDims(dims.size() - 1);
-    for (size_t i = 1; i < dims.size(); ++i)
-    {
-      arrayDims[i - 1] = dims[i];
-    }
-    if(arrayDims.size() == 0)
-    {
-      arrayDims.resize(1);
-      arrayDims[0] = 1;
-    }
-    ptr = DataArray<T>::CreateArray(numTuples, arrayDims, datasetPath);
+
+    ptr = DataArray<T>::CreateArray(tDims, cDims, datasetPath);
 
     T* data = (T*)(ptr->getVoidPointer(0));
     err = QH5Lite::readPointerDataset(locId, datasetPath, data);
@@ -136,12 +127,49 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
     {
       numComp = 1;
     }
+     // Read the tuple dimensions as an attribute
+    QVector<size_t> tDims;
+    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::TupleDimensions, tDims);
+    if (err < 0)
+    {
+      return ptr;
+    }
+
+    // Read the component dimensions as  an attribute
+    QVector<size_t> cDims;
+    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions,cDims);
+    if (err < 0)
+    {
+      return ptr;
+    }
+
+    //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
+    qint32 offset = 0;
+    for(qint32 i = 0; i < tDims.size(); i++)
+    {
+      if(dims.at(offset) != tDims.at(i))
+      {
+        qDebug() << "Tuple Dimension " << i << " did not equal the matching slot in the HDF5 Dataset Dimensions." << dims.at(offset) << " Versus " << tDims.at(i);
+        return ptr;
+      }
+      offset++;
+    }
+    for(qint32 i = 0; i < cDims.size(); i++)
+    {
+      if(dims.at(offset) != tDims.at(i))
+      {
+        qDebug() << "Component Dimension " << i << " did not equal the matching slot in the HDF5 Dataset Dimensions." << dims.at(offset) << " Versus " << cDims.at(i);
+        return ptr;
+      }
+      offset++;
+    }
+
     if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE)
         || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
     {
       if (preflightOnly == false)
       {
-        IDataArray::Pointer bufferPtr = Detail::readH5Dataset<char>(gid, name, dims);
+        IDataArray::Pointer bufferPtr = Detail::readH5Dataset<char>(gid, name, tDims, cDims);
         const char* buf = reinterpret_cast<char*>(bufferPtr->getVoidPointer(0));
         // count the number of 0x00 characters which are the 'null termination' of each string
 
@@ -205,6 +233,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
   {
     return ptr;
   }
+  // Get the HDF5 DataSet information. the dimensions will be the combined Tuple Dims and the Data Array Componenet dimes
   err = QH5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
   if(err < 0)
   {
@@ -219,38 +248,56 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
       return ptr;
     }
     int version = 0;
-    int numComp = 1;
     err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::DataArrayVersion, version);
     if(err < 0)
     {
       version = 1;
     }
 
-    int numTuples = dims[0];
 
-    QVector<size_t> arrayDims(dims.size() - 1);
-    if(version < 2 && arrayDims.size() == 0)
-    {
-      arrayDims.resize(1);
-      arrayDims[0] = 1;
-    }
-    for(int i = 1; i < dims.size(); i++)
-    {
-      arrayDims[i - 1] = dims[i];
-    }
-
-
-
-    err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
+    // Read the tuple dimensions as an attribute
+    QVector<size_t> tDims;
+    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::TupleDimensions, tDims);
     if (err < 0)
     {
-      numComp = 1;
+      return ptr;
     }
+
+    // Read the component dimensions as  an attribute
+    QVector<size_t> cDims;
+    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions,cDims);
+    if (err < 0)
+    {
+      return ptr;
+    }
+
+    //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
+    qint32 offset = 0;
+    for(qint32 i = 0; i < tDims.size(); i++)
+    {
+      if(dims.at(offset) != tDims.at(i))
+      {
+        qDebug() << "Tuple Dimension " << i << " did not equal the matching slot in the HDF5 Dataset Dimensions." << dims.at(offset) << " Versus " << tDims.at(i);
+        return ptr;
+      }
+      offset++;
+    }
+    for(qint32 i = 0; i < cDims.size(); i++)
+    {
+      if(dims.at(offset) != cDims.at(i))
+      {
+        qDebug() << "Component Dimension " << i << " did not equal the matching slot in the HDF5 Dataset Dimensions." << dims.at(offset) << " Versus " << cDims.at(i);
+        return ptr;
+      }
+      offset++;
+    }
+
+
     // Check to see if we are reading a bool array and if so read it and return
     if (classType.compare("DataArray<bool>") == 0)
     {
-      if (preflightOnly == false) { ptr = Detail::readH5Dataset<bool>(gid, name, dims); }
-      else { ptr = DataArray<bool>::CreateArray(1, arrayDims, name); }
+      if (preflightOnly == false) { ptr = Detail::readH5Dataset<bool>(gid, name, tDims, cDims); }
+      else { ptr = DataArray<bool>::CreateArray(1, cDims, name); }
       CloseH5T(typeId, err, retErr);
       return ptr; // <== Note early return here.
     }
@@ -270,43 +317,43 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
         //qDebug() << "User Meta Data Type is Integer" ;
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
-          if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint8_t>(gid, name, dims); }
-          else { ptr = DataArray<uint8_t>::CreateArray(1, arrayDims, name); }
+          if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint8_t>(gid, name, tDims, cDims); }
+          else { ptr = DataArray<uint8_t>::CreateArray(1, cDims, name); }
         }
         else if(H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId, H5T_STD_U16LE))
         {
-          if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint16_t>(gid, name, dims); }
-          else { ptr = DataArray<uint16_t>::CreateArray(1, arrayDims, name); }
+          if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint16_t>(gid, name, tDims, cDims); }
+          else { ptr = DataArray<uint16_t>::CreateArray(1, cDims, name); }
         }
         else if(H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId, H5T_STD_U32LE))
         {
-          if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint32_t>(gid, name, dims); }
-          else { ptr = DataArray<uint32_t>::CreateArray(1, arrayDims, name); }
+          if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint32_t>(gid, name, tDims, cDims); }
+          else { ptr = DataArray<uint32_t>::CreateArray(1, cDims, name); }
         }
         else if(H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId, H5T_STD_U64LE))
         {
-          if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint64_t>(gid, name, dims); }
-          else { ptr = DataArray<uint64_t>::CreateArray(1, arrayDims, name); }
+          if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint64_t>(gid, name, tDims, cDims); }
+          else { ptr = DataArray<uint64_t>::CreateArray(1, cDims, name); }
         }
         else if(H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE))
         {
-          if (preflightOnly == false) { ptr = Detail::readH5Dataset<int8_t>(gid, name, dims); }
-          else { ptr = DataArray<int8_t>::CreateArray(1, arrayDims, name); }
+          if (preflightOnly == false) { ptr = Detail::readH5Dataset<int8_t>(gid, name, tDims, cDims); }
+          else { ptr = DataArray<int8_t>::CreateArray(1, cDims, name); }
         }
         else if(H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId, H5T_STD_I16LE))
         {
-          if (preflightOnly == false) { ptr = Detail::readH5Dataset<int16_t>(gid, name, dims); }
-          else { ptr = DataArray<int16_t>::CreateArray(1, arrayDims, name); }
+          if (preflightOnly == false) { ptr = Detail::readH5Dataset<int16_t>(gid, name, tDims, cDims); }
+          else { ptr = DataArray<int16_t>::CreateArray(1, cDims, name); }
         }
         else if(H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId, H5T_STD_I32LE))
         {
-          if (preflightOnly == false) { ptr = Detail::readH5Dataset<int32_t>(gid, name, dims); }
-          else { ptr = DataArray<int32_t>::CreateArray(1, arrayDims, name); }
+          if (preflightOnly == false) { ptr = Detail::readH5Dataset<int32_t>(gid, name, tDims, cDims); }
+          else { ptr = DataArray<int32_t>::CreateArray(1, cDims, name); }
         }
         else if(H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId, H5T_STD_I64LE))
         {
-          if (preflightOnly == false) { ptr = Detail::readH5Dataset<int64_t>(gid, name, dims); }
-          else { ptr = DataArray<int64_t>::CreateArray(1, arrayDims, name); }
+          if (preflightOnly == false) { ptr = Detail::readH5Dataset<int64_t>(gid, name, tDims, cDims); }
+          else { ptr = DataArray<int64_t>::CreateArray(1, cDims, name); }
         }
         else
         {
@@ -318,13 +365,13 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
       case H5T_FLOAT:
         if(attr_size == 4)
         {
-          if (preflightOnly == false) { ptr = Detail::readH5Dataset<float>(gid, name, dims); }
-          else { ptr = DataArray<float>::CreateArray(1, arrayDims, name); }
+          if (preflightOnly == false) { ptr = Detail::readH5Dataset<float>(gid, name, tDims, cDims); }
+          else { ptr = DataArray<float>::CreateArray(1, cDims, name); }
         }
         else if(attr_size == 8)
         {
-          if (preflightOnly == false) { ptr = Detail::readH5Dataset<double>(gid, name, dims); }
-          else { ptr = DataArray<double>::CreateArray(1, arrayDims, name); }
+          if (preflightOnly == false) { ptr = Detail::readH5Dataset<double>(gid, name, tDims, cDims); }
+          else { ptr = DataArray<double>::CreateArray(1, cDims, name); }
         }
         else
         {
