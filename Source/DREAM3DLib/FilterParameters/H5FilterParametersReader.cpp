@@ -663,3 +663,13 @@ QSet<QString> H5FilterParametersReader::readArraySelections(const QString name, 
   return v;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v)
+{
+
+  return v;
+}
+

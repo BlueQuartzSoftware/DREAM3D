@@ -19,7 +19,8 @@
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
-
+#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 
 
 // -----------------------------------------------------------------------------
@@ -140,23 +141,29 @@ DataContainerArray::Pointer DREAM3DFileStructure::ReadFileStructure(const QStrin
 
   // Now create a QSettings based writer to write the parameters to a .ini file
   QFilterParametersWriter::Pointer qWriter = QFilterParametersWriter::New();
-  QString iniFile("/tmp/out.ini");
+  QString iniFile("out.ini");
   QFileInfo fi(iniFile);
   if (fi.exists() == true)
   {
     QFile(iniFile).remove();
   }
-  qWriter->openFile("/tmp/out.ini", QSettings::IniFormat);
+  qWriter->openFile("out.ini", QSettings::IniFormat);
   // Write the Filter Parameters to the file
   reader->writeFilterParameters(qWriter.get(), 0);
-
-
-
   qWriter->closeFile();
+
+  std::cout << "-----------------------------------------------------------------------------------------" << std::endl;
+  QFilterParametersReader::Pointer qReader = QFilterParametersReader::New();
+  qReader->openFile("out.ini", QSettings::IniFormat);
+  reader->readFilterParameters(qReader.get(), 0);
+  qReader->closeFile();
+
+  DataContainerArrayProxy dcaProxyFromIni = reader->getDataContainerArrayProxy();
+
 
   // This would create the actual DataContainerArray instance. The above function does most of the work but will
   // fail to create the data Arrays properly. THis code is just here as an example
-  DataContainerArray::Pointer dcArray = _createDataContainerArray(proxy);
+  DataContainerArray::Pointer dcArray = _createDataContainerArray(dcaProxyFromIni);
 
   return dcArray;
 }

@@ -389,7 +389,7 @@ void TestDataContainerReader()
       {
         amName = iter.key();
         if (amName.compare(getCellFeatureAttributeMatrixName()) != 0) iter.value().read = false;
-        else 
+        else
         {
           QMap<QString, DataArrayProxy>& dasToRead = iter.value().dataArrays;
           for (QMap<QString, DataArrayProxy>::iterator iter2 = dasToRead.begin(); iter2 != dasToRead.end(); ++iter2)

@@ -105,10 +105,7 @@ class DataArrayProxy
       {
         if(__SHOW_DEBUG_MSG__) { std::cout << "        DataArray: " << dataArrayName.toStdString()  << std::endl; }
 
-        DataArrayProxy proxy(h5InternalPath, dataArrayName);
-        //    proxy.path = h5InternalPath;
-        //    proxy.name = dataArrayName;
-        //    proxy.read = true;
+        DataArrayProxy proxy(h5InternalPath, dataArrayName, true);
 
         herr_t err = QH5Lite::readVectorAttribute(attrMatGid, dataArrayName, DREAM3D::HDF5::TupleDimensions, proxy.tupleDims);
         if(err < 0) { std::cout << "Error Reading the Tuple Dimensions for DataArray " << dataArrayName.toStdString() << std::endl; }
