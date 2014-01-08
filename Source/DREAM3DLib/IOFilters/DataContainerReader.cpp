@@ -82,7 +82,7 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile() ) );
-
+  //setDataContainerArrayProxy(reader->readValue("DataContainerArrayProxy", getDataContainerArrayProxy() ) );
   reader->closeFilterGroup();
 }
 
@@ -95,6 +95,8 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
+  DataContainerArrayProxy dcaProxy = getDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
+  writer->writeValue("DataContainerArrayProxy", dcaProxy );
 
 
   writer->closeFilterGroup();

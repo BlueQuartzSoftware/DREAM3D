@@ -3,21 +3,22 @@
 #include "DREAM3DFileStructure.h"
 
 
+#include <QtCore/QSettings>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+
 #include "H5Support/H5Support.h"
 #include "H5Support/QH5Lite.h"
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-
-
-
-
 #include "DREAM3DLib/DataContainers/DataArrayProxy.h"
 #include "DREAM3DLib/DataContainers/AttributeMatrixProxy.h"
 #include "DREAM3DLib/DataContainers/DataContainerProxy.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
-
+#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
 
 
 
@@ -61,7 +62,7 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
 
 
     const DataContainerProxy& dcProxy =  dcIter.next();
-     std::cout << "Found " << dcProxy.name.toStdString() << ": " << std::endl;
+    std::cout << "Found " << dcProxy.name.toStdString() << ": " << std::endl;
     if(dcProxy.read == false) { continue; } // Skip to the next DataContainer if we are not reading this one.
 
     std::cout << "  reading " << dcProxy.name.toStdString() << ": " << std::endl;
@@ -125,16 +126,36 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
 // -----------------------------------------------------------------------------
 DataContainerArray::Pointer DREAM3DFileStructure::ReadFileStructure(const QString &filePath)
 {
-  // Read the structure from the file
+  // Create an instance of the DataContainerReader
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(filePath);
 
   // Read the structure of the Data container from the file marking all elements as readable.
   DataContainerArrayProxy proxy = reader->readDataContainerArrayStructure();
+//  proxy.list[0].read = false;
+//  proxy.list[1].read = false;
+//  proxy.list[2].read = false;
+
+  reader->setDataContainerArrayProxy(proxy);
+
+  // Now create a QSettings based writer to write the parameters to a .ini file
+  QFilterParametersWriter::Pointer qWriter = QFilterParametersWriter::New();
+  QString iniFile("/tmp/out.ini");
+  QFileInfo fi(iniFile);
+  if (fi.exists() == true)
+  {
+    QFile(iniFile).remove();
+  }
+  qWriter->openFile("/tmp/out.ini", QSettings::IniFormat);
+  // Write the Filter Parameters to the file
+  reader->writeFilterParameters(qWriter.get(), 0);
 
 
-// This would create the actual DataContainerArray instance. The above function does most of the work but will
-// fail to create the data Arrays properly. THis code is just here as an example
+
+  qWriter->closeFile();
+
+  // This would create the actual DataContainerArray instance. The above function does most of the work but will
+  // fail to create the data Arrays properly. THis code is just here as an example
   DataContainerArray::Pointer dcArray = _createDataContainerArray(proxy);
 
   return dcArray;

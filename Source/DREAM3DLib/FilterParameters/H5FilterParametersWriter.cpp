@@ -508,3 +508,15 @@ int H5FilterParametersWriter::writeArraySelections(const QString name, QSet<QStr
   }
   return err;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
+{
+  int err = 0;
+
+  return err;
+}
+

@@ -328,3 +328,14 @@ int TextFilterParametersWriter::writeArraySelections(const QString name, QSet<QS
   int err = -1;
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
+{
+  int err = -1;
+
+  return err;
+}
+

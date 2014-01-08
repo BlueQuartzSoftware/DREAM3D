@@ -39,9 +39,9 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 #include <QtCore/QList>
+#include <QtCore/QStringList>
 
-
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DataContainers/DataContainerProxy.h"
 
 /**
@@ -53,33 +53,32 @@ class DataContainerArrayProxy
     /**
      * @brief DataContainerArrayProxy
      */
-    DataContainerArrayProxy() : isValid(false) {}
+    DataContainerArrayProxy();
 
     /**
      * @brief DataContainerArrayProxy
      * @param is_valid
      */
-    explicit DataContainerArrayProxy(bool is_valid) : isValid(is_valid) {}
+    explicit DataContainerArrayProxy(bool is_valid);
 
     /**
      * @brief DataContainerArrayProxy
      * @param rhs
      */
-    DataContainerArrayProxy(const DataContainerArrayProxy& rhs)
-    {
-      isValid = rhs.isValid;
-      list = rhs.list;
-    }
+    DataContainerArrayProxy(const DataContainerArrayProxy& rhs);
 
     /**
      * @brief operator =
      * @param rhs
      */
-    void operator=(const DataContainerArrayProxy& rhs)
-    {
-      isValid = rhs.isValid;
-      list = rhs.list;
-    }
+    void operator=(const DataContainerArrayProxy& rhs);
+
+    /**
+     * @brief flattenHeirarchy
+     * @return
+     */
+    QStringList flattenHeirarchy();
+
 
     //----- Our variables, publicly available
     QList<DataContainerProxy>  list;

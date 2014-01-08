@@ -36,7 +36,7 @@
 #include "QFilterParametersWriter.h"
 
 
-
+#include <QtCore/QStringListIterator>
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -498,3 +498,82 @@ int QFilterParametersWriter::writeArraySelections(const QString name, QSet<QStri
   m_Prefs->endArray();
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
+{
+  int err = 0;
+  QListIterator<DataContainerProxy> dcIter(v.list);
+  QStringList dcnames;
+  while (dcIter.hasNext()) // DataContainerLevel
+  {
+    const DataContainerProxy& dcProxy =  dcIter.next();
+    if(dcProxy.read == false) { continue; } // Skip to the next DataContainer if we are not reading this one.
+    dcnames << dcProxy.name;
+  }
+  // Now write the array with the names of the data containers
+  {
+    qint32 count = dcnames.size();
+    m_Prefs->beginWriteArray(name + "_DataContainerNames", count);
+    count = 0;
+    QStringListIterator i(dcnames);
+    while (i.hasNext())
+    {
+      QString data = i.next();
+      m_Prefs->setArrayIndex(count);
+      m_Prefs->setValue("Name", data);
+      count++;
+    }
+    m_Prefs->endArray();
+  }
+
+  dcIter.toFront();
+  while (dcIter.hasNext()) // DataContainerLevel
+  {
+    const DataContainerProxy& dcProxy =  dcIter.next();
+    if(dcProxy.read == false) { continue; } // Skip to the next DataContainer if we are not reading this one.
+   // m_Prefs->beginGroup(dcProxy.name);
+    QStringList flat;
+    QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
+    while(amIter.hasNext()) // AttributeMatrixLevel
+    {
+      amIter.next();
+
+      const AttributeMatrixProxy& amProxy = amIter.value();
+      if(amProxy.read == false) { continue; } // Skip to the next AttributeMatrix if not reading this one
+
+      QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
+      while(dIter.hasNext()) // DataArray Level
+      {
+        dIter.next();
+
+        const DataArrayProxy& daProxy = dIter.value();
+        if(daProxy.read == false) { continue; } // Skip to the next DataArray if not reading this one
+
+        QString path = QString("%1/%2").arg(amProxy.name).arg(dIter.value().name);
+        flat << path;
+      }
+    }
+    qint32 count = flat.size();
+    m_Prefs->beginWriteArray(name + "_" + dcProxy.name, count);
+    count = 0;
+    QStringListIterator i(flat);
+    while (i.hasNext())
+    {
+      QString data = i.next();
+      m_Prefs->setArrayIndex(count);
+      m_Prefs->setValue("ArrayName", data);
+      count++;
+    }
+    m_Prefs->endArray();
+  //  m_Prefs->endGroup();
+  }
+
+
+
+
+  return err;
+}
+
