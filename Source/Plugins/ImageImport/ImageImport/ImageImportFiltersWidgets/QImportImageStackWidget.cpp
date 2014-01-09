@@ -131,7 +131,7 @@ AbstractFilter::Pointer QImportImageStackWidget::getFilter(bool defaultValues)
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
   QVector<QString> realFileList;
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
@@ -183,7 +183,7 @@ QFilterWidget* QImportImageStackWidget::createDeepCopy()
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
 
   w->setEbsdFileList(fileList);
 
