@@ -403,7 +403,7 @@ void PackPrimaryPhases::dataCheck()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
-  QVector<size_t> tDims(1, 0);  
+  QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
@@ -723,7 +723,7 @@ void PackPrimaryPhases::execute()
         change = (currentsizedisterror) - (oldsizedisterror);
         if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
         {
-          QString ss = QObject::tr("Packing Features (2/2) - Generating Feature #").arg(gid);
+          QString ss = QObject::tr("Packing Features (2/2) - Generating Feature #%1").arg(gid);
           notifyStatusMessage(getHumanLabel(), ss);
           if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()) )
           {

@@ -280,19 +280,19 @@ void MatchCrystallography::execute()
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase ||  m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
-      ss = QObject::tr("Initializing Arrays of Phase ").arg(i);
+      ss = QObject::tr("Initializing Arrays of Phase %1").arg(i);
       notifyStatusMessage(getHumanLabel(), "Initializing Arrays");
       initializeArrays(i);
 
-      ss = QObject::tr("Assigning Eulers to Phase ").arg(i);
+      ss = QObject::tr("Assigning Eulers to Phase %1").arg(i);
       notifyStatusMessage(getHumanLabel(), ss);
       assign_eulers(i);
 
-      ss = QObject::tr("Measuring Misorientations of Phase ").arg(i);
+      ss = QObject::tr("Measuring Misorientations of Phase %1").arg(i);
       notifyStatusMessage(getHumanLabel(), ss);
       measure_misorientations(i);
 
-      ss = QObject::tr("Matching Crystallography of Phase ").arg(i);
+      ss = QObject::tr("Matching Crystallography of Phase %1").arg(i);
       notifyStatusMessage(getHumanLabel(), ss);
       matchCrystallography(i);
     }
