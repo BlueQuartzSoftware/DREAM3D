@@ -96,7 +96,8 @@ int VolumeDataContainer::writeMeshToHDF5(hid_t dcGid)
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
   getOrigin(origin);
-  err = writeMetaInfo(dcGid, getName(), volDims, spacing, origin);
+  QString name = getName(); // we need this because getName() returns a non-const value
+  err = writeMetaInfo(dcGid, name, volDims, spacing, origin);
   return err;
 }
 
