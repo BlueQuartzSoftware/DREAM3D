@@ -40,6 +40,7 @@
 
 #include <limits>
 
+#include <QtCore/QDir>
 #include <QtCore/QString>
 #include <QtGui/QImage>
 #include <QtGui/QImageReader>
@@ -51,9 +52,16 @@ ImportImageStack::ImportImageStack() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
-  m_RefFrameZDir(Ebsd::LowtoHigh)
+  m_TotalDigits(0),
+  m_InputDir(""),
+  m_FilePrefix(""),
+  m_FileSuffix(""),
+  m_FileExt(""),
+  m_StackLowToHigh(true),
+  m_StackHighToLow(false)
 {
 
   m_Origin.x = 0.0;
@@ -96,10 +104,15 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
   setImageDataArrayName( reader->readString("ImageDataArrayName", getImageDataArrayName()) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
+  setTotalDigits( reader->readValue("TotalDigits", getTotalDigits()) );
+  setStackLowToHigh( reader->readValue("StackLowToHigh", getStackLowToHigh()) );
+  setStackHighToLow( reader->readValue("StackHighToLow", getStackHighToLow()) );
+  setInputDir( reader->readString("InputDir", getInputDir()) );
+  setFilePrefix( reader->readString("FilePrefix", getFilePrefix()) );
+  setFileSuffix( reader->readString("FileSuffix", getFileSuffix()) );
+  setFileExt( reader->readString("FileExt", getFileExt()) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin()) );
   setResolution( reader->readFloatVec3("Resolution", getResolution()) );
-  Ebsd::RefFrameZDir zdir = static_cast<Ebsd::RefFrameZDir>(reader->readValue("RefFrameZDir", getRefFrameZDir()));
-  setRefFrameZDir(zdir);
   reader->closeFilterGroup();
 }
 
@@ -113,9 +126,15 @@ int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
+  writer->writeValue("TotalDigits", getTotalDigits() );
+  writer->writeValue("StackLowToHigh", getStackLowToHigh() );
+  writer->writeValue("StackHighToLow", getStackHighToLow() );
+  writer->writeValue("InputDir", getInputDir() );
+  writer->writeValue("FilePrefix", getFilePrefix() );
+  writer->writeValue("FileSuffix", getFileSuffix() );
+  writer->writeValue("FileExt", getFileExt() );
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );
-  writer->writeValue("RefFrameZDir", getRefFrameZDir() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -129,10 +148,8 @@ void ImportImageStack::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, ImportImageStack>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
 
+  generateFileList();
   if (m_ImageFileList.size() == 0)
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
@@ -141,11 +158,6 @@ void ImportImageStack::dataCheck()
   }
   else
   {
-    QVector<size_t> arraydims(1, 1);
-    // This would be for a gray scale image
-    m_ImageDataPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_ImageDataArrayName, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     // If we have RGB or RGBA Images then we are going to have to change things a bit.
     // We should read the file and see what we have? Of course Qt is going to read it up into
     // an RGB array by default
@@ -183,7 +195,19 @@ void ImportImageStack::dataCheck()
     m->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
     m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
     m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-
+    
+    QVector<size_t> tDims(3, 0);
+    for(int i=0;i<3; i++)
+    {
+      tDims[i] = dims[i];
+    }
+    AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+    if(getErrorCondition() < 0) { return; }
+    QVector<size_t> arraydims(1, 1);
+    // This would be for a gray scale image
+    m_ImageDataPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_ImageDataArrayName, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
 }
@@ -206,15 +230,13 @@ void ImportImageStack::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  dataCheck();
   if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
 
-
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-
 
   UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
 
@@ -228,6 +250,7 @@ void ImportImageStack::execute()
 
   int64_t z = m_ZStartIndex;
   int64_t zSpot;
+  generateFileList();
   for (QVector<QString>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
   {
     QString imageFName = *filepath;
@@ -256,12 +279,9 @@ void ImportImageStack::execute()
       {
         pixelBytes = 4;
       }
-      QVector<size_t> compDims(3, 0);
-      compDims[0] = height;
-      compDims[1] = width;
-      compDims[2] = pixelBytes;
+      QVector<size_t> compDims(1, pixelBytes);
 
-      data = UInt8ArrayType::CreateArray(m_ImageFileList.size(), compDims, m_ImageDataArrayName);
+      data = UInt8ArrayType::CreateArray(m_ImageFileList.size()*height*width, compDims, m_ImageDataArrayName);
 
     }
 
@@ -288,3 +308,29 @@ void ImportImageStack::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportImageStack::generateFileList()
+{
+  int index = 0;
+  QString filename;
+  m_ImageFileList.clear();
+  for (int i = 0; i < (m_ZEndIndex - m_ZStartIndex) + 1; ++i)
+  {
+    if (m_StackLowToHigh)
+    {
+      index = m_ZStartIndex + i;
+    }
+    else
+    {
+      index = m_ZEndIndex - i;
+    }
+    filename = QString("%1%2%3.%4").arg(m_FilePrefix)
+               .arg(QString::number(index), m_TotalDigits, '0')
+               .arg(m_FileSuffix).arg(m_FileExt);
+    QString filePath = m_InputDir + QDir::separator() + filename;
+    filePath = QDir::toNativeSeparators(filePath);
+    m_ImageFileList.push_back(filePath);
+  }
+}

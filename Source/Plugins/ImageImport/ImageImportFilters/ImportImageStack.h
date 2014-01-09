@@ -66,10 +66,16 @@ class ImportImageStack : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, TotalDigits)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputDir)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FilePrefix)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileSuffix)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileExt)
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, ImageFileList)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
-    DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
+    DREAM3D_INSTANCE_PROPERTY(bool, StackLowToHigh)
+    DREAM3D_INSTANCE_PROPERTY(bool, StackHighToLow)
 
 
     /**
@@ -133,6 +139,8 @@ class ImportImageStack : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck();
+
+    void generateFileList();
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, ImageData)
