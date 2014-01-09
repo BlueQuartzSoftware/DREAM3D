@@ -89,6 +89,43 @@ int VolumeDataContainer::writeMeshToHDF5(hid_t dcGid)
   writeEdgesToHDF5(dcGid);
   writeFacesToHDF5(dcGid);
   writeCellsToHDF5(dcGid);
+  int64_t volDims[3] =
+  { getXPoints(), getYPoints(), getZPoints() };
+  float spacing[3] =
+  { getXRes(), getYRes(), getZRes() };
+  float origin[3] =
+  { 0.0f, 0.0f, 0.0f };
+  getOrigin(origin);
+  err = writeMetaInfo(dcGid, getName(), volDims, spacing, origin);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VolumeDataContainer::writeMetaInfo(hid_t dcGid, QString& hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
+{
+  herr_t err = 0;
+
+  int32_t rank = 1;
+  hsize_t dims[1] = {3};
+  err = H5Lite::writePointerDataset(dcGid, H5_DIMENSIONS, rank, dims, volDims);
+  if (err < 0)
+  {
+//    std::cout << "Error Writing H5_DIMENSIONS array for " << hdfPath << std::endl;
+  }
+  err = H5Lite::writePointerDataset(dcGid, H5_ORIGIN, rank, dims, origin);
+  if (err < 0)
+  {
+//    std::cout << "Error Writing H5_ORIGIN array for " << hdfPath << std::endl;
+  }
+  err = H5Lite::writePointerDataset(dcGid, H5_SPACING, rank, dims, spacing);
+  if (err < 0)
+  {
+//    std::cout << "Error Writing H5_SPACING array for " << hdfPath << std::endl;
+  }
+
+  err |= H5Gclose(dcGid);
   return err;
 }
 
@@ -272,18 +309,31 @@ int VolumeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
     {
       CellArray::Pointer triangles = CellArray::CreateArray(1, DREAM3D::CellData::SurfaceMeshCells, NULL);
       setCells(triangles);
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellNeighbors, dims, type_class, type_size);
+      if(err >= 0)
+      {
+        Int32DynamicListArray::Pointer cellNeighbors = Int32DynamicListArray::New();
+        getCells()->setCellNeighbors(cellNeighbors);
+      }
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellsContainingVert, dims, type_class, type_size);
+      if(err >= 0)
+      {
+        Int32DynamicListArray::Pointer cellsContainingVert = Int32DynamicListArray::New();
+        getCells()->setCellsContainingVert(cellsContainingVert);
+      }
     }
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellNeighbors, dims, type_class, type_size);
-    if(err >= 0)
+    else
     {
-      Int32DynamicListArray::Pointer cellNeighbors = Int32DynamicListArray::New();
-      getCells()->setCellNeighbors(cellNeighbors);
-    }
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellsContainingVert, dims, type_class, type_size);
-    if(err >= 0)
-    {
-      Int32DynamicListArray::Pointer cellsContainingVert = Int32DynamicListArray::New();
-      getCells()->setCellsContainingVert(cellsContainingVert);
+      int64_t volDims[3] =
+      { 0, 0, 0 };
+      float spacing[3] =
+      { 1.0f, 1.0f, 1.0f };
+      float origin[3] =
+      { 0.0f, 0.0f, 0.0f };
+      setDimensions(volDims[0], volDims[1], volDims[2]);
+      setResolution(spacing);
+      setOrigin(origin);
+      gatherMetaData(dcGid, volDims, spacing, origin);
     }
   }
   else
@@ -340,6 +390,19 @@ int VolumeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
         getCells()->setCellsContainingVert(cellsContainingVert);
       }
     }
+    else
+    {
+      int64_t volDims[3] =
+      { 0, 0, 0 };
+      float spacing[3] =
+      { 1.0f, 1.0f, 1.0f };
+      float origin[3] =
+      { 0.0f, 0.0f, 0.0f };
+      setDimensions(volDims[0], volDims[1], volDims[2]);
+      setResolution(spacing);
+      setOrigin(origin);
+      gatherMetaData(dcGid, volDims, spacing, origin);
+    }
   }
   return 1;
 }
@@ -375,5 +438,10 @@ int VolumeDataContainer::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
 //    setErrorCondition(-153);
     return -1;
   }
+
+  setDimensions(volDims[0], volDims[1], volDims[2]); // We use this signature so the compiler will cast the value to the proper int type
+  setResolution(spacing);
+  setOrigin(origin);
+
   return err;
 }
