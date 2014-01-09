@@ -44,10 +44,14 @@
 
 
 
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
+//#include "DREAM3DLib/Common/IFilterFactory.hpp"
+//#include "DREAM3DLib/Common/FilterFactory.hpp"
 
-#include "QFilterWidget.h"
+//#include "FilterWidgetsLib/Widgets/InputFileWidget.h"
+
+#include "FilterWidgetsLib/FilterWidgetManager.h"
+
+//#include "QFilterWidget.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -74,9 +78,16 @@ QFilterInputDockWidget::~QFilterInputDockWidget()
 // -----------------------------------------------------------------------------
 void QFilterInputDockWidget::setupGui()
 {
-
-
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+//void QFilterInputDockWidget::initInputFileWidget(FilterParameter* option, QVBoxLayout* vertLayout, AbstractFilter* filter)
+//{
+//  InputFileWidget* w = new InputFileWidget(basicInputsScrollWidget);
+//  vertLayout->addWidget(w);
+//}
 
 // -----------------------------------------------------------------------------
 //
@@ -84,8 +95,8 @@ void QFilterInputDockWidget::setupGui()
 void QFilterInputDockWidget::setSelectedFilterWidget(AbstractFilter* filter)
 {
 
-// Remove all existing QWidgets from this Widget
-  QObjectList objs = basicInputs->children();
+  // Remove all existing QWidgets from this Widget
+  QObjectList objs = basicInputsScrollWidget->children();
   for(int i = 0; i < objs.size(); i++)
   {
     objs[i]->deleteLater();
@@ -93,24 +104,30 @@ void QFilterInputDockWidget::setSelectedFilterWidget(AbstractFilter* filter)
 
 
   // Remove the Layout itself
-  QLayoutItem* wItem = basicInputs->layout()->takeAt(0);
+  QLayoutItem* wItem = basicInputsScrollWidget->layout()->takeAt(0);
   while (wItem != NULL) {
     delete wItem;
-    wItem = basicInputs->layout()->takeAt(0);
+    wItem = basicInputsScrollWidget->layout()->takeAt(0);
   }
-  delete basicInputs->layout();
+  //delete verticalSpacer;
+  delete verticalLayout;
+  delete basicInputsScrollWidget;
+  basicInputsScrollWidget = new QWidget();
+  basicInputsScrollWidget->setObjectName(QString::fromUtf8("basicInputsScrollWidget"));
+  basicInputsScrollWidget->setGeometry(QRect(0, 0, 388, 267));
+  verticalLayout = new QVBoxLayout(basicInputsScrollWidget);
+  verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+  scrollArea->setWidget(basicInputsScrollWidget);
 
+  // Add a label at the top of the Inputs Tabs to show what filter we are working on
+  filterHumanLabel->setText(filter->getHumanLabel());
 
   QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Maximum);
   sizePolicy2.setHorizontalStretch(0);
   sizePolicy2.setVerticalStretch(0);
   setSizePolicy(sizePolicy2);
 
-  QVBoxLayout* vertLayout = new QVBoxLayout(basicInputs);
-
-  QFormLayout* frmLayout = new QFormLayout();
-  vertLayout->addLayout(frmLayout);
-  frmLayout->setObjectName("QFilterWidget QFormLayout Layout");
+  FilterWidgetManager::Pointer fwm = FilterWidgetManager::Instance();
 
   QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
   int optIndex = 0;
@@ -120,6 +137,106 @@ void QFilterInputDockWidget::setSelectedFilterWidget(AbstractFilter* filter)
     FilterParameter* option = (*iter).get();
     FilterParameter::WidgetType wType = option->getWidgetType();
 
+
+    QWidget w = fwm->createWidget(option->getWidgetType());
+    if (NULL == w) continue;
+
+
+
+    switch(wType)
+    {
+      case FilterParameter::StringWidget:
+        break;
+      case FilterParameter::IntWidget:
+        break;
+      case FilterParameter::DoubleWidget:
+        break;
+      case FilterParameter::InputFileWidget:
+        //initInputFileWidget(option, verticalLayout, filter);
+        break;
+      case FilterParameter::InputPathWidget:
+        break;
+      case FilterParameter::OutputFileWidget:
+        break;
+      case FilterParameter::OutputPathWidget:
+        break;
+      case FilterParameter::BooleanWidget:
+        break;
+      case FilterParameter::ChoiceWidget: // Generic ComboBox Drop down where the filter provides the list of strings
+        break;
+      case FilterParameter::IntVec3Widget:
+        break;
+      case FilterParameter::FloatVec3Widget:
+        //initFloatVec3Widget
+        break;
+      case FilterParameter::AxisAngleWidget:
+        /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
+        break;
+      case FilterParameter::VolumeVertexArrayNameSelectionWidget: // ComboBox where the Cell Array names are used to populate
+        break;
+      case FilterParameter::VolumeEdgeArrayNameSelectionWidget: //ComboBox where the Feature Array names are used to populate
+        break;
+      case FilterParameter::VolumeFaceArrayNameSelectionWidget: //ComboBox where the Ensemble Array names are used to populate
+        break;
+      case FilterParameter::VolumeCellArrayNameSelectionWidget: // ComboBox where the Cell Array names are used to populate
+        break;
+      case FilterParameter::VolumeFeatureArrayNameSelectionWidget: //ComboBox where the Feature Array names are used to populate
+        break;
+      case FilterParameter::VolumeEnsembleArrayNameSelectionWidget: //ComboBox where the Ensemble Array names are used to populate
+        break;
+      case FilterParameter::SurfaceVertexArrayNameSelectionWidget:
+        break;
+      case FilterParameter::SurfaceFaceArrayNameSelectionWidget:
+        break;
+      case FilterParameter::SurfaceEdgeArrayNameSelectionWidget:
+        break;
+      case FilterParameter::SurfaceFeatureArrayNameSelectionWidget:
+        break;
+      case FilterParameter::SurfaceEnsembleArrayNameSelectionWidget:
+        break;
+      case FilterParameter::EdgeVertexArrayNameSelectionWidget:
+        break;
+      case FilterParameter::EdgeEdgeArrayNameSelectionWidget:
+        break;
+      case FilterParameter::EdgeFeatureArrayNameSelectionWidget:
+        break;
+      case FilterParameter::EdgeEnsembleArrayNameSelectionWidget:
+        break;
+      case FilterParameter::VertexVertexArrayNameSelectionWidget:
+        break;
+      case FilterParameter::VertexFeatureArrayNameSelectionWidget:
+        break;
+      case FilterParameter::VertexEnsembleArrayNameSelectionWidget:
+        /* ****  AND THIS LINE ******** */
+        break;
+      case FilterParameter::ArraySelectionWidget: // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
+        /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
+        break;
+      case FilterParameter::CellArrayComparisonSelectionWidget:
+        break;
+      case FilterParameter::FeatureArrayComparisonSelectionWidget:
+        break;
+      case FilterParameter::EnsembleArrayComparisonSelectionWidget:
+        break;
+      case FilterParameter::VertexArrayComparisonSelectionWidget:
+        break;
+      case FilterParameter::FaceArrayComparisonSelectionWidget:
+        break;
+      case FilterParameter::EdgeArrayComparisonSelectionWidget:
+        break;
+      case FilterParameter::CustomWidget:
+        break;
+      default:
+        break;
+
+    }
+
+
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout->addItem(verticalSpacer);
+
+#if 0
     QString labelName = (option->getHumanLabel());
     if (option->getUnits().isEmpty() == false)
     {
@@ -138,7 +255,7 @@ void QFilterInputDockWidget::setSelectedFilterWidget(AbstractFilter* filter)
       //QVariant v = property(option->getPropertyName());
       le->setText(option->getPropertyName());
     }
-
+#endif
     ++optIndex;
   }
 

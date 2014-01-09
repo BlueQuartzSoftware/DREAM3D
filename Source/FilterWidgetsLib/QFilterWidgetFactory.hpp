@@ -34,38 +34,42 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef IFILTERWIDGETFACTOR_H_
-#define IFILTERWIDGETFACTOR_H_
+#ifndef QFILTERWIDGETFACTORY_H_
+#define QFILTERWIDGETFACTORY_H_
 
-#include "PipelineBuilder/QFilterWidget.h"
 
-/**
- * @brief This class serves as a base class to create Factory classes that can
- * create QFilterWidgets for a GUI based on Qt.
- */
-class IFilterWidgetFactory
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+#include "FilterWidgetsLib/IFilterWidgetFactory.h"
+
+
+template <class Widget>
+class QFilterWidgetFactory : public IFilterWidgetFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(IFilterWidgetFactory)
-    DREAM3D_TYPE_MACRO(IFilterWidgetFactory)
+    DREAM3D_SHARED_POINTERS(QFilterWidgetFactory<Widget> )
+    DREAM3D_TYPE_MACRO_SUPER(QFilterWidgetFactory<Widget>, IFilterWidgetFactory)
+    DREAM3D_STATIC_NEW_MACRO(QFilterWidgetFactory<Widget>)
 
-
-    virtual ~IFilterWidgetFactory() {}
-
-    /** @brief This function should NEVER get called. The subclass should ALWAYS implement
-     * this method so we are going to crash the program.
+    /**
+     * @brief Creates a new widget for this filter. The Calling method MUST set
+     * a parent Widget OR take responsibility for deleting this object.
+     * @return
      */
-    virtual QFilterWidget* createWidget() { BOOST_ASSERT(false); return NULL;}
-    virtual QString getFilterGroup() { BOOST_ASSERT(false); return ""; }
-    virtual QString getFilterSubGroup() { BOOST_ASSERT(false); return ""; }
-    virtual QString getFilterHumanLabel() { BOOST_ASSERT(false); return ""; }
-    virtual AbstractFilter::Pointer getFilterInstance() { BOOST_ASSERT(false); return AbstractFilter::NullPointer(); }
+    QWidget* createWidget(QWidget* parent = NULL)
+    {
+      return new Widget(parent);
+    }
+
 
   protected:
-    IFilterWidgetFactory() {}
-  private:
-    IFilterWidgetFactory(const IFilterWidgetFactory&); // Copy Constructor Not Implemented
-    void operator=(const IFilterWidgetFactory&); // Operator '=' Not Implemented
-};
+    QFilterWidgetFactory() {}
 
-#endif /* IFILTERWIDGETFACTOR_H_ */
+  private:
+
+
+
+    QFilterWidgetFactory(const QFilterWidgetFactory&); // Copy Constructor Not Implemented
+    void operator=(const QFilterWidgetFactory&); // Operator '=' Not Implemented
+};
+#endif /* QFILTERWIDGETFACTORY_H_ */

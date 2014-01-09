@@ -35,6 +35,11 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "FilterWidgetManager.h"
 
+
+#include "QFilterWidgetFactory.hpp"
+#include "FilterWidgetsLib/Widgets/InputFileWidget.h"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -90,44 +95,6 @@ FilterWidgetManager::Collection FilterWidgetManager::getFactories()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterWidgetManager::Collection FilterWidgetManager::getFactories(const QString& groupName)
-{
-  FilterWidgetManager::Collection groupFactories;
-
-
-  for (FilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
-  {
-    IFilterWidgetFactory::Pointer filterFactory = factory.value();
-    if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0)
-    {
-      groupFactories[factory.key()] = factory.value();
-    }
-  }
-  return groupFactories;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FilterWidgetManager::Collection FilterWidgetManager::getFactories(const QString& groupName, const QString& subGroupName)
-{
-  FilterWidgetManager::Collection groupFactories;
-
-
-  for (FilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
-  {
-    IFilterWidgetFactory::Pointer filterFactory = factory.value();
-    if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0 && factory.value()->getFilterSubGroup().compare(subGroupName) == 0)
-    {
-      groupFactories[factory.key()] = factory.value();
-    }
-  }
-  return groupFactories;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FilterWidgetManager::addFilterWidgetFactory(const QString& name, IFilterWidgetFactory::Pointer factory)
 {
   m_Factories[name] = factory;
@@ -136,67 +103,25 @@ void FilterWidgetManager::addFilterWidgetFactory(const QString& name, IFilterWid
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<QString> FilterWidgetManager::getGroupNames()
+void FilterWidgetManager::RegisterKnownFilterWidgets()
 {
-// qDebug() << "FilterWidgetManager::getGroupNames" << "\n";
-  // Get all the Widget Factories and loop over each one we know about and instantiate a new one
-  FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
-  FilterWidgetManager::Collection factories = fm->getFactories();
-  QSet<QString> groupNames;
-  for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
+  FilterWidgetManager::Pointer idManager = FilterWidgetManager::Instance();
+
   {
-    IFilterWidgetFactory::Pointer filterFactory = factory.value();
-    groupNames.insert(factory.value()->getFilterGroup());
-    //  qDebug() << factory.value()->getFilterGroup() << "\n";
+    QFilterWidgetFactory<InputFileWidget>::Pointer factory = QFilterWidgetFactory<InputFileWidget>::New();
+    idManager->addFilterWidgetFactory( "InputFileWidget", factory );
   }
-  return groupNames;
+
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<QString> FilterWidgetManager::getSubGroupNames(const QString& groupName)
+QWidget* FilterWidgetManager::createWidget(const QString& name)
 {
-// qDebug() << "FilterWidgetManager::getGroupNames" << "\n";
-  // Get all the Widget Factories and loop over each one we know about and instantiate a new one
-  FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
-  FilterWidgetManager::Collection factories = fm->getFactories();
-  QSet<QString> subGroupNames;
-  for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
-  {
-    IFilterWidgetFactory::Pointer filterFactory = factory.value();
-    if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0)
-    {
-      subGroupNames.insert(factory.value()->getFilterSubGroup());
-    }
-  }
-  return subGroupNames;
+  IFilterWidgetFactory::Pointer factory = m_Factories.value(name);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IFilterWidgetFactory::Pointer FilterWidgetManager::getFactoryForFilter(const QString& filterName)
-{
-  return m_Factories[filterName];
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IFilterWidgetFactory::Pointer FilterWidgetManager::getFactoryForFilterHumanName(const QString& humanName)
-{
-  IFilterWidgetFactory::Pointer widgetFactory;
-
-  for (FilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
-  {
-    IFilterWidgetFactory::Pointer filterFactory = factory.value();
-    if ( NULL != filterFactory.get() && filterFactory->getFilterHumanLabel().compare(humanName) == 0)
-    {
-      widgetFactory = filterFactory;
-      break;
-    }
-  }
-  return widgetFactory;
-}
 

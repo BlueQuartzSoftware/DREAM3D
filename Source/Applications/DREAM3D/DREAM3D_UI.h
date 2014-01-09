@@ -54,7 +54,9 @@
 //-- UIC generated Header
 #include <ui_DREAM3D_UI.h>
 
-#include <DREAM3DLib/Common/FilterManager.h>
+#include "DREAM3DLib/Common/FilterManager.h"
+
+#include "FilterWidgetsLib/FilterWidgetManager.h"
 
 
 class DREAM3DPluginInterface;
@@ -231,6 +233,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     QThread*                    m_UpdateCheckThread;
     FilterManager::Pointer      m_FilterManager;
+    FilterWidgetManager::Pointer m_FilterWidgetManager;
 
 
     QFilterLibraryDockWidget*     m_FilterLibrary;

@@ -69,6 +69,8 @@
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 #include "QtSupport/UpdateCheck.h"
 
+#include "FilterWidgetsLib/FilterWidgetManager.h"
+
 #include "PipelineViewWidget.h"
 #include "QFilterLibraryDockWidget.h"
 #include "QPrebuiltPipelinesDockWidget.h"
@@ -102,6 +104,10 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   //  which all should have been loaded by now.
   m_FilterManager = FilterManager::Instance();
   m_FilterManager->RegisterKnownFilters(m_FilterManager.get());
+
+  // Register all the known filterWidgets
+  m_FilterWidgetManager = FilterWidgetManager::Instance();
+  m_FilterWidgetManager->RegisterKnownQFilterWidgets();
 
   // Calls the Parent Class to do all the Widget Initialization that were created
   // using the QDesigner program
@@ -441,7 +447,7 @@ void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, int 
 #endif
   connect(btn, SIGNAL(toggled(bool)),
           dockWidget, SLOT(setVisible(bool)));
-  btn->setChecked(!dockWidget->isVisible());
+  btn->setChecked(dockWidget->isVisible());
   statusBar()->insertPermanentWidget(index, btn, 0);
 }
 

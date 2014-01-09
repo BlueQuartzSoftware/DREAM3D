@@ -33,45 +33,42 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QFilterInputDockWidget_H_
-#define _QFilterInputDockWidget_H_
 
+#ifndef IFILTERWIDGETFACTOR_H_
+#define IFILTERWIDGETFACTOR_H_
 
 #include <QtGui/QWidget>
 
+
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
-#include "ui_QFilterInputDockWidget.h"
-
-class QFilterInputDockWidget : public QWidget, private Ui::QFilterInputDockWidget
+/**
+ * @brief This class serves as a base class to create Factory classes that can
+ * create QFilterWidgets for a GUI based on Qt.
+ */
+class IFilterWidgetFactory
 {
-
-    Q_OBJECT
   public:
-    QFilterInputDockWidget(QWidget* parent = NULL);
-    virtual ~QFilterInputDockWidget();
+    DREAM3D_SHARED_POINTERS(IFilterWidgetFactory)
+    DREAM3D_TYPE_MACRO(IFilterWidgetFactory)
 
-    virtual void setupGui();
+
+    virtual ~IFilterWidgetFactory() {}
+
+    /** @brief This function should NEVER get called. The subclass should ALWAYS implement
+     * this method so we are going to crash the program.
+     */
+    virtual QWidget* createWidget(QWidget* parent) { BOOST_ASSERT(false); return NULL;}
+
+    virtual AbstractFilter::Pointer getFilterInstance() { BOOST_ASSERT(false); return AbstractFilter::NullPointer(); }
 
   protected:
-
-  protected slots:
-
-    void setSelectedFilterWidget(AbstractFilter* filter);
-
-  signals:
-
-  protected:
-    //void initInputFileWidget(FilterParameter* option, QVBoxLayout* vertLayout, AbstractFilter* filter);
-
+    IFilterWidgetFactory() {}
   private:
-
-
-    QFilterInputDockWidget(const QFilterInputDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterInputDockWidget&); // Operator '=' Not Implemented
-
-
+    IFilterWidgetFactory(const IFilterWidgetFactory&); // Copy Constructor Not Implemented
+    void operator=(const IFilterWidgetFactory&); // Operator '=' Not Implemented
 };
 
-#endif /* end QFilterInputDockWidget */
+#endif /* IFILTERWIDGETFACTOR_H_ */
