@@ -121,29 +121,29 @@ AbstractFilter::Pointer QImportImageStackWidget::getFilter(bool defaultValues)
 
   filter->setRefFrameZDir( getRefFrameZDir() );
 
-  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
-  m_GeneratedFileNameExample->setText(filename);
+  //QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+  //                   .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+  //                   .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+  //m_GeneratedFileNameExample->setText(filename);
 
-  int start = m_ZStartIndex->value();
-  int end = m_ZEndIndex->value();
-  bool hasMissingFiles = false;
+  //int start = m_ZStartIndex->value();
+  //int end = m_ZEndIndex->value();
+  //bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
-  QVector<QString> realFileList;
-  for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
-  {
-    QString filePath = (fileList[i]);
-    QFileInfo fi(filePath);
-    if (fi.exists())
-    {
-      realFileList.push_back(fileList[i]);
-    }
-  }
+  //QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
+  //QVector<QString> realFileList;
+  //for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
+  //{
+  //  QString filePath = (fileList[i]);
+  //  QFileInfo fi(filePath);
+  //  if (fi.exists())
+  //  {
+  //    realFileList.push_back(fileList[i]);
+  //  }
+  //}
 
-  filter->setImageFileList(realFileList);
+  //filter->setImageFileList(realFileList);
 
   bool ok = false;
 
