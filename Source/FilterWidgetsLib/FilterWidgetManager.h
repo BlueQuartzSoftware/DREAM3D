@@ -93,9 +93,9 @@ class FilterWidgetsLib_EXPORT FilterWidgetManager
        * @param name
        * @param factory
        */
-    void addFilterWidgetFactory(const QString& name, IFilterWidgetFactory::Pointer factory);
+    void addFilterWidgetFactory(const QString& widgetType, IFilterWidgetFactory::Pointer factory);
 
-    QWidget* createWidget(const QString& name);
+    QWidget* createWidget(FilterParameter *parameter, AbstractFilter* filter);
 
   protected:
     FilterWidgetManager();

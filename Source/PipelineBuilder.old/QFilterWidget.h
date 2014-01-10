@@ -242,7 +242,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     void setupIntVec3Widget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
     void setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
     void setupComparisonArraysWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label ,
-                                     FilterParameter::WidgetType arrayListType);
+                                     FilterParameterWidgetType::WidgetType arrayListType);
     void setupAxisAngleWidget(QFormLayout* frmLayout, int optIndex,
                               FilterParameter* option, QLabel* label );
 

@@ -77,7 +77,7 @@ void AddOrientationNoise::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Magnitude of Orientation Noise");
     option->setPropertyName("Magnitude");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("Degrees");

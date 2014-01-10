@@ -72,7 +72,7 @@ void SingleThresholdCells::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Cell Array Name");
     option->setPropertyName("SelectedCellArrayName");
-    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -81,7 +81,7 @@ void SingleThresholdCells::setupFilterParameters()
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Comparison Operator");
     option->setPropertyName("ComparisonOperator");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
+    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     option->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back(DREAM3D::Comparison::Strings::LessThan);
@@ -94,7 +94,7 @@ void SingleThresholdCells::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Value");
     option->setPropertyName("ComparisonValue");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("double");
     parameters.push_back(option);
   }
@@ -102,7 +102,7 @@ void SingleThresholdCells::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Array Name");
     parameter->setPropertyName("OutputArrayName");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     parameter->setValueType("string");
     parameter->setEditable(true);
     QVector<QString> choices;

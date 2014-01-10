@@ -77,7 +77,7 @@ void M3CEntireVolume::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Add Surface Layer");
     option->setPropertyName("AddSurfaceLayer");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }

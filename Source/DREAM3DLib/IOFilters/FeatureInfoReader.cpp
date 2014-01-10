@@ -91,7 +91,7 @@ void FeatureInfoReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Feature Info File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     option->setValueType("string");
     option->setFileExtension("*.txt");
     parameters.push_back(option);
@@ -100,7 +100,7 @@ void FeatureInfoReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Create Cell Level Arrays");
     option->setPropertyName("CreateCellLevelArrays");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -108,7 +108,7 @@ void FeatureInfoReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Renumber Features");
     option->setPropertyName("RenumberFeatures");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }

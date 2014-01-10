@@ -205,7 +205,7 @@ void RawBinaryReader::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Input File");
     parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameter::InputFileWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     parameter->setValueType("string");
     parameter->setFileExtension("*.raw *.bin");
     parameters.push_back(parameter);
@@ -214,7 +214,7 @@ void RawBinaryReader::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
     parameter->setPropertyName("ScalarType");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
@@ -234,7 +234,7 @@ void RawBinaryReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Dimensionality");
     option->setPropertyName("Dimensionality");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }
@@ -242,7 +242,7 @@ void RawBinaryReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Number Of Components");
     option->setPropertyName("NumberOfComponents");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }
@@ -250,7 +250,7 @@ void RawBinaryReader::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Endian");
     parameter->setPropertyName("Endian");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Little");
@@ -262,7 +262,7 @@ void RawBinaryReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Dimensions");
     option->setPropertyName("Dimensions");
-    option->setWidgetType(FilterParameter::IntVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
     option->setValueType("IntVec3Widget_t");
     option->setUnits("XYZ");
     parameters.push_back(option);
@@ -271,7 +271,7 @@ void RawBinaryReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Origin");
     option->setPropertyName("Origin");
-    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
     option->setUnits("XYZ");
     parameters.push_back(option);
@@ -280,7 +280,7 @@ void RawBinaryReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Resolution");
     option->setPropertyName("Resolution");
-    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
     option->setUnits("XYZ");
     parameters.push_back(option);
@@ -289,7 +289,7 @@ void RawBinaryReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Over Ride Origin & Resolution");
     option->setPropertyName("OverRideOriginResolution");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -297,7 +297,7 @@ void RawBinaryReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Skip Header Bytes");
     option->setPropertyName("SkipHeaderBytes");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }
@@ -305,7 +305,7 @@ void RawBinaryReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Array Name");
     option->setPropertyName("OutputArrayName");
-    option->setWidgetType(FilterParameter::StringWidget);
+    option->setWidgetType(FilterParameterWidgetType::StringWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }

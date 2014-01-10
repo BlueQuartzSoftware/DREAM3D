@@ -135,106 +135,107 @@ void QFilterInputDockWidget::setSelectedFilterWidget(AbstractFilter* filter)
   {
 
     FilterParameter* option = (*iter).get();
-    FilterParameter::WidgetType wType = option->getWidgetType();
+    //QString wType = option->getWidgetType();
 
 
-    QWidget w = fwm->createWidget(option->getWidgetType());
+    QWidget* w = fwm->createWidget(option, filter);
+
     if (NULL == w) continue;
 
 
+    w->setParent(basicInputsScrollWidget);
+    verticalLayout->addWidget(w);
 
+#if 0
     switch(wType)
     {
-      case FilterParameter::StringWidget:
+      case FilterParameterWidgetType::StringWidget:
         break;
-      case FilterParameter::IntWidget:
+      case FilterParameterWidgetType::IntWidget:
         break;
-      case FilterParameter::DoubleWidget:
+      case FilterParameterWidgetType::DoubleWidget:
         break;
-      case FilterParameter::InputFileWidget:
+      case FilterParameterWidgetType::InputFileWidget:
         //initInputFileWidget(option, verticalLayout, filter);
         break;
-      case FilterParameter::InputPathWidget:
+      case FilterParameterWidgetType::InputPathWidget:
         break;
-      case FilterParameter::OutputFileWidget:
+      case FilterParameterWidgetType::OutputFileWidget:
         break;
-      case FilterParameter::OutputPathWidget:
+      case FilterParameterWidgetType::OutputPathWidget:
         break;
-      case FilterParameter::BooleanWidget:
+      case FilterParameterWidgetType::BooleanWidget:
         break;
-      case FilterParameter::ChoiceWidget: // Generic ComboBox Drop down where the filter provides the list of strings
+      case FilterParameterWidgetType::ChoiceWidget: // Generic ComboBox Drop down where the filter provides the list of strings
         break;
-      case FilterParameter::IntVec3Widget:
+      case FilterParameterWidgetType::IntVec3Widget:
         break;
-      case FilterParameter::FloatVec3Widget:
+      case FilterParameterWidgetType::FloatVec3Widget:
         //initFloatVec3Widget
         break;
-      case FilterParameter::AxisAngleWidget:
+      case FilterParameterWidgetType::AxisAngleWidget:
         /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
         break;
-      case FilterParameter::VolumeVertexArrayNameSelectionWidget: // ComboBox where the Cell Array names are used to populate
+      case FilterParameterWidgetType::VolumeVertexArrayNameSelectionWidget: // ComboBox where the Cell Array names are used to populate
         break;
-      case FilterParameter::VolumeEdgeArrayNameSelectionWidget: //ComboBox where the Feature Array names are used to populate
+      case FilterParameterWidgetType::VolumeEdgeArrayNameSelectionWidget: //ComboBox where the Feature Array names are used to populate
         break;
-      case FilterParameter::VolumeFaceArrayNameSelectionWidget: //ComboBox where the Ensemble Array names are used to populate
+      case FilterParameterWidgetType::VolumeFaceArrayNameSelectionWidget: //ComboBox where the Ensemble Array names are used to populate
         break;
-      case FilterParameter::VolumeCellArrayNameSelectionWidget: // ComboBox where the Cell Array names are used to populate
+      case FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget: // ComboBox where the Cell Array names are used to populate
         break;
-      case FilterParameter::VolumeFeatureArrayNameSelectionWidget: //ComboBox where the Feature Array names are used to populate
+      case FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget: //ComboBox where the Feature Array names are used to populate
         break;
-      case FilterParameter::VolumeEnsembleArrayNameSelectionWidget: //ComboBox where the Ensemble Array names are used to populate
+      case FilterParameterWidgetType::VolumeEnsembleArrayNameSelectionWidget: //ComboBox where the Ensemble Array names are used to populate
         break;
-      case FilterParameter::SurfaceVertexArrayNameSelectionWidget:
+      case FilterParameterWidgetType::SurfaceVertexArrayNameSelectionWidget:
         break;
-      case FilterParameter::SurfaceFaceArrayNameSelectionWidget:
+      case FilterParameterWidgetType::SurfaceFaceArrayNameSelectionWidget:
         break;
-      case FilterParameter::SurfaceEdgeArrayNameSelectionWidget:
+      case FilterParameterWidgetType::SurfaceEdgeArrayNameSelectionWidget:
         break;
-      case FilterParameter::SurfaceFeatureArrayNameSelectionWidget:
+      case FilterParameterWidgetType::SurfaceFeatureArrayNameSelectionWidget:
         break;
-      case FilterParameter::SurfaceEnsembleArrayNameSelectionWidget:
+      case FilterParameterWidgetType::SurfaceEnsembleArrayNameSelectionWidget:
         break;
-      case FilterParameter::EdgeVertexArrayNameSelectionWidget:
+      case FilterParameterWidgetType::EdgeVertexArrayNameSelectionWidget:
         break;
-      case FilterParameter::EdgeEdgeArrayNameSelectionWidget:
+      case FilterParameterWidgetType::EdgeEdgeArrayNameSelectionWidget:
         break;
-      case FilterParameter::EdgeFeatureArrayNameSelectionWidget:
+      case FilterParameterWidgetType::EdgeFeatureArrayNameSelectionWidget:
         break;
-      case FilterParameter::EdgeEnsembleArrayNameSelectionWidget:
+      case FilterParameterWidgetType::EdgeEnsembleArrayNameSelectionWidget:
         break;
-      case FilterParameter::VertexVertexArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VertexVertexArrayNameSelectionWidget:
         break;
-      case FilterParameter::VertexFeatureArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VertexFeatureArrayNameSelectionWidget:
         break;
-      case FilterParameter::VertexEnsembleArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VertexEnsembleArrayNameSelectionWidget:
         /* ****  AND THIS LINE ******** */
         break;
-      case FilterParameter::ArraySelectionWidget: // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
+      case FilterParameterWidgetType::ArraySelectionWidget: // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
         /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
         break;
-      case FilterParameter::CellArrayComparisonSelectionWidget:
+      case FilterParameterWidgetType::CellArrayComparisonSelectionWidget:
         break;
-      case FilterParameter::FeatureArrayComparisonSelectionWidget:
+      case FilterParameterWidgetType::FeatureArrayComparisonSelectionWidget:
         break;
-      case FilterParameter::EnsembleArrayComparisonSelectionWidget:
+      case FilterParameterWidgetType::EnsembleArrayComparisonSelectionWidget:
         break;
-      case FilterParameter::VertexArrayComparisonSelectionWidget:
+      case FilterParameterWidgetType::VertexArrayComparisonSelectionWidget:
         break;
-      case FilterParameter::FaceArrayComparisonSelectionWidget:
+      case FilterParameterWidgetType::FaceArrayComparisonSelectionWidget:
         break;
-      case FilterParameter::EdgeArrayComparisonSelectionWidget:
+      case FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget:
         break;
-      case FilterParameter::CustomWidget:
+      case FilterParameterWidgetType::CustomWidget:
         break;
       default:
         break;
 
     }
+#endif
 
-
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout->addItem(verticalSpacer);
 
 #if 0
     QString labelName = (option->getHumanLabel());
@@ -244,7 +245,7 @@ void QFilterInputDockWidget::setSelectedFilterWidget(AbstractFilter* filter)
     }
     QLabel* label = new QLabel(labelName, this);
 
-    // if (wType == FilterParameter::StringWidget)
+    // if (wType == FilterParameterWidgetType::StringWidget)
     {
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(option->getPropertyName());
@@ -258,5 +259,7 @@ void QFilterInputDockWidget::setSelectedFilterWidget(AbstractFilter* filter)
 #endif
     ++optIndex;
   }
+  verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
+  verticalLayout->addItem(verticalSpacer);
 }

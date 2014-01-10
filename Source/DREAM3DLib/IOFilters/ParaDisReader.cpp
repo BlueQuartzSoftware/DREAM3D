@@ -78,7 +78,7 @@ void ParaDisReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     option->setFileExtension("*");
     option->setValueType("string");
     parameters.push_back(option);

@@ -60,7 +60,7 @@ class IFilterWidgetFactory
     /** @brief This function should NEVER get called. The subclass should ALWAYS implement
      * this method so we are going to crash the program.
      */
-    virtual QWidget* createWidget(QWidget* parent) { BOOST_ASSERT(false); return NULL;}
+    virtual QWidget* createWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL) { BOOST_ASSERT(false); return NULL;}
 
     virtual AbstractFilter::Pointer getFilterInstance() { BOOST_ASSERT(false); return AbstractFilter::NullPointer(); }
 

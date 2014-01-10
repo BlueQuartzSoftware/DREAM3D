@@ -83,7 +83,7 @@ namespace FilterParameterWidgetType
       const QString EdgeVertexArrayNameSelectionWidget("EdgeVertexArrayNameSelectionWidget");
       const QString EdgeEdgeArrayNameSelectionWidget("EdgeEdgeArrayNameSelectionWidget");
       const QString EdgeFeatureArrayNameSelectionWidget("EdgeFeatureArrayNameSelectionWidget");
-     const QString  EdgeEnsembleArrayNameSelectionWidget("EdgeEnsembleArrayNameSelectionWidget");
+      const QString EdgeEnsembleArrayNameSelectionWidget("EdgeEnsembleArrayNameSelectionWidget");
       const QString VertexVertexArrayNameSelectionWidget("VertexVertexArrayNameSelectionWidget");
       const QString VertexFeatureArrayNameSelectionWidget("VertexFeatureArrayNameSelectionWidget");
       const QString VertexEnsembleArrayNameSelectionWidget("VertexEnsembleArrayNameSelectionWidget");
@@ -166,7 +166,7 @@ class FilterParameter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel)
     DREAM3D_INSTANCE_STRING_PROPERTY(PropertyName)
-    DREAM3D_INSTANCE_PROPERTY(WidgetType, WidgetType)
+    DREAM3D_INSTANCE_STRING_PROPERTY(WidgetType)
     DREAM3D_INSTANCE_STRING_PROPERTY(ValueType)
     DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)

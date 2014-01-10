@@ -79,7 +79,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Feature Array To Fit");
     option->setPropertyName("SelectedFeatureArrayName");
-    option->setWidgetType(FilterParameter::VolumeFeatureArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -88,7 +88,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Distribution Type");
     option->setPropertyName("DistributionType");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
+    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     option->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Beta");
@@ -101,7 +101,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Array To Correlate With");
     option->setPropertyName("CorrelatedFeatureArrayName");
-    option->setWidgetType(FilterParameter::VolumeFeatureArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -110,7 +110,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Number Of Bins For Correlated Array");
     option->setPropertyName("NumberOfCorrelatedBins");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("");
     parameters.push_back(option);
@@ -119,7 +119,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Remove Biased Features");
     option->setPropertyName("RemoveBiasedFeatures");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     option->setUnits("");
     parameters.push_back(option);

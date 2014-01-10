@@ -160,7 +160,7 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Iteration Steps");
     option->setPropertyName("IterationSteps");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }
@@ -168,7 +168,7 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Apply Node Contraints");
     option->setPropertyName("NodeConstraints");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -176,7 +176,7 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Constrain Surface Nodes");
     option->setPropertyName("ConstrainSurfaceNodes");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -184,7 +184,7 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Constrain Quad Points");
     option->setPropertyName("ConstrainQuadPoints");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -192,7 +192,7 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Smooth Triple Lines");
     option->setPropertyName("SmoothTripleLines");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }

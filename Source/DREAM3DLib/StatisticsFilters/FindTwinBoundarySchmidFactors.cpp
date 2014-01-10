@@ -259,7 +259,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Twin Boundary Info File");
     option->setPropertyName("TwinBoundarySchmidFactorsFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -268,7 +268,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
 
     option->setHumanLabel("Loading Direction");
     option->setPropertyName("LoadingDir");
-    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
     option->setUnits("");
     parameters.push_back(option);

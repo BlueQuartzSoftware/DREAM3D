@@ -70,7 +70,7 @@ void CreateFeatureArrayFromCellArray::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Array Name");
     option->setPropertyName("SelectedCellArrayName");
-    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);

@@ -89,7 +89,7 @@ void NeighborOrientationCorrelation::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MinConfidence");
     option->setHumanLabel("Minimum Confidence Index");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("");
@@ -99,7 +99,7 @@ void NeighborOrientationCorrelation::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisorientationTolerance");
     option->setHumanLabel("Misorientation Tolerance");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("Degrees");
@@ -109,7 +109,7 @@ void NeighborOrientationCorrelation::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cleanup Level");
     option->setPropertyName("Level");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("");
     parameters.push_back(option);

@@ -78,7 +78,7 @@ void RegularizeZSpacing::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Z Positions File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -86,7 +86,7 @@ void RegularizeZSpacing::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("New Z Res");
     option->setPropertyName("NewZRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("Microns");

@@ -125,7 +125,7 @@ void AdjustVolumeOrigin::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Apply to Voxel Volume");
     option->setPropertyName("ApplyToVoxelVolume");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -133,7 +133,7 @@ void AdjustVolumeOrigin::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Apply to Surface Mesh");
     option->setPropertyName("ApplyToSurfaceMesh");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -141,7 +141,7 @@ void AdjustVolumeOrigin::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Origin");
     option->setPropertyName("Origin");
-    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
     option->setUnits("Microns");
     parameters.push_back(option);

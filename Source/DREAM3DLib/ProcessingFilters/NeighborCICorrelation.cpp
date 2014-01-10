@@ -82,7 +82,7 @@ void NeighborCICorrelation::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MinConfidence");
     option->setHumanLabel("Minimum Confidence Index");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("");
@@ -92,7 +92,7 @@ void NeighborCICorrelation::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Loop Until Gone");
     option->setPropertyName("Loop");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }

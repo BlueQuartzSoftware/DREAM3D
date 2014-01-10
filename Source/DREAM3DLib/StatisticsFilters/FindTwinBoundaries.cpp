@@ -216,7 +216,7 @@ void FindTwinBoundaries::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Axis Tolerance");
     option->setPropertyName("AxisTolerance");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("Degrees");
@@ -226,7 +226,7 @@ void FindTwinBoundaries::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Angle Tolerance");
     option->setPropertyName("AngleTolerance");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("Degrees");

@@ -90,16 +90,13 @@ set(FilterWidgetsLib_HDRS
 
 )
 
-
 set(FilterWidgetsLib_MOC_HDRS
-   ${FilterWidgetsLib_SOURCE_DIR}/Widgets/InputFileWidget.h
-   ${FilterWidgetsLib_SOURCE_DIR}/Widgets/FloatVec3Widget.h
+   ${FilterWidgetsLib_SOURCE_DIR}/QFilterParameterWidget.h
 )
 
 set(FilterWidgetsLib_SRCS
   ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetManager.cpp
-  ${FilterWidgetsLib_SOURCE_DIR}/Widgets/InputFileWidget.cpp
-  ${FilterWidgetsLib_SOURCE_DIR}/Widgets/FloatVec3Widget.cpp
+  ${FilterWidgetsLib_SOURCE_DIR}/QFilterParameterWidget.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${FilterWidgetsLib_HDRS};${FilterWidgetsLib_MOC_HDRS}" "${FilterWidgetsLib_SRCS}" "0")
@@ -118,10 +115,7 @@ set_source_files_properties( ${FilterWidgetsLib_Generated_MOC_SRCS} PROPERTIES H
 
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
-QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS
-  ${FilterWidgetsLib_SOURCE_DIR}/Widgets/UI_Files/InputFileWidget.ui
-  ${FilterWidgetsLib_SOURCE_DIR}/Widgets/UI_Files/FloatVec3Widget.ui
-)
+QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS   )
 
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs
@@ -129,6 +123,8 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "" "${FilterWidgetsLib_MOC_SRCS}" 
 cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${FilterWidgetsLib_Generated_UI_HDRS}" "" "0")
 cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${FilterWidgetsLib_Generated_RC_SRCS}" "" "0")
 
+# Include all the Parameter Widgets
+include(${FilterWidgetsLib_SOURCE_DIR}/Widgets/SourceList.cmake)
 
 
 set(Project_SRCS
@@ -140,6 +136,12 @@ set(Project_SRCS
         ${FilterWidgetsLib_Generated_MOC_SRCS}
         ${FilterWidgetsLib_Generated_UI_HDRS}
         ${FilterWidgetsLib_Generated_RC_SRCS}
+        
+        ${FilterWidgets_ParameterWidgets_HDRS}
+        ${FilterWidgets_ParameterWidgets_SRCS}
+        ${FilterWidgets_ParameterWidgets_UIS}
+        ${FilterWidgets_ParameterWidgets_Generated_MOC_SRCS}
+        ${FilterWidgets_ParameterWidgetes_Generated_UI_HDRS}  
 )
 
 

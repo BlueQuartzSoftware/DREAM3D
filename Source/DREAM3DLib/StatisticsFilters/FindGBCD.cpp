@@ -333,7 +333,7 @@ void FindGBCD::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("GBCDRes");
     option->setHumanLabel("GBCD Resolution");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("Degrees");

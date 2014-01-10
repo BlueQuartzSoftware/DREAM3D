@@ -110,7 +110,7 @@ void FindDeformationStatistics::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Deformation Statistics File");
     option->setPropertyName("DeformationStatisticsFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -118,7 +118,7 @@ void FindDeformationStatistics::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("VTK Output File");
     option->setPropertyName("VtkOutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }

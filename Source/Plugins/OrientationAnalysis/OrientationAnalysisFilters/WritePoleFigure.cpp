@@ -129,7 +129,7 @@ void WritePoleFigure::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Eulers Array");
     option->setPropertyName("CellEulerAnglesArrayName");
-    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -138,7 +138,7 @@ void WritePoleFigure::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
     parameter->setPropertyName("ImageFormat");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("tif");
@@ -153,7 +153,7 @@ void WritePoleFigure::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel(" Image Prefix");
     parameter->setPropertyName("ImagePrefix");
-    parameter->setWidgetType(FilterParameter::StringWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("string");
     parameters.push_back(parameter);
   }
@@ -162,7 +162,7 @@ void WritePoleFigure::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Path");
     option->setPropertyName("OutputPath");
-    option->setWidgetType(FilterParameter::OutputPathWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -170,7 +170,7 @@ void WritePoleFigure::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("ImageSize");
     option->setHumanLabel("Image Size (Square)");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Pixels");
     parameters.push_back(option);
@@ -179,7 +179,7 @@ void WritePoleFigure::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("LambertSize");
     option->setHumanLabel("Lambert Image Size");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }
@@ -187,7 +187,7 @@ void WritePoleFigure::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("NumColors");
     option->setHumanLabel("Number of Colors");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }

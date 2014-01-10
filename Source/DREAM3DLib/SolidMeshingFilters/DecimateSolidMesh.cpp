@@ -88,7 +88,7 @@ void DecimateSolidMesh::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Goal Number of Elements");
     option->setPropertyName("GoalElementNumber");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("");
     parameters.push_back(option);

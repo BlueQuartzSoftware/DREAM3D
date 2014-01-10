@@ -111,7 +111,7 @@ void MatchCrystallography::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Maximum Number of Iterations (Swaps)");
     option->setPropertyName("MaxIterations");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("");
     parameters.push_back(option);

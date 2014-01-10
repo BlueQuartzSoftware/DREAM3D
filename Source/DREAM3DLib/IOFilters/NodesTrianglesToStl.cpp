@@ -74,7 +74,7 @@ void NodesTrianglesToStl::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Nodes File");
     option->setPropertyName("NodesFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -82,7 +82,7 @@ void NodesTrianglesToStl::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Triangles File");
     option->setPropertyName("TrianglesFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -90,7 +90,7 @@ void NodesTrianglesToStl::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output STL Directory");
     option->setPropertyName("OutputStlDirectory");
-    option->setWidgetType(FilterParameter::OutputPathWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -98,7 +98,7 @@ void NodesTrianglesToStl::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Stl File Prefix");
     option->setPropertyName("OutputStlPrefix");
-    option->setWidgetType(FilterParameter::StringWidget);
+    option->setWidgetType(FilterParameterWidgetType::StringWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }

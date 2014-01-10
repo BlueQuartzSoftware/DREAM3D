@@ -107,7 +107,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
 
   // Register all the known filterWidgets
   m_FilterWidgetManager = FilterWidgetManager::Instance();
-  m_FilterWidgetManager->RegisterKnownQFilterWidgets();
+  m_FilterWidgetManager->RegisterKnownFilterWidgets();
 
   // Calls the Parent Class to do all the Widget Initialization that were created
   // using the QDesigner program

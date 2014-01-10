@@ -77,7 +77,7 @@ void AddBadData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Add Random Noise");
     option->setPropertyName("PoissonNoise");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -85,7 +85,7 @@ void AddBadData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Volume Fraction of Random Noise");
     option->setPropertyName("PoissonVolFraction");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     parameters.push_back(option);
@@ -94,7 +94,7 @@ void AddBadData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Add Boundary Noise");
     option->setPropertyName("BoundaryNoise");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -102,7 +102,7 @@ void AddBadData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Volume Fraction of Boundary Noise");
     option->setPropertyName("BoundaryVolFraction");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     parameters.push_back(option);

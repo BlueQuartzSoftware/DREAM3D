@@ -100,7 +100,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -108,7 +108,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
     parameter->setPropertyName("ImageFormat");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("tif");
@@ -122,7 +122,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("ImageSize");
     option->setHumanLabel("Image Size (Square)");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Pixels");
     parameters.push_back(option);
@@ -132,7 +132,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
 //    option->setPropertyName("ColorCorrectionFactor");
 //    option->setHumanLabel("Color Correction Factor");
 //    option->setUnits("0 <= x < 1");
-//    option->setWidgetType(FilterParameter::DoubleWidget);
+//    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
 //    option->setValueType("float");
 //    parameters.push_back(option);
 //  }

@@ -90,14 +90,14 @@ void VisualizeGBCD::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Axis Angles");
     option->setPropertyName("MisorientationRotations");
-    option->setWidgetType(FilterParameter::AxisAngleWidget);
+    option->setWidgetType(FilterParameterWidgetType::AxisAngleWidget);
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisAngle");
     option->setHumanLabel("Misorientation Angle");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("Degrees");
@@ -108,7 +108,7 @@ void VisualizeGBCD::setupFilterParameters()
 
     option->setHumanLabel("Misorientation Axis");
     option->setPropertyName("MisAxis");
-    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
     option->setUnits("");
     parameters.push_back(option);
@@ -117,7 +117,7 @@ void VisualizeGBCD::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Regular Grid Pole Figure");
     option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setFileExtension("*.vtk");
     option->setFileType("VTK File");
     option->setValueType("string");

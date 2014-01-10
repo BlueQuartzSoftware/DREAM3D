@@ -109,7 +109,7 @@ void GroupMicroTextureRegions::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("C-Axis Alignment Tolerance");
     option->setPropertyName("CAxisTolerance");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("Degrees");
@@ -120,7 +120,7 @@ void GroupMicroTextureRegions::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Use Non-Contiguous Neighbors");
     option->setPropertyName("UseNonContiguousNeighbors");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     option->setUnits("");
     parameters.push_back(option);

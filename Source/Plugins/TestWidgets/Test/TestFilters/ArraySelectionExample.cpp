@@ -83,7 +83,7 @@ void ArraySelectionExample::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Arrays to Delete");
     option->setPropertyName("ArraysToDelete");
-    option->setWidgetType(FilterParameter::ArraySelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::ArraySelectionWidget);
     options.push_back(option);
   }
 

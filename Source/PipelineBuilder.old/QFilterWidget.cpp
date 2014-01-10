@@ -462,7 +462,7 @@ void QFilterWidget::setupGui()
   for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();
-    FilterParameter::WidgetType wType = option->getWidgetType();
+    FilterParameterWidgetType::WidgetType wType = option->getWidgetType();
 
     QString labelName = (option->getHumanLabel());
     if (option->getUnits().isEmpty() == false)
@@ -471,7 +471,7 @@ void QFilterWidget::setupGui()
     }
     QLabel* label = new QLabel(labelName, this);
 
-    if (wType == FilterParameter::StringWidget)
+    if (wType == FilterParameterWidgetType::StringWidget)
     {
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName((option->getPropertyName()));
@@ -482,7 +482,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setText(v.toString());
     }
-    else if (wType == FilterParameter::IntWidget)
+    else if (wType == FilterParameterWidgetType::IntWidget)
     {
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName((option->getPropertyName()));
@@ -494,7 +494,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setText(v.toString());
     }
-    else if (wType == FilterParameter::DoubleWidget)
+    else if (wType == FilterParameterWidgetType::DoubleWidget)
     {
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName((option->getPropertyName()));
@@ -507,7 +507,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setText(v.toString());
     }
-    else if (wType == FilterParameter::InputFileWidget)
+    else if (wType == FilterParameterWidgetType::InputFileWidget)
     {
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -536,7 +536,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().toLatin1().data());
       fp->setText(v.toString());
     }
-    else if (wType == FilterParameter::InputPathWidget)
+    else if (wType == FilterParameterWidgetType::InputPathWidget)
     {
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -568,7 +568,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().toLatin1().data());
       fp->setText(v.toString());
     }
-    else if (wType == FilterParameter::OutputFileWidget)
+    else if (wType == FilterParameterWidgetType::OutputFileWidget)
     {
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -594,7 +594,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().toLatin1().data());
       fp->setText(v.toString());
     }
-    else if (wType == FilterParameter::OutputPathWidget)
+    else if (wType == FilterParameterWidgetType::OutputPathWidget)
     {
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -621,7 +621,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().toLatin1().data());
       fp->setText(v.toString());
     }
-    else if (wType == FilterParameter::BooleanWidget)
+    else if (wType == FilterParameterWidgetType::BooleanWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QCheckBox* le = new QCheckBox(this);
@@ -632,7 +632,7 @@ void QFilterWidget::setupGui()
       le->setChecked(v.toBool());
     }
 #if 0
-    else if (wType == FilterParameter::IntConstrainedWidget)
+    else if (wType == FilterParameterWidgetType::IntConstrainedWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QSpinBox* le = new QSpinBox(this);
@@ -648,7 +648,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().toLatin1().data());
       le->setValue(v.toInt());
     }
-    else if (wType == FilterParameter::DoubleConstrainedWidget)
+    else if (wType == FilterParameterWidgetType::DoubleConstrainedWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QDoubleSpinBox* le = new QDoubleSpinBox(this);
@@ -665,7 +665,7 @@ void QFilterWidget::setupGui()
       le->setValue(v.toDouble());
     }
 #endif
-    else if (wType == FilterParameter::ChoiceWidget)
+    else if (wType == FilterParameterWidgetType::ChoiceWidget)
     {
       ChoiceFilterParameter* choiceFilterParameter = ChoiceFilterParameter::SafeObjectDownCast<FilterParameter*, ChoiceFilterParameter*>(option);
       if (NULL == choiceFilterParameter) { return; }
@@ -718,96 +718,96 @@ void QFilterWidget::setupGui()
         setProperty(option->getPropertyName().toLatin1().data(), uintValue);
       }
     }
-    else if (wType == FilterParameter::VolumeVertexArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::VolumeVertexArrayNameSelectionWidget)
     {
       setupVertexArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VolumeEdgeArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::VolumeEdgeArrayNameSelectionWidget)
     {
       setupEdgeArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VolumeFaceArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::VolumeFaceArrayNameSelectionWidget)
     {
       setupFaceArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VolumeCellArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget)
     {
       setupCellArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VolumeFeatureArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget)
     {
       setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VolumeEnsembleArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::VolumeEnsembleArrayNameSelectionWidget)
     {
       setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::SurfaceVertexArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::SurfaceVertexArrayNameSelectionWidget)
     {
       setupVertexArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::SurfaceEdgeArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::SurfaceEdgeArrayNameSelectionWidget)
     {
       setupEdgeArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::SurfaceFaceArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::SurfaceFaceArrayNameSelectionWidget)
     {
       setupFaceArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::SurfaceFeatureArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::SurfaceFeatureArrayNameSelectionWidget)
     {
       setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::SurfaceEnsembleArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::SurfaceEnsembleArrayNameSelectionWidget)
     {
       setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::EdgeVertexArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::EdgeVertexArrayNameSelectionWidget)
     {
       setupVertexArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::EdgeEdgeArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::EdgeEdgeArrayNameSelectionWidget)
     {
       setupEdgeArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::EdgeFeatureArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::EdgeFeatureArrayNameSelectionWidget)
     {
       setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::EdgeEnsembleArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::EdgeEnsembleArrayNameSelectionWidget)
     {
       setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VertexVertexArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::VertexVertexArrayNameSelectionWidget)
     {
       setupVertexArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VertexFeatureArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::VertexFeatureArrayNameSelectionWidget)
     {
       setupFeatureArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VertexEnsembleArrayNameSelectionWidget)
+    else if (wType == FilterParameterWidgetType::VertexEnsembleArrayNameSelectionWidget)
     {
       setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
 
-    else if (wType == FilterParameter::ArraySelectionWidget)
+    else if (wType == FilterParameterWidgetType::ArraySelectionWidget)
     {
       setupArraySelectionWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::IntVec3Widget)
+    else if (wType == FilterParameterWidgetType::IntVec3Widget)
     {
       setupIntVec3Widget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::FloatVec3Widget)
+    else if (wType == FilterParameterWidgetType::FloatVec3Widget)
     {
       setupFloatVec3Widget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::AxisAngleWidget)
+    else if (wType == FilterParameterWidgetType::AxisAngleWidget)
     {
       setupAxisAngleWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType >= FilterParameter::CellArrayComparisonSelectionWidget && wType <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+    else if (wType >= FilterParameterWidgetType::CellArrayComparisonSelectionWidget && wType <= FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget)
     {
       setupComparisonArraysWidget(frmLayout, optIndex, option, label, wType);
     }
@@ -1017,7 +1017,7 @@ void QFilterWidget::setupArraySelectionWidget(QFormLayout* frmLayout, int optInd
 //
 // -----------------------------------------------------------------------------
 void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label,
-                                                FilterParameter::WidgetType arrayListType)
+                                                FilterParameterWidgetType::WidgetType arrayListType)
 {
   ComparisonFilterParameter* param = ComparisonFilterParameter::SafePointerDownCast(option);
   if (NULL == param) { return; }
@@ -1025,22 +1025,22 @@ void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optI
   ComparisonSelectionWidget* w = new ComparisonSelectionWidget(param->getShowOperators(), this);
   switch(arrayListType)
   {
-    case FilterParameter::CellArrayComparisonSelectionWidget:
+    case FilterParameterWidgetType::CellArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::CellListType);
       break;
-    case FilterParameter::FeatureArrayComparisonSelectionWidget:
+    case FilterParameterWidgetType::FeatureArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::FeatureListType);
       break;
-    case FilterParameter::EnsembleArrayComparisonSelectionWidget:
+    case FilterParameterWidgetType::EnsembleArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::EnsembleListType);
       break;
-    case FilterParameter::VertexArrayComparisonSelectionWidget:
+    case FilterParameterWidgetType::VertexArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::VertexListType);
       break;
-    case FilterParameter::EdgeArrayComparisonSelectionWidget:
+    case FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::EdgeListType);
       break;
-    case FilterParameter::FaceArrayComparisonSelectionWidget:
+    case FilterParameterWidgetType::FaceArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::FaceListType);
       break;
     default:
@@ -1755,67 +1755,67 @@ void QFilterWidget::preflightAboutToExecute(DataContainerArray::Pointer dca)
   for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();
-    FilterParameter::WidgetType wType = option->getWidgetType();
+    FilterParameterWidgetType::WidgetType wType = option->getWidgetType();
     QString propertyName = (option->getPropertyName());
 
     switch(wType)
     {
 #if 0
-      case FilterParameter::VolumeVertexArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VolumeVertexArrayNameSelectionWidget:
         updateArrayNameComboBox(vldc->getVertexArrayNameList(), propertyName);
         break;
-      case FilterParameter::VolumeEdgeArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VolumeEdgeArrayNameSelectionWidget:
         updateArrayNameComboBox(vldc->getEdgeArrayNameList(), propertyName);
         break;
-      case FilterParameter::VolumeFaceArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VolumeFaceArrayNameSelectionWidget:
         updateArrayNameComboBox(vldc->getFaceArrayNameList(), propertyName);
         break;
-      case FilterParameter::VolumeCellArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget:
         updateArrayNameComboBox(vldc->getCellArrayNameList(), propertyName);
         break;
-      case FilterParameter::VolumeFieldArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VolumeFieldArrayNameSelectionWidget:
         updateArrayNameComboBox(vldc->getCellFieldArrayNameList(), propertyName);
         break;
-      case FilterParameter::VolumeEnsembleArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VolumeEnsembleArrayNameSelectionWidget:
         updateArrayNameComboBox(vldc->getCellEnsembleArrayNameList(), propertyName);
         break;
-      case FilterParameter::SurfaceVertexArrayNameSelectionWidget:
+      case FilterParameterWidgetType::SurfaceVertexArrayNameSelectionWidget:
         updateArrayNameComboBox(sdc->getVertexArrayNameList(), propertyName);
         break;
-      case FilterParameter::SurfaceEdgeArrayNameSelectionWidget:
+      case FilterParameterWidgetType::SurfaceEdgeArrayNameSelectionWidget:
         updateArrayNameComboBox(sdc->getEdgeArrayNameList(), propertyName);
         break;
-      case FilterParameter::SurfaceFaceArrayNameSelectionWidget:
+      case FilterParameterWidgetType::SurfaceFaceArrayNameSelectionWidget:
         updateArrayNameComboBox(sdc->getFaceArrayNameList(), propertyName);
         break;
-      case FilterParameter::SurfaceFieldArrayNameSelectionWidget:
+      case FilterParameterWidgetType::SurfaceFieldArrayNameSelectionWidget:
         updateArrayNameComboBox(sdc->getFaceFieldArrayNameList(), propertyName);
         break;
-      case FilterParameter::SurfaceEnsembleArrayNameSelectionWidget:
+      case FilterParameterWidgetType::SurfaceEnsembleArrayNameSelectionWidget:
         updateArrayNameComboBox(sdc->getFaceEnsembleArrayNameList(), propertyName);
         break;
-      case FilterParameter::EdgeVertexArrayNameSelectionWidget:
+      case FilterParameterWidgetType::EdgeVertexArrayNameSelectionWidget:
         updateArrayNameComboBox(edc->getVertexArrayNameList(), propertyName);
         break;
-      case FilterParameter::EdgeEdgeArrayNameSelectionWidget:
+      case FilterParameterWidgetType::EdgeEdgeArrayNameSelectionWidget:
         updateArrayNameComboBox(edc->getEdgeArrayNameList(), propertyName);
         break;
-      case FilterParameter::EdgeFieldArrayNameSelectionWidget:
+      case FilterParameterWidgetType::EdgeFieldArrayNameSelectionWidget:
         updateArrayNameComboBox(edc->getEdgeFieldArrayNameList(), propertyName);
         break;
-      case FilterParameter::EdgeEnsembleArrayNameSelectionWidget:
+      case FilterParameterWidgetType::EdgeEnsembleArrayNameSelectionWidget:
         updateArrayNameComboBox(edc->getEdgeEnsembleArrayNameList(), propertyName);
         break;
-      case FilterParameter::VertexVertexArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VertexVertexArrayNameSelectionWidget:
         updateArrayNameComboBox(vdc->getVertexArrayNameList(), propertyName);
         break;
-      case FilterParameter::VertexFieldArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VertexFieldArrayNameSelectionWidget:
         updateArrayNameComboBox(vdc->getVertexFieldArrayNameList(), propertyName);
         break;
-      case FilterParameter::VertexEnsembleArrayNameSelectionWidget:
+      case FilterParameterWidgetType::VertexEnsembleArrayNameSelectionWidget:
         updateArrayNameComboBox(vdc->getVertexEnsembleArrayNameList(), propertyName);
         break;
-      case FilterParameter::ArraySelectionWidget:
+      case FilterParameterWidgetType::ArraySelectionWidget:
         //     updateArraySelectionWidget(vdc, smdc, sdc, propertyName);
         break;
 #endif

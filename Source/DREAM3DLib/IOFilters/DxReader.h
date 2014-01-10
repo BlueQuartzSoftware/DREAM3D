@@ -66,6 +66,11 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    signals:
+      void inputFileChanged();
+    public:
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY inputFileChanged)
+
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 

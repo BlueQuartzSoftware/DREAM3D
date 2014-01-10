@@ -56,9 +56,9 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
      * a parent Widget OR take responsibility for deleting this object.
      * @return
      */
-    QWidget* createWidget(QWidget* parent = NULL)
+    QWidget* createWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL)
     {
-      return new Widget(parent);
+      return new Widget(parameter, filter, parent);
     }
 
 

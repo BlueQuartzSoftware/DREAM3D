@@ -81,7 +81,7 @@ void OpenCloseCoordinationNumber::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Coordination Number to Consider");
     option->setPropertyName("CoordinationNumber");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }
@@ -89,7 +89,7 @@ void OpenCloseCoordinationNumber::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Loop Until Gone");
     option->setPropertyName("Loop");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
