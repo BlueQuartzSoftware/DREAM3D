@@ -75,7 +75,7 @@ void SaveImages::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel(" Colors Array");
     option->setPropertyName("ColorsArrayName");
-    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -84,7 +84,7 @@ void SaveImages::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
     parameter->setPropertyName("ImageFormat");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("tif");
@@ -98,7 +98,7 @@ void SaveImages::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel(" Image Prefix");
     parameter->setPropertyName("ImagePrefix");
-    parameter->setWidgetType(FilterParameter::StringWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("string");
     parameters.push_back(parameter);
   }
@@ -107,7 +107,7 @@ void SaveImages::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Path");
     option->setPropertyName("OutputPath");
-    option->setWidgetType(FilterParameter::OutputPathWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }

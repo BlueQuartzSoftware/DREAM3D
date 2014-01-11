@@ -76,7 +76,7 @@ void GenerateSurfaceMeshConnectivity::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Generate Per Vertex Triangle List");
     parameter->setPropertyName("GenerateVertexTriangleLists");
-    parameter->setWidgetType(FilterParameter::BooleanWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     parameter->setValueType("bool");
     parameters.push_back(parameter);
   }
@@ -84,7 +84,7 @@ void GenerateSurfaceMeshConnectivity::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Generate Triangle Neighbors List");
     parameter->setPropertyName("GenerateTriangleNeighbors");
-    parameter->setWidgetType(FilterParameter::BooleanWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     parameter->setValueType("bool");
     parameters.push_back(parameter);
   }
@@ -92,7 +92,7 @@ void GenerateSurfaceMeshConnectivity::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Generate Edge Id List");
     parameter->setPropertyName("GenerateEdgeIdList");
-    parameter->setWidgetType(FilterParameter::BooleanWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     parameter->setValueType("bool");
     parameters.push_back(parameter);
   }

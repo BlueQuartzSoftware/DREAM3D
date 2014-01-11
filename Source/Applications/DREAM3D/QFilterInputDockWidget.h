@@ -47,28 +47,29 @@
 class QFilterInputDockWidget : public QWidget, private Ui::QFilterInputDockWidget
 {
 
-  Q_OBJECT
-public:
-  QFilterInputDockWidget(QWidget* parent = NULL);
-  virtual ~QFilterInputDockWidget();
+    Q_OBJECT
+  public:
+    QFilterInputDockWidget(QWidget* parent = NULL);
+    virtual ~QFilterInputDockWidget();
 
-  virtual void setupGui();
+    virtual void setupGui();
 
-protected:
+  protected:
 
   protected slots:
 
     void setSelectedFilterWidget(AbstractFilter* filter);
 
-signals:
+  signals:
+
+  protected:
+    //void initInputFileWidget(FilterParameter* option, QVBoxLayout* vertLayout, AbstractFilter* filter);
+
+  private:
 
 
-
-private:
-
-
-  QFilterInputDockWidget(const QFilterInputDockWidget&); // Copy Constructor Not Implemented
-  void operator=(const QFilterInputDockWidget&); // Operator '=' Not Implemented
+    QFilterInputDockWidget(const QFilterInputDockWidget&); // Copy Constructor Not Implemented
+    void operator=(const QFilterInputDockWidget&); // Operator '=' Not Implemented
 
 
 };

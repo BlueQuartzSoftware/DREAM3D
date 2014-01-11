@@ -84,7 +84,7 @@ void OpenCloseBadData::setupFilterParameters()
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Operation");
     option->setPropertyName("Direction");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
+    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     option->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Dilate");
@@ -96,7 +96,7 @@ void OpenCloseBadData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Number of Iterations");
     option->setPropertyName("NumIterations");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }
@@ -104,7 +104,7 @@ void OpenCloseBadData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Direction");
     option->setPropertyName("XDirOn");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -112,7 +112,7 @@ void OpenCloseBadData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Direction");
     option->setPropertyName("YDirOn");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -120,7 +120,7 @@ void OpenCloseBadData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Direction");
     option->setPropertyName("ZDirOn");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }

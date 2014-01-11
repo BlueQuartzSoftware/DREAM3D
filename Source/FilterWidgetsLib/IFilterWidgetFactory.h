@@ -37,7 +37,12 @@
 #ifndef IFILTERWIDGETFACTOR_H_
 #define IFILTERWIDGETFACTOR_H_
 
-#include "PipelineBuilder/QFilterWidget.h"
+#include <QtGui/QWidget>
+
+
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+
 
 /**
  * @brief This class serves as a base class to create Factory classes that can
@@ -55,10 +60,8 @@ class IFilterWidgetFactory
     /** @brief This function should NEVER get called. The subclass should ALWAYS implement
      * this method so we are going to crash the program.
      */
-    virtual QFilterWidget* createWidget() { BOOST_ASSERT(false); return NULL;}
-    virtual QString getFilterGroup() { BOOST_ASSERT(false); return ""; }
-    virtual QString getFilterSubGroup() { BOOST_ASSERT(false); return ""; }
-    virtual QString getFilterHumanLabel() { BOOST_ASSERT(false); return ""; }
+    virtual QWidget* createWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL) { BOOST_ASSERT(false); return NULL;}
+
     virtual AbstractFilter::Pointer getFilterInstance() { BOOST_ASSERT(false); return AbstractFilter::NullPointer(); }
 
   protected:

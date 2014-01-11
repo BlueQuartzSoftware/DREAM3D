@@ -80,7 +80,7 @@ void SurfaceMeshToVtk::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Vtk File");
     option->setPropertyName("OutputVtkFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
@@ -88,7 +88,7 @@ void SurfaceMeshToVtk::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Binary Vtk File");
     option->setPropertyName("WriteBinaryFile");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     options.push_back(option);
   }
@@ -96,7 +96,7 @@ void SurfaceMeshToVtk::setupFilterParameters()
   //     FilterParameter::Pointer option = FilterParameter::New();
   //     option->setHumanLabel("Write Conformal Mesh");
   //     option->setPropertyName("WriteConformalMesh");
-  //     option->setWidgetType(FilterParameter::BooleanWidget);
+  //     option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
   //     option->setValueType("bool");
   //     options.push_back(option);
   //   }

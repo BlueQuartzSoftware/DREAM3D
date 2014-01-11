@@ -77,7 +77,7 @@ void FindFeatureHistogram::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Feature Array To Bin");
     option->setPropertyName("SelectedFeatureArrayName");
-    option->setWidgetType(FilterParameter::VolumeFeatureArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -86,7 +86,7 @@ void FindFeatureHistogram::setupFilterParameters()
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Number of Bins");
     option->setPropertyName("NumBins");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }
@@ -94,7 +94,7 @@ void FindFeatureHistogram::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Remove Biased Features");
     option->setPropertyName("RemoveBiasedFeatures");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     option->setUnits("");
     parameters.push_back(option);

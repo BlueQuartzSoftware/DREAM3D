@@ -85,7 +85,7 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Points (Voxels)");
     option->setPropertyName("XPoints");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Column");
     parameters.push_back(option);
@@ -94,7 +94,7 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Points (Voxels)");
     option->setPropertyName("YPoints");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Row");
     parameters.push_back(option);
@@ -103,7 +103,7 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Points (Voxels)");
     option->setPropertyName("ZPoints");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Plane");
     parameters.push_back(option);
@@ -112,7 +112,7 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Resolution");
     option->setPropertyName("Resolution");
-    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
     option->setUnits("Microns");
     parameters.push_back(option);
@@ -121,7 +121,7 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Uncertainty");
     option->setPropertyName("Uncertainty");
-    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
     option->setUnits("Microns");
     parameters.push_back(option);

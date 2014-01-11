@@ -79,7 +79,7 @@ void GBCDTriangleDumper::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setFileExtension("*.ph");
     option->setFileType("CMU Feature Growth");
     option->setValueType("string");

@@ -67,7 +67,7 @@ void RenameFeatureArray::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Feature Array Name");
     option->setPropertyName("SelectedFeatureArrayName");
-    option->setWidgetType(FilterParameter::VolumeFeatureArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -76,7 +76,7 @@ void RenameFeatureArray::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("New Feature Array Name");
     parameter->setPropertyName("NewFeatureArrayName");
-    parameter->setWidgetType(FilterParameter::StringWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("string");
     parameters.push_back(parameter);
   }

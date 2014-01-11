@@ -93,7 +93,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Use Reference Slice");
     option->setPropertyName("UseReferenceSlice");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -101,7 +101,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Reference Slice");
     option->setPropertyName("ReferenceSlice");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("");
     parameters.push_back(option);
@@ -110,7 +110,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Alignment Shift File");
     option->setPropertyName("WriteAlignmentShifts");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -118,7 +118,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Alignment File");
     option->setPropertyName("AlignmentShiftFileName");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }

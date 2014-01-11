@@ -80,7 +80,7 @@ void FillBadData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Defect Size");
     option->setPropertyName("MinAllowedDefectSize");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Pixels");
     parameters.push_back(option);

@@ -38,13 +38,14 @@
 
 
 #include <QtCore/QString>
-#include <map>
-#include <set>
+#include <QtCore/QMap>
+#include <QtCore/QSet>
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "PipelineBuilder/IFilterWidgetFactory.h"
-#include "PipelineBuilder/PipelineBuilderDLLExport.h"
+#include "FilterWidgetsLib/FilterWidgetsLib.h"
+#include "FilterWidgetsLib/IFilterWidgetFactory.h"
+
 
 /**
  * @class FilterWidgetManager FilterWidgetManager.h FilterWidgets/FilterWidgetManager.h
@@ -54,7 +55,7 @@
  * @date Jan 6, 2012
  * @version 1.0
  */
-class PipelineBuilderLib_EXPORT FilterWidgetManager
+class FilterWidgetsLib_EXPORT FilterWidgetManager
 {
   public:
     DREAM3D_SHARED_POINTERS(FilterWidgetManager)
@@ -77,7 +78,7 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
      */
     static void RegisterFilterWidgetFactory(const QString& name, IFilterWidgetFactory::Pointer factory);
 
-    static void RegisterKnownQFilterWidgets();
+    static void RegisterKnownFilterWidgets();
 
 
     /**
@@ -88,54 +89,13 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
     Collection getFactories();
 
     /**
-     * @brief Returns the mapping of names to the Factory instances for a given filter group
-     * @param groupName The name of the group.
-     * @return
-     */
-    Collection getFactories(const QString& groupName);
-
-    /**
-     * @brief Returns the mapping of names to the Factory instances for a given filter subgroup
-     * @param subGroupName The name of the subgroup.
-     * @return
-     */
-    Collection getFactories(const QString& groupName, const QString& subGroupName);
-
-    /**
        * @brief Adds a Factory that creates QFilterWidgets
        * @param name
        * @param factory
        */
-    void addFilterWidgetFactory(const QString& name, IFilterWidgetFactory::Pointer factory);
+    void addFilterWidgetFactory(const QString& widgetType, IFilterWidgetFactory::Pointer factory);
 
-    /**
-     * @brief getGroupNames Returns the uniqe set of group names for all the filters
-     * @return
-     */
-    QSet<QString> getGroupNames();
-
-    /**
-     * @brief getSubGroupNames For a given group, returns all the subgroups
-     * @param groupName The name of the Filter group
-     * @return
-     */
-    QSet<QString> getSubGroupNames(const QString& groupName);
-
-
-    /**
-     * @brief getFactoryForFilter Returns a FilterWidgetFactory for a given filter
-     * @param filterName
-     * @return
-     */
-    IFilterWidgetFactory::Pointer getFactoryForFilter(const QString& filterName);
-
-    /**
-     * @brief getFactoryForFilterHumanName For a given human label, the FilterWidgetFactory is given
-     * @param humanName
-     * @return
-     */
-    IFilterWidgetFactory::Pointer getFactoryForFilterHumanName(const QString& humanName);
-
+    QWidget* createWidget(FilterParameter *parameter, AbstractFilter* filter);
 
   protected:
     FilterWidgetManager();

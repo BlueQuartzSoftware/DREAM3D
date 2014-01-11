@@ -69,7 +69,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("STL Output Prefix");
     option->setPropertyName("StlFilePrefix");
-    option->setWidgetType(FilterParameter::StringWidget);
+    option->setWidgetType(FilterParameterWidgetType::StringWidget);
     option->setValueType("string");
     options.push_back(option);
   }
@@ -78,7 +78,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Max Iterations");
     option->setPropertyName("MaxIterations");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     options.push_back(option);
   }
@@ -87,7 +87,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Tolerance");
     option->setPropertyName("MisorientationTolerance");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     options.push_back(option);
@@ -97,7 +97,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
@@ -106,7 +106,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Path");
     option->setPropertyName("InputPath");
-    option->setWidgetType(FilterParameter::InputPathWidget);
+    option->setWidgetType(FilterParameterWidgetType::InputPathWidget);
     option->setValueType("string");
     options.push_back(option);
   }
@@ -116,7 +116,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
@@ -125,7 +125,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Path");
     option->setPropertyName("OutputPath");
-    option->setWidgetType(FilterParameter::OutputPathWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
     option->setValueType("string");
     options.push_back(option);
   }
@@ -134,7 +134,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Alignment Shift File");
     option->setPropertyName("WriteAlignmentShifts");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     options.push_back(option);
   }
@@ -143,7 +143,7 @@ void GenericFilter::setupFilterParameters()
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Conversion Type");
     option->setPropertyName("ConversionType");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
+    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     option->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Degrees To Radians");
@@ -158,7 +158,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Dimensions");
     option->setPropertyName("Dimensions");
-    option->setWidgetType(FilterParameter::IntVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
     option->setValueType("IntVec3Widget_t");
     option->setUnits("XYZ");
     options.push_back(option);
@@ -168,7 +168,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Origin");
     option->setPropertyName("Origin");
-    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
     option->setUnits("XYZ");
     options.push_back(option);
@@ -180,7 +180,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Voxel Cell Array Name");
     option->setPropertyName("SelectedVoxelCellArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VoxelCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -190,7 +190,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Voxel Feature Array Name");
     option->setPropertyName("SelectedVoxelFeatureArrayName");
-    option->setWidgetType(FilterParameter::VoxelFeatureArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VoxelFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -200,7 +200,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Voxel Ensemble Array Name");
     option->setPropertyName("SelectedVoxelEnsembleArrayName");
-    option->setWidgetType(FilterParameter::VoxelEnsembleArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VoxelEnsembleArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -211,7 +211,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SurfaceMesh Point Array Name");
     option->setPropertyName("SelectedSurfaceMeshPointArrayName");
-    option->setWidgetType(FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::SurfaceMeshVertexArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -221,7 +221,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SurfaceMesh Face Array Name");
     option->setPropertyName("SelectedSurfaceMeshFaceArrayName");
-    option->setWidgetType(FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::SurfaceMeshFaceArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -231,7 +231,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SurfaceMesh Edge Array Name");
     option->setPropertyName("SelectedSurfaceMeshEdgeArrayName");
-    option->setWidgetType(FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::SurfaceMeshEdgeArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -242,7 +242,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SolidMesh Point Array Name");
     option->setPropertyName("SelectedSolidMeshPointArrayName");
-    option->setWidgetType(FilterParameter::SolidMeshVertexArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::SolidMeshVertexArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -252,7 +252,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SolidMesh Face Array Name");
     option->setPropertyName("SelectedSolidMeshFaceArrayName");
-    option->setWidgetType(FilterParameter::SolidMeshFaceArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::SolidMeshFaceArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -262,7 +262,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SolidMesh Edge Array Name");
     option->setPropertyName("SelectedSolidMeshEdgeArrayName");
-    option->setWidgetType(FilterParameter::SolidMeshEdgeArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::SolidMeshEdgeArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -273,7 +273,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Crystal Rotations");
     option->setPropertyName("AxisAngleRotations");
-    option->setWidgetType(FilterParameter::AxisAngleWidget);
+    option->setWidgetType(FilterParameterWidgetType::AxisAngleWidget);
     options.push_back(option);
   }
   /* To select arrays */
@@ -281,7 +281,7 @@ void GenericFilter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Arrays to Delete");
     option->setPropertyName("ArraysToDelete");
-    option->setWidgetType(FilterParameter::ArraySelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::ArraySelectionWidget);
     options.push_back(option);
   }
 

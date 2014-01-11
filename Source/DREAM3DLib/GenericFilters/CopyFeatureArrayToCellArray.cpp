@@ -69,7 +69,7 @@ void CopyFeatureArrayToCellArray::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Feature Array Name");
     option->setPropertyName("SelectedFeatureArrayName");
-    option->setWidgetType(FilterParameter::VolumeFeatureArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);

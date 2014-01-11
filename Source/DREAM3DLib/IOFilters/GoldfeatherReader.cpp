@@ -94,7 +94,7 @@ void GoldfeatherReader::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Input File");
     parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameter::InputFileWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     parameter->setValueType("string");
     parameters.push_back(parameter);
   }

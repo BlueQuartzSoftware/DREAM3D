@@ -97,7 +97,7 @@ void FindFeatureReferenceMisorientations::setupFilterParameters()
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Reference Orientation");
     option->setPropertyName("ReferenceOrientation");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
+    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     option->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Feature's Average Orientation");

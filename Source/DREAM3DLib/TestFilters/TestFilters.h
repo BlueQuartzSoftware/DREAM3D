@@ -37,7 +37,7 @@ class DREAM3DLib_EXPORT Filt0 : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return "Test"; }
+    virtual const QString getGroupName() { return "TestFilters"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -49,7 +49,7 @@ class DREAM3DLib_EXPORT Filt0 : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const QString getSubGroupName() { return "Misc"; }
+    virtual const QString getSubGroupName() { return "Test"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -123,7 +123,7 @@ class DREAM3DLib_EXPORT Filt1 : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return "Test"; }
+    virtual const QString getGroupName() { return "TestFilters"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT Filt1 : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const QString getSubGroupName() { return "Misc"; }
+    virtual const QString getSubGroupName() { return "Test"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

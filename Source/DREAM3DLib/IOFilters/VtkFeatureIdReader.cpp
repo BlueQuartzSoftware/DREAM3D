@@ -74,7 +74,7 @@ void VtkFeatureIdReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Vtk File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -82,7 +82,7 @@ void VtkFeatureIdReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Feature Id Scalar Name");
     option->setPropertyName("FeatureIdScalarName");
-    option->setWidgetType(FilterParameter::StringWidget);
+    option->setWidgetType(FilterParameterWidgetType::StringWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }

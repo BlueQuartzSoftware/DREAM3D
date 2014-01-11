@@ -77,7 +77,7 @@ void ClearData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Min");
     option->setPropertyName("XMin");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Column");
     parameters.push_back(option);
@@ -86,7 +86,7 @@ void ClearData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Min");
     option->setPropertyName("YMin");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Row");
     parameters.push_back(option);
@@ -95,7 +95,7 @@ void ClearData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Min");
     option->setPropertyName("ZMin");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Plane");
     parameters.push_back(option);
@@ -104,7 +104,7 @@ void ClearData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Max");
     option->setPropertyName("XMax");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Column");
     parameters.push_back(option);
@@ -113,7 +113,7 @@ void ClearData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Max");
     option->setPropertyName("YMax");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Row");
     parameters.push_back(option);
@@ -122,7 +122,7 @@ void ClearData::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Max");
     option->setPropertyName("ZMax");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Plane");
     parameters.push_back(option);

@@ -290,24 +290,24 @@ void createHeaderFile(const QString& group, const QString& filterName, AbstractF
       fprintf(f, "  public:\n");
       fprintf(f, "    %s  get%s();\n\n\n", cType.toLatin1().data(), prop.toLatin1().data());
     }
-    else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget && implementPreflightAboutToExecute == true)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::ArraySelectionWidget && implementPreflightAboutToExecute == true)
     {
       fprintf(f, "  public:\n");
       fprintf(f, "    virtual void preflightAboutToExecute(DataContainerArray::Pointer dca);\n");
       fprintf(f, "\n\n");
       implementPreflightAboutToExecute = false;
     }
-    else if (opt->getWidgetType() == FilterParameter::IntVec3Widget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::IntVec3Widget)
     {
       fprintf(f, "    Q_PROPERTY(IntVec3Widget_t %s READ get%s WRITE set%s)\n", prop.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data());
       fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(IntVec3Widget_t, %s)\n\n", prop.toLatin1().data());
     }
-    else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::FloatVec3Widget)
     {
       fprintf(f, "    Q_PROPERTY(FloatVec3Widget_t %s READ get%s WRITE set%s)\n", prop.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data());
       fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(FloatVec3Widget_t, %s)\n\n", prop.toLatin1().data());
     }
-    else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::AxisAngleWidget)
     {
       fprintf(f, "DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, %s)\n\n", prop.toLatin1().data());
       axisAngleWidgetCount++;
@@ -316,8 +316,8 @@ void createHeaderFile(const QString& group, const QString& filterName, AbstractF
         fprintf(f, "#error You can have only 1 AxisAngleWidget per filter.\n");
       }
     }
-    else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget
+    else if (opt->getWidgetType() >= FilterParameterWidgetType::CellArrayComparisonSelectionWidget
+             && opt->getWidgetType() <= FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget
              && implementPreflightAboutToExecute == true)
     {
       fprintf(f, "\n  DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, %s)\n\n", prop.toLatin1().data());
@@ -332,8 +332,8 @@ void createHeaderFile(const QString& group, const QString& filterName, AbstractF
       fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n\n", typ.toLatin1().data(), prop.toLatin1().data());
     }
 
-    if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
-        && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget )
+    if (opt->getWidgetType() >= FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget
+        && opt->getWidgetType() <= FilterParameterWidgetType::VertexEnsembleArrayNameSelectionWidget )
     { implementArrayNameComboBoxUpdated = true; }
   }
 
@@ -538,16 +538,16 @@ void createSourceFile( const QString& group,
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
+    if (opt->getWidgetType() == FilterParameterWidgetType::ArraySelectionWidget)
     {
       fprintf(f, "#include \"ArraySelectionWidget.h\"\n");
     }
-    if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-        && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+    if (opt->getWidgetType() >= FilterParameterWidgetType::CellArrayComparisonSelectionWidget
+        && opt->getWidgetType() <= FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "#include \"ComparisonSelectionWidget.h\"\n");
     }
-    if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
+    if (opt->getWidgetType() == FilterParameterWidgetType::AxisAngleWidget)
     {
       fprintf(f, "#include \"AxisAngleWidget.h\"\n");
     }
@@ -587,9 +587,9 @@ void createSourceFile( const QString& group,
     QString prop = opt->getPropertyName();
     QString typ = opt->getValueType();
 
-    if(opt->getWidgetType() == FilterParameter::StringWidget || opt->getWidgetType() == FilterParameter::InputFileWidget
-        || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget
-        || opt->getWidgetType() == FilterParameter::OutputPathWidget)
+    if(opt->getWidgetType() == FilterParameterWidgetType::StringWidget || opt->getWidgetType() == FilterParameterWidgetType::InputFileWidget
+        || opt->getWidgetType() == FilterParameterWidgetType::InputPathWidget || opt->getWidgetType() == FilterParameterWidgetType::OutputFileWidget
+        || opt->getWidgetType() == FilterParameterWidgetType::OutputPathWidget)
     {
       fprintf(f, "     { \n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
@@ -598,7 +598,7 @@ void createSourceFile( const QString& group,
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::IntWidget || opt->getWidgetType() == FilterParameter::DoubleWidget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::IntWidget || opt->getWidgetType() == FilterParameterWidgetType::DoubleWidget)
     {
       fprintf(f, "     {\n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
@@ -609,7 +609,7 @@ void createSourceFile( const QString& group,
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::BooleanWidget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::BooleanWidget)
     {
       fprintf(f, "     {\n");
       fprintf(f, "        QCheckBox* w = qFindChild<QCheckBox*>(this, \"%s\");\n", prop.toLatin1().data());
@@ -618,7 +618,7 @@ void createSourceFile( const QString& group,
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::ChoiceWidget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::ChoiceWidget)
     {
       ChoiceFilterParameter* ptr = ChoiceFilterParameter::SafePointerDownCast( opt.get() );
 
@@ -645,10 +645,10 @@ void createSourceFile( const QString& group,
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::IntVec3Widget || opt->getWidgetType() == FilterParameter::FloatVec3Widget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::IntVec3Widget || opt->getWidgetType() == FilterParameterWidgetType::FloatVec3Widget)
     {
       QString wType = "IntVec3Widget_t";
-      if(opt->getWidgetType() == FilterParameter::FloatVec3Widget)
+      if(opt->getWidgetType() == FilterParameterWidgetType::FloatVec3Widget)
       {
         wType = "FloatVec3Widget_t";
       }
@@ -664,7 +664,7 @@ void createSourceFile( const QString& group,
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::ArraySelectionWidget)
     {
       fprintf(f, "     {\n");
       fprintf(f, "        ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
@@ -675,7 +675,7 @@ void createSourceFile( const QString& group,
 
       implementArrayNameSelectionWidget = true;
     }
-    else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::AxisAngleWidget)
     {
       fprintf(f, "     {\n");
       fprintf(f, "        AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.toLatin1().data());
@@ -693,8 +693,8 @@ void createSourceFile( const QString& group,
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
-    else if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget)
+    else if (opt->getWidgetType() >= FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget
+             && opt->getWidgetType() <= FilterParameterWidgetType::VertexEnsembleArrayNameSelectionWidget)
     {
       fprintf(f, "     {\n");
       fprintf(f, "        QComboBox* w = qFindChild<QComboBox*>(this, \"%s\");\n", prop.toLatin1().data());
@@ -707,8 +707,8 @@ void createSourceFile( const QString& group,
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
-    else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+    else if (opt->getWidgetType() >= FilterParameterWidgetType::CellArrayComparisonSelectionWidget
+             && opt->getWidgetType() <= FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget)
     {
       // fprintf(f, "     {\n");
       fprintf(f, "     ComparisonSelectionWidget* w_%s = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data(), prop.toLatin1().data());
@@ -752,21 +752,21 @@ void createSourceFile( const QString& group,
     {
       fprintf(f, "  filter->set%s( get%s() );\n", prop.toLatin1().data(), prop.toLatin1().data());
     }
-    else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::ArraySelectionWidget)
     {
       fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
       fprintf(f, "      w->getArraySelections(filter.get());\n    }\n  }\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
+    else if (opt->getWidgetType() == FilterParameterWidgetType::AxisAngleWidget)
     {
       fprintf(f, "  {\n    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
       //  fprintf(f, "//      w->setAxisAnglesIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.toLatin1().data());
       fprintf(f, "      filter->set%s(w->getAxisAngleRotations());\n    }\n  }\n", prop.toLatin1().data());
     }
-    else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+    else if (opt->getWidgetType() >= FilterParameterWidgetType::CellArrayComparisonSelectionWidget
+             && opt->getWidgetType() <= FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
@@ -815,10 +815,10 @@ void createSourceFile( const QString& group,
 
       fprintf(f, "\n// -----------------------------------------------------------------------------\n");
       fprintf(f, "void Q%sWidget::set%s(const %s &v, bool emitChanged)\n{\n  m_%s = v;\n", filter.toLatin1().data(), prop.toLatin1().data(), cType.toLatin1().data(), prop.toLatin1().data());
-      if (opt->getWidgetType() == FilterParameter::OutputFileWidget ||
-          opt->getWidgetType() == FilterParameter::OutputPathWidget ||
-          opt->getWidgetType() == FilterParameter::InputFileWidget ||
-          opt->getWidgetType() == FilterParameter::InputPathWidget)
+      if (opt->getWidgetType() == FilterParameterWidgetType::OutputFileWidget ||
+          opt->getWidgetType() == FilterParameterWidgetType::OutputPathWidget ||
+          opt->getWidgetType() == FilterParameterWidgetType::InputFileWidget ||
+          opt->getWidgetType() == FilterParameterWidgetType::InputPathWidget)
       {
         fprintf(f, "  m_%s = QDir::toNativeSeparators(m_%s);\n", prop.toLatin1().data(), prop.toLatin1().data());
       }
@@ -834,8 +834,8 @@ void createSourceFile( const QString& group,
       //    fprintf(f, "FILTER_PROPERTY_WRAPPER(%s, %s, m_Filter);\n", typ.toLatin1().data(), prop.toLatin1().data());
     }
 
-    if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
-        && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget )
+    if (opt->getWidgetType() >= FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget
+        && opt->getWidgetType() <= FilterParameterWidgetType::VertexEnsembleArrayNameSelectionWidget )
     { implementArrayNameComboBoxUpdated = true; }
   }
 
@@ -858,8 +858,8 @@ void createSourceFile( const QString& group,
       QString prop = opt->getPropertyName();
       QString typ = opt->getValueType();
       QString hl = opt->getHumanLabel();
-      if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
-          && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget )
+      if (opt->getWidgetType() >= FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget
+          && opt->getWidgetType() <= FilterParameterWidgetType::VertexEnsembleArrayNameSelectionWidget )
       {
         fprintf(f, "  if(cb->objectName().compare(\"%s\") == 0) {\n", prop.toLatin1().data());
         fprintf(f, "    m_%s = cb->currentText();\n  }\n", prop.toLatin1().data());
@@ -879,14 +879,14 @@ void createSourceFile( const QString& group,
       QString prop = opt->getPropertyName();
       QString typ = opt->getValueType();
       QString hl = opt->getHumanLabel();
-      if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget )
+      if (opt->getWidgetType() == FilterParameterWidgetType::ArraySelectionWidget )
       {
         fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data()); // Make sure we have a non null QWidget to deal with
 
         fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(dca);\n    }\n  }\n");
       }
-      if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-          && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+      if (opt->getWidgetType() >= FilterParameterWidgetType::CellArrayComparisonSelectionWidget
+          && opt->getWidgetType() <= FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget)
       {
         fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data()); // Make sure we have a non null QWidget to deal with
 

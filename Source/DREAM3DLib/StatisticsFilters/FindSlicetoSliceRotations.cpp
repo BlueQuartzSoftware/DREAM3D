@@ -83,7 +83,7 @@ void FindSlicetoSliceRotations::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Slice to Slice Rotations File");
     option->setPropertyName("SlicetoSliceRotationsFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }

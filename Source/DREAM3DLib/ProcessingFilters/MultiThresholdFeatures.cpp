@@ -74,7 +74,7 @@ void MultiThresholdFeatures::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Array Name");
     parameter->setPropertyName("OutputArrayName");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     parameter->setValueType("string");
     parameter->setEditable(true);
     QVector<QString> choices;
@@ -86,7 +86,7 @@ void MultiThresholdFeatures::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("ComparisonInputs");
-    parameter->setWidgetType(FilterParameter::FeatureArrayComparisonSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::FeatureArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
     parameters.push_back(parameter);
   }

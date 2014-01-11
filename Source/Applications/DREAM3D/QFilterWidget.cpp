@@ -451,7 +451,7 @@ void QFilterWidget::initializeWithFilter(QString filterClassName)
   {
   #if 0
     FilterParameter* option = (*iter).get();
-    FilterParameter::WidgetType wType = option->getWidgetType();
+    FilterParameterWidgetType::WidgetType wType = option->getWidgetType();
 
     QString labelName = (option->getHumanLabel());
     if (option->getUnits().isEmpty() == false)
@@ -460,7 +460,7 @@ void QFilterWidget::initializeWithFilter(QString filterClassName)
     }
     QLabel* label = new QLabel(labelName, this);
 
-    // if (wType == FilterParameter::StringWidget)
+    // if (wType == FilterParameterWidgetType::StringWidget)
     {
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(option->getPropertyName());

@@ -85,7 +85,7 @@ void CropVolume::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Min (Voxels)");
     option->setPropertyName("XMin");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Column");
     parameters.push_back(option);
@@ -94,7 +94,7 @@ void CropVolume::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Min (Voxels)");
     option->setPropertyName("YMin");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Row");
     parameters.push_back(option);
@@ -103,7 +103,7 @@ void CropVolume::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Min (Voxels)");
     option->setPropertyName("ZMin");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Plane");
     parameters.push_back(option);
@@ -112,7 +112,7 @@ void CropVolume::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Max (Voxels)");
     option->setPropertyName("XMax");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Column");
     parameters.push_back(option);
@@ -121,7 +121,7 @@ void CropVolume::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Max (Voxels)");
     option->setPropertyName("YMax");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Row");
     parameters.push_back(option);
@@ -130,7 +130,7 @@ void CropVolume::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Max (Voxels)");
     option->setPropertyName("ZMax");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Plane");
     parameters.push_back(option);
@@ -139,7 +139,7 @@ void CropVolume::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Renumber Features");
     option->setPropertyName("RenumberFeatures");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -147,7 +147,7 @@ void CropVolume::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Update Origin");
     option->setPropertyName("UpdateOrigin");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }

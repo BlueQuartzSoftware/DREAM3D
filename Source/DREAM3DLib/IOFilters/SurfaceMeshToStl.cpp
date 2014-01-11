@@ -79,7 +79,7 @@ void SurfaceMeshToStl::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output STL Directory");
     option->setPropertyName("OutputStlDirectory");
-    option->setWidgetType(FilterParameter::OutputPathWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -87,7 +87,7 @@ void SurfaceMeshToStl::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Stl File Prefix");
     option->setPropertyName("OutputStlPrefix");
-    option->setWidgetType(FilterParameter::StringWidget);
+    option->setWidgetType(FilterParameterWidgetType::StringWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -95,7 +95,7 @@ void SurfaceMeshToStl::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Group Files By Phase");
     option->setPropertyName("GroupByPhase");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,65 +34,53 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef QFILTERWIDGETFACTORY_H_
-#define QFILTERWIDGETFACTORY_H_
 
-#include "PipelineBuilder/IFilterWidgetFactory.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-template <class Widget>
-class QFilterWidgetFactory : public IFilterWidgetFactory
-{
-  public:
-    DREAM3D_SHARED_POINTERS(QFilterWidgetFactory<Widget> )
-    DREAM3D_TYPE_MACRO_SUPER(QFilterWidgetFactory<Widget>, IFilterWidgetFactory)
-    DREAM3D_STATIC_NEW_MACRO(QFilterWidgetFactory<Widget>)
 
-    /**
-     * @brief Creates a new widget for this filter. The Calling method MUST set
-     * a parent Widget OR take responsibility for deleting this object.
-     * @return
-     */
-    QFilterWidget* createWidget()
-    {
-      return new Widget;
-    }
+#ifndef _FilterWidgetsLib_COMMON_DLL_EXPORT_H_
+#define _FilterWidgetsLib_COMMON_DLL_EXPORT_H_
 
-    QString getFilterGroup()
-    {
-      return m_GroupName;
-    }
 
-    QString getFilterSubGroup()
-    {
-      return m_SubGroupName;
-    }
+#if defined (_MSC_VER)
+#pragma warning(disable: 4251)
+#pragma warning(disable: 4710)
+#pragma warning(disable: 4820)
+#pragma warning(disable: 4668)
+#pragma warning(disable: 4265)
+#pragma warning(disable: 4189)
+#pragma warning(disable: 4640)
+#pragma warning(disable: 4996)
+#pragma warning(disable: 4548)
+#endif
 
-    QString getFilterHumanLabel()
-    {
-      return m_HumanName;
-    }
+/* Cmake will define FilterWidgetsLib_EXPORTS on Windows when it
+configures to build a shared library. If you are going to use
+another build system on windows or create the visual studio
+projects by hand you need to define FilterWidgetsLib_EXPORTS when
+building the MXADatModel DLL on windows.
+*/
 
-    AbstractFilter::Pointer getFilterInstance()
-    {
-      Widget w;
-      return w.getFilter(false);
-    }
+#if defined (FilterWidgetsLib_BUILT_AS_DYNAMIC_LIB)
 
-  protected:
-    QFilterWidgetFactory() {
-      Widget w;
-      m_GroupName = w.getFilter(false)->getGroupName();
-      m_SubGroupName = w.getFilter(false)->getSubGroupName();
-      m_HumanName = w.getFilter(false)->getHumanLabel();
-    }
+#if defined (FilterWidgetsLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
+#if defined (_MSC_VER)  /* MSVC Compiler Case */
+#define  FilterWidgetsLib_EXPORT __declspec(dllexport)
+#elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
+#define FilterWidgetsLib_EXPORT __attribute__ ((visibility("default")))
+#endif
+#else  /* Importing the DLL into another project */
+#if defined (_MSC_VER)  /* MSVC Compiler Case */
+#define  FilterWidgetsLib_EXPORT __declspec(dllimport)
+#elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
+#define FilterWidgetsLib_EXPORT __attribute__ ((visibility("default")))
+#endif
+#endif
+#endif
 
-  private:
-    QString m_GroupName;
-    QString m_SubGroupName;
-    QString m_HumanName;
+/* If FilterWidgetsLib_EXPORT was never defined, define it here */
+#ifndef FilterWidgetsLib_EXPORT
+#define FilterWidgetsLib_EXPORT
+#endif
 
-    QFilterWidgetFactory(const QFilterWidgetFactory&); // Copy Constructor Not Implemented
-    void operator=(const QFilterWidgetFactory&); // Operator '=' Not Implemented
-};
-#endif /* QFILTERWIDGETFACTORY_H_ */
+
+#endif /* _FilterWidgetsLib_COMMON_DLL_EXPORT_H_ */

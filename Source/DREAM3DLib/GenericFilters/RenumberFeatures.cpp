@@ -76,7 +76,7 @@ void RenumberFeatures::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Name of Array for Active Features");
     option->setPropertyName("ActiveArrayName");
-    option->setWidgetType(FilterParameter::StringWidget);
+    option->setWidgetType(FilterParameterWidgetType::StringWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }

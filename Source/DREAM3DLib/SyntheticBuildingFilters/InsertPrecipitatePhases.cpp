@@ -137,7 +137,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Periodic Boundary");
     option->setPropertyName("PeriodicBoundaries");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -145,7 +145,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Goal Attributes");
     option->setPropertyName("WriteGoalAttributes");
-    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
@@ -153,7 +153,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Goal Attribute CSV File");
     option->setPropertyName("CsvOutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setFileExtension("*.csv");
     option->setFileType("Comma Separated Data");
     option->setValueType("string");

@@ -67,7 +67,7 @@ void RenameCellArray::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Cell Array Name");
     option->setPropertyName("SelectedCellArrayName");
-    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -76,7 +76,7 @@ void RenameCellArray::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("New Cell Array Name");
     parameter->setPropertyName("NewCellArrayName");
-    parameter->setWidgetType(FilterParameter::StringWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("string");
     parameters.push_back(parameter);
   }

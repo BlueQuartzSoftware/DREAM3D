@@ -76,7 +76,7 @@ void ChangeResolution::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Resolution");
     option->setPropertyName("Resolution");
-    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
     option->setUnits("Microns");
     parameters.push_back(option);

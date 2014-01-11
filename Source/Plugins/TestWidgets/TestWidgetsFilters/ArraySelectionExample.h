@@ -127,7 +127,7 @@ class ArraySelectionExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return "ExamplePlugin"; }
+    virtual const QString getGroupName() { return "TestWidgets"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

@@ -257,7 +257,7 @@ void ImportImageStack::execute()
     QString ss = QObject::tr("Importing file %1").arg(imageFName);
     notifyStatusMessage(getHumanLabel(), ss);
 
-    QImage image((imageFName));
+    QImage image(imageFName);
     if (image.isNull() == true)
     {
       setErrorCondition(-14000);

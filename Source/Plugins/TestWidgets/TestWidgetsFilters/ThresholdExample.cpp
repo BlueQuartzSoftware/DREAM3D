@@ -75,7 +75,7 @@ void ThresholdExample::setupFilterParameters()
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Voxel Cell Arrays to Threshold");
     parameter->setPropertyName("CellComparisonInputs");
-    parameter->setWidgetType(FilterParameter::CellArrayComparisonSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::CellArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
@@ -84,7 +84,7 @@ void ThresholdExample::setupFilterParameters()
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Voxel Feature Arrays to Threshold");
     parameter->setPropertyName("FeatureComparisonInputs");
-    parameter->setWidgetType(FilterParameter::FeatureArrayComparisonSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::FeatureArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
@@ -93,7 +93,7 @@ void ThresholdExample::setupFilterParameters()
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Voxel Ensemble Arrays to Threshold");
     parameter->setPropertyName("EnsembleComparisonInputs");
-    parameter->setWidgetType(FilterParameter::EnsembleArrayComparisonSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::EnsembleArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
@@ -102,7 +102,7 @@ void ThresholdExample::setupFilterParameters()
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Point Arrays to Threshold");
     parameter->setPropertyName("PointComparisonInputs");
-    parameter->setWidgetType(FilterParameter::VertexArrayComparisonSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::VertexArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
@@ -111,7 +111,7 @@ void ThresholdExample::setupFilterParameters()
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Face Arrays to Threshold");
     parameter->setPropertyName("FaceComparisonInputs");
-    parameter->setWidgetType(FilterParameter::FaceArrayComparisonSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::FaceArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
@@ -120,7 +120,7 @@ void ThresholdExample::setupFilterParameters()
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Edge Arrays to Threshold");
     parameter->setPropertyName("EdgeComparisonInputs");
-    parameter->setWidgetType(FilterParameter::EdgeArrayComparisonSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }

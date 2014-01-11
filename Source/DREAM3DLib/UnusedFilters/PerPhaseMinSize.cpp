@@ -81,7 +81,7 @@ void PerPhaseMinSize::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Feature Size");
     option->setPropertyName("MinAllowedFeatureSize");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     option->setUnits("Pixels");
     parameters.push_back(option);
@@ -90,7 +90,7 @@ void PerPhaseMinSize::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Phase Number to Run Min Size Filter on");
     option->setPropertyName("PhaseNumber");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }

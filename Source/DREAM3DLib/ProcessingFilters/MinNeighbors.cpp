@@ -87,7 +87,7 @@ void MinNeighbors::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Number Neighbors");
     option->setPropertyName("MinNumNeighbors");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }

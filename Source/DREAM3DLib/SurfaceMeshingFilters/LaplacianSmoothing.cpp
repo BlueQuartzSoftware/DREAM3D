@@ -186,7 +186,7 @@ void LaplacianSmoothing::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Iteration Steps");
     option->setPropertyName("IterationSteps");
-    option->setWidgetType(FilterParameter::IntWidget);
+    option->setWidgetType(FilterParameterWidgetType::IntWidget);
     option->setValueType("int");
     parameters.push_back(option);
   }
@@ -194,7 +194,7 @@ void LaplacianSmoothing::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Default Lambda");
     parameter->setPropertyName("Lambda");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     //parameter->setUnits("Bulk Nodes");
     parameter->setValueType("float");
     parameter->setCastableValueType("double");
@@ -204,7 +204,7 @@ void LaplacianSmoothing::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Triple Line Lambda");
     parameter->setPropertyName("TripleLineLambda");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     //parameter->setUnits("Zero will Lock them in Place");
     parameter->setValueType("float");
     parameter->setCastableValueType("double");
@@ -214,7 +214,7 @@ void LaplacianSmoothing::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Quad Points Lambda");
     parameter->setPropertyName("QuadPointLambda");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     //parameter->setUnits("Zero will Lock them in Place");
     parameter->setValueType("float");
     parameter->setCastableValueType("double");
@@ -224,7 +224,7 @@ void LaplacianSmoothing::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Outer Points Lambda");
     parameter->setPropertyName("SurfacePointLambda");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     //parameter->setUnits("Zero will Lock them in Place");
     parameter->setValueType("float");
     parameter->setCastableValueType("double");
@@ -235,7 +235,7 @@ void LaplacianSmoothing::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Outer Triple Line Lambda");
     parameter->setPropertyName("SurfaceTripleLineLambda");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     //parameter->setUnits("Zero will Lock them in Place");
     parameter->setValueType("float");
     parameter->setCastableValueType("double");
@@ -245,7 +245,7 @@ void LaplacianSmoothing::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Outer Quad Points Lambda");
     parameter->setPropertyName("SurfaceQuadPointLambda");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     //parameter->setUnits("Zero will Lock them in Place");
     parameter->setValueType("float");
     parameter->setCastableValueType("double");

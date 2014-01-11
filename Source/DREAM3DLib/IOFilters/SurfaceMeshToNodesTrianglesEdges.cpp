@@ -79,7 +79,7 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Nodes File");
     option->setPropertyName("OutputNodesFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -87,7 +87,7 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Triangles File");
     option->setPropertyName("OutputTrianglesFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -96,7 +96,7 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Edges File");
     option->setPropertyName("OutputEdgesFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }

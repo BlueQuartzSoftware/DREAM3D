@@ -118,7 +118,7 @@ set(PROJECT_SRCS
     ${H5Support_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
 )
 
-add_library(${PROJECT_NAME}  ${LIB_TYPE} ${PROJECT_SRCS})
+add_library(${PROJECT_NAME} ${LIB_TYPE} ${PROJECT_SRCS})
 target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} ${QT_QTCORE_LIBRARY} )
 
 

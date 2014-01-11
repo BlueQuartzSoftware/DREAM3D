@@ -77,7 +77,7 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Binary Nodes Input File");
     option->setPropertyName("BinaryNodesFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -85,7 +85,7 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Binary Triangles Input File");
     option->setPropertyName("BinaryTrianglesFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }

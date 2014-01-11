@@ -121,8 +121,12 @@ set(FILTER_WIDGETS_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR})
 set(FILTER_WIDGETS_DOCS_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/Filters)
 set(FILTER_INCLUDE_PREFIX "${PLUGIN_NAME}")
 file(MAKE_DIRECTORY ${${PLUGIN_NAME}_BINARY_DIR}/Temp)
+
+if(0)
 configure_file( ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetsCodeGen.h.in
                 ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetCodeGen.h)
+endif()
+
 
 # --------------------------------------------------------------------
 # On Linux we need -fPIC for linking static and shared libraries
