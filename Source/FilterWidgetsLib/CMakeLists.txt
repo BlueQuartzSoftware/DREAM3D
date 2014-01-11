@@ -87,7 +87,6 @@ set(FilterWidgetsLib_HDRS
   ${FilterWidgetsLib_SOURCE_DIR}/IFilterWidgetFactory.h
   ${FilterWidgetsLib_SOURCE_DIR}/QFilterWidgetFactory.hpp
   ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetsLibDLLExport.h
-
 )
 
 set(FilterWidgetsLib_MOC_HDRS
@@ -96,6 +95,7 @@ set(FilterWidgetsLib_MOC_HDRS
 
 set(FilterWidgetsLib_SRCS
   ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetManager.cpp
+  ${FilterWidgetsLib_SOURCE_DIR}/IFilterWidgetFactory.cpp
   ${FilterWidgetsLib_SOURCE_DIR}/QFilterParameterWidget.cpp
 )
 
@@ -108,7 +108,7 @@ QT4_WRAP_CPP( FilterWidgetsLib_Generated_MOC_SRCS ${FilterWidgetsLib_MOC_HDRS} )
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
 set_source_files_properties( ${FilterWidgetsLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
-#set_source_files_properties( ${FilterWidgetsLib_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
 
 # -- Run MOC and UIC on the necessary files
 # QT4_ADD_RESOURCES( FilterWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
@@ -119,7 +119,7 @@ QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS   )
 
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs
-cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "" "${FilterWidgetsLib_MOC_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "" "${FilterWidgetsLib_Generated_MOC_SRCS}" "0")
 cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${FilterWidgetsLib_Generated_UI_HDRS}" "" "0")
 cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${FilterWidgetsLib_Generated_RC_SRCS}" "" "0")
 
@@ -163,6 +163,7 @@ target_link_libraries(FilterWidgetsLib
                     ${QT_QTCORE_LIBRARY}
                     ${QT_QTGUI_LIBRARY}
                     QtSupport
+                    DREAM3DLib
 )
 
 LibraryProperties( FilterWidgetsLib ${EXE_DEBUG_EXTENSION})

@@ -60,7 +60,9 @@ endforeach()
 
 
 
-cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${FilterWidgets_ParameterWidgets_HDRS}" "${FilterWidgets_ParameterWidgets_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/Widgets" "${FilterWidgets_ParameterWidgets_HDRS}" "${FilterWidgets_ParameterWidgets_SRCS}" "0")
+
+cmp_IDE_GENERATED_PROPERTIES("FilterWidgets/Widgets/UI_Files" "${FilterWidgets_ParameterWidgets_UIS}" "")
 
 # --------------------------------------------------------------------
 # and finally this will run moc:

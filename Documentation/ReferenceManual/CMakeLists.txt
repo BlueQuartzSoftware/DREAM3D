@@ -167,10 +167,11 @@ endif()
 #-------------------------------------------------------------------------------
 # Make Sure this target is built so that the DREAM3D Application has access to
 # the HTML help files
-if(DREAM3D_BUILD_DREAM3D)
+if(DREAM3D_BUILD_DREAM3D AND DREAM3DReferenceManual_HTML)
 add_dependencies(DREAM3D DREAM3DReferenceManual_HTML)
+#add_dependencies(DREAM3DReferenceManual_HTML FilterWidgetsLib)
 endif()
-add_dependencies(DREAM3DReferenceManual_HTML FilterWidgetsLib)
+
 
 #- This installs all the help files. Note that we assume a flat directory structure
 #- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
