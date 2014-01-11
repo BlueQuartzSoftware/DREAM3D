@@ -27,13 +27,13 @@ Due to incompatibilities of HDF5 and these environments we can not support compi
 |  Package   | Minimum Version | Download Location |  
 |  ------	| ------	| ------	|  
 | Git | 1.7.x | [http://www.git-scm.com](http://www.git-scm.com) |  
-| CMake | 2.8.10 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
+| CMake | 2.8.12 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
 | Doxygen | 1.8.3 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |  
-| HDF5 | 1.8.10-1 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |  
-| Boost | 1.44 | [http://www.boost.org](http://www.boost.org) |  
+| HDF5 | 1.8.12 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |  
+| Boost | 1.55.0 | [http://www.boost.org](http://www.boost.org) |  
 | Eigen | 3.1.2 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |  
 | Intel Threading Building Blocks | tbb41_20121003oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |  
-| Qt | 4.7.4 or 4.8.4 (5.x will NOT work) | [http://www.qt-project.org](http://www.qt-project.org) |  
+| Qt | 4.8.5 (Qt 5.x will NOT work) | [http://www.qt-project.org](http://www.qt-project.org) |  
 | Qwt | 5.2.2 | git clone git://scm.bluequartz.net/support-libraries/qwt.git qwt |  
 
 

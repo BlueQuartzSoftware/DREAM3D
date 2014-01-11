@@ -14,10 +14,35 @@
    <string>InputPathWidget</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="spacing">
+    <number>5</number>
+   </property>
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
    <item>
-    <widget class="QLabel" name="InputPathWidgetLabel">
+    <widget class="QLabel" name="inputPathWidgetLabel">
      <property name="text">
       <string>Property</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="inputPathWidgetLineEdit"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="inputPathWidgetPushButton">
+     <property name="text">
+      <string>Select...</string>
      </property>
     </widget>
    </item>
