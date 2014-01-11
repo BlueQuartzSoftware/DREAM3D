@@ -110,11 +110,15 @@ class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
     IDataArray::Pointer m_InputData;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
     CompareFunctor* m_Compare;
 
     void dataCheck();
+    void updateFeatureInstancePointers();
+
+    bool missingGoodVoxels;
 
     ScalarSegmentFeatures(const ScalarSegmentFeatures&); // Copy Constructor Not Implemented
     void operator=(const ScalarSegmentFeatures&); // Operator '=' Not Implemented

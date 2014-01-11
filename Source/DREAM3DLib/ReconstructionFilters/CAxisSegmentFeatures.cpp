@@ -155,6 +155,17 @@ int CAxisSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::updateFeatureInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CAxisSegmentFeatures::dataCheck()
 {
   setErrorCondition(0);
@@ -224,6 +235,12 @@ void CAxisSegmentFeatures::execute()
   for(int64_t i = 0; i < totalPoints; i++)
   {
     m_FeatureIds[i] = 0;
+  }
+
+  missingGoodVoxels = true;
+  if (NULL != m_GoodVoxels)
+  {
+    missingGoodVoxels = false;
   }
 
   SegmentFeatures::execute();
@@ -308,7 +325,7 @@ int64_t CAxisSegmentFeatures::getSeed(size_t gnum)
   while (seed == -1 && counter < totalPoints)
   {
     if (randpoint > totalPMinus1) { randpoint = static_cast<int64_t>( randpoint - totalPoints ); }
-    if (m_GoodVoxels[randpoint] == true && m_FeatureIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) { seed = randpoint; }
+    if ((m_GoodVoxels[randpoint] == true || missingGoodVoxels == true) && m_FeatureIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) { seed = randpoint; }
     randpoint++;
     counter++;
   }
@@ -341,7 +358,7 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
   float c1[3];
   float c2[3];
 
-  if(m_FeatureIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
+  if(m_FeatureIds[neighborpoint] == 0 && (m_GoodVoxels[neighborpoint] == true || missingGoodVoxels == true))
   {
     phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
     QuaternionMathF::Copy(quats[referencepoint], q1);

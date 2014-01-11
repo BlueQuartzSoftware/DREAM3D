@@ -116,6 +116,9 @@ class DREAM3DLib_EXPORT CAxisSegmentFeatures : public SegmentFeatures
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck();
+    void updateFeatureInstancePointers();
+
+    bool missingGoodVoxels;
 
 
     CAxisSegmentFeatures(const CAxisSegmentFeatures&); // Copy Constructor Not Implemented
