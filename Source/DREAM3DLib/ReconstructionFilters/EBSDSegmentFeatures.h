@@ -116,7 +116,9 @@ class DREAM3DLib_EXPORT EBSDSegmentFeatures : public SegmentFeatures
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck();
+    void updateFeatureInstancePointers();
 
+    bool missingGoodVoxels;
 
     EBSDSegmentFeatures(const EBSDSegmentFeatures&); // Copy Constructor Not Implemented
     void operator=(const EBSDSegmentFeatures&); // Operator '=' Not Implemented

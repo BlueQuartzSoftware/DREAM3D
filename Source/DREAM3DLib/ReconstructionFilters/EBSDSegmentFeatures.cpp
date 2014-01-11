@@ -142,6 +142,17 @@ int EBSDSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::updateFeatureInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EBSDSegmentFeatures::dataCheck()
 {
   setErrorCondition(0);
@@ -157,9 +168,10 @@ void EBSDSegmentFeatures::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 1);
-  m_GoodVoxelsPtr = cellAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this,  m_GoodVoxelsArrayName,  true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(NULL, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  else {m_GoodVoxels = NULL;}
   m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -213,6 +225,12 @@ void EBSDSegmentFeatures::execute()
   for(int64_t i = 0; i < totalPoints; i++)
   {
     m_FeatureIds[i] = 0;
+  }
+
+  missingGoodVoxels = true;
+  if (NULL != m_GoodVoxels)
+  {
+    missingGoodVoxels = false;
   }
 
   SegmentFeatures::execute();
@@ -301,7 +319,7 @@ int64_t EBSDSegmentFeatures::getSeed(size_t gnum)
   while (seed == -1 && counter < totalPoints)
   {
     if (randpoint > totalPMinus1) { randpoint = static_cast<int64_t>( randpoint - totalPoints ); }
-    if (m_GoodVoxels[randpoint] == true && m_FeatureIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) { seed = randpoint; }
+    if ((m_GoodVoxels[randpoint] == true || missingGoodVoxels == true) && m_FeatureIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) { seed = randpoint; }
     randpoint++;
     counter++;
   }
@@ -327,7 +345,7 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
   float n1, n2, n3;
   unsigned int phase1, phase2;
 
-  if(m_FeatureIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
+  if(m_FeatureIds[neighborpoint] == 0 && (m_GoodVoxels[neighborpoint] == true || missingGoodVoxels == true))
   {
     phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
     QuaternionMathF::Copy(quats[referencepoint], q1);

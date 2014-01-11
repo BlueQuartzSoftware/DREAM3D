@@ -137,6 +137,8 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_RandomizeFeatureIds(true),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxels(NULL),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL),
   m_Compare(NULL)
@@ -222,6 +224,17 @@ int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::updateFeatureInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::dataCheck()
 {
   setErrorCondition(0);
@@ -244,6 +257,10 @@ void ScalarSegmentFeatures::dataCheck()
   m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(NULL, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  else {m_GoodVoxels = NULL;}
   m_ActivePtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_ActiveArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -342,6 +359,12 @@ void ScalarSegmentFeatures::execute()
     m_Compare =  new TSpecificCompareFunctor<double>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
 
+  missingGoodVoxels = true;
+  if (NULL != m_GoodVoxels)
+  {
+    missingGoodVoxels = false;
+  }
+
   SegmentFeatures::execute();
 
   if (true == m_RandomizeFeatureIds)
@@ -422,7 +445,7 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
   while (seed == -1 && counter < totalPoints)
   {
     if (randpoint > totalPMinus1) { randpoint = static_cast<int64_t>( randpoint - totalPoints ); }
-    if (m_FeatureIds[randpoint] == 0) { seed = randpoint; }
+    if ((m_GoodVoxels[randpoint] == true || missingGoodVoxels == true) && m_FeatureIds[randpoint] == 0) { seed = randpoint; }
     randpoint++;
     counter++;
   }
@@ -431,7 +454,7 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
     m_FeatureIds[seed] = gnum;
     QVector<size_t> tDims(1, gnum+1);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
-    dataCheck();
+    updateFeatureInstancePointers();
   }
   return seed;
 }
@@ -442,9 +465,14 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
 bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
 {
 
-  if(m_FeatureIds[neighborpoint] > 0) { return false; }
-  return (*m_Compare)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
+  if(m_FeatureIds[neighborpoint] == 0 && (m_GoodVoxels[neighborpoint] == true || missingGoodVoxels == true))
+  {
+    return (*m_Compare)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
   //     | Functor  ||calling the operator() method of the CompareFunctor Class |
-
+  }
+  else 
+  {
+    return false; 
+  }
 }
 

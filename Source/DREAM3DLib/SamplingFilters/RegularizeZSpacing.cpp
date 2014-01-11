@@ -125,7 +125,7 @@ int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularizeZSpacing::dataCheck()
+void RegularizeZSpacing::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
@@ -142,7 +142,7 @@ void RegularizeZSpacing::dataCheck()
   }
   size_t zP = static_cast<size_t>(zval / getNewZRes());
 
-  m->setDimensions(m->getXPoints(), m->getYPoints(), zP);
+  if(preflight == true) m->setDimensions(m->getXPoints(), m->getYPoints(), zP);
 
   inFile.close();
 }
@@ -152,7 +152,7 @@ void RegularizeZSpacing::dataCheck()
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::preflight()
 {
-  dataCheck();
+  dataCheck(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -162,7 +162,7 @@ void RegularizeZSpacing::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  dataCheck();
+  dataCheck(false);
   if(getErrorCondition() < 0) { return; }
 
   DREAM3D_RANDOMNG_NEW()
@@ -194,8 +194,7 @@ void RegularizeZSpacing::execute()
 
   int index, oldindex;
   int plane;
-  QVector<size_t> newindicies;
-  newindicies.resize(totalPoints);
+  QVector<size_t> newindicies(totalPoints, 0);
   for (size_t i = 0; i < m_ZP; i++)
   {
     plane = 0;
@@ -214,7 +213,14 @@ void RegularizeZSpacing::execute()
     }
   }
 
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
+  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m_XP;
+  tDims[1] = m_YP;
+  tDims[2] = m_ZP;
+  AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, cellAttrMat->getName(), cellAttrMat->getType());
+
+  QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNameList();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     QString name = *iter;
@@ -236,10 +242,13 @@ void RegularizeZSpacing::execute()
       destination = data->getVoidPointer((data->getNumberOfComponents() * i));
       ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
     }
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(*iter, data);
+    cellAttrMat->removeAttributeArray(*iter);
+    newCellAttrMat->addAttributeArray(*iter, data);
   }
   m->setResolution(xRes, yRes, m_NewZRes);
   m->setDimensions(m_XP, m_YP, m_ZP);
+  m->removeAttributeMatrix(getCellAttributeMatrixName());
+  m->addAttributeMatrix(getCellAttributeMatrixName(), newCellAttrMat);
 
   notifyStatusMessage(getHumanLabel(), "Changing Resolution Complete");
 }
