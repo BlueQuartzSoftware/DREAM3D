@@ -80,6 +80,7 @@ namespace DREAM3D
     const DREAM3D_STRING VolumeDataContainerName("VolumeDataContainer");
     const DREAM3D_STRING CellAttributeMatrixName("CellData");
     const DREAM3D_STRING CellFeatureAttributeMatrixName("CellFeatureData");
+    const DREAM3D_STRING NewCellFeatureAttributeMatrixName("NewCellFeatureData");
     const DREAM3D_STRING CellEnsembleAttributeMatrixName("CellEnsembleData");
 
     const DREAM3D_STRING VoxelDataName("VoxelData");

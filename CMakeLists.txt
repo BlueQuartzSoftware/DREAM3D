@@ -269,7 +269,7 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}
 # -----------------------------------------------------------------------
 set(FilterWidgetsLib_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgetsLib)
 set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgetsLib)
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgetsLib ${PROJECT_BINARY_DIR}/FilterWidgetsLib)
+#add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgetsLib ${PROJECT_BINARY_DIR}/FilterWidgetsLib)
 
 # -----------------------------------------------------------------------
 # -- Add in the DREAM3D Sources into a static library

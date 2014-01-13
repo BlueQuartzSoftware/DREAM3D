@@ -328,10 +328,11 @@ int64_t EBSDSegmentFeatures::getSeed(size_t gnum)
     m_FeatureIds[seed] = gnum;
     QVector<size_t> tDims(1, gnum+1);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
-    dataCheck();
+    updateFeatureInstancePointers();
   }
   return seed;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -334,7 +334,7 @@ int64_t CAxisSegmentFeatures::getSeed(size_t gnum)
     m_FeatureIds[seed] = gnum;
     QVector<size_t> tDims(1, gnum+1);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
-    dataCheck();
+    updateFeatureInstancePointers();
   }
   return seed;
 }

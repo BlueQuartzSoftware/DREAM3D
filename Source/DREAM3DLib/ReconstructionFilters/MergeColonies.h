@@ -46,9 +46,9 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
+#include "DREAM3DLib/ReconstructionFilters/GroupFeatures.h"
 /**
  * @class MergeColonies MergeColonies.h DREAM3DLib/ReconstructionFilters/MergeColonies.h
  * @brief
@@ -56,7 +56,7 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
+class DREAM3DLib_EXPORT MergeColonies : public GroupFeatures
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
@@ -67,6 +67,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     virtual ~MergeColonies();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NewCellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
@@ -97,8 +98,10 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
   protected:
     MergeColonies();
 
-    void merge_colonies();
-    int check_for_burgers(QuatF betaQuat, QuatF alphaQuat);
+    virtual size_t getSeed(size_t newFid);
+    virtual bool determineGrouping(size_t referenceFeature, size_t neighborFeature, size_t newFid);
+
+    bool check_for_burgers(QuatF betaQuat, QuatF alphaQuat);
     void characterize_colonies();
     void identify_globAlpha();
 
@@ -111,17 +114,13 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    NeighborList<int>* m_NeighborList;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-
-    QVector<int> m_ParentNumbers;
-    int numParents;
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck();
-
+    void updateFeatureInstancePointers();
 
     MergeColonies(const MergeColonies&); // Copy Constructor Not Implemented
     void operator=(const MergeColonies&); // Operator '=' Not Implemented

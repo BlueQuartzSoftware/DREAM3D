@@ -48,10 +48,6 @@
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
-#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
-#include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
-
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
@@ -132,9 +128,10 @@ float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
 //
 // -----------------------------------------------------------------------------
 MergeColonies::MergeColonies() :
-  AbstractFilter(),
+  GroupFeatures(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::NewCellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_AxisTolerance(1.0f),
@@ -240,6 +237,17 @@ int MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MergeColonies::updateFeatureInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MergeColonies::dataCheck()
 {
   setErrorCondition(0);
@@ -247,6 +255,9 @@ void MergeColonies::dataCheck()
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer newCellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
@@ -274,9 +285,6 @@ void MergeColonies::dataCheck()
   m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_ActivePtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_ActiveArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_FeatureParentIdsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeatureParentIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -284,14 +292,11 @@ void MergeColonies::dataCheck()
   m_AvgQuatsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgQuatsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
-  if(m_NeighborList == NULL)
-  {
-    QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
-    setErrorCondition(-304);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-  }
+
+  // NewFeature Data
+  m_ActivePtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_ActiveArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
   dims[0] = 1;
@@ -316,14 +321,34 @@ void MergeColonies::preflight()
 void MergeColonies::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  notifyStatusMessage(getHumanLabel(), "Merging Colonies");
-  merge_colonies();
+  m_AxisTolerance = m_AxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+
+  // Tell the user we are starting the filter
+  notifyStatusMessage(getHumanLabel(), "Starting");
+  GroupFeatures::execute();
+
+  size_t totalFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
+  if (totalFeatures < 2)
+  {
+    setErrorCondition(-87000);
+    notifyErrorMessage(getHumanLabel(), "The number of Grouped Features was 0 or 1 which means no grouped features were detected. Is a grouping value set to high?", getErrorCondition());
+    return;
+  }
+
+  size_t numParents = 0;
+  size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
+  for (size_t k = 0; k < totalPoints; k++)
+  {
+    int featurename = m_FeatureIds[k];
+    m_CellParentIds[k] = m_FeatureParentIds[featurename];
+    if(m_FeatureParentIds[featurename] > numParents) numParents = m_FeatureParentIds[featurename];
+  }
+  numParents += 1;
 
   notifyStatusMessage(getHumanLabel(), "Characterizing Colonies");
   characterize_colonies();
@@ -392,120 +417,107 @@ void MergeColonies::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeColonies::merge_colonies()
+size_t MergeColonies::getSeed(size_t newFid)
 {
-  // Since this method is called from the 'execute' and the DataContainer validity
-  // was checked there we are just going to get the Shared Pointer to the DataContainer
+  setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  NeighborList<int>& neighborlist = *m_NeighborList;
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
-  //Converting the user defined tolerance to radians.
-  m_AxisTolerance = m_AxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  DREAM3D_RANDOMNG_NEW()
+  size_t seed = -1;
+  size_t randfeature = 0;
 
-  QVector<int> colonylist;
+  // Precalculate some constants
+  size_t totalFMinus1 = numfeatures - 1;
+
+  size_t counter = 0;
+  randfeature = size_t(float(rg.genrand_res53()) * float(totalFMinus1));
+  while (seed == -1 && counter < numfeatures)
+  {
+    if (randfeature > totalFMinus1) { randfeature = static_cast<size_t>( randfeature - numfeatures ); }
+    if (m_FeatureParentIds[randfeature] == 0) { seed = randfeature; }
+    randfeature++;
+    counter++;
+  }
+  if (seed >= 0)
+  {
+    m_FeatureParentIds[seed] = newFid;
+    QVector<size_t> tDims(1, newFid+1);
+    m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
+    updateFeatureInstancePointers();
+  }
+  return seed;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool MergeColonies::determineGrouping(size_t referenceFeature, size_t neighborFeature, size_t newFid)
+{
   float w;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
+  bool colony = false;
   QuatF q1;
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  unsigned int phase1, phase2;
-  int parentcount = 0;
-  m_ParentNumbers.clear();
-  m_ParentNumbers.fill(-1, numfeatures);
-
-  m_ParentNumbers[0] = 0;
-  for (size_t i = 1; i < numfeatures; i++)
+  if (m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
-    if (m_ParentNumbers[i] == -1 && m_FeaturePhases[i] > 0)
+    w = 10000.0f;
+    QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
+    unsigned int phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
+    QuaternionMathF::Copy(avgQuats[neighborFeature], q2);
+    unsigned int phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
+    if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
     {
-      parentcount++;
-      m_ParentNumbers[i] = parentcount;
-      m_Active[i] = true;
-      colonylist.push_back(i);
-      for (QVector<int>::size_type j = 0; j < colonylist.size(); j++)
+      w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+      OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+      m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
+      OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+      w = w * (180.0f / DREAM3D::Constants::k_Pi);
+      float angdiff1 = fabs(w - 10.53f);
+      float axisdiff1 = acosf(fabs(n1) * 0.0000f + fabs(n2) * 0.0000f + fabs(n3) * 1.0000f);
+      if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) { colony = true; }
+      float angdiff2 = fabs(w - 90.00f);
+      float axisdiff2 = acosf(fabs(n1) * 0.9958f + fabs(n2) * 0.0917f + fabs(n3) * 0.0000f);
+      if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) { colony = true; }
+      float angdiff3 = fabs(w - 60.00f);
+      float axisdiff3 = acosf(fabs(n1) * 1.0000f + fabs(n2) * 0.0000f + fabs(n3) * 0.0000f);
+      if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) { colony = true; }
+      float angdiff4 = fabs(w - 60.83f);
+      float axisdiff4 = acosf(fabs(n1) * 0.9834f + fabs(n2) * 0.0905f + fabs(n3) * 0.1570f);
+      if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) { colony = true; }
+      float angdiff5 = fabs(w - 63.26f);
+      float axisdiff5 = acosf(fabs(n1) * 0.9549f + fabs(n2) * 0.0000f + fabs(n3) * 0.2969f);
+      if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) { colony = true; }
+      if (colony == true)
       {
-        int firstfeature = colonylist[j];
-        int size = int(neighborlist[firstfeature].size());
-        for (int l = 0; l < size; l++)
-        {
-          int colony = 0;
-          size_t neigh = neighborlist[firstfeature][l];
-          if (neigh != i && m_ParentNumbers[neigh] == -1 && m_FeaturePhases[neigh] > 0)
-          {
-            w = 10000.0f;
-            QuaternionMathF::Copy(avgQuats[firstfeature], q1);
-            phase1 = m_CrystalStructures[m_FeaturePhases[firstfeature]];
-            QuaternionMathF::Copy(avgQuats[neigh], q2);
-            phase2 = m_CrystalStructures[m_FeaturePhases[neigh]];
-
-            if (phase1 == phase2 &&
-                (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
-            {
-              w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-              OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-              m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
-              OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-              w = w * (180.0f / DREAM3D::Constants::k_Pi);
-              float angdiff1 = fabs(w - 10.53f);
-              float axisdiff1 = acosf(fabs(n1) * 0.0000f + fabs(n2) * 0.0000f + fabs(n3) * 1.0000f);
-              if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) { colony = 1; }
-              float angdiff2 = fabs(w - 90.00f);
-              float axisdiff2 = acosf(fabs(n1) * 0.9958f + fabs(n2) * 0.0917f + fabs(n3) * 0.0000f);
-              if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) { colony = 1; }
-              float angdiff3 = fabs(w - 60.00f);
-              float axisdiff3 = acosf(fabs(n1) * 1.0000f + fabs(n2) * 0.0000f + fabs(n3) * 0.0000f);
-              if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) { colony = 1; }
-              float angdiff4 = fabs(w - 60.83f);
-              float axisdiff4 = acosf(fabs(n1) * 0.9834f + fabs(n2) * 0.0905f + fabs(n3) * 0.1570f);
-              if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) { colony = 1; }
-              float angdiff5 = fabs(w - 63.26f);
-              float axisdiff5 = acosf(fabs(n1) * 0.9549f + fabs(n2) * 0.0000f + fabs(n3) * 0.2969f);
-              if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) { colony = 1; }
-              if (colony == 1)
-              {
-                m_ParentNumbers[neigh] = parentcount;
-                colonylist.push_back(neigh);
-              }
-            }
-            else if (Ebsd::CrystalStructure::Cubic_High == phase2
-                     && Ebsd::CrystalStructure::Hexagonal_High == phase1)
-            {
-              colony = check_for_burgers(q2, q1);
-              if (colony == 1)
-              {
-                m_ParentNumbers[neigh] = parentcount;
-                colonylist.push_back(neigh);
-              }
-            }
-            else if ( Ebsd::CrystalStructure::Cubic_High == phase1
-                      && Ebsd::CrystalStructure::Hexagonal_High == phase2)
-            {
-              colony = check_for_burgers(q1, q2);
-              if (colony == 1)
-              {
-                m_ParentNumbers[neigh] = parentcount;
-                colonylist.push_back(neigh);
-              }
-            }
-          }
-        }
+        m_FeatureParentIds[neighborFeature] = newFid;
+        return true;
       }
     }
-    colonylist.clear();
+    else if (Ebsd::CrystalStructure::Cubic_High == phase2 && Ebsd::CrystalStructure::Hexagonal_High == phase1)
+    {
+      colony = check_for_burgers(q2, q1);
+      if (colony == true)
+      {
+        m_FeatureParentIds[neighborFeature] = newFid;
+        return true;
+      }
+    }
+    else if ( Ebsd::CrystalStructure::Cubic_High == phase1 && Ebsd::CrystalStructure::Hexagonal_High == phase2)
+    {
+      colony = check_for_burgers(q1, q2);
+      if (colony == true)
+      {
+        m_FeatureParentIds[neighborFeature] = newFid;
+        return true;
+      }
+    }
   }
-  size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
-  for (size_t k = 0; k < totalPoints; k++)
-  {
-    int featurename = m_FeatureIds[k];
-    if(featurename > 0) { m_CellParentIds[k] = m_ParentNumbers[featurename]; }
-    else { m_CellParentIds[k] = 0; }
-  }
-  numParents = parentcount + 1;
+  return false;
 }
 
 // -----------------------------------------------------------------------------
@@ -525,7 +537,7 @@ void MergeColonies::characterize_colonies()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
+bool MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 {
   float dP = 0.0;
   float angle = 0.0;
@@ -569,26 +581,26 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
       b[2] = gAlphaT[2][0];
       dP = GeometryMath::CosThetaBetweenVectors(a, b);
       angle = acos(dP);
-      if((angle * radToDeg) < m_AngleTolerance) { return 1; }
-      if((180.0 - (angle * radToDeg)) < m_AngleTolerance) { return 1; }
+      if((angle * radToDeg) < m_AngleTolerance) { return true; }
+      if((180.0 - (angle * radToDeg)) < m_AngleTolerance) { return true; }
       b[0] = -0.5 * gAlphaT[0][0] + 0.866025 * gAlphaT[0][1];
       b[1] = -0.5 * gAlphaT[1][0] + 0.866025 * gAlphaT[1][1];
       b[2] = -0.5 * gAlphaT[2][0] + 0.866025 * gAlphaT[2][1];
       dP = GeometryMath::CosThetaBetweenVectors(a, b);
       angle = acos(dP);
-      if((angle * radToDeg) < m_AngleTolerance) { return 1; }
-      if((180.0 - (angle * radToDeg)) < m_AngleTolerance) { return 1; }
+      if((angle * radToDeg) < m_AngleTolerance) { return true; }
+      if((180.0 - (angle * radToDeg)) < m_AngleTolerance) { return true; }
       b[0] = -0.5 * gAlphaT[0][0] - 0.866025 * gAlphaT[0][1];
       b[1] = -0.5 * gAlphaT[1][0] - 0.866025 * gAlphaT[1][1];
       b[2] = -0.5 * gAlphaT[2][0] - 0.866025 * gAlphaT[2][1];
       dP = GeometryMath::CosThetaBetweenVectors(a, b);
       angle = acos(dP);
-      if((angle * radToDeg) < m_AngleTolerance) { return 1; }
-      if((180.0 - (angle * radToDeg)) < m_AngleTolerance) { return 1; }
+      if((angle * radToDeg) < m_AngleTolerance) { return true; }
+      if((180.0 - (angle * radToDeg)) < m_AngleTolerance) { return true; }
     }
   }
 
-  return 0;
+  return false;
 }
 
 // -----------------------------------------------------------------------------
@@ -596,24 +608,24 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 // -----------------------------------------------------------------------------
 void MergeColonies::identify_globAlpha()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  QVector<int> betaSize(numParents, 0);
-  QVector<int> totalSize(numParents, 0);
-  for (int64_t i = 0; i < totalPoints; i++)
-  {
-    int pnum = m_CellParentIds[i];
-    totalSize[pnum]++;
-    if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[m_CellPhases[i]] )
-    { betaSize[pnum]++; }
-  }
-  for (int64_t i = 0; i < totalPoints; i++)
-  {
-    int pnum = m_CellParentIds[i];
-    float ratio = float(betaSize[pnum]) / float(totalSize[pnum]);
-    if(ratio > 0.0) { m_GlobAlpha[i] = 0; }
-    else { m_GlobAlpha[i] = 1; }
-  }
+  //int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  //QVector<int> betaSize(numParents, 0);
+  //QVector<int> totalSize(numParents, 0);
+  //for (int64_t i = 0; i < totalPoints; i++)
+  //{
+  //  int pnum = m_CellParentIds[i];
+  //  totalSize[pnum]++;
+  //  if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[m_CellPhases[i]] )
+  //  { betaSize[pnum]++; }
+  //}
+  //for (int64_t i = 0; i < totalPoints; i++)
+  //{
+  //  int pnum = m_CellParentIds[i];
+  //  float ratio = float(betaSize[pnum]) / float(totalSize[pnum]);
+  //  if(ratio > 0.0) { m_GlobAlpha[i] = 0; }
+  //  else { m_GlobAlpha[i] = 1; }
+  //}
 }
 

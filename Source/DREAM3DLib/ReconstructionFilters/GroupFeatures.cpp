@@ -34,18 +34,11 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SegmentFeatures.h"
+#include "GroupFeatures.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-
-#include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -60,10 +53,13 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SegmentFeatures::SegmentFeatures() :
+GroupFeatures::GroupFeatures() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName)
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_ContiguousNeighborListArrayName(DREAM3D::FeatureData::NeighborList),
+  m_NonContiguousNeighborListArrayName(DREAM3D::FeatureData::NeighborhoodList),
+  m_UseNonContiguousNeighbors(false)
 {
 
 }
@@ -71,14 +67,14 @@ SegmentFeatures::SegmentFeatures() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SegmentFeatures::~SegmentFeatures()
+GroupFeatures::~GroupFeatures()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void GroupFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -89,7 +85,7 @@ void SegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int GroupFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->closeFilterGroup();
@@ -99,111 +95,103 @@ int SegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SegmentFeatures::dataCheck()
+void GroupFeatures::dataCheck()
 {
   setErrorCondition(0);
 
-  //VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  //if(getErrorCondition() < 0) { return; }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SegmentFeatures::preflight()
-{
-  dataCheck();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SegmentFeatures::execute()
-{
-  setErrorCondition(0);
-
-  dataCheck();
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
+  if(m_ContiguousNeighborList == NULL)
+  {
+    QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
+    setErrorCondition(-304);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+  }
+  if(m_UseNonContiguousNeighbors == true)
+  {
+    // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+    m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborhoodList).get());
+    if(m_NonContiguousNeighborList == NULL)
+    {
+      QString ss = QObject::tr("NeighborhoodLists Array Not Initialized correctly");
+      setErrorCondition(-305);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GroupFeatures::preflight()
+{
+  dataCheck();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GroupFeatures::execute()
+{
+  // Since this method is called from the 'execute' and the DataContainer validity
+  // was checked there we are just going to get the Shared Pointer to the DataContainer
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  size_t udims[3] =
-  { 0, 0, 0 };
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
+  if(m_NonContiguousNeighborList == NULL) m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborhoodList).get());
+  // But since a pointer is difficult to use operators with we will now create a
+  // reference variable to the pointer with the correct variable name that allows
+  // us to use the same syntax as the "vector of vectors"
+  NeighborList<int>& neighborlist = *m_ContiguousNeighborList;
+  NeighborList<int>& neighborlist2 = *m_NonContiguousNeighborList;
 
-  size_t gnum = 1;
-  int64_t seed = 0;
-  int64_t neighbor;
-  bool good = 0;
-  DimType col, row, plane;
-  int64_t size = 0;
-  int64_t initialVoxelsListSize = 10000;
-  QVector<int64_t> voxelslist(initialVoxelsListSize, -1);
-  DimType neighpoints[6];
-  neighpoints[0] = -(dims[0] * dims[1]);
-  neighpoints[1] = -dims[0];
-  neighpoints[2] = -1;
-  neighpoints[3] = 1;
-  neighpoints[4] = dims[0];
-  neighpoints[5] = (dims[0] * dims[1]);
+  QVector<int> grouplist;
+
+  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int parentcount = 0;
+  size_t seed = 0;
+  size_t list1size=0, list2size=0, listsize=0;
+  size_t neigh;
 
   while (seed >= 0)
   {
-    seed = getSeed(gnum);
+    seed = getSeed(parentcount);
     if(seed >= 0)
     {
-      size = 0;
-      voxelslist[size] = seed;
-      size++;
-      while(size > 0)
+      parentcount++;
+      grouplist.push_back(seed);
+      for (size_t j = 0; j < grouplist.size(); j++)
       {
-        int64_t currentpoint = voxelslist[size - 1];
-        size -= 1;
-        col = currentpoint % dims[0];
-        row = (currentpoint / dims[0]) % dims[1];
-        plane = currentpoint / (dims[0] * dims[1]);
-        for (int i = 0; i < 6; i++)
+        int firstfeature = grouplist[j];
+        list1size = int(neighborlist[firstfeature].size());
+        if (m_UseNonContiguousNeighbors == true) { list2size = int(neighborlist2[firstfeature].size()); }
+        for (int k = 0; k < 2; k++)
         {
-          good = true;
-          neighbor = currentpoint + neighpoints[i];
-
-          if(i == 0 && plane == 0) { good = false; }
-          if(i == 5 && plane == (dims[2] - 1)) { good = false; }
-          if(i == 1 && row == 0) { good = false; }
-          if(i == 4 && row == (dims[1] - 1)) { good = false; }
-          if(i == 2 && col == 0) { good = false; }
-          if(i == 3 && col == (dims[0] - 1)) { good = false; }
-          if(good == true)
+          if (k == 0) { listsize = list1size; }
+          else if (k == 1) { listsize = list2size; }
+          for (int l = 0; l < listsize; l++)
           {
-            if(determineGrouping(currentpoint, neighbor, gnum) == true)
+            int twin = 0;
+            if (k == 0) { neigh = neighborlist[firstfeature][l]; }
+            else if (k == 1) { neigh = neighborlist2[firstfeature][l]; }
+            if (neigh != seed)
             {
-              voxelslist[size] = neighbor;
-              size++;
-              if(size >= voxelslist.size())
+              if(determineGrouping(seed, neigh, parentcount) == true);
               {
-                size = voxelslist.size();
-                voxelslist.resize(size + initialVoxelsListSize);
-                for(qint32 j = size; j < voxelslist.size(); ++j) { voxelslist[j] = -1; }
+                grouplist.push_back(neigh);
               }
-
             }
           }
         }
       }
-      voxelslist.clear();
-      voxelslist.fill(-1, initialVoxelsListSize);
-      gnum++;
-
-      QString ss = QObject::tr("Total Features: %1").arg(gnum);
-      if(gnum % 100 == 0) { notifyStatusMessage(getHumanLabel(), ss); }
     }
+    grouplist.clear();
   }
 
   // If there is an error set this to something negative and also set a message
@@ -213,7 +201,7 @@ void SegmentFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t SegmentFeatures::getSeed(size_t gnum)
+size_t GroupFeatures::getSeed(size_t newFid)
 {
   return -1;
 }
@@ -221,7 +209,7 @@ int64_t SegmentFeatures::getSeed(size_t gnum)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
+bool GroupFeatures::determineGrouping(int64_t referenceFeature, int64_t neighborFeature, size_t newFid)
 {
   return false;
 }

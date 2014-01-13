@@ -34,11 +34,12 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef GroupMicroTextureRegions_H_
-#define GroupMicroTextureRegions_H_
+#ifndef GroupFeatures_H_
+#define GroupFeatures_H_
 
 #include <vector>
 #include <QtCore/QString>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -47,39 +48,40 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
-#include "DREAM3DLib/ReconstructionFilters/GroupFeatures.h"
 /**
- * @class GroupMicroTextureRegions GroupMicroTextureRegions.h DREAM3DLib/ReconstructionFilters/GroupMicroTextureRegions.h
+ * @class GroupFeatures GroupFeatures.h DREAM3DLib/ReconstructionFilters/GroupFeatures.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GroupMicroTextureRegions : public GroupFeatures
+class DREAM3DLib_EXPORT GroupFeatures : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GroupMicroTextureRegions)
-    DREAM3D_STATIC_NEW_MACRO(GroupMicroTextureRegions)
-    DREAM3D_TYPE_MACRO_SUPER(GroupMicroTextureRegions, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(GroupFeatures)
+    DREAM3D_STATIC_NEW_MACRO(GroupFeatures)
+    DREAM3D_TYPE_MACRO_SUPER(GroupFeatures, AbstractFilter)
 
-
-    virtual ~GroupMicroTextureRegions();
+    virtual ~GroupFeatures();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NewCellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
+    DREAM3D_INSTANCE_STRING_PROPERTY(ContiguousNeighborListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NonContiguousNeighborListArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance)
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
+    DREAM3D_INSTANCE_PROPERTY(bool, UseNonContiguousNeighbors)
 
-    virtual void setupFilterParameters();
+    virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
+    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
+    virtual const QString getHumanLabel() {return "Segment Features";}
+
+    /**
+    * @brief This method will write the options to a file
+    * @param writer The writer that is used to write the options to a file
+    */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -95,31 +97,19 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public GroupFeatures
     virtual void preflight();
 
   protected:
-    GroupMicroTextureRegions();
+    GroupFeatures();
 
     virtual size_t getSeed(size_t newFid);
-    virtual bool determineGrouping(size_t referenceFeature, size_t neighborFeature, size_t newFid);
-
-    void characterize_micro_texture_regions();
+    virtual bool determineGrouping(int64_t referenceFeature, int64_t neighborFeature, size_t newFid);
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    NeighborList<int>* m_ContiguousNeighborList;
+    NeighborList<int>* m_NonContiguousNeighborList;
 
     void dataCheck();
-    void updateFeatureInstancePointers();
 
-    GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented
-    void operator=(const GroupMicroTextureRegions&); // Operator '=' Not Implemented
+    GroupFeatures(const GroupFeatures&); // Copy Constructor Not Implemented
+    void operator=(const GroupFeatures&); // Operator '=' Not Implemented
 };
 
-#endif /* GroupMicroTextureRegions_H_ */
+#endif /* GroupFeatures_H_ */
