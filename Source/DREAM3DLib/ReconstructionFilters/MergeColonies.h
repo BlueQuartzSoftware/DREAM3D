@@ -98,8 +98,8 @@ class DREAM3DLib_EXPORT MergeColonies : public GroupFeatures
   protected:
     MergeColonies();
 
-    virtual size_t getSeed(size_t newFid);
-    virtual bool determineGrouping(size_t referenceFeature, size_t neighborFeature, size_t newFid);
+    virtual int getSeed(int newFid);
+    virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
 
     bool check_for_burgers(QuatF betaQuat, QuatF alphaQuat);
     void characterize_colonies();

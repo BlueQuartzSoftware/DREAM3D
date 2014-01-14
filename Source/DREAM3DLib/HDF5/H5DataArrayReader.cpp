@@ -121,13 +121,14 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
     {
       return ptr;
     }
-    int numComp = 1;
-    err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
-    if (err < 0)
+    int version = 0;
+    err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::DataArrayVersion, version);
+    if(err < 0)
     {
-      numComp = 1;
+      version = 1;
     }
-     // Read the tuple dimensions as an attribute
+
+    // Read the tuple dimensions as an attribute
     QVector<size_t> tDims;
     err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::TupleDimensions, tDims);
     if (err < 0)
@@ -145,6 +146,15 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
 
     //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
     qint32 offset = 0;
+    dims.resize((tDims.size()+cDims.size()));
+    for(qint32 i = 0; i < tDims.size(); i++)
+    {
+      dims[i] = tDims[i];
+    }
+    for(qint32 i = 0; i < cDims.size(); i++)
+    {
+      dims[i+tDims.size()] = cDims[i];
+    }
     for(qint32 i = 0; i < tDims.size(); i++)
     {
       if(dims.at(offset) != tDims.at(i))
@@ -156,7 +166,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
     }
     for(qint32 i = 0; i < cDims.size(); i++)
     {
-      if(dims.at(offset) != tDims.at(i))
+      if(dims.at(offset) != cDims.at(i))
       {
         qDebug() << "Component Dimension " << i << " did not equal the matching slot in the HDF5 Dataset Dimensions." << dims.at(offset) << " Versus " << cDims.at(i);
         return ptr;
@@ -254,12 +264,12 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
       version = 1;
     }
 
-
     // Read the tuple dimensions as an attribute
     QVector<size_t> tDims;
     err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::TupleDimensions, tDims);
     if (err < 0)
     {
+      std::cout << "Missing TupleDimensions for Array with Name: " << name.toStdString() << std::endl;
       return ptr;
     }
 
@@ -268,11 +278,21 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
     err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions,cDims);
     if (err < 0)
     {
+      std::cout << "Missing ComponentDimensions for Array with Name: " << name.toStdString() << std::endl;
       return ptr;
     }
 
     //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
     qint32 offset = 0;
+    dims.resize((tDims.size()+cDims.size()));
+    for(qint32 i = 0; i < tDims.size(); i++)
+    {
+      dims[i] = tDims[i];
+    }
+    for(qint32 i = 0; i < cDims.size(); i++)
+    {
+      dims[i+tDims.size()] = cDims[i];
+    }
     for(qint32 i = 0; i < tDims.size(); i++)
     {
       if(dims.at(offset) != tDims.at(i))

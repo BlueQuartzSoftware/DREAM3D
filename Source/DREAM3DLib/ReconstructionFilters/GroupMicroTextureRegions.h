@@ -97,8 +97,8 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public GroupFeatures
   protected:
     GroupMicroTextureRegions();
 
-    virtual size_t getSeed(size_t newFid);
-    virtual bool determineGrouping(size_t referenceFeature, size_t neighborFeature, size_t newFid);
+    virtual int getSeed(int newFid);
+    virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
 
     void characterize_micro_texture_regions();
 

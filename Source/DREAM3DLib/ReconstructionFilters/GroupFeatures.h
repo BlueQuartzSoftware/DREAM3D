@@ -99,8 +99,8 @@ class DREAM3DLib_EXPORT GroupFeatures : public AbstractFilter
   protected:
     GroupFeatures();
 
-    virtual size_t getSeed(size_t newFid);
-    virtual bool determineGrouping(int64_t referenceFeature, int64_t neighborFeature, size_t newFid);
+    virtual int getSeed(int newFid);
+    virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
 
   private:
     NeighborList<int>* m_ContiguousNeighborList;

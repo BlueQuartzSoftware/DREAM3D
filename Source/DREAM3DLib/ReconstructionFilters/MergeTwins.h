@@ -98,8 +98,8 @@ class DREAM3DLib_EXPORT MergeTwins : public GroupFeatures
   protected:
     MergeTwins();
 
-    virtual size_t getSeed(size_t newFid);
-    virtual bool determineGrouping(size_t referenceFeature, size_t neighborFeature, size_t newFid);
+    virtual int getSeed(int newFid);
+    virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
     void characterize_twins();
 
   private:

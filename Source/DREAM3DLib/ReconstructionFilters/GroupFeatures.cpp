@@ -153,11 +153,11 @@ void GroupFeatures::execute()
 
   QVector<int> grouplist;
 
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  int parentcount = 0;
-  size_t seed = 0;
-  size_t list1size=0, list2size=0, listsize=0;
-  size_t neigh;
+  int numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int parentcount = 1;
+  int seed = 0;
+  int list1size=0, list2size=0, listsize=0;
+  int neigh;
 
   while (seed >= 0)
   {
@@ -180,9 +180,9 @@ void GroupFeatures::execute()
             int twin = 0;
             if (k == 0) { neigh = neighborlist[firstfeature][l]; }
             else if (k == 1) { neigh = neighborlist2[firstfeature][l]; }
-            if (neigh != seed)
+            if (neigh != firstfeature)
             {
-              if(determineGrouping(seed, neigh, parentcount) == true);
+              if(determineGrouping(firstfeature, neigh, parentcount) == true)
               {
                 grouplist.push_back(neigh);
               }
@@ -201,7 +201,7 @@ void GroupFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t GroupFeatures::getSeed(size_t newFid)
+int GroupFeatures::getSeed(int newFid)
 {
   return -1;
 }
@@ -209,7 +209,7 @@ size_t GroupFeatures::getSeed(size_t newFid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool GroupFeatures::determineGrouping(int64_t referenceFeature, int64_t neighborFeature, size_t newFid)
+bool GroupFeatures::determineGrouping(int referenceFeature, int neighborFeature, int newFid)
 {
   return false;
 }

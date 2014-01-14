@@ -257,7 +257,7 @@ void MergeColonies::dataCheck()
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer newCellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  AttributeMatrix::Pointer newCellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
@@ -285,7 +285,7 @@ void MergeColonies::dataCheck()
   m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_FeatureParentIdsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeatureParentIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureParentIdsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeatureParentIdsArrayName, -1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 4;
@@ -294,12 +294,12 @@ void MergeColonies::dataCheck()
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // NewFeature Data
+  dims[0] = 1;
   m_ActivePtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_ActiveArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
-  dims[0] = 1;
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_CrystalStructuresArrayName, -305, dims)
                            ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -417,7 +417,7 @@ void MergeColonies::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t MergeColonies::getSeed(size_t newFid)
+int MergeColonies::getSeed(int newFid)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -425,18 +425,18 @@ size_t MergeColonies::getSeed(size_t newFid)
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   DREAM3D_RANDOMNG_NEW()
-  size_t seed = -1;
-  size_t randfeature = 0;
+  int seed = -1;
+  int randfeature = 0;
 
   // Precalculate some constants
   size_t totalFMinus1 = numfeatures - 1;
 
   size_t counter = 0;
-  randfeature = size_t(float(rg.genrand_res53()) * float(totalFMinus1));
+  randfeature = int(float(rg.genrand_res53()) * float(totalFMinus1));
   while (seed == -1 && counter < numfeatures)
   {
-    if (randfeature > totalFMinus1) { randfeature = static_cast<size_t>( randfeature - numfeatures ); }
-    if (m_FeatureParentIds[randfeature] == 0) { seed = randfeature; }
+    if (randfeature > totalFMinus1) { randfeature = static_cast<int>( randfeature - numfeatures ); }
+    if (m_FeatureParentIds[randfeature] == -1) { seed = randfeature; }
     randfeature++;
     counter++;
   }
@@ -453,7 +453,7 @@ size_t MergeColonies::getSeed(size_t newFid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MergeColonies::determineGrouping(size_t referenceFeature, size_t neighborFeature, size_t newFid)
+bool MergeColonies::determineGrouping(int referenceFeature, int neighborFeature, int newFid)
 {
   float w;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
