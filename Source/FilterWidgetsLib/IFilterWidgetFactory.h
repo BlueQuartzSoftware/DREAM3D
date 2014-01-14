@@ -37,35 +37,44 @@
 #ifndef IFILTERWIDGETFACTOR_H_
 #define IFILTERWIDGETFACTOR_H_
 
-#include <QtGui/QWidget>
-
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+
+#include "FilterWidgetsLib/FilterWidgetsLib.h"
+
+class FilterParameter;
+class QWidget;
 
 
 /**
  * @brief This class serves as a base class to create Factory classes that can
  * create QFilterWidgets for a GUI based on Qt.
  */
-class IFilterWidgetFactory
+class FilterWidgetsLib_EXPORT IFilterWidgetFactory
 {
   public:
     DREAM3D_SHARED_POINTERS(IFilterWidgetFactory)
     DREAM3D_TYPE_MACRO(IFilterWidgetFactory)
 
 
-    virtual ~IFilterWidgetFactory() {}
+    virtual ~IFilterWidgetFactory();
 
-    /** @brief This function should NEVER get called. The subclass should ALWAYS implement
-     * this method so we are going to crash the program.
+    /**
+     * @brief This function should NEVER get called. The subclass should ALWAYS implement
+     * this method so we are going to crash the program.t
+     * @param parameter The FilterParameter that this widget will represent
+     * @param filter The instance of the filter that the FilterParameter is a part of
+     * @param parent The Parent QWidget for the created widget
+     * @return
      */
-    virtual QWidget* createWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL) { BOOST_ASSERT(false); return NULL;}
-
-    virtual AbstractFilter::Pointer getFilterInstance() { BOOST_ASSERT(false); return AbstractFilter::NullPointer(); }
+    virtual QWidget* createWidget(FilterParameter* parameter,
+                                  AbstractFilter* filter = NULL,
+                                  QWidget* parent = NULL);
 
   protected:
-    IFilterWidgetFactory() {}
+    IFilterWidgetFactory();
+
   private:
     IFilterWidgetFactory(const IFilterWidgetFactory&); // Copy Constructor Not Implemented
     void operator=(const IFilterWidgetFactory&); // Operator '=' Not Implemented

@@ -23,9 +23,9 @@ macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
 endmacro()
 
 #-------------------------------------------------------------------------------
-# Macro START_FILTER_GROUP
+# Macro END_FILTER_GROUP
 macro(END_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
-   # file(APPEND ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D/Help/Filters/${filterGroup}/${filterGroup}.dox "\n*/\n")
+#    file(APPEND ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D/Help/Filters/${filterGroup}/${filterGroup}.dox "\n*/\n")
 endmacro(END_FILTER_GROUP  WidgetsBinaryDir filterGroup)
 
 #-------------------------------------------------------------------------------
