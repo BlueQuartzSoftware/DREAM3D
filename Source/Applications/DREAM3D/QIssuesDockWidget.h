@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,45 +28,54 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _QIssuesDockWidget_H_
+#define _QIssuesDockWidget_H_
 
-#ifndef OBSERVER_H_
-#define OBSERVER_H_
 
+#include <QtGui/QDockWidget>
 
-#include <QtCore/QObject>
-#include <QtCore/QVector>
-#include <QtCore/QString>
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 
-/**
- * @class Observer Observer.h DREAM3D/Common/Observer.h
- * @brief This class implements the <b>Observer</b> pattern from the <b>Gang of
- * Four Design Patterns</b> book. There are various methods that are used for
- * notifications. The <b>Observable</b> will decide which method to call.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date September 22, 2011
- * @version 1.0
- */
-class DREAM3DLib_EXPORT Observer : public QObject
+
+#include "ui_QIssuesDockWidget.h"
+
+class QFilterListDockWidget;
+class QLabel;
+class QTableWidgetItem;
+
+class QIssuesDockWidget : public QDockWidget, private Ui::QIssuesDockWidget
 {
+
     Q_OBJECT
-
   public:
-    Observer();
-    DREAM3D_TYPE_MACRO(Observer)
+    QIssuesDockWidget(QWidget* parent = NULL);
+    virtual ~QIssuesDockWidget();
 
-    virtual ~Observer();
+
+    QLabel* createHyperlinkLabel(PipelineMessage msg);
 
   public slots:
-    void processPipelineMessage(const PipelineMessage& pm);
+    void processPipelineMessage(const PipelineMessage& msg);
+    void clearIssues();
+    void on_errorTableWidget_itemClicked( QTableWidgetItem* item );
+  signals:
+
+protected:
+    void setupGui();
+
 
   private:
-    Observer(const Observer&); // Copy Constructor Not Implemented
-    void operator=(const Observer&); // Operator '=' Not Implemented
+
+
+    QIssuesDockWidget(const QIssuesDockWidget&); // Copy Constructor Not Implemented
+    void operator=(const QIssuesDockWidget&); // Operator '=' Not Implemented
+
+
 };
 
-#endif /* OBSERVER_H_ */
+#endif

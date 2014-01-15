@@ -406,12 +406,12 @@ void DREAM3D_UI::setupGui()
 #endif
 
 
-
-  makeStatusBarButton("Filter Library", filterLibraryDockWidget, 0);
-  makeStatusBarButton("Favorites", documentsDockWidget , 1);
-  makeStatusBarButton("PreBuilt", prebuiltPipelinesDockWidget, 2);
-  makeStatusBarButton("Issues", issuesDockWidget, 3);
   makeStatusBarButton("Filters", filterListDockWidget, 0);
+  makeStatusBarButton("Filter Library", filterLibraryDockWidget, 1);
+  makeStatusBarButton("Favorites", documentsDockWidget , 2);
+  makeStatusBarButton("PreBuilt", prebuiltPipelinesDockWidget, 3);
+  makeStatusBarButton("Issues", issuesDockWidget, 4);
+
 
   // Make the connections between the gui elements
   filterLibraryDockWidget->connectFilterList(filterListDockWidget);
@@ -420,6 +420,9 @@ void DREAM3D_UI::setupGui()
 
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
+
+  // Set the IssuesDockWidget as a PipelineMessageObserver Object.
+  pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);
 
 
 
@@ -447,7 +450,7 @@ void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, int 
 #endif
   connect(btn, SIGNAL(toggled(bool)),
           dockWidget, SLOT(setVisible(bool)));
-  btn->setChecked(dockWidget->isVisible());
+  btn->setChecked(!dockWidget->isVisible());
   statusBar()->insertPermanentWidget(index, btn, 0);
 }
 

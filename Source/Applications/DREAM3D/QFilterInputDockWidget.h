@@ -58,7 +58,7 @@ class QFilterInputDockWidget : public QWidget, private Ui::QFilterInputDockWidge
 
   protected slots:
 
-    void setSelectedFilterWidget(AbstractFilter* filter);
+    void displayFilterParameters(AbstractFilter* filter);
 
   signals:
 

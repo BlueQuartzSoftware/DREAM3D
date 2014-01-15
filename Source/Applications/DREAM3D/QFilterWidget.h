@@ -47,7 +47,7 @@
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 
-#if 1
+#if 0
 /**
 * @brief Creates a "setter" method to set the property.
 */
@@ -172,6 +172,7 @@ class QFilterWidget : public QGroupBox
 
   signals:
     void widgetSelected(AbstractFilter* filter);
+    void widgetSelected(QFilterWidget* widget);
 
 
   protected:

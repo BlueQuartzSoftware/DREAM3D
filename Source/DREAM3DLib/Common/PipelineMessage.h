@@ -63,11 +63,11 @@ class PipelineMessage
     {
       m_FilterClassName = rhs.m_FilterClassName;
       m_FilterHumanLabel = rhs.m_FilterHumanLabel;
-      m_MessagePrefix = rhs.m_MessagePrefix;
-      m_Msg = rhs.m_Msg;
+      m_Prefix = rhs.m_Prefix;
+      m_Text = rhs.m_Text;
       m_Code = rhs.m_Code;
-      m_msgType = rhs.m_msgType;
-      m_Progress = rhs.m_Progress;
+      m_Type = rhs.m_Type;
+      m_ProgressValue = rhs.m_ProgressValue;
     }
 
 
@@ -77,10 +77,10 @@ class PipelineMessage
                     MessageType msgType = UnknownMessageType,
                     int progress = -1) :
       m_FilterClassName(className),
-      m_Msg(msg),
+      m_Text(msg),
       m_Code(code),
-      m_msgType(msgType),
-      m_Progress(progress)
+      m_Type(msgType),
+      m_ProgressValue(progress)
     {}
 
     PipelineMessage(const QString& className,
@@ -90,10 +90,10 @@ class PipelineMessage
                     int progress = -1) :
       m_FilterClassName(className),
       m_FilterHumanLabel(""),
-      m_Msg(msg),
+      m_Text(msg),
       m_Code(code),
-      m_msgType(msgType),
-      m_Progress(progress)
+      m_Type(msgType),
+      m_ProgressValue(progress)
     {
 
     }
@@ -106,10 +106,10 @@ class PipelineMessage
                     int progress = -1) :
       m_FilterClassName(className),
       m_FilterHumanLabel(humanLabel),
-      m_Msg(msg),
+      m_Text(msg),
       m_Code(code),
-      m_msgType(msgType),
-      m_Progress(progress)
+      m_Type(msgType),
+      m_ProgressValue(progress)
     {
 
     }
@@ -141,93 +141,99 @@ class PipelineMessage
     bool operator==(const PipelineMessage& rhs)
     {
       return (m_FilterClassName == rhs.m_FilterClassName &&
-              m_MessagePrefix == rhs.m_MessagePrefix &&
+              m_Prefix == rhs.m_Prefix &&
               m_FilterHumanLabel == rhs.m_FilterHumanLabel &&
-              m_Msg == rhs.m_Msg &&
+              m_Text == rhs.m_Text &&
               m_Code == rhs.m_Code &&
-              m_msgType == rhs.m_msgType &&
-              m_Progress == rhs.m_Progress);
+              m_Type == rhs.m_Type &&
+              m_ProgressValue == rhs.m_ProgressValue);
     }
 
     void operator=(const PipelineMessage& rhs)
     {
       m_FilterClassName = rhs.m_FilterClassName;
-      m_MessagePrefix = rhs.m_MessagePrefix;
+      m_Prefix = rhs.m_Prefix;
       m_FilterHumanLabel = rhs.m_FilterHumanLabel;
-      m_Msg = rhs.m_Msg;
+      m_Text = rhs.m_Text;
       m_Code = rhs.m_Code;
-      m_msgType = rhs.m_msgType;
-      m_Progress = rhs.m_Progress;
+      m_Type = rhs.m_Type;
+      m_ProgressValue = rhs.m_ProgressValue;
     }
-
-
 
     DREAM3D_INSTANCE_STRING_PROPERTY(FilterClassName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(FilterHumanLabel)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(Prefix)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(Text)
+
+    DREAM3D_INSTANCE_PROPERTY(int, Code)
+
+    DREAM3D_INSTANCE_PROPERTY(MessageType, Type)
+
+    DREAM3D_INSTANCE_PROPERTY(int, ProgressValue)
+
+//    void setFilterHumanLabel(const QString& s)
+//    {
+//      m_FilterHumanLabel = s;
+//    }
+//    QString getFilterHumanLabel() const
+//    {
+//      return m_FilterHumanLabel;
+//    }
 
 
-    void setFilterHumanLabel(const QString& s)
-    {
-      m_FilterHumanLabel = s;
-    }
-    QString getFilterHumanLabel()
-    {
-      return m_FilterHumanLabel;
-    }
+//    /**
+//     * @brief This function is the member m_Text's accessor.
+//     */
+//    QString getMessageText() const { return m_Text; }
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(MessagePrefix)
+//    /**
+//     * @brief This function is the member m_Text's mutator.
+//     * @param val Variable whose value is assigned to m_Text.
+//     */
+//    void setMessageText(const QString& val) { m_Text = val; }
 
+//    /**
+//     * @brief This function is the member m_Code's accessor.
+//     */
+//    int getMessageCode() { return m_Code; }
 
-    /**
-     * @brief This function is the member m_Msg's accessor.
-     */
-    QString getMessageText() { return m_Msg; }
+//    /**
+//     * @brief This function is the member m_Code's mutator.
+//     * @param val Variable whose value is assigned to m_Code.
+//     */
+//    void setMessageCode(int val) { m_Code = val; }
 
-    /**
-     * @brief This function is the member m_Msg's mutator.
-     * @param val Variable whose value is assigned to m_Msg.
-     */
-    void setMessageText(const QString& val) { m_Msg = val; }
+//    /**
+//     * @brief This function is the member m_Type's accessor.
+//     */
+//    PipelineMessage::MessageType getMessageType() { return m_Type; }
 
-    /**
-     * @brief This function is the member m_Code's accessor.
-     */
-    int getMessageCode() { return m_Code; }
+//    /**
+//     * @brief This function is the member m_Type's mutator.
+//     * @param val Variable whose value is assigned to m_Type.
+//     */
+//    void setMessageType(PipelineMessage::MessageType val) { m_Type = val; }
 
-    /**
-     * @brief This function is the member m_Code's mutator.
-     * @param val Variable whose value is assigned to m_Code.
-     */
-    void setMessageCode(int val) { m_Code = val; }
+//    /**
+//     * @brief This function is the member m_status's accessor.
+//     */
+//    int getProgressValue() const { return m_ProgressValue; }
 
-    /**
-     * @brief This function is the member m_msgType's accessor.
-     */
-    PipelineMessage::MessageType getMessageType() { return m_msgType; }
-
-    /**
-     * @brief This function is the member m_msgType's mutator.
-     * @param val Variable whose value is assigned to m_msgType.
-     */
-    void setMessageType(PipelineMessage::MessageType val) { m_msgType = val; }
-
-    /**
-     * @brief This function is the member m_status's accessor.
-     */
-    int getProgressValue() const { return m_Progress; }
-
-    /**
-     * @brief This function is the member m_status's mutator.
-     * @param val Variable whose value is assigned to m_Progress.
-     */
-    void setProgressValue(int val) { m_Progress = val; }
+//    /**
+//     * @brief This function is the member m_status's mutator.
+//     * @param val Variable whose value is assigned to m_ProgressValue.
+//     */
+//    void setProgressValue(int val) { m_ProgressValue = val; }
 
     /**
      * @brief This function creates and returns a string for error messages
      */
     QString generateErrorString()
     {
-      QString ss = QObject::tr("Error (%1): %2: %3").arg(m_Code).arg(m_MessagePrefix).arg(m_Msg);
+      QString ss = QObject::tr("Error (%1): %2: %3").arg(m_Code).arg(m_Prefix).arg(m_Text);
       return ss;
     }
 
@@ -236,7 +242,7 @@ class PipelineMessage
      */
     QString generateWarningString()
     {
-      QString ss = QObject::tr("Warning (%1): %2: %3").arg(m_Code).arg(m_MessagePrefix).arg(m_Msg);
+      QString ss = QObject::tr("Warning (%1): %2: %3").arg(m_Code).arg(m_Prefix).arg(m_Text);
       return ss;
     }
 
@@ -245,17 +251,17 @@ class PipelineMessage
      */
     QString generateStatusString()
     {
-      QString ss = QObject::tr("%1: %2").arg(m_MessagePrefix).arg(m_Msg);
+      QString ss = QObject::tr("%1: %2").arg(m_Prefix).arg(m_Text);
       return ss;
     }
 
 
   private:
-    QString m_FilterHumanLabel;
-    QString m_Msg;          // Message Text
-    int m_Code;                 // Error/Warning Code
-    MessageType m_msgType;      // Type of Message (see enumeration "MessageType")
-    int m_Progress;             // Progress integer
+ //   QString m_FilterHumanLabel;
+ //   QString m_Text;          // Message Text
+ //   int m_Code;                 // Error/Warning Code
+//    MessageType m_Type;      // Type of Message (see enumeration "MessageType")
+ //   int m_ProgressValue;             // Progress integer
 
 };
 
