@@ -45,6 +45,8 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
+#define MIKESTEMP 1
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -146,6 +148,8 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
 
     //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
     qint32 offset = 0;
+    
+#if MIKESTEMP
     dims.resize((tDims.size()+cDims.size()));
     for(qint32 i = 0; i < tDims.size(); i++)
     {
@@ -155,6 +159,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
     {
       dims[i+tDims.size()] = cDims[i];
     }
+#endif
     for(qint32 i = 0; i < tDims.size(); i++)
     {
       if(dims.at(offset) != tDims.at(i))
@@ -284,6 +289,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
 
     //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
     qint32 offset = 0;
+#if MIKESTEMP
     dims.resize((tDims.size()+cDims.size()));
     for(qint32 i = 0; i < tDims.size(); i++)
     {
@@ -293,6 +299,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
     {
       dims[i+tDims.size()] = cDims[i];
     }
+#endif
     for(qint32 i = 0; i < tDims.size(); i++)
     {
       if(dims.at(offset) != tDims.at(i))

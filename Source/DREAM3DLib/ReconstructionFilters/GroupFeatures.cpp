@@ -154,17 +154,17 @@ void GroupFeatures::execute()
   QVector<int> grouplist;
 
   int numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  int parentcount = 1;
+  int parentcount = 0;
   int seed = 0;
   int list1size=0, list2size=0, listsize=0;
   int neigh;
 
   while (seed >= 0)
   {
+    parentcount++;
     seed = getSeed(parentcount);
     if(seed >= 0)
     {
-      parentcount++;
       grouplist.push_back(seed);
       for (size_t j = 0; j < grouplist.size(); j++)
       {

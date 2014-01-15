@@ -261,6 +261,7 @@ void MergeTwins::execute()
   notifyStatusMessage(getHumanLabel(), "Characterizing Twins");
   characterize_twins();
 
+ // m_RandomizeParentIds = false;
   if (true == m_RandomizeParentIds)
   {
     // Generate all the numbers up front
