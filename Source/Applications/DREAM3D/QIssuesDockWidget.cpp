@@ -36,6 +36,8 @@
 
 #include "QIssuesDockWidget.h"
 
+#include <iostream>
+
 #include <QtGui/QLabel>
 #include <QtGui/QTableWidgetItem>
 
