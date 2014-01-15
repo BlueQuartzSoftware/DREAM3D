@@ -92,7 +92,7 @@ void QFilterInputDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterInputDockWidget::setSelectedFilterWidget(AbstractFilter* filter)
+void QFilterInputDockWidget::displayFilterParameters(AbstractFilter* filter)
 {
 
   // Remove all existing QWidgets from this Widget

@@ -35,15 +35,53 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 
-
+#include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/TSL/AngFields.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/TestFilters/GenericExample.h"
 #include "DREAM3DLib/TestFilters/MakeVolumeDataContainer.h"
+#include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
+
 
 #include "UnitTestSupport.hpp"
+#include "TestFileLocations.h"
+
+namespace GenericFilterTest
+{
+  QString TestDir()
+  {
+    return UnitTest::TestTempDir + QString::fromAscii("/GenericFilterTest");
+  }
+
+  QString TestFile()
+  {
+    return TestDir() + QString::fromAscii("/ReadH5EbsdTest.ini");
+  }
+
+  QString DREAM3DFile()
+  {
+    return TestDir() + QString::fromAscii("/SmallIN100.dream3d");
+  }
+
+  //// ****************** This file is a reference file from the DREAM3D Data Directory
+  /// ******************** DO NOT FREAKING DELETE IT!!!!!!!!!!
+  QString SmallIN100File()
+  {
+    return UnitTest::DataDir + QString::fromAscii("/SmallIN100/SmallIN100.h5ebsd");
+  }
+
+}
 
 
 // -----------------------------------------------------------------------------
@@ -52,7 +90,8 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::DataContainerIOTest::TestFile);
+  QFile::remove(GenericFilterTest::TestFile());
+  QFile::remove(GenericFilterTest::DREAM3DFile());
 #endif
 }
 
@@ -81,14 +120,78 @@ void TestGenericFilter()
 
   DREAM3D_REQUIRED(err, >=, 0)
 
-  pipeline->execute();
+      pipeline->execute();
   err = pipeline->getErrorCondition();
 
   DREAM3D_REQUIRE(err >= 0)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestReadH5Ebsd()
+{
 
+ Observer obs;
+  // Send progress messages from PipelineBuilder to this object for display
+  qRegisterMetaType<PipelineMessage>();
+
+  // Create our Pipeline object
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  pipeline->addMessageReceiver(&obs);
+
+  ReadH5Ebsd::Pointer reader = ReadH5Ebsd::New();
+  AngFields angFields;
+  QVector<QString> vArrayNames = angFields.getFieldNames();
+
+  QSet<QString> arrays;
+  for(int i = 0; i < vArrayNames.size(); i++)
+  {
+    arrays.insert(vArrayNames[i]);
+  }
+
+  reader->setInputFile(GenericFilterTest::SmallIN100File());
+  reader->setSelectedArrayNames(arrays);
+  reader->setRefFrameZDir(Ebsd::HightoLow);
+  reader->setZStartIndex(1);
+  reader->setZEndIndex(117);
+  reader->setUseTransformations(true);
+
+  pipeline->pushBack(reader); // Push the H5EbsdReader into the Pipeline
+
+
+  DataContainerWriter::Pointer dcWriter = DataContainerWriter::New();
+  dcWriter->setOutputFile(GenericFilterTest::DREAM3DFile());
+  pipeline->pushBack(dcWriter); // Push the DREAM3D writer into the Pipeline
+
+// Now create a QSettings based writer to write the parameters to a .ini file
+  QFilterParametersWriter::Pointer qWriter = QFilterParametersWriter::New();
+  QString iniFile(GenericFilterTest::TestFile());
+  QFileInfo fi(iniFile);
+  if (fi.exists() == true)
+  {
+    QFile(iniFile).remove();
+  }
+  qWriter->openFile(GenericFilterTest::TestFile(), QSettings::IniFormat);
+  // Write the Filter Parameters to the file
+  int idx = reader->writeFilterParameters(qWriter.get(), 0);
+  dcWriter->writeFilterParameters(qWriter.get(), idx);
+  qWriter->closeFile();
+
+
+// Now preflight and run the Pipeline
+  int err = pipeline->preflightPipeline();
+  if(err < 0)
+  {
+    std::cout << "Failed Preflight" << std::endl;
+  }
+  pipeline->run();
+
+
+
+
+}
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
@@ -97,14 +200,18 @@ int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 
-#if !REMOVE_TEST_FILES
+  QDir dir(GenericFilterTest::TestDir());
+  dir.mkpath(".");
+
+#if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif
 
+      DREAM3D_REGISTER_TEST( TestReadH5Ebsd() )
       DREAM3D_REGISTER_TEST( TestGenericFilter() )
 
     #if REMOVE_TEST_FILES
-      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+      //   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif
 
       PRINT_TEST_SUMMARY();

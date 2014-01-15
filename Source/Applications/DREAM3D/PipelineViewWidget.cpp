@@ -75,10 +75,10 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   m_FilterBeingDragged(NULL),
   m_DropIndex(-1),
   m_EmptyPipelineLabel(NULL),
-  errorTableWidget(NULL),
   m_AutoScroll(false),
   m_AutoScrollMargin(10),
-  m_InputParametersWidget(NULL)
+  m_InputParametersWidget(NULL),
+  m_PipelineMessageObserver(NULL)
 {
   setupGui();
   m_LastDragPoint = QPoint(-1, -1);
@@ -91,6 +91,17 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
 PipelineViewWidget::~PipelineViewWidget()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::setPipelineMessageObserver(QObject* pipelineMessageObserver)
+{
+  m_PipelineMessageObserver = pipelineMessageObserver;
+  // setup our connection
+  connect(this, SIGNAL(pipelineIssuesCleared()),
+          m_PipelineMessageObserver, SLOT(clearIssues()) );
 }
 
 // -----------------------------------------------------------------------------
@@ -156,14 +167,6 @@ void PipelineViewWidget::newEmptyPipelineViewLayout()
   }
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::setErrorsTextArea(QTableWidget* t)
-{
-  this->errorTableWidget = t;
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -318,8 +321,6 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString nam
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::addFilter(const QString& filterName, int index)
 {
-
-
   QFilterWidget* w = new QFilterWidget;
   w->initializeWithFilter(filterName);
 
@@ -358,10 +359,15 @@ void PipelineViewWidget::addFilter(const QString& filterName, int index)
           this, SLOT(removeFilterWidget()) );
   if(NULL != m_InputParametersWidget) {
     connect(w, SIGNAL(widgetSelected(AbstractFilter*)),
-            m_InputParametersWidget, SLOT(setSelectedFilterWidget(AbstractFilter*)) );
+            m_InputParametersWidget, SLOT(displayFilterParameters(AbstractFilter*)) );
   }
+  connect(w, SIGNAL(widgetSelected(QFilterWidget*)),
+          this, SLOT(setSelectedFilterWidget(QFilterWidget*)) );
+
+
   connect(w, SIGNAL(dragStarted(QFilterWidget*)),
           this, SLOT(setFilterBeingDragged(QFilterWidget*)) );
+
   connect(w, SIGNAL(parametersChanged()),
           this, SLOT(preflightPipeline()));
 
@@ -386,16 +392,45 @@ void PipelineViewWidget::addFilter(const QString& filterName, int index)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightPipeline()
 {
-  // clear all the error messages
-  m_PipelineErrorList.clear();
 
-  for (int i = 0; i < errorTableWidget->rowCount(); ++i)
+  std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
+  emit pipelineIssuesCleared();
+
+
+  // Create a Pipeline Object and fill it with the filters from this View
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  qint32 count = filterCount();
+  for(qint32 i = 0; i < count; ++i)
   {
-    errorTableWidget->removeRow(i);
+    QFilterWidget* fw = filterWidgetAt(i);
+    if (fw)
+    {
+      fw->setHasPreflightErrors(false);
+      AbstractFilter::Pointer filter = fw->getFilter();
+      filter->setErrorCondition(0); // Reset the error condition as we are going to preflight
+      pipeline->pushBack(filter);
+    }
+
   }
-  errorTableWidget->setRowCount(0);
+  pipeline->addMessageReceiver(m_PipelineMessageObserver);
+
+  int err = pipeline->preflightPipeline();
+
+  //Now that the preflight has been executed loop through the filters and check their error condition and set the
+  // outline on the filter widget if there were errors or warnings
+  for(qint32 i = 0; i < count; ++i)
+  {
+    QFilterWidget* fw = filterWidgetAt(i);
+    if (fw)
+    {
+      AbstractFilter::Pointer filter = fw->getFilter();
+      if(filter->getErrorCondition() < 0) {fw->setHasPreflightErrors(true);}
+    }
+
+  }
 
 
+#if 0
   // Create the DataContainerArray object
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
@@ -445,60 +480,10 @@ void PipelineViewWidget::preflightPipeline()
   {
     emit pipelineHasNoErrors();
   }
-
-  errorTableWidget->resizeRowsToContents();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::preflightErrorMessage(QVector<PipelineMessage> errorStream)
-{
-  if(NULL != errorTableWidget)
-  {
-
-    // int rc = errorTableWidget->rowCount();
-
-    for (QVector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
-    {
-      emit preflightHasMessage(errorStream.at(i));
-
-#if 0
-      errorTableWidget->insertRow(rc);
-
-      QString filterName = (errorStream.at(i).getFilterName());
-      QString errorDescription = (errorStream.at(i).getMessageText());
-      int errorCode = errorStream.at(i).getMessageCode();
-
-      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(filterName);
-      filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
-      QTableWidgetItem* errorDescriptionWidgetItem = new QTableWidgetItem(errorDescription);
-
-      QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem(QString::number(errorCode));
-      errorCodeWidgetItem->setTextAlignment(Qt::AlignCenter);
-      PipelineMessage& msg = errorStream.at(i);
-      QColor errColor(255, 255, 255);
-      if (msg.getMessageType() == PipelineMessage::Error)
-      {
-        errColor = QColor(255, 191, 193);
-      }
-      else if (msg.getMessageType() == PipelineMessage::Warning)
-      {
-        errColor = QColor(251, 254, 137);
-      }
-      QBrush errBrush(errColor);
-
-      filterNameWidgetItem->setBackground(errBrush);
-      errorDescriptionWidgetItem->setBackground(errBrush);
-      errorCodeWidgetItem->setBackground(errBrush);
-
-      errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
-      errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
-      errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
 #endif
-    }
-  }
+
 }
+
 
 // -----------------------------------------------------------------------------
 //

@@ -60,7 +60,7 @@ class DREAM3DLib_EXPORT Observer : public QObject
     virtual ~Observer();
 
   public slots:
-    void processPipelineMessage(const PipelineMessage& pm) const;
+    void processPipelineMessage(const PipelineMessage& pm);
 
   private:
     Observer(const Observer&); // Copy Constructor Not Implemented

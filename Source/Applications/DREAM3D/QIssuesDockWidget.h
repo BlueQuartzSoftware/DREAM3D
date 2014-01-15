@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,53 +33,49 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _QIssuesDockWidget_H_
+#define _QIssuesDockWidget_H_
 
-#ifndef ANGFIELDS_H_
-#define ANGFIELDS_H_
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
+#include <QtGui/QDockWidget>
 
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/EbsdSetGetMacros.h"
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/AbstractEbsdFields.h"
-#include "EbsdLib/TSL/AngConstants.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
-/**
- * @class AngFields AngFields.h EbsdLib/TSL/AngFields.h
- * @brief This class simply holds the names of the columns that are present in the
- * TSL .ang file.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Aug 18, 2011
- * @version 1.0
- */
-class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
+
+#include "ui_QIssuesDockWidget.h"
+
+class QFilterListDockWidget;
+class QLabel;
+class QTableWidgetItem;
+
+class QIssuesDockWidget : public QDockWidget, private Ui::QIssuesDockWidget
 {
+
+    Q_OBJECT
   public:
-    AngFields();
-    virtual ~AngFields();
+    QIssuesDockWidget(QWidget* parent = NULL);
+    virtual ~QIssuesDockWidget();
 
-    virtual QVector<QString> getFieldNames();
 
-    template<typename T>
-    T getFilterFeatures()
-    {
-      T features;
+    QLabel* createHyperlinkLabel(PipelineMessage msg);
 
-      features.push_back(Ebsd::Ang::ImageQuality);
-      features.push_back(Ebsd::Ang::ConfidenceIndex);
+  public slots:
+    void processPipelineMessage(const PipelineMessage& msg);
+    void clearIssues();
+    void on_errorTableWidget_itemClicked( QTableWidgetItem* item );
+  signals:
 
-      features.push_back(Ebsd::Ang::SEMSignal);
-      features.push_back(Ebsd::Ang::Fit);
-
-      return features;
-    }
+protected:
+    void setupGui();
 
 
   private:
-    AngFields(const AngFields&); // Copy Constructor Not Implemented
-    void operator=(const AngFields&); // Operator '=' Not Implemented
+
+
+    QIssuesDockWidget(const QIssuesDockWidget&); // Copy Constructor Not Implemented
+    void operator=(const QIssuesDockWidget&); // Operator '=' Not Implemented
+
+
 };
 
-#endif /* ANGFIELDS_H_ */
+#endif

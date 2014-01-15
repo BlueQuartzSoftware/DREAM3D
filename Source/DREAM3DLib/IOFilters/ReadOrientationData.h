@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
-    DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer)
+    DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

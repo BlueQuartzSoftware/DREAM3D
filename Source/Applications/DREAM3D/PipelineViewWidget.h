@@ -70,15 +70,23 @@ class PipelineViewWidget : public QFrame
     QFilterWidget* filterWidgetAt(int index);
     void clearWidgets();
 
-
     void loadPipeline(FilterPipeline::Pointer pipeline, bool append = false);
     void savePipeline(const QString& filePath, const QString name, QSettings::Format = QSettings::IniFormat);
 
-    QStringList getPipelineErrorList() {return m_PipelineErrorList;}
-    QTableWidget* getTableWidget() {return errorTableWidget;}
-
-
+    /**
+     * @brief setScrollArea
+     * @param sa
+     */
+    void setScrollArea(QScrollArea* sa);
+    /**
+     * @brief setAutoScroll
+     * @param scroll
+     */
     void setAutoScroll(bool scroll) {m_AutoScroll = scroll;}
+    /**
+     * @brief hasAutoScroll
+     * @return
+     */
     bool hasAutoScroll() {return m_AutoScroll;}
 
     void setAutoScrollMargin(int margin) {m_AutoScrollMargin = margin;}
@@ -93,8 +101,6 @@ class PipelineViewWidget : public QFrame
      */
     void startAutoScroll();
 
-
-
     /**
      * @brief shouldAutoScroll Figures out if the mouse position is in the margin area that would trigger an
      * autoscroll
@@ -104,22 +110,24 @@ class PipelineViewWidget : public QFrame
     bool shouldAutoScroll(const QPoint& pos);
 
 
-
-    void setErrorsTextArea(QTableWidget* t);
     void setInputParametersWidget(QWidget* w);
+
+
 
     void newEmptyPipelineViewLayout();
     void resetLayout();
-    void setScrollArea(QScrollArea* sa);
+
+    void setPipelineMessageObserver(QObject* pipelineMessageObserver);
 
   public slots:
+    void addFilter(const QString& filterName, int index = -1);
     void removeFilterWidget();
     void setSelectedFilterWidget(QFilterWidget* w);
     void setFilterBeingDragged(QFilterWidget* w);
     void preflightPipeline();
 
     // Slots for the pipeline to communicate back to us
-    void preflightErrorMessage(QVector<PipelineMessage> messages);
+//    void preflightErrorMessage(QVector<PipelineMessage> messages);
 
     /**
      * @brief doAutoScroll This does the actual scrolling of the Widget
@@ -127,7 +135,7 @@ class PipelineViewWidget : public QFrame
     void doAutoScroll();
 
     void loadPipelineFile(const QString& filePath);
-    void addFilter(const QString& filterName, int index = -1);
+
 
   signals:
     void addPlaceHolderFilter(QPoint p);
@@ -136,6 +144,7 @@ class PipelineViewWidget : public QFrame
     void pipelineHasErrorsSignal();
     void pipelineHasNoErrors();
     void preflightHasMessage(PipelineMessage msg);
+    void pipelineIssuesCleared();
 
   protected:
     void setupGui();
@@ -149,17 +158,18 @@ class PipelineViewWidget : public QFrame
     QVBoxLayout*              m_FilterWidgetLayout;
     QFilterWidget*            m_FilterBeingDragged;
     int                       m_DropIndex;
-    QStringList               m_PipelineErrorList;
+//    QStringList               m_PipelineErrorList;
     QLabel*                   m_EmptyPipelineLabel;
-    QTableWidget*                       errorTableWidget;
-    QVector<PipelineMessage>       errorStream;
+//    QTableWidget*                       errorTableWidget;
+//    QVector<PipelineMessage>       errorStream;
     QPoint                    m_LastDragPoint;
     QScrollArea*              m_ScrollArea;
-    QTimer            m_autoScrollTimer;
-    bool            m_AutoScroll;
-    int             m_AutoScrollMargin;
-    int             m_autoScrollCount;
-    QWidget*        m_InputParametersWidget;
+    QTimer                    m_autoScrollTimer;
+    bool                      m_AutoScroll;
+    int                       m_AutoScrollMargin;
+    int                       m_autoScrollCount;
+    QWidget*                  m_InputParametersWidget;
+    QObject*                  m_PipelineMessageObserver;
 
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented

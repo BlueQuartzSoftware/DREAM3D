@@ -276,7 +276,7 @@
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
 #define DREAM3D_GET_PROPERTY(type, prpty) \
-  type get##prpty() { return m_##prpty; }
+  type get##prpty() const { return m_##prpty; }
 
 
 
@@ -355,7 +355,7 @@
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
 #define DREAM3D_GET_STRING_PROPERTY( prpty, varname) \
-  QString get##prpty() { return varname; }
+  QString get##prpty() const { return varname; }
 
 /**
  * @brief Creates setters and getters in the form of 'setXXX()' and 'getXXX()' methods
@@ -460,7 +460,7 @@
     updatePipelineProgress(0);\
     pipelineFinished();\
     return;}\
-   
+
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
   if(err < 0) {\

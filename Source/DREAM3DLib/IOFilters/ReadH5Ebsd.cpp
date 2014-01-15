@@ -121,42 +121,17 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile() ) );
+  setRefFrameZDir( static_cast<Ebsd::RefFrameZDir>( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex() ) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex() ) );
   setUseTransformations( reader->readValue("UseTransformations", getUseTransformations() ) );
-  setRefFrameZDir( static_cast<Ebsd::RefFrameZDir>( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
+  setSelectedArrayNames(reader->readArraySelections("SelectedArrayNames", getSelectedArrayNames() ));
 
-
-  // we need to support H5Ebsd Files from previous versions of DREAM3D where there was a "Voxel" data container so
-  // try reading these values. If they are there then it is an older file and it will set the appropriate values
-  setSelectedVolumeCellArrays( reader->readArraySelections("VoxelCell", getSelectedVolumeCellArrays() ) );
-  setSelectedVolumeCellFeatureArrays( reader->readArraySelections("VoxelFeature", getSelectedVolumeCellFeatureArrays() ) );
-  setSelectedVolumeCellEnsembleArrays( reader->readArraySelections("VoxelEnsemble", getSelectedVolumeCellEnsembleArrays() ) );
-
-  // If we are reading a Version 4.3 file and above then the data container names have changed and the last set of
-  // reads would have failed to read anything so those arrays are still empty. These functions will now read those
-  // arrays from the file.
-  READ_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
-
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
-
-  READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
-
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+  //  setManufacturer( static_cast<Ebsd::Manufacturer>(reader->readValue("Manufacturer", getManufacturer() ) ) );
+  //  setSampleTransformationAngle(reader->readValue("SampleTransformationAngle", getSampleTransformationAngle() ));
+  //  setSampleTransformationAxis(reader->readArray("SampleTransformationAxis", getSampleTransformationAxis() ));
+  //  setEulerTransformationAngle(reader->readValue("EulerTransformationAngle", getEulerTransformationAngle() ));
+  //  setEulerTransformationAxis(reader->readArray("EulerTransformationAxis", getEulerTransformationAxis() ));
 
   reader->closeFilterGroup();
 }
@@ -168,32 +143,17 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("RefFrameZDir", getRefFrameZDir());
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("UseTransformations", getUseTransformations() );
-  writer->writeValue("RefFrameZDir", getRefFrameZDir());
+  writer->writeArraySelections("SelectedArrayNames", getSelectedArrayNames() );
 
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
-
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
-
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
-
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+  //  writer->writeValue("Manufacturer", getManufacturer() );
+  //  writer->writeValue("SampleTransformationAngle", getSampleTransformationAngle() );
+  //  writer->writeValue("SampleTransformationAxis", getSampleTransformationAxis() );
+  //  writer->writeValue("EulerTransformationAngle", getEulerTransformationAngle() );
+  //  writer->writeValue("EulerTransformationAxis", getEulerTransformationAxis() );
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -397,8 +357,8 @@ void ReadH5Ebsd::dataCheck()
   if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray( DREAM3D::EnsembleData::MaterialName, materialNames);
+  //  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
+  //  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray( DREAM3D::EnsembleData::MaterialName, materialNames);
 }
 
 // -----------------------------------------------------------------------------
@@ -491,7 +451,7 @@ void ReadH5Ebsd::execute()
     setErrorCondition(-1);
 
     QString ss = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
-                 .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
+        .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -516,7 +476,7 @@ void ReadH5Ebsd::execute()
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
   ebsdReader->readAllArrays(false);
-  ebsdReader->setArraysToRead(m_SelectedVolumeCellArrays);
+  ebsdReader->setArraysToRead(m_SelectedArrayNames);
   err = ebsdReader->loadData(m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir);
   if(err < 0)
   {
@@ -541,7 +501,7 @@ void ReadH5Ebsd::execute()
   else
   {
     QString ss = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
-                 .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
+        .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -591,57 +551,6 @@ void ReadH5Ebsd::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                             QSet<QString> selectedEdgeArrays,
-                                             QSet<QString> selectedFaceArrays,
-                                             QSet<QString> selectedCellArrays,
-                                             QSet<QString> selectedFeatureArrays,
-                                             QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedVolumeVertexArrays = selectedVertexArrays;
-  m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
-  m_SelectedVolumeFaceArrays = selectedFaceArrays;
-  m_SelectedVolumeCellArrays = selectedCellArrays;
-  m_SelectedVolumeCellFeatureArrays = selectedFeatureArrays;
-  m_SelectedVolumeCellEnsembleArrays = selectedEnsembleArrays;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadH5Ebsd::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                              QSet<QString> selectedEdgeArrays,
-                                              QSet<QString> selectedFaceArrays,
-                                              QSet<QString> selectedFeatureArrays,
-                                              QSet<QString> selectedEnsembleArrays)
-{
-  // Empty because there is no Surface data in an H5Ebsd file
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadH5Ebsd::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                           QSet<QString> selectedEdgeArrays,
-                                           QSet<QString> selectedFeatureArrays,
-                                           QSet<QString> selectedEnsembleArrays)
-{
-  // Empty because there is no Edge data in an H5Ebsd file
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadH5Ebsd::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                             QSet<QString> selectedFeatureArrays,
-                                             QSet<QString> selectedEnsembleArrays)
-{
-  // Empty because there is no Vertex data in an H5Ebsd file
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
 {
   int err = 0;
@@ -660,15 +569,15 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
     notifyErrorMessage(getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
     return H5EbsdVolumeReader::NullPointer();
   }
-  if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end())
+  if (m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end())
   {
-    m_SelectedVolumeCellArrays.insert(Ebsd::Ang::Phi1);
-    m_SelectedVolumeCellArrays.insert(Ebsd::Ang::Phi);
-    m_SelectedVolumeCellArrays.insert(Ebsd::Ang::Phi2);
+    m_SelectedArrayNames.insert(Ebsd::Ang::Phi1);
+    m_SelectedArrayNames.insert(Ebsd::Ang::Phi);
+    m_SelectedArrayNames.insert(Ebsd::Ang::Phi2);
   }
-  if (m_SelectedVolumeCellArrays.find(m_CellPhasesArrayName) != m_SelectedVolumeCellArrays.end())
+  if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end())
   {
-    m_SelectedVolumeCellArrays.insert(Ebsd::Ang::PhaseData);
+    m_SelectedArrayNames.insert(Ebsd::Ang::PhaseData);
   }
   return ebsdReader;
 }
@@ -694,15 +603,15 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHKLEbsdVolumeReader()
     notifyErrorMessage(getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
     return H5EbsdVolumeReader::NullPointer();
   }
-  if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end())
+  if (m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end())
   {
-    m_SelectedVolumeCellArrays.insert(Ebsd::Ctf::Euler1);
-    m_SelectedVolumeCellArrays.insert(Ebsd::Ctf::Euler2);
-    m_SelectedVolumeCellArrays.insert(Ebsd::Ctf::Euler3);
+    m_SelectedArrayNames.insert(Ebsd::Ctf::Euler1);
+    m_SelectedArrayNames.insert(Ebsd::Ctf::Euler2);
+    m_SelectedArrayNames.insert(Ebsd::Ctf::Euler3);
   }
-  if (m_SelectedVolumeCellArrays.find(m_CellPhasesArrayName) != m_SelectedVolumeCellArrays.end())
+  if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end())
   {
-    m_SelectedVolumeCellArrays.insert(Ebsd::Ctf::Phase);
+    m_SelectedArrayNames.insert(Ebsd::Ctf::Phase);
   }
   return ebsdReader;
 
@@ -729,18 +638,18 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHEDMEbsdVolumeReader()
     notifyErrorMessage(getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
     return H5EbsdVolumeReader::NullPointer();
   }
-  if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end())
+  if (m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end())
   {
-    m_SelectedVolumeCellArrays.insert(Ebsd::Mic::Euler1);
-    m_SelectedVolumeCellArrays.insert(Ebsd::Mic::Euler2);
-    m_SelectedVolumeCellArrays.insert(Ebsd::Mic::Euler3);
+    m_SelectedArrayNames.insert(Ebsd::Mic::Euler1);
+    m_SelectedArrayNames.insert(Ebsd::Mic::Euler2);
+    m_SelectedArrayNames.insert(Ebsd::Mic::Euler3);
   }
-  if (m_SelectedVolumeCellArrays.find(m_CellPhasesArrayName) != m_SelectedVolumeCellArrays.end())
+  if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end())
   {
-    m_SelectedVolumeCellArrays.insert(Ebsd::Mic::Phase);
+    m_SelectedArrayNames.insert(Ebsd::Mic::Phase);
   }
-  m_SelectedVolumeCellArrays.insert(Ebsd::Mic::X);
-  m_SelectedVolumeCellArrays.insert(Ebsd::Mic::Y);
+  m_SelectedArrayNames.insert(Ebsd::Mic::X);
+  m_SelectedArrayNames.insert(Ebsd::Mic::Y);
   return ebsdReader;
 }
 
@@ -758,23 +667,30 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
+  AttributeMatrix::Pointer cellAttrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m->getXPoints();
+  tDims[1] = m->getYPoints();
+  tDims[2] = m->getZPoints();
+  cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
+
   int64_t totalPoints = m->getTotalPoints();
-  QVector<size_t> dims(1, 1);
-  if (m_SelectedVolumeCellArrays.find(m_CellPhasesArrayName) != m_SelectedVolumeCellArrays.end() )
+  QVector<size_t> cDims(1, 1);
+  if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end() )
   {
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
-    iArray = Int32ArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::Phases);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, iArray);
+    cellAttrMatrix->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
-  if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end() )
+  if (m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end() )
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi1));
     f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi2));
-    dims[0] = 3;
-    fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
+    cDims[0] = 3;
+    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
     for (int64_t i = 0; i < totalPoints; i++)
@@ -783,39 +699,42 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
+    cellAttrMatrix->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
 
-  if (m_SelectedVolumeCellArrays.find(Ebsd::Ang::ImageQuality) != m_SelectedVolumeCellArrays.end() )
+  // Reset this back to 1 for the rest of the arrays
+  cDims[0] = 1;
+
+  if (m_SelectedArrayNames.find(Ebsd::Ang::ImageQuality) != m_SelectedArrayNames.end() )
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ImageQuality));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ImageQuality);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
+    cellAttrMatrix->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
   }
 
-  if (m_SelectedVolumeCellArrays.find(Ebsd::Ang::ConfidenceIndex) != m_SelectedVolumeCellArrays.end() )
+  if (m_SelectedArrayNames.find(Ebsd::Ang::ConfidenceIndex) != m_SelectedArrayNames.end() )
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ConfidenceIndex);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
+    cellAttrMatrix->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
   }
 
-  if (m_SelectedVolumeCellArrays.find(Ebsd::Ang::SEMSignal) != m_SelectedVolumeCellArrays.end() )
+  if (m_SelectedArrayNames.find(Ebsd::Ang::SEMSignal) != m_SelectedArrayNames.end() )
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::SEMSignal));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::SEMSignal);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
+    cellAttrMatrix->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
   }
 
-  if (m_SelectedVolumeCellArrays.find(Ebsd::Ang::Fit) != m_SelectedVolumeCellArrays.end() )
+  if (m_SelectedArrayNames.find(Ebsd::Ang::Fit) != m_SelectedArrayNames.end() )
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Fit));
-    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::Fit);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ang::Fit, fArray);
+    cellAttrMatrix->addAttributeArray(Ebsd::Ang::Fit, fArray);
   }
 }
 
@@ -832,22 +751,28 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix::Pointer cellAttrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m->getXPoints();
+  tDims[1] = m->getYPoints();
+  tDims[2] = m->getZPoints();
+  cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
 
   int64_t totalPoints = m->getTotalPoints();
-  QVector<size_t> dims(1, 1);
+  QVector<size_t> cDims(1, 1);
   phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
-  iArray = Int32ArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::Phases);
+  iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
   ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-  m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, iArray);
+  cellAttrMatrix->addAttributeArray(DREAM3D::CellData::Phases, iArray);
 
-  if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end() )
+  if (m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end() )
   {
     //  radianconversion = M_PI / 180.0;
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler1));
     f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler2));
     f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler3));
-    dims[0] = 3;
-    fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
+    cDims[0] = 3;
+    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     int* cellPhases = iArray->getPointer(0);
 
@@ -859,48 +784,48 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
       if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Hexagonal_High)
       {cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0);}
     }
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
+    cellAttrMatrix->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
 
-  dims[0] = 1;
-  if (m_SelectedVolumeCellArrays.find(Ebsd::Ctf::Bands) != m_SelectedVolumeCellArrays.end() )
+  cDims[0] = 1;
+  if (m_SelectedArrayNames.find(Ebsd::Ctf::Bands) != m_SelectedArrayNames.end() )
   {
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Bands));
-    iArray = Int32ArrayType::CreateArray(totalPoints, dims, Ebsd::Ctf::Bands);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Bands);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::Bands, iArray);
+    cellAttrMatrix->addAttributeArray(Ebsd::Ctf::Bands, iArray);
   }
 
-  if (m_SelectedVolumeCellArrays.find(Ebsd::Ctf::Error) != m_SelectedVolumeCellArrays.end() )
+  if (m_SelectedArrayNames.find(Ebsd::Ctf::Error) != m_SelectedArrayNames.end() )
   {
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Error));
-    iArray = Int32ArrayType::CreateArray(totalPoints, dims, Ebsd::Ctf::Error);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Error);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::Error, iArray);
+    cellAttrMatrix->addAttributeArray(Ebsd::Ctf::Error, iArray);
   }
 
-  if (m_SelectedVolumeCellArrays.find(Ebsd::Ctf::MAD) != m_SelectedVolumeCellArrays.end() )
+  if (m_SelectedArrayNames.find(Ebsd::Ctf::MAD) != m_SelectedArrayNames.end() )
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::MAD));
-    fArray = FloatArrayType::CreateArray(totalPoints, dims, Ebsd::Ctf::MAD);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::MAD);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::MAD, fArray);
+    cellAttrMatrix->addAttributeArray(Ebsd::Ctf::MAD, fArray);
   }
 
-  if (m_SelectedVolumeCellArrays.find(Ebsd::Ctf::BC) != m_SelectedVolumeCellArrays.end() )
+  if (m_SelectedArrayNames.find(Ebsd::Ctf::BC) != m_SelectedArrayNames.end() )
   {
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BC));
-    iArray = Int32ArrayType::CreateArray(totalPoints, dims, Ebsd::Ctf::BC);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::BC);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::BC, iArray);
+    cellAttrMatrix->addAttributeArray(Ebsd::Ctf::BC, iArray);
   }
 
-  if (m_SelectedVolumeCellArrays.find(Ebsd::Ctf::BS) != m_SelectedVolumeCellArrays.end() )
+  if (m_SelectedArrayNames.find(Ebsd::Ctf::BS) != m_SelectedArrayNames.end() )
   {
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BS));
-    iArray = Int32ArrayType::CreateArray(totalPoints, dims, Ebsd::Ctf::BS);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::BS);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Ctf::BS, iArray);
+    cellAttrMatrix->addAttributeArray(Ebsd::Ctf::BS, iArray);
   }
 }
 
@@ -917,6 +842,12 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix::Pointer cellAttrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m->getXPoints();
+  tDims[1] = m->getYPoints();
+  tDims[2] = m->getZPoints();
+  cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
 
   int64_t totalPoints = m->getTotalPoints();
 
@@ -933,14 +864,14 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
     if(y < yMin) { yMin = y; }
   }
   m->setOrigin(xMin, yMin, 0.0);
-  QVector<size_t> dims(1, 3);
-  if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end() )
+  QVector<size_t> cDims(1, 3);
+  if (m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end() )
   {
     //  radianconversion = M_PI / 180.0;
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Mic::Euler1));
     f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Mic::Euler2));
     f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Mic::Euler3));
-    fArray = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::EulerAngles);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     for (int64_t i = 0; i < totalPoints; i++)
     {
@@ -948,23 +879,23 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
+    cellAttrMatrix->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
   }
-  dims[0] = 1;
-  if (m_SelectedVolumeCellArrays.find(m_CellPhasesArrayName) != m_SelectedVolumeCellArrays.end() )
+  cDims[0] = 1;
+  if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end() )
   {
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Mic::Phase));
-    iArray = Int32ArrayType::CreateArray(totalPoints, dims, DREAM3D::CellData::Phases);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, iArray);
+    cellAttrMatrix->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
-  if (m_SelectedVolumeCellArrays.find(Ebsd::Mic::Confidence) != m_SelectedVolumeCellArrays.end() )
+  if (m_SelectedArrayNames.find(Ebsd::Mic::Confidence) != m_SelectedArrayNames.end() )
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Mic::Confidence));
-    fArray = FloatArrayType::CreateArray(totalPoints, dims, Ebsd::Mic::Confidence);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Mic::Confidence);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(Ebsd::Mic::Confidence, fArray);
+    cellAttrMatrix->addAttributeArray(Ebsd::Mic::Confidence, fArray);
   }
 }
 

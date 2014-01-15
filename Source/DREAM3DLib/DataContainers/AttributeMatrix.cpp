@@ -245,10 +245,10 @@ size_t AttributeMatrix::getNumTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AttributeMatrix::resizeAttributeArrays(QVector<size_t> tupleDims)
+void AttributeMatrix::resizeAttributeArrays(QVector<size_t> tDims)
 {
   // int success = 0;
-  m_TupleDims = tupleDims;
+  m_TupleDims = tDims;
   size_t numTuples = m_TupleDims[0];
   for(int i = 1; i < m_TupleDims.size(); i++)
   {

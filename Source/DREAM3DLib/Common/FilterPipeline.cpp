@@ -321,14 +321,14 @@ void FilterPipeline::execute()
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
     progress = progress + 1.0f;
-    progValue.setMessageType(PipelineMessage::ProgressValue);
+    progValue.setType(PipelineMessage::ProgressValue);
     progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
     emit pipelineGeneratedMessage(progValue);
 
     QString ss = QObject::tr("[%1/%2] %3 ").arg(progress).arg(m_Pipeline.size()).arg( (*iter)->getHumanLabel());
 
-    progValue.setMessageType(PipelineMessage::StatusMessage);
-    progValue.setMessageText(ss);
+    progValue.setType(PipelineMessage::StatusMessage);
+    progValue.setText(ss);
     emit pipelineGeneratedMessage(progValue);
 
 
@@ -343,7 +343,7 @@ void FilterPipeline::execute()
     {
       setErrorCondition(err);
 
-      progValue.setMessageType(PipelineMessage::Error);
+      progValue.setType(PipelineMessage::Error);
       progValue.setProgressValue(100);
       emit pipelineGeneratedMessage(progValue);
 

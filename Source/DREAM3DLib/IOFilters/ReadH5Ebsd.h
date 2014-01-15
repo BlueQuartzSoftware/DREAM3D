@@ -81,44 +81,28 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Created Cell Data
-    //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellFeatureArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellEnsembleArrays)
-
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceFeatureArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceEnsembleArrays)
-
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeFeatureArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeEnsembleArrays)
-
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexFeatureArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexEnsembleArrays)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(bool, UseTransformations)
-    DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedArrayNames)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, PossibleArrayNames) // These are for reading the names of the arrays during a preflight
+
+
+    //-------------------------------------------------------
+    // Not sure why these are here. We would be reading all of these from the file
+    //
+    DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
     DREAM3D_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
     DREAM3D_INSTANCE_PROPERTY(QVector<float>, EulerTransformationAxis)
+    //-------------------------------------------------------
 
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -144,24 +128,6 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual void preflight();
 
 
-    virtual void setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                             QSet<QString> selectedEdgeArrays,
-                                             QSet<QString> selectedFaceArrays,
-                                             QSet<QString> selectedCellArrays,
-                                             QSet<QString> selectedFeatureArrays,
-                                             QSet<QString> selectedEnsembleArrays);
-    virtual void setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                              QSet<QString> selectedEdgeArrays,
-                                              QSet<QString> selectedFaceArrays,
-                                              QSet<QString> selectedFeatureArrays,
-                                              QSet<QString> selectedEnsembleArrays);
-    virtual void setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                           QSet<QString> selectedEdgeArrays,
-                                           QSet<QString> selectedFeatureArrays,
-                                           QSet<QString> selectedEnsembleArrays);
-    virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                             QSet<QString> selectedFeatureArrays,
-                                             QSet<QString> selectedEnsembleArrays);
   protected:
     ReadH5Ebsd();
     void dataCheck();
@@ -188,6 +154,11 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     template<typename EbsdReader, typename EbsdPhase>
     int loadInfo(EbsdReader* reader)
     {
+      VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      if(NULL == vdc) { return -1;}
+      AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
+      if(NULL == attrMatrix.get() ) { return -2; }
+
       reader->setFileName(m_InputFile);
       reader->setSliceStart(m_ZStartIndex);
       reader->setSliceEnd(m_ZEndIndex);
@@ -200,15 +171,19 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         return getErrorCondition();
       }
 
+      // Resize the Ensemble Attribute Matrix to be the correct number of phases.
+      QVector<size_t> tDims(1, phases.size() + 1);
+      attrMatrix->resizeAttributeArrays(tDims);
+
       DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
-      StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
-      QVector<size_t> dims(1, 6);
-      FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, getLatticeConstantsArrayName());
+      // StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
+      QVector<size_t> cDims(1, 6);
+      FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, getLatticeConstantsArrayName());
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
       crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-      materialNames->setValue(0, "Invalid Phase");
+      //materialNames->setValue(0, "Invalid Phase");
       latticeConstants->setComponent(0, 0, 0.0f);
       latticeConstants->setComponent(0, 1, 0.0f);
       latticeConstants->setComponent(0, 2, 0.0f);
@@ -220,7 +195,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       {
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure() );
-        materialNames->setValue(phaseID, phases[i]->getMaterialName());
+        //  materialNames->setValue(phaseID, phases[i]->getMaterialName());
         QVector<float> lc = phases[i]->getLatticeConstants();
 
         latticeConstants->setComponent(phaseID, 0, lc[0]);
@@ -231,14 +206,11 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         latticeConstants->setComponent(phaseID, 5, lc[5]);
 
       }
-      VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-      if(NULL == vdc) { return -1;}
-      AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
-      if(NULL == attrMatrix.get() ) { return -2; }
+
 
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+      //    attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
       return 0;
     }
 

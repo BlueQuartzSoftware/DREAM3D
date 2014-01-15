@@ -525,7 +525,7 @@ void QFilterWidget::mouseReleaseEvent(QMouseEvent* event)
   else
   {
     emit widgetSelected(getFilter().get());
-    setIsSelected(true);
+    emit widgetSelected(this);
     event->setAccepted(true);
   }
 }
