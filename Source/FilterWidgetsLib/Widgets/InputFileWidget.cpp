@@ -76,6 +76,8 @@ void InputFileWidget::setupGui()
   if (m_FilterParameter != NULL)
   {
     inputFileWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    QString currentPath = m_Filter->property(m_FilterParameter->getPropertyName().toStdString().c_str()).toString();
+    inputFileWidgetLineEdit->setText(currentPath);
   }
 }
 
@@ -105,12 +107,10 @@ void InputFileWidget::on_inputFileWidgetPushButton_clicked()
   {
     return;
   }
-  bool ok = false;
   file = QDir::toNativeSeparators(file);
   // Store the last used directory into the private instance variable
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
-on_inputFileWidgetLineEdit_textChanged(file);
-
+  inputFileWidgetLineEdit->setText(file);
 
 }
