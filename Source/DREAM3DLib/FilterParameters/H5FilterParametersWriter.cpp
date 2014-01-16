@@ -516,7 +516,45 @@ int H5FilterParametersWriter::writeArraySelections(const QString name, QSet<QStr
 int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
 {
   int err = 0;
+  QListIterator<DataContainerProxy> dcIter(v.list);
+  hid_t dcaGid = QH5Utilities::createGroup(m_CurrentGroupId, name);
 
+  while (dcIter.hasNext()) // DataContainerLevel
+  {
+    const DataContainerProxy& dcProxy =  dcIter.next();
+    if(dcProxy.read == false) { continue; } // Skip to the next DataContainer if we are not reading this one.
+    hid_t dcGid = QH5Utilities::createGroup(dcaGid, dcProxy.name);
+
+    QStringList flat;
+    QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
+    while(amIter.hasNext()) // AttributeMatrixLevel
+    {
+      amIter.next();
+
+      const AttributeMatrixProxy& amProxy = amIter.value();
+      if(amProxy.read == false) { continue; } // Skip to the next AttributeMatrix if not reading this one
+      hid_t amGid = QH5Utilities::createGroup(dcGid, amProxy.name);
+
+      QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
+      while(dIter.hasNext()) // DataArray Level
+      {
+        dIter.next();
+
+        const DataArrayProxy& daProxy = dIter.value();
+        if(daProxy.read == false) { continue; } // Skip to the next DataArray if not reading this one
+
+        flat << dIter.value().name;
+      }
+      QString data = flat.join(QString('\n'));
+      err = QH5Lite::writeStringDataset(amGid, QString::fromAscii("Arrays"), data);
+
+      H5Gclose(amGid);
+    }
+
+    H5Gclose(dcGid);
+  }
+
+  H5Gclose(dcaGid);
   return err;
 }
 

@@ -432,7 +432,7 @@ endif()
 # Should we build the documentation using DOxygen
 FIND_PACKAGE(Doxygen)
 if(NOT DOXYGEN_FOUND)
-	message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
+  message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
 else()
 set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
@@ -440,26 +440,26 @@ set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 set(DOX_GENERATE_RTF "NO")
 option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" OFF)
 if(DREAM3D_GENERATE_RTF STREQUAL "ON")
-	set(DOX_GENERATE_RTF "YES")
+  set(DOX_GENERATE_RTF "YES")
 endif()
 
 
 set(DOX_GENERATE_HTML "NO")
 option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
 if(DREAM3D_GENERATE_HTML STREQUAL "ON")
-	set(DOX_GENERATE_HTML "YES")
+  set(DOX_GENERATE_HTML "YES")
 endif()
 
 
 set(DOX_GENERATE_LATEX "NO")
 option(DREAM3D_GENERATE_LATEX "Generate PDF Documentation" OFF)
 if(DREAM3D_GENERATE_LATEX STREQUAL "ON")
-	set(DOX_GENERATE_LATEX "YES")
-	# Check for existence of LaTex executable files
-	INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
-	if(APPLE)
-		option(AUTO_OPEN_PDF "Automatically open generated PDF files with default PDF reading application" ON)
-	endif()
+  set(DOX_GENERATE_LATEX "YES")
+  # Check for existence of LaTex executable files
+  INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
+  if(APPLE)
+    option(AUTO_OPEN_PDF "Automatically open generated PDF files with default PDF reading application" ON)
+  endif()
 endif()
 
 

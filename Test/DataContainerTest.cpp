@@ -114,7 +114,12 @@ namespace DataContainerIOTest
 
   QString IniFile()
   {
-    return TestDir() + QString::fromAscii("/DataContainerIOTest.txt");
+    return TestDir() + QString::fromAscii("/DataContainerProxyTest.ini");
+  }
+
+  QString H5File()
+  {
+    return TestDir() + QString::fromAscii("/DataContainerProxyTest.h5");
   }
 }
 
@@ -365,7 +370,7 @@ void TestDataContainerReader()
   int err = reader->getErrorCondition();
   DREAM3D_REQUIRE(err >= 0)
 
-  Observer obs;
+      Observer obs;
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();
 
@@ -421,7 +426,7 @@ void TestDataContainerReader()
   err = reader2->getErrorCondition();
   DREAM3D_REQUIRE(err >= 0)
 
-  DataContainerWriter::Pointer writer2 = DataContainerWriter::New();
+      DataContainerWriter::Pointer writer2 = DataContainerWriter::New();
   writer2->setDataContainerArray(dca2);
   writer2->setOutputFile(DataContainerIOTest::TestFile3());
   QObject::connect(writer.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
@@ -525,11 +530,32 @@ void TestDataContainerArrayProxy()
   DataContainerArrayProxy dcaProxyFromIni = reader->getDataContainerArrayProxy();
   //FIXME: This should be validated
 
-  // This would create the actual DataContainerArray instance. The above function does most of the work but will
-  // fail to create the data Arrays properly. THis code is just here as an example
+  // Now write the proxy to an HDF5/DREAM3D file
+  hid_t fid = QH5Utilities::createFile(DataContainerIOTest::H5File() );
+  H5FilterParametersWriter::Pointer parametersWriter = H5FilterParametersWriter::New();
+  hid_t pipelineGroupId = QH5Utilities::createGroup(fid, DREAM3D::StringConstants::PipelineGroupName);
+  parametersWriter->setGroupId(pipelineGroupId);
 
-  //DataContainerArray::Pointer dcArray = _createDataContainerArray(dcaProxyFromIni);
+  int index = reader->writeFilterParameters(parametersWriter.get(), 0);
 
+  int err = QH5Lite::writeScalarAttribute(fid, DREAM3D::StringConstants::PipelineGroupName, DREAM3D::Settings::NumFilters, index);
+  DREAM3D_REQUIRE(err >= 0)
+
+
+
+  // Lets try to read the Proxy back into memory
+  H5FilterParametersReader::Pointer hReader = H5FilterParametersReader::New();
+  hReader->setPipelineGroupId(pipelineGroupId);
+  reader->readFilterParameters(hReader.get(), 0);
+
+  DataContainerArrayProxy dcaProxy = reader->getDataContainerArrayProxy();
+
+  int dcaCount = dcaProxy.list.count();
+  DREAM3D_REQUIRE_EQUAL(dcaCount, 4);
+
+  H5Gclose(pipelineGroupId);
+
+  H5Fclose(fid);
 }
 
 // -----------------------------------------------------------------------------

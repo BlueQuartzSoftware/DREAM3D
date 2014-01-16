@@ -667,9 +667,49 @@ QSet<QString> H5FilterParametersReader::readArraySelections(const QString name, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v)
+DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy defValue)
 {
+  DataContainerArrayProxy dcaProxy;
+  // Open the top level group that holds all the values for this filter parameter
+  hid_t dcaGid = QH5Utilities::openHDF5Object(m_CurrentGroupId, name);
+  if(dcaGid < 0) { return defValue; }
+  QList<QString> dcaNames;
+  int err = QH5Utilities::getGroupObjects(dcaGid, H5Utilities::H5Support_GROUP, dcaNames);
+  // Loop over all the data Containers
+  for(int i = 0; i < dcaNames.size(); i++)
+  {
+    QString dcName = dcaNames.at(i);
+    hid_t dcGid = QH5Utilities::openHDF5Object(dcaGid, dcName);
+    DataContainerProxy dcProxy;
+    dcProxy.name = dcName;
+    // Loop over the attribute Matrices
+    QList<QString> amNames;
+    err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, amNames);
+    for(int j = 0; j < amNames.size(); j++)
+    {
+      QString amName = amNames.at(j);
+      hid_t amGid = QH5Utilities::openHDF5Object(dcGid, amName);
+      AttributeMatrixProxy amProxy(amName, true);
+      QString data; // Output will be read into this object
+      err = QH5Lite::readStringDataset(amGid, "Arrays", data);
+      H5Gclose(amGid);
+      QStringList arrayNames = data.split('\n');
+      QString path = DREAM3D::StringConstants::DataContainerGroupName + "/" + dcProxy.name + "/" + amProxy.name;
+      for(int k = 0; k < arrayNames.size(); k++)
+      {
+        DataArrayProxy daProxy(path, arrayNames.at(k), true);
+        amProxy.dataArrays.insert(arrayNames.at(k), daProxy);
+      }
+      dcProxy.attributeMatricies.insert(amName, amProxy);
+    }
 
-  return v;
+    H5Gclose(dcGid);
+
+    // Add this DataContainerProxy to the DataContainerArrayProxy
+    dcaProxy.list.push_back(dcProxy);
+
+  }
+  dcaProxy.isValid = true;
+  return dcaProxy;
 }
 

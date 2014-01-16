@@ -27,7 +27,7 @@
 * during an MSVC build */
 #cmakedefine DREAM3D_DISABLE_MSVC_WARNINGS
 
-#define __SHOW_DEBUG_MSG__ true
+#define __SHOW_DEBUG_MSG__ false
 
 
 #if (_MSC_VER >= 1)

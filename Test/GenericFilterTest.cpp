@@ -41,6 +41,8 @@
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngFields.h"
+#include "EbsdLib/HKL/CtfFields.h"
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
@@ -64,9 +66,14 @@ namespace GenericFilterTest
     return UnitTest::TestTempDir + QString::fromAscii("/GenericFilterTest");
   }
 
-  QString TestFile()
+  QString TestTSLPipelineFile()
   {
-    return TestDir() + QString::fromAscii("/ReadH5EbsdTest.ini");
+    return TestDir() + QString::fromAscii("/ReadH5Ebsd_AngFileExample.ini");
+  }
+
+  QString TestHKLPipelineFile()
+  {
+    return TestDir() + QString::fromAscii("/ReadH5Ebsd_HklFileExample.ini");
   }
 
   QString DREAM3DFile()
@@ -90,7 +97,8 @@ namespace GenericFilterTest
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(GenericFilterTest::TestFile());
+  QFile::remove(GenericFilterTest::TestTSLPipelineFile());
+  QFile::remove(GenericFilterTest::TestHKLPipelineFile());
   QFile::remove(GenericFilterTest::DREAM3DFile());
 #endif
 }
@@ -130,7 +138,7 @@ void TestGenericFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestReadH5Ebsd()
+void TestTslReadH5Ebsd()
 {
 
  Observer obs;
@@ -167,13 +175,13 @@ void TestReadH5Ebsd()
 
 // Now create a QSettings based writer to write the parameters to a .ini file
   QFilterParametersWriter::Pointer qWriter = QFilterParametersWriter::New();
-  QString iniFile(GenericFilterTest::TestFile());
+  QString iniFile(GenericFilterTest::TestTSLPipelineFile());
   QFileInfo fi(iniFile);
   if (fi.exists() == true)
   {
     QFile(iniFile).remove();
   }
-  qWriter->openFile(GenericFilterTest::TestFile(), QSettings::IniFormat);
+  qWriter->openFile(GenericFilterTest::TestTSLPipelineFile(), QSettings::IniFormat);
   // Write the Filter Parameters to the file
   int idx = reader->writeFilterParameters(qWriter.get(), 0);
   dcWriter->writeFilterParameters(qWriter.get(), idx);
@@ -187,10 +195,72 @@ void TestReadH5Ebsd()
     std::cout << "Failed Preflight" << std::endl;
   }
   pipeline->run();
+  err = pipeline->getErrorCondition();
+  DREAM3D_REQUIRE(err >= 0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestHklReadH5Ebsd()
+{
+
+ Observer obs;
+  // Send progress messages from PipelineBuilder to this object for display
+  qRegisterMetaType<PipelineMessage>();
+
+  // Create our Pipeline object
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  pipeline->addMessageReceiver(&obs);
+
+  ReadH5Ebsd::Pointer reader = ReadH5Ebsd::New();
+  CtfFields ctfFields;
+  QVector<QString> vArrayNames = ctfFields.getFieldNames();
+
+  QSet<QString> arrays;
+  for(int i = 0; i < vArrayNames.size(); i++)
+  {
+    arrays.insert(vArrayNames[i]);
+  }
+
+  reader->setInputFile(GenericFilterTest::SmallIN100File());
+  reader->setSelectedArrayNames(arrays);
+  reader->setRefFrameZDir(Ebsd::HightoLow);
+  reader->setZStartIndex(1);
+  reader->setZEndIndex(117);
+  reader->setUseTransformations(true);
+
+  pipeline->pushBack(reader); // Push the H5EbsdReader into the Pipeline
 
 
+  DataContainerWriter::Pointer dcWriter = DataContainerWriter::New();
+  dcWriter->setOutputFile(GenericFilterTest::DREAM3DFile());
+  pipeline->pushBack(dcWriter); // Push the DREAM3D writer into the Pipeline
+
+// Now create a QSettings based writer to write the parameters to a .ini file
+  QFilterParametersWriter::Pointer qWriter = QFilterParametersWriter::New();
+  QString iniFile(GenericFilterTest::TestHKLPipelineFile());
+  QFileInfo fi(iniFile);
+  if (fi.exists() == true)
+  {
+    QFile(iniFile).remove();
+  }
+  qWriter->openFile(GenericFilterTest::TestHKLPipelineFile(), QSettings::IniFormat);
+  // Write the Filter Parameters to the file
+  int idx = reader->writeFilterParameters(qWriter.get(), 0);
+  dcWriter->writeFilterParameters(qWriter.get(), idx);
+  qWriter->closeFile();
 
 
+// Now preflight and run the Pipeline
+//  int err = pipeline->preflightPipeline();
+//  if(err < 0)
+//  {
+//    std::cout << "Failed Preflight" << std::endl;
+//  }
+//  pipeline->run();
+//  err = pipeline->getErrorCondition();
+//  DREAM3D_REQUIRE(err >= 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -207,7 +277,8 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif
 
-      DREAM3D_REGISTER_TEST( TestReadH5Ebsd() )
+      DREAM3D_REGISTER_TEST( TestTslReadH5Ebsd() )
+      DREAM3D_REGISTER_TEST( TestHklReadH5Ebsd() )
       DREAM3D_REGISTER_TEST( TestGenericFilter() )
 
     #if REMOVE_TEST_FILES
