@@ -197,7 +197,7 @@ void FeatureDataCSVWriter::execute()
   QTextStream outFile(&file);
 
   // Write the total number of features
-  outFile << m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples() - 1 ;
+  outFile << m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples() - 1 << "\n";
   // Get all the names of the arrays from the Data Container
   QList<QString> headers = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
 
