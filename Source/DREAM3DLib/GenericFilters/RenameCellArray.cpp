@@ -155,18 +155,8 @@ void RenameCellArray::execute()
 {
   setErrorCondition(0);
 
-  dataCheck();
+  dataCheck(); // calling the dataCheck will rename the array, so nothing is required here
   if(getErrorCondition() < 0) { return; }
-
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  bool check = m->getAttributeMatrix(getCellAttributeMatrixName())->renameAttributeArray(m_SelectedCellArrayName, m_NewCellArrayName);
-
-  if(check == false)
-  {
-    QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
-    setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }

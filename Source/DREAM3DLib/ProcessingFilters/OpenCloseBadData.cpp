@@ -229,7 +229,7 @@ void OpenCloseBadData::execute()
   size_t numfeatures = 0;
   for(int64_t i = 0; i < totalPoints; i++)
   {
-    featurename = m_FeatureIds[point];
+    featurename = m_FeatureIds[i];
     if(featurename > numfeatures) { numfeatures = featurename; }
   }
 

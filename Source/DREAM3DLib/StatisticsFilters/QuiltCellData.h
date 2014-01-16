@@ -72,6 +72,13 @@ class DREAM3DLib_EXPORT QuiltCellData : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
 
+    DREAM3D_INSTANCE_PROPERTY(int, QStepX)
+    DREAM3D_INSTANCE_PROPERTY(int, QStepY)
+    DREAM3D_INSTANCE_PROPERTY(int, QStepZ)
+    DREAM3D_INSTANCE_PROPERTY(int, PSizeX)
+    DREAM3D_INSTANCE_PROPERTY(int, PSizeY)
+    DREAM3D_INSTANCE_PROPERTY(int, PSizeZ)
+
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
@@ -84,7 +91,7 @@ class DREAM3DLib_EXPORT QuiltCellData : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Fit Distribution To Feature Data"; }
+    virtual const QString getHumanLabel() { return "Quilt Cell Data"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -129,6 +136,7 @@ class DREAM3DLib_EXPORT QuiltCellData : public AbstractFilter
     void dataCheck();
 
   private:
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, NewCellArray)
 
     QuiltCellData(const QuiltCellData&); // Copy Constructor Not Implemented
     void operator=(const QuiltCellData&); // Operator '=' Not Implemented

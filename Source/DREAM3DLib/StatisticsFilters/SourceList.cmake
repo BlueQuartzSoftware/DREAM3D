@@ -47,7 +47,7 @@ set(_PublicFilters
   FitFeatureData
   FitCorrelatedFeatureData
   GenerateEnsembleStatistics
-  #QuiltCellData
+  QuiltCellData
 )
 
 
