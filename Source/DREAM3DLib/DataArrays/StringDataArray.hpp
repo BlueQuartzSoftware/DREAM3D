@@ -375,19 +375,29 @@ class StringDataArray : public IDataArray
 
       // Convert the QVector of Strings into a flat list of strings separated by NULL characters
       // and write that flat array into the HDF5 file.
-      size_t totalSize = 0;
+      size_t max = 0;
       for(int i = 0; i < m_Array.size(); ++i)
       {
-        totalSize += 1 + m_Array[i].size();
+        if (m_Array[i].size() > max) { max = m_Array[i].size(); }
       }
-      Int8ArrayType::Pointer strPtr = Int8ArrayType::CreateArray(totalSize, getName());
+      max = max + 1; // make sure we are 1 greater than the largest to make sure it is null terminated
+
+     // QVector<size_t> tDims(1, m_Array.size());
+      QVector<size_t> cDims(1, max);
+
+      // We are going to encode the strings into a 2D matrix where the number of Rows is the number of tuples (number
+      // of strings in the string array) and the number of columns is the length of the largest string + 1. Yes this is
+      // a waste of some space but in order to read the data back into an attribute matrix the tuple dims and component
+      // dims need to match up.
+
+      Int8ArrayType::Pointer strPtr = Int8ArrayType::CreateArray(tDims, cDims, getName());
       strPtr->initializeWithZeros();
       int8_t* str = strPtr->getPointer(0);
 
       for(int i = 0; i < m_Array.size(); ++i)
       {
-        ::memcpy(str, m_Array[i].toLatin1().data(), m_Array[i].size());
-        str = str + m_Array[i].size() + 1;
+        ::memcpy(str, m_Array[i].toStdString().c_str(), max);
+        str = str + max;
       }
 
       return H5DataArrayWriter::writeDataArray<Int8ArrayType>(parentId, strPtr.get(), tDims);

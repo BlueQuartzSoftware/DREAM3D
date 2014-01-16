@@ -811,6 +811,17 @@ class DataArray : public IDataArray
       }
     }
 
+    /**
+     * @brief getTuplePointer Returns the pointer to a specific tuple
+     * @param tupleIndex The index of tuple
+     */
+    T* getTuplePointer(size_t tupleIndex)
+    {
+#ifndef NDEBUG
+      if (m_Size > 0) { BOOST_ASSERT(tupleIndex * m_NumComponents < m_Size);}
+#endif
+      return m_Array + (tupleIndex * m_NumComponents);
+    }
 
     /**
      * @brief resize

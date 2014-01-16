@@ -148,18 +148,18 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
 
     //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
     qint32 offset = 0;
-    
-#if MIKESTEMP
-    dims.resize((tDims.size()+cDims.size()));
-    for(qint32 i = 0; i < tDims.size(); i++)
-    {
-      dims[i] = tDims[i];
-    }
-    for(qint32 i = 0; i < cDims.size(); i++)
-    {
-      dims[i+tDims.size()] = cDims[i];
-    }
-#endif
+
+    //#if MIKESTEMP
+    //    dims.resize((tDims.size()+cDims.size()));
+    //    for(qint32 i = 0; i < tDims.size(); i++)
+    //    {
+    //      dims[i] = tDims[i];
+    //    }
+    //    for(qint32 i = 0; i < cDims.size(); i++)
+    //    {
+    //      dims[i+tDims.size()] = cDims[i];
+    //    }
+    //#endif
     for(qint32 i = 0; i < tDims.size(); i++)
     {
       if(dims.at(offset) != tDims.at(i))
@@ -180,39 +180,26 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
     }
 
     if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE)
-        || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
+       || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
     {
       if (preflightOnly == false)
       {
-        IDataArray::Pointer bufferPtr = Detail::readH5Dataset<char>(gid, name, tDims, cDims);
-        const char* buf = reinterpret_cast<char*>(bufferPtr->getVoidPointer(0));
-        // count the number of 0x00 characters which are the 'null termination' of each string
+        ptr = StringDataArray::CreateArray(0, name);
+        StringDataArray* strArray = StringDataArray::SafePointerDownCast(ptr.get());
 
-        size_t size = bufferPtr->getNumberOfTuples();
-        size_t count = 0;
-        for(size_t i = 0; i < size; ++i)
+        Int8ArrayType::Pointer bufPtr = Int8ArrayType::CreateArray(tDims, cDims, "INTERNAL_TEMP_STRING_MATRIX");
+        // Read the string matrix
+        err = QH5Lite::readPointerDataset(gid, name, bufPtr->getPointer(0) );
+
+        // the number of tuples is the number of strings
+        size_t size = bufPtr->getNumberOfTuples();
+        for(size_t tuple = 0; tuple < size; tuple++)
         {
-          if(buf[i] == 0)
-          {
-            ++count;
-          }
-        }
-        if (count > 0)
-        {
-          ptr = StringDataArray::CreateArray(count, name);
-          StringDataArray* strArray = StringDataArray::SafePointerDownCast(ptr.get());
-          size_t start = 0;
-          size_t index = 0;
-          for(size_t i = 0; i < size; ++i)
-          {
-            if(buf[i] == 0)
-            {
-              QString str( &(buf[start]) );
-              strArray->setValue(index, str);
-              ++index;
-              start = i + 1;
-            }
-          }
+
+          const char* buf = reinterpret_cast<char*>(bufPtr->getTuplePointer(tuple));
+          QString value(buf);
+          strArray->resize(tuple + 1);
+          strArray->setValue(tuple, value);
         }
       }
       else // We are preflighting only so just create a StringDataArray of lenght 1
