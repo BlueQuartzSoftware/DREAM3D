@@ -176,14 +176,14 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       attrMatrix->resizeAttributeArrays(tDims);
 
       DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
-      // StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
+      StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
       QVector<size_t> cDims(1, 6);
       FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, getLatticeConstantsArrayName());
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
       crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-      //materialNames->setValue(0, "Invalid Phase");
+      materialNames->setValue(0, "Invalid Phase");
       latticeConstants->setComponent(0, 0, 0.0f);
       latticeConstants->setComponent(0, 1, 0.0f);
       latticeConstants->setComponent(0, 2, 0.0f);
@@ -195,7 +195,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       {
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure() );
-        //  materialNames->setValue(phaseID, phases[i]->getMaterialName());
+        materialNames->setValue(phaseID, phases[i]->getMaterialName());
         QVector<float> lc = phases[i]->getLatticeConstants();
 
         latticeConstants->setComponent(phaseID, 0, lc[0]);
@@ -210,7 +210,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
-      //    attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
+      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
       return 0;
     }
 
