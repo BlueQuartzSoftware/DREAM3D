@@ -54,6 +54,10 @@ FitFeatureData::FitFeatureData() :
   m_SelectedFeatureArrayName(""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_RemoveBiasedFeatures(false),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_FeaturePhases(NULL),
+  m_NewEnsembleArrayArrayName(""),
+  m_NewEnsembleArray(NULL),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL)
 {
@@ -117,6 +121,7 @@ void FitFeatureData::readFilterParameters(AbstractFilterParametersReader* reader
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedFeatureArrayName( reader->readString( "SelectedFeatureArrayName", getSelectedFeatureArrayName() ) );
   setDistributionType( reader->readValue( "DistributionType", getDistributionType() ) );
+  setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -148,14 +153,33 @@ void FitFeatureData::dataCheck()
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
+  QVector<size_t> dims(1, 1);
+  m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   if(m_SelectedFeatureArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
+
+  int numComp;
+  QString distType;
+// Determining number of components and name given distribution type
+  if (m_DistributionType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::DistributionType::BetaColumnCount; }
+  else if (m_DistributionType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
+  else if (m_DistributionType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
+
+  m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayName + distType + QString("Fit");
+  dims[0] = numComp;
+  m_NewEnsembleArrayPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter>(this, m_NewEnsembleArrayArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   if(m_RemoveBiasedFeatures == true)
   {
-    QVector<size_t> dims(1, 1);
+    dims[0] = 1;
     m_BiasedFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_BiasedFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -174,7 +198,7 @@ void FitFeatureData::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QString selectedFeatureArrayName, unsigned int dType, bool removeBiasedFeatures, bool* biasedFeatures)
+void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds, int32_t numEnsembles, unsigned int dType, bool removeBiasedFeatures, bool* biasedFeatures)
 {
   StatsData::Pointer sData = StatsData::New();
 
@@ -186,7 +210,7 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(inputData.get());
   if (NULL == featureArray)
   {
-    return IDataArray::NullPointer();
+    return;
   }
   QString ss;
   QString distType;
@@ -197,44 +221,39 @@ IDataArray::Pointer fitData(IDataArray::Pointer inputData, int64_t ensembles, QS
   else if (dType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
   else if (dType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
 
-  ss = selectedFeatureArrayName + distType + QString("Fit");
-  QVector<size_t> dims(1, numComp);
-  typename DataArray<float>::Pointer ensembleArray = DataArray<float>::CreateArray(ensembles, dims, ss);
-
   T* fPtr = featureArray->getPointer(0);
-  float* ePtr = ensembleArray->getPointer(0);
 
   QVector<FloatArrayType::Pointer> dist;
   QVector<QVector<float > > values;
 
   size_t numfeatures = featureArray->getNumberOfTuples();
 
-  dist.resize(ensembles);
-  values.resize(ensembles);
+  dist.resize(numEnsembles);
+  values.resize(numEnsembles);
 
-  for(int64_t i = 1; i < ensembles; i++)
+  for(int64_t i = 1; i < numEnsembles; i++)
   {
     dist[i] = sData->CreateDistributionArrays(dType);
-    values[i].resize(1);
   }
 
+  int32_t ensemble;
   for (size_t i = 1; i < numfeatures; i++)
   {
     if(removeBiasedFeatures == false || biasedFeatures[i] == false)
     {
-      values[1].push_back(static_cast<float>(fPtr[i]));
+      ensemble = eIds[i];
+      values[ensemble].push_back(static_cast<float>(fPtr[i]));
     }
   }
-  for (int64_t i = 1; i < ensembles; i++)
+  for (int64_t i = 1; i < numEnsembles; i++)
   {
     m_DistributionAnalysis[dType]->calculateParameters(values[i], dist[i]);
     for (int j = 0; j < numComp; j++)
     {
       FloatArrayType::Pointer data = dist[i];
-      ePtr[numComp * i + j] = data->getValue(j);
+      ensembleArray[numComp * i + j] = data->getValue(j);
     }
   }
-  return ensembleArray;
 }
 
 // -----------------------------------------------------------------------------
@@ -247,12 +266,11 @@ void FitFeatureData::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t ensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  int32_t numEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   QString ss;
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
-
   if (NULL == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);
@@ -265,50 +283,49 @@ void FitFeatureData::execute()
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {
-    p = fitData<int8_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<int8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    p = fitData<uint8_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<uint8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    p = fitData<int16_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<int16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    p = fitData<uint16_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<uint16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    p = fitData<int32_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<int32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    p = fitData<uint32_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<uint32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    p = fitData<int64_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<int64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    p = fitData<uint64_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<uint64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("float") == 0)
   {
-    p = fitData<float>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<float>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("double") == 0)
   {
-    p = fitData<double>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<double>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("bool") == 0)
   {
-    p = fitData<bool>(inputData, ensembles, m_SelectedFeatureArrayName, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    fitData<bool>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
 
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->getName(), p);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

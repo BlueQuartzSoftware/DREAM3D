@@ -54,6 +54,10 @@ FindFeatureHistogram::FindFeatureHistogram() :
   m_SelectedFeatureArrayName(""),
   m_NumBins(1),
   m_RemoveBiasedFeatures(false),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_FeaturePhases(NULL),
+  m_NewEnsembleArrayArrayName(""),
+  m_NewEnsembleArray(NULL),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL)
 {
@@ -111,6 +115,8 @@ void FindFeatureHistogram::readFilterParameters(AbstractFilterParametersReader* 
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedFeatureArrayName( reader->readString( "SelectedFeatureArrayName", getSelectedFeatureArrayName() ) );
+  setNumBins( reader->readValue( "NumberOfBins", getNumBins() ) );
+  setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -142,14 +148,27 @@ void FindFeatureHistogram::dataCheck()
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
+  QVector<size_t> dims(1, 1);
+  m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   if(m_SelectedFeatureArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
+
+  int numComp = m_NumBins;
+  m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayName + QString("Histogram");
+  dims[0] = numComp;
+  m_NewEnsembleArrayPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<int>, AbstractFilter>(this, m_NewEnsembleArrayArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   if(m_RemoveBiasedFeatures == true)
   {
-    QVector<size_t> dims(1, 1);
+    dims[0] = 1;
     m_BiasedFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_BiasedFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -168,41 +187,19 @@ void FindFeatureHistogram::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-IDataArray::Pointer findHistogram(IDataArray::Pointer inputData, int64_t ensembles, QString selectedFeatureArrayName, int NumBins, bool removeBiasedFeatures, bool* biasedFeatures)
+void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_t* eIds, int NumBins, bool removeBiasedFeatures, bool* biasedFeatures)
 {
-  StatsData::Pointer sData = StatsData::New();
-
   DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(inputData.get());
   if (NULL == featureArray)
   {
-    return IDataArray::NullPointer();
+    return;
   }
-  QString ss;
-  int numComp = NumBins;
-
-  ss = selectedFeatureArrayName + QString("Histogram");
-  QVector<size_t> dims(1, numComp);
-  typename DataArray<float>::Pointer ensembleArray = DataArray<float>::CreateArray(ensembles, dims, ss);
 
   T* fPtr = featureArray->getPointer(0);
-  float* ePtr = ensembleArray->getPointer(0);
-
-  QVector<QVector<int > > counts;
-
   size_t numfeatures = featureArray->getNumberOfTuples();
 
-  counts.resize(ensembles);
-
-  for(int64_t i = 1; i < ensembles; i++)
-  {
-    counts[i].resize(NumBins);
-    for(int j = 0; j < NumBins; j++)
-    {
-      counts[i][j] = 0;
-    }
-  }
-
-  int bin;
+  int32_t bin;
+  int32_t ensemble;
   float min = 1000000.0f;
   float max = 0.0f;
   float value;
@@ -218,19 +215,12 @@ IDataArray::Pointer findHistogram(IDataArray::Pointer inputData, int64_t ensembl
   {
     if(removeBiasedFeatures == false || biasedFeatures[i] == false)
     {
+      ensemble = eIds[i];
       bin = (fPtr[i] - min) / stepsize;
       if(bin >= NumBins) { bin = NumBins - 1; }
-      counts[1][bin]++;
+      ensembleArray[(NumBins*ensemble) + bin]++;
     }
   }
-  for (int64_t i = 1; i < ensembles; i++)
-  {
-    for (int j = 0; j < numComp; j++)
-    {
-      ePtr[numComp * i + j] = counts[i][j];
-    }
-  }
-  return ensembleArray;
 }
 
 // -----------------------------------------------------------------------------
@@ -243,7 +233,6 @@ void FindFeatureHistogram::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t ensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   QString ss;
 
@@ -260,47 +249,47 @@ void FindFeatureHistogram::execute()
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {
-    p = findHistogram<int8_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<int8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    p = findHistogram<uint8_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<uint8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    p = findHistogram<int16_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<int16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    p = findHistogram<uint16_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<uint16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    p = findHistogram<int32_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<int32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    p = findHistogram<uint32_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<uint32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    p = findHistogram<int64_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<int64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    p = findHistogram<uint64_t>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<uint64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("float") == 0)
   {
-    p = findHistogram<float>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<float>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("double") == 0)
   {
-    p = findHistogram<double>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<double>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("bool") == 0)
   {
-    p = findHistogram<bool>(inputData, ensembles, m_SelectedFeatureArrayName, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<bool>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
 
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->getName(), p);

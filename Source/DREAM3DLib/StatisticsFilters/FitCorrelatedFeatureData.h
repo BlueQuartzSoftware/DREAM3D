@@ -136,6 +136,8 @@ class DREAM3DLib_EXPORT FitCorrelatedFeatureData : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, NewEnsembleArray)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
 
     FitCorrelatedFeatureData(const FitCorrelatedFeatureData&); // Copy Constructor Not Implemented
     void operator=(const FitCorrelatedFeatureData&); // Operator '=' Not Implemented

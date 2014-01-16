@@ -133,6 +133,8 @@ class DREAM3DLib_EXPORT FindFeatureHistogram : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NewEnsembleArray)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
 
     FindFeatureHistogram(const FindFeatureHistogram&); // Copy Constructor Not Implemented
     void operator=(const FindFeatureHistogram&); // Operator '=' Not Implemented
