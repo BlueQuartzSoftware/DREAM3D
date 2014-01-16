@@ -165,7 +165,7 @@ void FitFeatureData::dataCheck()
   }
 
   int numComp = 0;
-  QString distType = DREAM3D::DistributionType::UnknownDistributionType;
+  QString distType("UNKNOWN");
 // Determining number of components and name given distribution type
   if (m_DistributionType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::DistributionType::BetaColumnCount; }
   else if (m_DistributionType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
