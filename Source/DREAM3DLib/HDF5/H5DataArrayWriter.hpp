@@ -44,8 +44,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-
+//#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 
 /**
@@ -117,43 +116,70 @@ class H5DataArrayWriter
       return err;
     }
 
-#if 0
-    template<typename T>
-    static int writeArray(hid_t gid, const QString& name, size_t numTuples, int numComp, int arrayRank, QVector<int> arrayDims, int dataArrayVersion, T* data, const QString& className)
+    /**
+     * @brief writeDataArray
+     * @param gid
+     * @param dataArray
+     * @param tDims
+     * @return
+     */
+     template<class T>
+    static int writeStringDataArray(hid_t gid, T* dataArray, QVector<size_t> tDims,
+                                    int classVersion, const QString& fullNameOfClass)
     {
-      QVector<hsize_t> dims(arrayRank+1,0);
-      dims[0] = numTuples;
-      for(int i=1;i<dims.size();i++)
-      {
-        dims[i] = arrayDims[i-1];
-      }
       int err = 0;
-      if (QH5Lite::datasetExists(gid, name) == false)
+
+      QVector<size_t> cDims = dataArray->getComponentDimensions();
+      hsize_t h5Rank = tDims.size() + cDims.size();
+
+      QVector<hsize_t> h5Dims(tDims.size() + cDims.size());
+      for (int i = 0; i < tDims.size(); i++)
       {
-        err = QH5Lite::writePointerDataset(gid, name, dims.size(), dims.data(), data);
+        h5Dims[i] = tDims[i];
+      }
+      for(int i = 0;i < cDims.size(); i++)
+      {
+        h5Dims[i + tDims.size()] = cDims[i];
+      }
+
+      if (QH5Lite::datasetExists(gid, dataArray->getName()) == false)
+      {
+        err = QH5Lite::writePointerDataset(gid, dataArray->getName(), h5Rank, h5Dims.data(), dataArray->getPointer(0));
         if(err < 0)
         {
           return err;
         }
       }
-      err = QH5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
+
+
+      err = QH5Lite::writeScalarAttribute(gid, dataArray->getName(), DREAM3D::HDF5::DataArrayVersion, classVersion);
       if(err < 0)
       {
         return err;
       }
-      err = QH5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::DataArrayVersion, dataArrayVersion);
+      err = QH5Lite::writeStringAttribute(gid, dataArray->getName(), DREAM3D::HDF5::ObjectType, fullNameOfClass);
       if(err < 0)
       {
         return err;
       }
-      err = QH5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
-      if(err < 0)
+
+      // Write the tuple dimensions as an attribute
+      hsize_t size = tDims.size();
+      err = QH5Lite::writePointerAttribute(gid, dataArray->getName(), DREAM3D::HDF5::TupleDimensions, 1, &size, tDims.data());
+      if (err < 0)
+      {
+        return err;
+      }
+
+      // write the component dimensions as  an attribute
+      size = cDims.size();
+      err = QH5Lite::writePointerAttribute(gid, dataArray->getName(), DREAM3D::HDF5::ComponentDimensions, 1, &size, cDims.data());
+      if (err < 0)
       {
         return err;
       }
       return err;
     }
-#endif
 
 
   protected:

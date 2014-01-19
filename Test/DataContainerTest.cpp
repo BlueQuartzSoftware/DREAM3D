@@ -50,6 +50,7 @@
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
@@ -184,6 +185,22 @@ void CreateDataArray(AttributeMatrix::Pointer attrMat, QVector<size_t> compDims)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CreateStringArray(AttributeMatrix::Pointer attrMat, QVector<size_t> compDims)
+{
+  QString name("ExampleStringDataArray");
+  StringDataArray::Pointer data = StringDataArray::CreateArray(attrMat->getNumTuples(), name);
+  for(size_t i = 0; i < attrMat->getNumTuples(); i++)
+  {
+    QString value = QString("string_%1").arg(i);
+    data->setValue(i, value);
+  }
+  attrMat->addAttributeArray(data->getName(), data);
+
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -200,6 +217,7 @@ void FillAttributeMatrix(AttributeMatrix::Pointer attrMat, QVector<size_t> compD
   CreateDataArray<uint64_t>(attrMat, compDims);
   CreateDataArray<float>(attrMat, compDims);
   CreateDataArray<double>(attrMat, compDims);
+  CreateStringArray(attrMat, compDims);
 }
 
 
@@ -240,6 +258,9 @@ void PopulateVolumeDataContainer(VolumeDataContainer* dc, QVector<size_t> tupleD
   // of the image is 10 px high x 20 px Wide. The size of the dimensions go slowest to fastest moving (zyx)
   compDims[0] = 10; compDims.push_back(20);
   FillAttributeMatrix(autoAttrMat, compDims);
+
+
+
 }
 
 // -----------------------------------------------------------------------------
