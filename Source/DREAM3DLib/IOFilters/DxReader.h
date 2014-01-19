@@ -106,9 +106,12 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     void operator=(const DxReader&); // Operator '=' Not Implemented
 
     signals:
-      void inputFileChanged();
+      void parametersChanged();
+
     public:
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY inputFileChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3Widget_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3Widget_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
 };
 
 #endif /* DXREADER_H_ */

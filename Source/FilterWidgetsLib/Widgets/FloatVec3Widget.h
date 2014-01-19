@@ -68,16 +68,18 @@ class FilterWidgetsLib_EXPORT FloatVec3Widget : public QWidget, private Ui::Floa
     * @param parent The parent QWidget for this Widget
     */
     FloatVec3Widget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
-    
+
     virtual ~FloatVec3Widget();
-    
+
     /**
     * @brief This method does additional GUI widget connections
     */
     void setupGui();
 
   public slots:
-
+    void on_xData_textChanged(const QString& text);
+    void on_yData_textChanged(const QString& text);
+    void on_zData_textChanged(const QString& text);
 
   private:
     AbstractFilter*   m_Filter;
