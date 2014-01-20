@@ -53,7 +53,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
+class SurfaceMeshFilter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

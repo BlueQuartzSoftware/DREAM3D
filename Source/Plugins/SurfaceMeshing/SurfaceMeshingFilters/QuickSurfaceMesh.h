@@ -48,7 +48,7 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
+class QuickSurfaceMesh : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

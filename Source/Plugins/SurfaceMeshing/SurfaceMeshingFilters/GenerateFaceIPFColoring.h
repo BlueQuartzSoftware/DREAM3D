@@ -52,7 +52,7 @@
  * @date Dec 12, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateFaceIPFColoring : public SurfaceMeshFilter
+class GenerateFaceIPFColoring : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

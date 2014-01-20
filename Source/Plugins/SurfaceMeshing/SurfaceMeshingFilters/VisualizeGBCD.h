@@ -58,7 +58,7 @@ typedef float real;
  * @date Dec 12, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
+class VisualizeGBCD : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

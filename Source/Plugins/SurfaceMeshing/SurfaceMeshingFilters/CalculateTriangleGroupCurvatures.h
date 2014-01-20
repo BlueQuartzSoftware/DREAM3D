@@ -55,7 +55,7 @@ class SurfaceDataContainer;
  * @date Dec 2012.
  * @version 1.0
  */
-class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
+class CalculateTriangleGroupCurvatures
 {
   public:
     CalculateTriangleGroupCurvatures(int nring,
