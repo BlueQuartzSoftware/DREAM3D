@@ -86,23 +86,23 @@ void BadDataNeighborOrientationCheck::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setPropertyName("MisorientationTolerance");
-    option->setHumanLabel("Misorientation Tolerance");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    option->setUnits("Degrees");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setPropertyName("MisorientationTolerance");
+    parameter->setHumanLabel("Misorientation Tolerance");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameter->setUnits("Degrees");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Required Number of Neighbors");
-    option->setPropertyName("NumberOfNeighbors");
-    option->setWidgetType(FilterParameterWidgetType::IntWidget);
-    option->setValueType("int");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Required Number of Neighbors");
+    parameter->setPropertyName("NumberOfNeighbors");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
 
   setFilterParameters(parameters);

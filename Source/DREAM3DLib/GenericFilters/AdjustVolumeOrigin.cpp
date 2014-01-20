@@ -122,29 +122,29 @@ void AdjustVolumeOrigin::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Apply to Voxel Volume");
-    option->setPropertyName("ApplyToVoxelVolume");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Apply to Voxel Volume");
+    parameter->setPropertyName("ApplyToVoxelVolume");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Apply to Surface Mesh");
-    option->setPropertyName("ApplyToSurfaceMesh");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Apply to Surface Mesh");
+    parameter->setPropertyName("ApplyToSurfaceMesh");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Origin");
-    option->setPropertyName("Origin");
-    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    option->setValueType("FloatVec3Widget_t");
-    option->setUnits("Microns");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Origin");
+    parameter->setPropertyName("Origin");
+    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
+    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setUnits("Microns");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

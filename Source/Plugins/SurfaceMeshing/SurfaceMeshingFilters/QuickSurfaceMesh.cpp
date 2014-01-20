@@ -77,12 +77,12 @@ void QuickSurfaceMesh::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Transfer Phase Id");
-    option->setPropertyName("TransferPhaseId");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Transfer Phase Id");
+    parameter->setPropertyName("TransferPhaseId");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

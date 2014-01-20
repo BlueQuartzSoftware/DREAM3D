@@ -280,36 +280,36 @@ void FindEuclideanDistMap::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Calculate Distance to Boundaries");
-    option->setPropertyName("doBoundaries");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Calculate Distance to Boundaries");
+    parameter->setPropertyName("doBoundaries");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Calculate Distance to Triple Lines");
-    option->setPropertyName("doTripleLines");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Calculate Distance to Triple Lines");
+    parameter->setPropertyName("doTripleLines");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Calculate Distance to Quadruple Points");
-    option->setPropertyName("doQuadPoints");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Calculate Distance to Quadruple Points");
+    parameter->setPropertyName("doQuadPoints");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Calculate Manhattan Distance Only");
-    option->setPropertyName("CalcOnlyManhattanDist");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Calculate Manhattan Distance Only");
+    parameter->setPropertyName("CalcOnlyManhattanDist");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 

@@ -69,12 +69,16 @@ class H5DataArrayWriter
       hsize_t h5Rank = tDims.size() + cDims.size();
 
       QVector<hsize_t> h5Dims(tDims.size() + cDims.size());
+      std::cout << dataArray->getName().toStdString() << " Tuple Dims " << std::endl;
       for (int i = 0; i < tDims.size(); i++)
       {
+        std::cout << "  " << tDims[i] << std::endl;
         h5Dims[i] = tDims[i];
       }
+      std::cout << "  Comp Dims: " << std::endl;
       for(int i = 0;i < cDims.size(); i++)
       {
+              std::cout << "  " << cDims[i] << std::endl;
         h5Dims[i + tDims.size()] = cDims[i];
       }
 

@@ -72,22 +72,22 @@ void DxWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output File");
-    option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setFileExtension("*.dx");
-    option->setFileType("Open DX Visualization");
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output File");
+    parameter->setPropertyName("OutputFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setFileExtension("*.dx");
+    parameter->setFileType("Open DX Visualization");
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Add Surface Layer");
-    option->setPropertyName("AddSurfaceLayer");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Add Surface Layer");
+    parameter->setPropertyName("AddSurfaceLayer");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

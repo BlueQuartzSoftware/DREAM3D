@@ -197,13 +197,13 @@ void ConvertData::setupFilterParameters()
 
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Volume Cell Array Name");
-    option->setPropertyName("SelectedCellArrayName");
-    option->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Volume Cell Array Name");
+    parameter->setPropertyName("SelectedCellArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -226,12 +226,12 @@ void ConvertData::setupFilterParameters()
     parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output Array Name");
-    option->setPropertyName("OutputArrayName");
-    option->setWidgetType(FilterParameterWidgetType::StringWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output Array Name");
+    parameter->setPropertyName("OutputArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

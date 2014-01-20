@@ -106,23 +106,23 @@ void CAxisSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setPropertyName("MisorientationTolerance");
-    option->setHumanLabel("C-Axis Misorientation Tolerance");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    option->setUnits("Degrees");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setPropertyName("MisorientationTolerance");
+    parameter->setHumanLabel("C-Axis Misorientation Tolerance");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameter->setUnits("Degrees");
+    parameters.push_back(parameter);
   }
 #if 0
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Randomly Reorder Generated Feature Ids");
-    option->setPropertyName("RandomizeFeatureIds");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Randomly Reorder Generated Feature Ids");
+    parameter->setPropertyName("RandomizeFeatureIds");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
 #endif
   setFilterParameters(parameters);

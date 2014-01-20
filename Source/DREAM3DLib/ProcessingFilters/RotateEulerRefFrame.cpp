@@ -134,23 +134,23 @@ void RotateEulerRefFrame::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Rotation Axis");
-    option->setPropertyName("RotationAxis");
-    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    option->setValueType("FloatVec3Widget_t");
-    option->setUnits("ijk");
-    parameters.push_back(option);
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Rotation Axis");
+    parameter->setPropertyName("RotationAxis");
+    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
+    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setUnits("ijk");
+    parameters.push_back(parameter);
   }
   {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Rotation Angle");
-    option->setPropertyName("RotationAngle");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    option->setUnits("Degrees");
-    parameters.push_back(option);
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Rotation Angle");
+    parameter->setPropertyName("RotationAngle");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameter->setUnits("Degrees");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

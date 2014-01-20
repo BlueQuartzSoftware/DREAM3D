@@ -164,32 +164,32 @@ void ScalarSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Input Cell Array Name");
-    option->setPropertyName("ScalarArrayName");
-    option->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input Cell Array Name");
+    parameter->setPropertyName("ScalarArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setPropertyName("ScalarTolerance");
-    option->setHumanLabel("Scalar Tolerance");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setPropertyName("ScalarTolerance");
+    parameter->setHumanLabel("Scalar Tolerance");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
 #if 0
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Randomly Reorder Generated Feature Ids");
-    option->setPropertyName("RandomizeFeatureIds");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Randomly Reorder Generated Feature Ids");
+    parameter->setPropertyName("RandomizeFeatureIds");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
 #endif
   setFilterParameters(parameters);

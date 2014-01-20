@@ -75,22 +75,22 @@ void FeatureDataCSVWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output File");
-    option->setPropertyName("FeatureDataFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setFileExtension("*.csv");
-    option->setFileType("Comma Separated Data");
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output File");
+    parameter->setPropertyName("FeatureDataFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setFileExtension("*.csv");
+    parameter->setFileType("Comma Separated Data");
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Neighbor Data");
-    option->setPropertyName("WriteNeighborListData");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Write Neighbor Data");
+    parameter->setPropertyName("WriteNeighborListData");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

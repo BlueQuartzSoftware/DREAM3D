@@ -76,29 +76,29 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output Nodes File");
-    option->setPropertyName("OutputNodesFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output Nodes File");
+    parameter->setPropertyName("OutputNodesFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output Triangles File");
-    option->setPropertyName("OutputTrianglesFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output Triangles File");
+    parameter->setPropertyName("OutputTrianglesFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
 #if WRITE_EDGES_FILE
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output Edges File");
-    option->setPropertyName("OutputEdgesFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output Edges File");
+    parameter->setPropertyName("OutputEdgesFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
 #endif
 

@@ -85,13 +85,13 @@ void FindKernelAvgMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Kernel Radius");
-    option->setPropertyName("KernelSize");
-    option->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
-    option->setValueType("IntVec3Widget_t");
-    option->setUnits("Pixels");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Kernel Radius");
+    parameter->setPropertyName("KernelSize");
+    parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
+    parameter->setValueType("IntVec3Widget_t");
+    parameter->setUnits("Pixels");
+    parameters.push_back(parameter);
   }
 
   setFilterParameters(parameters);

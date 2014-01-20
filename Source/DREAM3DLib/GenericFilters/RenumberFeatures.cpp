@@ -73,12 +73,12 @@ void RenumberFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Name of Array for Active Features");
-    option->setPropertyName("ActiveArrayName");
-    option->setWidgetType(FilterParameterWidgetType::StringWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Name of Array for Active Features");
+    parameter->setPropertyName("ActiveArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

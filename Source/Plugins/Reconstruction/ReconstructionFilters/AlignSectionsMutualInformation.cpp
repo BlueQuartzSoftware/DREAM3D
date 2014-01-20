@@ -105,13 +105,13 @@ void AlignSectionsMutualInformation::setupFilterParameters()
   // Now append our options
   QVector<FilterParameter::Pointer> parameters = getFilterParameters();
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Misorientation Tolerance");
-    option->setPropertyName("MisorientationTolerance");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Misorientation Tolerance");
+    parameter->setPropertyName("MisorientationTolerance");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

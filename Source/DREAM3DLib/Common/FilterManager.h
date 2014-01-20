@@ -38,9 +38,8 @@
 
 
 #include <QtCore/QString>
-#include <map>
-#include <set>
-
+#include <QtCore/QMap>
+#include <QtCore/QMapIterator>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -60,6 +59,8 @@ class DREAM3DLib_EXPORT FilterManager
     virtual ~FilterManager();
 
     typedef QMap<QString, IFilterFactory::Pointer> Collection;
+    typedef QMapIterator<QString, IFilterFactory::Pointer> CollectionIterator;
+
     /**
      * @brief Static instance to retrieve the global instance of this class
      * @return

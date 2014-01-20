@@ -13,10 +13,10 @@
 
 set(DREAM3DLib_Plugin_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Plugin/DREAM3DPluginInterface.h
-
+  ${DREAM3DLib_SOURCE_DIR}/Plugin/DREAM3DPluginLoader.h
 )
 set(DREAM3DLib_Plugin_SRCS
-  
+  ${DREAM3DLib_SOURCE_DIR}/Plugin/DREAM3DPluginLoader.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Plugin" "${DREAM3DLib_Plugin_HDRS}" "${DREAM3DLib_Plugin_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

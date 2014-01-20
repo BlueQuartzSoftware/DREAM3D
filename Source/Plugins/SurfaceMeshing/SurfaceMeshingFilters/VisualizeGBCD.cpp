@@ -87,41 +87,41 @@ void VisualizeGBCD::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Misorientation Axis Angles");
-    option->setPropertyName("MisorientationRotations");
-    option->setWidgetType(FilterParameterWidgetType::AxisAngleWidget);
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Misorientation Axis Angles");
+    parameter->setPropertyName("MisorientationRotations");
+    parameter->setWidgetType(FilterParameterWidgetType::AxisAngleWidget);
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setPropertyName("MisAngle");
-    option->setHumanLabel("Misorientation Angle");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    option->setUnits("Degrees");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setPropertyName("MisAngle");
+    parameter->setHumanLabel("Misorientation Angle");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameter->setUnits("Degrees");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
+    FilterParameter::Pointer parameter = FilterParameter::New();
 
-    option->setHumanLabel("Misorientation Axis");
-    option->setPropertyName("MisAxis");
-    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    option->setValueType("FloatVec3Widget_t");
-    option->setUnits("");
-    parameters.push_back(option);
+    parameter->setHumanLabel("Misorientation Axis");
+    parameter->setPropertyName("MisAxis");
+    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
+    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Regular Grid Pole Figure");
-    option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setFileExtension("*.vtk");
-    option->setFileType("VTK File");
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Regular Grid Pole Figure");
+    parameter->setPropertyName("OutputFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setFileExtension("*.vtk");
+    parameter->setFileType("VTK File");
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

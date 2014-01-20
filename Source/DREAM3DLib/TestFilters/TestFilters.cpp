@@ -31,31 +31,31 @@ Filt0::~Filt0()
 // -----------------------------------------------------------------------------
 void Filt0::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
 
   /*  For an Integer use this code*/
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Integer");
-    option->setPropertyName("Filt0_Integer");
-    option->setWidgetType(FilterParameterWidgetType::IntWidget);
-    option->setValueType("int");
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Integer");
+    parameter->setPropertyName("Filt0_Integer");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
   }
   /*  For a Floating point value use this code*/
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Float");
-    option->setPropertyName("Filt0_Float");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Float");
+    parameter->setPropertyName("Filt0_Float");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameters.push_back(parameter);
   }
 
 
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -152,31 +152,31 @@ Filt1::~Filt1()
 // -----------------------------------------------------------------------------
 void Filt1::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
 
   /*  For an Integer use this code*/
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Integer");
-    option->setPropertyName("Integer");
-    option->setWidgetType(FilterParameterWidgetType::IntWidget);
-    option->setValueType("int");
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Integer");
+    parameter->setPropertyName("Integer");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
   }
   /*  For a Floating point value use this code*/
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Float");
-    option->setPropertyName("Float");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Float");
+    parameter->setPropertyName("Float");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameters.push_back(parameter);
   }
 
 
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

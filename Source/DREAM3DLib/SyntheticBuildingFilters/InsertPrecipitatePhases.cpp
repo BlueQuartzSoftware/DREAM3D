@@ -134,30 +134,30 @@ void InsertPrecipitatePhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Periodic Boundary");
-    option->setPropertyName("PeriodicBoundaries");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Periodic Boundary");
+    parameter->setPropertyName("PeriodicBoundaries");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Goal Attributes");
-    option->setPropertyName("WriteGoalAttributes");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Write Goal Attributes");
+    parameter->setPropertyName("WriteGoalAttributes");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Goal Attribute CSV File");
-    option->setPropertyName("CsvOutputFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setFileExtension("*.csv");
-    option->setFileType("Comma Separated Data");
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Goal Attribute CSV File");
+    parameter->setPropertyName("CsvOutputFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setFileExtension("*.csv");
+    parameter->setFileType("Comma Separated Data");
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

@@ -94,16 +94,16 @@ void FindFeatureReferenceMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Reference Orientation");
-    option->setPropertyName("ReferenceOrientation");
-    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    option->setValueType("unsigned int");
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Reference Orientation");
+    parameter->setPropertyName("ReferenceOrientation");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Feature's Average Orientation");
     choices.push_back("Orientation at Feature's Centroid");
-    option->setChoices(choices);
-    parameters.push_back(option);
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

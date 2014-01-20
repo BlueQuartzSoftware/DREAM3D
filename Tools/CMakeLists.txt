@@ -156,6 +156,22 @@ COMPILE_TOOL(
 )
 
 
+# Create a Command line tool for the FilterParameterTool
+COMPILE_TOOL(
+    TARGET FilterParameterTool
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/FilterParameterTool.cpp
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}"
+    LINK_LIBRARIES DREAM3DLib
+)
+
+
+
 COMPILE_TOOL(
     TARGET ModifiedLambertTest
     SOURCES ${DREAM3DTools_SOURCE_DIR}/ModifiedLambertTest.cpp

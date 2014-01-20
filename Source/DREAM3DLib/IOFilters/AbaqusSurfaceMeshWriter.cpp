@@ -75,13 +75,13 @@ void AbaqusSurfaceMeshWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output File");
-    option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setValueType("string");
-    option->setFileExtension("*.inp");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output File");
+    parameter->setPropertyName("OutputFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setValueType("QString");
+    parameter->setFileExtension("*.inp");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

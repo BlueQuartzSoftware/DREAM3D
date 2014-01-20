@@ -86,14 +86,14 @@ void FindSchmids::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
+    FilterParameter::Pointer parameter = FilterParameter::New();
 
-    option->setHumanLabel("Loading Direction");
-    option->setPropertyName("LoadingDir");
-    option->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    option->setValueType("FloatVec3Widget_t");
-    option->setUnits("");
-    parameters.push_back(option);
+    parameter->setHumanLabel("Loading Direction");
+    parameter->setPropertyName("LoadingDir");
+    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
+    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

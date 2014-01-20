@@ -74,20 +74,20 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Binary Nodes Input File");
-    option->setPropertyName("BinaryNodesFile");
-    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Binary Nodes Input File");
+    parameter->setPropertyName("BinaryNodesFile");
+    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Binary Triangles Input File");
-    option->setPropertyName("BinaryTrianglesFile");
-    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Binary Triangles Input File");
+    parameter->setPropertyName("BinaryTrianglesFile");
+    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
 
 

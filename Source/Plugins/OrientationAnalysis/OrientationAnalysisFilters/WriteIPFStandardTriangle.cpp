@@ -97,12 +97,12 @@ void WriteIPFStandardTriangle::setupFilterParameters()
   FilterParameterVector parameters;
   /* Place all your option initialization code here */
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output File");
-    option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output File");
+    parameter->setPropertyName("OutputFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -119,22 +119,22 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setPropertyName("ImageSize");
-    option->setHumanLabel("Image Size (Square)");
-    option->setWidgetType(FilterParameterWidgetType::IntWidget);
-    option->setValueType("int");
-    option->setUnits("Pixels");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setPropertyName("ImageSize");
+    parameter->setHumanLabel("Image Size (Square)");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameter->setUnits("Pixels");
+    parameters.push_back(parameter);
   }
 //  {
-//    FilterParameter::Pointer option = FilterParameter::New();
-//    option->setPropertyName("ColorCorrectionFactor");
-//    option->setHumanLabel("Color Correction Factor");
-//    option->setUnits("0 <= x < 1");
-//    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-//    option->setValueType("float");
-//    parameters.push_back(option);
+//    FilterParameter::Pointer parameter = FilterParameter::New();
+//    parameter->setPropertyName("ColorCorrectionFactor");
+//    parameter->setHumanLabel("Color Correction Factor");
+//    parameter->setUnits("0 <= x < 1");
+//    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+//    parameter->setValueType("float");
+//    parameters.push_back(parameter);
 //  }
 
 

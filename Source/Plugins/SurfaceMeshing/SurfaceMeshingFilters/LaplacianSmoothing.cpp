@@ -183,12 +183,12 @@ void LaplacianSmoothing::setupFilterParameters()
   FilterParameterVector parameters;
   /* Place all your option initialization code here */
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Iteration Steps");
-    option->setPropertyName("IterationSteps");
-    option->setWidgetType(FilterParameterWidgetType::IntWidget);
-    option->setValueType("int");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Iteration Steps");
+    parameter->setPropertyName("IterationSteps");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();

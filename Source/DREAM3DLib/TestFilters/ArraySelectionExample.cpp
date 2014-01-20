@@ -79,18 +79,18 @@ ArraySelectionExample::~ArraySelectionExample()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> parameters;
   /* To select arrays */
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Arrays to Remember");
-    option->setPropertyName("ArraysToRemember");
-    option->setWidgetType(FilterParameterWidgetType::ArraySelectionWidget);
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Arrays to Remember");
+    parameter->setPropertyName("ArraysToRemember");
+    parameter->setWidgetType(FilterParameterWidgetType::ArraySelectionWidget);
+    parameters.push_back(parameter);
   }
 
 
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

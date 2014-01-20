@@ -73,17 +73,17 @@ void FindLargestCrossSections::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Plane of Interest");
-    option->setPropertyName("Plane");
-    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    option->setValueType("unsigned int");
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Plane of Interest");
+    parameter->setPropertyName("Plane");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
     choices.push_back("YZ");
-    option->setChoices(choices);
-    parameters.push_back(option);
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

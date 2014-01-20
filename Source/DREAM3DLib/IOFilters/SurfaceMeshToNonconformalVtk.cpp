@@ -75,24 +75,24 @@ SurfaceMeshToNonconformalVtk::~SurfaceMeshToNonconformalVtk()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNonconformalVtk::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output Vtk File");
-    option->setPropertyName("OutputVtkFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setValueType("string");
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output Vtk File");
+    parameter->setPropertyName("OutputVtkFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Binary Vtk File");
-    option->setPropertyName("WriteBinaryFile");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Write Binary Vtk File");
+    parameter->setPropertyName("WriteBinaryFile");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

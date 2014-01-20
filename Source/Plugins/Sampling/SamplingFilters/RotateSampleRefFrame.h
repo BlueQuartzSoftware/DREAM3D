@@ -96,6 +96,15 @@ class RotateSampleRefFrame : public AbstractFilter
 
     RotateSampleRefFrame(const RotateSampleRefFrame&); // Copy Constructor Not Implemented
     void operator=(const RotateSampleRefFrame&); // Operator '=' Not Implemented
+
+
+  signals:
+    void parametersChanged();
+
+  public:
+    Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3Widget_t RotationAxis READ getRotationAxis WRITE setRotationAxis NOTIFY parametersChanged)
+    Q_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice NOTIFY parametersChanged)
 };
 
 #endif /* RotateSampleRefFrame_H_ */

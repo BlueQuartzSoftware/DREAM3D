@@ -86,12 +86,12 @@ void AlignSectionsList::setupFilterParameters()
   // Now append our options
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Input File");
-    option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input File");
+    parameter->setPropertyName("InputFile");
+    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }
