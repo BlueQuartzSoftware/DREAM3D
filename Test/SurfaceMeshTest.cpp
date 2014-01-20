@@ -47,10 +47,10 @@
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
 #include "DREAM3DLib/DataContainers/MeshStructs.h"
 #include "DREAM3DLib/Common/Observer.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
 
-#include "DREAM3DLib/SurfaceMeshingFilters/LaplacianSmoothing.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/LaplacianSmoothing.h"
 
 
 // -----------------------------------------------------------------------------

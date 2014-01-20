@@ -62,13 +62,13 @@ class StringDataArray : public IDataArray
     DREAM3D_TYPE_MACRO_SUPER(StringDataArray, IDataArray)
     DREAM3D_CLASS_VERSION(2)
 
-    static Pointer CreateArray(size_t numElements, const QString& name)
+    static Pointer CreateArray(size_t numTuples, const QString& name)
     {
       if (name.isEmpty() == true)
       {
         return NullPointer();
       }
-      StringDataArray* d = new StringDataArray(numElements, true);
+      StringDataArray* d = new StringDataArray(numTuples, true);
       d->setName(name);
       Pointer ptr(d);
       return ptr;
@@ -400,7 +400,7 @@ class StringDataArray : public IDataArray
         str = str + max;
       }
 
-      return H5DataArrayWriter::writeDataArray<Int8ArrayType>(parentId, strPtr.get(), tDims);
+      return H5DataArrayWriter::writeStringDataArray<Int8ArrayType>(parentId, strPtr.get(), tDims, getClassVersion(), getFullNameOfClass());
     }
 
     /**

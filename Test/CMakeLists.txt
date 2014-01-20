@@ -131,10 +131,11 @@ set_target_properties(TextureTest PROPERTIES FOLDER Test)
 
 
 # --------
+if(0)
 add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp)
 target_link_libraries(SurfaceMeshTest DREAM3DLib)
 set_target_properties(SurfaceMeshTest PROPERTIES FOLDER Test)
-
+endif()
 
 # --------
 add_executable(RNGTest ${DREAM3DTest_SOURCE_DIR}/RNGTest.cpp)

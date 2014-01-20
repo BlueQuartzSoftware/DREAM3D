@@ -59,6 +59,8 @@ class QFilterLibraryDockWidget : public QDockWidget, private Ui::QFilterLibraryD
 
     void connectFilterList(QFilterListDockWidget *filterListWidget);
 
+    void refreshFilterGroups();
+
   protected:
     void updateFilterGroupList(FilterManager::Collection& factories);
 

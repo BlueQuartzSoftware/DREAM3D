@@ -249,7 +249,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  fprintf(nodesFile, "%d\n", numNodes);
+  fprintf(nodesFile, "%lld\n", numNodes);
   VertexArray::Vert_t* v = nodes->getPointer(0);
   for (int i = 0; i < numNodes; i++)
   {
@@ -330,7 +330,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  fprintf(triFile, "%lu\n", numTriangles);
+  fprintf(triFile, "%lld\n", numTriangles);
   FaceArray::Face_t* t = triangles->getPointer(0);
 
   int n1, n2, n3, e1 = -1, e2 = -1, e3 = -1;

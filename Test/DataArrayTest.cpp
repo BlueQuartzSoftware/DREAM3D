@@ -39,8 +39,8 @@
 #include <QtCore/QVector>
 #include <QtCore/QString>
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
+//#include "H5Support/QH5Utilities.h"
+//#include "H5Support/QH5Lite.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"

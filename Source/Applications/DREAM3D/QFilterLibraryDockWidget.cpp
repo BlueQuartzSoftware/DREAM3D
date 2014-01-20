@@ -76,10 +76,13 @@ void QFilterLibraryDockWidget::connectFilterList(QFilterListDockWidget* filterLi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterLibraryDockWidget::setupGui()
+void QFilterLibraryDockWidget::refreshFilterGroups()
 {
     FilterManager::Pointer fm = FilterManager::Instance();
-    QSet<QString> groupNames = fm->getGroupNames();
+    QSet<QString> grpNames = fm->getGroupNames();
+
+     QList<QString> grpNameSorted = grpNames.toList();
+    qSort(grpNameSorted);
 
     // Clear out the default stuff
     filterLibraryTree->clear();
@@ -93,7 +96,7 @@ void QFilterLibraryDockWidget::setupGui()
     library->setText(0, DREAM3D::Settings::Library);
     library->setIcon(0, QIcon(":/cubes.png"));
 #endif
-    for(QSet<QString>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
+    for(QList<QString>::iterator iter = grpNameSorted.begin(); iter != grpNameSorted.end(); ++iter)
     {
       //   qDebug() << *iter << "\n";
       QString iconName(":/");
@@ -118,6 +121,14 @@ void QFilterLibraryDockWidget::setupGui()
       }
     }
     library->setExpanded(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterLibraryDockWidget::setupGui()
+{
+  refreshFilterGroups();
 }
 
 

@@ -143,6 +143,7 @@ FilterManager::Collection FilterManager::getFactories(const QString& groupName, 
 // -----------------------------------------------------------------------------
 void FilterManager::addFilterFactory(const QString& name, IFilterFactory::Pointer factory)
 {
+ // std::cout << this << " - Registering Filter: " << name.toStdString() << std::endl;
   m_Factories[name] = factory;
 }
 

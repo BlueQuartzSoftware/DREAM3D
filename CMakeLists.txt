@@ -304,6 +304,9 @@ endfunction()
 set(DREAM3D_PLUGIN_LIST
      ImageImport
      OrientationAnalysis
+     SurfaceMeshing
+     Reconstruction
+     Sampling
 )
 
 # Clear this file out before we go any further

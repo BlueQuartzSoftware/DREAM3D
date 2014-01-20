@@ -67,6 +67,59 @@ void FloatVec3Widget::setupGui()
   if (m_FilterParameter != NULL)
   {
     FloatVec3WidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    FloatVec3Widget_t data = m_Filter->property(m_FilterParameter->getPropertyName().toStdString().c_str()).value<FloatVec3Widget_t>();
+    xData->setText(QString::number(data.x) );
+    yData->setText(QString::number(data.y) );
+    zData->setText(QString::number(data.z) );
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FloatVec3Widget::on_xData_textChanged(const QString& text)
+{
+  bool ok = false;
+  FloatVec3Widget_t data;
+  data.x = xData->text().toDouble(&ok);
+  data.y = yData->text().toDouble(&ok);
+  data.z = zData->text().toDouble(&ok);
+
+  QVariant v;
+  v.setValue(data);
+  ok = m_Filter->setProperty(m_FilterParameter->getPropertyName().toStdString().c_str(), v);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FloatVec3Widget::on_yData_textChanged(const QString& text)
+{
+  bool ok = false;
+  FloatVec3Widget_t data;
+  data.x = xData->text().toDouble(&ok);
+  data.y = yData->text().toDouble(&ok);
+  data.z = zData->text().toDouble(&ok);
+
+  QVariant v;
+  v.setValue(data);
+  ok = m_Filter->setProperty(m_FilterParameter->getPropertyName().toStdString().c_str(), v);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FloatVec3Widget::on_zData_textChanged(const QString& text)
+{
+  bool ok = false;
+  FloatVec3Widget_t data;
+  data.x = xData->text().toDouble(&ok);
+  data.y = yData->text().toDouble(&ok);
+  data.z = zData->text().toDouble(&ok);
+
+  QVariant v;
+  v.setValue(data);
+  ok = m_Filter->setProperty(m_FilterParameter->getPropertyName().toStdString().c_str(), v);
+}
+
 

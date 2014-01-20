@@ -74,7 +74,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
   size_t npoints = coords->getNumberOfTuples();
   bool nhCheck = false;
   float sqCoord[2];
-  int sqIndex = 0;
+  //int sqIndex = 0;
   ModifiedLambertProjection::Pointer squareProj = ModifiedLambertProjection::New();
   squareProj->initializeSquares(dimension, sphereRadius);
 
