@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
-#include "DREAM3DLib/SamplingFilters/SampleSurfaceMesh.h"
+#include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
 /**
  * @class RegularGridSampleSurfaceMesh RegularGridSampleSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/RegularGridSampleSurfaceMesh.h
@@ -55,9 +55,9 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
+class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
-	Q_OBJECT
+  Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
     DREAM3D_STATIC_NEW_MACRO(RegularGridSampleSurfaceMesh)

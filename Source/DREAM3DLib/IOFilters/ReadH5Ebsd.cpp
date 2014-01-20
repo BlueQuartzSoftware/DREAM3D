@@ -51,11 +51,13 @@
 #include "EbsdLib/HEDM/H5MicVolumeReader.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
 
 #include "DREAM3DLib/ProcessingFilters/RotateEulerRefFrame.h"
-#include "DREAM3DLib/SamplingFilters/RotateSampleRefFrame.h"
+
+//#include "Sampling/SamplingFilters/RotateSampleRefFrame.h"
 
 
 #define ERROR_TXT_OUT 1
@@ -502,6 +504,7 @@ void ReadH5Ebsd::execute()
   {
     QString ss = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
         .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
+    setErrorCondition(-109875);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -515,15 +518,48 @@ void ReadH5Ebsd::execute()
       sampleAxis.x = m_SampleTransformationAxis[0];
       sampleAxis.y = m_SampleTransformationAxis[1];
       sampleAxis.z = m_SampleTransformationAxis[2];
+      QString filtName = "RotateSampleRefFrame";
+      FilterManager::Pointer fm = FilterManager::Instance();
+      IFilterFactory::Pointer rotSampleFactory = fm->getFactoryForFilter(filtName);
+      if (NULL != rotSampleFactory.get() )
+      {
+        // If we get this far, the Factory is good so creating the filter should not fail unless something has
+        // horribly gone wrong in which case the system is going to come down quickly after this.
+        AbstractFilter::Pointer rot_Sample = rotSampleFactory->create();
 
-      RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
-      connect(rot_Sample.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-              this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-      rot_Sample->setDataContainerArray(getDataContainerArray());
-      rot_Sample->setRotationAngle(m_SampleTransformationAngle);
-      rot_Sample->setRotationAxis(sampleAxis);
-      rot_Sample->setsliceBySlice(true);
-      rot_Sample->execute();
+        // Connect up the Error/Warning/Progress object so the filter can report those things
+        connect(rot_Sample.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+                this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+        rot_Sample->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
+        // Now set the filter parameters for the filter using QProperty System since we can not directly
+        // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
+        // tight loop. Your filter will slow down by 10X.
+        bool propWasSet = rot_Sample->setProperty("RotationAngle", m_SampleTransformationAngle);
+        if(false == propWasSet)
+        {
+          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2'. The filter should have been loaded through the plugin mechanism. This filter is aborting now.").arg("RotationAngle").arg(filtName);
+          setErrorCondition(-109874);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
+        QVariant v;
+        v.setValue(sampleAxis);
+        propWasSet = rot_Sample->setProperty("RotationAxis", v);
+        if(false == propWasSet)
+        {
+          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2'. The filter should have been loaded through the plugin mechanism. This filter is aborting now.").arg("RotationAxis").arg(filtName);
+          setErrorCondition(-109873);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
+        v.setValue(true);
+        propWasSet = rot_Sample->setProperty("SliceBySlice", v);
+        if(false == propWasSet)
+        {
+          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2'. The filter should have been loaded through the plugin mechanism. This filter is aborting now.").arg("SliceBySlice").arg(filtName);
+          setErrorCondition(-109872);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
+        rot_Sample->execute();
+      }
     }
 
     if(m_EulerTransformationAngle > 0)

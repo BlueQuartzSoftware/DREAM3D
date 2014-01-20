@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,53 +33,63 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef Hex2SqrConverter_H_
+#define Hex2SqrConverter_H_
 
-#ifndef CROPVOLUME_H_
-#define CROPVOLUME_H_
 
+
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
+#endif
+
+
+#include <QtCore/QVector>
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 /**
- * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @class Hex2SqrConverter Hex2SqrConverter.h Hex2SqrConverter/Hex2SqrConverter.h
+ * @brief This class is used to convert Hex grid TSL .ang files into Square grid
+ * .ang files
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @author Dr. Michael Groeber, US Air Force Research Laboratories
+ * @date July 23, 2012
+ * @version 1.2
+ *
  */
-class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
+class Hex2SqrConverter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CropVolume)
-    DREAM3D_STATIC_NEW_MACRO(CropVolume)
-    DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(Hex2SqrConverter)
+    DREAM3D_STATIC_NEW_MACRO(Hex2SqrConverter)
+    DREAM3D_TYPE_MACRO_SUPER(Hex2SqrConverter, AbstractFilter)
 
-    virtual ~CropVolume();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    virtual ~Hex2SqrConverter();
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMin)
-    DREAM3D_INSTANCE_PROPERTY(int, YMin)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+    DREAM3D_INSTANCE_PROPERTY(float, XResolution)
+    DREAM3D_INSTANCE_PROPERTY(float, YResolution)
+    DREAM3D_INSTANCE_PROPERTY(int, NumCols)
+    DREAM3D_INSTANCE_PROPERTY(int, NumRows)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMax)
-    DREAM3D_INSTANCE_PROPERTY(int, YMax)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
-    DREAM3D_INSTANCE_PROPERTY(bool, RenumberFeatures)
-    DREAM3D_INSTANCE_PROPERTY(bool, UpdateOrigin)
+    DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
 
+    virtual void preflight();
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
-    virtual const QString getHumanLabel() { return "Crop Volume"; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -95,23 +105,26 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-       * @brief Reimplemented from @see AbstractFilter class
-       */
+    * @brief Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
-    virtual void preflight();
 
   protected:
-    CropVolume();
-
-
-  private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    Hex2SqrConverter();
 
     void dataCheck();
 
-    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
-    void operator=(const CropVolume&); // Operator '=' Not Implemented
+  private:
+    /** @brief Modifies a single line of the header section of the TSL .ang file if necessary
+    * @param line The line to possibly modify
+    */
+    QString modifyAngHeaderLine(QString& buf);
+
+    QString int_to_string(int value);
+    QString float_to_string(float value);
+
+    Hex2SqrConverter(const Hex2SqrConverter&); // Copy Constructor Not Implemented
+    void operator=(const Hex2SqrConverter&); // Operator '=' Not Implemented
 };
 
-#endif /* CROPVOLUME_H_ */
+#endif /* Hex2SqrConverter_H_ */

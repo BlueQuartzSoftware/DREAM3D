@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CHANGERESOLUTION_H_
-#define CHANGERESOLUTION_H_
+#ifndef SampleSurfaceMesh_H_
+#define SampleSurfaceMesh_H_
 
 #include <QtCore/QString>
 
@@ -45,31 +45,31 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
 
 /**
- * @class ChangeResolution ChangeResolution.h DREAM3DLib/SyntheticBuilderFilters/ChangeResolution.h
+ * @class SampleSurfaceMesh SampleSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/SampleSurfaceMesh.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
+class SampleSurfaceMesh : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ChangeResolution)
-    DREAM3D_STATIC_NEW_MACRO(ChangeResolution)
-    DREAM3D_TYPE_MACRO_SUPER(ChangeResolution, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(SampleSurfaceMesh)
+    DREAM3D_STATIC_NEW_MACRO(SampleSurfaceMesh)
+    DREAM3D_TYPE_MACRO_SUPER(SampleSurfaceMesh, AbstractFilter)
 
-    virtual ~ChangeResolution();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    virtual ~SampleSurfaceMesh();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const QString getHumanLabel() { return "Change Resolution"; }
+    virtual const QString getHumanLabel() { return "Sample Surface Mesh"; }
 
     virtual void setupFilterParameters();
     /**
@@ -91,15 +91,26 @@ class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
     virtual void preflight();
 
   protected:
-    ChangeResolution();
+    SampleSurfaceMesh();
 
-
-  private:
-
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param features The number of features
+    * @param ensembles The number of ensembles
+    */
     void dataCheck();
 
-    ChangeResolution(const ChangeResolution&); // Copy Constructor Not Implemented
-    void operator=(const ChangeResolution&); // Operator '=' Not Implemented
+    virtual VertexArray::Pointer generate_points();
+    virtual void assign_points(Int32ArrayType::Pointer iArray);
+
+  private:
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+
+    SampleSurfaceMesh(const SampleSurfaceMesh&); // Copy Constructor Not Implemented
+    void operator=(const SampleSurfaceMesh&); // Operator '=' Not Implemented
 };
 
-#endif /* CHANGERESOLUTION_H_ */
+#endif /* SampleSurfaceMesh_H_ */

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,38 +33,43 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef RotateSampleRefFrame_H_
-#define RotateSampleRefFrame_H_
+
+#ifndef CHANGERESOLUTION_H_
+#define CHANGERESOLUTION_H_
+
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 /**
- * @class RotateSampleRefFrame RotateSampleRefFrame.h DREAM3DLib/GenericFilters/RotateSampleRefFrame.h
- * @brief This filter will
+ * @class ChangeResolution ChangeResolution.h DREAM3DLib/SyntheticBuilderFilters/ChangeResolution.h
+ * @brief
  * @author
- * @date Apr 26, 2012
+ * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT RotateSampleRefFrame : public AbstractFilter
+class ChangeResolution : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(RotateSampleRefFrame)
-    DREAM3D_STATIC_NEW_MACRO(RotateSampleRefFrame)
-    DREAM3D_TYPE_MACRO_SUPER(RotateSampleRefFrame, AbstractFilter)
-    virtual ~RotateSampleRefFrame();
+    DREAM3D_SHARED_POINTERS(ChangeResolution)
+    DREAM3D_STATIC_NEW_MACRO(ChangeResolution)
+    DREAM3D_TYPE_MACRO_SUPER(ChangeResolution, AbstractFilter)
+
+    virtual ~ChangeResolution();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, RotationAxis)
-    DREAM3D_INSTANCE_PROPERTY(float, RotationAngle)
-    DREAM3D_INSTANCE_PROPERTY(bool, sliceBySlice)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
-    virtual const QString getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::RotationTransformationFilters; }
-    virtual const QString getHumanLabel() { return "Rotate Sample Reference Frame"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getHumanLabel() { return "Change Resolution"; }
 
     virtual void setupFilterParameters();
     /**
@@ -82,20 +87,19 @@ class DREAM3DLib_EXPORT RotateSampleRefFrame : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
+    virtual void execute();
     virtual void preflight();
 
-
-    virtual void execute();
-
   protected:
-    RotateSampleRefFrame();
+    ChangeResolution();
 
-    void dataCheck();
 
   private:
 
-    RotateSampleRefFrame(const RotateSampleRefFrame&); // Copy Constructor Not Implemented
-    void operator=(const RotateSampleRefFrame&); // Operator '=' Not Implemented
+    void dataCheck();
+
+    ChangeResolution(const ChangeResolution&); // Copy Constructor Not Implemented
+    void operator=(const ChangeResolution&); // Operator '=' Not Implemented
 };
 
-#endif /* RotateSampleRefFrame_H_ */
+#endif /* CHANGERESOLUTION_H_ */

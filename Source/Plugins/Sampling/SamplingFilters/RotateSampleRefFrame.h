@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,63 +33,38 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef Hex2SqrConverter_H_
-#define Hex2SqrConverter_H_
-
-
-
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
-#endif
-
-
-#include <QtCore/QVector>
-#include <QtCore/QString>
-
-
-#include "EbsdLib/EbsdConstants.h"
+#ifndef RotateSampleRefFrame_H_
+#define RotateSampleRefFrame_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 /**
- * @class Hex2SqrConverter Hex2SqrConverter.h Hex2SqrConverter/Hex2SqrConverter.h
- * @brief This class is used to convert Hex grid TSL .ang files into Square grid
- * .ang files
- * @author Michael A. Jackson for BlueQuartz Software
- * @author Dr. Michael Groeber, US Air Force Research Laboratories
- * @date July 23, 2012
- * @version 1.2
- *
+ * @class RotateSampleRefFrame RotateSampleRefFrame.h DREAM3DLib/GenericFilters/RotateSampleRefFrame.h
+ * @brief This filter will
+ * @author
+ * @date Apr 26, 2012
+ * @version 1.0
  */
-class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
+class RotateSampleRefFrame : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(Hex2SqrConverter)
-    DREAM3D_STATIC_NEW_MACRO(Hex2SqrConverter)
-    DREAM3D_TYPE_MACRO_SUPER(Hex2SqrConverter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(RotateSampleRefFrame)
+    DREAM3D_STATIC_NEW_MACRO(RotateSampleRefFrame)
+    DREAM3D_TYPE_MACRO_SUPER(RotateSampleRefFrame, AbstractFilter)
+    virtual ~RotateSampleRefFrame();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    virtual ~Hex2SqrConverter();
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, RotationAxis)
+    DREAM3D_INSTANCE_PROPERTY(float, RotationAngle)
+    DREAM3D_INSTANCE_PROPERTY(bool, SliceBySlice)
 
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(float, XResolution)
-    DREAM3D_INSTANCE_PROPERTY(float, YResolution)
-    DREAM3D_INSTANCE_PROPERTY(int, NumCols)
-    DREAM3D_INSTANCE_PROPERTY(int, NumRows)
-    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
-
-    DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
-
-    virtual void preflight();
-
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const QString getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
+    virtual const QString getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::RotationTransformationFilters; }
+    virtual const QString getHumanLabel() { return "Rotate Sample Reference Frame"; }
 
     virtual void setupFilterParameters();
     /**
@@ -105,26 +80,22 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    virtual void preflight();
+
+
     virtual void execute();
 
   protected:
-    Hex2SqrConverter();
+    RotateSampleRefFrame();
 
     void dataCheck();
 
   private:
-    /** @brief Modifies a single line of the header section of the TSL .ang file if necessary
-    * @param line The line to possibly modify
-    */
-    QString modifyAngHeaderLine(QString& buf);
 
-    QString int_to_string(int value);
-    QString float_to_string(float value);
-
-    Hex2SqrConverter(const Hex2SqrConverter&); // Copy Constructor Not Implemented
-    void operator=(const Hex2SqrConverter&); // Operator '=' Not Implemented
+    RotateSampleRefFrame(const RotateSampleRefFrame&); // Copy Constructor Not Implemented
+    void operator=(const RotateSampleRefFrame&); // Operator '=' Not Implemented
 };
 
-#endif /* Hex2SqrConverter_H_ */
+#endif /* RotateSampleRefFrame_H_ */

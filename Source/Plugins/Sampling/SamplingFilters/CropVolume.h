@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef UncertainRegularGridSampleSurfaceMesh_H_
-#define UncertainRegularGridSampleSurfaceMesh_H_
+#ifndef CROPVOLUME_H_
+#define CROPVOLUME_H_
 
 #include <QtCore/QString>
 
@@ -45,38 +45,41 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
-#include "DREAM3DLib/SamplingFilters/SampleSurfaceMesh.h"
 
 /**
- * @class UncertainRegularGridSampleSurfaceMesh UncertainRegularGridSampleSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/UncertainRegularGridSampleSurfaceMesh.h
+ * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
+class CropVolume : public AbstractFilter
 {
-	Q_OBJECT
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(UncertainRegularGridSampleSurfaceMesh)
-    DREAM3D_STATIC_NEW_MACRO(UncertainRegularGridSampleSurfaceMesh)
-    DREAM3D_TYPE_MACRO_SUPER(UncertainRegularGridSampleSurfaceMesh, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(CropVolume)
+    DREAM3D_STATIC_NEW_MACRO(CropVolume)
+    DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter)
 
-    virtual ~UncertainRegularGridSampleSurfaceMesh();
+    virtual ~CropVolume();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
+    DREAM3D_INSTANCE_PROPERTY(int, XMin)
+    DREAM3D_INSTANCE_PROPERTY(int, YMin)
+    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
 
-    DREAM3D_INSTANCE_PROPERTY(int, XPoints)
-    DREAM3D_INSTANCE_PROPERTY(int, YPoints)
-    DREAM3D_INSTANCE_PROPERTY(int, ZPoints)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Uncertainty)
+    DREAM3D_INSTANCE_PROPERTY(int, XMax)
+    DREAM3D_INSTANCE_PROPERTY(int, YMax)
+    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
+    DREAM3D_INSTANCE_PROPERTY(bool, RenumberFeatures)
+    DREAM3D_INSTANCE_PROPERTY(bool, UpdateOrigin)
+
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const QString getHumanLabel() { return "Sample Surface Mesh on Regular Grid"; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
+    virtual const QString getHumanLabel() { return "Crop Volume"; }
 
     virtual void setupFilterParameters();
     /**
@@ -92,32 +95,23 @@ class DREAM3DLib_EXPORT UncertainRegularGridSampleSurfaceMesh : public SampleSur
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+       * @brief Reimplemented from @see AbstractFilter class
+       */
     virtual void execute();
     virtual void preflight();
 
   protected:
-    UncertainRegularGridSampleSurfaceMesh();
+    CropVolume();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
-    void dataCheck();
-
-    virtual VertexArray::Pointer generate_points();
-    virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
-    UncertainRegularGridSampleSurfaceMesh(const UncertainRegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
-    void operator=(const UncertainRegularGridSampleSurfaceMesh&); // Operator '=' Not Implemented
+    void dataCheck();
+
+    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
+    void operator=(const CropVolume&); // Operator '=' Not Implemented
 };
 
-#endif /* UncertainRegularGridSampleSurfaceMesh_H_ */
+#endif /* CROPVOLUME_H_ */

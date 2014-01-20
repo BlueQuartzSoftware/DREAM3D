@@ -47,40 +47,40 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataContainers/DataContainerArray.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+// DREAM3D Lib
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
-#include "DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
-#include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "DREAM3DLib/DataContainers/DataContainerArray.h"
+// DREAM3DLib Filters
+#include "DREAM3DLib/GenericFilters/FindBoundingBoxFeatures.h"
+#include "DREAM3DLib/GenericFilters/FindFeatureCentroids.h"
+#include "DREAM3DLib/GenericFilters/FindSurfaceFeatures.h"
+#include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/ParaDisReader.h"
+#include "DREAM3DLib/IOFilters/VASPReader.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/StatisticsFilters/FindNumFeatures.h"
+#include "DREAM3DLib/StatisticsFilters/FindSizes.h"
+#include "DREAM3DLib/StatisticsFilters/FitCorrelatedFeatureData.h"
+#include "DREAM3DLib/StatisticsFilters/FitFeatureData.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/MatchCrystallography.h"
-#include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
-#include "DREAM3DLib/SamplingFilters/ChangeResolution.h"
-#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
 
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/QuickSurfaceMesh.h"
+// Sampling Plugin
+//#include "Sampling/SamplingFilters/ChangeResolution.h"
+//#include "Sampling/SamplingFilters/RegularGridSampleSurfaceMesh.h"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/LaplacianSmoothing.h"
+// SurfaceMeshing Plugin
+//#include "SurfaceMeshing/SurfaceMeshingFilters/LaplacianSmoothing.h"
+//#include "SurfaceMeshing/SurfaceMeshingFilters/QuickSurfaceMesh.h"
 
-#include "DREAM3DLib/IOFilters/VASPReader.h"
-
-#include "DREAM3DLib/IOFilters/ParaDisReader.h"
-
-#include"DREAM3DLib/SamplingFilters/RegularGridSampleSurfaceMesh.h"
-
-#include"DREAM3DLib/GenericFilters/FindSurfaceFeatures.h"
-#include"DREAM3DLib/GenericFilters/FindBoundingBoxFeatures.h"
-#include"DREAM3DLib/GenericFilters/FindFeatureCentroids.h"
-#include"DREAM3DLib/StatisticsFilters/FindSizes.h"
-#include"DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include"DREAM3DLib/StatisticsFilters/FitFeatureData.h"
-#include"DREAM3DLib/StatisticsFilters/FitCorrelatedFeatureData.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -285,10 +285,10 @@ void RunPipeline1()
   GenerateIPFColors::Pointer gipfc = GenerateIPFColors::New();
 //  pipeline->pushBack(gipfc);
 
-  ChangeResolution::Pointer cr = ChangeResolution::New();
-  FloatVec3Widget_t res = {0.2, 0.2, 0.2};
-  cr->setResolution(res);
-  pipeline->pushBack(cr);
+//  ChangeResolution::Pointer cr = ChangeResolution::New();
+//  FloatVec3Widget_t res = {0.2, 0.2, 0.2};
+//  cr->setResolution(res);
+//  pipeline->pushBack(cr);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile(UnitTest::NewDataContainerStructureTest::SyntheticOutputFile);
