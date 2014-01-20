@@ -80,53 +80,53 @@ void FitCorrelatedFeatureData::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Feature Array To Fit");
-    option->setPropertyName("SelectedFeatureArrayName");
-    option->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Feature Array To Fit");
+    parameter->setPropertyName("SelectedFeatureArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Distribution Type");
-    option->setPropertyName("DistributionType");
-    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    option->setValueType("unsigned int");
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Distribution Type");
+    parameter->setPropertyName("DistributionType");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Beta");
     choices.push_back("LogNormal");
     choices.push_back("Power Law");
-    option->setChoices(choices);
-    parameters.push_back(option);
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Array To Correlate With");
-    option->setPropertyName("CorrelatedFeatureArrayName");
-    option->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Array To Correlate With");
+    parameter->setPropertyName("CorrelatedFeatureArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Number Of Bins For Correlated Array");
-    option->setPropertyName("NumberOfCorrelatedBins");
-    option->setWidgetType(FilterParameterWidgetType::IntWidget);
-    option->setValueType("int");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Number Of Bins For Correlated Array");
+    parameter->setPropertyName("NumberOfCorrelatedBins");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Remove Biased Features");
-    option->setPropertyName("RemoveBiasedFeatures");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Remove Biased Features");
+    parameter->setPropertyName("RemoveBiasedFeatures");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

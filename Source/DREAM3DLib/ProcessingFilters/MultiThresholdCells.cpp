@@ -74,7 +74,7 @@ void MultiThresholdCells::setupFilterParameters()
     parameter->setHumanLabel("Output Array Name");
     parameter->setPropertyName("OutputArrayName");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("string");
+    parameter->setValueType("QString");
     parameter->setEditable(true);
     QVector<QString> choices;
     choices.push_back(DREAM3D::CellData::GoodVoxels);

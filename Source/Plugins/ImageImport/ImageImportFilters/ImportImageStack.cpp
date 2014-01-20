@@ -88,11 +88,11 @@ ImportImageStack::~ImportImageStack()
 // -----------------------------------------------------------------------------
 void ImportImageStack::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> parameters;
 
 
 
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

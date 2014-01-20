@@ -76,28 +76,28 @@ void SurfaceMeshToStl::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output STL Directory");
-    option->setPropertyName("OutputStlDirectory");
-    option->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output STL Directory");
+    parameter->setPropertyName("OutputStlDirectory");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Stl File Prefix");
-    option->setPropertyName("OutputStlPrefix");
-    option->setWidgetType(FilterParameterWidgetType::StringWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Stl File Prefix");
+    parameter->setPropertyName("OutputStlPrefix");
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Group Files By Phase");
-    option->setPropertyName("GroupByPhase");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Group Files By Phase");
+    parameter->setPropertyName("GroupByPhase");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

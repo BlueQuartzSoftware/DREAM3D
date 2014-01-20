@@ -103,23 +103,23 @@ void GroupMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("C-Axis Alignment Tolerance");
-    option->setPropertyName("CAxisTolerance");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    option->setUnits("Degrees");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("C-Axis Alignment Tolerance");
+    parameter->setPropertyName("CAxisTolerance");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameter->setUnits("Degrees");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Use Non-Contiguous Neighbors");
-    option->setPropertyName("UseNonContiguousNeighbors");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Use Non-Contiguous Neighbors");
+    parameter->setPropertyName("UseNonContiguousNeighbors");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
 
   setFilterParameters(parameters);

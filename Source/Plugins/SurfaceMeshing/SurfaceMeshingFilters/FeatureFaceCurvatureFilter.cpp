@@ -91,7 +91,7 @@ FeatureFaceCurvatureFilter::~FeatureFaceCurvatureFilter()
 // -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Neighborhood Ring Count");
@@ -100,41 +100,41 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
     //parameter->setUnits("Zero will Lock them in Place");
     parameter->setValueType("int");
     parameter->setCastableValueType("int");
-    options.push_back(parameter);
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Compute Principal Direction Vectors");
-    option->setPropertyName("ComputePrincipalDirectionVectors");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Compute Principal Direction Vectors");
+    parameter->setPropertyName("ComputePrincipalDirectionVectors");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Compute Gaussian Curvature");
-    option->setPropertyName("ComputeGaussianCurvature");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Compute Gaussian Curvature");
+    parameter->setPropertyName("ComputeGaussianCurvature");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Compute Mean Curvature");
-    option->setPropertyName("ComputeMeanCurvature");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Compute Mean Curvature");
+    parameter->setPropertyName("ComputeMeanCurvature");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Use Face Normals for Curve Fitting");
-    option->setPropertyName("UseNormalsForCurveFitting");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    options.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Use Face Normals for Curve Fitting");
+    parameter->setPropertyName("UseNormalsForCurveFitting");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

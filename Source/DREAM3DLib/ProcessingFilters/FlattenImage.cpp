@@ -116,17 +116,17 @@ void FlattenImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Flattening Method");
-    option->setPropertyName("FlattenMethod");
-    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    option->setValueType("unsigned int");
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Flattening Method");
+    parameter->setPropertyName("FlattenMethod");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Lightness");
     choices.push_back("Average");
     choices.push_back("Luminosity");
-    option->setChoices(choices);
-    parameters.push_back(option);
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

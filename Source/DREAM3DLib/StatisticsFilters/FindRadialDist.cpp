@@ -87,14 +87,14 @@ void FindRadialDist::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output File");
-    option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setFileExtension("*.csv");
-    option->setFileType("Comma Separated Values");
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output File");
+    parameter->setPropertyName("OutputFile");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setFileExtension("*.csv");
+    parameter->setFileType("Comma Separated Values");
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
 }
 // -----------------------------------------------------------------------------

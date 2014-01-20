@@ -100,7 +100,7 @@ void ReadOrientationData::setupFilterParameters()
     parameter->setHumanLabel("Input File");
     parameter->setPropertyName("InputFile");
     parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("string");
+    parameter->setValueType("QString");
     parameter->setFileExtension("*.ang *.ctf");
     parameters.push_back(parameter);
   }

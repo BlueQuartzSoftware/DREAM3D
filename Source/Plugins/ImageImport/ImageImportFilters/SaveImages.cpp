@@ -72,13 +72,13 @@ void SaveImages::setupFilterParameters()
   /* Place all your option initialization code here */
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel(" Colors Array");
-    option->setPropertyName("ColorsArrayName");
-    option->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel(" Colors Array");
+    parameter->setPropertyName("ColorsArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -99,17 +99,17 @@ void SaveImages::setupFilterParameters()
     parameter->setHumanLabel(" Image Prefix");
     parameter->setPropertyName("ImagePrefix");
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("string");
+    parameter->setValueType("QString");
     parameters.push_back(parameter);
   }
   /*   For an output path use this code*/
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output Path");
-    option->setPropertyName("OutputPath");
-    option->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output Path");
+    parameter->setPropertyName("OutputPath");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
 
 

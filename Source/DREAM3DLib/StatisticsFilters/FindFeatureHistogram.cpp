@@ -78,30 +78,30 @@ void FindFeatureHistogram::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Feature Array To Bin");
-    option->setPropertyName("SelectedFeatureArrayName");
-    option->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Feature Array To Bin");
+    parameter->setPropertyName("SelectedFeatureArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Number of Bins");
-    option->setPropertyName("NumBins");
-    option->setWidgetType(FilterParameterWidgetType::IntWidget);
-    option->setValueType("int");
-    parameters.push_back(option);
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Number of Bins");
+    parameter->setPropertyName("NumBins");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Remove Biased Features");
-    option->setPropertyName("RemoveBiasedFeatures");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Remove Biased Features");
+    parameter->setPropertyName("RemoveBiasedFeatures");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }

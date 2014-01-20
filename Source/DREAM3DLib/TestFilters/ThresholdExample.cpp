@@ -62,7 +62,7 @@ ThresholdExample::~ThresholdExample()
 // -----------------------------------------------------------------------------
 void ThresholdExample::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> parameters;
 
   /* To Compare Arrays like a threshold filter */
   {
@@ -71,7 +71,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setPropertyName("CellComparisonInputs");
     parameter->setWidgetType(FilterParameterWidgetType::CellArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
-    options.push_back(parameter);
+    parameters.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
   {
@@ -80,7 +80,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setPropertyName("FeatureComparisonInputs");
     parameter->setWidgetType(FilterParameterWidgetType::FeatureArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
-    options.push_back(parameter);
+    parameters.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
   {
@@ -89,7 +89,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setPropertyName("EnsembleComparisonInputs");
     parameter->setWidgetType(FilterParameterWidgetType::EnsembleArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
-    options.push_back(parameter);
+    parameters.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
   {
@@ -98,7 +98,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setPropertyName("PointComparisonInputs");
     parameter->setWidgetType(FilterParameterWidgetType::VertexArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
-    options.push_back(parameter);
+    parameters.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
   {
@@ -107,7 +107,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setPropertyName("FaceComparisonInputs");
     parameter->setWidgetType(FilterParameterWidgetType::FaceArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
-    options.push_back(parameter);
+    parameters.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
   {
@@ -116,10 +116,10 @@ void ThresholdExample::setupFilterParameters()
     parameter->setPropertyName("EdgeComparisonInputs");
     parameter->setWidgetType(FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
-    options.push_back(parameter);
+    parameters.push_back(parameter);
   }
 
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

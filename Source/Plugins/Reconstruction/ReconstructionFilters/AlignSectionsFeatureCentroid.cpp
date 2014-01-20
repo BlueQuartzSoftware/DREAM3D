@@ -90,37 +90,37 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
   //AlignSections::setupFilterParameters();
   QVector<FilterParameter::Pointer> parameters = getFilterParameters();
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Use Reference Slice");
-    option->setPropertyName("UseReferenceSlice");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Use Reference Slice");
+    parameter->setPropertyName("UseReferenceSlice");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Reference Slice");
-    option->setPropertyName("ReferenceSlice");
-    option->setWidgetType(FilterParameterWidgetType::IntWidget);
-    option->setValueType("int");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Reference Slice");
+    parameter->setPropertyName("ReferenceSlice");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Alignment Shift File");
-    option->setPropertyName("WriteAlignmentShifts");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Write Alignment Shift File");
+    parameter->setPropertyName("WriteAlignmentShifts");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Alignment File");
-    option->setPropertyName("AlignmentShiftFileName");
-    option->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Alignment File");
+    parameter->setPropertyName("AlignmentShiftFileName");
+    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
 }
