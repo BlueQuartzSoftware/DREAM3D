@@ -64,9 +64,9 @@
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/QuickSurfaceMesh.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/QuickSurfaceMesh.h"
 
-#include "DREAM3DLib/SurfaceMeshingFilters/LaplacianSmoothing.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/LaplacianSmoothing.h"
 
 #include "DREAM3DLib/IOFilters/VASPReader.h"
 

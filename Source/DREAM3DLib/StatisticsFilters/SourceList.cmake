@@ -26,7 +26,6 @@ set(_PublicFilters
   FindFeatureClustering
   FindFeatureHistogram
   FindFeatureNeighborCAxisMisalignments
-  FindGBCD
   FindFeatureReferenceCAxisMisorientations
   FindFeatureReferenceMisorientations
   FindKernelAvgMisorientations

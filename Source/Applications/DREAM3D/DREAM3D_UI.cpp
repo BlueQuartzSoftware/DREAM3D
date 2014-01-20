@@ -402,8 +402,11 @@ void DREAM3D_UI::setupGui()
 #if 0
   FilterWidgetsLib::RegisterKnownQFilterWidgets();
   // Look for plugins
-  loadPlugins(m_FilterManager.get());
 #endif
+// Load up the plugins which will register their filters and custom widgets
+  loadPlugins(m_FilterManager.get());
+  // Tell the Filter Library that we have more Filters (potentially)
+  filterLibraryDockWidget->refreshFilterGroups();
 
 
   makeStatusBarButton("Filters", filterListDockWidget, 0);
@@ -666,7 +669,7 @@ void DREAM3D_UI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::loadPlugins(FilterManager *fm)
 {
-  //  qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
+    qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
 
   foreach (QObject *plugin, QPluginLoader::staticInstances())
     populateMenus(plugin);

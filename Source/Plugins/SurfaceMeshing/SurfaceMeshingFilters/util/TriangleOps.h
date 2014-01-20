@@ -33,58 +33,58 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QFILTERLIBRARYWIDGET_H_
-#define _QFILTERLIBRARYWIDGET_H_
+
+#ifndef _TriangleOps_H_
+#define _TriangleOps_H_
+
+#include <vector>
+#include <set>
+
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
+#include "DREAM3DLib/DataContainers/VertexArray.h"
+#include "DREAM3DLib/DataContainers/FaceArray.hpp"
+#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 
 
-#include <QtGui/QDockWidget>
+class SurfaceDataContainer;
 
-#include "DREAM3DLib/Common/FilterManager.h"
-
-
-#include "ui_QFilterLibraryDockWidget.h"
-
-class QFilterListDockWidget;
-
-
-class QFilterLibraryDockWidget : public QDockWidget, private Ui::QFilterLibraryDockWidget
+/**
+ * @brief The TriangleOps class
+ */
+class TriangleOps
 {
-
-    Q_OBJECT
   public:
-    QFilterLibraryDockWidget(QWidget* parent = NULL);
-    virtual ~QFilterLibraryDockWidget();
+    virtual ~TriangleOps();
 
-    virtual void setupGui();
+    static int getLabelIndex(int32_t* t, int label);
 
-    void connectFilterList(QFilterListDockWidget *filterListWidget);
+    QVector<int> getNodeIndices(FaceArray::Face_t& t, int32_t* faceLabel, int label);
 
-    void refreshFilterGroups();
+    static void flipWinding(FaceArray::Face_t& triangle);
+
+    static VectorType computeNormal(VertexArray::Vert_t& n0, VertexArray::Vert_t& n1, VertexArray::Vert_t& n2);
+
+    static QSet<int32_t> generateUniqueLabels(DataArray<int32_t>::Pointer faceLabelsPtr);
+
+    static QVector<int32_t> findAdjacentTriangles(FaceArray::Pointer facesPtr,
+                                                  int32_t triangleIndex,
+                                                  DataArray<int32_t>::Pointer faceLabelsPtr,
+                                                  int32_t label);
+
+    static bool verifyWinding(FaceArray::Face_t& source, FaceArray::Face_t& tri,
+                              int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label);
+
+
+    static void getWindingIndices4(FaceArray::Face_t& triangle, int32_t* faceLabel, int ids[4], int32_t label);
 
   protected:
-    void updateFilterGroupList(FilterManager::Collection& factories);
-
-  protected slots:
-    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
-    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
-
-
-
-  signals:
-
-
-
-    void filterListGenerated(const QStringList& filterList);
+    TriangleOps();
 
   private:
-
-
-    QFilterLibraryDockWidget(const QFilterLibraryDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterLibraryDockWidget&); // Operator '=' Not Implemented
-
+    TriangleOps(const TriangleOps&); // Copy Constructor Not Implemented
+    void operator=(const TriangleOps&); // Operator '=' Not Implemented
 
 };
 
-#endif
+#endif /* _TriangleOps_H_ */
