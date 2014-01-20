@@ -305,6 +305,7 @@ set(DREAM3D_PLUGIN_LIST
      ImageImport
      OrientationAnalysis
      SurfaceMeshing
+     Reconstruction
 )
 
 # Clear this file out before we go any further

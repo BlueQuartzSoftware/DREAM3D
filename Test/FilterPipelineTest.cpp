@@ -47,16 +47,11 @@
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
-#include "DREAM3DLib/GenericFilters/FindCellQuats.h"
-#include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
-#include "DREAM3DLib/GenericFilters/GenerateMisorientationColors.h"
-#include "DREAM3DLib/IOFilters/ReadOrientationData.h"
-#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
-#include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
-#include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
-#include "DREAM3DLib/ReconstructionFilters/SegmentFeatures.h"
-#include "DREAM3DLib/ProcessingFilters/MinSize.h"
+#include "DREAM3DLib/TestFilters/GenericExample.h"
+#include "DREAM3DLib/TestFilters/ArraySelectionExample.h"
+#include "DREAM3DLib/TestFilters/MakeVolumeDataContainer.h"
+#include "DREAM3DLib/TestFilters/ThresholdExample.h"
+#include "DREAM3DLib/TestFilters/TestFilters.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -95,68 +90,6 @@ void RemoveTestFiles()
 #endif
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestEbsdCleanUpPipeline()
-{
-  Observer obs;
-  // Send progress messages from PipelineBuilder to this object for display
-  qRegisterMetaType<PipelineMessage>();
-
-  // Create our Pipeline object
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-  pipeline->addMessageReceiver(&obs);
-
-  {
-    ReadOrientationData::Pointer f = ReadOrientationData::New();
-    f->setInputFile(testFile1());
-    pipeline->pushBack(f);
-  }
-
-  {
-    FindCellQuats::Pointer f = FindCellQuats::New();
-    pipeline->pushBack(f);
-  }
-
-  {
-    GenerateIPFColors::Pointer f = GenerateIPFColors::New();
-    FloatVec3Widget_t refDir;
-    refDir.x = 0;
-    refDir.y = 0;
-    refDir.z = 1;
-    f->setReferenceDir(refDir);
-    pipeline->pushBack(f);
-  }
-
-  {
-    GenerateMisorientationColors::Pointer f = GenerateMisorientationColors::New();
-    FloatVec3Widget_t refDir;
-    refDir.x = 0;
-    refDir.y = 0;
-    refDir.z = 1;
-    f->setReferenceAxis(refDir);
-    f->setReferenceAngle(0.0);
-    pipeline->pushBack(f);
-  }
-
-  {
-    DataContainerWriter::Pointer f = DataContainerWriter::New();
-    f->setOutputFile(outputDREAM3DFile());
-    f->setWriteXdmfFile(true);
-    pipeline->pushBack(f);
-  }
-
-
-
-  int err = pipeline->preflightPipeline();
-  DREAM3D_REQUIRED(err, >=, 0);
-
-  pipeline->execute();
-  err = pipeline->getErrorCondition();
-  DREAM3D_REQUIRED(err, >=, 0);
-
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -167,22 +100,22 @@ void TestPipelinePushPop()
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-  ReadH5Ebsd::Pointer read_h5ebsd = ReadH5Ebsd::New();
+  MakeVolumeDataContainer::Pointer read_h5ebsd = MakeVolumeDataContainer::New();
   //  pipeline->pushBack(read_h5ebsd);
 
-  AlignSections::Pointer align_sections = AlignSections::New();
+  GenericExample::Pointer align_sections = GenericExample::New();
   pipeline->pushBack(align_sections);
 
-  SegmentFeatures::Pointer segment_features = SegmentFeatures::New();
+  ArraySelectionExample::Pointer segment_features = ArraySelectionExample::New();
   pipeline->pushBack(segment_features);
 
-  MinSize::Pointer min_size = MinSize::New();
+  ThresholdExample::Pointer min_size = ThresholdExample::New();
   pipeline->pushBack(min_size);
 
-  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  Filt0::Pointer writer = Filt0::New();
   pipeline->pushBack(writer);
 
-  VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
+  Filt1::Pointer vtkWriter = Filt1::New();
   pipeline->pushBack(vtkWriter);
 
   pipeline->popFront();
@@ -349,10 +282,7 @@ int main(int argc, char** argv)
 
   DREAM3D_REGISTER_TEST( loadFilterPlugins() );
 
-
-
   DREAM3D_REGISTER_TEST( TestPipelinePushPop() );
-  DREAM3D_REGISTER_TEST( TestEbsdCleanUpPipeline() );
 
 #if REMOVE_TEST_FILES
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() );

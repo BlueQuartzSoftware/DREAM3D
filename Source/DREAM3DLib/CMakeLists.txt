@@ -142,10 +142,8 @@ file(WRITE ${FilterWidget_GEN_SRCS_File})
 include(${DREAM3DLib_SOURCE_DIR}/GenericFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/IOFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/SourceList.cmake)
-include(${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/SamplingFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/SourceList.cmake)
-#include(${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/SyntheticBuildingFilters/SourceList.cmake)
 
 #-----------------------------------------------------
