@@ -94,7 +94,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
+class M3CSliceBySlice : public AbstractFilter
 {
 	Q_OBJECT
   public:

@@ -55,7 +55,7 @@
  * @date Dec 12, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
+class FindGBCD : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

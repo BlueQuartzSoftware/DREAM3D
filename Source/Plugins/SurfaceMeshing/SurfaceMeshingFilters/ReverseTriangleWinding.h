@@ -50,7 +50,7 @@
  * @date Jan 10, 2013
  * @version 1.0
  */
-class DREAM3DLib_EXPORT ReverseTriangleWinding : public SurfaceMeshFilter
+class ReverseTriangleWinding : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
