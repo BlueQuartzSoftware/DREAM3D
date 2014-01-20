@@ -72,3 +72,4 @@ class DREAM3DLib_EXPORT DistributionAnalysisOps
 };
 
 #endif /* _DistributionAnalysisOps_H_ */
+

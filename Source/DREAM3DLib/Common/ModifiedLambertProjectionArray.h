@@ -305,3 +305,4 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
 };
 
 #endif /* _ModifiedLambertProjectionArray_H_ */
+

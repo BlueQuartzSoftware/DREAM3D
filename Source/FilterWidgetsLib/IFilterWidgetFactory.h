@@ -81,3 +81,4 @@ class FilterWidgetsLib_EXPORT IFilterWidgetFactory
 };
 
 #endif /* IFILTERWIDGETFACTOR_H_ */
+

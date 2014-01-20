@@ -112,3 +112,4 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
 };
 
 #endif /* VERTEXDATACONTAINER_H_ */
+

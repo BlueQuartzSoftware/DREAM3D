@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     virtual const QString getHumanLabel() { return "Find Schmid Factors"; }
 
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, LoadingDir)
+    Q_PROPERTY(FloatVec3Widget_t LoadingDir READ getLoadingDir WRITE setLoadingDir NOTIFY parametersChanged)
 
 
     virtual void setupFilterParameters();
@@ -93,6 +94,9 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
      */
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     FindSchmids();
@@ -118,3 +122,6 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 };
 
 #endif /* FINDSCHMIDS_H_ */
+
+
+

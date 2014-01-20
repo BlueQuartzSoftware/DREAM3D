@@ -107,3 +107,4 @@ class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParame
 };
 
 #endif /* TEXTFilterParametersWRITER_H_ */
+

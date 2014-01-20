@@ -110,3 +110,4 @@ class CalculateTriangleGroupCurvatures
 #endif /* _CalculateTriangleGroupCurvatures_H_ */
 
 
+

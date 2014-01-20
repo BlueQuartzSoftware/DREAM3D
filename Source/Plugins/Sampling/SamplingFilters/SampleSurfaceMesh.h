@@ -114,3 +114,4 @@ class SampleSurfaceMesh : public AbstractFilter
 };
 
 #endif /* SampleSurfaceMesh_H_ */
+

@@ -91,3 +91,4 @@ class DREAM3DLib_EXPORT VtkGrainIdWriter : public FileWriter
 };
 
 #endif /* VTKGRAINIDWRITER_H_ */
+

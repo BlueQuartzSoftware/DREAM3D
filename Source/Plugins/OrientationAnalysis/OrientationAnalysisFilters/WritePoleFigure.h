@@ -70,11 +70,16 @@ class WritePoleFigure : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(ImagePrefix)
+    Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
+    Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
     DREAM3D_INSTANCE_PROPERTY(int, ImageSize)
+    Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, LambertSize)
+    Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, NumColors)
+    Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors NOTIFY parametersChanged)
 
 
     enum ImageFormatType
@@ -134,6 +139,9 @@ class WritePoleFigure : public AbstractFilter
     virtual void preflight();
 
 
+  signals:
+    void parametersChanged();
+
   protected:
     WritePoleFigure();
 
@@ -184,3 +192,8 @@ class WritePoleFigure : public AbstractFilter
 };
 
 #endif /* _WritePoleFigure_H_ */
+
+
+
+
+

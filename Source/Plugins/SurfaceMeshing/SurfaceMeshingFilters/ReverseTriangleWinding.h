@@ -126,3 +126,4 @@ class ReverseTriangleWinding : public SurfaceMeshFilter
 };
 
 #endif /* _ReverseTriangleWinding_H_ */
+

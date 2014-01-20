@@ -91,6 +91,7 @@ building the H5SupportDatModel DLL on windows.
 #else
 #define  H5Support_EXPORT __declspec(dllimport)
 #endif /* H5Support_EXPORTS */
+
 #else
 #define H5Support_EXPORT
 #endif
@@ -103,3 +104,4 @@ building the H5SupportDatModel DLL on windows.
 #endif
 
 #endif /* _H5Support_COMMON_DLL_EXPORT_H_ */
+

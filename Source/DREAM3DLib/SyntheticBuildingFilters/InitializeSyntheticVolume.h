@@ -122,3 +122,4 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 };
 
 #endif /* _INITIALIZESYNTHETICVOLUME_H_ */
+

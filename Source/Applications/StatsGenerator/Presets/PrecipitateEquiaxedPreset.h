@@ -82,3 +82,4 @@ class PrecipitateEquiaxedPreset : public AbstractMicrostructurePreset
 DECLARE_FACTORY_CLASS(PrecipitateEquiaxedPresetFactory, PrecipitateEquiaxedPreset, "Precipitate Equiaxed" )
 
 #endif /* PrecipitateEquiaxedPresetFACTORY_H_ */
+

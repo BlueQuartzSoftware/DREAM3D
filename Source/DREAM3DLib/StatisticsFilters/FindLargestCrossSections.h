@@ -68,6 +68,7 @@ class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, Plane)
+    Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
@@ -102,6 +103,9 @@ class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     FindLargestCrossSections();
     void find_crosssections();
@@ -117,3 +121,6 @@ class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
 };
 
 #endif /* FindLargestCrossSections_H_ */
+
+
+

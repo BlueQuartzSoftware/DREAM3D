@@ -228,3 +228,4 @@ Q_OBJECT
   };
 
 #endif /* SGABSTRACTTABLEMODEL_H_ */
+

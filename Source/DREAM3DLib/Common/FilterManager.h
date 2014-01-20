@@ -156,3 +156,4 @@ class DREAM3DLib_EXPORT FilterManager
 };
 
 #endif /* _FilterManager_H_ */
+

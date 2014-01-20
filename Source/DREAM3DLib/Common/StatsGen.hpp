@@ -527,3 +527,4 @@ class StatsGen
 };
 
 #endif /* _STATSGEN_H_ */
+

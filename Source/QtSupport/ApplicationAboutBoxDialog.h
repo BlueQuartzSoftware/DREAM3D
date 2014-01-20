@@ -98,3 +98,4 @@ class ApplicationAboutBoxDialog: public QDialog, private Ui::ApplicationAboutBox
 };
 
 #endif /* R3DApplicationAboutBoxDialog_H_ */
+

@@ -224,3 +224,4 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
 #include "IOFiltersWidgets/moc_QualityMetricItemDelegate.cxx"
 #endif /*  */
 
+

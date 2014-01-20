@@ -165,3 +165,4 @@ class AIMImageGraphicsDelegate : public QObject
 };
 
 #endif /* _AIMIMAGEGRAPHICSDELEGATE_H_ */
+

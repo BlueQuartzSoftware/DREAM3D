@@ -96,3 +96,4 @@ class SGWidget : public QWidget
 };
 
 #endif /* SGWIDGET_H_ */
+

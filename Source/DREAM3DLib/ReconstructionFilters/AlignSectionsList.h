@@ -71,6 +71,7 @@ class DREAM3DLib_EXPORT AlignSectionsList : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
@@ -92,6 +93,9 @@ class DREAM3DLib_EXPORT AlignSectionsList : public AlignSections
     virtual void preflight();
 
 
+  signals:
+    void parametersChanged();
+
   protected:
     AlignSectionsList();
 
@@ -106,3 +110,6 @@ class DREAM3DLib_EXPORT AlignSectionsList : public AlignSections
 };
 
 #endif /* AlignSectionsList_H_ */
+
+
+

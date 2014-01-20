@@ -100,3 +100,4 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
 };
 
 #endif /* _PerPhaseMinSize_H_ */
+

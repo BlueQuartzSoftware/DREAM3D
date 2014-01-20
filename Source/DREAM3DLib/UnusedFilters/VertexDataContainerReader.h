@@ -110,3 +110,4 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
 };
 
 #endif /* _VertexDataContainerReader_H_ */
+

@@ -65,3 +65,4 @@ class DREAM3DLib_EXPORT EllipsoidOps : public ShapeOps
 };
 
 #endif /* ELLIPSOIDOPS_H_ */
+

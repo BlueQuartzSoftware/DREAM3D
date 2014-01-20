@@ -126,3 +126,4 @@ class GenericFilter : public AbstractFilter
 };
 
 #endif /* _GenericFilter_H_ */
+

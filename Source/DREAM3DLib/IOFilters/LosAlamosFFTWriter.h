@@ -107,3 +107,5 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
 };
 
 #endif /* _LosAlamosFFTWriter_H_ */
+
+

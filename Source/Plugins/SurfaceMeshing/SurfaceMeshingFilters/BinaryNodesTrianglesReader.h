@@ -134,3 +134,4 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
 };
 
 #endif /* _BinaryNodesTrianglesReader_H_ */
+

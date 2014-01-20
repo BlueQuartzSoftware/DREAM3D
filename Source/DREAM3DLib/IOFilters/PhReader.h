@@ -68,8 +68,11 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+    Q_PROPERTY(FloatVec3Widget_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
+    Q_PROPERTY(FloatVec3Widget_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
 
     //------ Created Cell Data
 
@@ -93,6 +96,9 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     virtual void preflight();
     virtual void execute();
 
+  signals:
+    void parametersChanged();
+
   protected:
     PhReader();
 
@@ -112,5 +118,9 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
 };
 
 #endif //_PHReader_h_
+
+
+
+
 
 

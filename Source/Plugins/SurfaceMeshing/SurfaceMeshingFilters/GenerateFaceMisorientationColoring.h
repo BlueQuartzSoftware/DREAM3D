@@ -139,3 +139,4 @@ class GenerateFaceMisorientationColoring : public SurfaceMeshFilter
 };
 
 #endif /* _GenerateFaceMisorientationColoring_H_ */
+

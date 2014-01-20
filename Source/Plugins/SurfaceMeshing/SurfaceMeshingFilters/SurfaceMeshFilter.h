@@ -75,3 +75,4 @@ class SurfaceMeshFilter : public AbstractFilter
 };
 
 #endif /* _SurfaceMeshFilter_H_ */
+

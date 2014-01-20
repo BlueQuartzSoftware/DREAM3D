@@ -139,3 +139,4 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
 };
 
 #endif /* _FeatureFaceFilter_H_ */
+

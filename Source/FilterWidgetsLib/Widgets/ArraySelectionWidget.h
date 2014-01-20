@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT ArraySelectionWidget : public QWidget, private Ui:
 
 #endif /* _ArraySelectionWidget_H_ */
 
+

@@ -64,9 +64,13 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
     virtual ~NodesTrianglesToStl();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
+    Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);
+    Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory);
+    Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlPrefix);
+    Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix NOTIFY parametersChanged)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -111,6 +115,9 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     NodesTrianglesToStl();
 
@@ -142,3 +149,5 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
 };
 
 #endif /* CMUNodesTrianglesToStl_H_ */
+
+

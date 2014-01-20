@@ -152,3 +152,4 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
 
 
 #endif /* _ComparisonSelectionWidget_H_ */
+

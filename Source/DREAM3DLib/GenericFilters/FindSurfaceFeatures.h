@@ -105,3 +105,4 @@ class DREAM3DLib_EXPORT FindSurfaceFeatures : public AbstractFilter
 };
 
 #endif /* FINDSURFACEGRAINS_H_ */
+

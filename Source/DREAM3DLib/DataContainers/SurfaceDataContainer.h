@@ -112,3 +112,4 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
 };
 
 #endif /* SURFACEDATACONTAINER_H_ */
+

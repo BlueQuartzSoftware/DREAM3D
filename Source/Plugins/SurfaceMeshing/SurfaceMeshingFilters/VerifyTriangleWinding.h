@@ -163,3 +163,4 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
 };
 
 #endif /* _VerifyTriangleWinding_H_ */
+

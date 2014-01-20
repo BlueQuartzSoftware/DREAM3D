@@ -136,3 +136,4 @@ class QImportImageStackWidget : public QFilterWidget, private Ui::QImportImageSt
 };
 
 #endif /* EbsdImportWIDGET_H_ */
+

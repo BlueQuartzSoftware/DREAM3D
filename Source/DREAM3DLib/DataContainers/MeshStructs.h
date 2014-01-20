@@ -132,3 +132,4 @@ namespace SurfaceMesh
 }
 
 #endif /* MESHSTRUCTS_H_ */
+

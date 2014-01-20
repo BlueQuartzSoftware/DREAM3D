@@ -104,3 +104,4 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
 };
 
 #endif /* _STATSGENMDFWIDGET_H_ */
+

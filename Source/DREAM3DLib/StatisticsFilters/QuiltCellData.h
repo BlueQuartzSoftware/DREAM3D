@@ -73,11 +73,17 @@ class DREAM3DLib_EXPORT QuiltCellData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, QStepX)
+    Q_PROPERTY(int QStepX READ getQStepX WRITE setQStepX NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, QStepY)
+    Q_PROPERTY(int QStepY READ getQStepY WRITE setQStepY NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, QStepZ)
+    Q_PROPERTY(int QStepZ READ getQStepZ WRITE setQStepZ NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, PSizeX)
+    Q_PROPERTY(int PSizeX READ getPSizeX WRITE setPSizeX NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, PSizeY)
+    Q_PROPERTY(int PSizeY READ getPSizeY WRITE setPSizeY NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, PSizeZ)
+    Q_PROPERTY(int PSizeZ READ getPSizeZ WRITE setPSizeZ NOTIFY parametersChanged)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -122,6 +128,9 @@ class DREAM3DLib_EXPORT QuiltCellData : public AbstractFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     QuiltCellData();
 
@@ -143,3 +152,8 @@ class DREAM3DLib_EXPORT QuiltCellData : public AbstractFilter
 };
 
 #endif /* QuiltCellData_H_ */
+
+
+
+
+

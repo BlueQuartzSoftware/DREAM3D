@@ -71,3 +71,4 @@ class DREAM3DLib_EXPORT FileWriter : public AbstractFilter
 };
 
 #endif /* FILEWRITER_H_ */
+

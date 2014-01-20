@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, ComparisonInputs)
+    Q_PROPERTY(QVector<ComparisonInput_t> ComparisonInputs READ getComparisonInputs WRITE setComparisonInputs NOTIFY parametersChanged)
 
 
     /**
@@ -109,6 +110,9 @@ class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     MultiThresholdCells();

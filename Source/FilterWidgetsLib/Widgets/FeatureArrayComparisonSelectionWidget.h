@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT FeatureArrayComparisonSelectionWidget : public QWi
 
 #endif /* _FeatureArrayComparisonSelectionWidget_H_ */
 
+

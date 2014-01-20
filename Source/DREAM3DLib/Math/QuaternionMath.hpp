@@ -327,3 +327,4 @@ typedef QuaternionMath<double>::Quaternion  QuatD;
 
 #endif /* _QuaternionMath_H_ */
 
+

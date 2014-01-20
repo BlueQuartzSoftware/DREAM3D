@@ -141,3 +141,4 @@ class EbsdLib_EXPORT H5AngImporter : public EbsdImporter
 
 
 #endif /* _H5ANGIMPORTER_H_ */
+

@@ -67,8 +67,11 @@ class GenerateSurfaceMeshConnectivity : public SurfaceMeshFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(bool, GenerateVertexTriangleLists)
+    Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, GenerateTriangleNeighbors)
+    Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, GenerateEdgeIdList)
+    Q_PROPERTY(bool GenerateEdgeIdList READ getGenerateEdgeIdList WRITE setGenerateEdgeIdList NOTIFY parametersChanged)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -113,6 +116,9 @@ class GenerateSurfaceMeshConnectivity : public SurfaceMeshFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     GenerateSurfaceMeshConnectivity();
 
@@ -133,3 +139,4 @@ class GenerateSurfaceMeshConnectivity : public SurfaceMeshFilter
 };
 
 #endif /* _GenerateSurfaceMeshConnectivity_H_ */
+

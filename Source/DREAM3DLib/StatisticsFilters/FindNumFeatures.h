@@ -96,3 +96,4 @@ class DREAM3DLib_EXPORT FindNumFeatures : public AbstractFilter
 };
 
 #endif /* FindNumFeatures_H_ */
+

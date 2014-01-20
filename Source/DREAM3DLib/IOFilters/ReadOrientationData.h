@@ -73,6 +73,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
 
@@ -124,6 +125,9 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     ReadOrientationData();
@@ -233,3 +237,6 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 };
 
 #endif /* _ReadOrientationData_H_ */
+
+
+

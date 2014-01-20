@@ -516,3 +516,4 @@ namespace DREAM3D
 
 
 #endif /* DREAM3DSETGETMACROS_H_ */
+

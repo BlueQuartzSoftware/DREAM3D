@@ -157,3 +157,4 @@ class DREAM3DLib_EXPORT TrigonalLowOps : public OrientationOps
 };
 
 #endif /* TrigonalLowOPS_H_ */
+

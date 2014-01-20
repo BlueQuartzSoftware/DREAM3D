@@ -229,3 +229,4 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 };
 
 #endif /* ReadH5Ebsd_H_ */
+

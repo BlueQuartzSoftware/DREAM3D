@@ -100,3 +100,4 @@ class DREAM3DLib_EXPORT StandardizeEulerAngles : public AbstractFilter
 };
 
 #endif /* StandardizeEulerANGLES_H_ */
+

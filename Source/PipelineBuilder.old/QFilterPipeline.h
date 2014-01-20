@@ -99,3 +99,4 @@ class QFilterPipeline : public FilterPipeline
 };
 
 #endif /* QGRAINGENERATOR_H_ */
+

@@ -103,3 +103,4 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public IOSupport
 };
 
 #endif /* _VertexDataContainerWriter_H_ */
+

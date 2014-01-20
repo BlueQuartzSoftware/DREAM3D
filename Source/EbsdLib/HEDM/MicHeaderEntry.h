@@ -157,3 +157,4 @@ class MicStringHeaderEntry : public EbsdHeaderEntry
 
 #endif /* _MicHeaderEntry_H_ */
 
+

@@ -171,3 +171,4 @@ namespace Ebsd
 
 
 #endif /* MicCONSTANTS_H_ */
+

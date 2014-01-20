@@ -71,6 +71,7 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize)
+    Q_PROPERTY(int MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
@@ -87,6 +88,9 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
 
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     FillBadData();
@@ -107,3 +111,6 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
 };
 
 #endif /* FillBadData_H_ */
+
+
+

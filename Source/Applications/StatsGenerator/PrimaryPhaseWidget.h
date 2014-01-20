@@ -121,3 +121,4 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
 };
 
 #endif /* PRIMARYPHASEWIDGET_H_ */
+

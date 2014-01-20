@@ -102,3 +102,4 @@ class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGen
 
 
 #endif /* _QGenerateEnsembleStatisticsWidget_H_ */
+

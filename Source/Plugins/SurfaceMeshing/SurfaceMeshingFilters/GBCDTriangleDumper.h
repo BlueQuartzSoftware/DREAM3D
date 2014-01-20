@@ -69,6 +69,7 @@ class GBCDTriangleDumper : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
 
 
 
@@ -120,6 +121,9 @@ class GBCDTriangleDumper : public SurfaceMeshFilter
 
     int GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc);
 
+  signals:
+    void parametersChanged();
+
   protected:
     GBCDTriangleDumper();
 
@@ -146,3 +150,6 @@ class GBCDTriangleDumper : public SurfaceMeshFilter
 };
 
 #endif /* _GBCDTriangleDumper_H_ */
+
+
+

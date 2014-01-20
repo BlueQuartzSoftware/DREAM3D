@@ -233,3 +233,4 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 };
 
 #endif /* _DREAM3D_UI_H_ */
+

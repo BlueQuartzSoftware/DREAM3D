@@ -153,3 +153,4 @@ class DREAM3DLib_EXPORT VertexArray
 
 
 #endif /* _VertexArray_H_ */
+

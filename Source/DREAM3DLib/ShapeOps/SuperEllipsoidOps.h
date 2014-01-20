@@ -67,3 +67,4 @@ class DREAM3DLib_EXPORT SuperEllipsoidOps : public ShapeOps
 };
 
 #endif /* SUPERELLIPSOIDOPS_H_ */
+

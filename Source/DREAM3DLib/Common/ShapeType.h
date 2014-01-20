@@ -147,3 +147,4 @@ class DREAM3DLib_EXPORT ShapeType
 };
 
 #endif /* SHAPETYPE_H_ */
+

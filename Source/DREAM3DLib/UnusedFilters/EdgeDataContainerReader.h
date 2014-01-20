@@ -113,3 +113,4 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
 };
 
 #endif /* _EdgeDataContainerReader_H_ */
+

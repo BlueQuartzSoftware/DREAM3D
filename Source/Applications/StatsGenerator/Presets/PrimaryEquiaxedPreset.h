@@ -82,3 +82,4 @@ class PrimaryEquiaxedPreset : public AbstractMicrostructurePreset
 DECLARE_FACTORY_CLASS(PrimaryEquiaxedPresetFactory, PrimaryEquiaxedPreset, "Primary Equiaxed" )
 
 #endif /* PrimaryEquiaxedPresetFACTORY_H_ */
+

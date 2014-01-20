@@ -75,12 +75,19 @@ class LaplacianSmoothing : public SurfaceMeshFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
+    Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, Lambda)
+    Q_PROPERTY(float Lambda READ getLambda WRITE setLambda NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, SurfacePointLambda)
+    Q_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, TripleLineLambda)
+    Q_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, QuadPointLambda)
+    Q_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, SurfaceTripleLineLambda)
+    Q_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, SurfaceQuadPointLambda)
+    Q_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, GenerateIterationOutputFiles)
 
 
@@ -136,6 +143,9 @@ class LaplacianSmoothing : public SurfaceMeshFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     LaplacianSmoothing();
 
@@ -180,3 +190,8 @@ class LaplacianSmoothing : public SurfaceMeshFilter
 };
 
 #endif /* _LaplacianSmoothing_H_ */
+
+
+
+
+

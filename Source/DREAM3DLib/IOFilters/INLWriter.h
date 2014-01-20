@@ -110,3 +110,5 @@ class DREAM3DLib_EXPORT INLWriter : public FileWriter
 };
 
 #endif /* _INLWRITER_H_ */
+
+

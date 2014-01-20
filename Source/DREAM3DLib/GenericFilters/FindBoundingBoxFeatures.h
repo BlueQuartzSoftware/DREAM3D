@@ -106,3 +106,4 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
 };
 
 #endif /* FINDBOUNDINGBOXGRAINS_H_ */
+

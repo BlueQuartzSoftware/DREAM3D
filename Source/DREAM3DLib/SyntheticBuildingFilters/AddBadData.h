@@ -74,9 +74,13 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
     virtual const QString getHumanLabel() { return "Add Bad Data"; }
 
     DREAM3D_INSTANCE_PROPERTY(bool, PoissonNoise)
+    Q_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, PoissonVolFraction)
+    Q_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, BoundaryNoise)
+    Q_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, BoundaryVolFraction)
+    Q_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction NOTIFY parametersChanged)
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -94,6 +98,9 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     AddBadData();
 
@@ -109,3 +116,10 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
 };
 
 #endif /* AddBadData_H_ */
+
+
+
+
+
+
+

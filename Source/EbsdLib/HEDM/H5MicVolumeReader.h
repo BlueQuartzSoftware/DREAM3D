@@ -163,3 +163,4 @@ class EbsdLib_EXPORT H5MicVolumeReader : public H5EbsdVolumeReader
 };
 
 #endif /* _H5MicDATALOADER_H_ */
+

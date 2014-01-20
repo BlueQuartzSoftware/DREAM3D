@@ -177,3 +177,4 @@ class AxisAngleTableModel : public QAbstractTableModel
 };
 
 #endif /* AxisAngleTableModel_H_ */
+

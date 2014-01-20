@@ -183,3 +183,4 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
 };
 
 #endif /* SGPOWERLAWITEMDELEGATE_H_ */
+

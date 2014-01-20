@@ -86,6 +86,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     typedef boost::shared_array<int> SharedIntArray;
 
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+    Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations NOTIFY parametersChanged)
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
@@ -110,6 +111,9 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
      */
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     MatchCrystallography();
@@ -171,3 +175,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 };
 
 #endif /* MATCHCRYSTALLOGRAPHY_H_ */
+
+
+

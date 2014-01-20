@@ -110,3 +110,4 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
 };
 
 #endif /* _H5FilterParametersWRITER_H_ */
+

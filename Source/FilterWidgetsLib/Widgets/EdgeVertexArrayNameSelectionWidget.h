@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT EdgeVertexArrayNameSelectionWidget : public QWidge
 
 #endif /* _EdgeVertexArrayNameSelectionWidget_H_ */
 
+

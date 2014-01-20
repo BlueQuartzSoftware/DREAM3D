@@ -86,3 +86,4 @@ class DREAM3DLib_EXPORT H5BoundaryStatsDataDelegate : public H5StatsDataDelegate
 };
 
 #endif /* _H5STATSDATA_DELEGATE_H_ */
+

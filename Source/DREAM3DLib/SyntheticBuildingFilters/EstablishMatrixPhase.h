@@ -125,3 +125,4 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
 };
 
 #endif /* EstablishMatrixPhase_H_ */
+

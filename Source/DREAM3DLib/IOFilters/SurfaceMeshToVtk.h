@@ -68,7 +68,9 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputVtkFile)
+    Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
+    Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
     /**
@@ -113,6 +115,9 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     SurfaceMeshToVtk();

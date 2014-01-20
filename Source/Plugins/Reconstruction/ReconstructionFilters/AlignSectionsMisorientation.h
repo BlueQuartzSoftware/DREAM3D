@@ -116,3 +116,4 @@ class AlignSectionsMisorientation : public AlignSections
 };
 
 #endif /* AlignSectionsMisorientation_H_ */
+

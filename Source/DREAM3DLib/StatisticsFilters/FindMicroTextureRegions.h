@@ -104,3 +104,4 @@ class DREAM3DLib_EXPORT FindMicroTextureRegions : public AbstractFilter
 };
 
 #endif /* FINDMICROTEXTUREREGIONS_H_ */
+

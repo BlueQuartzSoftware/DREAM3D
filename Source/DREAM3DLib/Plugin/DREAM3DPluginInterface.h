@@ -178,3 +178,4 @@ Q_DECLARE_INTERFACE(DREAM3DPluginInterface,
                     "net.BlueQuartz.DREAM3DPluginInterface/1.0")
 
 #endif /* DREAM3DPluginInterface_H_ */
+

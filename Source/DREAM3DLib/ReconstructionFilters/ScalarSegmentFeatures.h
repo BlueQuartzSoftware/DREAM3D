@@ -73,8 +73,10 @@ class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ScalarArrayName)
+    Q_PROPERTY(QString ScalarArrayName READ getScalarArrayName WRITE setScalarArrayName NOTIFY parametersChanged)
 
     DREAM3D_INSTANCE_PROPERTY(float, ScalarTolerance)
+    Q_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -99,6 +101,9 @@ class DREAM3DLib_EXPORT ScalarSegmentFeatures : public SegmentFeatures
      */
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     ScalarSegmentFeatures();

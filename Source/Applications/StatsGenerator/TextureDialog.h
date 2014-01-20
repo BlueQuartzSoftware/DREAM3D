@@ -86,3 +86,4 @@ class TextureDialog : public QDialog , private Ui::TextureDialog
 };
 
 #endif /* TEXTUREDIALOG_H_ */
+

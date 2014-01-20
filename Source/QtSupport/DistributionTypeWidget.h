@@ -73,3 +73,4 @@ class DistributionTypeWidget : public QWidget, private Ui::DistributionTypeWidge
 
 
 #endif /* _DistributionTypeWidget_H_ */
+

@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT DoubleWidget : public QWidget, private Ui::DoubleW
 
 #endif /* _DoubleWidget_H_ */
 
+

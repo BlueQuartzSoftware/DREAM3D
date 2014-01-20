@@ -106,3 +106,4 @@ class DREAM3DLib_EXPORT SegmentFeatures : public AbstractFilter
 };
 
 #endif /* SEGMENTGRAINS_H_ */
+

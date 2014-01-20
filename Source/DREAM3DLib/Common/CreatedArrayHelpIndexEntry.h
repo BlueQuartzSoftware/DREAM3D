@@ -77,3 +77,4 @@ class DREAM3DLib_EXPORT CreatedArrayHelpIndexEntry
 
 
 #endif /* _CreatedArrayHelpIndexEntry_H_ */
+

@@ -128,3 +128,4 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
 };
 
 #endif /* _H5CTFIMPORTER_H_ */
+

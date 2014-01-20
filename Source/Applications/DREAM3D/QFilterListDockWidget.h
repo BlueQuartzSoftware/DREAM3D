@@ -80,3 +80,4 @@ class QFilterListDockWidget : public QDockWidget, private Ui::QFilterListDockWid
 
 
 #endif /* _QFilterListDockWidget_H_ */
+

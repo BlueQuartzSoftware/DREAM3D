@@ -140,3 +140,4 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
 };
 
 #endif /* Hex2SqrConverterWidget_H_ */
+

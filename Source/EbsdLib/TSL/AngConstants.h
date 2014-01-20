@@ -287,3 +287,4 @@ namespace Ebsd
 #endif
 
 #endif /* ANGCONSTANTS_H_ */
+

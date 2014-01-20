@@ -165,3 +165,4 @@ class PoleFigureImageUtilities
 
 
 #endif /* _PoleFigureImageUtilities_H_ */
+

@@ -269,3 +269,4 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 };
 
 #endif /* _QFILTERWIDGET_H_ */
+

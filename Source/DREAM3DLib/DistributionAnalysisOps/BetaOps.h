@@ -70,3 +70,4 @@ class DREAM3DLib_EXPORT BetaOps : public DistributionAnalysisOps
 };
 
 #endif /* _BETAOPS_H_ */
+

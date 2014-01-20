@@ -121,3 +121,4 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
 };
 
 #endif /* _QFilterParametersReader_H_ */
+

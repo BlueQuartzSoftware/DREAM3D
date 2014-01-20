@@ -144,3 +144,4 @@ class AbstractMicrostructurePresetFactory
 };
 
 #endif /* ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_ */
+

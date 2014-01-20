@@ -182,3 +182,4 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
   };
 
 #endif /* _STATSGENERATOR_H_ */
+

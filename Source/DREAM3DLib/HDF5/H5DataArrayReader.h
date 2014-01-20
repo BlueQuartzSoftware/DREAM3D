@@ -88,3 +88,4 @@ class DREAM3DLib_EXPORT H5DataArrayReader
 };
 
 #endif /* H5DATAARRAYREADER_HPP_ */
+

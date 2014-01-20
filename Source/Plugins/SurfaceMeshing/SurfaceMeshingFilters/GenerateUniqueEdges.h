@@ -149,3 +149,4 @@ class GenerateUniqueEdges : public SurfaceMeshFilter
 };
 
 #endif /* _GenerateUniqueEdges_H_ */
+

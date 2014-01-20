@@ -97,3 +97,4 @@ class DREAM3DLib_EXPORT FindVolFractions : public AbstractFilter
 };
 
 #endif /* FindVolFractions_H_ */
+

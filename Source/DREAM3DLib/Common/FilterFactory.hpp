@@ -97,3 +97,4 @@ class FilterFactory : public IFilterFactory
     void operator=(const FilterFactory&); // Operator '=' Not Implemented
 };
 #endif /* FilterFACTORY_H_ */
+

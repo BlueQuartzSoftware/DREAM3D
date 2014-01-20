@@ -112,3 +112,4 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
 };
 
 #endif /* _QINITIALIZESYNTHETICVOLUMEWIDGET_H_ */
+

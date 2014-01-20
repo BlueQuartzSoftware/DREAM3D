@@ -105,6 +105,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MultiplesOfAverage)
+    Q_PROPERTY(int MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
@@ -130,6 +131,9 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     FindNeighborhoods();
 
@@ -149,3 +153,6 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 };
 
 #endif /* FINDNEIGHBORHOODS_H_ */
+
+
+

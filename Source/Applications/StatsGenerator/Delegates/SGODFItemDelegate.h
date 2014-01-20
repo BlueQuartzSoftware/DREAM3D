@@ -156,3 +156,4 @@ class SGODFItemDelegate : public QStyledItemDelegate
 };
 
 #endif /* _SGODFITEMDELEGATE_H_ */
+

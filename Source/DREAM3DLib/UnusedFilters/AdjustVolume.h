@@ -107,3 +107,4 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 };
 
 #endif /* _ADJUSTVOLUME_H_ */
+

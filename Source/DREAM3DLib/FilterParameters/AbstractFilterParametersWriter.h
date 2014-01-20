@@ -118,3 +118,4 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 };
 
 #endif /* _AbstractFilterParametersWriter_H_ */
+

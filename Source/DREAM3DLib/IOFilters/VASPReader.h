@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
 
     //------ Created Cell Data
 
@@ -88,6 +89,9 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
 
     virtual void preflight();
     virtual void execute();
+
+  signals:
+    void parametersChanged();
 
   protected:
     VASPReader();
@@ -112,3 +116,6 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
 };
 
 #endif /* VASPREADER_H_ */
+
+
+

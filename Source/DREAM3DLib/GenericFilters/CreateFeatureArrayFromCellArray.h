@@ -68,6 +68,7 @@ class DREAM3DLib_EXPORT CreateFeatureArrayFromCellArray : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
+    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -112,6 +113,9 @@ class DREAM3DLib_EXPORT CreateFeatureArrayFromCellArray : public AbstractFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     CreateFeatureArrayFromCellArray();
 
@@ -134,3 +138,6 @@ class DREAM3DLib_EXPORT CreateFeatureArrayFromCellArray : public AbstractFilter
 
 
 #endif /* CREATEFIELDARRAYFROMCELLARRAY_H_ */
+
+
+

@@ -116,6 +116,3 @@ class PipelineBuilderLib_EXPORT AxisAngleWidget : public QWidget, private Ui::Ax
 
 
 #endif /* _AxisAngleWidget_H_ */
-
-
-

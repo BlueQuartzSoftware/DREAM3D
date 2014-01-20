@@ -243,3 +243,4 @@ class H5GBCDArrayWriter
 
 
 #endif /* _H5DataArrayWriter_H_ */
+

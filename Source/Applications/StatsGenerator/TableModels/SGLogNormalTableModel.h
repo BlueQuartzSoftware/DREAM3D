@@ -138,3 +138,4 @@ Q_OBJECT
   };
 
 #endif /* _SG_LOG_NORMAL_TABLEMODEL_H_ */
+

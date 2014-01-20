@@ -97,3 +97,4 @@ class EbsdLib_EXPORT MicPhase
 };
 
 #endif /* MicPHASE_H_ */
+

@@ -105,3 +105,4 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */
+

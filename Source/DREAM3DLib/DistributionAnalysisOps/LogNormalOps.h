@@ -70,3 +70,4 @@ class DREAM3DLib_EXPORT LogNormalOps : public DistributionAnalysisOps
 };
 
 #endif /* _LogNormalOps_H_ */
+

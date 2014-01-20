@@ -98,3 +98,4 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
 };
 
 #endif /* EDITPHASEDIALOG_H_ */
+

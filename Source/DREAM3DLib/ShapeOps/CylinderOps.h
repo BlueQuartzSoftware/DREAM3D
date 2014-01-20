@@ -67,3 +67,4 @@ class DREAM3DLib_EXPORT CylinderOps : public ShapeOps
 };
 
 #endif /* CYLINDEROPS_H_ */
+

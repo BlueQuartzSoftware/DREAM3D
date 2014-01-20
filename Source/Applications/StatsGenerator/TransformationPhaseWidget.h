@@ -152,3 +152,4 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
 };
 
 #endif /* TransformationPhaseWidget_H_ */
+

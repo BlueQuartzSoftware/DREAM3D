@@ -72,8 +72,11 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedFeatureSize)
+    Q_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, ApplyToAll)
+    Q_PROPERTY(bool ApplyToAll READ getApplyToAll WRITE setApplyToAll NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
+    Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
@@ -94,6 +97,9 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     MinSize();
@@ -118,3 +124,4 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 };
 
 #endif /* MinSize_H_ */
+

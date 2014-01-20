@@ -152,3 +152,4 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
 
 
 #endif /* _DREAM3DUpdateCheckDialog_H_ */
+

@@ -65,3 +65,4 @@ class DREAM3DFileDragMessageBox : public QDialog, public Ui::Form
 };
 
 #endif /* _DREAM3DFileDragMessageBox_H */
+

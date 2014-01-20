@@ -69,7 +69,9 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(int, ReferenceSlice)
+    Q_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, UseReferenceSlice)
+    Q_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
@@ -109,3 +111,4 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
 };
 
 #endif /* AlignSectionsFeatureCentroid_H_ */
+

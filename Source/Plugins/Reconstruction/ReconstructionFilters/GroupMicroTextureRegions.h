@@ -123,3 +123,4 @@ class GroupMicroTextureRegions : public GroupFeatures
 };
 
 #endif /* GroupMicroTextureRegions_H_ */
+

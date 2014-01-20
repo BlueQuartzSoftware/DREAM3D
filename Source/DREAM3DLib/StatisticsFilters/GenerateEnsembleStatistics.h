@@ -158,3 +158,4 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 };
 
 #endif /* GenerateEnsembleStatistics_H_ */
+

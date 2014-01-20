@@ -75,7 +75,9 @@ class DREAM3DLib_EXPORT FindTwinBoundaries : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
+    Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
+    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
@@ -99,6 +101,9 @@ class DREAM3DLib_EXPORT FindTwinBoundaries : public AbstractFilter
      */
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     FindTwinBoundaries();

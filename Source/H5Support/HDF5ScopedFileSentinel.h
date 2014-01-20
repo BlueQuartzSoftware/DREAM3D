@@ -88,3 +88,4 @@ class H5Support_EXPORT HDF5ScopedGroupSentinel
 
 
 #endif /* _HDF5ScopedFileSentineal_H_ */
+

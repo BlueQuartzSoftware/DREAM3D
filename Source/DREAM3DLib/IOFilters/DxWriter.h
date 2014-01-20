@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
+    Q_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
@@ -84,6 +85,9 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     DxWriter();

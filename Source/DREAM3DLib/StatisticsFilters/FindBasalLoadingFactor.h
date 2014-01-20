@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
     virtual const QString getHumanLabel() { return "Find Basal Loading Factors"; }
 
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, LoadingDir)
+    Q_PROPERTY(FloatVec3Widget_t LoadingDir READ getLoadingDir WRITE setLoadingDir NOTIFY parametersChanged)
 
 
     virtual void setupFilterParameters();
@@ -93,6 +94,9 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
      */
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     FindBasalLoadingFactor();
@@ -114,3 +118,6 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
 
 
 #endif /* FINDBASALLOADINGFACTOR_H_ */
+
+
+

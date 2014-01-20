@@ -79,3 +79,4 @@ class DREAM3DLib_EXPORT H5MatrixStatsDataDelegate : public H5StatsDataDelegate
 };
 
 #endif /* _H5MatrixStatsData_DELEGATE_H_ */
+

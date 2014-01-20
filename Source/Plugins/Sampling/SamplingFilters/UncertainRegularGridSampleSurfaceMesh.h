@@ -69,10 +69,15 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 
 
     DREAM3D_INSTANCE_PROPERTY(int, XPoints)
+    Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, YPoints)
+    Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, ZPoints)
+    Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
+    Q_PROPERTY(FloatVec3Widget_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Uncertainty)
+    Q_PROPERTY(FloatVec3Widget_t Uncertainty READ getUncertainty WRITE setUncertainty NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
@@ -96,6 +101,9 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
      */
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     UncertainRegularGridSampleSurfaceMesh();
@@ -121,3 +129,6 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 };
 
 #endif /* UncertainRegularGridSampleSurfaceMesh_H_ */
+
+
+

@@ -175,3 +175,4 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
 };
 
 #endif /* H5CTFVOLUMEREADER_H_ */
+

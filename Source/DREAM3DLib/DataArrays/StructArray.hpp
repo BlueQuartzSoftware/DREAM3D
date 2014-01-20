@@ -794,3 +794,4 @@ class StructArray : public IDataArray
 
 
 #endif /* _StructArray_H_ */
+

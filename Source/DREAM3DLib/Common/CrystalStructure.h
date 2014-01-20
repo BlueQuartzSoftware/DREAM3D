@@ -95,3 +95,4 @@ class  CrystalStructure
 };
 
 #endif /* CRYSTALSTRUCTURE_H_ */
+

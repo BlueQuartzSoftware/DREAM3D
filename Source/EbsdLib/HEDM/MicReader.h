@@ -221,3 +221,4 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
 };
 
 #endif /* _MicREADER_H_ */
+

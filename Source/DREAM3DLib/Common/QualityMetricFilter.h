@@ -132,3 +132,4 @@ class DREAM3DLib_EXPORT QualityMetricFilter
 };
 
 #endif /* _QUALITYMETRICFILTER_H_ */
+

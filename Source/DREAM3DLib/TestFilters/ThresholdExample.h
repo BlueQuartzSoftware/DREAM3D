@@ -145,3 +145,4 @@ class DREAM3DLib_EXPORT ThresholdExample : public AbstractFilter
 };
 
 #endif /* _ThresholdExample_H_ */
+

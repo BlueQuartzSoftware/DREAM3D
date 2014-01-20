@@ -88,3 +88,4 @@ class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
 };
 
 #endif /* BoundaryPhaseWidget_H_ */
+

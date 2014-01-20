@@ -105,3 +105,4 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 };
 
 #endif /* FINDSIZES_H_ */
+

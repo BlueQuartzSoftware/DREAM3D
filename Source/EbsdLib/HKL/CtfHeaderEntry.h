@@ -161,3 +161,4 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
 
 #endif /* _CTFHEADERENTRY_H_ */
 
+

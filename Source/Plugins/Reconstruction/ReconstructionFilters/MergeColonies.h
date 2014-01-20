@@ -127,3 +127,4 @@ class MergeColonies : public GroupFeatures
 };
 
 #endif /* MERGECOLONIES_H_ */
+

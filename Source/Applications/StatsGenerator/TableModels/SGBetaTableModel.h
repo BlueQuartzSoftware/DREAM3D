@@ -149,3 +149,4 @@ Q_OBJECT
   };
 
 #endif /* _SG_BETA_TABLEMODEL_H_ */
+

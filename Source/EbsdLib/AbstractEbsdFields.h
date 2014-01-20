@@ -63,3 +63,4 @@ class EbsdLib_EXPORT AbstractEbsdFields
 };
 
 #endif /* ABSTRACTEBSDFIELDS_H_ */
+

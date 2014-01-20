@@ -72,6 +72,7 @@ class DREAM3DLib_EXPORT EBSDSegmentFeatures : public SegmentFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
+    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -97,6 +98,9 @@ class DREAM3DLib_EXPORT EBSDSegmentFeatures : public SegmentFeatures
     virtual void execute();
     virtual void preflight();
 
+
+  signals:
+    void parametersChanged();
 
   protected:
     EBSDSegmentFeatures();
@@ -125,3 +129,6 @@ class DREAM3DLib_EXPORT EBSDSegmentFeatures : public SegmentFeatures
 };
 
 #endif /* EBSDSegmentFeatures_H_ */
+
+
+

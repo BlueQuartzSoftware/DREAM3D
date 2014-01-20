@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -110,6 +111,9 @@ class DREAM3DLib_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     AbaqusSurfaceMeshWriter();
 
@@ -136,3 +140,9 @@ class DREAM3DLib_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
 };
 
 #endif /* _AbaqusSurfaceMeshWriter_H_ */
+
+
+
+
+
+

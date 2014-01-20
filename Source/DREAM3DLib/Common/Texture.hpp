@@ -548,3 +548,4 @@ class Texture
 };
 
 #endif /* TEXTURE_H_ */
+

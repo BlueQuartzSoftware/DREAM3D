@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT IntWidget : public QWidget, private Ui::IntWidget
 
 #endif /* _IntWidget_H_ */
 
+

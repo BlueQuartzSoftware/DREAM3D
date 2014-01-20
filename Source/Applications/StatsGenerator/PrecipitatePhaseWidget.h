@@ -122,3 +122,4 @@ class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidg
 };
 
 #endif /* PrecipitatePhaseWidget_H_ */
+

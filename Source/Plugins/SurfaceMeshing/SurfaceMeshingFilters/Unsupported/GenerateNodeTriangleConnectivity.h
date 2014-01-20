@@ -144,3 +144,4 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConnectivity : public AbstractFilter
 };
 
 #endif /* _GenerateNodeTriangleConnectivity_H_ */
+

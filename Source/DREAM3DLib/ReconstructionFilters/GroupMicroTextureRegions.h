@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public GroupFeatures
     virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance)
+    Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual void setupFilterParameters();
@@ -123,3 +124,6 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public GroupFeatures
 };
 
 #endif /* GroupMicroTextureRegions_H_ */
+
+
+

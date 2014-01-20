@@ -103,3 +103,4 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
 };
 
 #endif /* _EdgeDataContainerWriter_H_ */
+

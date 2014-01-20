@@ -101,3 +101,4 @@ class DREAM3DLib_EXPORT FindFeaturePhases : public AbstractFilter
 };
 
 #endif /* FindFeaturePhases_H_ */
+

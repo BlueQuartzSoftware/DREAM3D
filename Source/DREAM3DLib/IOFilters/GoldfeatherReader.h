@@ -144,3 +144,4 @@ class DREAM3DLib_EXPORT GoldfeatherReader : public AbstractFilter
 };
 
 #endif /* _GoldfeatherReader_H_ */
+

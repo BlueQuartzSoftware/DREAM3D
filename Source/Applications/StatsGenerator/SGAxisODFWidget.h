@@ -137,3 +137,4 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
 };
 
 #endif /* _SG_AXIS_ODFWIDGET_H_ */
+

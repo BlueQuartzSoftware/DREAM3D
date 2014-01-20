@@ -187,3 +187,4 @@ class SGMDFTableModel : public QAbstractTableModel
 };
 
 #endif /* SGMDFTABLEMODEL_H_ */
+

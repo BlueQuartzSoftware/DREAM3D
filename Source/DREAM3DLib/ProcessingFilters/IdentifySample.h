@@ -109,3 +109,4 @@ class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
 };
 
 #endif /* IdentifySample_H_ */
+

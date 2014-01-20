@@ -138,3 +138,4 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
 };
 
 #endif /* FindSlipTransmissionMetrics_H_ */
+
