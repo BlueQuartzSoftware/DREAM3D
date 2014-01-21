@@ -48,9 +48,9 @@ QuiltCellData::QuiltCellData() :
   m_NewDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_NewCellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_SelectedCellArrayName(""),
   m_NewCellArrayArrayName(""),
-  m_NewCellArray(NULL),
-  m_SelectedCellArrayName("")
+  m_NewCellArray(NULL)
 {
   setupFilterParameters();
 }

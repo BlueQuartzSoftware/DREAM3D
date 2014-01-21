@@ -56,12 +56,12 @@ FitCorrelatedFeatureData::FitCorrelatedFeatureData() :
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_NumberOfCorrelatedBins(1),
   m_RemoveBiasedFeatures(false),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_FeaturePhases(NULL),
+  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
+  m_BiasedFeatures(NULL),
   m_NewEnsembleArrayArrayName(""),
   m_NewEnsembleArray(NULL),
-  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
-  m_BiasedFeatures(NULL)
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_FeaturePhases(NULL)
 {
   setupFilterParameters();
 }
