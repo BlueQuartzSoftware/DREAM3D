@@ -164,15 +164,23 @@ namespace Detail
 
 } // End Namespace Detail
 
+//#define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, OutputName)\
+//  if(false == completed) {\
+//    Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
+//    if (NULL != Type##Ptr) {\
+//      Detail::ConvertData<Type>(Type##Ptr, DataContainer, ScalarType, OutputName);\
+//      completed = true;\
+//    }\
+//  }
+
 #define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, OutputName)\
   if(false == completed) {\
-  Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
-  if (NULL != Type##Ptr) {\
-  Detail::ConvertData<Type>(Type##Ptr, DataContainer, ScalarType, OutputName);\
-  completed = true;\
-  }\
+    Type::Pointer ptr = boost::dynamic_pointer_cast<Type>(Array);\
+    if (NULL != ptr) {\
+      Detail::ConvertData<Type>(ptr.get(), DataContainer, ScalarType, OutputName);\
+      completed = true;\
+    }\
   }
-
 
 
 // -----------------------------------------------------------------------------
@@ -374,12 +382,8 @@ void ConvertData::execute()
 
   IDataArray::Pointer iArray = m->getCellData(m_SelectedCellArrayName);
   bool completed = false;
-  //  UInt8ArrayType* uint8Ptr = UInt8ArrayType::SafePointerDownCast(iArray.get());
-  //  if (uint8Ptr != NULL)
-  //  {
-  //    Detail::ConvertData<UInt8ArrayType>(uint8Ptr, m, m_ScalarType);
-  //  }
-  CHECK_AND_CONVERT(UInt8ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
+
+  CHECK_AND_CONVERT(BoolArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
   CHECK_AND_CONVERT(Int8ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
   CHECK_AND_CONVERT(UInt16ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
   CHECK_AND_CONVERT(Int16ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
@@ -391,6 +395,14 @@ void ConvertData::execute()
   CHECK_AND_CONVERT(FloatArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
   CHECK_AND_CONVERT(DoubleArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
 
+  if(false == completed)
+  {
+    setErrorCondition(-60000);
+    std::stringstream ss;
+    ss << "Could not convert data because the input array '" << iArray->GetName() << "' of type '" << iArray->getTypeAsString() << "' could not be down cast properly.";
+    notifyErrorMessage(ss.str(), getErrorCondition());
+    return;
+  }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }

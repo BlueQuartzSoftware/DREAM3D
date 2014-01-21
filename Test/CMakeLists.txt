@@ -204,18 +204,18 @@ if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     # --------------------------------------------------------------------------
     # FindNeighbors Testing
     # --------------------------------------------------------------------------
-    add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
-    target_link_libraries(FindNeighborsTest DREAM3DLib)
-    set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
-    add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
+    #add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
+    #target_link_libraries(FindNeighborsTest DREAM3DLib)
+    #set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
+    #add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
     # --------------------------------------------------------------------------
     # SyntheticBuilder Test
     # --------------------------------------------------------------------------
-    add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
-    target_link_libraries(SyntheticBuilderTest DREAM3DLib)
-    set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
-    add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
+    #add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
+    #target_link_libraries(SyntheticBuilderTest DREAM3DLib)
+    #set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
+    #add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
 endif()
 
 # --------------------------------------------------------------------------
