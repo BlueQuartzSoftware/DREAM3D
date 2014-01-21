@@ -83,3 +83,4 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
 };
 
 #endif /* ANGFIELDS_H_ */
+

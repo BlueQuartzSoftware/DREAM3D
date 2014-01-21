@@ -88,3 +88,4 @@ class TriangleOps
 };
 
 #endif /* _TriangleOps_H_ */
+

@@ -130,3 +130,4 @@ class TriangleAreaFilter : public SurfaceMeshFilter
 };
 
 #endif /* _TriangleAreaFilter_H_ */
+

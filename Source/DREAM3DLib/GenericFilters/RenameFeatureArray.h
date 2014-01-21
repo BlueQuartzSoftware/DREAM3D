@@ -66,7 +66,9 @@ class DREAM3DLib_EXPORT RenameFeatureArray : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
+    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(NewFeatureArrayName)
+    Q_PROPERTY(QString NewFeatureArrayName READ getNewFeatureArrayName WRITE setNewFeatureArrayName NOTIFY parametersChanged)
 
 
     /**
@@ -111,6 +113,9 @@ class DREAM3DLib_EXPORT RenameFeatureArray : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     RenameFeatureArray();

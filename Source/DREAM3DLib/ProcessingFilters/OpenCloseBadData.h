@@ -71,10 +71,15 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, Direction)
+    Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, NumIterations)
+    Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, XDirOn)
+    Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, YDirOn)
+    Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, ZDirOn)
+    Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
@@ -96,6 +101,9 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     OpenCloseBadData();
 
@@ -113,3 +121,6 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
 };
 
 #endif /* OpenCloseBadData_H_ */
+
+
+

@@ -114,3 +114,4 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
 };
 
 #endif /* FINDAVGORIENTATIONS_H_ */
+

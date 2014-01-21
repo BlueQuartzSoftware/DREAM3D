@@ -129,3 +129,4 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
 };
 
 #endif /* _RemoveArrays_H_ */
+

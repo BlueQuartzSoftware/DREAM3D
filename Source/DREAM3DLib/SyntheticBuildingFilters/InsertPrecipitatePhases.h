@@ -91,8 +91,11 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)
+    Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
+    Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
+    Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
@@ -117,6 +120,9 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     InsertPrecipitatePhases();
@@ -227,3 +233,4 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 };
 
 #endif /* InsertPrecipitatePhases_H_ */
+

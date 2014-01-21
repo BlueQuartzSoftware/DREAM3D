@@ -44,3 +44,4 @@ class PMFilterGenerator : public PMFileGenerator
 };
 
 #endif /* PMFILTERGENERATOR_H_ */
+

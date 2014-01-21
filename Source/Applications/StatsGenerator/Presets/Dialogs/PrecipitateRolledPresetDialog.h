@@ -73,3 +73,4 @@ class PrecipitateRolledPresetDialog : public QDialog
 };
 
 #endif /* PrecipitateRolledPresetDialog_H_ */
+

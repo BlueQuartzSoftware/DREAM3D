@@ -128,3 +128,4 @@ class DREAM3DLib_EXPORT StatsData
 };
 
 #endif /* _STATSDATA_H_ */
+

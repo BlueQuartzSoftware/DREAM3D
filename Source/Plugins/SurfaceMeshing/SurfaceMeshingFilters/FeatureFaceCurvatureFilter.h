@@ -71,10 +71,15 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, NRing)
+    Q_PROPERTY(int NRing READ getNRing WRITE setNRing NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, ComputePrincipalDirectionVectors)
+    Q_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, ComputeMeanCurvature)
+    Q_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, ComputeGaussianCurvature)
+    Q_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, UseNormalsForCurveFitting)
+    Q_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting NOTIFY parametersChanged)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -123,6 +128,9 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     virtual void tbbTaskProgress();
 #endif
 
+  signals:
+    void parametersChanged();
+
   protected:
     FeatureFaceCurvatureFilter();
 
@@ -152,3 +160,6 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 };
 
 #endif /* FeatureFaceCurvatureFilter_H_ */
+
+
+

@@ -114,3 +114,4 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
 };
 
 #endif /* FindRadialDist_H_ */
+

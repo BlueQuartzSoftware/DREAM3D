@@ -176,3 +176,4 @@ class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
 };
 
 #endif /* _PrimaryStatsDataTUPLE_H_ */
+

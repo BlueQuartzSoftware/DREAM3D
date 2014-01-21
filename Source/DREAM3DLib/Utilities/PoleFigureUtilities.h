@@ -110,3 +110,4 @@ class DREAM3DLib_EXPORT PoleFigureUtilities
 
 
 #endif /* _PoleFigureUtilities_H_ */
+

@@ -69,8 +69,11 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory)
+    Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlPrefix)
+    Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, GroupByPhase)
+    Q_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase NOTIFY parametersChanged)
     
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -115,6 +118,9 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     SurfaceMeshToStl();
 
@@ -140,3 +146,4 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
 };
 
 #endif /* _SurfaceMeshToStl_H_ */
+

@@ -610,3 +610,4 @@ class VtkMiscFileWriter : public AbstractFilter
 
 
 #endif /* _VTKFILEWRITERS_HPP_ */
+

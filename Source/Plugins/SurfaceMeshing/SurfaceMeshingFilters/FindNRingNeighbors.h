@@ -112,3 +112,4 @@ class FindNRingNeighbors
 };
 
 #endif /* _FindNRingNeighbors_H_ */
+

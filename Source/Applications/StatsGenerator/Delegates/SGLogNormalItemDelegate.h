@@ -173,3 +173,4 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
 };
 
 #endif /* SGLOGNORMALITEMDELEGATE_H_ */
+

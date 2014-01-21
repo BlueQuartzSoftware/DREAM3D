@@ -68,8 +68,11 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
 
     /* Input Parameters */
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, CreateCellLevelArrays)
+    Q_PROPERTY(bool CreateCellLevelArrays READ getCreateCellLevelArrays WRITE setCreateCellLevelArrays NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, RenumberFeatures)
+    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
@@ -89,6 +92,9 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     FeatureInfoReader();
@@ -112,5 +118,9 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
 };
 
 #endif //_FeatureInfoReader_h_
+
+
+
+
 
 

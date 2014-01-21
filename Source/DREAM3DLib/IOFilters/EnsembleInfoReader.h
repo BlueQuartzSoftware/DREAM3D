@@ -67,6 +67,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
@@ -87,6 +88,9 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     EnsembleInfoReader();
 
@@ -105,5 +109,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 };
 
 #endif //_EnsembleInfoReader_h_
+
+
 
 

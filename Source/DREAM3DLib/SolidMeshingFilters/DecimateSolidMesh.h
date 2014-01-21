@@ -96,3 +96,4 @@ class DREAM3DLib_EXPORT DecimateSolidMesh : public AbstractFilter
 };
 
 #endif /* DecimateSolidMesh_H_ */
+

@@ -83,3 +83,4 @@ Q_DECLARE_METATYPE(UpdateCheckData);
 #endif
 
 #endif /* _UPDATECHECKDATA_H_ */
+

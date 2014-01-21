@@ -182,3 +182,4 @@ class Filt1 : public AbstractFilter
 };
 
 #endif /* _Filt0_H_ */
+

@@ -195,3 +195,4 @@ class DREAM3DPluginFrame : public QFrame
 };
 
 #endif /* _AIM_PLUGIN_FRAME_H_ */
+

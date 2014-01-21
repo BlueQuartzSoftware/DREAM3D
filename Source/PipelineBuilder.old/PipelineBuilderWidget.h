@@ -304,3 +304,4 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 };
 
 #endif /* PipelineBuilderWIDGET_H_ */
+

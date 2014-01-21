@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
     //------ Created Feature Data
 
     DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors)
+    Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
@@ -92,6 +93,9 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
 
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     MinNeighbors();
@@ -114,3 +118,6 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
 };
 
 #endif /* MinNeighbors_H_ */
+
+
+

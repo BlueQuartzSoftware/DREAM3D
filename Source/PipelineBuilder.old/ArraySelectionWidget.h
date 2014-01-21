@@ -266,3 +266,4 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
 
 
 #endif /* _ArraySelectionWidget_H_ */
+

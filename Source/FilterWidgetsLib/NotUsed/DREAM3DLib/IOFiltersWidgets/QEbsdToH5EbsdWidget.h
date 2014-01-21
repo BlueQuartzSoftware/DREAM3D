@@ -162,3 +162,4 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
 };
 
 #endif /* EbsdImportWIDGET_H_ */
+

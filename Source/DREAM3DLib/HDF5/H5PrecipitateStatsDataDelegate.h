@@ -121,3 +121,4 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
 };
 
 #endif /* _H5PrecipitateStatsData_DELEGATE_H_ */
+

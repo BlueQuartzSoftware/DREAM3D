@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT ChoiceWidget : public QWidget, private Ui::ChoiceW
 
 #endif /* _ChoiceWidget_H_ */
 
+

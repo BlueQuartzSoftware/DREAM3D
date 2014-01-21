@@ -109,3 +109,4 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
 };
 
 #endif /* FINDAvgCAxes_H_ */
+

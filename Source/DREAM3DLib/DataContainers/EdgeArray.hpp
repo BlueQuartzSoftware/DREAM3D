@@ -332,3 +332,4 @@ class EdgeArray
 
 
 #endif /* _EdgeArray_H_ */
+

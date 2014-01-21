@@ -73,3 +73,4 @@ class HelpDialog : public QDialog, private Ui::HelpDialog
 };
 
 #endif /* HELPDIALOG_H_ */
+

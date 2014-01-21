@@ -126,3 +126,4 @@ class CAxisSegmentFeatures : public SegmentFeatures
 };
 
 #endif /* CAxisSegmentFeatures_H_ */
+

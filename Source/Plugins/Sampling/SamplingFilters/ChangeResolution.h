@@ -66,6 +66,7 @@ class ChangeResolution : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
+    Q_PROPERTY(FloatVec3Widget_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
@@ -90,6 +91,9 @@ class ChangeResolution : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     ChangeResolution();
 
@@ -103,3 +107,6 @@ class ChangeResolution : public AbstractFilter
 };
 
 #endif /* CHANGERESOLUTION_H_ */
+
+
+

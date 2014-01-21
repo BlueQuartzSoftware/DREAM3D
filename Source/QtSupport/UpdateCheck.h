@@ -74,3 +74,4 @@ class UpdateCheck : public QObject
 };
 
 #endif /* _UPDATECHECK_H_ */
+

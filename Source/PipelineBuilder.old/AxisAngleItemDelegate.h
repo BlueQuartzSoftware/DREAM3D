@@ -152,3 +152,4 @@ class AxisAngleItemDelegate : public QStyledItemDelegate
 
 
 #endif /* AxisAngleItemDelegate_H_ */
+

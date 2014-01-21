@@ -169,3 +169,4 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 };
 
 #endif /* _DATACONTAINER_READER_H_ */
+

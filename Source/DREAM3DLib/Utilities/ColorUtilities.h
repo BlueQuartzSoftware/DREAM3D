@@ -52,3 +52,4 @@ class DREAM3DLib_EXPORT ColorUtilities
 
 
 #endif /* _ColorUtilities_H_ */
+

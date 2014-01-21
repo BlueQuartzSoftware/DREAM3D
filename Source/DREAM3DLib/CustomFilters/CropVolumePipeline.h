@@ -100,3 +100,4 @@ class DREAM3DLib_EXPORT CropVolumePipeline : public AbstractFilter
 };
 
 #endif /* CROP_VOLUME_PIPELINE_H_ */
+

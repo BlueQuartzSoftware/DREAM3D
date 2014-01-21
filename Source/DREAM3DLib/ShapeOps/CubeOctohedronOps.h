@@ -70,3 +70,4 @@ class DREAM3DLib_EXPORT CubeOctohedronOps : public ShapeOps
 
 
 #endif /* CUBOCTOHEDRONOPS_H_ */
+

@@ -155,3 +155,4 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
 };
 
 #endif /* HEXAGONALOPS_H_ */
+

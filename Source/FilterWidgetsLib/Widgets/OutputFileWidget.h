@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::Out
 
 #endif /* _OutputFileWidget_H_ */
 
+

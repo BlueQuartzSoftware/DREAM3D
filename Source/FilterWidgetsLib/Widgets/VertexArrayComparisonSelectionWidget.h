@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT VertexArrayComparisonSelectionWidget : public QWid
 
 #endif /* _VertexArrayComparisonSelectionWidget_H_ */
 
+

@@ -121,3 +121,4 @@ class DREAM3DLib_EXPORT H5TransformationStatsDataDelegate : public H5StatsDataDe
 };
 
 #endif /* _H5TransformationStatsData_DELEGATE_H_ */
+

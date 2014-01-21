@@ -48,3 +48,4 @@ class QR3DFileCompleter : public QCompleter
 };
 
 #endif /* R3DFILECOMPLETER_H_ */
+

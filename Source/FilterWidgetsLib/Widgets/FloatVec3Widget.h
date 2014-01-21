@@ -92,3 +92,4 @@ class FilterWidgetsLib_EXPORT FloatVec3Widget : public QWidget, private Ui::Floa
 
 #endif /* _FloatVec3Widget_H_ */
 
+

@@ -311,3 +311,4 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 };
 
 #endif /* _STATSDATAARRAY_H_ */
+

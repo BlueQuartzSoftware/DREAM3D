@@ -117,3 +117,4 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
 };
 
 #endif /* EDGEDATACONTAINER_H_ */
+

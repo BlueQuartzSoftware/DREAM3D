@@ -166,3 +166,4 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
 };
 
 #endif /* _H5ANGDATALOADER_H_ */
+

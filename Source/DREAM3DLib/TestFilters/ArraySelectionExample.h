@@ -190,3 +190,4 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
 };
 
 #endif /* _ArraySelectionExample_H_ */
+

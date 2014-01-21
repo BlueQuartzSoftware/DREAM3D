@@ -131,3 +131,4 @@ class TriangleNormalFilter : public SurfaceMeshFilter
 };
 
 #endif /* _TriangleNormalFilter_H_ */
+

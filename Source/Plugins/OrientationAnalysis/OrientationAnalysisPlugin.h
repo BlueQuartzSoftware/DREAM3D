@@ -63,3 +63,4 @@ class OrientationAnalysisPlugin : public QObject, public DREAM3DPluginInterface
 };
 
 #endif /* _OrientationAnalysis_H_ */
+

@@ -137,3 +137,4 @@ class GenericExample : public AbstractFilter
 };
 
 #endif /* _GenericExample_H_ */
+

@@ -107,3 +107,4 @@ Q_DECLARE_METATYPE(DataContainerProxy)
 
 
 #endif /* _DataContainerProxy_H_ */
+

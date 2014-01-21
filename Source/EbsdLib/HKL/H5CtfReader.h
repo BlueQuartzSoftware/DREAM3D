@@ -145,3 +145,4 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
 };
 
 #endif /* _H5CTFREADER_H_ */
+

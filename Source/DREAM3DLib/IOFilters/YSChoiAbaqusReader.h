@@ -58,7 +58,9 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFeatureInfoFile)
+    Q_PROPERTY(QString InputFeatureInfoFile READ getInputFeatureInfoFile WRITE setInputFeatureInfoFile NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
@@ -75,6 +77,9 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
     virtual void preflight();
     virtual void execute();
+
+  signals:
+    void parametersChanged();
 
   protected:
     YSChoiAbaqusReader();

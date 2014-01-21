@@ -94,8 +94,11 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)
+    Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
+    Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
+    Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes NOTIFY parametersChanged)
 
 
     virtual void setupFilterParameters();
@@ -118,6 +121,9 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
      */
     virtual void execute();
 
+
+  signals:
+    void parametersChanged();
 
   protected:
     PackPrimaryPhases();
@@ -233,3 +239,4 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 };
 
 #endif /* PackPrimaryPhases_H_ */
+

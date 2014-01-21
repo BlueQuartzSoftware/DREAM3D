@@ -109,3 +109,4 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
 };
 
 #endif /* AlignSectionsFeature_H_ */
+

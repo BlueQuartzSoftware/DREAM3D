@@ -93,3 +93,4 @@ class FilterWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inpu
 
 #endif /* _InputFileWidget_H_ */
 
+

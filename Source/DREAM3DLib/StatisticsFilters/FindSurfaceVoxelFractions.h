@@ -103,3 +103,4 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
 };
 
 #endif /* FindSurfaceVoxelFractions_H_ */
+

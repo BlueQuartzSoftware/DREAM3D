@@ -67,6 +67,7 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
 
     //------ Created Vertex Data
     //------ Created Edge Data
@@ -90,6 +91,9 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
 
     virtual void preflight();
     virtual void execute();
+
+  signals:
+    void parametersChanged();
 
   protected:
     ParaDisReader();
@@ -116,3 +120,6 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
 };
 
 #endif /* ParaDisREADER_H_ */
+
+
+

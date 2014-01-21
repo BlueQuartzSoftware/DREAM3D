@@ -71,3 +71,4 @@ private:
 };
 
 #endif /* SGAPPLICATION_H_ */
+

@@ -176,3 +176,4 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
 };
 
 #endif /* _PrecipitateStatsDataTUPLE_H_ */
+

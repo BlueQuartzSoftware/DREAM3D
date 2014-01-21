@@ -186,3 +186,4 @@ class DREAM3DLib_EXPORT Filt1 : public AbstractFilter
 };
 
 #endif /* _Filt0_H_ */
+

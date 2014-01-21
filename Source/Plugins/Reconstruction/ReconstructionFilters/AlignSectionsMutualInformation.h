@@ -121,3 +121,4 @@ class AlignSectionsMutualInformation : public AlignSections
 };
 
 #endif /* AlignSectionsMutualInformation_H_ */
+

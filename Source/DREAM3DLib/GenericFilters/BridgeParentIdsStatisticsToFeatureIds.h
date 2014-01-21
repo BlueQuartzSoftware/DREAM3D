@@ -112,3 +112,4 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
 };
 
 #endif /* BridgeParentIdsStatisticsToFeatureIds_H_ */
+

@@ -166,3 +166,4 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
 };
 
 #endif /* ANGREADER_H_ */
+

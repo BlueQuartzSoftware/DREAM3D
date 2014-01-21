@@ -86,3 +86,4 @@ public slots:
 
 
 #endif /* _SideBarWidget_H_ */
+

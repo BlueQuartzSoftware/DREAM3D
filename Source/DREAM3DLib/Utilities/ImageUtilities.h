@@ -94,3 +94,4 @@ class GenerateRgbaImageImpl
 
 
 #endif /* _ImageUtilites_H_ */
+

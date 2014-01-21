@@ -91,3 +91,4 @@ class PipelineTreeWidget : public QTreeWidget
 };
 
 #endif /* _TREEWIDGETBUILDER_H_ */
+

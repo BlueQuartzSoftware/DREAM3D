@@ -58,3 +58,4 @@ class DREAM3DLib_EXPORT IDataArrayFilter
 
 
 #endif /* _IDataArrayFilter_H_ */
+

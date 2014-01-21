@@ -88,3 +88,4 @@ DECLARE_FACTORY_CLASS(PrecipitateRolledPresetFactory, PrecipitateRolledPreset, "
 
 
 #endif /* PrecipitateRolledPreset_H_ */
+

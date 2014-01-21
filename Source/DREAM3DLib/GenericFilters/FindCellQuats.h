@@ -101,3 +101,4 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
 };
 
 #endif /* FindCellQuats_H_ */
+

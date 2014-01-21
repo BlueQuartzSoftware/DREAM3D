@@ -154,3 +154,4 @@ class DREAM3DLib_EXPORT TetragonalOps : public OrientationOps
 };
 
 #endif /* TetragonalOPS_H_ */
+

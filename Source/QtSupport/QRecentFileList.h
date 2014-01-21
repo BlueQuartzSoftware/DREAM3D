@@ -136,3 +136,4 @@ class QRecentFileList: public QObject
 };
 
 #endif /* QRECENTFILELIST_H_ */
+

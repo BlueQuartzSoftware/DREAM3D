@@ -138,3 +138,4 @@ class AbstractMicrostructurePreset
 };
 
 #endif /* MICROSTRUCTUREPRESET_H_ */
+

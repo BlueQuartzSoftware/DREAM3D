@@ -73,3 +73,4 @@ class PrimaryRolledPresetDialog : public QDialog
 };
 
 #endif /* PrimaryRolledPresetDialog_H_ */
+

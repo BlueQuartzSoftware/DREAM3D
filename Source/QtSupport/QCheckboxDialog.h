@@ -71,3 +71,4 @@ class QCheckboxDialog : public QDialog
 };
 
 #endif /* QCHECKBOXDIALOG_H_ */
+

@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT VertexFeatureArrayNameSelectionWidget : public QWi
 
 #endif /* _VertexFeatureArrayNameSelectionWidget_H_ */
 
+

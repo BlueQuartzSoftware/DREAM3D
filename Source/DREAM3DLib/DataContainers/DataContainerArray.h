@@ -183,3 +183,4 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
 };
 
 #endif /* DATACONTAINERARRAY_H_ */
+

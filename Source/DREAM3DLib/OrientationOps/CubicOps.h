@@ -181,3 +181,4 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
 };
 
 #endif /* CUBICOPS_H_ */
+

@@ -81,3 +81,4 @@ class DREAM3DLib_EXPORT FileReader : public AbstractFilter
 };
 
 #endif /* FILEREADER_H_ */
+

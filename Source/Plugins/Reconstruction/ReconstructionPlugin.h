@@ -63,3 +63,4 @@ class ReconstructionPlugin : public QObject, public DREAM3DPluginInterface
 };
 
 #endif /* _Reconstruction_H_ */
+

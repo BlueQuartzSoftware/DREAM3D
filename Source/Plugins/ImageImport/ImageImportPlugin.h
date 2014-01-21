@@ -59,3 +59,4 @@ class ImageImportPlugin : public QObject, public DREAM3DPluginInterface
 };
 
 #endif /* _ImageImportPlugin_H_ */
+

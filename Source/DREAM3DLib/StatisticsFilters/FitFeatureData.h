@@ -72,9 +72,12 @@ class DREAM3DLib_EXPORT FitFeatureData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
+    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName NOTIFY parametersChanged)
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, DistributionType)
+    Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, RemoveBiasedFeatures)
+    Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures NOTIFY parametersChanged)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -119,6 +122,9 @@ class DREAM3DLib_EXPORT FitFeatureData : public AbstractFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     FitFeatureData();
 
@@ -142,3 +148,4 @@ class DREAM3DLib_EXPORT FitFeatureData : public AbstractFilter
 };
 
 #endif /* FITFIELDDATA_H_ */
+

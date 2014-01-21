@@ -122,3 +122,4 @@ class MergeTwins : public GroupFeatures
 };
 
 #endif /* MERGETWINS_H_ */
+

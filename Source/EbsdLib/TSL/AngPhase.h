@@ -195,3 +195,4 @@ class EbsdLib_EXPORT AngPhase
 };
 
 #endif /* ANGPHASE_H_ */
+

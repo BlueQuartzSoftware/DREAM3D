@@ -154,3 +154,4 @@ class DataArrayProxy
 Q_DECLARE_METATYPE(DataArrayProxy)
 
 #endif /* _DataArrayProxy_H_ */
+

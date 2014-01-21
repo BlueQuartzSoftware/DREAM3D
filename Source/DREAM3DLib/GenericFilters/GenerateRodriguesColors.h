@@ -135,3 +135,4 @@ class DREAM3DLib_EXPORT GenerateRodriguesColors : public AbstractFilter
 };
 
 #endif /* _GenerateRodriguesColors_H_ */
+

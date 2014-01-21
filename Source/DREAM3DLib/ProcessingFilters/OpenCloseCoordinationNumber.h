@@ -71,7 +71,9 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, Loop)
+    Q_PROPERTY(bool Loop READ getLoop WRITE setLoop NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, CoordinationNumber)
+    Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
@@ -93,6 +95,9 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
 
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     OpenCloseCoordinationNumber();

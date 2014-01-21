@@ -88,3 +88,4 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
 };
 
 #endif /* MatrixPhaseWidget_H_ */
+

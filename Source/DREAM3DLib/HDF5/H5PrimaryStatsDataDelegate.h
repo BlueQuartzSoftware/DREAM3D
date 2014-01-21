@@ -118,3 +118,4 @@ class DREAM3DLib_EXPORT H5PrimaryStatsDataDelegate : public H5StatsDataDelegate
 };
 
 #endif /* _H5PrimaryStatsData_DELEGATE_H_ */
+

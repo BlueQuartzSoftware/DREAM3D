@@ -493,3 +493,4 @@ class StringDataArray : public IDataArray
 };
 
 #endif /* _StrignDataArray_H_ */
+

@@ -469,6 +469,7 @@ void scanDirIter(QDir dir)
 
 int main(int argc, char *argv[])
 {
+  Q_ASSERT(false); // We don't want anyone to run this program.
 
 //#if 0
 //  QString header = argv[1];

@@ -21,3 +21,4 @@ class ScopedFileMonitor
 };
 
 #endif /* _ScopedFilePointer_H_ */
+

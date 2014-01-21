@@ -88,3 +88,4 @@ DECLARE_FACTORY_CLASS(PrimaryRolledPresetFactory, PrimaryRolledPreset, "Primary 
 
 
 #endif /* PrimaryRolledPreset_H_ */
+

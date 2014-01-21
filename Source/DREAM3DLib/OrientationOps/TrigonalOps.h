@@ -153,3 +153,4 @@ class DREAM3DLib_EXPORT TrigonalOps : public OrientationOps
 };
 
 #endif /* TrigonalOPS_H_ */
+

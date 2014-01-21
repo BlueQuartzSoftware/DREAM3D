@@ -59,3 +59,4 @@ class AddFavoriteWidget : public QDialog, public Ui::Dialog
 };
 
 #endif /* _AddFavoriteWidget_H */
+

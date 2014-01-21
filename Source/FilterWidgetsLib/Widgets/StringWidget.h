@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::StringW
 
 #endif /* _StringWidget_H_ */
 
+

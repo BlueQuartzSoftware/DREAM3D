@@ -102,3 +102,4 @@ class AttributeMatrixProxy
 Q_DECLARE_METATYPE(AttributeMatrixProxy)
 
 #endif /* _AttributeMatrixProxy_H_ */
+

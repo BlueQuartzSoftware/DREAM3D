@@ -109,3 +109,4 @@ class AlignSectionsFeatureCentroid : public AlignSections
 };
 
 #endif /* AlignSectionsFeatureCentroid_H_ */
+

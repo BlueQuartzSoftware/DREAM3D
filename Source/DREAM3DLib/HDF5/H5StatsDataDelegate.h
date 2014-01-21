@@ -75,3 +75,4 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
 };
 
 #endif /* _H5STATSDATA_DELEGATE_H_ */
+

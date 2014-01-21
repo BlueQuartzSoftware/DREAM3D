@@ -161,3 +161,4 @@ class SGMDFItemDelegate : public QStyledItemDelegate
 
 
 #endif /* SGMDFITEMDELEGATE_H_ */
+

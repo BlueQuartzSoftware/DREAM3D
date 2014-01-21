@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT AxisAngleWidget : public QWidget, private Ui::Axis
 
 #endif /* _AxisAngleWidget_H_ */
 
+

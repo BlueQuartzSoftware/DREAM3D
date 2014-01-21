@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT SurfaceVertexArrayNameSelectionWidget : public QWi
 
 #endif /* _SurfaceVertexArrayNameSelectionWidget_H_ */
 
+

@@ -66,9 +66,11 @@ class RegularizeZSpacing : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
 
 
     DREAM3D_INSTANCE_PROPERTY(float, NewZRes)
+    Q_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
@@ -92,6 +94,9 @@ class RegularizeZSpacing : public AbstractFilter
      */
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     RegularizeZSpacing();

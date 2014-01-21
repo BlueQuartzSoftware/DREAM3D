@@ -36,3 +36,4 @@ class QFilterListWidget: public QListWidget
 };
 
 #endif /* QFILTERLISTWIDGET_H_ */
+

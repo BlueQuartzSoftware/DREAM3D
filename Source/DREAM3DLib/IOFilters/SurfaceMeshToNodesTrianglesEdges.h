@@ -67,8 +67,10 @@ class DREAM3DLib_EXPORT SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputNodesFile);
+    Q_PROPERTY(QString OutputNodesFile READ getOutputNodesFile WRITE setOutputNodesFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputEdgesFile);
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputTrianglesFile);
+    Q_PROPERTY(QString OutputTrianglesFile READ getOutputTrianglesFile WRITE setOutputTrianglesFile NOTIFY parametersChanged)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -112,6 +114,9 @@ class DREAM3DLib_EXPORT SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     SurfaceMeshToNodesTrianglesEdges();

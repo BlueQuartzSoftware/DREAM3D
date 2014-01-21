@@ -137,3 +137,4 @@ class DREAM3DLib_EXPORT GenerateEulerColors : public AbstractFilter
 };
 
 #endif /* _GenerateEulerColors_H_ */
+

@@ -200,3 +200,4 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
 };
 
 #endif /* H5EBSDVOLUMEREADER_H_ */
+

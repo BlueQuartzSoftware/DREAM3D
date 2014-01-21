@@ -142,3 +142,4 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
 };
 
 #endif /* _STATSGENODFWIDGET_H_ */
+

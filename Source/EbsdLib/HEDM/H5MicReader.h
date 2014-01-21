@@ -170,3 +170,4 @@ class EbsdLib_EXPORT H5MicReader : public MicReader
 };
 
 #endif /* _H5MicREADER_H_ */
+

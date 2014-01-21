@@ -134,3 +134,4 @@ class EbsdLib_EXPORT H5MicImporter : public EbsdImporter
 
 
 #endif /* _H5MicIMPORTER_H_ */
+

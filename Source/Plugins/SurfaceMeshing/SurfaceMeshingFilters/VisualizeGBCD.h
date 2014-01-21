@@ -72,8 +72,11 @@ class VisualizeGBCD : public SurfaceMeshFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
+    Q_PROPERTY(float MisAngle READ getMisAngle WRITE setMisAngle NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, MisAxis)
+    Q_PROPERTY(FloatVec3Widget_t MisAxis READ getMisAxis WRITE setMisAxis NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)
 
@@ -119,6 +122,9 @@ class VisualizeGBCD : public SurfaceMeshFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     VisualizeGBCD();
@@ -181,3 +187,5 @@ class VisualizeGBCD : public SurfaceMeshFilter
 };
 
 #endif /* _VisualizeGBCD_H_ */
+
+

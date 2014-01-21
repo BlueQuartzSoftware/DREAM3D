@@ -73,6 +73,7 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
 
 
     DREAM3D_INSTANCE_PROPERTY(float, Magnitude)
+    Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
@@ -98,6 +99,9 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     AddOrientationNoise();
 
@@ -113,3 +117,6 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
 };
 
 #endif /* AddOrientationNoise_H_ */
+
+
+

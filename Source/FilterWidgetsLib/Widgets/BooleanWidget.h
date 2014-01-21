@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT BooleanWidget : public QWidget, private Ui::Boolea
 
 #endif /* _BooleanWidget_H_ */
 
+

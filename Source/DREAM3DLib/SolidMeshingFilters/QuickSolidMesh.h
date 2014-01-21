@@ -91,3 +91,4 @@ class DREAM3DLib_EXPORT QuickSolidMesh : public AbstractFilter
 };
 
 #endif /* QuickSolidMesh_H_ */
+

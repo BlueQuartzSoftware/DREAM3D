@@ -264,3 +264,4 @@ class ComparisonFilterParameter : public FilterParameter
 };
 
 #endif /* _FilterParameter_H_ */
+

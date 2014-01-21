@@ -643,3 +643,4 @@ class NeighborList : public IDataArray
 };
 
 #endif /* NEIGHBORLIST_H_ */
+

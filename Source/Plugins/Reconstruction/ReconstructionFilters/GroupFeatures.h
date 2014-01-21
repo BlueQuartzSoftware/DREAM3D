@@ -113,3 +113,4 @@ class GroupFeatures : public AbstractFilter
 };
 
 #endif /* GroupFeatures_H_ */
+

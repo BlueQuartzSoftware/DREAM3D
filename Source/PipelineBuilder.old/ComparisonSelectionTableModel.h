@@ -177,3 +177,4 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionTableModel : public QAbstract
 };
 
 #endif /* QUALITYMETRICTABLEMODEL_H_ */
+

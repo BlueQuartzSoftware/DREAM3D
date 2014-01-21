@@ -201,3 +201,4 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
 };
 
 #endif /* _GenericExample_H_ */
+

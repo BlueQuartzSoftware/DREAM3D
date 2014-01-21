@@ -63,3 +63,4 @@ class SamplingPlugin : public QObject, public DREAM3DPluginInterface
 };
 
 #endif /* _Sampling_H_ */
+

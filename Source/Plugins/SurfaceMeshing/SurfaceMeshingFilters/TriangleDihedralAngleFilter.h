@@ -130,3 +130,4 @@ class TriangleDihedralAngleFilter : public SurfaceMeshFilter
 };
 
 #endif /* _TriangleDihedralAngleFilter_H_ */
+

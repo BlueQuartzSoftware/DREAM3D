@@ -125,3 +125,4 @@ class ScalarSegmentFeatures : public SegmentFeatures
 };
 
 #endif /* ScalarSegmentFeatures_H_ */
+

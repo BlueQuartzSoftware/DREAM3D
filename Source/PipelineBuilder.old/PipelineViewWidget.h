@@ -161,3 +161,4 @@ class PipelineViewWidget : public QFrame
 };
 
 #endif /* _PipelineViewWidget_H */
+

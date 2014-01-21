@@ -118,3 +118,4 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
 };
 
 #endif /* _AbstractFilterParametersReader_H_ */
+

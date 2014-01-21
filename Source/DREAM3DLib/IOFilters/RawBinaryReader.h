@@ -71,16 +71,24 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, ScalarType)
     DREAM3D_INSTANCE_PROPERTY(int, Endian)
     DREAM3D_INSTANCE_PROPERTY(int, Dimensionality)
+    Q_PROPERTY(int Dimensionality READ getDimensionality WRITE setDimensionality NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, NumberOfComponents)
+    Q_PROPERTY(int NumberOfComponents READ getNumberOfComponents WRITE setNumberOfComponents NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
+    Q_PROPERTY(IntVec3Widget_t Dimensions READ getDimensions WRITE setDimensions NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+    Q_PROPERTY(FloatVec3Widget_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
+    Q_PROPERTY(FloatVec3Widget_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, OverRideOriginResolution)
+    Q_PROPERTY(bool OverRideOriginResolution READ getOverRideOriginResolution WRITE setOverRideOriginResolution NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, SkipHeaderBytes)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
+    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
 
 
 
@@ -127,6 +135,9 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     RawBinaryReader();
 
@@ -148,3 +159,12 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
 };
 
 #endif /* _RawBinaryReader_H_ */
+
+
+
+
+
+
+
+
+

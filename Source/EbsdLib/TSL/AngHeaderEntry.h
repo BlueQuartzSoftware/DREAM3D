@@ -159,3 +159,4 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
 
 #endif /* _AngHeaderEntry_H_ */
 
+

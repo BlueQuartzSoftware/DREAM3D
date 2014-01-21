@@ -125,3 +125,4 @@ class EBSDSegmentFeatures : public SegmentFeatures
 };
 
 #endif /* EBSDSegmentFeatures_H_ */
+

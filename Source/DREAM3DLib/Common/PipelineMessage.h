@@ -269,3 +269,4 @@ class PipelineMessage
 Q_DECLARE_METATYPE(PipelineMessage)
 
 #endif /* _PipelineMessage_H */
+

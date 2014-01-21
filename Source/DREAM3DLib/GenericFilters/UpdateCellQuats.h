@@ -101,3 +101,4 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
 };
 
 #endif /* UpdateCellQuats_H_ */
+

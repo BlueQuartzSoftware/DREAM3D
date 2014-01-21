@@ -30,3 +30,4 @@ class FilterWidgetsLib_EXPORT QFilterParameterWidget : public QWidget
 };
 
 #endif /* _QFilterParameterWidget_H_ */
+

@@ -154,3 +154,4 @@ class DREAM3DLib_EXPORT TriclinicOps : public OrientationOps
 };
 
 #endif /* TriclinicOPS_H_ */
+

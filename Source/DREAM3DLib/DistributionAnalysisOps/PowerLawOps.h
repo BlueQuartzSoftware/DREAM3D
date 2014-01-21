@@ -70,3 +70,4 @@ class DREAM3DLib_EXPORT PowerLawOps : public DistributionAnalysisOps
 };
 
 #endif /* _PowerLawOps_H_ */
+

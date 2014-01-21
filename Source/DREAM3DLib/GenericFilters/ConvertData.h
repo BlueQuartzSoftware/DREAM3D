@@ -70,7 +70,9 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, ScalarType)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
+    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
+    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
 
 
     /**
@@ -116,6 +118,9 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     ConvertData();
 
@@ -137,3 +142,4 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
 };
 
 #endif /* _ConvertData_H_ */
+

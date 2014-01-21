@@ -72,8 +72,11 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
+    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)
+    Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, Level)
+    Q_PROPERTY(int Level READ getLevel WRITE setLevel NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
@@ -90,6 +93,9 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
 
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     NeighborOrientationCorrelation();
@@ -109,3 +115,4 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
 };
 
 #endif /* NeighborOrientationCorrelation_H_ */
+

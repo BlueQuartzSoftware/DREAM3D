@@ -113,3 +113,4 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
 };
 
 #endif /* FINDEUCLIDEANDISTMAP_H_ */
+

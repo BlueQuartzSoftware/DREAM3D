@@ -130,3 +130,4 @@ class TriangleCentroidFilter : public SurfaceMeshFilter
 };
 
 #endif /* _TriangleCentroidFilter_H_ */
+

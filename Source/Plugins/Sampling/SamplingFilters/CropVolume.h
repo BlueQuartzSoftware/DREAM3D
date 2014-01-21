@@ -67,14 +67,22 @@ class CropVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(int, XMin)
+    Q_PROPERTY(int XMin READ getXMin WRITE setXMin NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, YMin)
+    Q_PROPERTY(int YMin READ getYMin WRITE setYMin NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, ZMin)
+    Q_PROPERTY(int ZMin READ getZMin WRITE setZMin NOTIFY parametersChanged)
 
     DREAM3D_INSTANCE_PROPERTY(int, XMax)
+    Q_PROPERTY(int XMax READ getXMax WRITE setXMax NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, YMax)
+    Q_PROPERTY(int YMax READ getYMax WRITE setYMax NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, ZMax)
+    Q_PROPERTY(int ZMax READ getZMax WRITE setZMax NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, RenumberFeatures)
+    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, UpdateOrigin)
+    Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin NOTIFY parametersChanged)
 
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
@@ -100,6 +108,9 @@ class CropVolume : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     CropVolume();
 
@@ -115,3 +126,9 @@ class CropVolume : public AbstractFilter
 };
 
 #endif /* CROPVOLUME_H_ */
+
+
+
+
+
+

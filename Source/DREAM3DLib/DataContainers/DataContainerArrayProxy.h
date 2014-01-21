@@ -88,3 +88,4 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
 Q_DECLARE_METATYPE(DataContainerArrayProxy)
 
 #endif /* _DataContainerArrayProxy_H_ */
+

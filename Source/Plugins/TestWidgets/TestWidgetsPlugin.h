@@ -60,3 +60,4 @@ class TestWidgetsPlugin : public QObject, public DREAM3DPluginInterface
 };
 
 #endif /* _TestWidgets_H_ */
+

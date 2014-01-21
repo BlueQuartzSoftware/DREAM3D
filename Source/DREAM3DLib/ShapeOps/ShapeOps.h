@@ -77,3 +77,4 @@ class DREAM3DLib_EXPORT ShapeOps
 };
 
 #endif /* SHAPEOPS_H_ */
+

@@ -197,3 +197,4 @@ class FloatParser : public DataParser
 
 
 #endif /* DATAPARSER_HPP_ */
+

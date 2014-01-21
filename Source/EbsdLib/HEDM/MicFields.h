@@ -78,3 +78,4 @@ class EbsdLib_EXPORT MicFields : public AbstractEbsdFields
 };
 
 #endif /* MicFIELDS_H_ */
+

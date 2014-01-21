@@ -75,7 +75,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
+    Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile NOTIFY parametersChanged)
 
 
     virtual void preflight();
@@ -216,6 +218,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       return err;
     }
 
+
+  signals:
+    void parametersChanged();
 
   protected:
     VtkRectilinearGridWriter();

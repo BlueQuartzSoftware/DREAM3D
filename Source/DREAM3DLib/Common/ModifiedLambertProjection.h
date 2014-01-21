@@ -234,3 +234,4 @@ class GenerateIntensityMapImpl
 };
 
 #endif /* _ModifiedLambertProjection_H_ */
+

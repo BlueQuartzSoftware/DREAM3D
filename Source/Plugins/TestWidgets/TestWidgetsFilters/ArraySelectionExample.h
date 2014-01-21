@@ -190,3 +190,4 @@ class ArraySelectionExample : public AbstractFilter
 };
 
 #endif /* _ArraySelectionExample_H_ */
+

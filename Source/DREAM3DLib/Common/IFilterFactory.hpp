@@ -71,3 +71,4 @@ class IFilterFactory
 };
 
 #endif /* _IFilterFactory_H_ */
+

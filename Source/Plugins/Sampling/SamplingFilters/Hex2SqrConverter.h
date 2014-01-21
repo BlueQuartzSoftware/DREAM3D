@@ -128,3 +128,4 @@ class Hex2SqrConverter : public AbstractFilter
 };
 
 #endif /* Hex2SqrConverter_H_ */
+

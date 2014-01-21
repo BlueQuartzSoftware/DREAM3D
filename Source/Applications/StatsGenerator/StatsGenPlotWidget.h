@@ -143,3 +143,4 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 };
 
 #endif /* _STATSGENPLOTWIDGET_H_ */
+

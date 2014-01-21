@@ -68,3 +68,4 @@ class DREAM3DLib_EXPORT Observer : public QObject
 };
 
 #endif /* OBSERVER_H_ */
+

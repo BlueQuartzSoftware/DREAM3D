@@ -109,3 +109,4 @@ class AlignSectionsFeature : public AlignSections
 };
 
 #endif /* AlignSectionsFeature_H_ */
+

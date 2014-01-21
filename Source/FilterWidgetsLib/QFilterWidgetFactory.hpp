@@ -73,3 +73,4 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
     void operator=(const QFilterWidgetFactory&); // Operator '=' Not Implemented
 };
 #endif /* QFILTERWIDGETFACTORY_H_ */
+

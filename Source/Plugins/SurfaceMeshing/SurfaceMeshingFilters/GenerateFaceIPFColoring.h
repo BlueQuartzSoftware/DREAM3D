@@ -140,3 +140,4 @@ class GenerateFaceIPFColoring : public SurfaceMeshFilter
 };
 
 #endif /* _GenerateFaceIPFColoring_H_ */
+

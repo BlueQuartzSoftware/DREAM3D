@@ -66,7 +66,9 @@ class DREAM3DLib_EXPORT RenameCellArray : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
+    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(NewCellArrayName)
+    Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName NOTIFY parametersChanged)
 
 
     /**
@@ -111,6 +113,9 @@ class DREAM3DLib_EXPORT RenameCellArray : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     RenameCellArray();

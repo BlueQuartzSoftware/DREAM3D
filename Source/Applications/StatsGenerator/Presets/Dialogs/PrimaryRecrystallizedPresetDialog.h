@@ -70,3 +70,4 @@ class PrimaryRecrystallizedPresetDialog : public QDialog
 };
 
 #endif /* PrimaryRecrystallizedPresetDialog_H_ */
+

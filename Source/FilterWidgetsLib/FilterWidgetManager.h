@@ -110,3 +110,4 @@ class FilterWidgetsLib_EXPORT FilterWidgetManager
 };
 
 #endif /* QFILTERWIDGETMANAGER_H_ */
+

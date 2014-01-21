@@ -100,3 +100,5 @@ class DREAM3DLib_EXPORT FlattenImage : public AbstractFilter
 };
 
 #endif /* FlattenImage_H_ */
+
+

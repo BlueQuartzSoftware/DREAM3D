@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT CustomWidget : public QWidget, private Ui::CustomW
 
 #endif /* _CustomWidget_H_ */
 
+

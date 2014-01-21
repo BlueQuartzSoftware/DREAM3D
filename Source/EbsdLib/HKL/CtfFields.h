@@ -84,3 +84,4 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
 };
 
 #endif /* CTFFIELDS_H_ */
+

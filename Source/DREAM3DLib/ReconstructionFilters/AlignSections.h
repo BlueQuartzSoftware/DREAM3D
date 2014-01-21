@@ -109,3 +109,4 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
 };
 
 #endif /* ALIGNSECTIONS_H_ */
+

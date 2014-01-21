@@ -85,6 +85,7 @@ building the MXADatModel DLL on windows.
 #else
 #define  DREAM3DLib_EXPORT __declspec(dllimport)
 #endif /* DREAM3DLib_EXPORTS */
+
 #else
 #define DREAM3DLib_EXPORT
 #endif
@@ -97,3 +98,4 @@ building the MXADatModel DLL on windows.
 #endif
 
 #endif /* _DREAM3DLib_DLL_EXPORT_H_ */
+

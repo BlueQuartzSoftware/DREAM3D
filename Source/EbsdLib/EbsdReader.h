@@ -212,3 +212,4 @@ class EbsdLib_EXPORT EbsdReader
 };
 
 #endif /* EBSDREADER_H_ */
+

@@ -133,3 +133,4 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
 };
 
 #endif /* _H5FilterParametersREADER_H_ */
+

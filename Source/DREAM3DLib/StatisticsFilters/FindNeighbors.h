@@ -109,3 +109,4 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
 };
 
 #endif /* FINDNEIGHBORS_H_ */
+

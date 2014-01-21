@@ -60,3 +60,4 @@ class QDroppableScrollArea : public QScrollArea
 };
 
 #endif /* _QDROPPABLEWIDGET_H_ */
+

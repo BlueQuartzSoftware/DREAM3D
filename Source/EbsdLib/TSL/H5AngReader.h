@@ -180,3 +180,4 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
 };
 
 #endif /* _H5ANGREADER_H_ */
+

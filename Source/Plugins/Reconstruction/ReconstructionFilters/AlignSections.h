@@ -109,3 +109,4 @@ class AlignSections : public AbstractFilter
 };
 
 #endif /* ALIGNSECTIONS_H_ */
+

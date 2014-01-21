@@ -101,3 +101,4 @@ class DREAM3DLib_EXPORT FindFeatureCentroids : public AbstractFilter
 };
 
 #endif /* FindFeatureCentroids_H_ */
+

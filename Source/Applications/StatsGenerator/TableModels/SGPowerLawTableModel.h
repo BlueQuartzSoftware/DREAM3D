@@ -144,3 +144,4 @@ Q_OBJECT
   };
 
 #endif /* _SG_POWER_LAW_TABLEMODEL_H_ */
+

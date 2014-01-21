@@ -70,10 +70,15 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
+    Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, NodeConstraints)
+    Q_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, ConstrainSurfaceNodes)
+    Q_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, ConstrainQuadPoints)
+    Q_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, SmoothTripleLines)
+    Q_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines NOTIFY parametersChanged)
 
 
 
@@ -120,6 +125,9 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
     */
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     MovingFiniteElementSmoothing();
 
@@ -142,3 +150,6 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
 };
 
 #endif /* _MovingFiniteElementSmoothing_H_ */
+
+
+

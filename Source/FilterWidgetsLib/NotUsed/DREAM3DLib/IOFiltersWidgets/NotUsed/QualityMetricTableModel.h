@@ -175,3 +175,4 @@ class QualityMetricTableModel : public QAbstractTableModel
 };
 
 #endif /* QUALITYMETRICTABLEMODEL_H_ */
+

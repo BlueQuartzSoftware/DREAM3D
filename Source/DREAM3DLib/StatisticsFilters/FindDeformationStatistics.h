@@ -142,3 +142,4 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 };
 
 #endif /* FINDDEFORMATIONSTATISTICS_H_ */
+

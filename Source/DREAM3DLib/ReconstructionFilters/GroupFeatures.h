@@ -113,3 +113,4 @@ class DREAM3DLib_EXPORT GroupFeatures : public AbstractFilter
 };
 
 #endif /* GroupFeatures_H_ */
+

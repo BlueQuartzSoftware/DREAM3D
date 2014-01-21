@@ -146,3 +146,4 @@ class PoleFigureMaker
 
 
 #endif /* COLORPOLEFIGURE_H_ */
+

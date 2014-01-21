@@ -129,3 +129,4 @@ class DREAM3DLib_EXPORT SegmentBetaGrains : public SegmentGrains
 };
 
 #endif /* SegmentBetaGrains_H_ */
+

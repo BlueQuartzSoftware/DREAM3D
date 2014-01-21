@@ -113,3 +113,4 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
 
 
 #endif /* QReadH5Ebsd_H_ */
+

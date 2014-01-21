@@ -86,6 +86,7 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Loading)
+    Q_PROPERTY(FloatVec3Widget_t Loading READ getLoading WRITE setLoading NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
@@ -110,6 +111,9 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
      */
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     FindBoundaryStrengths();
@@ -138,3 +142,6 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
 };
 
 #endif /* FindBoundaryStrengths_H_ */
+
+
+

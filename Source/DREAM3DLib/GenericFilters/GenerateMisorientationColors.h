@@ -65,7 +65,9 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, ReferenceAxis)
+    Q_PROPERTY(FloatVec3Widget_t ReferenceAxis READ getReferenceAxis WRITE setReferenceAxis NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(float, ReferenceAngle)
+    Q_PROPERTY(float ReferenceAngle READ getReferenceAngle WRITE setReferenceAngle NOTIFY parametersChanged)
 
 
     /**
@@ -110,6 +112,9 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     GenerateMisorientationColors();

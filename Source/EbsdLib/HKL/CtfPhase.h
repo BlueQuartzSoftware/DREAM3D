@@ -101,3 +101,4 @@ class EbsdLib_EXPORT CtfPhase
     void operator=(const CtfPhase&); // Operator '=' Not Implemented
 };
 #endif /* _CTFPHASE_H_ */
+

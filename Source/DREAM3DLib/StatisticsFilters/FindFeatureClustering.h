@@ -115,3 +115,4 @@ class DREAM3DLib_EXPORT FindFeatureClustering : public AbstractFilter
 
 
 #endif /* FINDFIELDCLUSTERING_H_ */
+

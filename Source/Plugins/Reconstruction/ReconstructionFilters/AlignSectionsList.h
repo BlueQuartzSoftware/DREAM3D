@@ -106,3 +106,4 @@ class AlignSectionsList : public AlignSections
 };
 
 #endif /* AlignSectionsList_H_ */
+

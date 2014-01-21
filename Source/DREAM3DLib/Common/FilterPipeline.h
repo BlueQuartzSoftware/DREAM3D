@@ -152,3 +152,4 @@ class DREAM3DLib_EXPORT FilterPipeline : public QObject
 };
 
 #endif /* FILTERPIPELINE_H_ */
+

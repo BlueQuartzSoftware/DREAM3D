@@ -207,3 +207,4 @@ class QFilterWidget : public QGroupBox
 };
 
 #endif /* _QFILTERWIDGET_H_ */
+

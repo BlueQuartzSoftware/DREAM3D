@@ -156,3 +156,4 @@ class DREAM3DLib_EXPORT CubicLowOps : public OrientationOps
 };
 
 #endif /* CubicLowOPS_H_ */
+

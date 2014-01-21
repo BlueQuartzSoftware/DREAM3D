@@ -126,3 +126,4 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 };
 
 #endif /* FINDSHAPES_H_ */
+

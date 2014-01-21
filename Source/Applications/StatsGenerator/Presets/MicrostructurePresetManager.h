@@ -135,3 +135,4 @@ class MicrostructurePresetManager
 };
 
 #endif /* MICROSTRUCTUREPRESETMANAGER_H_ */
+

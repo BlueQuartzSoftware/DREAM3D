@@ -150,3 +150,4 @@ class ImportImageStack : public AbstractFilter
 };
 
 #endif /* ImportImageStack_H_ */
+

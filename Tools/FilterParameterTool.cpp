@@ -54,27 +54,174 @@
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool fixFile(FilterParameter::Pointer parameter, const QString &props, const QString &cppFile)
+{
+  // Read the Source File
+  QFileInfo fi(cppFile);
+  QFile source(cppFile);
+  source.open(QFile::ReadOnly);
+  QString cpp = source.readAll();
+  source.close();
 
+  QStringList list;
+
+  bool didReplace = false;
+
+  QString pType = parameter->getValueType();
+
+  QString searchString = "DREAM3D_INSTANCE_PROPERTY(" + parameter->getValueType() + ", " + parameter->getPropertyName() + ")";
+  if(pType.compare("QString") == 0)
+  {
+    searchString = "DREAM3D_INSTANCE_STRING_PROPERTY("+parameter->getPropertyName() + ")";
+  }
+
+  QString headerStr;
+  QTextStream header(&headerStr);
+
+  list = cpp.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    header << line << "\n";
+    if(line.contains(searchString) )
+    {
+      header << props;
+      didReplace = true;
+    }
+  }
+
+  QFileInfo fi2(cppFile);
+#if 1
+  QFile hOut(cppFile);
+#else
+  QString tmpPath = "/tmp/" + fi2.fileName();
+  QFile hOut(tmpPath);
+#endif
+  hOut.open(QFile::WriteOnly);
+  QTextStream stream( &hOut );
+  stream << headerStr;
+  hOut.close();
+
+  qDebug() << "Saved File " << fi2.absoluteFilePath();
+  return didReplace;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void generateQProperties(IFilterFactory::Pointer factory)
+void appendSignal(const QString& cppFile)
 {
-  AbstractFilter::Pointer filter = factory->create();
+  // Read the Source File
+  QFileInfo fi(cppFile);
+  QFile source(cppFile);
+  source.open(QFile::ReadOnly);
+  QString cpp = source.readAll();
+  source.close();
+
+  QStringList list;
+
+  QString searchString = "protected:";
+
+
+  QString headerStr;
+  QTextStream header(&headerStr);
+
+  list = cpp.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+
+    if(line.contains(searchString) )
+    {
+      header << "  signals:\n    void parametersChanged();\n\n";
+    }
+    header << line << "\n";
+  }
+
+  QFileInfo fi2(cppFile);
+#if 1
+  QFile hOut(cppFile);
+#else
+  QString tmpPath = "/tmp/" + fi2.fileName();
+  QFile hOut(tmpPath);
+#endif
+  hOut.open(QFile::WriteOnly);
+  QTextStream stream( &hOut );
+  stream << headerStr;
+  hOut.close();
+
+  qDebug() << "Saved File " << fi2.absoluteFilePath();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void generateQProperties(AbstractFilter::Pointer filter, const QString &path)
+{
+  QString out;
+  QTextStream ss(&out);
+  bool addSignal = false;
+  ss << "  /* ** These are the Q_Properties for each of the input parameters. **  */\n";
+
   QVector<FilterParameter::Pointer> parameters = filter->getFilterParameters();
 
   for(int i = 0; i < parameters.size(); i++)
   {
-    std::cout << "   " << parameters[i]->getValueType().toStdString() << "  " << parameters[i]->getPropertyName().toStdString() << std::endl;
+    out = ""; // clear the string
+    QString pType = parameters[i]->getValueType();
+    QString pName = parameters[i]->getPropertyName();
 
+    ss << "    Q_PROPERTY(" << pType << " " << pName << " READ get" << pName << " WRITE set" << pName << " NOTIFY parametersChanged)\n";
 
+    addSignal = fixFile(parameters[i], out, path);
   }
 
+  if(addSignal == true)
+  {
+    appendSignal(path);
+  }
 
-
-
+  std::cout << "Done" << std::endl;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString findPath(const QString& groupName, const QString& filtName)
+{
+  QString prefix("/Users/mjackson/Workspace/DREAM3D_Rewrite/Source/");
+  {
+    QString path = prefix + "DREAM3DLib/" + groupName + "Filters/" + filtName + ".h";
+    QFileInfo fi(path);
+    if(fi.exists() == true)
+    {
+      return path;
+    }
+  }
+
+  prefix = prefix + "Plugins/";
+  QStringList libs;
+  libs << "ImageImport" << "OrientationAnalysis" << "Reconstruction" << "Sampling" << "SurfaceMeshing";
+
+  for (int i = 0; i < libs.size(); ++i)
+  {
+    QString path = prefix + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ".h";
+    //  std::cout << "****" << path.toStdString() << std::endl;
+
+    QFileInfo fi(path);
+    if(fi.exists() == true)
+    {
+      return path;
+    }
+  }
+  return "NOT FOUND";
+}
+
 
 
 // -----------------------------------------------------------------------------
@@ -87,11 +234,20 @@ void LoopOnFilters()
 
   FilterManager::CollectionIterator i(factories);
   int count = 0;
-  while (i.hasNext()) {
+  while (i.hasNext())
+  {
     i.next();
     std::cout << ++count << ": " << i.key().toStdString() << ": " << std::endl;
+
+    //std::cout << "  public:" << std::endl;
     IFilterFactory::Pointer factory = i.value();
-    generateQProperties(factory);
+    AbstractFilter::Pointer filter = factory->create();
+
+    //    std::cout << "" << filter->getGroupName().toStdString() << "Filters/" << filter->getNameOfClass().toStdString() << ".h" << std::endl;
+    QString path = findPath(filter->getGroupName(), filter->getNameOfClass());
+    std::cout << " " << path.toStdString() << std::endl;
+    generateQProperties(filter, path);
+
   }
 
 }
@@ -103,7 +259,7 @@ void LoopOnFilters()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -120,8 +276,6 @@ int main(int argc, char *argv[])
 
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();
-
-  int err = 0;
 
   LoopOnFilters();
 

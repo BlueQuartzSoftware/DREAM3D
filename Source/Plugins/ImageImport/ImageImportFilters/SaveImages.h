@@ -65,7 +65,9 @@ class SaveImages : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(ImagePrefix)
+    Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
+    Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
 
     enum ImageFormatType
@@ -132,6 +134,9 @@ class SaveImages : public AbstractFilter
      */
     int saveImage(uint8_t* ipfColors, size_t slice, size_t* dims);
 
+  signals:
+    void parametersChanged();
+
   protected:
     SaveImages();
 
@@ -153,3 +158,5 @@ class SaveImages : public AbstractFilter
 };
 
 #endif /* _SaveImages_H_ */
+
+

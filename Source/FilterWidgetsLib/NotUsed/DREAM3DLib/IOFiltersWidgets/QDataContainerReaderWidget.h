@@ -116,3 +116,4 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
 
 
 #endif /* _QDataContainerReaderWidget_H_ */
+

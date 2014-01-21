@@ -122,3 +122,4 @@ class DREAM3DLib_EXPORT ColorTable
 
 };
 #endif /* _ColorTable_H_ */
+

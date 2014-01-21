@@ -62,10 +62,12 @@ class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
+    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
     //------ Created Cell Data
 
     DREAM3D_INSTANCE_PROPERTY(int, ComparisonOperator)
     DREAM3D_INSTANCE_PROPERTY(double, ComparisonValue)
+    Q_PROPERTY(double ComparisonValue READ getComparisonValue WRITE setComparisonValue NOTIFY parametersChanged)
 
 
     virtual void preflight();
@@ -93,6 +95,9 @@ class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
     virtual void execute();
 
 
+  signals:
+    void parametersChanged();
+
   protected:
     SingleThresholdCells();
 
@@ -108,3 +113,4 @@ class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
 };
 
 #endif /* _SingleThresholdCells_H_ */
+

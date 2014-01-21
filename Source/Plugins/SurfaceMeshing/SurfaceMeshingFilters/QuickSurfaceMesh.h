@@ -96,3 +96,4 @@ class QuickSurfaceMesh : public AbstractFilter
 };
 
 #endif /* QuickSurfaceMesh_H_ */
+

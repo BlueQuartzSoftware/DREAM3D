@@ -145,3 +145,4 @@ class ThresholdExample : public AbstractFilter
 };
 
 #endif /* _ThresholdExample_H_ */
+

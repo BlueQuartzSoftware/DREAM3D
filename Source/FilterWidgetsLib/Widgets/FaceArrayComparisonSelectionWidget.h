@@ -90,3 +90,4 @@ class FilterWidgetsLib_EXPORT FaceArrayComparisonSelectionWidget : public QWidge
 
 #endif /* _FaceArrayComparisonSelectionWidget_H_ */
 
+
