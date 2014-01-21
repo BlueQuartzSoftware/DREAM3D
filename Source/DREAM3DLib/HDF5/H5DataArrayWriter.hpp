@@ -90,6 +90,14 @@ class H5DataArrayWriter
           return err;
         }
       }
+      else
+      {
+        err = QH5Lite::replacePointerDataset(gid, dataArray->getName(), h5Rank, h5Dims.data(), dataArray->getPointer(0));
+        if(err < 0)
+        {
+          return err;
+        }
+      }
 
       err = QH5Lite::writeScalarAttribute(gid, dataArray->getName(), DREAM3D::HDF5::DataArrayVersion, dataArray->getClassVersion());
       if(err < 0)

@@ -302,7 +302,8 @@ class NeighborList : public IDataArray
       // can compare this with what is written in the file. If they are
       // different we are going to overwrite what is in the file with what
       // we compute here.
-      std::vector<int32_t> numNeighbors(_data.size());
+      Int32ArrayType::Pointer numNeighborsPtr = Int32ArrayType::CreateArray(_data.size(), m_NumNeighborsArrayName);
+      int32_t* numNeighbors = numNeighborsPtr->getPointer(0);
       size_t total = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
@@ -315,22 +316,7 @@ class NeighborList : public IDataArray
       if (QH5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == false)
       {
         // The NumNeighbors Array is NOT already in the file so write it to the file
-        std::vector<hsize_t> dims(1, numNeighbors.size());
-        err = H5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName.toStdString(), dims, numNeighbors);
-        if(err < 0)
-        {
-          return -603;
-        }
-        err = QH5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::NumComponents, 1);
-        if(err < 0)
-        {
-          return -605;
-        }
-        err = QH5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
-        if(err < 0)
-        {
-          return -604;
-        }
+        numNeighborsPtr->writeH5Data(parentId, tDims);
       }
       else
       {
@@ -344,15 +330,14 @@ class NeighborList : public IDataArray
         }
 
         // Compare the 2 vectors to make sure they are exactly the same;
-        if (fileNumNeigh.size() != numNeighbors.size())
+        if (fileNumNeigh.size() != numNeighborsPtr->getNumberOfTuples())
         {
           rewrite = true;
         }
         // The sizes are the same, now compare each value;
-        int32_t* numNeighPtr = &(numNeighbors.front());
         int32_t* fileNumNeiPtr = &(fileNumNeigh.front());
-        size_t nBytes = numNeighbors.size() * sizeof(int32_t);
-        if (::memcmp(numNeighPtr, fileNumNeiPtr, nBytes) != 0)
+        size_t nBytes = numNeighborsPtr->getNumberOfTuples() * sizeof(int32_t);
+        if (::memcmp(numNeighbors, fileNumNeiPtr, nBytes) != 0)
         {
           rewrite = true;
         }
@@ -362,23 +347,7 @@ class NeighborList : public IDataArray
       // the top of the function versus what is in memory
       if(rewrite == true)
       {
-        hsize_t dims[1] = {numNeighbors.size()};
-        hsize_t rank = 1;
-        err = QH5Lite::replacePointerDataset(parentId, m_NumNeighborsArrayName, rank, dims, &(numNeighbors.front()) );
-        if(err < 0)
-        {
-          return -603;
-        }
-        err = QH5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::NumComponents, 1);
-        if(err < 0)
-        {
-          return -605;
-        }
-        err = QH5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
-        if(err < 0)
-        {
-          return -604;
-        }
+        numNeighborsPtr->writeH5Data(parentId, tDims);
       }
 
       // Allocate an array of the proper size to we can concatenate all the arrays together into a single array that
