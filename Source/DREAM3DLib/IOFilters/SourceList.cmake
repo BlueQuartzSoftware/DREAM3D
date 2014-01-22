@@ -72,7 +72,7 @@ set(_PrivateFilters
   GBCDTriangleDumper
   FileReader
   FileWriter
-  
+
   VoxelDataContainerWriter
   VoxelDataContainerReader
 
@@ -81,6 +81,8 @@ set(_PrivateFilters
 
   SolidMeshDataContainerWriter
   SolidMeshDataContainerReader
+  
+  VrmlWriter
 )
 
 #-----------------
