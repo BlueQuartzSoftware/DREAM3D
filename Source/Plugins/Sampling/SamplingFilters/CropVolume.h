@@ -117,9 +117,9 @@ class CropVolume : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
     void dataCheck();
+    void updateCellInstancePointers();
 
     CropVolume(const CropVolume&); // Copy Constructor Not Implemented
     void operator=(const CropVolume&); // Operator '=' Not Implemented

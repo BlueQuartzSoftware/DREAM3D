@@ -242,6 +242,77 @@ size_t AttributeMatrix::getNumTuples()
   }
   return numTuples;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AttributeMatrix::removeInactiveObjects(QVector<bool> activeObjects, Int32ArrayType::Pointer Ids)
+{
+  bool acceptableMatrix = false;
+  //Only valid for feature or ensemble type matrices
+  if(m_Type == DREAM3D::AttributeMatrixType::VertexFeature || m_Type == DREAM3D::AttributeMatrixType::VertexEnsemble ||
+     m_Type == DREAM3D::AttributeMatrixType::EdgeFeature || m_Type == DREAM3D::AttributeMatrixType::EdgeEnsemble ||
+     m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
+     m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble) acceptableMatrix = true;
+  size_t totalTuples = getNumTuples();
+  if(activeObjects.size() == totalTuples && acceptableMatrix == true)
+  {
+    size_t goodcount = 1;
+    QVector<size_t> NewNames(totalTuples, 0);
+    QVector<size_t> RemoveList;
+
+    for(size_t i = 1; i < activeObjects.size(); i++)
+    {
+      if(activeObjects[i] == false)
+      {
+        RemoveList.push_back(i);
+        NewNames[i] = 0;
+      }
+      else
+      {
+        NewNames[i] = goodcount;
+        goodcount++;
+      }
+    }
+
+    if(RemoveList.size() > 0)
+    {
+      QList<QString> headers = getAttributeArrayNameList();
+      for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+      {
+        IDataArray::Pointer p = getAttributeArray(*iter);
+        QString type = p->getTypeAsString();
+        if(type.compare("NeighborList<T>") == 0)
+        {
+          removeAttributeArray(*iter);
+        }
+        else
+        {
+          p->eraseTuples(RemoveList);
+        }
+      }
+      QVector<size_t> tDims(1, (totalTuples - RemoveList.size()));
+      setTupleDimensions(tDims);
+
+      // Loop over all the points and correct all the feature names
+      size_t totalPoints = Ids->getNumberOfTuples();
+      int32_t* id = Ids->getPointer(0);
+      for (int i = 0; i < totalPoints; i++)
+      {
+        if(id[i] >= 0 && id[i] < NewNames.size())
+        {
+          id[i] = static_cast<int32_t>( NewNames[id[i]] );
+        }
+      }
+    }
+  }
+  else
+  {
+    return false;
+  }
+  return true;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

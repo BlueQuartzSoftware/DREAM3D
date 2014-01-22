@@ -348,10 +348,17 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     virtual bool renameAttributeArray(const QString& oldname, const QString& newname);
 
     /**
-    * @brief Resizes an array from the Data Container
+    * @brief Resizes an array from the Attribute Matrix
     * @param size The new size of the array
     */
     void resizeAttributeArrays(QVector<size_t> tDims);
+
+    /**
+    * @brief Removes inactive objects from the Attribute Matrix and renumbers the active objects to preserve a compact matrix 
+      (only valid for feature or ensemble type matrices)
+    * @param size The new size of the array
+    */
+    bool removeInactiveObjects(QVector<bool> activeObjects, Int32ArrayType::Pointer Ids);
 
     void setTupleDimensions(QVector<size_t> tupleDims);
 

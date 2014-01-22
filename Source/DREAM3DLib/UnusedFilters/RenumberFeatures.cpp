@@ -162,8 +162,7 @@ void RenumberFeatures::execute()
 
   QString ss;
   size_t goodcount = 1;
-  std::vector<size_t> NewNames;
-  NewNames.resize(totalFeatures, 0);
+  QVector<size_t> NewNames(totalFeatures, 0);
 
   ss = QObject::tr(" - Generating Active Feature List");
   notifyStatusMessage(getHumanLabel(), ss);

@@ -50,7 +50,6 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/RenumberFeatures.h"
 #include "DREAM3DLib/IOFilters/FeatureDataCSVWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
@@ -241,8 +240,6 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_FeatureIds(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
@@ -374,8 +371,6 @@ void PackPrimaryPhases::updateFeatureInstancePointers()
 
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0);
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -419,13 +414,9 @@ void PackPrimaryPhases::dataCheck()
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   //Feature Data
-  // Feature Data
   m_FeaturePhasesPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeaturePhasesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_ActivePtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this,  m_ActiveArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_NeighborhoodsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NeighborhoodsArrayName, 0, dims);
   if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0);
@@ -685,7 +676,6 @@ void PackPrimaryPhases::execute()
           updateFeatureInstancePointers();
         }
 
-        m_Active[gid] = true;
         transfer_attributes(gid, &feature);
         oldsizedisterror = currentsizedisterror;
         curphasevol[j] = curphasevol[j] + m_Volumes[gid];
@@ -732,7 +722,6 @@ void PackPrimaryPhases::execute()
             //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
             updateFeatureInstancePointers();
           }
-          m_Active[gid] = true;
           transfer_attributes(gid, &feature);
           oldsizedisterror = currentsizedisterror;
           curphasevol[j] = curphasevol[j] + m_Volumes[gid];
@@ -1101,19 +1090,6 @@ void PackPrimaryPhases::execute()
   notifyStatusMessage(getHumanLabel(), "Packing Features - Cleaning Up Volume");
   //  cleanup_features();
   if (getCancel() == true) { return; }
-
-  notifyStatusMessage(getHumanLabel(), "Packing Features - Renumbering Features");
-  RenumberFeatures::Pointer renumber_features2 = RenumberFeatures::New();
-  connect(renumber_features2.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-  renumber_features2->setDataContainerArray(getDataContainerArray());
-  renumber_features2->execute();
-  err = renumber_features2->getErrorCondition();
-  if (err < 0)
-  {
-    setErrorCondition(renumber_features2->getErrorCondition());
-    return;
-  }
 
   if(m_WriteGoalAttributes == true)
   {
@@ -2003,36 +1979,21 @@ void PackPrimaryPhases::assign_voxels()
 
   }
 
+  QVector<bool> activeObjects(totalFeatures, false);
   int gnum;
-  for (int64_t i = firstPrimaryFeature; i < totalFeatures; i++)
-  {
-    m_Active[i] = false;
-  }
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
   {
     if(ellipfuncs[i] >= 0) { m_FeatureIds[i] = newowners[i]; }
     gnum = m_FeatureIds[i];
-    if(gnum >= 0) { m_Active[gnum] = true; }
+    if(gnum >= 0) { activeObjects[gnum] = true; }
     newowners[i] = -1;
     ellipfuncs[i] = -1.0;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Assigning Voxels - Removing Included Features");
-  RenumberFeatures::Pointer renumber_features1 = RenumberFeatures::New();
-  connect(renumber_features1.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-  renumber_features1->setDataContainerArray(getDataContainerArray());
-  renumber_features1->execute();
-  int err = renumber_features1->getErrorCondition();
-  if (err < 0)
-  {
-    setErrorCondition(renumber_features1->getErrorCondition());
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
 
-    return;
-  }
-
-  totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
-
+  totalFeatures = cellFeatureAttrMat->getNumTuples();
   //need to update pointers after resize, but do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
   if (getCancel() == true)
@@ -2042,16 +2003,12 @@ void PackPrimaryPhases::assign_voxels()
     setErrorCondition(-1);
     return;
   }
-  for (int64_t i = firstPrimaryFeature; i < totalFeatures; i++)
-  {
-    m_Active[i] = false;
-  }
+
   for(int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
     if(gnum >= 0)
     {
-      m_Active[gnum] = true;
       m_CellPhases[i] = m_FeaturePhases[gnum];
     }
   }
@@ -2179,6 +2136,7 @@ void PackPrimaryPhases::assign_gaps_only()
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -2221,6 +2179,7 @@ void PackPrimaryPhases::cleanup_features()
   vlists.resize(totalFeatures);
   QVector<int> currentvlist;
   QVector<bool> checked(totalPoints, false);
+  QVector<bool> activeObjects(totalFeatures, true);
   size_t count;
   int touchessurface = 0;
   int good;
@@ -2232,7 +2191,6 @@ void PackPrimaryPhases::cleanup_features()
   for (size_t i = 1; i < totalFeatures; i++)
   {
     gsizes[i] = 0;
-    m_Active[i] = true;
   }
 
   float resConst = m->getXRes() * m->getYRes() * m->getZRes();
@@ -2333,8 +2291,13 @@ void PackPrimaryPhases::cleanup_features()
   }
   for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
-    if(gsizes[i] == 0) { m_Active[i] = false; }
+    if(gsizes[i] == 0) { activeObjects[i] = false; }
   }
+
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+  updateFeatureInstancePointers();
+
   for (int i = 0; i < totalPoints; i++)
   {
     if(m_FeatureIds[i] > 0) { m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]]; }

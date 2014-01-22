@@ -42,7 +42,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/GenericFilters/RenumberFeatures.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -61,9 +60,7 @@ CropVolume::CropVolume() :
   m_RenumberFeatures(true),
   m_UpdateOrigin(true),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL)
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -184,8 +181,20 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->writeValue("YMax", getYMax() );
   writer->writeValue("ZMax", getZMax() );
   writer->writeValue("RenumberFeatures", getRenumberFeatures() );
+  writer->writeValue("UpdateOrigin", getUpdateOrigin() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CropVolume::updateCellInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -209,9 +218,6 @@ void CropVolume::dataCheck()
     m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    m_ActivePtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this,  m_ActiveArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -287,6 +293,13 @@ void CropVolume::preflight()
   tDims[2] = (getZMax() - getZMin()) + 1;
   m->getAttributeMatrix(getCellAttributeMatrixName())->setTupleDimensions(tDims);
   m->setDimensions(tDims[0], tDims[1], tDims[2]);
+
+  if(m_RenumberFeatures == true)
+  {
+    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+    QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -387,7 +400,9 @@ void CropVolume::execute()
   if (m_RenumberFeatures == true)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+    size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
+    QVector<bool> activeObjects(totalFeatures, false);
     if (0 == totalFeatures)
     {
       notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
@@ -395,26 +410,14 @@ void CropVolume::execute()
       return;
     }
 
-    dataCheck();
+    updateCellInstancePointers();
 
     // Find the unique set of feature ids
-    for (size_t i = 1; i < totalFeatures; ++i)
-    {
-      m_Active[i] = false;
-    }
     for (int64_t i = 0; i < totalPoints; ++i)
     {
-      m_Active[m_FeatureIds[i]] = true;
+      activeObjects[m_FeatureIds[i]] = true;
     }
-
-    RenumberFeatures::Pointer renum = RenumberFeatures::New();
-    renum->setDataContainerArray(getDataContainerArray());
-    connect(renum.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-    renum->setMessagePrefix(getMessagePrefix());
-    renum->execute();
-    setErrorCondition(renum->getErrorCondition());
-
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
 
   if(m_UpdateOrigin == true)
@@ -427,10 +430,8 @@ void CropVolume::execute()
     origin[0] = m_XMin * resolution[0];
     origin[1] = m_YMin * resolution[1];
     origin[2] = m_ZMin * resolution[2];
-
     m->setOrigin(origin);
   }
-
 
   notifyStatusMessage(getHumanLabel(), "Completed");
 }

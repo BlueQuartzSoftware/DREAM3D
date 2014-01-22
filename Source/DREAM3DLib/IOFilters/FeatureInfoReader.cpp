@@ -44,7 +44,6 @@
 #include <QtCore/QFileInfo>
 
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/GenericFilters/RenumberFeatures.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -66,9 +65,7 @@ FeatureInfoReader::FeatureInfoReader() :
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
-  m_FeatureEulerAngles(NULL),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL)
+  m_FeatureEulerAngles(NULL)
 {
   setupFilterParameters();
 }
@@ -146,6 +143,19 @@ int FeatureInfoReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FeatureInfoReader::updateFeatureInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FeatureInfoReader::dataCheck()
 {
   setErrorCondition(0);
@@ -187,9 +197,6 @@ void FeatureInfoReader::dataCheck()
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   dims[0] = 1;
-  m_ActivePtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this,  m_ActiveArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_FeaturePhasesPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeaturePhasesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -220,8 +227,11 @@ int FeatureInfoReader::readHeader()
 int FeatureInfoReader::readFile()
 {
   dataCheck();
+  if(getErrorCondition() < 0) { return -999; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
 
   std::ifstream inFile;
   inFile.open(getInputFile().toLatin1().data(), std::ios_base::binary);
@@ -237,88 +247,57 @@ int FeatureInfoReader::readFile()
   int maxphase = 0;
   float ea1, ea2, ea3;
   inFile >> numfeatures;
+  if (0 == numfeatures)
+  {
+    notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
+    return -999;
+  }
 
-  // Create and initialize the Feature Active Array with a default value of true
-  BoolArrayType::Pointer featureActive = BoolArrayType::CreateArray(numfeatures + 1, DREAM3D::FeatureData::Active);
-  featureActive->initializeWithValue(true);
+  QVector<size_t> tDims(1, numfeatures+1);
+  cellFeatureAttrMat->setTupleDimensions(tDims);
+  updateFeatureInstancePointers();
 
-  // Initialize arrays to hold the data for the Euler Data
-  QVector<size_t> dims(1, 3);
-  FloatArrayType::Pointer featureEulerData = FloatArrayType::CreateArray(numfeatures + 1, dims, DREAM3D::FeatureData::EulerAngles);
-  featureEulerData->initializeWithZeros();
-
-  // Create and initialize the Feature Phase Array with a default value of the "Unkown Phase Type"
-  Int32ArrayType::Pointer featurePhaseData = Int32ArrayType::CreateArray(numfeatures + 1, DREAM3D::FeatureData::Phases);
-  featurePhaseData->initializeWithValue(999);
   for(int i = 0; i < numfeatures; i++)
   {
     inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
-    if(gnum >= featureActive->getSize())
+    if(gnum >= cellFeatureAttrMat->getNumTuples())
     {
-      featureActive->resize(gnum + 1);
-      featurePhaseData->resize(gnum + 1);
-      featureEulerData->resize(gnum + 1);
+      tDims[0] = gnum+1;
+      cellFeatureAttrMat->setTupleDimensions(tDims);
+      updateFeatureInstancePointers();
     }
-    featureEulerData->setValue(3 * gnum, ea1);
-    featureEulerData->setValue(3 * gnum + 1, ea2);
-    featureEulerData->setValue(3 * gnum + 2, ea3);
-    featurePhaseData->setValue(gnum, phase);
+    m_FeatureEulerAngles[3 * gnum] = ea1;
+    m_FeatureEulerAngles[3 * gnum + 1] = ea2;
+    m_FeatureEulerAngles[3 * gnum + 2] = ea3;
+    m_FeaturePhases[gnum] = phase;
     if(phase > maxphase) { maxphase = phase; }
   }
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::EulerAngles, featureEulerData);
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::Phases, featurePhaseData);
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(DREAM3D::FeatureData::Active, featureActive);
 
   if (m_CreateCellLevelArrays == true)
   {
     int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-    QVector<size_t> dims(1, 3);
-    FloatArrayType::Pointer cellEulerData = FloatArrayType::CreateArray(totalPoints, dims, DREAM3D::FeatureData::EulerAngles);
-    cellEulerData->initializeWithZeros();
-    Int32ArrayType::Pointer cellPhaseData = Int32ArrayType::CreateArray(totalPoints, DREAM3D::FeatureData::Phases);
-    cellPhaseData->initializeWithValue(999);
     for(int i = 0; i < totalPoints; i++)
     {
       gnum = m_FeatureIds[i];
-      cellEulerData->setValue(3 * i, featureEulerData->getValue(3 * gnum));
-      cellEulerData->setValue(3 * i + 1, featureEulerData->getValue(3 * gnum + 1));
-      cellEulerData->setValue(3 * i + 2, featureEulerData->getValue(3 * gnum + 2));
-      cellPhaseData->setValue(i, featurePhaseData->getValue(gnum));
+      m_CellEulerAngles[3 * i] = m_FeatureEulerAngles[3 * gnum];
+      m_CellEulerAngles[3 * i + 1] = m_FeatureEulerAngles[3 * gnum + 1];
+      m_CellEulerAngles[3 * i + 2] = m_FeatureEulerAngles[3 * gnum + 2];
+      m_CellPhases[i] = m_FeaturePhases[gnum];
     }
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::EulerAngles, cellEulerData);
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::Phases, cellPhaseData);
   }
 
   if (m_RenumberFeatures == true)
   {
-    int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-    if (0 == totalFeatures)
-    {
-      notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
-      return -999;
-    }
-
-    dataCheck();
+    int64_t totalPoints = cellAttrMat->getNumTuples();
+    size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
 
     // Find the unique set of feature ids
-    for (size_t i = 1; i < totalFeatures; ++i)
-    {
-      m_Active[i] = false;
-    }
+    QVector<bool> activeObjects(totalFeatures, false);
     for (int64_t i = 0; i < totalPoints; ++i)
     {
-      m_Active[m_FeatureIds[i]] = true;
+      activeObjects[m_FeatureIds[i]] = true;
     }
-
-    RenumberFeatures::Pointer renum = RenumberFeatures::New();
-    renum->setDataContainerArray(getDataContainerArray());
-    connect(renum.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-    renum->setMessagePrefix(getMessagePrefix());
-    renum->execute();
-    setErrorCondition(renum->getErrorCondition());
-
+      cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

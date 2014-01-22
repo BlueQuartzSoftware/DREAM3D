@@ -185,7 +185,6 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumCells)
     NeighborList<float>* m_ClusteringList;

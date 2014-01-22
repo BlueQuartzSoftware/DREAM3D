@@ -107,13 +107,12 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     int32_t* m_Neighbors;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;
 
-    virtual void remove_smallfeatures();
+    virtual QVector<bool> remove_smallfeatures();
     virtual void assign_badpoints();
 
   private:

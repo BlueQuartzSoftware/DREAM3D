@@ -50,9 +50,7 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
-#include "DREAM3DLib/GenericFilters/FindSurfaceCells.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/RenumberFeatures.h"
 
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
 
@@ -90,8 +88,6 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_Omega3s(NULL),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_EquivalentDiameters(NULL),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
@@ -209,8 +205,6 @@ void InsertPrecipitatePhases::updateFeatureInstancePointers()
 
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -260,9 +254,6 @@ void InsertPrecipitatePhases::dataCheck()
   m_FeaturePhasesPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeaturePhasesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_ActivePtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_ActiveArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_NumCellsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NumCellsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -348,42 +339,11 @@ void InsertPrecipitatePhases::execute()
   notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Assigning Voxels");
   assign_voxels();
 
-  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Renumbering Features");
-  RenumberFeatures::Pointer renumber_features1 = RenumberFeatures::New();
-  connect(renumber_features1.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-  renumber_features1->setDataContainerArray(getDataContainerArray());
-  renumber_features1->execute();
-  err = renumber_features1->getErrorCondition();
-  if (err < 0)
-  {
-    setErrorCondition(renumber_features1->getErrorCondition());
-
-    return;
-  }
-
-  updateCellInstancePointers();
-  updateFeatureInstancePointers();
-
   notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Filling Gaps");
   assign_gaps();
 
   notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Cleaning Up Volume");
   cleanup_features();
-
-  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Renumbering Features");
-  RenumberFeatures::Pointer renumber_features2 = RenumberFeatures::New();
-  connect(renumber_features2.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-  renumber_features2->setDataContainerArray(getDataContainerArray());
-  renumber_features2->execute();
-  err = renumber_features2->getErrorCondition();
-  if (err < 0)
-  {
-    setErrorCondition(renumber_features2->getErrorCondition());
-
-    return;
-  }
 
   if(m_WriteGoalAttributes == true)
   {
@@ -535,7 +495,6 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
         tDims[0] = currentnumfeatures+1;
         m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
         updateFeatureInstancePointers();
-        m_Active[currentnumfeatures] = true;
         transfer_attributes(currentnumfeatures, &precip);
         oldsizedisterror = currentsizedisterror;
         curphasevol[j] = curphasevol[j] + m_Volumes[currentnumfeatures];
@@ -1505,16 +1464,19 @@ void InsertPrecipitatePhases::assign_voxels()
       }
     }
   }
-  for (int64_t i = firstPrecipitateFeature; i < numFeatures; i++)
-  {
-    m_Active[i] = false;
-  }
+
+  QVector<bool> activeObjects(numFeatures, false);
   int gnum;
-  for(size_t i = 0; i < totalPoints; i++)
+  for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
   {
     gnum = m_FeatureIds[i];
-    if(gnum >= 0) { m_Active[gnum] = true; }
+    if(gnum >= 0) { activeObjects[gnum] = true; }
   }
+
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+  //need to update pointers after resize, but do not need to run full data check because pointers are still valid
+  updateFeatureInstancePointers();
 }
 
 void InsertPrecipitatePhases::assign_gaps()
@@ -1737,6 +1699,7 @@ void InsertPrecipitatePhases::cleanup_features()
   vlists.resize(numFeatures);
   QVector<int> currentvlist;
   QVector<bool> checked(totpoints, false);
+  QVector<bool> activeObjects(numFeatures, true);
   size_t count;
   int touchessurface = 0;
   int good;
@@ -1748,7 +1711,6 @@ void InsertPrecipitatePhases::cleanup_features()
   for (int64_t i = 1; i < numFeatures; i++)
   {
     gsizes[i] = 0;
-    m_Active[i] = true;
   }
 
   float resConst = m->getXRes() * m->getYRes() * m->getZRes();
@@ -1847,10 +1809,15 @@ void InsertPrecipitatePhases::cleanup_features()
   {
     if(m_FeatureIds[i] > 0) { gsizes[m_FeatureIds[i]]++; }
   }
-  for (int64_t i = firstPrecipitateFeature; i < numFeatures; i++)
+  for (size_t i = firstPrecipitateFeature; i < numFeatures; i++)
   {
-    if(gsizes[i] == 0) { m_Active[i] = false; }
+    if(gsizes[i] == 0) { activeObjects[i] = false; }
   }
+
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+  updateFeatureInstancePointers();
+
   for (int i = 0; i < totpoints; i++)
   {
     if(m_FeatureIds[i] > 0) { m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]]; }
