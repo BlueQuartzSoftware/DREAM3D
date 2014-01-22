@@ -113,7 +113,7 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 void ChangeResolution::dataCheck()
 {
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == m) { return; }
 }
 // -----------------------------------------------------------------------------
 //

@@ -193,7 +193,7 @@ void DataContainerArray::printDataContainerNames(QTextStream& out)
 
 int DataContainerArray::readDataContainersFromHDF5(bool preflight, hid_t dcaGid, DataContainerArrayProxy& dcaProxy)
 {
-  int err;
+  int err = 0;
   QList<DataContainerProxy> dcsToRead = dcaProxy.list;
   uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
   QListIterator<DataContainerProxy> dcIter(dcsToRead);

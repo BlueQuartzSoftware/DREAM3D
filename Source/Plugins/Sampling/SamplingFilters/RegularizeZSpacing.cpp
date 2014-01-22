@@ -130,7 +130,7 @@ void RegularizeZSpacing::dataCheck(bool preflight)
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == m) { return; }
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
