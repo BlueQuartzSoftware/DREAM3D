@@ -176,7 +176,7 @@ void QuiltCellData::dataCheck()
   VolumeDataContainer* m2 = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, QuiltCellData>(this, getNewDataContainerName());
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   //Establish the dimensions, resolutions and origin of the new data container
   size_t dcDims[3];

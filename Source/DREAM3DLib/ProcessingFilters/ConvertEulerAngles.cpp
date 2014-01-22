@@ -154,7 +154,7 @@ void ConvertEulerAngles::dataCheck()
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 3);
   m_CellEulerAnglesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellEulerAnglesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

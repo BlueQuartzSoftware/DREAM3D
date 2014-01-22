@@ -262,7 +262,7 @@ void MergeColonies::dataCheck()
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 1);
   // Cell Data

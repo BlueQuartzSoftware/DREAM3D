@@ -160,7 +160,7 @@ void EBSDSegmentFeatures::dataCheck()
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
   QVector<size_t> tDims(1, 0);  
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
