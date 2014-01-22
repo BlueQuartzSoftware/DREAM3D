@@ -178,7 +178,8 @@ void CAxisSegmentFeatures::dataCheck()
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
+
 
   QVector<size_t> dims(1, 1);
   m_GoodVoxelsPtr = cellAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this,  m_GoodVoxelsArrayName,  true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

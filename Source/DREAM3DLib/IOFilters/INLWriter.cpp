@@ -141,7 +141,8 @@ void INLWriter::dataCheck()
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
+
 
   if(getOutputFile().isEmpty() == true)
   {
