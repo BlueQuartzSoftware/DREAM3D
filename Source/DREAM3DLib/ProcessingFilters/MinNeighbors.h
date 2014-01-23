@@ -71,10 +71,6 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-    //------ Required Feature Data
-    //------ Created Feature Data
-
     DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors)
     Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors NOTIFY parametersChanged)
 
@@ -101,7 +97,7 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
     MinNeighbors();
 
     void assign_badpoints();
-    void merge_containedfeatures();
+    QVector<bool> merge_containedfeatures();
 
   private:
     bool* m_AlreadyChecked;
@@ -109,7 +105,6 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumNeighbors)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
     void dataCheck();
 

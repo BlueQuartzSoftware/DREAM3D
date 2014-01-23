@@ -41,8 +41,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
-#include "DREAM3DLib/GenericFilters/RenumberFeatures.h"
+//#include "DREAM3DLib/GenericFilters/RenumberFeatures.h"
 
 
 
@@ -63,8 +62,6 @@ MinSize::MinSize() :
   m_PhaseNumber(0),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL)
 {
@@ -156,9 +153,6 @@ void MinSize::dataCheck()
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_ActivePtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_ActiveArrayName, true, dims);; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(m_ApplyToAll == false)
   {
     m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -175,19 +169,10 @@ void MinSize::preflight()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
-  connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-  renumber_features->setDataContainerArray(getDataContainerArray());
-  renumber_features->setMessagePrefix(getMessagePrefix());
-  renumber_features->preflight();
-  int err = renumber_features->getErrorCondition();
-  if (err < 0)
-  {
-    setErrorCondition(renumber_features->getErrorCondition());
-
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
 }
 
 // -----------------------------------------------------------------------------
@@ -200,22 +185,12 @@ void MinSize::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  remove_smallfeatures();
+  QVector<bool> activeObjects = remove_smallfeatures();
   assign_badpoints();
 
-  RenumberFeatures::Pointer renumber_features = RenumberFeatures::New();
-  connect(renumber_features.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-  renumber_features->setDataContainerArray(getDataContainerArray());
-  renumber_features->setMessagePrefix(getMessagePrefix());
-  renumber_features->execute();
-  int err = renumber_features->getErrorCondition();
-  if (err < 0)
-  {
-    setErrorCondition(renumber_features->getErrorCondition());
-
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Minimum Size Filter Complete");
@@ -363,7 +338,7 @@ void MinSize::assign_badpoints()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinSize::remove_smallfeatures()
+QVector<bool> MinSize::remove_smallfeatures()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getTotalPoints();
@@ -373,6 +348,7 @@ void MinSize::remove_smallfeatures()
   int numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   QVector<int> voxcounts(numfeatures, 0);
+  QVector<bool> activeObjects(numfeatures, true);
 
   for (int64_t i = 0; i < totalPoints; i++)
   {
@@ -381,7 +357,6 @@ void MinSize::remove_smallfeatures()
   }
   for (size_t i = 1; i <  static_cast<size_t>(numfeatures); i++)
   {
-    m_Active[i] = true;
     if(m_ApplyToAll == true)
     {
       if(voxcounts[i] >= m_MinAllowedFeatureSize ) { good = true; }
@@ -395,7 +370,7 @@ void MinSize::remove_smallfeatures()
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "The minimum size is larger than the largest Feature.  All Features would be removed.  The filter has quit.", -1);
-    return;
+    return activeObjects;
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
@@ -403,8 +378,9 @@ void MinSize::remove_smallfeatures()
     if(voxcounts[gnum] < m_MinAllowedFeatureSize && gnum > 0)
     {
       m_FeatureIds[i] = -1;
-      m_Active[gnum] = false;
+      activeObjects[gnum] = false;
     }
   }
+  return activeObjects;
 }
 

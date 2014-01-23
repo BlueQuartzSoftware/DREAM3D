@@ -164,7 +164,6 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     int8_t*  m_SurfaceVoxels;
 
     // Feature Data - make sure these are all initialized to NULL in the constructor
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)

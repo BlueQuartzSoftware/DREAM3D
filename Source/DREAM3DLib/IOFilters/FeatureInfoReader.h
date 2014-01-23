@@ -103,6 +103,7 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
     virtual int readFile();
 
     void dataCheck();
+    void updateFeatureInstancePointers();
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
@@ -110,7 +111,6 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
     FeatureInfoReader(const FeatureInfoReader&); //Not Implemented
     void operator=(const FeatureInfoReader&); //Not Implemented
