@@ -33,8 +33,9 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceMeshing_H_
-#define _SurfaceMeshing_H_
+
+#ifndef _Processing_H_
+#define _Processing_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -43,21 +44,21 @@
 
 
 /**
- * @class SurfaceMeshingPlugin SurfaceMeshingPlugin.h SurfaceMeshing/SurfaceMeshingPlugin.h
+ * @class ProcessingPlugin ProcessingPlugin.h Processing/ProcessingPlugin.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date May 10, 2012
  * @version 1.0
  */
-class SurfaceMeshingPlugin : public QObject, public DREAM3DPluginInterface
+class ProcessingPlugin : public QObject, public DREAM3DPluginInterface
 {
     Q_OBJECT
 
     Q_INTERFACES(DREAM3DPluginInterface)
 
   public:
-    SurfaceMeshingPlugin();
-    virtual ~SurfaceMeshingPlugin();
+    ProcessingPlugin();
+    virtual ~ProcessingPlugin();
     /**
      * @brief Returns the name of the plugin
      */
@@ -89,9 +90,9 @@ class SurfaceMeshingPlugin : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings& prefs);
 
   private:
-    SurfaceMeshingPlugin(const SurfaceMeshingPlugin&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshingPlugin&); // Operator '=' Not Implemented
+    ProcessingPlugin(const ProcessingPlugin&); // Copy Constructor Not Implemented
+    void operator=(const ProcessingPlugin&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceMeshing_H_ */
+#endif /* _Processing_H_ */
 

@@ -52,7 +52,7 @@
 
 
 /**
- * @class MinSize MinSize.h DREAM3DLib/ProcessingFilters/MinSize.h
+ * @class MinSize MinSize.h Processing/ProcessingFilters/MinSize.h
  * @brief This filter ensures each Feature or Region has a minimum number of voxels.
  * @author
  * @date Nov 19, 2011
