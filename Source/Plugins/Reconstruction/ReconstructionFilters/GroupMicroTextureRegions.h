@@ -95,6 +95,9 @@ class GroupMicroTextureRegions : public GroupFeatures
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     GroupMicroTextureRegions();
 

@@ -96,6 +96,9 @@ class AlignSectionsFeatureCentroid : public AlignSections
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     AlignSectionsFeatureCentroid();
 
