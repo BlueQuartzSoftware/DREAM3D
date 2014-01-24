@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>446</width>
+    <width>225</width>
     <height>34</height>
    </rect>
   </property>
@@ -16,12 +16,28 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>34</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+    <pointsize>12</pointsize>
+    <weight>75</weight>
+    <italic>true</italic>
+    <bold>true</bold>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QFrame#QFilterWidget {
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #CCCCCC);
+
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));
 border: 1px solid #515151;
 border-radius: 10px;
 padding: 0 0 0 0px;
@@ -60,8 +76,8 @@ font-weight: bold;
      </property>
      <property name="maximumSize">
       <size>
-       <width>24</width>
-       <height>24</height>
+       <width>16</width>
+       <height>16</height>
       </size>
      </property>
      <property name="styleSheet">
@@ -82,12 +98,12 @@ font-weight: bold;
      </property>
      <property name="icon">
       <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-       <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
+       <normaloff>:/delete-corner.png</normaloff>:/delete-corner.png</iconset>
      </property>
      <property name="iconSize">
       <size>
-       <width>24</width>
-       <height>24</height>
+       <width>16</width>
+       <height>16</height>
       </size>
      </property>
      <property name="flat">
@@ -106,11 +122,16 @@ font-weight: bold;
      <property name="font">
       <font>
        <family>Arial</family>
-       <pointsize>12</pointsize>
+       <pointsize>10</pointsize>
        <weight>75</weight>
        <italic>true</italic>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+font: 75 italic bold 10pt &quot;Arial&quot;;
+}</string>
      </property>
      <property name="lineWidth">
       <number>0</number>
@@ -130,8 +151,8 @@ font-weight: bold;
      </property>
      <property name="maximumSize">
       <size>
-       <width>24</width>
-       <height>24</height>
+       <width>20</width>
+       <height>20</height>
       </size>
      </property>
      <property name="styleSheet">
@@ -156,8 +177,8 @@ font-weight: bold;
      </property>
      <property name="iconSize">
       <size>
-       <width>24</width>
-       <height>24</height>
+       <width>20</width>
+       <height>20</height>
       </size>
      </property>
      <property name="flat">

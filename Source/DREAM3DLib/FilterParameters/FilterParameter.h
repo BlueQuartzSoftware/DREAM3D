@@ -69,6 +69,7 @@ namespace FilterParameterWidgetType
       const QString IntVec3Widget("IntVec3Widget");
       const QString FloatVec3Widget("FloatVec3Widget");
       const QString AxisAngleWidget("AxisAngleWidget");
+      const QString UnknownWidget("UnknownWidget");
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
       const QString VolumeVertexArrayNameSelectionWidget("VolumeVertexArrayNameSelectionWidget"); // ComboBox where the Cell Array names are used to populate
       const QString VolumeEdgeArrayNameSelectionWidget("VolumeEdgeArrayNameSelectionWidget"); //ComboBox where the Feature Array names are used to populate
@@ -115,55 +116,6 @@ class FilterParameter
     DREAM3D_STATIC_NEW_MACRO(FilterParameter)
     DREAM3D_TYPE_MACRO(FilterParameter)
     virtual ~FilterParameter() {}
-
-//    enum WidgetType
-//    {
-//      StringWidget = 0,
-//      IntWidget,
-//      DoubleWidget,
-//      InputFileWidget,
-//      InputPathWidget,
-//      OutputFileWidget,
-//      OutputPathWidget,
-//      BooleanWidget,
-//      ChoiceWidget, // Generic ComboBox Drop down where the filter provides the list of strings
-//      IntVec3Widget,
-//      FloatVec3Widget,
-//      AxisAngleWidget,
-//      /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
-//      VolumeVertexArrayNameSelectionWidget, // ComboBox where the Cell Array names are used to populate
-//      VolumeEdgeArrayNameSelectionWidget, //ComboBox where the Feature Array names are used to populate
-//      VolumeFaceArrayNameSelectionWidget, //ComboBox where the Ensemble Array names are used to populate
-//      VolumeCellArrayNameSelectionWidget, // ComboBox where the Cell Array names are used to populate
-//      VolumeFeatureArrayNameSelectionWidget, //ComboBox where the Feature Array names are used to populate
-//      VolumeEnsembleArrayNameSelectionWidget, //ComboBox where the Ensemble Array names are used to populate
-//      SurfaceVertexArrayNameSelectionWidget,
-//      SurfaceFaceArrayNameSelectionWidget,
-//      SurfaceEdgeArrayNameSelectionWidget,
-//      SurfaceFeatureArrayNameSelectionWidget,
-//      SurfaceEnsembleArrayNameSelectionWidget,
-//      EdgeVertexArrayNameSelectionWidget,
-//      EdgeEdgeArrayNameSelectionWidget,
-//      EdgeFeatureArrayNameSelectionWidget,
-//      EdgeEnsembleArrayNameSelectionWidget,
-//      VertexVertexArrayNameSelectionWidget,
-//      VertexFeatureArrayNameSelectionWidget,
-//      VertexEnsembleArrayNameSelectionWidget,
-//      /* ****  AND THIS LINE ******** */
-//      ArraySelectionWidget, // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
-//      /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
-//      CellArrayComparisonSelectionWidget,
-//      FeatureArrayComparisonSelectionWidget,
-//      EnsembleArrayComparisonSelectionWidget,
-//      VertexArrayComparisonSelectionWidget,
-//      FaceArrayComparisonSelectionWidget,
-//      EdgeArrayComparisonSelectionWidget,
-//      CustomWidget
-//      /* If you add more widget types you need to update the QFilterWidget code to
-//       * account for these new types. You also need to update the FilterWidgetCodeGen.cpp
-//       * file to generate default code for the new enumeration types
-//       */
-//    };
 
     DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel)
     DREAM3D_INSTANCE_STRING_PROPERTY(PropertyName)

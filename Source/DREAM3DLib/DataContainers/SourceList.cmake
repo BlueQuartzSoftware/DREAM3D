@@ -54,6 +54,10 @@ set(DREAM3DLib_DataContainers_SRCS
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/DataContainers" "${DREAM3DLib_DataContainers_HDRS}" "${DREAM3DLib_DataContainers_SRCS}" "0")
 cmp_IDE_SOURCE_PROPERTIES( "Generated/DREAM3DLib/DataContainers" "" "${DREAM3DLib_DataContainers_Generated_MOC_SRCS}" "0")
 
+set(DREAM3DLib_DataContainers_HDRS
+	${DREAM3DLib_DataContainers_HDRS}
+	${DREAM3DLib_DataContainers_Moc_HDRS}  # Add the headers that get Moc'ed here so they show up in solutions/IDEs/Project files
+)
 
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_DataContainers_HDRS}

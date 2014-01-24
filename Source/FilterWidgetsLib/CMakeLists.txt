@@ -97,7 +97,7 @@ set(FilterWidgetsLib_SRCS
   ${FilterWidgetsLib_SOURCE_DIR}/IFilterWidgetFactory.cpp
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${FilterWidgetsLib_HDRS};${FilterWidgetsLib_MOC_HDRS}" "${FilterWidgetsLib_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "FilterWidgetsLib" "${FilterWidgetsLib_HDRS};${FilterWidgetsLib_MOC_HDRS}" "${FilterWidgetsLib_SRCS}" "0")
 
 # --------------------------------------------------------------------
 # and finally this will run moc:

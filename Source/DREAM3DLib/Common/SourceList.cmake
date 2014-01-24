@@ -49,7 +49,6 @@ set(DREAM3DLib_Common_HDRS
 
 
 set(DREAM3DLib_Common_SRCS
-  ${DREAM3DLib_Common_Generated_MOC_SRCS}  # Add the generated source files here so they get compiled.
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AppVersion.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/CreatedArrayHelpIndexEntry.cpp
@@ -72,6 +71,10 @@ set(DREAM3DLib_Common_SRCS
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3DLib_Common_HDRS};${DREAM3DLib_Common_Moc_HDRS}" "${DREAM3DLib_Common_SRCS}" "0")
 cmp_IDE_SOURCE_PROPERTIES( "Generated/DREAM3DLib/Common" "" "${DREAM3DLib_Common_Generated_MOC_SRCS}" "0")
 
+set(DREAM3DLib_Common_SRCS
+	${DREAM3DLib_Common_SRCS}
+	${DREAM3DLib_Common_Generated_MOC_SRCS}  # Add the generated source files here so they get compiled.
+)
 
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_Common_HDRS}

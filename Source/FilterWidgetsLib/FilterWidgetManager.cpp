@@ -120,6 +120,11 @@ QWidget* FilterWidgetManager::createWidget(FilterParameter* parameter, AbstractF
   if(NULL != factory.get()) {
     return factory->createWidget(parameter, filter, NULL);
   }
+  else
+  {
+    factory = m_Factories.value(FilterParameterWidgetType::UnknownWidget);
+    factory->createWidget(parameter, filter, NULL);
+  }
   return NULL;
 }
 

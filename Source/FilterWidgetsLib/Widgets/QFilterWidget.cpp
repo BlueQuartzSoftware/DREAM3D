@@ -42,25 +42,11 @@
 #include <QtCore/QResource>
 #include <QtCore/QDir>
 
-//#include <QtGui/QFrame>
-//#include <QtGui/QSpinBox>
+
 #include <QtGui/QLabel>
-//#include <QtGui/QCheckBox>
-//#include <QtGui/QLineEdit>
-//#include <QtGui/QIntValidator>
-//#include <QtGui/QDoubleValidator>
-//#include <QtGui/QComboBox>
-//#include <QtGui/QApplication>
-//#include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
-#include <QtGui/QFormLayout>
-//#include <QtGui/QGridLayout>
-//#include <QtGui/QPainter>
-//#include <QtGui/QPushButton>
-//#include <QtGui/QFileDialog>
+//#include <QtGui/QFormLayout>
 #include <QtGui/QMouseEvent>
-//#include <QtGui/QDesktopServices>
-//#include <QtGui/QMessageBox>
 #include <QtGui/QPainter>
 
 
@@ -76,11 +62,11 @@
 
 #include "FilterWidgetsLib/FilterWidgetManager.h"
 
-#if 0
-#include "ArraySelectionWidget.h"
-#include "ComparisonSelectionWidget.h"
-#include "AxisAngleWidget.h"
-#endif
+
+// -----------------------------------------------------------------------------
+// Include the "moc" file that was generated for this file
+// -----------------------------------------------------------------------------
+#include "FilterWidgetsLib/Widgets/moc_QFilterWidget.cxx"
 
 #define PADDING 5
 #define BORDER 2
@@ -102,10 +88,6 @@ QDataStream& operator>>( QDataStream& in, FloatVec3_t& v) { in >> v.x >> v.y >> 
 QString QFilterWidget::m_OpenDialogLastDirectory = "";
 
 
-// -----------------------------------------------------------------------------
-// Include the "moc" file that was generated for this file
-// -----------------------------------------------------------------------------
-#include "FilterWidgetsLib/Widgets/moc_QFilterWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //
@@ -165,20 +147,21 @@ void QFilterWidget::initialize(AbstractFilter::Pointer filter)
   // Set the AbstractFilter for this class
   m_Filter = filter;
 
-  // Create the Widget that will be placed into the Basic Inputs Scroll Area
-
-  m_BasicInputsScrollWidget = new QWidget();
-  QString name = QString::fromUtf8("basicInputsScrollWidget_") + m_Filter->getNameOfClass();
-  m_BasicInputsScrollWidget->setObjectName(name);
-  m_BasicInputsScrollWidget->setGeometry(QRect(0, 0, 250, 267));
-  QVBoxLayout* verticalLayout = new QVBoxLayout(m_BasicInputsScrollWidget);
-  name = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
-  verticalLayout->setObjectName(name);
-
 
   // If the filter is valid then instantiate all the FilterParameterWidgets
   if (NULL != m_Filter.get())
   {
+    // Create the Widget that will be placed into the Basic Inputs Scroll Area
+    m_BasicInputsScrollWidget = new QWidget();
+    QString name = QString::fromUtf8("basicInputsScrollWidget_") + m_Filter->getNameOfClass();
+    m_BasicInputsScrollWidget->setObjectName(name);
+    m_BasicInputsScrollWidget->setGeometry(QRect(0, 0, 250, 267));
+    QVBoxLayout* verticalLayout = new QVBoxLayout(m_BasicInputsScrollWidget);
+    name = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
+    verticalLayout->setObjectName(name);
+
+
+    // Set the Name of the filter into the FilterWidget
     filterName->setText(m_Filter->getHumanLabel() );
 
     // Create all the FilterParameterWidet objects that can be displayed where ever
@@ -398,7 +381,7 @@ void QFilterWidget::updateWidgetStyle()
 
   style.append("QFrame#QFilterWidget\n {\n");
 
-  style.append("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #CCCCCC);\n");
+  style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n");
 
 #if 0
   QString headerFile(":/QFilterWidgetHeaders/");

@@ -46,7 +46,7 @@ QT4_WRAP_UI( FilterWidgetsLib_Widgets_Generated_UI_HDRS ${FilterWidgetsLib_Widge
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs
 cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "" "${FilterWidgetsLib_Widgets_Generated_MOC_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${FilterWidgetsLib_ParameterWidgetes_Generated_UI_HDRS}" "" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${FilterWidgetsLib_Widgets_Generated_UI_HDRS}" "" "0")
 #cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${FilterWidgetsLib_Generated_RC_SRCS}" "" "0")
 
 

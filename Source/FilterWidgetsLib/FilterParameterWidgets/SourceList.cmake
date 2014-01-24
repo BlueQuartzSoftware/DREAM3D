@@ -17,6 +17,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       IntVec3Widget
       FloatVec3Widget
       AxisAngleWidget
+	  UnknownWidget
 #      VolumeVertexArrayNameSelectionWidget
 #      VolumeEdgeArrayNameSelectionWidget
 #      VolumeFaceArrayNameSelectionWidget
@@ -70,9 +71,9 @@ endforeach()
 
 
 
-cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/FilterParameterWidgets" "${FilterWidgetsLib_ParameterWidgets_HDRS}" "${FilterWidgetsLib_ParameterWidgets_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "FilterWidgetsLib/FilterParameterWidgets" "${FilterWidgetsLib_ParameterWidgets_HDRS}" "${FilterWidgetsLib_ParameterWidgets_SRCS}" "0")
 
-cmp_IDE_GENERATED_PROPERTIES("FilterWidgets/FilterParameterWidgets/UI_Files" "${FilterWidgetsLib_ParameterWidgets_UIS}" "")
+cmp_IDE_GENERATED_PROPERTIES("FilterWidgetsLib/FilterParameterWidgets/UI_Files" "${FilterWidgetsLib_ParameterWidgets_UIS}" "")
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
@@ -92,7 +93,7 @@ QT4_WRAP_UI( FilterWidgetsLib_ParameterWidgets_Generated_UI_HDRS ${FilterWidgets
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs
 cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "" "${FilterWidgetsLib_ParameterWidgets_Generated_MOC_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${FilterWidgetsLib_ParameterWidgetes_Generated_UI_HDRS}" "" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${FilterWidgetsLib_ParameterWidgets_Generated_UI_HDRS}" "" "0")
 #cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${FilterWidgetsLib_Generated_RC_SRCS}" "" "0")
 
 

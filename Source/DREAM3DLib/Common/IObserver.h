@@ -41,7 +41,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 
-class IObserver
+class DREAM3DLib_EXPORT IObserver
 {
   public:
     IObserver();
