@@ -79,6 +79,10 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighbor Misorientations"; }
 
+	DREAM3D_INSTANCE_PROPERTY(bool, FindAvgMisors)
+
+	virtual void setupFilterParameters();
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -110,7 +114,7 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_MisorientationList;
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, avgMisorientation)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgMisorientations)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 

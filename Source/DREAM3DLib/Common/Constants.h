@@ -224,7 +224,7 @@ namespace DREAM3D
     const DREAM3D_STRING SurfaceFeatures("SurfaceFeatures");
     const DREAM3D_STRING SurfaceVoxelFractions("SurfaceVoxelFractions");
     const DREAM3D_STRING Volumes("Volumes");
-    const DREAM3D_STRING avgMisorientation("avgMisorientation");
+    const DREAM3D_STRING AvgMisorientations("AvgMisorientations");
     const DREAM3D_STRING mPrime("mPrime");
     const DREAM3D_STRING NumBins("NumBins");
 
