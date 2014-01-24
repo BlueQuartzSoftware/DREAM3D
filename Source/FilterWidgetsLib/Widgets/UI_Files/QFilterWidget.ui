@@ -36,7 +36,6 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QFrame#QFilterWidget {
-
 	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));
 border: 1px solid #515151;
 border-radius: 10px;
@@ -48,7 +47,7 @@ font-weight: bold;
 </string>
   </property>
   <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
+   <enum>QFrame::Box</enum>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
@@ -122,16 +121,11 @@ font-weight: bold;
      <property name="font">
       <font>
        <family>Arial</family>
-       <pointsize>10</pointsize>
+       <pointsize>12</pointsize>
        <weight>75</weight>
        <italic>true</italic>
        <bold>true</bold>
       </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel {
-font: 75 italic bold 10pt &quot;Arial&quot;;
-}</string>
      </property>
      <property name="lineWidth">
       <number>0</number>

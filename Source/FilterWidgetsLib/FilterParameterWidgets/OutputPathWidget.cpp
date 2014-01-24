@@ -40,6 +40,8 @@
 
 #include <QtGui/QFileDialog>
 
+#include "QtSupport/QFileCompleter.h"
+
 #include "FilterWidgetsLib/FilterParameterWidgets/moc_OutputPathWidget.cxx"
 
 // Initialize private static member variable
@@ -67,6 +69,14 @@ OutputPathWidget::~OutputPathWidget()
 // -----------------------------------------------------------------------------
 void OutputPathWidget::setupGui()
 {
+  connect(value, SIGNAL(textChanged(const QString&)),
+          this, SLOT(parametersChanged(const QString&)));
+
+  QFileCompleter* com = new QFileCompleter(this, false);
+  value->setCompleter(com);
+  QObject::connect( com, SIGNAL(activated(const QString &)),
+                    this, SLOT(parametersChanged(const QString &)));
+
   if (m_FilterParameter != NULL)
   {
     OutputPathWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
@@ -112,7 +122,7 @@ void OutputPathWidget::on_selectBtn_clicked()
   {
     return;
   }
-  bool ok = false;
+//  bool ok = false;
   file = QDir::toNativeSeparators(file);
   // Store the last used directory into the private instance variable
   QFileInfo fi(file);

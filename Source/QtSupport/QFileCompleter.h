@@ -39,11 +39,11 @@
 #include <QtCore/QObject>
 #include <QtGui/QCompleter>
 
-class QR3DFileCompleter : public QCompleter
+class QFileCompleter : public QCompleter
 {
     Q_OBJECT
   public:
-    QR3DFileCompleter(QObject* o, bool dirs);
+    QFileCompleter(QObject* o, bool dirs);
     virtual QString pathFromIndex(const QModelIndex& idx) const;
 };
 

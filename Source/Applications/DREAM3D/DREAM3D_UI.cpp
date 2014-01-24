@@ -61,7 +61,6 @@
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
-#include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/HelpDialog.h"
@@ -552,6 +551,14 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
 
   // Now display the dialog box
   d->exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionClearPipeline_triggered()
+{
+  pipelineViewWidget->clearWidgets();
 }
 
 // -----------------------------------------------------------------------------

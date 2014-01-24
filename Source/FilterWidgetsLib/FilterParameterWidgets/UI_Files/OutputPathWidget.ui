@@ -17,16 +17,7 @@
    <property name="spacing">
     <number>5</number>
    </property>
-   <property name="leftMargin">
-    <number>2</number>
-   </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>2</number>
    </property>
    <item>
@@ -37,7 +28,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="value"/>
+    <widget class="QFSDropLineEdit" name="value"/>
    </item>
    <item>
     <widget class="QPushButton" name="selectBtn">
@@ -48,6 +39,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QFSDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">QtSupport/QFSDropLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
