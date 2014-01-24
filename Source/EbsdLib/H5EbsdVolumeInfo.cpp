@@ -99,7 +99,7 @@ H5EbsdVolumeInfo::H5EbsdVolumeInfo() :
   m_ZRes(0.0f),
   m_ZStart(0),
   m_ZEnd(0),
-  m_StackingOrder(Ebsd::LowtoHigh),
+  m_StackingOrder(Ebsd::RefFrameZDir::LowtoHigh),
   m_NumPhases(0),
   m_SampleTransformationAngle(0.0),
   m_EulerTransformationAngle(0.0)
@@ -196,7 +196,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::YResolution, m_YRes);
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ZResolution, m_ZRes);
 
-  EBSD_VOLREADER_READ_HEADER_CAST(fileId, Ebsd::H5::StackingOrder, m_StackingOrder, Ebsd::RefFrameZDir, unsigned int);
+  EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::StackingOrder, m_StackingOrder);
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::SampleTransformationAngle, m_SampleTransformationAngle);
   EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, Ebsd::H5::SampleTransformationAxis, m_SampleTransformationAxis, float);
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformationAngle);
@@ -401,13 +401,13 @@ int H5EbsdVolumeInfo::getNumPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::RefFrameZDir H5EbsdVolumeInfo::getStackingOrder()
+uint32_t H5EbsdVolumeInfo::getStackingOrder()
 {
   int err = -1;
   if (m_ValuesAreCached == false)
   {
     err = readVolumeInfo();
-    if (err < 0) { return Ebsd::UnknownRefFrameZDirection; }
+    if (err < 0) { return Ebsd::RefFrameZDir::UnknownRefFrameZDirection; }
   }
   return m_StackingOrder;
 }

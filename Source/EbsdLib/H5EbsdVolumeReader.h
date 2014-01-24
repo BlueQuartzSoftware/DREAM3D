@@ -97,7 +97,7 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
      * @return
      */
     virtual int loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints,
-                         Ebsd::RefFrameZDir ZDir);
+                         uint32_t ZDir);
 
 
     /** @brief Will this class be responsible for deallocating the memory for the data arrays */

@@ -92,14 +92,19 @@ namespace Ebsd
   }
 
   /** @brief Constants defined for the 5 orientation options */
-
-
+  namespace RefFrameZDir {
+      static const unsigned int LowtoHigh = 0;
+      static const unsigned int HightoLow = 1;
+      static const unsigned int UnknownRefFrameZDirection = 2;
+  }
+    #if 0
   enum RefFrameZDir
   {
     LowtoHigh = 0,
     HightoLow = 1,
     UnknownRefFrameZDirection
   };
+#endif
 
   enum EbsdToSampleCoordinateMapping
   {
@@ -118,18 +123,18 @@ namespace Ebsd
     class Utils
     {
       public:
-        static QString getStringForEnum(RefFrameZDir v)
+        static QString getStringForEnum(int v)
         {
-          if (LowtoHigh == v) { return Ebsd::StackingOrder::LowToHigh; }
-          if (HightoLow == v) { return Ebsd::StackingOrder::HighToLow; }
+          if (Ebsd::RefFrameZDir::LowtoHigh == v) { return Ebsd::StackingOrder::LowToHigh; }
+          if (Ebsd::RefFrameZDir::HightoLow == v) { return Ebsd::StackingOrder::HighToLow; }
           return Ebsd::StackingOrder::UnknownStackingOrder;
         }
 
-        static RefFrameZDir getEnumForString(const QString& v)
+        static int getEnumForString(const QString& v)
         {
-          if (Ebsd::StackingOrder::LowToHigh.compare(v) == 0) { return LowtoHigh; }
-          if (Ebsd::StackingOrder::HighToLow.compare(v) == 0) { return HightoLow; }
-          return Ebsd::UnknownRefFrameZDirection;
+          if (Ebsd::StackingOrder::LowToHigh.compare(v) == 0) { return Ebsd::RefFrameZDir::LowtoHigh; }
+          if (Ebsd::StackingOrder::HighToLow.compare(v) == 0) { return Ebsd::RefFrameZDir::HightoLow; }
+          return Ebsd::RefFrameZDir::UnknownRefFrameZDirection;
         }
     };
   }

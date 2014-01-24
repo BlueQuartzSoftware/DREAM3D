@@ -87,7 +87,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
      * @param filters
      * @return
      */
-    int loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir);
+    int loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints, uint32_t ZDir);
 
     /**
      * @brief

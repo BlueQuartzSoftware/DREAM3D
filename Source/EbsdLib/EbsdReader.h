@@ -73,7 +73,7 @@ class EbsdLib_EXPORT EbsdReader
 
 
     /** @brief Allow the user to set the origin of the scan */
-    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
+    EBSD_INSTANCE_PROPERTY(uint32_t, UserZDir)
     EBSD_INSTANCE_PROPERTY(float, SampleTransformationAngle)
     EBSD_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
     EBSD_INSTANCE_PROPERTY(float, EulerTransformationAngle)

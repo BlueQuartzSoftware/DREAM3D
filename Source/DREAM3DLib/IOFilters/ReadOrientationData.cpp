@@ -66,7 +66,7 @@ ReadOrientationData::ReadOrientationData() :
   m_PhaseNameArrayName(""),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
   m_InputFile(""),
-  m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
+  m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
   m_Manufacturer(Ebsd::UnknownManufacturer),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),

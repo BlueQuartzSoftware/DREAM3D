@@ -83,7 +83,7 @@ ReadH5Ebsd::ReadH5Ebsd() :
   m_PhaseNameArrayName(""),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
   m_InputFile(""),
-  m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
+  m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_UseTransformations(true),
@@ -179,7 +179,7 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile() ) );
-  setRefFrameZDir( static_cast<Ebsd::RefFrameZDir>( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
+  setRefFrameZDir( ( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex() ) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex() ) );
   setUseTransformations( reader->readValue("UseTransformations", getUseTransformations() ) );

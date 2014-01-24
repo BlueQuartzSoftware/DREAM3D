@@ -157,7 +157,7 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
      */
     virtual int getNumPhases();
 
-    virtual Ebsd::RefFrameZDir getStackingOrder();
+    virtual uint32_t getStackingOrder();
 
     virtual float getSampleTransformationAngle();
     virtual QVector<float> getSampleTransformationAxis();
@@ -185,7 +185,7 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     float m_ZRes;
     int m_ZStart;
     int m_ZEnd;
-    Ebsd::RefFrameZDir   m_StackingOrder;
+    uint32_t m_StackingOrder;
     int m_NumPhases;
     float m_SampleTransformationAngle;
     QVector<float> m_SampleTransformationAxis;

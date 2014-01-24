@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
     DREAM3D_INSTANCE_PROPERTY(QVector<float>, EulerTransformationAxis)
-    DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
 
     virtual void preflight();
 

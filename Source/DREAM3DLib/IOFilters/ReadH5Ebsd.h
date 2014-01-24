@@ -86,13 +86,19 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+    Q_PROPERTY(quint32 RefFrameZDir READ getRefFrameZDir WRITE setRefFrameZDir NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex)
+    Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex)
+    Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, UseTransformations)
+    Q_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedArrayNames)
+    Q_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, PossibleArrayNames) // These are for reading the names of the arrays during a preflight
-
+    Q_PROPERTY(QSet<QString> PossibleArrayNames READ getPossibleArrayNames WRITE setPossibleArrayNames NOTIFY parametersChanged)
 
     //-------------------------------------------------------
     // Not sure why these are here. We would be reading all of these from the file
@@ -129,6 +135,8 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
 
   protected:
     ReadH5Ebsd();

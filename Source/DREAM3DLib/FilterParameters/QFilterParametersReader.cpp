@@ -690,9 +690,9 @@ ComparisonInput_t QFilterParametersReader::readComparisonInput(const QString nam
   m_Prefs->setArrayIndex(arrayIndex);
   v.arrayName = m_Prefs->value("ArrayName").toString();
   v.compOperator = m_Prefs->value("CompOperator").toInt(&ok);
-  if(!ok) { m_Prefs->endArray(); return defaultValue; }
+  if(!ok) { m_Prefs->endArray(); m_Prefs->endArray(); return defaultValue; }
   v.compValue = m_Prefs->value("CompValue").toDouble(&ok);
-  if(!ok) { m_Prefs->endArray(); return defaultValue; }
+  if(!ok) { m_Prefs->endArray(); m_Prefs->endArray(); return defaultValue; }
 
   m_Prefs->endArray();
   return v;
