@@ -56,7 +56,7 @@
 
 #include "DREAM3D/License/PluginMakerLicenseFiles.h"
 #include "QtSupport/ApplicationAboutBoxDialog.h"
-#include "QtSupport/QR3DFileCompleter.h"
+#include "QtSupport/QFileCompleter.h"
 
 
 #include "HelpWidget.h"
@@ -109,7 +109,7 @@ PluginMaker::PluginMaker(QWidget* parent) :
 // -----------------------------------------------------------------------------
 void PluginMaker::setupGui()
 {
-  QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
+  QFileCompleter* com = new QFileCompleter(this, true);
   m_OutputDir->setCompleter(com);
   QObject::connect(com, SIGNAL(activated(const QString &)), this, SLOT(on_m_OutputDir_textChanged(const QString &)));
 

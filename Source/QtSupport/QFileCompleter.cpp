@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "QR3DFileCompleter.h"
+#include "QFileCompleter.h"
 #include <QtGui/QDirModel>
 
 // -----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ static QDirModel* pathDirModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QR3DFileCompleter::QR3DFileCompleter(QObject* o, bool dirs) :
+QFileCompleter::QFileCompleter(QObject* o, bool dirs) :
   QCompleter(o)
 {
   QDirModel* m = dirs ? pathDirModel() : fileDirModel();
@@ -81,7 +81,7 @@ QR3DFileCompleter::QR3DFileCompleter(QObject* o, bool dirs) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString QR3DFileCompleter::pathFromIndex(const QModelIndex& idx) const
+QString QFileCompleter::pathFromIndex(const QModelIndex& idx) const
 {
   return QDir::toNativeSeparators(QCompleter::pathFromIndex(idx));
 }

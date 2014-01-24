@@ -44,7 +44,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/DataContainers/DataContainerProxy.h"
+#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
 /**
  * @class DataContainerReader DataContainerReader.h DREAM3DLib/IOFilters/DataContainerReader.h
@@ -64,10 +64,12 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual ~DataContainerReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, OverwriteExistingDataContainers)
-
+    Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
+    Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy NOTIFY parametersChanged)
+
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
@@ -117,6 +119,9 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
      */
     DataContainerArrayProxy readDataContainerArrayStructure();
 
+
+  signals:
+    void parametersChanged();
 
   protected:
     DataContainerReader();

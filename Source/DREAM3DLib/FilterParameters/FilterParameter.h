@@ -42,6 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
 typedef struct { int x; int y; int z; } IntVec3_t;
 typedef struct { float x; float y; float z; } FloatVec3_t;
@@ -70,6 +71,8 @@ namespace FilterParameterWidgetType
       const QString FloatVec3Widget("FloatVec3Widget");
       const QString AxisAngleWidget("AxisAngleWidget");
       const QString UnknownWidget("UnknownWidget");
+      const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
+
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
       const QString VolumeVertexArrayNameSelectionWidget("VolumeVertexArrayNameSelectionWidget"); // ComboBox where the Cell Array names are used to populate
       const QString VolumeEdgeArrayNameSelectionWidget("VolumeEdgeArrayNameSelectionWidget"); //ComboBox where the Feature Array names are used to populate
@@ -214,6 +217,30 @@ class ComparisonFilterParameter : public FilterParameter
   private:
     ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented
     void operator=(const ComparisonFilterParameter&); // Operator '=' Not Implemented
+};
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DataContainerArrayProxyFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(DataContainerArrayProxyFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(DataContainerArrayProxyFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(DataContainerArrayProxyFilterParameter, FilterParameter)
+
+    virtual ~DataContainerArrayProxyFilterParameter() {}
+
+    DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
+
+  protected:
+    DataContainerArrayProxyFilterParameter()
+     {}
+
+  private:
+    DataContainerArrayProxyFilterParameter(const DataContainerArrayProxyFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerArrayProxyFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _FilterParameter_H_ */

@@ -77,11 +77,11 @@ void BooleanWidget::setupGui()
     }
     else
     {
-      QString ss = QObject::tr("Error occurred getting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
+      QString ss = QObject::tr("Error occurred getting Filter Parameter %1 for filter %2").arg(m_FilterParameter->getPropertyName()).arg(m_Filter->getNameOfClass());
       emit errorSettingFilterParameter(ss);
       qDebug() << ss;
     }
-    
+
   }
 }
 

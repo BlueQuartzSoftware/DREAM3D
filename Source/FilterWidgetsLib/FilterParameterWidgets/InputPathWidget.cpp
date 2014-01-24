@@ -40,6 +40,9 @@
 
 #include <QtGui/QFileDialog>
 
+#include "QtSupport/QFileCompleter.h"
+
+
 #include "FilterWidgetsLib/FilterParameterWidgets/moc_InputPathWidget.cxx"
 
 
@@ -68,6 +71,14 @@ InputPathWidget::~InputPathWidget()
 // -----------------------------------------------------------------------------
 void InputPathWidget::setupGui()
 {
+  connect(value, SIGNAL(textChanged(const QString&)),
+          this, SLOT(parametersChanged(const QString&)));
+
+  QFileCompleter* com = new QFileCompleter(this, false);
+  value->setCompleter(com);
+  QObject::connect( com, SIGNAL(activated(const QString &)),
+                    this, SLOT(parametersChanged(const QString &)));
+
   if (m_FilterParameter != NULL)
   {
     inputPathWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
@@ -113,7 +124,7 @@ void InputPathWidget::on_selectBtn_clicked()
   {
     return;
   }
-  bool ok = false;
+  //bool ok = false;
   file = QDir::toNativeSeparators(file);
   // Store the last used directory into the private instance variable
   QFileInfo fi(file);
