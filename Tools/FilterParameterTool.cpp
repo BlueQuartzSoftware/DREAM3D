@@ -89,13 +89,18 @@ bool fixFile(FilterParameter::Pointer parameter, const QString &props, const QSt
     header << line << "\n";
     if(line.contains(searchString) )
     {
-      header << props;
-      didReplace = true;
+      line = sourceLines.next();
+      if(line.contains("Q_PROPERTY") == false)
+      {
+        header << props;
+        qDebug() << "adding " << props;
+        didReplace = true;
+      }
     }
   }
 
   QFileInfo fi2(cppFile);
-#if 1
+#if 0
   QFile hOut(cppFile);
 #else
   QString tmpPath = "/tmp/" + fi2.fileName();
@@ -259,7 +264,7 @@ void LoopOnFilters()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  //Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

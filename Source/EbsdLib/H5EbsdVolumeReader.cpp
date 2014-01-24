@@ -97,7 +97,7 @@ Ebsd::NumType H5EbsdVolumeReader::getPointerType(const QString& featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5EbsdVolumeReader::loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir)
+int H5EbsdVolumeReader::loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints, uint32_t ZDir)
 {
   // This class should be subclassed and this method implemented.
   return -1;

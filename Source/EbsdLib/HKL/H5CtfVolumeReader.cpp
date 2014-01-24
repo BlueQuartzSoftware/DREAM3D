@@ -209,7 +209,7 @@ QVector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
 int H5CtfVolumeReader::loadData(int64_t xpoints,
                                 int64_t ypoints,
                                 int64_t zpoints,
-                                Ebsd::RefFrameZDir ZDir)
+                                uint32_t ZDir)
 {
   int index = 0;
   int err = -1;
@@ -272,7 +272,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
     ystartspot = static_cast<int>( (ypointstemp - ypointsslice) / 2 );
 
     // If no stacking order preference was passed, read it from the file and use that value
-    if(ZDir == Ebsd::UnknownRefFrameZDirection)
+    if(ZDir == Ebsd::RefFrameZDir::UnknownRefFrameZDirection)
     {
       ZDir = getStackingOrder();
     }

@@ -68,7 +68,7 @@ EbsdToH5Ebsd::EbsdToH5Ebsd() :
   m_ZResolution(1.0),
   m_SampleTransformationAngle(0.0),
   m_EulerTransformationAngle(0.0),
-  m_RefFrameZDir(Ebsd::LowtoHigh)
+  m_RefFrameZDir(Ebsd::RefFrameZDir::LowtoHigh)
 {
   m_SampleTransformationAxis.resize(3);
   m_SampleTransformationAxis[0] = 0.0;
@@ -112,7 +112,7 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, 
   setSampleTransformationAxis( reader->readArray("SampleTransformationAxis", getSampleTransformationAxis()) );
   setEulerTransformationAngle( reader->readValue("EulerTransformationAngle", getEulerTransformationAngle()) );
   setEulerTransformationAxis( reader->readArray("EulerTransformationAxis", getEulerTransformationAxis()) );
-  setRefFrameZDir( static_cast<Ebsd::RefFrameZDir>( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
+  setRefFrameZDir( reader->readValue("RefFrameZDir", getRefFrameZDir()) );
   setEbsdFileList( reader->readStrings("EbsdFileList", getEbsdFileList()) );
   reader->closeFilterGroup();
 }
@@ -257,8 +257,8 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
 
   }
-  unsigned int ui = static_cast<unsigned int>(m_RefFrameZDir);
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, ui);
+
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, m_RefFrameZDir);
   if(err < 0)
   {
 

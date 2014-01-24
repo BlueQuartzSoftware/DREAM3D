@@ -40,7 +40,7 @@ padding-left: 5px;
    <property name="bottomMargin">
     <number>2</number>
    </property>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="QTabWidget" name="filterInputTabWidget">
      <property name="currentIndex">
       <number>0</number>
@@ -76,7 +76,7 @@ padding-left: 5px;
             <x>0</x>
             <y>0</y>
             <width>388</width>
-            <height>223</height>
+            <height>221</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout"/>
@@ -92,18 +92,38 @@ padding-left: 5px;
      </widget>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="filterHumanLabel">
-     <property name="styleSheet">
-      <string notr="true">QLabel {
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="filterHumanLabel">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
 	font: 18pt;
 	font-style: bold;
 }</string>
-     </property>
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

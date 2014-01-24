@@ -74,8 +74,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
-    DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -125,6 +124,10 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+    /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+    DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
 
   signals:
     void parametersChanged();

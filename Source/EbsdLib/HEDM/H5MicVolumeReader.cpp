@@ -193,7 +193,7 @@ QVector<MicPhase::Pointer> H5MicVolumeReader::getPhases()
 int H5MicVolumeReader::loadData(int64_t xpoints,
                                 int64_t ypoints,
                                 int64_t zpoints,
-                                Ebsd::RefFrameZDir ZDir )
+                                uint32_t ZDir )
 {
   int index = 0;
   int err = -1;
@@ -251,12 +251,12 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
     ystop = ypointsslice;
 
     // If no stacking order preference was passed, read it from the file and use that value
-    if(ZDir == Ebsd::UnknownRefFrameZDirection)
+    if(ZDir == Ebsd::RefFrameZDir::UnknownRefFrameZDirection)
     {
       ZDir = getStackingOrder();
     }
-    if(ZDir == Ebsd::LowtoHigh) { zval = slice; }
-    if(ZDir == Ebsd::HightoLow) { zval = static_cast<int>( (zpoints - 1) - slice ); }
+    if(ZDir == Ebsd::RefFrameZDir::LowtoHigh) { zval = slice; }
+    if(ZDir == Ebsd::RefFrameZDir::HightoLow) { zval = static_cast<int>( (zpoints - 1) - slice ); }
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
     for (int j = 0; j < ystop; j++)
