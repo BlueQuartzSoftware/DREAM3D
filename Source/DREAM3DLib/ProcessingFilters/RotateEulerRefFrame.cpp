@@ -55,9 +55,9 @@ class RotateEulerRefFrameImpl
 {
     float* m_CellEulerAngles;
     float angle;
-    FloatVec3Widget_t axis;
+    FloatVec3_t axis;
   public:
-    RotateEulerRefFrameImpl(float* data, float rotAngle, FloatVec3Widget_t rotAxis) :
+    RotateEulerRefFrameImpl(float* data, float rotAngle, FloatVec3_t rotAxis) :
       m_CellEulerAngles(data),
       angle(rotAngle),
       axis(rotAxis)
@@ -138,7 +138,7 @@ void RotateEulerRefFrame::setupFilterParameters()
     parameter->setHumanLabel("Rotation Axis");
     parameter->setPropertyName("RotationAxis");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("ijk");
     parameters.push_back(parameter);
   }
@@ -188,10 +188,10 @@ void RotateEulerRefFrame::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, RotateEulerRefFrame>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
   if(NULL == m)
   {
     QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());

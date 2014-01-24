@@ -227,7 +227,7 @@ void ArraySelectionExample::dataCheck()
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == m) { return; }
 }
 
 
@@ -248,7 +248,7 @@ void ArraySelectionExample::execute()
   setErrorCondition(err);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == m) { return; }
 
   /* Place all your code to execute your filter here. */
 

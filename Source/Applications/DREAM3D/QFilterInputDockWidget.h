@@ -44,6 +44,11 @@
 
 #include "ui_QFilterInputDockWidget.h"
 
+class QFilterWidget;
+
+/**
+ * @brief The QFilterInputDockWidget class
+ */
 class QFilterInputDockWidget : public QWidget, private Ui::QFilterInputDockWidget
 {
 
@@ -58,7 +63,7 @@ class QFilterInputDockWidget : public QWidget, private Ui::QFilterInputDockWidge
 
   protected slots:
 
-    void displayFilterParameters(AbstractFilter* filter);
+    void displayFilterParameters(QFilterWidget *w);
 
   signals:
 

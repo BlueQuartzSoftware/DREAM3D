@@ -65,7 +65,6 @@ set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/main.cpp
   ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.cpp
   ${DREAM3D_SOURCE_DIR}/PipelineViewWidget.cpp
-  ${DREAM3D_SOURCE_DIR}/QFilterWidget.cpp
   ${DREAM3D_SOURCE_DIR}/QFilterLibraryDockWidget.cpp
   ${DREAM3D_SOURCE_DIR}/QPrebuiltPipelinesDockWidget.cpp
   ${DREAM3D_SOURCE_DIR}/QDream3DDocumentsDockWidget.cpp
@@ -74,6 +73,7 @@ set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/SideBarWidget.cpp
   ${DREAM3D_SOURCE_DIR}/QFilterListDockWidget.cpp
   ${DREAM3D_SOURCE_DIR}/QIssuesDockWidget.cpp
+#  ${DREAM3D_SOURCE_DIR}/PipelineViewEntry.cpp
   )
 
 #------------------------------------------------------------------
@@ -87,7 +87,6 @@ set(DREAM3D_HDRS
 SET(DREAM3D_MOC_HDRS
   ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.h
   ${DREAM3D_SOURCE_DIR}/PipelineViewWidget.h
-  ${DREAM3D_SOURCE_DIR}/QFilterWidget.h
   ${DREAM3D_SOURCE_DIR}/QFilterLibraryDockWidget.h
   ${DREAM3D_SOURCE_DIR}/QPrebuiltPipelinesDockWidget.h
   ${DREAM3D_SOURCE_DIR}/QDream3DDocumentsDockWidget.h
@@ -96,6 +95,7 @@ SET(DREAM3D_MOC_HDRS
   ${DREAM3D_SOURCE_DIR}/SideBarWidget.h
   ${DREAM3D_SOURCE_DIR}/QFilterListDockWidget.h
   ${DREAM3D_SOURCE_DIR}/QIssuesDockWidget.h
+#  ${DREAM3D_SOURCE_DIR}/PipelineViewEntry.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3D" "${DREAM3D_HDRS};${DREAM3D_MOC_HDRS}" "${DREAM3D_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

@@ -113,7 +113,7 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
     parameter->setHumanLabel("Resolution");
     parameter->setPropertyName("Resolution");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("Microns");
     parameters.push_back(parameter);
   }
@@ -122,7 +122,7 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
     parameter->setHumanLabel("Uncertainty");
     parameter->setPropertyName("Uncertainty");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("Microns");
     parameters.push_back(parameter);
   }
@@ -157,8 +157,8 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, UncertainRegularGridSampleSurfaceMesh>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m) { return; }
   QVector<size_t> tDims(3, 0);  
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }

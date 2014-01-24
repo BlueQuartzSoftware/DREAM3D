@@ -39,6 +39,8 @@
 
 #include <QtGui/QDockWidget>
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/IObserver.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 
 
@@ -48,7 +50,7 @@ class QFilterListDockWidget;
 class QLabel;
 class QTableWidgetItem;
 
-class QIssuesDockWidget : public QDockWidget, private Ui::QIssuesDockWidget
+class QIssuesDockWidget : public QDockWidget, public IObserver, private Ui::QIssuesDockWidget
 {
 
     Q_OBJECT

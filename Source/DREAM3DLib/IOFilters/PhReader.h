@@ -69,10 +69,10 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
-    Q_PROPERTY(FloatVec3Widget_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
-    Q_PROPERTY(FloatVec3Widget_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, Origin)
+    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, Resolution)
+    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
 
     //------ Created Cell Data
 

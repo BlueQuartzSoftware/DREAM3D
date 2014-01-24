@@ -65,8 +65,8 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, ReferenceDir)
-    Q_PROPERTY(FloatVec3Widget_t ReferenceDir READ getReferenceDir WRITE setReferenceDir NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, ReferenceDir)
+    Q_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir NOTIFY parametersChanged)
 
 
     /**

@@ -50,30 +50,7 @@ Observer::~Observer()
 // -----------------------------------------------------------------------------
 void Observer::processPipelineMessage(const PipelineMessage& pm)
 {
-  PipelineMessage msg = pm;
-  QString filterHumanLabel = pm.getFilterHumanLabel();
-  QString str;
-  QTextStream ss(&str);
-  if(msg.getType() == PipelineMessage::Error)
-  {
-    ss << msg.generateErrorString();
-  }
-  else if(msg.getType() == PipelineMessage::Warning)
-  {
-    ss << msg.generateWarningString();
-  }
-  else if(msg.getType() == PipelineMessage::StatusMessage)
-  {
-    ss << msg.generateStatusString();
-  }
-  else if(msg.getType() == PipelineMessage::ProgressValue)
-  {
-    ss << msg.getProgressValue() << "%";
-  }
-  else if(msg.getType() == PipelineMessage::StatusMessageAndProgressValue)
-  {
-    ss << msg.getProgressValue() << msg.generateStatusString();
-  }
-  std::cout << msg.getFilterHumanLabel().toStdString() << ": " << str.toStdString() << std::endl;
+  // Just call the superclass
+  IObserver::processPipelineMessage(pm);
 
 }

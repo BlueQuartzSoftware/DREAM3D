@@ -80,7 +80,7 @@
   QFILTERWIDGET_SET_PROPERTY(type, prpty)\
   public:\
   QFILTERWIDGET_GET_PROPERTY(type, prpty)\
-   
+
 #endif
 
 
@@ -247,7 +247,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
                               FilterParameter* option, QLabel* label );
 
   private:
-    QRect                   m_DeleteRect;
+    QRect                     m_DeleteRect;
     QPoint                    dragStartPosition;
     QTimer*                   m_timer;
     unsigned char               m_CurrentBorderColorFactor;

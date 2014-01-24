@@ -269,7 +269,7 @@ int TextFilterParametersWriter::writeValue(const QString name, QVector<double> v
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, IntVec3Widget_t v)
+int TextFilterParametersWriter::writeValue(const QString name, IntVec3_t v)
 {
   int err = -1;
   return err;
@@ -278,7 +278,7 @@ int TextFilterParametersWriter::writeValue(const QString name, IntVec3Widget_t v
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, FloatVec3Widget_t v)
+int TextFilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
 {
   int err = -1;
   return err;

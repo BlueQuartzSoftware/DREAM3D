@@ -56,12 +56,12 @@ FitCorrelatedFeatureData::FitCorrelatedFeatureData() :
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_NumberOfCorrelatedBins(1),
   m_RemoveBiasedFeatures(false),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_FeaturePhases(NULL),
+  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
+  m_BiasedFeatures(NULL),
   m_NewEnsembleArrayArrayName(""),
   m_NewEnsembleArray(NULL),
-  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
-  m_BiasedFeatures(NULL)
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_FeaturePhases(NULL)
 {
   setupFilterParameters();
 }
@@ -168,8 +168,8 @@ void FitCorrelatedFeatureData::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FitCorrelatedFeatureData>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);

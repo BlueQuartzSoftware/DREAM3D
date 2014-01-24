@@ -78,11 +78,11 @@ MisorientationTolerance=5
 Level=2
 
 [8]
-Filter_Name=EBSDSegmentGrains
+Filter_Name=EBSDSegmentFeatures
 MisorientationTolerance=5
 
 [9]
-Filter_Name=FindGrainPhases
+Filter_Name=FindFeaturePhases
 
 [10]
 Filter_Name=FindAvgOrientations

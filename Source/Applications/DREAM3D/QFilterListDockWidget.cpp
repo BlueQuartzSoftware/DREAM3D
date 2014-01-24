@@ -84,8 +84,8 @@ void QFilterListDockWidget::updateFilterList(const QStringList& list)
 
   for (int i = 0; i < list.size(); i++)
   {
-
-    IFilterFactory::Pointer wigFactory = fm->getFactoryForFilter(list.at(i));
+    QString filterName = list.at(i);
+    IFilterFactory::Pointer wigFactory = fm->getFactoryForFilter(filterName);
     if (NULL == wigFactory.get() )
     {
       continue;
@@ -108,7 +108,6 @@ void QFilterListDockWidget::updateFilterList(const QStringList& list)
     // Set an "internal" QString that is the name of the filter. We need this value
     // when the item is clicked in order to retreive the Filter Widget from the
     // filter widget manager.
-    QString filterName = (list.at(i));
     filterItem->setData( Qt::UserRole, filterName);
   }
 }

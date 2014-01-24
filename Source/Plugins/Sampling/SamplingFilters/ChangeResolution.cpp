@@ -77,7 +77,7 @@ void ChangeResolution::setupFilterParameters()
     parameter->setHumanLabel("Resolution");
     parameter->setPropertyName("Resolution");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("Microns");
     parameters.push_back(parameter);
   }
@@ -113,7 +113,7 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 void ChangeResolution::dataCheck()
 {
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == m) { return; }
 }
 // -----------------------------------------------------------------------------
 //

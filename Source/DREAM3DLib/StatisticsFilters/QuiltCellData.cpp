@@ -48,9 +48,9 @@ QuiltCellData::QuiltCellData() :
   m_NewDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_NewCellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_SelectedCellArrayName(""),
   m_NewCellArrayArrayName(""),
-  m_NewCellArray(NULL),
-  m_SelectedCellArrayName("")
+  m_NewCellArray(NULL)
 {
   setupFilterParameters();
 }
@@ -176,7 +176,7 @@ void QuiltCellData::dataCheck()
   VolumeDataContainer* m2 = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, QuiltCellData>(this, getNewDataContainerName());
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   //Establish the dimensions, resolutions and origin of the new data container
   size_t dcDims[3];

@@ -226,7 +226,7 @@ void GenericExample::setupFilterParameters()
     parameter->setHumanLabel("Dimensions");
     parameter->setPropertyName("Dimensions");
     parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
-    parameter->setValueType("IntVec3Widget_t");
+    parameter->setValueType("IntVec3_t");
     parameter->setUnits("XYZ");
     parameters.push_back(parameter);
   }
@@ -236,7 +236,7 @@ void GenericExample::setupFilterParameters()
     parameter->setHumanLabel("Origin");
     parameter->setPropertyName("Origin");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("XYZ");
     parameters.push_back(parameter);
   }
@@ -583,10 +583,10 @@ void GenericExample::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, GenericExample>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 1);
   // Require the following Cell Data

@@ -89,10 +89,10 @@ void QIssuesDockWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item 
 // -----------------------------------------------------------------------------
 void QIssuesDockWidget::clearIssues()
 {
-  std::cout << "QIssuesDockWidget::clearIssues()" << std::endl;
+  // std::cout << "QIssuesDockWidget::clearIssues()" << std::endl;
   for (int i = 0; i < errorTableWidget->rowCount(); ++i)
   {
-    std::cout << "    Removing Issue" << std::endl;
+    //  std::cout << "    Removing Issue" << std::endl;
     errorTableWidget->removeRow(i);
   }
   errorTableWidget->setRowCount(0);
@@ -105,7 +105,7 @@ void QIssuesDockWidget::clearIssues()
 // -----------------------------------------------------------------------------
 void QIssuesDockWidget::processPipelineMessage(const PipelineMessage &msg)
 {
-  std::cout << "QIssuesDockWidget::processPipelineMessage(PipelineMessage& message)" << std::endl;
+  //  std::cout << "QIssuesDockWidget::processPipelineMessage(PipelineMessage& message)" << std::endl;
   // Create error hyperlink
   QLabel* hyperlinkLabel = createHyperlinkLabel(msg);
 
@@ -232,7 +232,10 @@ QLabel* QIssuesDockWidget::createHyperlinkLabel(PipelineMessage msg)
 
   if ( filterClassName.isEmpty() || filterHumanLabel.isEmpty() )
   {
-    return NULL;
+    if(filterClassName.isEmpty() == false) { return new QLabel(filterClassName); }
+    else if(filterHumanLabel.isEmpty() == false) { return new QLabel(filterHumanLabel); }
+
+    return new QLabel("Unknown Filter Class");
   }
 
   QUrl filterURL = DREAM3DHelpUrlGenerator::generateHTMLUrl( filterClassName.toLower() );

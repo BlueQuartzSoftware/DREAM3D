@@ -53,10 +53,10 @@ class UpdateVerticesImpl
 {
     VertexArray::Pointer m_Nodes;
     float* m_Min;
-    FloatVec3Widget_t m_ScaleFactor;
+    FloatVec3_t m_ScaleFactor;
 
   public:
-    UpdateVerticesImpl(VertexArray::Pointer nodes, float* min, FloatVec3Widget_t scale) :
+    UpdateVerticesImpl(VertexArray::Pointer nodes, float* min, FloatVec3_t scale) :
       m_Nodes(nodes),
       m_Min(min),
       m_ScaleFactor(scale)
@@ -137,7 +137,7 @@ void ScaleVolume::setupFilterParameters()
     parameter->setHumanLabel("Scaling Factor");
     parameter->setPropertyName("ScaleFactor");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     //   parameter->setUnits("Microns");
     parameters.push_back(parameter);
   }

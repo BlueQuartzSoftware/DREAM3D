@@ -112,8 +112,8 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual QVector<double> readArray(const QString name, QVector<double> value);
 
 
-    virtual IntVec3Widget_t readIntVec3(const QString name, IntVec3Widget_t v);
-    virtual FloatVec3Widget_t readFloatVec3(const QString name, FloatVec3Widget_t v);
+    virtual IntVec3_t readIntVec3(const QString name, IntVec3_t v);
+    virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v);
     virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos);
     virtual QVector<ComparisonInput_t> readComparisonInputs(const QString name, QVector<ComparisonInput_t> defValue);
     virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos);

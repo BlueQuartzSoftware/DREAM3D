@@ -60,7 +60,9 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
+
 
 #include "QtSupport/QDroppableScrollArea.h"
 
@@ -75,8 +77,10 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   m_FilterBeingDragged(NULL),
   m_DropIndex(-1),
   m_EmptyPipelineLabel(NULL),
+  m_ScrollArea(NULL),
   m_AutoScroll(false),
   m_AutoScrollMargin(10),
+  m_autoScrollCount(0),
   m_InputParametersWidget(NULL),
   m_PipelineMessageObserver(NULL)
 {
@@ -184,7 +188,7 @@ int PipelineViewWidget::filterCount()
   int count = 0;
   if (NULL != m_FilterWidgetLayout)
   {
-    count = m_FilterWidgetLayout->count() - 1;
+    count = m_FilterWidgetLayout->count();
   }
   return count;
 }
@@ -226,6 +230,7 @@ void PipelineViewWidget::resetLayout()
   }
 
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -243,46 +248,6 @@ void PipelineViewWidget::clearWidgets()
   }
   m_SelectedFilterWidget = NULL;
   resetLayout();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::loadPipelineFile(const QString& filePath)
-{
-#ifdef __APPLE__
-#warning THIS NEEDS TO BE IMPLEMENTED
-#endif
-  std::cout << " PipelineViewWidget::loadPipelineFile() filePath=" << filePath.toStdString() << std::endl;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::loadPipeline(FilterPipeline::Pointer pipeline, bool append)
-{
-#ifdef __APPLE__
-#warning IMPLEMENT PipelineViewWidget::loadPipeline
-#endif
-#if 0
-  // Clear the Pipeline First
-  if (false == append) { clearWidgets(); }
-  // get a reference to the filters which are in some type of container object.
-  FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
-  int filterCount = filters.size();
-  // Start looping on each filter
-  for(int i = 0; i < filterCount; i++)
-  {
-    AbstractFilter::Pointer filter = filters.at(i);
-    QString filterName = filter->getNameOfClass();
-    // Insert the filter into the GUI
-    QFilterWidget* w = addFilter(filterName);
-    // Use the actual filter instance to populate the values from the filter into the FilterWidget
-    w->getGuiParametersFromFilter(filter.get());
-    // Now preflight the pipeline for this filter.
-    preflightPipeline();
-  }
-#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -319,16 +284,79 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString nam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::addFilter(const QString& filterName, int index)
+void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Format format)
 {
-  QFilterWidget* w = new QFilterWidget;
-  w->initializeWithFilter(filterName);
+  //std::cout << " PipelineViewWidget::loadPipelineFile() filePath=" << filePath.toStdString() << std::endl;
+  emit pipelineIssuesCleared();
+  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(filePath, format, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
+  updateFilterPipeline(pipeline, false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::updateFilterPipeline(FilterPipeline::Pointer pipeline, bool append)
+{
+
+  // Clear the Pipeline First
+  if (false == append) { clearWidgets(); }
+  // get a reference to the filters which are in some type of container object.
+  FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
+  int fCount = filters.size();
+  int index = -1;
+  // Start looping on each filter
+  for(int i = 0; i < fCount; i++)
+  {
+    // Create a QFilterWidget using the current AbstractFilter instance to initialize it
+    QFilterWidget* w = new QFilterWidget(filters.at(i));
+    index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
+    addFilterWidget(w, index);
+  }
+  // Now preflight the pipeline for this filter.
+  preflightPipeline();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
+{
+
+  FilterManager::Pointer wm = FilterManager::Instance();
+  if(NULL == wm.get() ) { return; }
+  IFilterFactory::Pointer wf = wm->getFactoryForFilter(filterClassName);
+  if (NULL == wf.get()) { return; }
+
+  // Create an instance of the filter. Since we are dealing with the AbstractFilter interface we can not
+  // actually use the actual filter class. We are going to have to rely on QProperties or Signals/Slots
+  // to communicate changes back to the filter.
+  AbstractFilter::Pointer filter = wf->create();
 
   if (index < 0) // If the programmer wants to add it to the end of the list
   {
-    index = filterCount();
+    index = filterCount() - 1; // filterCount will come back with the vertical spacer, and if index is still
+     // -1 then the spacer is not there and it will get added so the next time throught this should work
   }
 
+  // Create a FilterWidget object
+  QFilterWidget* w = new QFilterWidget(filter);
+
+  addFilterWidget(w, index);
+
+  // Clear the Issues Table and then preflight
+  emit pipelineIssuesCleared();
+
+  // Now preflight the pipeline for this filter.
+  preflightPipeline();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::addFilterWidget(QFilterWidget* w, int index)
+{
+  bool addSpacer = false;
   if (filterCount() <= 0)
   {
     if (NULL != m_EmptyPipelineLabel)
@@ -346,21 +374,25 @@ void PipelineViewWidget::addFilter(const QString& filterName, int index)
 
     m_FilterWidgetLayout = new QVBoxLayout(this);
     m_FilterWidgetLayout->setObjectName(QString::fromUtf8("m_FilterWidgetLayout"));
-    m_FilterWidgetLayout->setContentsMargins(5, 15, 5, 15);
-    m_FilterWidgetLayout->setSpacing(15);
-    QSpacerItem* verticalSpacer = new QSpacerItem(20, 361, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    m_FilterWidgetLayout->addItem(verticalSpacer);
+    m_FilterWidgetLayout->setContentsMargins(5, 6, 5, 6);
+    m_FilterWidgetLayout->setSpacing(5);
+    addSpacer = true;
   }
 
-
+  // The layout will take control of the QFilterWidget 'w' instance
   m_FilterWidgetLayout->insertWidget(index, w);
+  // Set the Parent
   w->setParent(this);
-  connect(w, SIGNAL(clicked(bool)),
-          this, SLOT(removeFilterWidget()) );
+
+/// Now setup all the conections between the various widgets
+  connect(w, SIGNAL(filterWidgetRemoved(QFilterWidget*)),
+          this, SLOT(removeFilterWidget(QFilterWidget*)) );
+
   if(NULL != m_InputParametersWidget) {
-    connect(w, SIGNAL(widgetSelected(AbstractFilter*)),
-            m_InputParametersWidget, SLOT(displayFilterParameters(AbstractFilter*)) );
+    connect(w, SIGNAL(widgetSelected(QFilterWidget*)),
+            m_InputParametersWidget, SLOT(displayFilterParameters(QFilterWidget*)) );
   }
+
   connect(w, SIGNAL(widgetSelected(QFilterWidget*)),
           this, SLOT(setSelectedFilterWidget(QFilterWidget*)) );
 
@@ -371,21 +403,16 @@ void PipelineViewWidget::addFilter(const QString& filterName, int index)
   connect(w, SIGNAL(parametersChanged()),
           this, SLOT(preflightPipeline()));
 
+  // Check to make sure at least the vertical spacer is in the Layout
+  if (addSpacer)
+  {
+    QSpacerItem* verticalSpacer = new QSpacerItem(20, 361, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    m_FilterWidgetLayout->insertSpacerItem(-1, verticalSpacer);
+  }
+
   setSelectedFilterWidget(w);
 
 }
-
-
-#define CONVERT_STD_LIST_TO_QLIST(dataContainer, type, filterWidget)\
-{\
-  QList<QString> theList = dataContainer->get##type##ArrayNameList();\
-  QList<QString> list;\
-  for(QList<QString>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
-  list << (*iter);\
-  }\
-  PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
-  if (NULL != ptr) { ptr->setPossible##type##ArrayNames(list); }\
-  }\
 
 // -----------------------------------------------------------------------------
 //
@@ -394,9 +421,6 @@ void PipelineViewWidget::preflightPipeline()
 {
 
   std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
-  emit pipelineIssuesCleared();
-
-
   // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
   qint32 count = filterCount();
@@ -426,71 +450,15 @@ void PipelineViewWidget::preflightPipeline()
       AbstractFilter::Pointer filter = fw->getFilter();
       if(filter->getErrorCondition() < 0) {fw->setHasPreflightErrors(true);}
     }
-
   }
-
-
-#if 0
-  // Create the DataContainerArray object
-  DataContainerArray::Pointer dca = DataContainerArray::New();
-
-  // Build up the pipeline
-  bool pipelineHasErrors = false;
-  qint32 count = filterCount();
-  for(qint32 i = 0; i < count; ++i)
-  {
-    QFilterWidget* fw = filterWidgetAt(i);
-    if (fw)
-    {
-      fw->setHasPreflightErrors(false);
-      AbstractFilter::Pointer filter = fw->getFilter();
-
-      filter->setDataContainerArray(dca);
-
-      filter->preflight();
-      int err = filter->getErrorCondition();
-      //FIXME: connect up the Error/Warnings Table widget as an observer of the pipeline and filters.
-      QVector<PipelineMessage> msgs ;
-      if(msgs.size() > 0 || err < 0)
-      {
-        preflightErrorMessage(msgs);
-        for(QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
-        {
-          if ( (*iter).getMessageType() == PipelineMessage::Error)
-          {
-            fw->setHasPreflightErrors(true);
-            pipelineHasErrors = true;
-
-          }
-          else if ((*iter).getMessageType() == PipelineMessage::Warning)
-          {
-            fw->setHasPreflightWarnings(true);
-          }
-        }
-      }
-
-    }
-  }
-
-  if (pipelineHasErrors == true)
-  {
-    emit pipelineHasErrorsSignal();
-  }
-  else
-  {
-    emit pipelineHasNoErrors();
-  }
-#endif
-
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::removeFilterWidget()
+void PipelineViewWidget::removeFilterWidget(QFilterWidget* whoSent)
 {
-  QObject* whoSent = sender();
   if (whoSent)
   {
     QWidget* w = qobject_cast<QWidget*>(whoSent);
@@ -750,8 +718,9 @@ void PipelineViewWidget::doAutoScroll()
 // -----------------------------------------------------------------------------
 bool PipelineViewWidget::shouldAutoScroll(const QPoint& pos)
 {
-  QRect rect = m_ScrollArea->geometry();
+  if (NULL == m_ScrollArea) { return false; }
   QPoint scpos = m_ScrollArea->viewport()->mapFromGlobal(QCursor::pos());
+  QRect rect = m_ScrollArea->geometry();
 
   if (scpos.y() <= getAutoScrollMargin())
   {

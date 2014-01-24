@@ -375,7 +375,7 @@ int H5FilterParametersWriter::writeValue(const QString name, QVector<double> val
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, IntVec3Widget_t v)
+int H5FilterParametersWriter::writeValue(const QString name, IntVec3_t v)
 {
   int err = 0;
   int32_t rank = 1;
@@ -387,7 +387,7 @@ int H5FilterParametersWriter::writeValue(const QString name, IntVec3Widget_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, FloatVec3Widget_t v)
+int H5FilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
 {
   int err = 0;
   int32_t rank = 1;

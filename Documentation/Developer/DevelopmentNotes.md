@@ -4,7 +4,13 @@ DREAM3D Development Notes {#developmentnotes}
 ## Intro
   This is just a dumping ground for ideas that we are working on.
 
-## Help Index Generation
+
+
+## Converting an IDataArray to what you want ##
+      IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
+      UInt32ArrayType::Pointer attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray);
+
+## Help Index Generation 3#
 Be able to automatically generate a cross referenced Help/Filter index. The index would allow the user to look up what filters produce which arrays. Ideally we would add something to the macros used in the DataCheck() function that would automatically add those arrays to some global index.
 
         struct CreatedArrayHelpIndexEntry
@@ -49,9 +55,9 @@ Allow pausing of the Pipeline as maybe a button in each filter where the user ca
 
 ## StatsGenerator Template File Selection ##
 
-StatsGenerator should open to a dialog that displays a list of *templates* that the user can select from to build a synthetic structure. A tree structure to group the templates on the left with a grid of icons to choose from for that group on the right. 
+StatsGenerator should open to a dialog that displays a list of *templates* that the user can select from to build a synthetic structure. A tree structure to group the templates on the left with a grid of icons to choose from for that group on the right.
 
-+ QListView has this ability to show Icons. 
++ QListView has this ability to show Icons.
 + We need to create some sort of Icon.
 + We need to create all the template files
     - We need to also have the matching pipelines built for each file
@@ -82,19 +88,19 @@ hyperslabs
 ## Parallelize Synthetic Generators
 
 Initial threading of PackPrimaryGrains was performed using the parallel\_for() construct from the Threading Building Blocks (TBB) package. We are achieving a decent speed up on multi-core hardware. We could probably realize more speed ups just using more efficient algorithms.
-   
+
 Thread up the InsertPrecipitates code. It is essentially the same as the PackPrimaryGrains code.
 
 -------------------
 ## DREAM3D Reader
 
-Allow the data being read into DREAM3D to be appended to the data container if it does not already exist. Currently when reading the DREAM3D file the entire data containers are wiped out. If the same array is read then the user could have the option to over write the existing array with the data from the file. This opens up the ability to append files together or get data from several different sources.  
+Allow the data being read into DREAM3D to be appended to the data container if it does not already exist. Currently when reading the DREAM3D file the entire data containers are wiped out. If the same array is read then the user could have the option to over write the existing array with the data from the file. This opens up the ability to append files together or get data from several different sources.
 
 -------------------
 ## PipelineRunner Program
 
 This program should be able to use as an input a Pipeline text file saved from the GUI. The requires the use of Qt libraries to read the .ini style file and the sometimes specially encoded QVariant class within the .ini file. In order to do this I tried linking against the generated widgets library and simply invoking a PipelineBuilderWidget class but Qt borked on that saying that we needed to have a QApplication running which is will probably start popping up QWidgets on the screen which is not really what we want.
-  
+
 One idea was to further break apart the QFilterWidget and to have something like a QFilterProxy object that holds the values from the gui but before the gui stuffs those values into the actual Filter instance object. The QFilterProxy would simply inherit from the QObject class so that we can use the QObject's property system which reading from the QSettings file is going to require. Either that or we generate a QFilterProxy file for each filter like we do for the QFilterWidgets which will add to the amount of code that needs to be compiled but should work in the long run.
 
 -------------------
@@ -123,12 +129,12 @@ What about adding this information to the QFilterWidget and a "pop-up" window or
 ## Python Bindings
 
   We need to figure out if it is possible to auto generate python bindings for DREAM3D. This would come in very handy for writing python scripts for processing of data and using other python frameworks like PyQt and Image processing libraries written in python.
-  
+
 -------------------
 ## Tutorials
 
   We need more tutorials on the following:
-  
+
 +  Synthetic Structures with all sorts of different types displayed and generated
 +  Importing more data types
 +  Meshing and Smoothing a volume
@@ -138,7 +144,7 @@ What about adding this information to the QFilterWidget and a "pop-up" window or
 -------------------
 ## DREAM3D_SDK ##
 
-Create a few more variations on the DREAM3D_SDK for Visual Studio 2008, 2010 and 2012. We may be able to create one for OS X but not so sure.
+Create a few more variations on the DREAM3D_SDK for Visual Studio 2008, 2010 and 2012 & 2013. We may be able to create one for OS X but not so sure.
 
 -------------------
 ## Updated Build Documentation
@@ -146,11 +152,11 @@ Create a few more variations on the DREAM3D_SDK for Visual Studio 2008, 2010 and
 
 -------------------
 ## Developer Opportunities
-  
+
 +  FEM File formats
 +  Improved Meshing (Surface and Volume)
 +  Image processing Filters
 +  Python Bindings
-  
 
-   
+
+

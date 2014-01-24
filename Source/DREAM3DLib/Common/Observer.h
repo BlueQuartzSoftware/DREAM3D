@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/IObserver.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 
 /**
@@ -49,18 +50,18 @@
  * @date September 22, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT Observer : public QObject
+class DREAM3DLib_EXPORT Observer : public QObject, public IObserver
 {
     Q_OBJECT
 
   public:
     Observer();
-    DREAM3D_TYPE_MACRO(Observer)
+    DREAM3D_TYPE_MACRO_SUPER(Observer, IObserver)
 
     virtual ~Observer();
 
   public slots:
-    void processPipelineMessage(const PipelineMessage& pm);
+    virtual void processPipelineMessage(const PipelineMessage& pm);
 
   private:
     Observer(const Observer&); // Copy Constructor Not Implemented
