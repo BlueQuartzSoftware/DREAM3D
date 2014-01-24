@@ -139,7 +139,7 @@ void StatsGenPlotWidget::setSizeDistributionValues(float mu, float sigma,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenPlotWidget::extractStatsData(VolumeDataContainer::Pointer m, int index,
+int StatsGenPlotWidget::extractStatsData(int index,
                                          QVector<float>  &binNumbers,
                                          VectorOfFloatArray arrays)
 {

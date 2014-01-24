@@ -78,7 +78,7 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     DREAM3D_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel)
 
     int getMisorientationData(StatsData* statsData, unsigned int phaseType);
-    void extractStatsData(VolumeDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType);
+    void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
 
     QVector<float> generateODFData();
 

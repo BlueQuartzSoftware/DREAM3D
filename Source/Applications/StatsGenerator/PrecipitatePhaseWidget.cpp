@@ -709,7 +709,7 @@ void PrecipitatePhaseWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrecipitatePhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
+int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 {
   if (m_PhaseIndex < 1)
   {
@@ -754,86 +754,75 @@ int PrecipitatePhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  size_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t ensembles = attrMat->getNumTuples();
 
   // Get pointers
-  unsigned int* crystalStructures = m->getCellEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(DREAM3D::EnsembleData::CrystalStructures, ensembles, 1, NULL);
-  unsigned int* phaseTypes = m->getCellEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
-
-  //unsigned int* shapeTypes = m->getCellEnsembleDataSizeCheck<unsigned int, ShapeTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::ShapeTypes, ensembles*1, NULL);
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  unsigned int* crystalStructures = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
-  StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
-  PrecipitateStatsData* precipitateStatsData = PrecipitateStatsData::SafePointerDownCast(statsData.get());
-
-  //H5StatsWriter::Pointer writer = H5StatsWriter::New();
-
-  precipitateStatsData->setPhaseFraction(calcPhaseFraction);
-  precipitateStatsData->setPrecipBoundaryFraction(m_PptFraction);
-  // Feature Diameter Info
-  precipitateStatsData->setBinStepSize(stepSize);
-  precipitateStatsData->setMaxFeatureDiameter(maxdiameter);
-  precipitateStatsData->setMinFeatureDiameter(mindiameter);
-  // Feature Size Distribution
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
+  if (NULL != statsDataArray)
   {
-    VectorOfFloatArray data;
-    FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::Average);
-    FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::StandardDeviation);
-    data.push_back(d1);
-    data.push_back(d2);
-    d1->SetValue(0, avglogdiam);
-    d2->SetValue(0, sdlogdiam);
-    precipitateStatsData->setFeatureSizeDistribution(data);
-    precipitateStatsData->setFeatureSize_DistType(DREAM3D::DistributionType::LogNormal);
+    StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
+    PrecipitateStatsData* precipitateStatsData = PrecipitateStatsData::SafePointerDownCast(statsData.get());
+
+    precipitateStatsData->setPhaseFraction(calcPhaseFraction);
+    precipitateStatsData->setPrecipBoundaryFraction(m_PptFraction);
+    // Feature Diameter Info
+    precipitateStatsData->setBinStepSize(stepSize);
+    precipitateStatsData->setMaxFeatureDiameter(maxdiameter);
+    precipitateStatsData->setMinFeatureDiameter(mindiameter);
+    // Feature Size Distribution
+    {
+      VectorOfFloatArray data;
+      FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::Average);
+      FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::StandardDeviation);
+      data.push_back(d1);
+      data.push_back(d2);
+      d1->setValue(0, avglogdiam);
+      d2->setValue(0, sdlogdiam);
+      precipitateStatsData->setFeatureSizeDistribution(data);
+      precipitateStatsData->setFeatureSize_DistType(DREAM3D::DistributionType::LogNormal);
+    }
+
+    // Now that we have bins and feature sizes, push those to the other plot widgets
+    {
+      VectorOfFloatArray data = m_Omega3Plot->getStatisticsData();
+      precipitateStatsData->setFeatureSize_Omegas(data);
+      precipitateStatsData->setOmegas_DistType(m_Omega3Plot->getDistributionType());
+    }
+    {
+      VectorOfFloatArray data = m_BOverAPlot->getStatisticsData();
+      precipitateStatsData->setFeatureSize_BOverA(data);
+      precipitateStatsData->setBOverA_DistType(m_BOverAPlot->getDistributionType());
+    }
+    {
+      VectorOfFloatArray data = m_COverAPlot->getStatisticsData();
+      precipitateStatsData->setFeatureSize_COverA(data);
+      precipitateStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
+    }
+    {
+      VectorOfFloatArray data = m_ClusteringPlot->getStatisticsData();
+      precipitateStatsData->setFeatureSize_Clustering(data);
+      precipitateStatsData->setClustering_DistType(m_ClusteringPlot->getDistributionType());
+    }
+
+    m_ODFWidget->getOrientationData(precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
+
+    err = m_AxisODFWidget->getOrientationData(precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
   }
-
-  // Now that we have bins and feature sizes, push those to the other plot widgets
-
-  //err = m_Omega3Plot->writeDataToHDF5(m, DREAM3D::StringConstants::Feature_SizeVOmega3_Distributions);
-  {
-    VectorOfFloatArray data = m_Omega3Plot->getStatisticsData();
-    precipitateStatsData->setFeatureSize_Omegas(data);
-    precipitateStatsData->setOmegas_DistType(m_Omega3Plot->getDistributionType());
-  }
-
-  //err = m_BOverAPlot->writeDataToHDF5(writer, DREAM3D::StringConstants::Feature_SizeVBoverA_Distributions);
-  {
-    VectorOfFloatArray data = m_BOverAPlot->getStatisticsData();
-    precipitateStatsData->setFeatureSize_BOverA(data);
-    precipitateStatsData->setBOverA_DistType(m_BOverAPlot->getDistributionType());
-  }
-
-  //err = m_COverAPlot->writeDataToHDF5(writer, DREAM3D::StringConstants::Feature_SizeVCoverA_Distributions);
-  {
-    VectorOfFloatArray data = m_COverAPlot->getStatisticsData();
-    precipitateStatsData->setFeatureSize_COverA(data);
-    precipitateStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
-  }
-
- // err = m_ClusteringPlot->writeDataToHDF5(writer, DREAM3D::StringConstants::Feature_SizeVClustering_Distributions);
-  {
-    VectorOfFloatArray data = m_ClusteringPlot->getStatisticsData();
-    precipitateStatsData->setFeatureSize_Clustering(data);
-    precipitateStatsData->setClustering_DistType(m_ClusteringPlot->getDistributionType());
-  }
-
-
-  //err = m_ODFWidget->writeDataToHDF5(writer);
-  m_ODFWidget->getOrientationData(precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
-
-
-  err = m_AxisODFWidget->getOrientationData(precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
-
   return retErr;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, int index)
+void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 {
   setWidgetListEnabled(true);
   float mu = 1.0f;
@@ -844,18 +833,16 @@ void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, in
 
   setPhaseIndex(index);
 
-  IDataArray* iDataPtr = NULL;
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  unsigned int* attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  m_CrystalStructure = attributeArray[index];
 
-  iDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get();
-  UInt32ArrayType* data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
-  m_CrystalStructure = data->GetValue(index);
+  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  m_PhaseType = attributeArray[index];
 
-  iDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
-  data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
-  m_PhaseType = data->GetValue(index);
-
-  iDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get();
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataPtr);
+  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics);
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
   if (statsDataArray == NULL)
   {
     return;
@@ -890,8 +877,8 @@ void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, in
 
   /* Set the Feature_Size_Distribution Data */
   VectorOfFloatArray distData = precipitateStatsData->getFeatureSizeDistribution();
-  mu = distData[0]->GetValue(0);
-  sigma = distData[1]->GetValue(0);
+  mu = distData[0]->getValue(0);
+  sigma = distData[1]->getValue(0);
   m_Mu_SizeDistribution->blockSignals(true);
   m_Sigma_SizeDistribution->blockSignals(true);
 
@@ -920,31 +907,31 @@ void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, in
   QVector<float> qbins (static_cast<int>(bins->getNumberOfTuples()));
   for(int i = 0; i < qbins.size(); ++i)
   {
-    qbins[i] = bins->GetValue(i);
+    qbins[i] = bins->getValue(i);
   }
 
   m_Omega3Plot->setDistributionType(precipitateStatsData->getOmegas_DistType(), false);
-  m_Omega3Plot->extractStatsData(m, index, qbins, precipitateStatsData->getFeatureSize_Omegas());
+  m_Omega3Plot->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_Omegas());
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_BOverAPlot->setDistributionType(precipitateStatsData->getBOverA_DistType(), false);
-  m_BOverAPlot->extractStatsData(m, index, qbins, precipitateStatsData->getFeatureSize_BOverA());
+  m_BOverAPlot->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_BOverA());
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_COverAPlot->setDistributionType(precipitateStatsData->getCOverA_DistType(), false);
-  m_COverAPlot->extractStatsData(m, index, qbins, precipitateStatsData->getFeatureSize_COverA());
+  m_COverAPlot->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_ClusteringPlot->setDistributionType(precipitateStatsData->getClustering_DistType(), false);
-  m_ClusteringPlot->extractStatsData(m, index, qbins, precipitateStatsData->getFeatureSize_Clustering());
+  m_ClusteringPlot->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_Clustering());
   m_ClusteringPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(m, index, precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
+  m_ODFWidget->extractStatsData(index, precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(m, index, precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
+  m_AxisODFWidget->extractStatsData(index, precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

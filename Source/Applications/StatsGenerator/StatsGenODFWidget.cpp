@@ -106,7 +106,7 @@ StatsGenODFWidget::~StatsGenODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::extractStatsData(VolumeDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
+void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
 {
   VectorOfFloatArray arrays;
   if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
@@ -158,7 +158,7 @@ void StatsGenODFWidget::extractStatsData(VolumeDataContainer::Pointer m, int ind
   // Write the MDF Data if we have that functionality enabled
   if (m_MDFWidget != NULL)
   {
-    m_MDFWidget->extractStatsData(m, index, statsData, phaseType);
+    m_MDFWidget->extractStatsData(index, statsData, phaseType);
   }
   updatePlots();
 }
@@ -575,7 +575,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   int lamberSize = pfLambertSize->value();
   int numColors = 16;
   int npoints = pfSamplePoints->value();
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
 
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)

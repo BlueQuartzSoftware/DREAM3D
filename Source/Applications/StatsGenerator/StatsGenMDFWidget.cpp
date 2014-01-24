@@ -338,7 +338,7 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::extractStatsData(VolumeDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
+void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
 {
   VectorOfFloatArray arrays;
   if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
@@ -432,11 +432,7 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
     if(angles.size() > 0)
     {
       FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), DREAM3D::StringConstants::Angle);
-
-      QVector<int> dims(1,3); // Initialize the dimensions to a 1x3 or 3 element vector
       FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), DREAM3D::StringConstants::Axis);
-      axisArray->SetDims(dims);
-
       FloatArrayType::Pointer weightArray = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::StringConstants::Weight);
 
       VectorOfFloatArray mdfWeights;

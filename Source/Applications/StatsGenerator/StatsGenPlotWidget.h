@@ -75,7 +75,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     VectorOfFloatArray getStatisticsData();
 
-    int extractStatsData(VolumeDataContainer::Pointer m, int index,
+    int extractStatsData(int index,
                          QVector<float>  &binNumbers,
                          VectorOfFloatArray arrays);
 

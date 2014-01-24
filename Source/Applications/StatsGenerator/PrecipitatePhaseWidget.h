@@ -49,7 +49,7 @@ class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidg
      DREAM3D_INSTANCE_PROPERTY(float, PptFraction)
      DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
-     void extractStatsData(VolumeDataContainer::Pointer m, int index);
+     void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 
      void setCrystalStructure(unsigned int xtal);
      unsigned int getCrystalStructure();
@@ -73,7 +73,7 @@ class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidg
      int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
      int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
 
-     int gatherStatsData(VolumeDataContainer::Pointer m);
+     int gatherStatsData(AttributeMatrix::Pointer attrMat);
 
    public slots:
      void on_m_GenerateDefaultData_clicked();

@@ -95,7 +95,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     unsigned int getCrystalStructure();
 
     int getOrientationData(StatsData* statsData, unsigned int phaseType);
-    void extractStatsData(VolumeDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType);
+    void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
 
     void setPlotTabTitles(QString t1, QString t2, QString t3);
 

@@ -104,7 +104,7 @@ SGAxisODFWidget::~SGAxisODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::extractStatsData(VolumeDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
+void SGAxisODFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
 {
 
   VectorOfFloatArray arrays(0);
@@ -510,7 +510,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   int lamberSize = 22;
   int numColors = 16;
   int npoints = 5000;
-  QVector<int> dims(1, 3);
+  QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
 
   odf.resize(OrthoRhombicOps::k_OdfSize);

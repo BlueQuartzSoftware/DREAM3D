@@ -44,7 +44,7 @@ class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
      DREAM3D_INSTANCE_PROPERTY(float, TotalPhaseFraction)
  //    DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
-     void extractStatsData(VolumeDataContainer::Pointer m, int index);
+     void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 
      void setCrystalStructure(unsigned int xtal);
      unsigned int getCrystalStructure();
@@ -52,7 +52,7 @@ class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
      QString getComboString();
      QString getTabTitle();
 
-     int gatherStatsData(VolumeDataContainer::Pointer m);
+     int gatherStatsData(AttributeMatrix::Pointer attrMat);
 
   // public slots:
   //   void on_m_GenerateDefaultData_clicked();

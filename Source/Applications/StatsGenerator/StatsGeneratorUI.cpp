@@ -647,16 +647,20 @@ void StatsGeneratorUI::on_actionSave_triggered()
   DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   dca->pushBack(m);
+  QVector<size_t> tDims(1, phaseTabs->count());
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, "CellEnsembleData", DREAM3D::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix("CellEnsembleData", cellEnsembleAttrMat);
+
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, statsDataArray);
+  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, statsDataArray);
 
   UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::CrystalStructures);
   crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
 
   UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->setValue(0, DREAM3D::PhaseType::UnknownPhaseType);
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
+  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 
   // Loop on all the phases
 
@@ -702,10 +706,6 @@ void StatsGeneratorUI::on_actionSave_triggered()
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setDataContainerArray(dca);
   writer->setOutputFile(m_FilePath);
-  writer->setWriteVolumeData(true);
-  writer->setWriteSurfaceData(false);
-  writer->setWriteEdgeData(false);
-  writer->setWriteVertexData(false);
   writer->setWriteXdmfFile(false);
   writer->setWritePipeline(false);
   writer->execute();
@@ -803,43 +803,41 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   QString path;
 
-
   // Delete any existing phases from the GUI
   phaseTabs->clear();
-
-  // Instantiate a Reader object
-
-  QSet<QString> selectedArrays;
-  selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
-  selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
-  selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   dca->pushBack(m);
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, "CellEnsembleData", DREAM3D::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix("CellEnsembleData", cellEnsembleAttrMat);
 
-  DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(m_FilePath);
-  reader->setDataContainerArray(dca);
-  reader->setReadVolumeData(true);
-  reader->setReadSurfaceData(false);
-  reader->setReadEdgeData(false);
-  reader->setReadVertexData(false);
-  reader->setSelectedVolumeCellEnsembleArrays(selectedArrays);
-  reader->setReadAllArrays(false);
-  reader->execute();
-  err = reader->getErrorCondition();
-  if (err < 0)
+  hid_t fileId = QH5Utilities::openFile(h5file, true); // Open the file Read Only
+  if(fileId < 0)
   {
-    this->statusBar()->showMessage("Error Reading the DREAM3D Data File");
+    QString ss = QObject::tr(": Error opening input file '%1'").arg(h5file);
+    QMessageBox::critical(this, QString("File Open Error"), ss , QMessageBox::Ok);
     return;
   }
+  // This will make sure if we return early from this method that the HDF5 File is properly closed.
+  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+  hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
+  scopedFileSentinel.addGroupId(&dcaGid);
+  hid_t dcGid = H5Gopen(dcaGid, "VolumeDataContainer", 0);
+  scopedFileSentinel.addGroupId(&dcGid);
+  hid_t amGid = H5Gopen(dcGid, "CellEnsembleData", 0);
+  scopedFileSentinel.addGroupId(&amGid);
+
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "Statistics", false);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "CrystalStructures", false);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", false);
 
   // Get the number of Phases
-  size_t ensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t ensembles = cellEnsembleAttrMat->getNumTuples();
 
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  unsigned int* phaseTypes = m->getCellEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
+  IDataArray::Pointer iDataArray = cellEnsembleAttrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects
@@ -847,44 +845,38 @@ void StatsGeneratorUI::openFile(QString h5file)
   {
     if(phaseTypes[phase] == DREAM3D::PhaseType::BoundaryPhase)
     {
-   //   BoundaryStatsData* bsd = BoundaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
       BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
-      w->extractStatsData(m, static_cast<int>(phase));
+      w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     else if(phaseTypes[phase] == DREAM3D::PhaseType::MatrixPhase)
     {
-   //   MatrixStatsData* msd = MatrixStatsData::SafePointerDownCast(statsDataArray[phase].get());
       MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
-      w->extractStatsData(m, static_cast<int>(phase));
+      w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::PrecipitatePhase)
     {
-  //    PrecipitateStatsData* psd = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
       PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
-      w->extractStatsData(m, static_cast<int>(phase));
+      w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::PrimaryPhase)
     {
-   //   PrimaryStatsData* prisd = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
       PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
-      w->extractStatsData(m, static_cast<int>(phase));
+      w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::TransformationPhase)
     {
-    //  TransformationStatsData* tsd = TransformationStatsData::SafePointerDownCast(statsDataArray[phase].get());
       TransformationPhaseWidget* w = new TransformationPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
-      w->extractStatsData(m, static_cast<int>(phase));
+      w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     else
     {
 
     }
-
   }
 
   // Now delete the first Phase from the Combo which was left over from something else
@@ -896,7 +888,6 @@ void StatsGeneratorUI::openFile(QString h5file)
   QString windowTitle = QString("");
   windowTitle = windowTitle +  m_FilePath + QString(" - StatsGenerator");
   setWindowTitle(windowTitle);
-
 }
 
 // -----------------------------------------------------------------------------
