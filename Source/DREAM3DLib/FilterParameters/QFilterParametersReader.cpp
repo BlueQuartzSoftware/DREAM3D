@@ -38,9 +38,11 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QDataStream>
 #include <QtCore/QStringList>
+#include <QtCore/QFileInfo>
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/GenericFilters/EmptyFilter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -51,11 +53,11 @@ QFilterParametersReader::QFilterParametersReader() :
   m_Prefs(NULL)
 {
 
-  //  qRegisterMetaType<IntVec3Widget_t>("IntVec3Widget_t");
-  //  qRegisterMetaTypeStreamOperators<IntVec3Widget_t>("IntVec3Widget_t");
+  //  qRegisterMetaType<IntVec3_t>("IntVec3_t");
+  //  qRegisterMetaTypeStreamOperators<IntVec3_t>("IntVec3_t");
 
-  //  qRegisterMetaType<FloatVec3Widget_t>("FloatVec3Widget_t");
-  //  qRegisterMetaTypeStreamOperators<FloatVec3Widget_t>("FloatVec3Widget_t");
+  //  qRegisterMetaType<FloatVec3_t>("FloatVec3_t");
+  //  qRegisterMetaTypeStreamOperators<FloatVec3_t>("FloatVec3_t");
 }
 
 // -----------------------------------------------------------------------------
@@ -72,9 +74,18 @@ QFilterParametersReader::~QFilterParametersReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString filePath, QSettings::Format format, Observer* obs)
+FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString filePath, QSettings::Format format, IObserver* obs)
 {
+
+
+  if (filePath.isEmpty() == true) { return FilterPipeline::NullPointer(); }
+  QFileInfo fi(filePath);
+  if(fi.exists() == false) { return FilterPipeline::NullPointer(); }
+
   FilterManager::Pointer filtManager = FilterManager::Instance();
+  FilterFactory<EmptyFilter>::Pointer emptyFilterFactory = FilterFactory<EmptyFilter>::New();
+  filtManager->addFilterFactory("EmptyFilter",emptyFilterFactory);
+
   QFilterParametersReader::Pointer paramsReader = QFilterParametersReader::New();
   paramsReader->openFile(filePath, format);
   QSettings* prefs = paramsReader->getPrefs();
@@ -110,7 +121,23 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
           pipeline->pushBack(filter);
         }
       }
+      else // Could not find the filter because the specific name has not been registered. This could
+        // be due to a name change for the filter.
+      {
+        EmptyFilter::Pointer filter = EmptyFilter::New();
+        QString humanLabel = QString("MISSING FILTER: ") + filterName;
+        filter->setHumanLabel(humanLabel);
+        pipeline->pushBack(filter);
+
+        if (NULL != obs) {
+          QString ss = QObject::tr("An implementation for filter '%1' could not be located. Is it spelled correctly or has the name changed? A blank filter has been inserted in its place.").arg(filterName);
+          PipelineMessage pm(filterName, ss, -66066, PipelineMessage::Error);
+          pm.setPrefix("QFilterParametersReader::ReadPipelineFromFile()");
+          obs->processPipelineMessage(pm);
+        }
+      }
     }
+
   }
   return pipeline;
 }
@@ -595,12 +622,12 @@ QVector<double> QFilterParametersReader::readArray(const QString name, QVector<d
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IntVec3Widget_t QFilterParametersReader::readIntVec3(const QString name, IntVec3Widget_t defaultValue)
+IntVec3_t QFilterParametersReader::readIntVec3(const QString name, IntVec3_t defaultValue)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   //QVariant var = m_Prefs->value(name);
   bool ok = false;
-  IntVec3Widget_t v3;
+  IntVec3_t v3;
   v3.x = 0;
   v3.y = 0;
   v3.z = 0;
@@ -626,12 +653,12 @@ IntVec3Widget_t QFilterParametersReader::readIntVec3(const QString name, IntVec3
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatVec3Widget_t QFilterParametersReader::readFloatVec3(const QString name, FloatVec3Widget_t defaultValue)
+FloatVec3_t QFilterParametersReader::readFloatVec3(const QString name, FloatVec3_t defaultValue)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   QVariant var = m_Prefs->value(name);
   bool ok = false;
-  FloatVec3Widget_t v3 = var.value<FloatVec3Widget_t>();
+  FloatVec3_t v3 = var.value<FloatVec3_t>();
   m_Prefs->beginReadArray(name);
   m_Prefs->setArrayIndex(0);
   v3.x = m_Prefs->value("x", v3.x).toFloat(&ok);
@@ -786,7 +813,7 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
     QString data = m_Prefs->value("Name", defValue).toString();
     DataContainerProxy dcProxy(data, true);
     dcaProxy.list.push_back(dcProxy);
-   // qDebug() << "Found DataContainer: " << data;
+    // qDebug() << "Found DataContainer: " << data;
   }
   m_Prefs->endArray();
 
@@ -812,7 +839,7 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
       QString path = DREAM3D::StringConstants::DataContainerGroupName + "/" + dcProxy.name + "/" + amProxy.name;
       DataArrayProxy daProxy(path, tokens[1], true);
       amProxy.dataArrays.insert(daProxy.name, daProxy);
-     // qDebug() << "Found AttributeMatrix/DataArray: " << data;
+      // qDebug() << "Found AttributeMatrix/DataArray: " << data;
     }
     m_Prefs->endArray();
   }

@@ -55,9 +55,9 @@ class RotateEulerRefFrameImpl
 {
     float* m_CellEulerAngles;
     float angle;
-    FloatVec3Widget_t axis;
+    FloatVec3_t axis;
   public:
-    RotateEulerRefFrameImpl(float* data, float rotAngle, FloatVec3Widget_t rotAxis) :
+    RotateEulerRefFrameImpl(float* data, float rotAngle, FloatVec3_t rotAxis) :
       m_CellEulerAngles(data),
       angle(rotAngle),
       axis(rotAxis)
@@ -138,7 +138,7 @@ void RotateEulerRefFrame::setupFilterParameters()
     parameter->setHumanLabel("Rotation Axis");
     parameter->setPropertyName("RotationAxis");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("ijk");
     parameters.push_back(parameter);
   }

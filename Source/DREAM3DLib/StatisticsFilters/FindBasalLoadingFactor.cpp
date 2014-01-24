@@ -89,7 +89,7 @@ void FindBasalLoadingFactor::setupFilterParameters()
     parameter->setHumanLabel("Loading Direction");
     parameter->setPropertyName("LoadingDir");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }

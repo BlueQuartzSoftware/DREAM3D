@@ -286,7 +286,7 @@ void RunPipeline1()
 //  pipeline->pushBack(gipfc);
 
 //  ChangeResolution::Pointer cr = ChangeResolution::New();
-//  FloatVec3Widget_t res = {0.2, 0.2, 0.2};
+//  FloatVec3_t res = {0.2, 0.2, 0.2};
 //  cr->setResolution(res);
 //  pipeline->pushBack(cr);
 
@@ -485,7 +485,7 @@ void RunPipeline1()
 //  rgssm->setXPoints(256);
 //  rgssm->setYPoints(256);
 //  rgssm->setZPoints(256);
-//  FloatVec3Widget_t res = {0.05,0.05,0.05};
+//  FloatVec3_t res = {0.05,0.05,0.05};
 //  rgssm->setResolution(res);
 //  pipeline->pushBack(rgssm);
 //

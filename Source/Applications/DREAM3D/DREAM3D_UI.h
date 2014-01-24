@@ -105,11 +105,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionShow_User_Manual_triggered();
 
     /**
-     * @brief Reads the Preferences from the users pref file
-     */
-    void readSettings();
-
-    /**
      * @brief Writes the preferences to the users pref file
      */
     void writeSettings();
@@ -187,11 +182,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @param prefs
      */
     void writeWindowSettings(QSettings &prefs);
-
-    void readWindowSettings(QSettings &prefs);
-
-    void readVersionCheckSettings(QSettings &prefs);
     void writeVersionCheckSettings(QSettings &prefs);
+
+
+    void readWindowSettings();
+    void readVersionSettings();
+    void readLastPipeline();
 
     void checkForUpdatesAtStartup();
 

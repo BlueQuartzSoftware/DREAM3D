@@ -101,7 +101,7 @@ void FindBoundaryStrengths::setupFilterParameters()
     parameter->setHumanLabel("Loading");
     parameter->setPropertyName("Loading");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("XYZ");
     parameters.push_back(parameter);
   }

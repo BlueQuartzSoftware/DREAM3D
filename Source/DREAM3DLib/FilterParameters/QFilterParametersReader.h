@@ -62,7 +62,16 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
 
     virtual ~QFilterParametersReader();
 
-    static FilterPipeline::Pointer ReadPipelineFromFile(QString filePath, QSettings::Format format, Observer* obs = NULL);
+    /**
+     * @brief ReadPipelineFromFile Reads the QSettings formatted file and returns a FilterPipeline object
+     * that contains all the filters that could be found. If a filter can not be found then that filter is simply skipped.
+     * If the IObserver is NON-Null then an error message will be passed to it with an error message
+     * @param filePath The path to the INI formatted file
+     * @param format The format of the file which is anything that QSettings understands
+     * @param obs An IObserver object to report errors.
+     * @return Shared Pointer to a FilterPipeline Instance
+     */
+    static FilterPipeline::Pointer ReadPipelineFromFile(QString filePath, QSettings::Format format, IObserver* obs = NULL);
 
 
     QSettings* getPrefs();
@@ -100,8 +109,8 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
     virtual QVector<double> readArray(const QString name, QVector<double> value);
 
 
-    virtual IntVec3Widget_t readIntVec3(const QString name, IntVec3Widget_t v);
-    virtual FloatVec3Widget_t readFloatVec3(const QString name, FloatVec3Widget_t v);
+    virtual IntVec3_t readIntVec3(const QString name, IntVec3_t v);
+    virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v);
     virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos);
     virtual QVector<ComparisonInput_t> readComparisonInputs(const QString name, QVector<ComparisonInput_t> v);
     virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos);

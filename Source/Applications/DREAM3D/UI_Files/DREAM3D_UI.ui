@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>882</width>
+    <width>912</width>
     <height>673</height>
    </rect>
   </property>
@@ -35,7 +35,16 @@
     </size>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item row="0" column="0">
@@ -94,6 +103,12 @@ color: white;
             <height>16777215</height>
            </size>
           </property>
+          <property name="mouseTracking">
+           <bool>false</bool>
+          </property>
+          <property name="acceptDrops">
+           <bool>true</bool>
+          </property>
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
@@ -102,9 +117,12 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>415</width>
+             <width>439</width>
              <height>566</height>
             </rect>
+           </property>
+           <property name="acceptDrops">
+            <bool>true</bool>
            </property>
           </widget>
          </widget>
@@ -158,7 +176,7 @@ color: white;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>882</width>
+     <width>912</width>
      <height>22</height>
     </rect>
    </property>

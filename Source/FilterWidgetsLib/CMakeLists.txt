@@ -90,13 +90,11 @@ set(FilterWidgetsLib_HDRS
 )
 
 set(FilterWidgetsLib_MOC_HDRS
-   ${FilterWidgetsLib_SOURCE_DIR}/QFilterParameterWidget.h
 )
 
 set(FilterWidgetsLib_SRCS
   ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetManager.cpp
   ${FilterWidgetsLib_SOURCE_DIR}/IFilterWidgetFactory.cpp
-  ${FilterWidgetsLib_SOURCE_DIR}/QFilterParameterWidget.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${FilterWidgetsLib_HDRS};${FilterWidgetsLib_MOC_HDRS}" "${FilterWidgetsLib_SRCS}" "0")
@@ -123,8 +121,14 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "" "${FilterWidgetsLib_Generated_M
 cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${FilterWidgetsLib_Generated_UI_HDRS}" "" "0")
 cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${FilterWidgetsLib_Generated_RC_SRCS}" "" "0")
 
-# Include all the Parameter Widgets
+
+# --------------------------------------------------------------------
+#-- Include all the generic Widgets that can be used to build up a GUI
 include(${FilterWidgetsLib_SOURCE_DIR}/Widgets/SourceList.cmake)
+
+# --------------------------------------------------------------------
+# Include all the Filter Parameter Widgets
+include(${FilterWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
 
 
 set(Project_SRCS
@@ -136,12 +140,18 @@ set(Project_SRCS
         ${FilterWidgetsLib_Generated_MOC_SRCS}
         ${FilterWidgetsLib_Generated_UI_HDRS}
         ${FilterWidgetsLib_Generated_RC_SRCS}
-        
-        ${FilterWidgets_ParameterWidgets_HDRS}
-        ${FilterWidgets_ParameterWidgets_SRCS}
-        ${FilterWidgets_ParameterWidgets_UIS}
-        ${FilterWidgets_ParameterWidgets_Generated_MOC_SRCS}
-        ${FilterWidgets_ParameterWidgetes_Generated_UI_HDRS}  
+#---------------
+        ${FilterWidgetsLib_Widgets_HDRS}
+        ${FilterWidgetsLib_Widgets_SRCS}
+        ${FilterWidgetsLib_Widgets_UIS}
+        ${FilterWidgetsLib_Widgets_Generated_MOC_SRCS}
+        ${FilterWidgetsLib_Widgets_Generated_UI_HDRS}
+#---------------
+        ${FilterWidgetsLib_ParameterWidgets_HDRS}
+        ${FilterWidgetsLib_ParameterWidgets_SRCS}
+        ${FilterWidgetsLib_ParameterWidgets_UIS}
+        ${FilterWidgetsLib_ParameterWidgets_Generated_MOC_SRCS}
+        ${FilterWidgetsLib_ParameterWidgets_Generated_UI_HDRS}
 )
 
 
@@ -149,9 +159,6 @@ set(Project_SRCS
 # Set some Include directories
 include_directories(${FilterWidgetsLib_SOURCE_DIR}/..)
 include_directories(${FilterWidgetsLib_BINARY_DIR})
-#include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
-#include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
-
 
 
 if(UNIX AND NOT APPLE)

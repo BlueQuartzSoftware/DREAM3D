@@ -24,6 +24,10 @@
 * during an MSVC build */
 #cmakedefine DREAM3D_DISABLE_MSVC_WARNINGS
 
+/* This is a Macro that comes in handy in all the filter parameter widgets */
+#define PROPERTY_NAME_AS_CHAR m_FilterParameter->getPropertyName().toStdString().c_str()
+
+
 #if (_MSC_VER >= 1)
 
   #pragma warning (error: 4715) /* Not all control points return a value */

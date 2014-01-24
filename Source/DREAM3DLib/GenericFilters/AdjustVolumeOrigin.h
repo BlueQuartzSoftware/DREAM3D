@@ -70,8 +70,8 @@ class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
     Q_PROPERTY(bool ApplyToVoxelVolume READ getApplyToVoxelVolume WRITE setApplyToVoxelVolume NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, ApplyToSurfaceMesh)
     Q_PROPERTY(bool ApplyToSurfaceMesh READ getApplyToSurfaceMesh WRITE setApplyToSurfaceMesh NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
-    Q_PROPERTY(FloatVec3Widget_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, Origin)
+    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

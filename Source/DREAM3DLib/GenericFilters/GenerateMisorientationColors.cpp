@@ -96,7 +96,7 @@ void GenerateMisorientationColors::setupFilterParameters()
     parameter->setHumanLabel("Reference Orientation Axis");
     parameter->setPropertyName("ReferenceAxis");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameters.push_back(parameter);
   }
   {

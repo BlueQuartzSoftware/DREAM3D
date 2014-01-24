@@ -89,7 +89,7 @@ void FindKernelAvgMisorientations::setupFilterParameters()
     parameter->setHumanLabel("Kernel Radius");
     parameter->setPropertyName("KernelSize");
     parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
-    parameter->setValueType("IntVec3Widget_t");
+    parameter->setValueType("IntVec3_t");
     parameter->setUnits("Pixels");
     parameters.push_back(parameter);
   }

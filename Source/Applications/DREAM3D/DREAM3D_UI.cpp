@@ -113,11 +113,17 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   // using the QDesigner program
   setupUi(this);
 
+  // Get the last window state
+  readWindowSettings();
+
   // Do our own widget initializations
   setupGui();
 
-  // Read the Preferences for each plugin and our own settings
-  readSettings();
+  // Read other settings
+  readVersionSettings();
+
+  // Load the last pipeline
+  readLastPipeline();
 
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
@@ -216,12 +222,10 @@ void DREAM3D_UI::closeEvent(QCloseEvent *event)
   }
 }
 
-
-
 // -----------------------------------------------------------------------------
-//  Read the prefs from the local storage file
+//
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::readSettings()
+void DREAM3D_UI::readWindowSettings()
 {
   QString filePath;
   {
@@ -231,36 +235,7 @@ void DREAM3D_UI::readSettings()
     QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
     filePath = prefs.fileName();
-    // Have the PipelineBuilder Widget read its settings
-
-    readWindowSettings(prefs);
-
-    readVersionCheckSettings(prefs);
-
-  }
-  //FIXME: Implement opening of Pipeline from Prefs
-  //openPipelineFile(filePath, QSettings::NativeFormat);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::readVersionCheckSettings(QSettings &prefs)
-{
-  // So the idea here may be to read the values, figure out if we should check the version
-  // against the server, if we DO need to check the version then Reuse the DREAM3DUpdateCheckDialog code
-  // to do the check and if the check comes back that we need to update then pop open the dialog box?
-  // We could also separate out the codes that do the actual checking from the  DREAM3DUpdateCheckDialog
-  // class so we can reuse those codes here?
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::readWindowSettings(QSettings &prefs)
-{
-  bool ok = false;
+bool ok = false;
   prefs.beginGroup("WindowSettings");
   if (prefs.contains(QString("Geometry")) )
   {
@@ -278,7 +253,47 @@ void DREAM3D_UI::readWindowSettings(QSettings &prefs)
     restoreState(layout_data);
   }
   prefs.endGroup();
+  }
+
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::readVersionSettings()
+{
+  QString filePath;
+  {
+#if defined (Q_OS_MAC)
+    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+    filePath = prefs.fileName();
+
+  }
+
+}
+
+
+// -----------------------------------------------------------------------------
+//  Read the prefs from the local storage file
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::readLastPipeline()
+{
+  QString filePath;
+  {
+#if defined (Q_OS_MAC)
+    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+    filePath = prefs.fileName();
+  }
+  //FIXME: Implement opening of Pipeline from Prefs
+  pipelineViewWidget->loadPipelineFile(filePath, QSettings::NativeFormat);
+}
+
 
 // -----------------------------------------------------------------------------
 //  Write our Prefs to file
@@ -308,14 +323,8 @@ void DREAM3D_UI::writeSettings()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::writeVersionCheckSettings(QSettings &prefs)
 {
-  // In this function we are going to have to first see if the settings are even in the
-  // file (this would occur on the very first launch of DREAM3D). If they are not then
-  // set Manual as the default.
-  // If the settings are already in the file then we don't write anything because we don't
-  // want to over write anything.
 
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -378,8 +387,8 @@ void DREAM3D_UI::setupGui()
 
     if ( (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily
           && currentDateToday >= dailyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly
-                                                     && currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
-                                                                                                 && currentDateToday >= monthlyThreshold))
+          && currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
+          && currentDateToday >= monthlyThreshold))
     {
       checkForUpdatesAtStartup();
     }
@@ -389,7 +398,7 @@ void DREAM3D_UI::setupGui()
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
   pipelineViewWidget->setInputParametersWidget(filterInputWidget);
-
+  pipelineViewWidget->setScrollArea(scrollArea);
 
   // Hook up signals from the DockWidgets
   //  connect(topSideBarWidget, SIGNAL(pipelineFileActivated(const QString&)),
@@ -421,14 +430,21 @@ void DREAM3D_UI::setupGui()
   documentsDockWidget->connectFilterList(filterListDockWidget);
   prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
 
+// Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
+// or load an entire pipeline into the view
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString)),
+          pipelineViewWidget, SLOT(loadPipelineFile(QString)) );
+  connect(documentsDockWidget, SIGNAL(pipelineFileActivated(QString)),
+          pipelineViewWidget, SLOT(loadPipelineFile(QString)) );
+
 
   // Set the IssuesDockWidget as a PipelineMessageObserver Object.
   pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);
 
 
-
+// Add some key shortcuts
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
   actionOpenPipeline->setShortcut(actionOpenKeySeq);
 

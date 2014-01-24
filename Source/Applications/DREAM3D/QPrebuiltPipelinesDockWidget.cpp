@@ -49,6 +49,7 @@
 
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 
 
 #include "QFilterListDockWidget.h"
@@ -57,10 +58,10 @@
 //
 // -----------------------------------------------------------------------------
 QPrebuiltPipelinesDockWidget::QPrebuiltPipelinesDockWidget(QWidget* parent) :
-    QDockWidget(parent)
+  QDockWidget(parent)
 {
-    setupUi(this);
-    setupGui();
+  setupUi(this);
+  setupGui();
 }
 
 
@@ -86,22 +87,22 @@ void QPrebuiltPipelinesDockWidget::connectFilterList(QFilterListDockWidget* filt
 // -----------------------------------------------------------------------------
 void QPrebuiltPipelinesDockWidget::setupGui()
 {
-    // This is just here to have the code compile. This is a QListWidget where the filters that make up
+  // This is just here to have the code compile. This is a QListWidget where the filters that make up
   // a prebuilt pipeline are displayed.
-    //filterList = new QListWidget(this);
+  //filterList = new QListWidget(this);
 
-    // Clear out the default stuff
-    filterLibraryTree->clear();
+  // Clear out the default stuff
+  filterLibraryTree->clear();
 
 
 #if 0
-    QTreeWidgetItem* prebuiltTreeWidgetItem = new QTreeWidgetItem(filterLibraryTree, ItemType::Prebuilt_Category_Item_Type);
-    prebuiltTreeWidgetItem->setText(0, DREAM3D::Settings::PrebuiltPipelines);
-    prebuiltTreeWidgetItem->setIcon(0, QIcon(":/flag_blue_scroll.png"));
-    prebuiltTreeWidgetItem->setExpanded(true);
+  QTreeWidgetItem* prebuiltTreeWidgetItem = new QTreeWidgetItem(filterLibraryTree, ItemType::Prebuilt_Category_Item_Type);
+  prebuiltTreeWidgetItem->setText(0, DREAM3D::Settings::PrebuiltPipelines);
+  prebuiltTreeWidgetItem->setIcon(0, QIcon(":/flag_blue_scroll.png"));
+  prebuiltTreeWidgetItem->setExpanded(true);
 #endif
 
-    readPrebuiltPipelines(filterLibraryTree->invisibleRootItem());
+  readPrebuiltPipelines(filterLibraryTree->invisibleRootItem());
 
 }
 
@@ -110,35 +111,35 @@ void QPrebuiltPipelinesDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 void QPrebuiltPipelinesDockWidget::readPrebuiltPipelines(QTreeWidgetItem* prebuiltTreeWidgetItem)
 {
-    QString appPath = qApp->applicationDirPath();
-    QDir prebuiltDir = QDir(appPath);
+  QString appPath = qApp->applicationDirPath();
+  QDir prebuiltDir = QDir(appPath);
 #if defined(Q_OS_WIN)
 
 #elif defined(Q_OS_MAC)
-    if (prebuiltDir.dirName() == "MacOS")
-    {
-        prebuiltDir.cdUp();
-        prebuiltDir.cdUp();
-        prebuiltDir.cdUp();
-    }
-#else
-    // We are on Linux - I think
+  if (prebuiltDir.dirName() == "MacOS")
+  {
     prebuiltDir.cdUp();
+    prebuiltDir.cdUp();
+    prebuiltDir.cdUp();
+  }
+#else
+  // We are on Linux - I think
+  prebuiltDir.cdUp();
 #endif
 
 #if defined(Q_OS_WIN)
-    QFileInfo fi( prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines");
-    if (fi.exists() == false)
-    {
-        // The help file does not exist at the default location because we are probably running from visual studio.
-        // Try up one more directory
-        prebuiltDir.cdUp();
-    }
+  QFileInfo fi( prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines");
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    prebuiltDir.cdUp();
+  }
 #endif
-    prebuiltDir = prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines";
+  prebuiltDir = prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines";
 
-    // So Now we have the top level Directory for the Prebuilts
-    addFiltersRecursively(prebuiltDir, prebuiltTreeWidgetItem);
+  // So Now we have the top level Directory for the Prebuilts
+  addFiltersRecursively(prebuiltDir, prebuiltTreeWidgetItem);
 }
 
 
@@ -147,42 +148,42 @@ void QPrebuiltPipelinesDockWidget::readPrebuiltPipelines(QTreeWidgetItem* prebui
 // -----------------------------------------------------------------------------
 void QPrebuiltPipelinesDockWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem)
 {
-    QTreeWidgetItem* nextDirItem;
+  QTreeWidgetItem* nextDirItem;
 
-    // Get a list of all the directories
-    QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-    if ( dirList.size() > 0 )
+  // Get a list of all the directories
+  QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+  if ( dirList.size() > 0 )
+  {
+    foreach(QFileInfo fi, dirList)
     {
-        foreach(QFileInfo fi, dirList)
-        {
-            // At this point we have the first level of directories and we want to do 2 things:
-            // 1.Create an entry in the tree widget with this name
-            // 2.drop into the directory and look for all the .txt files and add entries for those items.
-            //qDebug() << fi.absoluteFilePath() << "\n";
-            // Add a tree widget item for this Prebuilt Group
-            nextDirItem = new QTreeWidgetItem(currentDirItem);
-            nextDirItem->setText(0, fi.baseName());
-            addFiltersRecursively( QDir( fi.absoluteFilePath() ), nextDirItem );   // Recursive call
-        }
+      // At this point we have the first level of directories and we want to do 2 things:
+      // 1.Create an entry in the tree widget with this name
+      // 2.drop into the directory and look for all the .txt files and add entries for those items.
+      //qDebug() << fi.absoluteFilePath() << "\n";
+      // Add a tree widget item for this Prebuilt Group
+      nextDirItem = new QTreeWidgetItem(currentDirItem);
+      nextDirItem->setText(0, fi.baseName());
+      addFiltersRecursively( QDir( fi.absoluteFilePath() ), nextDirItem );   // Recursive call
     }
+  }
 
-    QStringList filters;
-    filters << "*.txt";
-    QFileInfoList pblist = currentDir.entryInfoList(filters);
-    foreach(QFileInfo pbinfo, pblist)
-    {
-        QString pbFilePath = pbinfo.absoluteFilePath();
-        QSettings pbPref(pbFilePath, QSettings::IniFormat);
-        pbPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-        QString pbName = pbPref.value("Name").toString();
-        pbPref.endGroup();
-        //qDebug() << pbinfo.absoluteFilePath() << "\n";
-        // Add tree widget for this Prebuilt Pipeline
-        QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(currentDirItem, Prebuilt_Item_Type);
-        prebuiltItem->setText(0, pbName);
-        prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
-        prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
-    }
+  QStringList filters;
+  filters << "*.txt";
+  QFileInfoList pblist = currentDir.entryInfoList(filters);
+  foreach(QFileInfo pbinfo, pblist)
+  {
+    QString pbFilePath = pbinfo.absoluteFilePath();
+    QSettings pbPref(pbFilePath, QSettings::IniFormat);
+    pbPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+    QString pbName = pbPref.value("Name").toString();
+    pbPref.endGroup();
+    //qDebug() << pbinfo.absoluteFilePath() << "\n";
+    // Add tree widget for this Prebuilt Pipeline
+    QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(currentDirItem, Prebuilt_Item_Type);
+    prebuiltItem->setText(0, pbName);
+    prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
+    prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
+  }
 }
 
 
@@ -203,24 +204,18 @@ void QPrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidget
 // -----------------------------------------------------------------------------
 QStringList QPrebuiltPipelinesDockWidget::generateFilterListFromPipelineFile(QString path)
 {
+  QStringList filterNames;
+  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(path, QSettings::IniFormat);
+  if(NULL == pipeline.get()) { return filterNames; }
 
-    QStringList filterNames;
-    QSettings prefs(path, QSettings::IniFormat);
-
-    prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-    bool ok = false;
-    int filterCount = prefs.value("Number_Filters").toInt(&ok);
-    prefs.endGroup();
-    if (false == ok) {filterCount = 0;}
-    for (int i = 0; i < filterCount; ++i)
-    {
-        QString gName = QString::number(i);
-        prefs.beginGroup(gName);
-        QString filterName = prefs.value("Filter_Name", "").toString();
-        filterNames.push_back(filterName);
-        prefs.endGroup();
-    }
-    return filterNames;
+  FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
+  int filterCount = filters.count();
+  for (int i = 0; i < filterCount; ++i)
+  {
+    QString filterName = filters.at(i)->getNameOfClass();
+    filterNames.push_back(filterName);
+  }
+  return filterNames;
 }
 
 
@@ -238,7 +233,7 @@ void QPrebuiltPipelinesDockWidget::on_filterLibraryTree_itemChanged( QTreeWidget
 // -----------------------------------------------------------------------------
 void QPrebuiltPipelinesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
-    on_filterLibraryTree_itemClicked(item, 0);
+  on_filterLibraryTree_itemClicked(item, 0);
 }
 
 // -----------------------------------------------------------------------------

@@ -142,7 +142,7 @@ void AdjustVolumeOrigin::setupFilterParameters()
     parameter->setHumanLabel("Origin");
     parameter->setPropertyName("Origin");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("Microns");
     parameters.push_back(parameter);
   }

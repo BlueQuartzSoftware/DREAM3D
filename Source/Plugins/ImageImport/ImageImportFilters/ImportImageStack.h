@@ -72,8 +72,8 @@ class ImportImageStack : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FileSuffix)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExt)
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, ImageFileList)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, Origin)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, Resolution)
     DREAM3D_INSTANCE_PROPERTY(bool, StackLowToHigh)
     DREAM3D_INSTANCE_PROPERTY(bool, StackHighToLow)
 

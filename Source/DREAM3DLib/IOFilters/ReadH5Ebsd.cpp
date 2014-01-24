@@ -514,7 +514,7 @@ void ReadH5Ebsd::execute()
 
     if(m_SampleTransformationAngle > 0)
     {
-      FloatVec3Widget_t sampleAxis;
+      FloatVec3_t sampleAxis;
       sampleAxis.x = m_SampleTransformationAxis[0];
       sampleAxis.y = m_SampleTransformationAxis[1];
       sampleAxis.z = m_SampleTransformationAxis[2];
@@ -564,7 +564,7 @@ void ReadH5Ebsd::execute()
 
     if(m_EulerTransformationAngle > 0)
     {
-      FloatVec3Widget_t eulerAxis;
+      FloatVec3_t eulerAxis;
       eulerAxis.x = m_EulerTransformationAxis[0];
       eulerAxis.y = m_EulerTransformationAxis[1];
       eulerAxis.z = m_EulerTransformationAxis[2];

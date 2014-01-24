@@ -97,7 +97,7 @@ void GenerateIPFColors::setupFilterParameters()
     parameter->setHumanLabel("Reference Direction");
     parameter->setPropertyName("ReferenceDir");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameters.push_back(parameter);
   }
   setFilterParameters(parameters);

@@ -103,7 +103,7 @@ void PhReader::setupFilterParameters()
     parameter->setHumanLabel("Origin");
     parameter->setPropertyName("Origin");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("XYZ");
     parameters.push_back(parameter);
   }
@@ -112,7 +112,7 @@ void PhReader::setupFilterParameters()
     parameter->setHumanLabel("Resolution");
     parameter->setPropertyName("Resolution");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("XYZ");
     parameters.push_back(parameter);
   }

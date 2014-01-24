@@ -77,7 +77,7 @@ void ChangeResolution::setupFilterParameters()
     parameter->setHumanLabel("Resolution");
     parameter->setPropertyName("Resolution");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("Microns");
     parameters.push_back(parameter);
   }

@@ -44,11 +44,11 @@ QFilterParametersWriter::QFilterParametersWriter() :
   AbstractFilterParametersWriter(),
   m_Prefs(NULL)
 {
-  //  qRegisterMetaType<IntVec3Widget_t>("IntVec3Widget_t");
-  //  qRegisterMetaTypeStreamOperators<IntVec3Widget_t>("IntVec3Widget_t");
+  //  qRegisterMetaType<IntVec3_t>("IntVec3_t");
+  //  qRegisterMetaTypeStreamOperators<IntVec3_t>("IntVec3_t");
 
-  //  qRegisterMetaType<FloatVec3Widget_t>("FloatVec3Widget_t");
-  //  qRegisterMetaTypeStreamOperators<FloatVec3Widget_t>("FloatVec3Widget_t");
+  //  qRegisterMetaType<FloatVec3_t>("FloatVec3_t");
+  //  qRegisterMetaTypeStreamOperators<FloatVec3_t>("FloatVec3_t");
 }
 
 // -----------------------------------------------------------------------------
@@ -376,7 +376,7 @@ int QFilterParametersWriter::writeValue(const QString name, QVector<double> valu
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, IntVec3Widget_t v)
+int QFilterParametersWriter::writeValue(const QString name, IntVec3_t v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   int err = 0;
@@ -397,7 +397,7 @@ int QFilterParametersWriter::writeValue(const QString name, IntVec3Widget_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, FloatVec3Widget_t v)
+int QFilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   int err = 0;

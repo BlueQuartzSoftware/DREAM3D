@@ -226,7 +226,7 @@ void GenericExample::setupFilterParameters()
     parameter->setHumanLabel("Dimensions");
     parameter->setPropertyName("Dimensions");
     parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
-    parameter->setValueType("IntVec3Widget_t");
+    parameter->setValueType("IntVec3_t");
     parameter->setUnits("XYZ");
     parameters.push_back(parameter);
   }
@@ -236,7 +236,7 @@ void GenericExample::setupFilterParameters()
     parameter->setHumanLabel("Origin");
     parameter->setPropertyName("Origin");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3Widget_t");
+    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("XYZ");
     parameters.push_back(parameter);
   }

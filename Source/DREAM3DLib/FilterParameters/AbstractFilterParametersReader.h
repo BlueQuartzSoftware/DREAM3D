@@ -99,8 +99,8 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual QVector<float> readArray(const QString name, QVector<float> value) = 0;
     virtual QVector<double> readArray(const QString name, QVector<double> value) = 0;
 
-    virtual IntVec3Widget_t readIntVec3(const QString name, IntVec3Widget_t v) = 0;
-    virtual FloatVec3Widget_t readFloatVec3(const QString name, FloatVec3Widget_t v) = 0;
+    virtual IntVec3_t readIntVec3(const QString name, IntVec3_t v) = 0;
+    virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v) = 0;
     virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos) = 0;
     virtual QVector<ComparisonInput_t> readComparisonInputs(const QString name, QVector<ComparisonInput_t> v) = 0;
     virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos) = 0;
