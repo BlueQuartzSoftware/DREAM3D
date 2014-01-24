@@ -33,65 +33,66 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceMeshing_H_
-#define _SurfaceMeshing_H_
 
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
+#include "ProcessingPlugin.h"
 
-#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
 
+//#include "PipelineBuilder/FilterWidgetManager.h"
+//#include "FilterWidgets/QFilterWidgetFactory.hpp"
 
-/**
- * @class SurfaceMeshingPlugin SurfaceMeshingPlugin.h SurfaceMeshing/SurfaceMeshingPlugin.h
- * @brief
- * @author Michael A. Jackson for BlueQuartz Software
- * @date May 10, 2012
- * @version 1.0
- */
-class SurfaceMeshingPlugin : public QObject, public DREAM3DPluginInterface
+#include "moc_ProcessingPlugin.cxx"
+
+Q_EXPORT_PLUGIN2(ProcessingPlugin, ProcessingPlugin)
+
+namespace Detail
 {
-    Q_OBJECT
+  const QString ProcessingPluginFile("ProcessingPlugin");
+  const QString ProcessingPluginDisplayName("ProcessingPlugin");
+  const QString ProcessingPluginBaseName("ProcessingPlugin");
+}
 
-    Q_INTERFACES(DREAM3DPluginInterface)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ProcessingPlugin::ProcessingPlugin()
+{
 
-  public:
-    SurfaceMeshingPlugin();
-    virtual ~SurfaceMeshingPlugin();
-    /**
-     * @brief Returns the name of the plugin
-     */
-    virtual QString getPluginName();
+}
 
-    /**
-     * @brief Register all the filters with the FilterWidgetFactory
-     */
-  //  virtual void registerFilterWidgets();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ProcessingPlugin::~ProcessingPlugin()
+{
+}
 
-    /**
-    * @brief This registers the filters that this plugin implements with the Filter Manager that is passed in
-    * @param fm The FilterManager to register the filters into.
-    */
-    virtual void registerFilters(FilterManager* fm);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ProcessingPlugin::getPluginName()
+{
+  return (Detail::ProcessingPluginDisplayName);
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ProcessingPlugin::writeSettings(QSettings& prefs)
+{
 
-    /**
-     * @brief Writes the settings in the input gui to the Application's preference file
-     * @param prefs A valid QSettings pointer.
-     */
-    virtual void writeSettings(QSettings& prefs);
+}
 
-    /**
-     * @brief Reads the settings from the Application's preference file and sets
-     * the input GUI widgets accordingly.
-     * @param prefs
-     */
-    virtual void readSettings(QSettings& prefs);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ProcessingPlugin::readSettings(QSettings& prefs)
+{
 
-  private:
-    SurfaceMeshingPlugin(const SurfaceMeshingPlugin&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshingPlugin&); // Operator '=' Not Implemented
-};
+}
 
-#endif /* _SurfaceMeshing_H_ */
+//#include "SurfaceMeshingFilters/RegisterKnownFilterWidgets.cpp"
+#include "ProcessingFilters/RegisterKnownFilters.cpp"
 

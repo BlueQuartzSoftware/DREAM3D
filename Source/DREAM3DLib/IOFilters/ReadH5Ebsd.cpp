@@ -56,7 +56,7 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 
-#include "DREAM3DLib/ProcessingFilters/RotateEulerRefFrame.h"
+//#include "Processing/ProcessingFilters/RotateEulerRefFrame.h"
 
 //#include "Sampling/SamplingFilters/RotateSampleRefFrame.h"
 
@@ -614,13 +614,40 @@ void ReadH5Ebsd::execute()
       eulerAxis.y = m_EulerTransformationAxis[1];
       eulerAxis.z = m_EulerTransformationAxis[2];
 
-      RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
-      connect(rot_Euler.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-              this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-      rot_Euler->setDataContainerArray(getDataContainerArray());
-      rot_Euler->setRotationAngle(m_EulerTransformationAngle);
-      rot_Euler->setRotationAxis(eulerAxis);
-      rot_Euler->execute();
+      QString filtName = "RotateEulerRefFrame";
+      FilterManager::Pointer fm = FilterManager::Instance();
+      IFilterFactory::Pointer rotSampleFactory = fm->getFactoryForFilter(filtName);
+      if (NULL != rotSampleFactory.get() )
+      {
+        // If we get this far, the Factory is good so creating the filter should not fail unless something has
+        // horribly gone wrong in which case the system is going to come down quickly after this.
+        AbstractFilter::Pointer rot_Sample = rotSampleFactory->create();
+
+        // Connect up the Error/Warning/Progress object so the filter can report those things
+        connect(rot_Sample.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+                this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+        rot_Sample->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
+        // Now set the filter parameters for the filter using QProperty System since we can not directly
+        // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
+        // tight loop. Your filter will slow down by 10X.
+        bool propWasSet = rot_Sample->setProperty("RotationAngle", m_EulerTransformationAngle);
+        if(false == propWasSet)
+        {
+          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2'. The filter should have been loaded through the plugin mechanism. This filter is aborting now.").arg("RotationAngle").arg(filtName);
+          setErrorCondition(-109874);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
+        QVariant v;
+        v.setValue(eulerAxis);
+        propWasSet = rot_Sample->setProperty("RotationAxis", v);
+        if(false == propWasSet)
+        {
+          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2'. The filter should have been loaded through the plugin mechanism. This filter is aborting now.").arg("RotationAxis").arg(filtName);
+          setErrorCondition(-109873);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
+        rot_Sample->execute();
+      }
     }
 
   }
