@@ -39,6 +39,7 @@
 #include <vector>
 #include <sstream>
 
+#include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
@@ -107,6 +108,8 @@ ReadH5Ebsd::ReadH5Ebsd() :
   m_EulerTransformationAxis[0] = 0.0;
   m_EulerTransformationAxis[1] = 0.0;
   m_EulerTransformationAxis[2] = 1.0;
+
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -116,6 +119,59 @@ ReadH5Ebsd::~ReadH5Ebsd()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setupFilterParameters()
+{
+  FilterParameterVector parameters;
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input File");
+    parameter->setPropertyName("InputFile");
+    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
+    parameter->setFileExtension("*.dx");
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Z Start Index");
+    parameter->setPropertyName("ZStartIndex");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Z End Index");
+    parameter->setPropertyName("ZEndIndex");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
+  }
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Reference Z Direction");
+    parameter->setPropertyName("RefFrameZDir");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setValueType("unsigned int");
+    QVector<QString> choices;
+    choices.push_back("Low to High");
+    choices.push_back("High to Low");
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Use Transformations");
+    parameter->setPropertyName("UseTransformations");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }
+  setFilterParameters(parameters);
+}
 
 
 // -----------------------------------------------------------------------------
@@ -128,12 +184,6 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex() ) );
   setUseTransformations( reader->readValue("UseTransformations", getUseTransformations() ) );
   setSelectedArrayNames(reader->readArraySelections("SelectedArrayNames", getSelectedArrayNames() ));
-
-  //  setManufacturer( static_cast<Ebsd::Manufacturer>(reader->readValue("Manufacturer", getManufacturer() ) ) );
-  //  setSampleTransformationAngle(reader->readValue("SampleTransformationAngle", getSampleTransformationAngle() ));
-  //  setSampleTransformationAxis(reader->readArray("SampleTransformationAxis", getSampleTransformationAxis() ));
-  //  setEulerTransformationAngle(reader->readValue("EulerTransformationAngle", getEulerTransformationAngle() ));
-  //  setEulerTransformationAxis(reader->readArray("EulerTransformationAxis", getEulerTransformationAxis() ));
 
   reader->closeFilterGroup();
 }
@@ -150,12 +200,6 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("UseTransformations", getUseTransformations() );
   writer->writeArraySelections("SelectedArrayNames", getSelectedArrayNames() );
-
-  //  writer->writeValue("Manufacturer", getManufacturer() );
-  //  writer->writeValue("SampleTransformationAngle", getSampleTransformationAngle() );
-  //  writer->writeValue("SampleTransformationAxis", getSampleTransformationAxis() );
-  //  writer->writeValue("EulerTransformationAngle", getEulerTransformationAngle() );
-  //  writer->writeValue("EulerTransformationAxis", getEulerTransformationAxis() );
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -213,6 +257,7 @@ void ReadH5Ebsd::dataCheck()
   tDims[0] = 0;
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
+
 
   QFileInfo fi(m_InputFile);
   if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)

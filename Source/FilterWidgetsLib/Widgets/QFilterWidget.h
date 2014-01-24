@@ -74,7 +74,7 @@ class FilterWidgetsLib_EXPORT QFilterWidget : public QFrame, private Ui::QFilter
     Q_OBJECT
   public:
     QFilterWidget(QWidget* parent = NULL);
-    QFilterWidget(AbstractFilter::Pointer filter, QWidget* parent = NULL);
+    QFilterWidget(AbstractFilter::Pointer filter, IObserver* observer = NULL, QWidget* parent = NULL);
     virtual ~QFilterWidget();
 
 
@@ -155,13 +155,10 @@ class FilterWidgetsLib_EXPORT QFilterWidget : public QFrame, private Ui::QFilter
     bool                      m_HasPreflightErrors;
     bool                      m_HasPreflightWarnings;
     static QString            m_OpenDialogLastDirectory;
-//    QMenu                     m_FilterMenu;
-//    QAction*                  m_actionFilterHelp;
-//    QAction*                  m_actionRemoveFilter;
-
     AbstractFilter::Pointer   m_Filter;
     QVector<QWidget*>         m_FilterParameterWidgets;
     QWidget*                  m_BasicInputsScrollWidget;
+    IObserver*                m_Observer;
 
     /**
      * @brief initialize Calls all the necessary initialization code for the widget

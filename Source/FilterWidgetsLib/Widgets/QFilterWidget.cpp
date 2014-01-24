@@ -99,7 +99,8 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
-  m_BasicInputsScrollWidget(NULL)
+  m_BasicInputsScrollWidget(NULL),
+  m_Observer(NULL)
 {
   initialize(AbstractFilter::NullPointer() );
 }
@@ -107,14 +108,15 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFilterWidget::QFilterWidget(AbstractFilter::Pointer filter, QWidget* parent) :
+QFilterWidget::QFilterWidget(AbstractFilter::Pointer filter, IObserver* observer, QWidget* parent) :
   QFrame(parent),
   m_CurrentBorderColorFactor(0),
   m_BorderIncrement(16),
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
-  m_BasicInputsScrollWidget(NULL)
+  m_BasicInputsScrollWidget(NULL),
+  m_Observer(observer)
 {
   initialize(filter);
 }
@@ -164,7 +166,7 @@ void QFilterWidget::initialize(AbstractFilter::Pointer filter)
     // Set the Name of the filter into the FilterWidget
     filterName->setText(m_Filter->getHumanLabel() );
 
-    // Create all the FilterParameterWidet objects that can be displayed where ever
+    // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
     FilterWidgetManager::Pointer fwm = FilterWidgetManager::Instance();
 
     QVector<FilterParameter::Pointer> options = m_Filter->getFilterParameters();
@@ -181,6 +183,8 @@ void QFilterWidget::initialize(AbstractFilter::Pointer filter)
       w->setParent(m_BasicInputsScrollWidget);
       // Add the FilterWidget to the layout
       verticalLayout->addWidget(w);
+
+      // Connect any errors/warnings that the widget may create to the Issues Tab
     }
 
     QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);

@@ -66,7 +66,7 @@ void UnknownWidget::setupGui()
 {
   if (m_FilterParameter != NULL)
   {
-    UnknownWidgetLabel->setText(m_FilterParameter->getHumanLabel());
+    UnknownWidgetLabel->setText("Unknown Widget Type " + m_FilterParameter->getWidgetType() + " for " + m_FilterParameter->getHumanLabel());
   }
 }
 

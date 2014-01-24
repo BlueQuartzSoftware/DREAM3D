@@ -70,8 +70,18 @@ void BooleanWidget::setupGui()
   if (m_FilterParameter != NULL)
   {
     BooleanWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
-    bool b = m_Filter->property(PROPERTY_NAME_AS_CHAR).toBool();
-    value->setChecked(b);
+    QVariant objValue = m_Filter->property(PROPERTY_NAME_AS_CHAR);
+    if (objValue.isValid() == true)
+    {
+      value->setChecked(objValue.toBool());
+    }
+    else
+    {
+      QString ss = QObject::tr("Error occurred getting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
+      emit errorSettingFilterParameter(ss);
+      qDebug() << ss;
+    }
+    
   }
 }
 

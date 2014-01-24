@@ -109,6 +109,8 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read H5Ebsd File"; }
 
+    virtual void setupFilterParameters();
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file

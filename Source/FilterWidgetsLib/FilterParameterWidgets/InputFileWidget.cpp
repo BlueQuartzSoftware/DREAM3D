@@ -67,7 +67,6 @@ InputFileWidget::InputFileWidget(FilterParameter* parameter, AbstractFilter* fil
 // -----------------------------------------------------------------------------
 InputFileWidget::~InputFileWidget()
 {
-  qDebug() << "    ~InputFileWidget(): " << this << "\n";
 }
 
 // -----------------------------------------------------------------------------
