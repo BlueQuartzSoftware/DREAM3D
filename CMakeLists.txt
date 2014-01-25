@@ -309,6 +309,7 @@ set(DREAM3D_PLUGIN_LIST
      Sampling
      Statistics
      SurfaceMeshing
+     SyntheticBuilding
 )
 
 # Clear this file out before we go any further

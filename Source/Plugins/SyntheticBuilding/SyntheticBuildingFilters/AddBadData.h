@@ -57,7 +57,7 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
+class AddBadData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

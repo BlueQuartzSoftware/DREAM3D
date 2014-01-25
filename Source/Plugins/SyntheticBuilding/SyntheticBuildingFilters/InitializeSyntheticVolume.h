@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,47 +34,63 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EstablishMatrixPhase_H_
-#define EstablishMatrixPhase_H_
-
-#include <QtCore/QString>
-#include <vector>
+#ifndef _INITIALIZESYNTHETICVOLUME_H_
+#define _INITIALIZESYNTHETICVOLUME_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
-
 /**
- * @class EstablishMatrixPhases EstablishMatrixPhases.h DREAM3DLib/SyntheticBuilderFilters/EstablishMatrixPhases.h
+ * @class InitializeSyntheticVolume InitializeSyntheticVolume.h DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h
  * @brief
  * @author
- * @date Nov 19, 2011
+ * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
+class InitializeSyntheticVolume : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(EstablishMatrixPhase)
-    DREAM3D_STATIC_NEW_MACRO(EstablishMatrixPhase)
-    DREAM3D_TYPE_MACRO_SUPER(EstablishMatrixPhase, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(InitializeSyntheticVolume)
+    DREAM3D_STATIC_NEW_MACRO(InitializeSyntheticVolume)
+    DREAM3D_TYPE_MACRO_SUPER(InitializeSyntheticVolume, AbstractFilter)
 
-    virtual ~EstablishMatrixPhase();
+
+    virtual ~InitializeSyntheticVolume();
+
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const QString getHumanLabel() { return "Establish Matrix Phase"; }
+    DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
 
+    virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const QString getHumanLabel() {return "Initialize Synthetic Volume";}
+
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputEnsembleAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputStatsAttributeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputPhaseTypeAttributeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputCrystalStructuresAttributeArrayName)
+    DREAM3D_INSTANCE_PROPERTY(int, XVoxels)
+    DREAM3D_INSTANCE_PROPERTY(int, YVoxels)
+    DREAM3D_INSTANCE_PROPERTY(int, ZVoxels)
+    DREAM3D_INSTANCE_PROPERTY(float, XRes)
+    DREAM3D_INSTANCE_PROPERTY(float, YRes)
+    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
+    DREAM3D_INSTANCE_PROPERTY(QVector<uint32_t>, ShapeTypes)
+
+
+    virtual void setupFilterParameters();
+    /**
+    * @brief This method will write the options to a file
+    * @param writer The writer that is used to write the options to a file
+    */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -83,46 +99,27 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+    virtual void preflight();
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
     virtual void execute();
-    virtual void preflight();
 
   protected:
-    EstablishMatrixPhase();
-
-    void establish_matrix();
-
-    QVector<int> matrixphases;
-    QVector<float> matrixphasefractions;
+    InitializeSyntheticVolume();
 
   private:
-
-
-    size_t firstMatrixFeature;
-    unsigned long long int Seed;
-    float sizex;
-    float sizey;
-    float sizez;
-    float totalvol;
-
-
+    // Cell Data - make sure these are all initialized to NULL in the constructor
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
-    StatsDataArray* m_StatsDataArray;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     void dataCheck();
 
-    EstablishMatrixPhase(const EstablishMatrixPhase&); // Copy Constructor Not Implemented
-    void operator=(const EstablishMatrixPhase&); // Operator '=' Not Implemented
+    InitializeSyntheticVolume(const InitializeSyntheticVolume&); // Copy Constructor Not Implemented
+    void operator=(const InitializeSyntheticVolume&); // Operator '=' Not Implemented
 };
 
-#endif /* EstablishMatrixPhase_H_ */
+#endif /* _INITIALIZESYNTHETICVOLUME_H_ */
 

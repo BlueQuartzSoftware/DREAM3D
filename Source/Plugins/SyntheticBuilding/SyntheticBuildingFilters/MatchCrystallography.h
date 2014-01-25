@@ -34,11 +34,16 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AddOrientationNoise_H_
-#define AddOrientationNoise_H_
+#ifndef MATCHCRYSTALLOGRAPHY_H_
+#define MATCHCRYSTALLOGRAPHY_H_
 
 #include <QtCore/QString>
-#include <vector>
+#include <numeric>
+#include <limits>
+
+#include <boost/shared_array.hpp>
+
+#include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -48,36 +53,44 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 /**
- * @class AddOrientationNoises AddOrientationNoises.h DREAM3DLib/SyntheticBuilderFilters/AddOrientationNoises.h
+ * @class MatchCrystallography MatchCrystallography.h DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
+class MatchCrystallography : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(AddOrientationNoise)
-    DREAM3D_STATIC_NEW_MACRO(AddOrientationNoise)
-    DREAM3D_TYPE_MACRO_SUPER(AddOrientationNoise, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(MatchCrystallography)
+    DREAM3D_STATIC_NEW_MACRO(MatchCrystallography)
+    DREAM3D_TYPE_MACRO_SUPER(MatchCrystallography, AbstractFilter)
 
-    virtual ~AddOrientationNoise();
+
+    virtual ~MatchCrystallography();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(StatsDataArrayName)
 
+    typedef boost::shared_array<float> SharedFloatArray;
+    typedef boost::shared_array<int> SharedIntArray;
 
-    DREAM3D_INSTANCE_PROPERTY(float, Magnitude)
-    Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+    Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations NOTIFY parametersChanged)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+    virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
-    virtual const QString getHumanLabel() { return "Add Orientation Noise"; }
+    virtual const QString getHumanLabel() {return "Match Crystallography";}
 
     virtual void setupFilterParameters();
     /**
@@ -92,10 +105,10 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
     virtual void execute();
     virtual void preflight();
 
@@ -103,20 +116,65 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
     void parametersChanged();
 
   protected:
-    AddOrientationNoise();
+    MatchCrystallography();
 
-    void add_orientation_noise();
+    void initializeArrays(int ensem);
+
+    void determine_volumes();
+    void determine_boundary_areas();
+    void assign_eulers(int ensem);
+    int pick_euler(float random, int numbins);
+    void MC_LoopBody1(int feature, int ensem, int j, float neighsurfarea, unsigned int sym, QuatF& q1, QuatF& q2);
+    void MC_LoopBody2(int feature, int phase, int j, float neighsurfarea, unsigned int sym, QuatF& q1, QuatF& q2);
+    void matchCrystallography(int ensem);
+    void measure_misorientations(int ensem);
 
   private:
+
+    // Cell Data
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+
+    // Feature Data
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    NeighborList<int>* m_NeighborList;
+    NeighborList<float>* m_SharedSurfaceAreaList;
+
+    //Ensemble Data
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeatures)
+    StatsDataArray* m_StatsDataArray;
+
+    // All other private instance variables
+    float mdfchange;
+    float odfchange;
+
+    QVector<float> unbiasedvol;
+    QVector<float> m_TotalSurfaceArea;
+
+
+    FloatArrayType::Pointer actualodf;
+    FloatArrayType::Pointer simodf;
+    FloatArrayType::Pointer actualmdf;
+    FloatArrayType::Pointer simmdf;
+
+
+    QVector<QVector<float> > m_MisorientationLists;
+
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck();
 
-    AddOrientationNoise(const AddOrientationNoise&); // Copy Constructor Not Implemented
-    void operator=(const AddOrientationNoise&); // Operator '=' Not Implemented
+    MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
+    void operator=(const MatchCrystallography&); // Operator '=' Not Implemented
 };
 
-#endif /* AddOrientationNoise_H_ */
+#endif /* MATCHCRYSTALLOGRAPHY_H_ */
 
 
 

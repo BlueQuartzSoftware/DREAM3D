@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,63 +34,50 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _INITIALIZESYNTHETICVOLUME_H_
-#define _INITIALIZESYNTHETICVOLUME_H_
+#ifndef JumbleOrientations_H_
+#define JumbleOrientations_H_
+
+#include <QtCore/QString>
+#include <numeric>
+#include <limits>
+
+#include <boost/shared_array.hpp>
+
+#include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 /**
- * @class InitializeSyntheticVolume InitializeSyntheticVolume.h DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h
+ * @class JumbleOrientations JumbleOrientations.h DREAM3DLib/SyntheticBuilderFilters/JumbleOrientations.h
  * @brief
  * @author
- * @date
+ * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
+class JumbleOrientations : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(InitializeSyntheticVolume)
-    DREAM3D_STATIC_NEW_MACRO(InitializeSyntheticVolume)
-    DREAM3D_TYPE_MACRO_SUPER(InitializeSyntheticVolume, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(JumbleOrientations)
+    DREAM3D_STATIC_NEW_MACRO(JumbleOrientations)
+    DREAM3D_TYPE_MACRO_SUPER(JumbleOrientations, AbstractFilter)
 
 
-    virtual ~InitializeSyntheticVolume();
-
+    virtual ~JumbleOrientations();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const QString getHumanLabel() {return "Initialize Synthetic Volume";}
-
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputStatsAttributeArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputPhaseTypeAttributeArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputCrystalStructuresAttributeArrayName)
-    DREAM3D_INSTANCE_PROPERTY(int, XVoxels)
-    DREAM3D_INSTANCE_PROPERTY(int, YVoxels)
-    DREAM3D_INSTANCE_PROPERTY(int, ZVoxels)
-    DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    DREAM3D_INSTANCE_PROPERTY(float, YRes)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
-    DREAM3D_INSTANCE_PROPERTY(QVector<uint32_t>, ShapeTypes)
-
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const QString getHumanLabel() {return "Jumble Orientations";}
 
     virtual void setupFilterParameters();
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -99,27 +86,31 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    virtual void preflight();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
+    virtual void preflight();
 
   protected:
-    InitializeSyntheticVolume();
+    JumbleOrientations();
 
   private:
-    // Cell Data - make sure these are all initialized to NULL in the constructor
+    // Cell Data
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+
+    // Feature Data
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
 
     void dataCheck();
 
-    InitializeSyntheticVolume(const InitializeSyntheticVolume&); // Copy Constructor Not Implemented
-    void operator=(const InitializeSyntheticVolume&); // Operator '=' Not Implemented
+    JumbleOrientations(const JumbleOrientations&); // Copy Constructor Not Implemented
+    void operator=(const JumbleOrientations&); // Operator '=' Not Implemented
 };
 
-#endif /* _INITIALIZESYNTHETICVOLUME_H_ */
+#endif /* JumbleOrientations_H_ */
 

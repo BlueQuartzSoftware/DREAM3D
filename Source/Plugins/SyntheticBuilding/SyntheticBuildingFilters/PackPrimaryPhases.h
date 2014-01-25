@@ -34,26 +34,23 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef InsertPrecipitatePhases_H_
-#define InsertPrecipitatePhases_H_
+#ifndef PACKPRIMARYPHASES_H_
+#define PACKPRIMARYPHASES_H_
 
-#include <QtCore/QString>
 #include <vector>
+#include <QtCore/QString>
+
+#include <boost/shared_array.hpp>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 typedef struct
 {
@@ -64,32 +61,38 @@ typedef struct
   float m_Omega3s;
   int m_FeaturePhases;
   int m_Neighborhoods;
-} Precip;
+} Feature;
 
 /**
- * @class InsertPrecipitatePhases InsertPrecipitatePhases.h DREAM3DLib/SyntheticBuilderFilters/InsertPrecipitatePhases.h
+ * @class PackPrimaryPhases PackPrimaryPhases.h DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
+class PackPrimaryPhases : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(InsertPrecipitatePhases)
-    DREAM3D_STATIC_NEW_MACRO(InsertPrecipitatePhases)
-    DREAM3D_TYPE_MACRO_SUPER(InsertPrecipitatePhases, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(PackPrimaryPhases)
+    DREAM3D_STATIC_NEW_MACRO(PackPrimaryPhases)
+    DREAM3D_TYPE_MACRO_SUPER(PackPrimaryPhases, AbstractFilter)
 
-    virtual ~InsertPrecipitatePhases();
+    virtual ~PackPrimaryPhases();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
+    typedef boost::shared_array<float> SharedFloatArray;
+    typedef boost::shared_array<int> SharedIntArray;
+
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const QString getHumanLabel() { return "Pack Primary Phases"; }
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)
     Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
@@ -97,9 +100,6 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes NOTIFY parametersChanged)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const QString getHumanLabel() { return "Insert Precipitate Phases"; }
 
     virtual void setupFilterParameters();
     /**
@@ -114,60 +114,71 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+    virtual void preflight();
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
     virtual void execute();
-    virtual void preflight();
+
 
   signals:
     void parametersChanged();
 
   protected:
-    InsertPrecipitatePhases();
+    PackPrimaryPhases();
 
-    Int32ArrayType::Pointer initialize_packinggrid();
+    void initialize_packinggrid();
 
-    void place_precipitates(Int32ArrayType::Pointer featureOwnersPtr);
-    void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps);
+    void generate_feature(int phase, int Seed, Feature* feature, unsigned int shapeclass);
 
-    void transfer_attributes(int gnum, Precip* precip);
-    void insert_precipitate(size_t featureNum);
+    void transfer_attributes(int gnum, Feature* feature);
+    void insert_feature(size_t featureNum);
 
-    void move_precipitate(size_t featureNum, float xc, float yc, float zc);
+    void move_feature(size_t featureNum, float xc, float yc, float zc);
 
-    float check_sizedisterror(Precip* precip);
-    void determine_clustering(size_t featureNum, int add);
-    float check_clusteringerror(int gadd, int gremove);
+    float check_sizedisterror(Feature* feature);
+    void determine_neighbors(size_t featureNum, int add);
+    float check_neighborhooderror(int gadd, int gremove);
 
-    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr);
+    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr);
     void assign_voxels();
-    void assign_gaps();
+    void assign_gaps_only();
     void cleanup_features();
     void write_goal_attributes();
 
-    float find_xcoord(long long int index);
-    float find_ycoord(long long int index);
-    float find_zcoord(long long int index);
-
     void compare_1Ddistributions(QVector<float>, QVector<float>, float& sqrerror);
     void compare_2Ddistributions(QVector<QVector<float> >, QVector<QVector<float> >, float& sqrerror);
-
     void compare_3Ddistributions(QVector<QVector<QVector<float> > >, QVector<QVector<QVector<float> > >, float& sqrerror);
 
-    QVector<int> precipitatephases;
-    QVector<float> precipitatephasefractions;
+    int writeVtkFile(int32_t* featureOwners, bool* exclusionZonesPtr);
+    int estimate_numfeatures(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres);
+
 
   private:
+    int32_t* m_Neighbors;
 
-    int firstPrecipitateFeature;
-    unsigned long long int Seed;
-    float sizex;
-    float sizey;
-    float sizez;
-    float totalvol;
+    // Cell Data - make sure these are all initialized to NULL in the constructor
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
+    int8_t*  m_SurfaceVoxels;
 
+    // Feature Data - make sure these are all initialized to NULL in the constructor
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisLengths)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
+
+    // Ensemble Data - make sure these are all initialized to NULL in the constructor
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, ShapeTypes)
+    StatsDataArray* m_StatsDataArray;
+
+    // All other private variables
     QMap<unsigned int, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
@@ -175,32 +186,24 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     ShapeOps::Pointer m_EllipsoidOps;
     ShapeOps::Pointer m_SuperEllipsoidOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
-
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisLengths)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumCells)
-    NeighborList<float>* m_ClusteringList;
-
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, ShapeTypes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeatures)
-    StatsDataArray* m_StatsDataArray;
-
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     QVector<QVector<int> > columnlist;
     QVector<QVector<int> > rowlist;
     QVector<QVector<int> > planelist;
+    QVector<QVector<float> > ellipfunclist;
+
+    unsigned long long int m_Seed;
+
+    int firstPrimaryFeature;
+
+    float sizex;
+    float sizey;
+    float sizez;
+    float totalvol;
 
     float m_HalfPackingRes[3];
+    float m_OneOverPackingRes[3];
     float m_OneOverHalfPackingRes[3];
 
     float m_PackingRes[3];
@@ -209,27 +212,30 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
     QVector<QVector<float> > featuresizedist;
     QVector<QVector<float> > simfeaturesizedist;
-    QVector<QVector<QVector<float> > > clusteringdist;
-    QVector<QVector<QVector<float> > > simclusteringdist;
+    QVector<QVector<QVector<float> > > neighbordist;
+    QVector<QVector<QVector<float> > > simneighbordist;
 
     QVector<float> featuresizediststep;
-    QVector<float> clusteringdiststep;
+    QVector<float> neighbordiststep;
 
     QVector<int> newnames;
     QVector<int> packqualities;
     QVector<int> gsizes;
 
+    QVector<int> primaryphases;
+    QVector<float> primaryphasefractions;
+
     float fillingerror, oldfillingerror;
-    float currentclusteringerror, oldclusteringerror;
+    float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
 
     void dataCheck();
     void updateCellInstancePointers();
     void updateFeatureInstancePointers();
 
-    InsertPrecipitatePhases(const InsertPrecipitatePhases&); // Copy Constructor Not Implemented
-    void operator=(const InsertPrecipitatePhases&); // Operator '=' Not Implemented
+    PackPrimaryPhases(const PackPrimaryPhases&); // Copy Constructor Not Implemented
+    void operator=(const PackPrimaryPhases&); // Operator '=' Not Implemented
 };
 
-#endif /* InsertPrecipitatePhases_H_ */
+#endif /* PackPrimaryPhases_H_ */
 

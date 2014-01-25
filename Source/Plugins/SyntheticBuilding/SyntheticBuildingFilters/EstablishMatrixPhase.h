@@ -34,50 +34,47 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef JumbleOrientations_H_
-#define JumbleOrientations_H_
+#ifndef EstablishMatrixPhase_H_
+#define EstablishMatrixPhase_H_
 
 #include <QtCore/QString>
-#include <numeric>
-#include <limits>
-
-#include <boost/shared_array.hpp>
-
-#include "EbsdLib/EbsdConstants.h"
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+
 /**
- * @class JumbleOrientations JumbleOrientations.h DREAM3DLib/SyntheticBuilderFilters/JumbleOrientations.h
+ * @class EstablishMatrixPhases EstablishMatrixPhases.h DREAM3DLib/SyntheticBuilderFilters/EstablishMatrixPhases.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
+class EstablishMatrixPhase : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(JumbleOrientations)
-    DREAM3D_STATIC_NEW_MACRO(JumbleOrientations)
-    DREAM3D_TYPE_MACRO_SUPER(JumbleOrientations, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(EstablishMatrixPhase)
+    DREAM3D_STATIC_NEW_MACRO(EstablishMatrixPhase)
+    DREAM3D_TYPE_MACRO_SUPER(EstablishMatrixPhase, AbstractFilter)
 
-
-    virtual ~JumbleOrientations();
+    virtual ~EstablishMatrixPhase();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
-    virtual const QString getHumanLabel() {return "Jumble Orientations";}
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const QString getHumanLabel() { return "Establish Matrix Phase"; }
 
-    virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -86,31 +83,46 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
+
     virtual void execute();
     virtual void preflight();
 
   protected:
-    JumbleOrientations();
+    EstablishMatrixPhase();
+
+    void establish_matrix();
+
+    QVector<int> matrixphases;
+    QVector<float> matrixphasefractions;
 
   private:
-    // Cell Data
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
 
-    // Feature Data
+
+    size_t firstMatrixFeature;
+    unsigned long long int Seed;
+    float sizex;
+    float sizey;
+    float sizez;
+    float totalvol;
+
+
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
+
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
+    StatsDataArray* m_StatsDataArray;
 
     void dataCheck();
 
-    JumbleOrientations(const JumbleOrientations&); // Copy Constructor Not Implemented
-    void operator=(const JumbleOrientations&); // Operator '=' Not Implemented
+    EstablishMatrixPhase(const EstablishMatrixPhase&); // Copy Constructor Not Implemented
+    void operator=(const EstablishMatrixPhase&); // Operator '=' Not Implemented
 };
 
-#endif /* JumbleOrientations_H_ */
+#endif /* EstablishMatrixPhase_H_ */
 
