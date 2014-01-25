@@ -48,12 +48,6 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/StatisticsFilters/FindNumFeatures.h"
-
-#include "DREAM3DLib/GenericFilters/FindSurfaceFeatures.h"
-#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
-
 
 
 // -----------------------------------------------------------------------------

@@ -49,10 +49,10 @@
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
-
-#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+
+//#include "Statistics/StatisticsFilters/FindNeighbors.h"
+
 
 
 
@@ -232,7 +232,7 @@ void InsertPrecipitatePhases::dataCheck()
   if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-  QVector<size_t> tDims(1, 0);  
+  QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);

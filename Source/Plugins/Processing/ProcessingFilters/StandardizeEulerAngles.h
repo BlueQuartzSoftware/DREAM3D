@@ -49,7 +49,7 @@
  * @date Dec 12s, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT StandardizeEulerAngles : public AbstractFilter
+class StandardizeEulerAngles : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

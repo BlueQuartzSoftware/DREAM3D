@@ -48,7 +48,7 @@
 /**
  * @brief The SingleThresholdFeatures class
  */
-class DREAM3DLib_EXPORT SingleThresholdFeatures : public AbstractFilter
+class SingleThresholdFeatures : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

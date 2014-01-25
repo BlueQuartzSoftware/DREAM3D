@@ -41,18 +41,20 @@
 #include <QtCore/QDir>
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
-#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
+
 #include "DREAM3DLib/IOFilters/FeatureDataCSVWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>

@@ -58,7 +58,7 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MinSize : public AbstractFilter
+class MinSize : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

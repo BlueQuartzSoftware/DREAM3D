@@ -307,6 +307,7 @@ set(DREAM3D_PLUGIN_LIST
      Processing
      Reconstruction     
      Sampling
+     Statistics
      SurfaceMeshing
 )
 

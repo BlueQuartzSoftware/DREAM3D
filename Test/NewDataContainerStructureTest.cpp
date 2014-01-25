@@ -63,12 +63,7 @@
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/ParaDisReader.h"
 #include "DREAM3DLib/IOFilters/VASPReader.h"
-#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/StatisticsFilters/FindNumFeatures.h"
-#include "DREAM3DLib/StatisticsFilters/FindSizes.h"
-#include "DREAM3DLib/StatisticsFilters/FitCorrelatedFeatureData.h"
-#include "DREAM3DLib/StatisticsFilters/FitFeatureData.h"
+
 #include "DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
@@ -76,6 +71,14 @@
 // Sampling Plugin
 //#include "Sampling/SamplingFilters/ChangeResolution.h"
 //#include "Sampling/SamplingFilters/RegularGridSampleSurfaceMesh.h"
+
+// Statistics Plugin
+//#include "Statistics/StatisticsFilters/FindNeighbors.h"
+//#include "Statistics/StatisticsFilters/FindNeighbors.h"
+//#include "Statistics/StatisticsFilters/FindNumFeatures.h"
+//#include "Statistics/StatisticsFilters/FindSizes.h"
+//#include "Statistics/StatisticsFilters/FitCorrelatedFeatureData.h"
+//#include "Statistics/StatisticsFilters/FitFeatureData.h"
 
 // SurfaceMeshing Plugin
 //#include "SurfaceMeshing/SurfaceMeshingFilters/LaplacianSmoothing.h"

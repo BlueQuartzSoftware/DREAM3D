@@ -58,5 +58,5 @@ endforeach()
 
 
 
-END_FILTER_GROUP(${Processing_BINARY_DIR} "${_filterGroupName}" "Surface Meshing Filters")
+END_FILTER_GROUP(${Processing_BINARY_DIR} "${_filterGroupName}" "Processing Filters")
 
