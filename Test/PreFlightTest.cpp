@@ -43,8 +43,6 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/DREAM3DFilters.h"
-#include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
-#include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"

@@ -58,7 +58,7 @@
  * @date  Dec 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateNodeTriangleConnectivity : public AbstractFilter
+class GenerateNodeTriangleConnectivity : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

@@ -86,21 +86,27 @@ bool fixFile(FilterParameter::Pointer parameter, const QString &props, const QSt
   while (sourceLines.hasNext())
   {
     QString line = sourceLines.next();
-    header << line << "\n";
+    if (sourceLines.hasNext() ) { header << line << "\n"; }
     if(line.contains(searchString) )
     {
-      line = sourceLines.next();
-      if(line.contains("Q_PROPERTY") == false)
+      qDebug() << "Found a DREAM3D Filter Property " << searchString;
+      line = sourceLines.next(); // Get the next line, it should start with a Q_PROPERTY
+      if(line.contains("Q_PROPERTY") == true ) // It had the Q_PROPERTY line already so just write the existing line
+      {
+        header << line << "\n";
+      }
+      else // The Q_PROPERTY was missing so write that, and also the line that was read
       {
         header << props;
         qDebug() << "adding " << props;
         didReplace = true;
+        header << line << "\n";
       }
     }
   }
 
   QFileInfo fi2(cppFile);
-#if 0
+#if 1
   QFile hOut(cppFile);
 #else
   QString tmpPath = "/tmp/" + fi2.fileName();
@@ -145,11 +151,11 @@ void appendSignal(const QString& cppFile)
     {
       header << "  signals:\n    void parametersChanged();\n\n";
     }
-    header << line << "\n";
+    if (sourceLines.hasNext() ) { header << line << "\n"; }
   }
 
   QFileInfo fi2(cppFile);
-#if 1
+#if 0
   QFile hOut(cppFile);
 #else
   QString tmpPath = "/tmp/" + fi2.fileName();
@@ -264,7 +270,7 @@ void LoopOnFilters()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  //Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

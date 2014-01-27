@@ -104,6 +104,7 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
     QString gName = QString::number(i);
 
     // Open the group to get the name of the filter then close again.
+    //qDebug() << " Current QSettings Group: " << prefs->group();
     prefs->beginGroup(gName);
     QString filterName = prefs->value(DREAM3D::Settings::FilterName, "").toString();
     prefs->endGroup();
@@ -137,6 +138,7 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
         }
       }
     }
+
 
   }
   return pipeline;
@@ -804,7 +806,7 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
   DataContainerArrayProxy dcaProxy;
   QString defValue;
   int count = m_Prefs->beginReadArray(name + "_DataContainerNames");
-  if (count == 0) { return v; } // If there is nothing to read return the default value
+  if (count == 0) { m_Prefs->endArray(); return v; } // If there is nothing to read return the default value
   // First, gather the list of DataContainers
 
   for(int i = 0; i < count; i++)

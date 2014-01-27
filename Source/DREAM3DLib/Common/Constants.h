@@ -156,7 +156,7 @@ namespace DREAM3D
     const DREAM3D_STRING KernelAverageMisorientations("KernelAverageMisorientations");
     const DREAM3D_STRING MicroTexVolFrac("MicroTexVolFrac");
     const DREAM3D_STRING MisorientationColor("MisorientationColor");
-    const DREAM3D_STRING MTRdensity("MTRdensity");
+    const DREAM3D_STRING ParentDensity("ParentDensity");
     const DREAM3D_STRING MTRgKAM("MTRgKAM");
     const DREAM3D_STRING NearestNeighbors("NearestNeighbors");
     const DREAM3D_STRING ParentIds("ParentIds");
@@ -178,7 +178,7 @@ namespace DREAM3D
     const DREAM3D_STRING AspectRatios("AspectRatios");
     const DREAM3D_STRING AvgCAxes("AvgCAxes");
     const DREAM3D_STRING AvgCAxisMisalignments("AvgCAxisMisalignments");
-    const DREAM3D_STRING AvgParentAvgCAxisMisalignments("AvgCAxisMisalignments");
+    const DREAM3D_STRING AvgParentAvgCAxisMisalignments("AvgParentAvgCAxisMisalignments");
     const DREAM3D_STRING AvgQuats("AvgQuats");
     const DREAM3D_STRING AxisEulerAngles("AxisEulerAngles");
     const DREAM3D_STRING AxisLengths("AxisLengths");
@@ -224,7 +224,7 @@ namespace DREAM3D
     const DREAM3D_STRING SurfaceFeatures("SurfaceFeatures");
     const DREAM3D_STRING SurfaceVoxelFractions("SurfaceVoxelFractions");
     const DREAM3D_STRING Volumes("Volumes");
-    const DREAM3D_STRING avgMisorientation("avgMisorientation");
+    const DREAM3D_STRING AvgMisorientations("AvgMisorientations");
     const DREAM3D_STRING mPrime("mPrime");
     const DREAM3D_STRING NumBins("NumBins");
 

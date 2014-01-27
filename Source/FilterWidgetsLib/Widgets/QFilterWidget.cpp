@@ -42,16 +42,12 @@
 #include <QtCore/QResource>
 #include <QtCore/QDir>
 
-
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
-//#include <QtGui/QFormLayout>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 
 
-#include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/QFSDropLineEdit.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"

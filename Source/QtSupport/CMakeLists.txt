@@ -20,7 +20,7 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/DREAM3DPluginFrame.cpp
     ${QtSupport_SOURCE_DIR}/ApplicationAboutBoxDialog.cpp
     ${QtSupport_SOURCE_DIR}/ColorComboPicker.cpp
-    ${QtSupport_SOURCE_DIR}/QR3DFileCompleter.cpp
+    ${QtSupport_SOURCE_DIR}/QFileCompleter.cpp
     ${QtSupport_SOURCE_DIR}/QRecentFileList.cpp
     ${QtSupport_SOURCE_DIR}/QFSDropLineEdit.cpp
     ${QtSupport_SOURCE_DIR}/QDroppableScrollArea.cpp
@@ -40,7 +40,7 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/DREAM3DPluginFrame.h
     ${QtSupport_SOURCE_DIR}/ApplicationAboutBoxDialog.h
     ${QtSupport_SOURCE_DIR}/ColorComboPicker.h
-    ${QtSupport_SOURCE_DIR}/QR3DFileCompleter.h
+    ${QtSupport_SOURCE_DIR}/QFileCompleter.h
     ${QtSupport_SOURCE_DIR}/QRecentFileList.h
     ${QtSupport_SOURCE_DIR}/QFSDropLineEdit.h
     ${QtSupport_SOURCE_DIR}/QDroppableScrollArea.h

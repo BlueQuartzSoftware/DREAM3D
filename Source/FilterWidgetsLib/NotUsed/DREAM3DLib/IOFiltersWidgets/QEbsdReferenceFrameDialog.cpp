@@ -54,7 +54,7 @@
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/ReadOrientationData.h"
 #include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
-#include "DREAM3DLib/ProcessingFilters/ConvertEulerAngles.h"
+#include "Processing/ProcessingFilters/ConvertEulerAngles.h"
 
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 

@@ -40,6 +40,9 @@
 
 #include <QtGui/QFileDialog>
 
+#include "QtSupport/QFileCompleter.h"
+
+
 #include "FilterWidgetsLib/FilterParameterWidgets/moc_OutputFileWidget.cxx"
 
 // Initialize private static member variable
@@ -70,6 +73,11 @@ void OutputFileWidget::setupGui()
 {
     connect(value, SIGNAL(textChanged(const QString&)),
           this, SLOT(parametersChanged(const QString&)));
+
+  QFileCompleter* com = new QFileCompleter(this, false);
+  value->setCompleter(com);
+  QObject::connect( com, SIGNAL(activated(const QString &)),
+                    this, SLOT(parametersChanged(const QString &)));
 
   if (m_FilterParameter != NULL)
   {

@@ -92,12 +92,7 @@ AlignSectionsMisorientation::~AlignSectionsMisorientation()
 // -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::setupFilterParameters()
 {
-  // Run the superclass first.
-  //AlignSections::setupFilterParameters();
-  // Now append our options
-
   QVector<FilterParameter::Pointer> parameters = getFilterParameters();
-
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Misorientation Tolerance");

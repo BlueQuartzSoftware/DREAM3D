@@ -43,11 +43,11 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/ProcessingFilters/MinSize.h"
+#include "Processing/ProcessingFilters/MinSize.h"
 
 
 /**
- * @class PerPhaseMinSize PerPhaseMinSize.h DREAM3DLib/ProcessingFilters/PerPhaseMinSize.h
+ * @class PerPhaseMinSize PerPhaseMinSize.h Processing/ProcessingFilters/PerPhaseMinSize.h
  * @brief This filter ensures each Feature or Region has a minimum number of voxels.
  * @author
  * @date Nov 19, 2011

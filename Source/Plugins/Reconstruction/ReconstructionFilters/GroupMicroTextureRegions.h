@@ -77,6 +77,7 @@ class GroupMicroTextureRegions : public GroupFeatures
     virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance)
+    Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual void setupFilterParameters();
@@ -94,6 +95,9 @@ class GroupMicroTextureRegions : public GroupFeatures
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+
   protected:
     GroupMicroTextureRegions();
 
@@ -105,6 +109,7 @@ class GroupMicroTextureRegions : public GroupFeatures
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ParentDensity)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)

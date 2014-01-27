@@ -60,11 +60,6 @@ include(${CMP_SOURCE_DIR}/cmpProject.cmake)
 configure_file(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetsLibConfiguration.h.in
                ${FilterWidgetsLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
 
-# Setup the Include Directories
-include_directories(${PROJECT_CODE_DIR})
-include_directories(${FilterWidgetsLib_BINARY_DIR})
-
-
 
 set(Project_SRCS "")
 
@@ -155,8 +150,10 @@ set(Project_SRCS
 )
 
 
+
 # --------------------------------------------------------------------
 # Set some Include directories
+include_directories(${PROJECT_CODE_DIR})
 include_directories(${FilterWidgetsLib_SOURCE_DIR}/..)
 include_directories(${FilterWidgetsLib_BINARY_DIR})
 

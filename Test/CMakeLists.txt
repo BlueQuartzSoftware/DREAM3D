@@ -93,9 +93,10 @@ ADD_DREAM3D_TEST(ErrorMessageTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(GenericFilterTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(PreFlightTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(DataContainerTest  "DREAM3DLib")
-ADD_DREAM3D_TEST(NewDataContainerStructureTest  "DREAM3DLib")
+
 
 if(0)
+ADD_DREAM3D_TEST(NewDataContainerStructureTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(RawBinaryReaderTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(StatsGenTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(PhIOTest  "DREAM3DLib")

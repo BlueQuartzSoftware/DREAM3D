@@ -71,7 +71,31 @@ DataContainerReader::~DataContainerReader()
 void DataContainerReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input File");
+    parameter->setPropertyName("InputFile");
+    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
+    parameter->setFileExtension("*.dx");
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Overwrite Existing DataContainers");
+    parameter->setPropertyName("OverwriteExistingDataContainers");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }
+  {
+    DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
+    parameter->setHumanLabel("Selected Arrays");
+    parameter->setPropertyName("DataContainerArrayProxy");
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
+    parameter->setValueType("DataContainerArrayProxy");
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
@@ -82,6 +106,7 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile() ) );
+  setOverwriteExistingDataContainers(reader->readValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() ) );
   setDataContainerArrayProxy(reader->readDataContainerArrayProxy("DataContainerArrayProxy", getDataContainerArrayProxy() ) );
   reader->closeFilterGroup();
 }
@@ -95,6 +120,7 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() );
   DataContainerArrayProxy dcaProxy = getDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
   writer->writeValue("DataContainerArrayProxy", dcaProxy );
 

@@ -58,7 +58,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
+class M3CEntireVolume : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

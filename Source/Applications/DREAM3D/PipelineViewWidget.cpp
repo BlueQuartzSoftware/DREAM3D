@@ -629,7 +629,7 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       QByteArray dropData = event->mimeData()->data("text/plain");
       QString name(dropData);
       // We need to figure out where it was dropped relative to other filters
-      int count = filterCount();
+      int count = filterCount() - 1;
       for (int i = 0; i < count; ++i)
       {
         QFilterWidget* w = qobject_cast<QFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
