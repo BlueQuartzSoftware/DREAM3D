@@ -55,7 +55,7 @@ SGWidget::~SGWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::extractStatsData(VolumeDataContainer::Pointer m, int index)
+void SGWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 {
   BOOST_ASSERT(false);
 }
@@ -71,7 +71,7 @@ QString SGWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::gatherStatsData(VolumeDataContainer::Pointer m)
+int SGWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 {
   return -1;
 }

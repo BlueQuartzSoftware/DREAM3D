@@ -643,28 +643,30 @@ void StatsGeneratorUI::on_actionSave_triggered()
     phaseFractionTotal += sgwidget->getPhaseFraction();
   }
 
-  int nPhases = phaseTabs->count();
+  int nPhases = phaseTabs->count()+1;
   DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   dca->pushBack(m);
-  QVector<size_t> tDims(1, phaseTabs->count());
+  QVector<size_t> tDims(1, nPhases);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, "CellEnsembleData", DREAM3D::AttributeMatrixType::CellEnsemble);
   m->addAttributeMatrix("CellEnsembleData", cellEnsembleAttrMat);
 
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
+  statsDataArray->resize(nPhases);
   cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, statsDataArray);
 
-  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::CrystalStructures);
+  QVector<size_t> cDims(1, 1);
+  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, DREAM3D::EnsembleData::CrystalStructures);
   crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
   cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
 
-  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::PhaseTypes);
+  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->setValue(0, DREAM3D::PhaseType::UnknownPhaseType);
   cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 
   // Loop on all the phases
 
-  for(int i = 0; i < nPhases; ++i)
+  for(int i = 0; i < phaseTabs->count(); ++i)
   {
     SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(i));
     sgwidget->setTotalPhaseFraction(phaseFractionTotal);
@@ -693,7 +695,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
       BoundaryStatsData::Pointer data = BoundaryStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    err = sgwidget->gatherStatsData(m);
+    err = sgwidget->gatherStatsData(cellEnsembleAttrMat);
     if(err < 0)
     {
       QString  msg("Could not save file due to an internal error gathering statistics.\nError code ");

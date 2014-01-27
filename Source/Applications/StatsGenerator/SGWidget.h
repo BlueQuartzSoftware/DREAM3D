@@ -69,8 +69,8 @@ class SGWidget : public QWidget
      DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
      DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
-    virtual void extractStatsData(VolumeDataContainer::Pointer m, int index);
-    virtual int gatherStatsData(VolumeDataContainer::Pointer m);
+    virtual void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
+    virtual int gatherStatsData(AttributeMatrix::Pointer attrMat);
 
     virtual QString getComboString();
     virtual QString getTabTitle();
