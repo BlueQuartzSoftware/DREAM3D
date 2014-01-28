@@ -34,7 +34,6 @@ Voxel
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Feature | Active | Boolean value specifying if the **Feature** is still in the sample (1 if the **Feature** is in the sample and 0 if it is not). | At the end of the filter, all **Features** will be "Active" as the "Inactive" **Features** will have been removed.  |  
-| Cell | ParentDensity | Float of the voxel fraction of "flipped" microtexture against the region searched in Find Neighborhoods filter. | To convert to a **Feature**, use Create Feature Array From Cell Array Filter. |  
 | Feature | ParentIds | List of grouped microtexture region **Features**. |  |
 | Cell | ParentIds | List of grouped microtexture region **Cells**.  |  |  
 
