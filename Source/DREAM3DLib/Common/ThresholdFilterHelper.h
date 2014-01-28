@@ -47,7 +47,7 @@
 /**
  * @brief The ThresholdFilterHelper class
  */
-class ThresholdFilterHelper : public IDataArrayFilter
+class DREAM3DLib_EXPORT ThresholdFilterHelper : public IDataArrayFilter
 {
   public:
     ThresholdFilterHelper(DREAM3D::Comparison::Enumeration compType,
