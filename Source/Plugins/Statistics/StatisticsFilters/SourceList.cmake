@@ -23,6 +23,7 @@ set(_PublicFilters
   FindFeatureReferenceMisorientations
   FindKernelAvgMisorientations
   FindLargestCrossSections
+  FindLocalAverageCAxisMisalignments
   FindMicroTextureRegions
   FindMisorientations
   FindNeighborhoods

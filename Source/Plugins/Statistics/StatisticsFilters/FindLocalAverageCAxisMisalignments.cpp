@@ -1,7 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * Copyright (c) 2013 Dr. Joseph C. Tucker (UES, Inc.)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,7 +35,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "BridgeParentIdsStatisticsToFeatureIds.h"
+#include "FindLocalAverageCAxisMisalignments.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
@@ -58,20 +58,23 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BridgeParentIdsStatisticsToFeatureIds::BridgeParentIdsStatisticsToFeatureIds() :
+FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::NewCellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_CellParentIds(NULL),
   m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
   m_FeatureParentIds(NULL),
+  m_AvgCAxisMisalignmentsArrayName(DREAM3D::FeatureData::AvgCAxisMisalignments),
+  m_AvgCAxisMisalignments(NULL),
   m_NumFeaturesPerParentArrayName(DREAM3D::FeatureData::NumFeaturesPerParent),
   m_NumFeaturesPerParent(NULL),
+  m_AvgParentAvgCAxisMisalignmentsArrayName(DREAM3D::FeatureData::AvgParentAvgCAxisMisalignments),
+  m_AvgParentAvgCAxisMisalignments(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
@@ -83,21 +86,21 @@ BridgeParentIdsStatisticsToFeatureIds::BridgeParentIdsStatisticsToFeatureIds() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BridgeParentIdsStatisticsToFeatureIds::~BridgeParentIdsStatisticsToFeatureIds()
+FindLocalAverageCAxisMisalignments::~FindLocalAverageCAxisMisalignments()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BridgeParentIdsStatisticsToFeatureIds::setupFilterParameters()
+void FindLocalAverageCAxisMisalignments::setupFilterParameters()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BridgeParentIdsStatisticsToFeatureIds::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FindLocalAverageCAxisMisalignments::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -109,7 +112,7 @@ void BridgeParentIdsStatisticsToFeatureIds::readFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BridgeParentIdsStatisticsToFeatureIds::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindLocalAverageCAxisMisalignments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->closeFilterGroup();
@@ -119,7 +122,7 @@ int BridgeParentIdsStatisticsToFeatureIds::writeFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BridgeParentIdsStatisticsToFeatureIds::dataCheck()
+void FindLocalAverageCAxisMisalignments::dataCheck()
 {
   setErrorCondition(0);
 
@@ -129,6 +132,8 @@ void BridgeParentIdsStatisticsToFeatureIds::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -302);
   if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
+  AttributeMatrix::Pointer newCellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), -302);
+  if(getErrorCondition() < 0 || NULL == newCellFeatureAttrMat.get()) { return; }
 
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
@@ -144,10 +149,22 @@ void BridgeParentIdsStatisticsToFeatureIds::dataCheck()
   { m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Data
-  m_FeatureParentIdsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureParentIdsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_FeatureParentIdsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureParentIdsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_AvgCAxisMisalignmentsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgCAxisMisalignmentsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_AvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_AvgCAxisMisalignments = m_AvgCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
+  // New Feature Data
+    m_NumFeaturesPerParentPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, float>(this, m_NumFeaturesPerParentArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_NumFeaturesPerParentPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_NumFeaturesPerParent = m_NumFeaturesPerParentPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_AvgParentAvgCAxisMisalignmentsPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_AvgParentAvgCAxisMisalignmentsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_AvgParentAvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_AvgParentAvgCAxisMisalignments = m_AvgParentAvgCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this,  m_CrystalStructuresArrayName, -305, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -157,81 +174,34 @@ void BridgeParentIdsStatisticsToFeatureIds::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BridgeParentIdsStatisticsToFeatureIds::preflight()
+void FindLocalAverageCAxisMisalignments::preflight()
 {
   dataCheck();
-
-  RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
-  connect(rename_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-  rename_cell_array->setDataContainerArray(getDataContainerArray());
-  rename_cell_array->setMessagePrefix(getMessagePrefix());
-  rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
-  rename_cell_array->setNewCellArrayName(m_FeatureIdsArrayName);
-  rename_cell_array->preflight();
-  int err1 = rename_cell_array->getErrorCondition();
-  if (err1 < 0)
-  {
-    setErrorCondition(rename_cell_array->getErrorCondition());
-
-    return;
-  }
-
-  LinkFeatureMapToCellArray::Pointer link_feature_map_to_cell_array = LinkFeatureMapToCellArray::New();
-  connect(link_feature_map_to_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-  link_feature_map_to_cell_array->setDataContainerArray(getDataContainerArray());
-  link_feature_map_to_cell_array->setMessagePrefix(getMessagePrefix());
-  link_feature_map_to_cell_array->setSelectedCellDataArrayName(m_FeatureIdsArrayName);
-  link_feature_map_to_cell_array->preflight();
-  int err2 = link_feature_map_to_cell_array->getErrorCondition();
-  if (err2 < 0)
-  {
-    setErrorCondition(link_feature_map_to_cell_array->getErrorCondition());
-
-    return;
-  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BridgeParentIdsStatisticsToFeatureIds::execute()
+void FindLocalAverageCAxisMisalignments::execute()
 {
   setErrorCondition(0);
 
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
-  connect(rename_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-  rename_cell_array->setDataContainerArray(getDataContainerArray());
-  rename_cell_array->setMessagePrefix(getMessagePrefix());
-  rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
-  rename_cell_array->setNewCellArrayName(m_FeatureIdsArrayName);
-  rename_cell_array->preflight();
-  int err1 = rename_cell_array->getErrorCondition();
-  if (err1 < 0)
-  {
-    setErrorCondition(rename_cell_array->getErrorCondition());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  size_t numFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t newNumFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
 
-    return;
+  for(int i=0;i<numFeatures;i++)
+  {
+    int parentid = m_FeatureParentIds[i];
+    m_NumFeaturesPerParent[parentid]++;
+    m_AvgParentAvgCAxisMisalignments[parentid] += m_AvgCAxisMisalignments[i];
   }
-
-  LinkFeatureMapToCellArray::Pointer link_feature_map_to_cell_array = LinkFeatureMapToCellArray::New();
-  connect(link_feature_map_to_cell_array.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-  link_feature_map_to_cell_array->setDataContainerArray(getDataContainerArray());
-  link_feature_map_to_cell_array->setMessagePrefix(getMessagePrefix());
-  link_feature_map_to_cell_array->setSelectedCellDataArrayName(m_FeatureIdsArrayName);
-  link_feature_map_to_cell_array->preflight();
-  int err2 = link_feature_map_to_cell_array->getErrorCondition();
-  if (err2 < 0)
+  for(int i=0;i<newNumFeatures;i++)
   {
-    setErrorCondition(link_feature_map_to_cell_array->getErrorCondition());
-
-    return;
+    m_AvgParentAvgCAxisMisalignments[i] /= m_NumFeaturesPerParent[i];
   }
 
   // If there is an error set this to something negative and also set a message
