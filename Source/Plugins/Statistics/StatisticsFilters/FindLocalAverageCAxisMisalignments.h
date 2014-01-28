@@ -1,7 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * Copyright (c) 2013 Dr. Joseph C. Tucker (UES, Inc.)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef BridgeParentIdsStatisticsToFeatureIds_H_
-#define BridgeParentIdsStatisticsToFeatureIds_H_
+#ifndef FindLocalAverageCAxisMisalignments_H_
+#define FindLocalAverageCAxisMisalignments_H_
 
 #include <QtCore/QObject>
 
@@ -50,32 +50,33 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 /**
- * @class BridgeParentIdsStatisticsToFeatureIds BridgeParentIdsStatisticsToFeatureIds.h DREAM3DLib/GenericFilters/BridgeParentIdsStatisticsToFeatureIds.h
+ * @class FindLocalAverageCAxisMisalignments FindLocalAverageCAxisMisalignments.h Plugins/Statistics/StatisticsFilters/FindLocalAverageCAxisMisalignments.h
  * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @author Joseph C. Tucker
+ * @date Jan 28, 2014
+ * @version 5.0
  */
-class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractFilter
+class FindLocalAverageCAxisMisalignments : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(BridgeParentIdsStatisticsToFeatureIds)
-    DREAM3D_STATIC_NEW_MACRO(BridgeParentIdsStatisticsToFeatureIds)
-    DREAM3D_TYPE_MACRO_SUPER(BridgeParentIdsStatisticsToFeatureIds, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindLocalAverageCAxisMisalignments)
+    DREAM3D_STATIC_NEW_MACRO(FindLocalAverageCAxisMisalignments)
+    DREAM3D_TYPE_MACRO_SUPER(FindLocalAverageCAxisMisalignments, AbstractFilter)
 
 
-    virtual ~BridgeParentIdsStatisticsToFeatureIds();
+    virtual ~FindLocalAverageCAxisMisalignments();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NewCellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::MemoryManagementFilters;}
-    virtual const QString getHumanLabel() { return "Bridge ParentIds Statistics To FeatureIds"; }
+	virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::CrystallographicFilters;}
+    virtual const QString getHumanLabel() { return "Find Local Average C-Axis Misalignments"; }
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -93,13 +94,15 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
     virtual void preflight();
 
   protected:
-    BridgeParentIdsStatisticsToFeatureIds();
+    FindLocalAverageCAxisMisalignments();
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeaturesPerParent)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgCAxisMisalignments)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgParentAvgCAxisMisalignments)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     QVector<OrientationOps::Pointer> m_OrientationOps;
@@ -107,9 +110,9 @@ class DREAM3DLib_EXPORT BridgeParentIdsStatisticsToFeatureIds : public AbstractF
     void dataCheck();
 
 
-    BridgeParentIdsStatisticsToFeatureIds(const BridgeParentIdsStatisticsToFeatureIds&); // Copy Constructor Not Implemented
-    void operator=(const BridgeParentIdsStatisticsToFeatureIds&); // Operator '=' Not Implemented
+    FindLocalAverageCAxisMisalignments(const FindLocalAverageCAxisMisalignments&); // Copy Constructor Not Implemented
+    void operator=(const FindLocalAverageCAxisMisalignments&); // Operator '=' Not Implemented
 };
 
-#endif /* BridgeParentIdsStatisticsToFeatureIds_H_ */
+#endif /* FindLocalAverageCAxisMisalignments_H_ */
 
