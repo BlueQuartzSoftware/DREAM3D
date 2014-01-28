@@ -1,17 +1,17 @@
-Rename Cell Array {#renamecellarray}
+Rename Attribute Array {#renameattributearray}
 ==============================
 
 ## Group (Subgroup) ##
 Generic Filters (Memory/Management)
 
 ## Description ##
-This filter renames a user chosen **Cell** array to a user defined new name.
+This filter renames a user chosen array to a user defined new name.
 
 ## Parameters ##
 
 | Name | Type |
 |------|------|
-| Cell Array Name | String |
+| Array Name | String |
 
 ## Required DataContainers ##
 Voxel
@@ -20,14 +20,14 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
+| *User Chosen* | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
 
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | *User Defined* | | Array will have same values as its old counterpart |
+| *User Chosen* | *User Defined* | | Array will have same values as its old counterpart |
 
 
 

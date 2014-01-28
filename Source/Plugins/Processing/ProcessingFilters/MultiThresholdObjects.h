@@ -33,45 +33,40 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef _RenameCellArray_H_
-#define _RenameCellArray_H_
+#ifndef _MultiThresholdObjects_H_
+#define _MultiThresholdObjects_H_
 
 #include <QtCore/QString>
-#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
 /**
- * @class RenameCellArray RenameCellArray.h /FilterCategoryFilters/RenameCellArray.h
+ * @class MultiThresholdObjects MultiThresholdObjects.h /GenericFilters/MultiThresholdObjects.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT RenameCellArray : public AbstractFilter
+class MultiThresholdObjects : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(RenameCellArray)
-    DREAM3D_STATIC_NEW_MACRO(RenameCellArray)
-    DREAM3D_TYPE_MACRO_SUPER(RenameCellArray, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(MultiThresholdObjects)
+    DREAM3D_STATIC_NEW_MACRO(MultiThresholdObjects)
+    DREAM3D_TYPE_MACRO_SUPER(MultiThresholdObjects, AbstractFilter)
 
-    virtual ~RenameCellArray();
-
-
+    virtual ~MultiThresholdObjects();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-//    Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AttributeMatrixName)
-//    Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedArrayPath)
-    Q_PROPERTY(QString SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NewArrayName)
-    Q_PROPERTY(QString NewArrayName READ getNewArrayName WRITE setNewArrayName NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
+
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, ComparisonInputs)
+    Q_PROPERTY(QVector<ComparisonInput_t> ComparisonInputs READ getComparisonInputs WRITE setComparisonInputs NOTIFY parametersChanged)
 
 
     /**
@@ -79,14 +74,14 @@ class DREAM3DLib_EXPORT RenameCellArray : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ThresholdFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Rename Cell Array"; }
+    virtual const QString getHumanLabel() { return "Multi Threshold (Cell Data)"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -121,7 +116,7 @@ class DREAM3DLib_EXPORT RenameCellArray : public AbstractFilter
     void parametersChanged();
 
   protected:
-    RenameCellArray();
+    MultiThresholdObjects();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -134,9 +129,10 @@ class DREAM3DLib_EXPORT RenameCellArray : public AbstractFilter
     void dataCheck();
 
   private:
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Output)
 
-    RenameCellArray(const RenameCellArray&); // Copy Constructor Not Implemented
-    void operator=(const RenameCellArray&); // Operator '=' Not Implemented
+    MultiThresholdObjects(const MultiThresholdObjects&); // Copy Constructor Not Implemented
+    void operator=(const MultiThresholdObjects&); // Operator '=' Not Implemented
 };
 
-#endif /* _RenameCellArray_H_ */
+#endif /* _MultiThresholdObjects_H_ */

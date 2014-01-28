@@ -34,13 +34,13 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "RenameCellArray.h"
+#include "RenameAttributeArray.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RenameCellArray::RenameCellArray() :
+RenameAttributeArray::RenameAttributeArray() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_AttributeMatrixName(DREAM3D::Defaults::AttributeMatrixName),
@@ -53,14 +53,14 @@ RenameCellArray::RenameCellArray() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RenameCellArray::~RenameCellArray()
+RenameAttributeArray::~RenameAttributeArray()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::setupFilterParameters()
+void RenameAttributeArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
@@ -87,7 +87,7 @@ void RenameCellArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void RenameAttributeArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -101,7 +101,7 @@ void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int RenameAttributeArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
@@ -113,7 +113,7 @@ int RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::dataCheck()
+void RenameAttributeArray::dataCheck()
 {
   setErrorCondition(0);
 
@@ -143,7 +143,7 @@ void RenameCellArray::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::preflight()
+void RenameAttributeArray::preflight()
 {
   dataCheck();
 }
@@ -151,7 +151,7 @@ void RenameCellArray::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::execute()
+void RenameAttributeArray::execute()
 {
   setErrorCondition(0);
 

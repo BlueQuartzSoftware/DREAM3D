@@ -43,10 +43,6 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
-#include "DREAM3DLib/GenericFilters/RenameCellArray.h"
-#include "DREAM3DLib/GenericFilters/LinkFeatureMapToCellArray.h"
-
-//#include "Statistics/StatisticsFilters/FindNeighbors.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
