@@ -70,15 +70,11 @@ void MultiThresholdCells::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Output Array Name");
     parameter->setPropertyName("OutputArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
-    parameter->setEditable(true);
-    QVector<QString> choices;
-    choices.push_back(DREAM3D::CellData::GoodVoxels);
-    parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
 

@@ -62,13 +62,16 @@ class DREAM3DLib_EXPORT RenameCellArray : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(RenameCellArray, AbstractFilter)
 
     virtual ~RenameCellArray();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
-    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NewCellArrayName)
-    Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName NOTIFY parametersChanged)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AttributeMatrixName)
+    Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedArrayName)
+    Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NewArrayName)
+    Q_PROPERTY(QString NewArrayName READ getNewArrayName WRITE setNewArrayName NOTIFY parametersChanged)
 
 
     /**
