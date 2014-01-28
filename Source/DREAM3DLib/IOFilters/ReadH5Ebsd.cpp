@@ -130,7 +130,7 @@ void ReadH5Ebsd::setupFilterParameters()
     parameter->setHumanLabel("Input File");
     parameter->setPropertyName("InputFile");
     parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setFileExtension("*.dx");
+    parameter->setFileExtension("*.h5ebsd");
     parameter->setValueType("QString");
     parameters.push_back(parameter);
   }

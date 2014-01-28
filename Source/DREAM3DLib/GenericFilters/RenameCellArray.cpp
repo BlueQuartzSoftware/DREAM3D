@@ -43,9 +43,9 @@
 RenameCellArray::RenameCellArray() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_SelectedCellArrayName(""),
-  m_NewCellArrayName("")
+  m_AttributeMatrixName(DREAM3D::Defaults::AttributeMatrixName),
+  m_SelectedArrayName(""),
+  m_NewArrayName("")
 {
   setupFilterParameters();
 }
