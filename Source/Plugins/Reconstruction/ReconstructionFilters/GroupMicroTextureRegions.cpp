@@ -71,8 +71,6 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_FeatureIds(NULL),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_CellParentIds(NULL),
-  m_ParentDensityArrayName(DREAM3D::CellData::ParentDensity),
-  m_ParentDensity(NULL),
   m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
   m_FeatureParentIds(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
