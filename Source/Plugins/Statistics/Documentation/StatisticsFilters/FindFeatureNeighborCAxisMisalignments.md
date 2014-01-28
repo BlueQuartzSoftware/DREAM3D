@@ -11,7 +11,7 @@ This Filter determines, for each **Feature**, the c-axis misalignments with the 
 
 | Name | Type |
 |-------|------|
-|Find Average C-Axis Mialignment | Boolean |
+|Find Average C-Axis Mialignments | Boolean |
 
 ## Required DataContainers ##
 Volume
