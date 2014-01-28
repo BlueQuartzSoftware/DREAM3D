@@ -45,7 +45,6 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "FilterWidgetsLib/QFilterParameterWidget.h"
 #include "FilterWidgetsLib/FilterWidgetsLib.h"
 
 #include "FilterWidgetsLib/ui_ArraySelectionWidget.h"
@@ -68,16 +67,22 @@ class FilterWidgetsLib_EXPORT ArraySelectionWidget : public QWidget, private Ui:
     * @param parent The parent QWidget for this Widget
     */
     ArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
-    
+
     virtual ~ArraySelectionWidget();
-    
+
     /**
     * @brief This method does additional GUI widget connections
     */
     void setupGui();
 
   public slots:
+    void updateWidget();
+    void beforePreflight();
+    void afterPreflight();
+    void on_dataContainerList_itemClicked();
 
+  protected:
+    void populateLists();
 
   private:
     AbstractFilter*   m_Filter;

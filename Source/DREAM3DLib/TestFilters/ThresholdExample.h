@@ -69,12 +69,18 @@ class DREAM3DLib_EXPORT ThresholdExample : public AbstractFilter
     // -----------------------------------------------------------------------------
     /* Each Filter can ONLY have ONE of each of these types of widgets */
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, CellComparisonInputs)
+    Q_PROPERTY(QVector<ComparisonInput_t> CellComparisonInputs READ getCellComparisonInputs WRITE setCellComparisonInputs NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, FeatureComparisonInputs)
+    Q_PROPERTY(QVector<ComparisonInput_t> FeatureComparisonInputs READ getFeatureComparisonInputs WRITE setFeatureComparisonInputs NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, EnsembleComparisonInputs)
+    Q_PROPERTY(QVector<ComparisonInput_t> EnsembleComparisonInputs READ getEnsembleComparisonInputs WRITE setEnsembleComparisonInputs NOTIFY parametersChanged)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, PointComparisonInputs)
+    Q_PROPERTY(QVector<ComparisonInput_t> PointComparisonInputs READ getPointComparisonInputs WRITE setPointComparisonInputs NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, FaceComparisonInputs)
+    Q_PROPERTY(QVector<ComparisonInput_t> FaceComparisonInputs READ getFaceComparisonInputs WRITE setFaceComparisonInputs NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, EdgeComparisonInputs)
+    Q_PROPERTY(QVector<ComparisonInput_t> EdgeComparisonInputs READ getEdgeComparisonInputs WRITE setEdgeComparisonInputs NOTIFY parametersChanged)
 
 
     /**
@@ -82,7 +88,7 @@ class DREAM3DLib_EXPORT ThresholdExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return "TestFilters"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -124,6 +130,9 @@ class DREAM3DLib_EXPORT ThresholdExample : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     ThresholdExample();

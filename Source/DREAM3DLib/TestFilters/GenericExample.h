@@ -67,17 +67,26 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(StlFilePrefix)
+    Q_PROPERTY(QString StlFilePrefix READ getStlFilePrefix WRITE setStlFilePrefix NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+    Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(double, MisorientationTolerance)
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(InputPath)
+    Q_PROPERTY(QString InputPath READ getInputPath WRITE setInputPath NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
+    Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
+    Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, ConversionType)
 
     DREAM3D_INSTANCE_PROPERTY(IntVec3_t, Dimensions)
+    Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, Origin)
+    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, AxisAngleInputs)
 
@@ -107,23 +116,41 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeVertexArrayName)
+    Q_PROPERTY(QString SelectedVolumeVertexArrayName READ getSelectedVolumeVertexArrayName WRITE setSelectedVolumeVertexArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeEdgeArrayName)
+    Q_PROPERTY(QString SelectedVolumeEdgeArrayName READ getSelectedVolumeEdgeArrayName WRITE setSelectedVolumeEdgeArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeFaceArrayName)
+    Q_PROPERTY(QString SelectedVolumeFaceArrayName READ getSelectedVolumeFaceArrayName WRITE setSelectedVolumeFaceArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeCellArrayName)
+    Q_PROPERTY(QString SelectedVolumeCellArrayName READ getSelectedVolumeCellArrayName WRITE setSelectedVolumeCellArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeFeatureArrayName)
+    Q_PROPERTY(QString SelectedVolumeFeatureArrayName READ getSelectedVolumeFeatureArrayName WRITE setSelectedVolumeFeatureArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeEnsembleArrayName)
+    Q_PROPERTY(QString SelectedVolumeEnsembleArrayName READ getSelectedVolumeEnsembleArrayName WRITE setSelectedVolumeEnsembleArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceVertexArrayName)
+    Q_PROPERTY(QString SelectedSurfaceVertexArrayName READ getSelectedSurfaceVertexArrayName WRITE setSelectedSurfaceVertexArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceEdgeArrayName)
+    Q_PROPERTY(QString SelectedSurfaceEdgeArrayName READ getSelectedSurfaceEdgeArrayName WRITE setSelectedSurfaceEdgeArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceFaceArrayName)
+    Q_PROPERTY(QString SelectedSurfaceFaceArrayName READ getSelectedSurfaceFaceArrayName WRITE setSelectedSurfaceFaceArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceFeatureArrayName)
+    Q_PROPERTY(QString SelectedSurfaceFeatureArrayName READ getSelectedSurfaceFeatureArrayName WRITE setSelectedSurfaceFeatureArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceEnsembleArrayName)
+    Q_PROPERTY(QString SelectedSurfaceEnsembleArrayName READ getSelectedSurfaceEnsembleArrayName WRITE setSelectedSurfaceEnsembleArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEdgeVertexArrayName)
+    Q_PROPERTY(QString SelectedEdgeVertexArrayName READ getSelectedEdgeVertexArrayName WRITE setSelectedEdgeVertexArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEdgeEdgeArrayName)
+    Q_PROPERTY(QString SelectedEdgeEdgeArrayName READ getSelectedEdgeEdgeArrayName WRITE setSelectedEdgeEdgeArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEdgeFeatureArrayName)
+    Q_PROPERTY(QString SelectedEdgeFeatureArrayName READ getSelectedEdgeFeatureArrayName WRITE setSelectedEdgeFeatureArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEdgeEnsembleArrayName)
+    Q_PROPERTY(QString SelectedEdgeEnsembleArrayName READ getSelectedEdgeEnsembleArrayName WRITE setSelectedEdgeEnsembleArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVertexVertexArrayName)
+    Q_PROPERTY(QString SelectedVertexVertexArrayName READ getSelectedVertexVertexArrayName WRITE setSelectedVertexVertexArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVertexFeatureArrayName)
+    Q_PROPERTY(QString SelectedVertexFeatureArrayName READ getSelectedVertexFeatureArrayName WRITE setSelectedVertexFeatureArrayName NOTIFY parametersChanged)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVertexEnsembleArrayName)
+    Q_PROPERTY(QString SelectedVertexEnsembleArrayName READ getSelectedVertexEnsembleArrayName WRITE setSelectedVertexEnsembleArrayName NOTIFY parametersChanged)
 
 
     /**
@@ -131,7 +158,7 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return "TestFilters"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -173,6 +200,9 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     GenericExample();

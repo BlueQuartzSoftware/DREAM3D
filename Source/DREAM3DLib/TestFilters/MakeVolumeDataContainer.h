@@ -55,65 +55,71 @@
 */
 class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-public:
-  DREAM3D_SHARED_POINTERS(MakeVolumeDataContainer)
-  DREAM3D_STATIC_NEW_MACRO(MakeVolumeDataContainer)
-  DREAM3D_TYPE_MACRO_SUPER(MakeVolumeDataContainer, AbstractFilter)
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+  public:
+    DREAM3D_SHARED_POINTERS(MakeVolumeDataContainer)
+    DREAM3D_STATIC_NEW_MACRO(MakeVolumeDataContainer)
+    DREAM3D_TYPE_MACRO_SUPER(MakeVolumeDataContainer, AbstractFilter)
 
-  virtual ~MakeVolumeDataContainer();
-  DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-  DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    virtual ~MakeVolumeDataContainer();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-  /**
+    /**
   * @brief This returns the group that the filter belonds to. You can select
   * a different group if you want. The string returned here will be displayed
   * in the GUI for the filter
   */
-  virtual const QString getGroupName() { return "TestFilters"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
 
-  /**
+    /**
   * @brief This returns a string that is displayed in the GUI. It should be readable
   * and understandable by humans.
   */
-  virtual const QString getHumanLabel() { return "MakeVolumeDataContainer"; }
+    virtual const QString getHumanLabel() { return "MakeVolumeDataContainer"; }
 
-  /**
+    /**
   * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
   * a subgroup. It should be readable and understandable by humans.
   */
-  virtual const QString getSubGroupName() { return "Test"; }
+    virtual const QString getSubGroupName() { return "Test"; }
 
 
 
-  /**
+    /**
   * @brief This method will write the options to a file
   * @param writer The writer that is used to write the options to a file
   */
-  virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
-  /**
+    /**
   * @brief This method will read the options from a file
   * @param reader The reader that is used to read the options from a file
   */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-  /**
+    /**
   * @brief Reimplemented from @see AbstractFilter class
   */
-  virtual void execute();
+    virtual void execute();
 
-  /**
+    /**
   * @brief This function runs some sanity checks on the DataContainer and inputs
   * in an attempt to ensure the filter can process the inputs.
   */
-  virtual void preflight();
+    virtual void preflight();
 
-protected:
-  MakeVolumeDataContainer();
+  signals:
+    void parametersChanged();
+
+  protected:
+    MakeVolumeDataContainer();
 
 
-  /**
+    /**
   * @brief Checks for the appropriate parameter values and availability of
   * arrays in the data container
   * @param preflight
@@ -121,12 +127,17 @@ protected:
   * @param features The number of features
   * @param ensembles The number of ensembles
   */
-  void dataCheck();
+    void dataCheck();
 
-private:
+  private:
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
 
-  MakeVolumeDataContainer(const MakeVolumeDataContainer&); // Copy Constructor Not Implemented
-  void operator=(const MakeVolumeDataContainer&); // Operator '=' Not Implemented
+    MakeVolumeDataContainer(const MakeVolumeDataContainer&); // Copy Constructor Not Implemented
+    void operator=(const MakeVolumeDataContainer&); // Operator '=' Not Implemented
 };
 
 #endif /*    */

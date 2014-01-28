@@ -17,7 +17,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       IntVec3Widget
       FloatVec3Widget
       AxisAngleWidget
-	  UnknownWidget
+      ArraySelectionWidget
 #      VolumeVertexArrayNameSelectionWidget
 #      VolumeEdgeArrayNameSelectionWidget
 #      VolumeFaceArrayNameSelectionWidget
@@ -36,7 +36,6 @@ set(DREAM3D_PARAMETER_WIDGETS
 #      VertexVertexArrayNameSelectionWidget
 #      VertexFeatureArrayNameSelectionWidget
 #      VertexEnsembleArrayNameSelectionWidget
-#      ArraySelectionWidget
 #      CellArrayComparisonSelectionWidget
 #      FeatureArrayComparisonSelectionWidget
 #      EnsembleArrayComparisonSelectionWidget
@@ -44,6 +43,8 @@ set(DREAM3D_PARAMETER_WIDGETS
 #      FaceArrayComparisonSelectionWidget
 #      EdgeArrayComparisonSelectionWidget
 #      CustomWidget
+      UnknownWidget
+
 )
 
 set(REGISTER_KNOWN_WIDGETS ${FilterWidgetsLib_BINARY_DIR}/FilterWidgetManager_RegisterWidgets.cpp)

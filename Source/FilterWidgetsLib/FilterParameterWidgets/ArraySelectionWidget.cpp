@@ -38,7 +38,7 @@
 #include <QtCore/QMetaProperty>
 
 
-#include "FilterWidgetsLib/Widgets/moc_ArraySelectionWidget.cxx"
+#include "FilterWidgetsLib/FilterParameterWidgets/moc_ArraySelectionWidget.cxx"
 
 
 // -----------------------------------------------------------------------------
@@ -64,9 +64,74 @@ ArraySelectionWidget::~ArraySelectionWidget()
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::setupGui()
 {
+
+  connect(m_Filter, SIGNAL(parametersChanged()),
+          this, SLOT(updateWidget() ) );
+
+
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight() ) );
+
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(afterPreflight()) );
+
   if (m_FilterParameter != NULL)
   {
     ArraySelectionWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+
+    populateLists();
   }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::populateLists()
+{
+  if (NULL == m_Filter) { return; }
+
+  DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
+  QList<DataContainer::Pointer> arrays = dca->getDataContainerArray(); // get a reference to the list of data containers
+  for(qint32 i = 0; i < arrays.size(); i++)
+  {
+    QListWidgetItem* listItem = new QListWidgetItem(arrays.at(i)->getName(), dataContainerList);
+    listItem->setData( Qt::UserRole, arrays.at(i)->getName());
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_dataContainerList_itemClicked()
+{
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::updateWidget()
+{
+  std::cout << "Filter Parameter Widget should update" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::beforePreflight()
+{
+  std::cout << "Before Preflight" << std::endl;
+  populateLists();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::afterPreflight()
+{
+  std::cout << "After Preflight" << std::endl;
 }
 

@@ -72,6 +72,8 @@ namespace FilterParameterWidgetType
       const QString AxisAngleWidget("AxisAngleWidget");
       const QString UnknownWidget("UnknownWidget");
       const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
+      const QString ArraySelectionWidget("ArraySelectionWidget"); // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
+
 
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
       const QString VolumeVertexArrayNameSelectionWidget("VolumeVertexArrayNameSelectionWidget"); // ComboBox where the Cell Array names are used to populate
@@ -93,7 +95,6 @@ namespace FilterParameterWidgetType
       const QString VertexFeatureArrayNameSelectionWidget("VertexFeatureArrayNameSelectionWidget");
       const QString VertexEnsembleArrayNameSelectionWidget("VertexEnsembleArrayNameSelectionWidget");
       /* ****  AND THIS LINE ******** */
-      const QString ArraySelectionWidget("ArraySelectionWidget"); // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
       /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
       const QString CellArrayComparisonSelectionWidget("CellArrayComparisonSelectionWidget");
       const QString FeatureArrayComparisonSelectionWidget("FeatureArrayComparisonSelectionWidget");

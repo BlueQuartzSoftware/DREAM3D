@@ -47,7 +47,6 @@
 #include "ui_QDream3DDocumentsDockWidget.h"
 
 class QListWidget;
-class QListWidgetItem;
 class QTreeWidgetItem;
 class QFilterListDockWidget;
 

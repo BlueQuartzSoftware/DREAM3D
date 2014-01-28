@@ -166,8 +166,9 @@ void BridgeParentIdsStatisticsToFeatureIds::preflight()
           this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   rename_cell_array->setDataContainerArray(getDataContainerArray());
   rename_cell_array->setMessagePrefix(getMessagePrefix());
-  rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
-  rename_cell_array->setNewCellArrayName(m_FeatureIdsArrayName);
+  QString renamePath = getDataContainerName() + "/" + getCellAttributeMatrixName() + "/" + m_CellParentIdsArrayName;
+  rename_cell_array->setSelectedArrayPath(renamePath);
+  rename_cell_array->setNewArrayName(m_FeatureIdsArrayName);
   rename_cell_array->preflight();
   int err1 = rename_cell_array->getErrorCondition();
   if (err1 < 0)
@@ -208,8 +209,9 @@ void BridgeParentIdsStatisticsToFeatureIds::execute()
           this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   rename_cell_array->setDataContainerArray(getDataContainerArray());
   rename_cell_array->setMessagePrefix(getMessagePrefix());
-  rename_cell_array->setSelectedCellArrayName(m_CellParentIdsArrayName);
-  rename_cell_array->setNewCellArrayName(m_FeatureIdsArrayName);
+  QString renamePath = getDataContainerName() + "/" + getCellAttributeMatrixName() + "/" + m_CellParentIdsArrayName;
+  rename_cell_array->setSelectedArrayPath(renamePath);
+  rename_cell_array->setNewArrayName(m_FeatureIdsArrayName);
   rename_cell_array->preflight();
   int err1 = rename_cell_array->getErrorCondition();
   if (err1 < 0)

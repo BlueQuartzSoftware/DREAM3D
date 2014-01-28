@@ -112,7 +112,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   // using the QDesigner program
   setupUi(this);
 
-  // Get the last window state
+  // Get the last window state and the dock widget state
   readWindowSettings();
 
   // Do our own widget initializations
@@ -234,25 +234,46 @@ void DREAM3D_UI::readWindowSettings()
     QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
     filePath = prefs.fileName();
-bool ok = false;
-  prefs.beginGroup("WindowSettings");
-  if (prefs.contains(QString("Geometry")) )
-  {
-    QByteArray geo_data = prefs.value(QString("Geometry")).toByteArray();
-    ok = restoreGeometry(geo_data);
-    if (!ok)
+    bool ok = false;
+    prefs.beginGroup("WindowSettings");
+    if (prefs.contains(QString("MainWindowGeometry")) )
     {
-      qDebug() << "Error Restoring the Window Geometry" << "\n";
+      QByteArray geo_data = prefs.value(QString("MainWindowGeometry")).toByteArray();
+      ok = restoreGeometry(geo_data);
+      if (!ok)
+      {
+        qDebug() << "Error Restoring the Window Geometry" << "\n";
+      }
     }
+
+    if (prefs.contains(QString("MainWindowState")))
+    {
+      std::cout << "Reading State of Main Window" << std::endl;
+      QByteArray layout_data = prefs.value(QString("MainWindowState")).toByteArray();
+      restoreState(layout_data);
+    }
+    readDockWidgetSettings(prefs, filterListDockWidget);
+    readDockWidgetSettings(prefs, filterLibraryDockWidget);
+    readDockWidgetSettings(prefs, documentsDockWidget);
+    readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
+    readDockWidgetSettings(prefs, issuesDockWidget);
+    prefs.endGroup();
+
   }
 
-  if (prefs.contains(QString("Layout")))
-  {
-    QByteArray layout_data = prefs.value(QString("Layout")).toByteArray();
-    restoreState(layout_data);
-  }
-  prefs.endGroup();
-  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::readDockWidgetSettings(QSettings& prefs, QDockWidget* dw)
+{
+  restoreDockWidget(dw);
+
+  QString name = dw->objectName();
+  bool b = prefs.value(dw->objectName(), false).toBool();
+  dw->setHidden(b);
+
 
 }
 
@@ -340,9 +361,24 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
   prefs.beginGroup("WindowSettings");
   QByteArray geo_data = saveGeometry();
   QByteArray layout_data = saveState();
-  prefs.setValue(QString("Geometry"), geo_data);
-  prefs.setValue(QString("Layout"), layout_data);
+  prefs.setValue(QString("MainWindowGeometry"), geo_data);
+  prefs.setValue(QString("MainWindowState"), layout_data);
+
+  writeDockWidgetSettings(prefs, filterListDockWidget);
+  writeDockWidgetSettings(prefs, filterLibraryDockWidget);
+  writeDockWidgetSettings(prefs, documentsDockWidget);
+  writeDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
+  writeDockWidgetSettings(prefs, issuesDockWidget);
+
   prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::writeDockWidgetSettings(QSettings &prefs, QDockWidget *dw)
+{
+  prefs.setValue(dw->objectName(), dw->isHidden() );
 }
 
 // -----------------------------------------------------------------------------
@@ -386,8 +422,8 @@ void DREAM3D_UI::setupGui()
 
     if ( (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily
           && currentDateToday >= dailyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly
-          && currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
-          && currentDateToday >= monthlyThreshold))
+                                                     && currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
+                                                                                                 && currentDateToday >= monthlyThreshold))
     {
       checkForUpdatesAtStartup();
     }
@@ -411,7 +447,7 @@ void DREAM3D_UI::setupGui()
   FilterWidgetsLib::RegisterKnownQFilterWidgets();
   // Look for plugins
 #endif
-// Load up the plugins which will register their filters and custom widgets
+  // Load up the plugins which will register their filters and custom widgets
   loadPlugins(m_FilterManager.get());
   // Tell the Filter Library that we have more Filters (potentially)
   filterLibraryDockWidget->refreshFilterGroups();
@@ -429,8 +465,8 @@ void DREAM3D_UI::setupGui()
   documentsDockWidget->connectFilterList(filterListDockWidget);
   prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
 
-// Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
-// or load an entire pipeline into the view
+  // Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
+  // or load an entire pipeline into the view
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString)),
@@ -443,7 +479,7 @@ void DREAM3D_UI::setupGui()
   pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);
 
 
-// Add some key shortcuts
+  // Add some key shortcuts
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
   actionOpenPipeline->setShortcut(actionOpenKeySeq);
 
@@ -462,13 +498,13 @@ void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, int 
 
 #if 0
   btn->setStyleSheet(QString::fromUtf8("QToolButton { color: black; border-radius: 2px; font-size: 12px; font-style: bold;\n"
-  "	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(150, 150, 150, 255), stop:0.497537 rgba(225, 225, 225, 255), stop:0.517241 rgba(190, 190, 190, 255), stop:0.990148 rgba(160, 160, 160, 255));\n"
-"selection-background-color: rgb(100, 100, 100);\n"
-"}"));
+                                       "	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(150, 150, 150, 255), stop:0.497537 rgba(225, 225, 225, 255), stop:0.517241 rgba(190, 190, 190, 255), stop:0.990148 rgba(160, 160, 160, 255));\n"
+                                       "selection-background-color: rgb(100, 100, 100);\n"
+                                       "}"));
 #endif
   connect(btn, SIGNAL(toggled(bool)),
           dockWidget, SLOT(setVisible(bool)));
-  btn->setChecked(!dockWidget->isVisible());
+  btn->setChecked(!dockWidget->isHidden());
   statusBar()->insertPermanentWidget(index, btn, 0);
 }
 
@@ -692,7 +728,7 @@ void DREAM3D_UI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::loadPlugins(FilterManager *fm)
 {
-    qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
+  qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
 
   foreach (QObject *plugin, QPluginLoader::staticInstances())
     populateMenus(plugin);

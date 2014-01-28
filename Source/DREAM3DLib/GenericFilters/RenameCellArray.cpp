@@ -44,7 +44,7 @@ RenameCellArray::RenameCellArray() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_AttributeMatrixName(DREAM3D::Defaults::AttributeMatrixName),
-  m_SelectedArrayName(""),
+  m_SelectedArrayPath(""),
   m_NewArrayName("")
 {
   setupFilterParameters();
@@ -65,17 +65,17 @@ void RenameCellArray::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Current Cell Array Name");
-    parameter->setPropertyName("SelectedCellArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
+    parameter->setHumanLabel("Selected Array Name");
+    parameter->setPropertyName("SelectedArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::ArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New Cell Array Name");
-    parameter->setPropertyName("NewCellArrayName");
+    parameter->setHumanLabel("New Array Name");
+    parameter->setPropertyName("NewArrayName");
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
     parameters.push_back(parameter);
@@ -92,8 +92,8 @@ void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reade
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedCellArrayName( reader->readString( "SelectedCellArrayName", getSelectedCellArrayName() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
+  setSelectedArrayPath( reader->readString( "SelectedArrayPath", getSelectedArrayPath() ) );
+  setNewArrayName( reader->readString( "NewArrayName", getNewArrayName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -104,8 +104,8 @@ void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reade
 int RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
-  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
+  writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
+  writer->writeValue("NewArrayName", getNewArrayName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -119,10 +119,10 @@ void RenameCellArray::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
-  if(m_SelectedCellArrayName.isEmpty() == true)
+  if(m_SelectedArrayPath.isEmpty() == true)
   {
     setErrorCondition(-11000);
     QString ss = QObject::tr("An array from the Volume DataContainer must be selected.");
@@ -130,7 +130,7 @@ void RenameCellArray::dataCheck()
   }
   else
   {
-    bool check = cellAttrMat->renameAttributeArray(m_SelectedCellArrayName, m_NewCellArrayName);
+    bool check = cellAttrMat->renameAttributeArray(m_SelectedArrayPath, m_NewArrayName);
     if(check == false)
     {
       QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");

@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return "TestFilters"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -169,6 +169,11 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
     virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                              QSet<QString> selectedFeatureArrays,
                                              QSet<QString> selectedEnsembleArrays);
+
+  signals:
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     ArraySelectionExample();

@@ -37,7 +37,7 @@ class DREAM3DLib_EXPORT Filt0 : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return "TestFilters"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -79,6 +79,9 @@ class DREAM3DLib_EXPORT Filt0 : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     Filt0();
@@ -165,6 +168,9 @@ class DREAM3DLib_EXPORT Filt1 : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
 
   protected:
     Filt1();

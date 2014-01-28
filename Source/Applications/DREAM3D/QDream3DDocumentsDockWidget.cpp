@@ -42,8 +42,6 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 
-#include <QtGui/QListWidget>
-#include <QtGui/QListWidgetItem>
 #include <QtGui/QMessageBox>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QTreeWidgetItem>

@@ -236,7 +236,9 @@ void ArraySelectionExample::dataCheck()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::preflight()
 {
+  emit preflightAboutToExecute();
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

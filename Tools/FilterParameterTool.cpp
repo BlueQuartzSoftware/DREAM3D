@@ -253,11 +253,13 @@ void LoopOnFilters()
     //std::cout << "  public:" << std::endl;
     IFilterFactory::Pointer factory = i.value();
     AbstractFilter::Pointer filter = factory->create();
+    if (filter->getGroupName().compare(DREAM3D::FilterGroups::TestFilters) == 0) {
 
-    //    std::cout << "" << filter->getGroupName().toStdString() << "Filters/" << filter->getNameOfClass().toStdString() << ".h" << std::endl;
-    QString path = findPath(filter->getGroupName(), filter->getNameOfClass());
-    std::cout << " " << path.toStdString() << std::endl;
-    generateQProperties(filter, path);
+      std::cout << "" << filter->getGroupName().toStdString() << "Filters/" << filter->getNameOfClass().toStdString() << ".h" << std::endl;
+      QString path = findPath(filter->getGroupName(), filter->getNameOfClass());
+      std::cout << " " << path.toStdString() << std::endl;
+      generateQProperties(filter, path);
+    }
 
   }
 
@@ -270,7 +272,7 @@ void LoopOnFilters()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  Q_ASSERT(false); // We don't want anyone to run this program.
+   Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
