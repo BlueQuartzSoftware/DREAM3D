@@ -73,10 +73,14 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CAxisMisalignmentListArrayName)
 
 	virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
 	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::CrystallographicFilters;}
     virtual const QString getHumanLabel() { return "Find Local Average C-Axis Misalignments"; }
+
+    DREAM3D_INSTANCE_PROPERTY(bool, CalcUnbiasedAvg)
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -103,6 +107,8 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeaturesPerParent)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgCAxisMisalignments)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgParentAvgCAxisMisalignments)
+    NeighborList<int>* m_NeighborList;
+    NeighborList<float>* m_CAxisMisalignmentList;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     QVector<OrientationOps::Pointer> m_OrientationOps;

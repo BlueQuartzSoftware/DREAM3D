@@ -24,6 +24,9 @@ Volume
 | Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 | Cell | ParentIds | List of grouped "parents" of features region **Cells**.  |  |
 | Feature | ParentIds | List of grouped "parents" of features region **Features**. |  |
+| Feature | CAxisMisalignmentList | NeighborList of c-axis misalignments. | Only needed if "Calculate Unbiased Local Average C-Axis Misalignment" IS NOT checked. | Find Field Neighbor C-Axis Misalignments (Statistics) |  
+| Feature | NeighborList | List of grain nearest neighbors. | Only needed if "Calculate Unbiased Local Average C-Axis Misalignment" IS checked. | Find Neighbors (Statistics) |
+
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
 
 ## Created Arrays ##
