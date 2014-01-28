@@ -61,6 +61,7 @@ FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()  
   m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
   m_CAxisMisalignmentListArrayName(DREAM3D::FeatureData::CAxisMisalignmentList),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_FindAvgMisals(false),
   m_AvgQuats(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
@@ -70,6 +71,8 @@ FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()  
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
+
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -78,12 +81,35 @@ FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()  
 FindFeatureNeighborCAxisMisalignments::~FindFeatureNeighborCAxisMisalignments()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
+{
+  FilterParameterVector parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Find Average C-Axis Misalignments");
+    option->setPropertyName("FindAvgMisals");
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    option->setValueType("bool");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+
+  setFilterParameters(parameters);
+}
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FindFeatureNeighborCAxisMisalignments::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setFindAvgMisals( reader->readValue("UseFindAvgMisals", getFindAvgMisals()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -94,6 +120,7 @@ void FindFeatureNeighborCAxisMisalignments::readFilterParameters(AbstractFilterP
 int FindFeatureNeighborCAxisMisalignments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FindAvgMisals", getFindAvgMisals() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -122,10 +149,15 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
+  // New Feature Data
+  if(m_FindAvgMisals == true)
+  {
   m_AvgCAxisMisalignmentsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_AvgCAxisMisalignmentsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgCAxisMisalignments = m_AvgCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
+  // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_CrystalStructuresArrayName, -305, dims)
                            ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -252,10 +284,10 @@ void FindFeatureNeighborCAxisMisalignments::execute()
       {
         misalignmentlists[i][j] = -100.0f;
       }
-      neighMisalTot += misalignmentlists[i][j];
+      if (m_FindAvgMisals == true) neighMisalTot += misalignmentlists[i][j];
     }
-    m_AvgCAxisMisalignments[i] = neighMisalTot / neighborlist[i].size();
-    neighMisalTot = 0.0f;
+    if (m_FindAvgMisals == true) m_AvgCAxisMisalignments[i] = neighMisalTot / neighborlist[i].size();
+    if (m_FindAvgMisals == true) neighMisalTot = 0.0f;
   }
 
   // We do this to create new set of MisalignmentList objects

@@ -81,6 +81,10 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighbor C-Axis Misalignments"; }
 
+	DREAM3D_INSTANCE_PROPERTY(bool, FindAvgMisals)
+
+	virtual void setupFilterParameters();
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
