@@ -24,10 +24,7 @@ set(_PublicFilters
   ConvertEulerAngles
   RotateEulerRefFrame
   IdentifySample
-  SingleThresholdCells
-  MultiThresholdCells
-  SingleThresholdFeatures
-  MultiThresholdFeatures
+  MultiThresholdObjects
 )
 
 #--------------

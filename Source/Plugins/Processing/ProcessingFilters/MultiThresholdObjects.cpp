@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "MultiThresholdCells.h"
+#include "MultiThresholdObjects.h"
 
 #include <vector>
 
@@ -46,7 +46,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MultiThresholdCells::MultiThresholdCells() :
+MultiThresholdObjects::MultiThresholdObjects() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
@@ -59,14 +59,14 @@ MultiThresholdCells::MultiThresholdCells() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MultiThresholdCells::~MultiThresholdCells()
+MultiThresholdObjects::~MultiThresholdObjects()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiThresholdCells::setupFilterParameters()
+void MultiThresholdObjects::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
@@ -94,7 +94,7 @@ void MultiThresholdCells::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiThresholdCells::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void MultiThresholdObjects::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -108,7 +108,7 @@ void MultiThresholdCells::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int MultiThresholdObjects::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputArrayName", getOutputArrayName());
@@ -120,7 +120,7 @@ int MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiThresholdCells::dataCheck()
+void MultiThresholdObjects::dataCheck()
 {
   setErrorCondition(0);
 
@@ -145,7 +145,7 @@ void MultiThresholdCells::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiThresholdCells::preflight()
+void MultiThresholdObjects::preflight()
 {
   dataCheck();
 }
@@ -153,7 +153,7 @@ void MultiThresholdCells::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiThresholdCells::execute()
+void MultiThresholdObjects::execute()
 {
   int err = 0;
   setErrorCondition(err);
