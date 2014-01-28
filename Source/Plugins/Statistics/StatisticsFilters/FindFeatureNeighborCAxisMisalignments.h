@@ -1,7 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * Copyright (c) 2013 Dr. Joseph C. Tucker (UES, Inc.)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -54,11 +54,11 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 /**
- * @class FindFeatureNeighborCAxisMisalignments FindFeatureNeighborCAxisMisalignments.h DREAM3DLib/GenericFilters/FindFeatureNeighborCAxisMisalignments.h
+ * @class FindFeatureNeighborCAxisMisalignments FindFeatureNeighborCAxisMisalignments.h Plugins/Statistics/StatisticsFilters/FindFeatureNeighborCAxisMisalignments.h
  * @brief
- * @author Michael A Groeber (AFRL)
- * @date Nov 19, 2011
- * @version 1.0
+ * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES) 
+ * @date Jan 28, 2014
+ * @version 5.0
  */
 class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 {
