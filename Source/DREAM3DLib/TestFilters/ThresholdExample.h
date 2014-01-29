@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT ThresholdExample : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const QString getSubGroupName() { return "Test"; }
+    virtual const QString getSubGroupName() { return "Misc"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -133,6 +133,8 @@ class DREAM3DLib_EXPORT ThresholdExample : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     ThresholdExample();
