@@ -49,6 +49,7 @@
 CropVolume::CropVolume() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_NewDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_XMin(0),
@@ -58,6 +59,7 @@ CropVolume::CropVolume() :
   m_YMax(0),
   m_ZMax(0),
   m_RenumberFeatures(true),
+  m_SaveAsNewDataContainer(false),
   m_UpdateOrigin(true),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
@@ -142,6 +144,14 @@ void CropVolume::setupFilterParameters()
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Save As New Data Container");
+    parameter->setPropertyName("SaveAsNewDataContainer");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Update Origin");
     parameter->setPropertyName("UpdateOrigin");
     parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
@@ -163,6 +173,7 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
   setYMax( reader->readValue("YMax", getYMax()) );
   setZMax( reader->readValue("ZMax", getZMax()) );
   setRenumberFeatures( reader->readValue("RenumberFeatures", false) );
+  setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContiner", false) );
   setUpdateOrigin( reader->readValue("UpdateOrigin", false) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -181,6 +192,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->writeValue("YMax", getYMax() );
   writer->writeValue("ZMax", getZMax() );
   writer->writeValue("RenumberFeatures", getRenumberFeatures() );
+  writer->writeValue("SaveAsNewDataContiner", getSaveAsNewDataContiner() );
   writer->writeValue("UpdateOrigin", getUpdateOrigin() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to

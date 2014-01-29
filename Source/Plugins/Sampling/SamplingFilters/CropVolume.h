@@ -63,6 +63,7 @@ class CropVolume : public AbstractFilter
 
     virtual ~CropVolume();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NewDataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
@@ -81,6 +82,8 @@ class CropVolume : public AbstractFilter
     Q_PROPERTY(int ZMax READ getZMax WRITE setZMax NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, RenumberFeatures)
     Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_PROPERTY(bool, SaveAsNewDataContainer)
+    Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, UpdateOrigin)
     Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin NOTIFY parametersChanged)
 

@@ -50,7 +50,13 @@
 ChangeResolution::ChangeResolution() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName)
+  m_NewDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_RenumberFeatures(true),
+  m_SaveAsNewDataContainer(false),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -81,6 +87,22 @@ void ChangeResolution::setupFilterParameters()
     parameter->setUnits("Microns");
     parameters.push_back(parameter);
   }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Renumber Features");
+    parameter->setPropertyName("RenumberFeatures");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Save As New Data Container");
+    parameter->setPropertyName("SaveAsNewDataContainer");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
@@ -92,6 +114,8 @@ void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* read
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
+  setRenumberFeatures( reader->readValue("RenumberFeatures", false) );
+  setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContiner", false) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -103,8 +127,21 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("Resolution", getResolution() );
+  writer->writeValue("RenumberFeatures", getRenumberFeatures() );
+  writer->writeValue("SaveAsNewDataContiner", getSaveAsNewDataContiner() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ChangeResolution::updateCellInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -114,6 +151,20 @@ void ChangeResolution::dataCheck()
 {
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
+
+  if (m_RenumberFeatures == true)
+  {
+    AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+    if(getErrorCondition() < 0) { return; }
+    AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+    if(getErrorCondition() < 0) { return; }
+
+    QVector<size_t> dims(1, 1);
+    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
+
 }
 // -----------------------------------------------------------------------------
 //
@@ -143,6 +194,13 @@ void ChangeResolution::preflight()
   tDims[1] = m_YP;
   tDims[2] = m_ZP;
   m->getAttributeMatrix(getCellAttributeMatrixName())->setTupleDimensions(tDims);
+
+  if(m_RenumberFeatures == true)
+  {
+    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+    QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -239,6 +297,30 @@ void ChangeResolution::execute()
   m->setDimensions(m_XP, m_YP, m_ZP);
   m->removeAttributeMatrix(getCellAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixName(), newCellAttrMat);
+
+  // Feature Ids MUST already be renumbered.
+  if (m_RenumberFeatures == true)
+  {
+    totalPoints = m->getTotalPoints();
+    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+    size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
+    QVector<bool> activeObjects(totalFeatures, false);
+    if (0 == totalFeatures)
+    {
+      notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
+      notifyStatusMessage(getHumanLabel(), "Completed");
+      return;
+    }
+
+    updateCellInstancePointers();
+
+    // Find the unique set of feature ids
+    for (int64_t i = 0; i < totalPoints; ++i)
+    {
+      activeObjects[m_FeatureIds[i]] = true;
+    }
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
