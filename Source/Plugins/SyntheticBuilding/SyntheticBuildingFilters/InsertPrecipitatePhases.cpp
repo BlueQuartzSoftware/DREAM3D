@@ -1,6 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,7 +31,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                   FA8650-07-D-5800 and FA8650-10-D-5226
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -240,6 +241,7 @@ void InsertPrecipitatePhases::dataCheck()
 
 
   // Cell Data
+  // Needs to be a created because the size of these fields will change
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -370,7 +372,7 @@ void InsertPrecipitatePhases::execute()
 void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featureOwnersPtr)
 {
   bool writeErrorFile = true;
-  std::ofstream outFile;
+  std::ofstream outFile
   if(m_ErrorOutputFile.isEmpty() == false)
   {
     outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
@@ -401,6 +403,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   totalvol = sizex * sizey * sizez;
 
   int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+
+// figure out how many grains we already have so we can start the counter at +1 this
+
   int64_t currentnumfeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
   int64_t numensembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
   QVector<size_t> tDims(1, 1);
@@ -576,6 +581,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     random = static_cast<float>(rg.genrand_res53());
     if(random <= precipboundaryfraction)
     {
+// figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
       random2 = int(rg.genrand_res53() * double(totalPoints - 1));
       while (m_SurfaceVoxels[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
       {
@@ -600,6 +606,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     m_Centroids[3 * i + 2] = zc;
     insert_precipitate(i);
 //    fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
+
+// try moving precipitate around 10 times, figure out which one of those is the best
 //    for (int iter_fill = 0; iter_fill < 10; iter_fill++)
 //    {
 //      random = static_cast<float>(rg.genrand_res53());
