@@ -44,7 +44,7 @@ RenameAttributeArray::RenameAttributeArray() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_AttributeMatrixName(DREAM3D::Defaults::AttributeMatrixName),
-  m_SelectedArrayPath(""),
+  m_SelectedArrayName(""),
   m_NewArrayName("")
 {
   setupFilterParameters();
@@ -65,8 +65,8 @@ void RenameAttributeArray::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Selected Array Name");
-    parameter->setPropertyName("SelectedArrayPath");
+    parameter->setHumanLabel("Array to Rename");
+    parameter->setPropertyName("SelectedArrayName");
     parameter->setWidgetType(FilterParameterWidgetType::ArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
@@ -92,7 +92,9 @@ void RenameAttributeArray::readFilterParameters(AbstractFilterParametersReader* 
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedArrayPath( reader->readString( "SelectedArrayPath", getSelectedArrayPath() ) );
+  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
+  setAttributeMatrixName( reader->readString("AttributeMatrixName", getAttributeMatrixName()) );
+  setSelectedArrayName( reader->readString("SelectedArrayName", getSelectedArrayName()) );
   setNewArrayName( reader->readString( "NewArrayName", getNewArrayName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -104,7 +106,9 @@ void RenameAttributeArray::readFilterParameters(AbstractFilterParametersReader* 
 int RenameAttributeArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
+  writer->writeValue("DataContainerName", getDataContainerName());
+  writer->writeValue("AttributeMatrixName", getAttributeMatrixName());
+  writer->writeValue("SelectedArrayName", getSelectedArrayName());
   writer->writeValue("NewArrayName", getNewArrayName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -117,12 +121,12 @@ void RenameAttributeArray::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
+  //  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  //  if(getErrorCondition() < 0 || NULL == m) { return; }
+  //  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getAttributeMatrixName(), -301);
+  //  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
-  if(m_SelectedArrayPath.isEmpty() == true)
+  if(m_SelectedArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     QString ss = QObject::tr("An array from the Volume DataContainer must be selected.");
@@ -130,13 +134,52 @@ void RenameAttributeArray::dataCheck()
   }
   else
   {
-    bool check = cellAttrMat->renameAttributeArray(m_SelectedArrayPath, m_NewArrayName);
+
+    // The name of the array is really the path
+    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer( getDataContainerName() );
+    if (NULL == dc.get())
+    {
+      setErrorCondition(-11001);
+      QString ss = QObject::tr("A DataContainer with the name '%1' was not found in the DataContainerArray").arg(getDataContainerName() );
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+    // We have the DataContainer, now get the AttributeMatrix
+    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getAttributeMatrixName());
+    if (NULL == attrMat.get())
+    {
+      setErrorCondition(-11002);
+      QString ss = QObject::tr("An AttributeMatrix with the name '%1' was not found in the DataContainer").arg(getAttributeMatrixName());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    // We the AttributeMatrix, now lets try to get the AttributeArray object and rename it if it exists
+    IDataArray::Pointer dataArray = attrMat->getAttributeArray(getSelectedArrayName());
+
+    if(NULL == dataArray.get() )
+    {
+      setErrorCondition(-11003);
+      QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(getSelectedArrayName());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+    bool check = attrMat->renameAttributeArray(getSelectedArrayName(), m_NewArrayName);
     if(check == false)
     {
-      QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
+      setErrorCondition(-11004);
+      QString ss = QObject::tr("Attempt to rename AttributeArray '%1' to '%2' Failed.").arg(getSelectedArrayName()).arg(m_NewArrayName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
+
+  if(m_NewArrayName.isEmpty() == true)
+  {
+    setErrorCondition(-11000);
+    QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
 }
 
 
@@ -145,7 +188,9 @@ void RenameAttributeArray::dataCheck()
 // -----------------------------------------------------------------------------
 void RenameAttributeArray::preflight()
 {
+  emit preflightAboutToExecute();
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------
