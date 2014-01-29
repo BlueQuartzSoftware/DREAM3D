@@ -54,7 +54,7 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 /**
- * @class FindMisorientations FindMisorientations.h DREAM3DLib/GenericFilters/FindMisorientations.h
+ * @class FindMisorientations FindMisorientations.h Plugins/Statistics/StatisticsFilters/FindMisorientations.h
  * @brief
  * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
  * @date Jan 29, 2014
