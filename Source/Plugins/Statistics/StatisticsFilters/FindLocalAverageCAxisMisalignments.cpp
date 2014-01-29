@@ -192,18 +192,22 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
       m_CAxisMisalignmentList->resize(cellFeatureAttrMat->getNumTuples());
     }
   }
+  else
+  {
+	m_AvgCAxisMisalignmentsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgCAxisMisalignmentsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+	if( NULL != m_AvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+	{ m_AvgCAxisMisalignments = m_AvgCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
+
   m_FeatureParentIdsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureParentIdsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_AvgCAxisMisalignmentsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgCAxisMisalignmentsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_AvgCAxisMisalignments = m_AvgCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // New Feature Data
   m_NumFeaturesPerParentPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, float>(this, m_NumFeaturesPerParentArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPerParentPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeaturesPerParent = m_NumFeaturesPerParentPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_AvgParentAvgCAxisMisalignmentsPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_AvgParentAvgCAxisMisalignmentsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AvgParentAvgCAxisMisalignmentsPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_AvgParentAvgCAxisMisalignmentsArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgParentAvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgParentAvgCAxisMisalignments = m_AvgParentAvgCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -236,26 +240,29 @@ void FindLocalAverageCAxisMisalignments::execute()
   size_t numFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t newNumFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
 
+  std::vector<int32_t> NumMTRGrainsPerParent(numFeatures,0);
+
   if(m_CalcUnbiasedAvg == true)
   {
     NeighborList<int>& neighborlist = *m_NeighborList;
     NeighborList<float>& caxismisalignmentList = *m_CAxisMisalignmentList;
-    for(int i=0;i<numFeatures;i++)
+    for(int i=1;i<numFeatures;i++)
     {
       int parentid = m_FeatureParentIds[i];
       for (size_t j = 0; j < neighborlist[i].size(); j++)
       {
         if (m_FeatureParentIds[neighborlist[i][j]] == m_FeatureParentIds[i])
         {
-          m_NumFeaturesPerParent[parentid]++;
           m_AvgParentAvgCAxisMisalignments[parentid] += caxismisalignmentList[i][j];
+		  NumMTRGrainsPerParent[parentid]++;
+
         }
       }
     }
   }
   else
   {
-    for(int i=0;i<numFeatures;i++)
+    for(int i=1;i<numFeatures;i++)
     {
       int parentid = m_FeatureParentIds[i];
       m_NumFeaturesPerParent[parentid]++;
@@ -263,9 +270,14 @@ void FindLocalAverageCAxisMisalignments::execute()
     }
   }
 
-  for(int i=0;i<newNumFeatures;i++)
+  for(int i=1;i<newNumFeatures;i++)
   {
-    m_AvgParentAvgCAxisMisalignments[i] /= m_NumFeaturesPerParent[i];
+    if (m_CalcUnbiasedAvg == false) m_AvgParentAvgCAxisMisalignments[i] /= m_NumFeaturesPerParent[i];
+    if (m_CalcUnbiasedAvg == true)
+    {
+      if(NumMTRGrainsPerParent[i] > 0) m_AvgParentAvgCAxisMisalignments[i] /= NumMTRGrainsPerParent[i];
+      else m_AvgParentAvgCAxisMisalignments[i] = 0.0f;
+    }
   }
 
   // If there is an error set this to something negative and also set a message
