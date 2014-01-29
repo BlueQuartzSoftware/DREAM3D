@@ -99,6 +99,8 @@ class MergeTwins : public GroupFeatures
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     MergeTwins();

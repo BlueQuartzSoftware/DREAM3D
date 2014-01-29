@@ -127,6 +127,8 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     MovingFiniteElementSmoothing();

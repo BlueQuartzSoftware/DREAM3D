@@ -116,6 +116,8 @@ class DREAM3DLib_EXPORT RenameFeatureArray : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     RenameFeatureArray();

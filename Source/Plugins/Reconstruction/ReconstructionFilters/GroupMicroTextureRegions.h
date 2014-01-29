@@ -98,6 +98,8 @@ class GroupMicroTextureRegions : public GroupFeatures
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     GroupMicroTextureRegions();

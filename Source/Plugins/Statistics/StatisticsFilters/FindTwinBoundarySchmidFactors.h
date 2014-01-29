@@ -104,6 +104,8 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     FindTwinBoundarySchmidFactors();

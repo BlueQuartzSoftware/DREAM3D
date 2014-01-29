@@ -95,6 +95,8 @@ class AlignSectionsList : public AlignSections
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     AlignSectionsList();

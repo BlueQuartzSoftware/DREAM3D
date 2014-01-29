@@ -137,6 +137,8 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     RawBinaryReader();

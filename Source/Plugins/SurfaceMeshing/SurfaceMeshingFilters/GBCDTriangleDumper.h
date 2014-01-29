@@ -123,6 +123,8 @@ class GBCDTriangleDumper : public SurfaceMeshFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     GBCDTriangleDumper();

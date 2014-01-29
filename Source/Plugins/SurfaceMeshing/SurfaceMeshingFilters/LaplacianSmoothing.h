@@ -145,6 +145,8 @@ class LaplacianSmoothing : public SurfaceMeshFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     LaplacianSmoothing();

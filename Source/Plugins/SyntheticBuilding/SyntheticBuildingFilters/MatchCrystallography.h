@@ -114,6 +114,8 @@ class MatchCrystallography : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     MatchCrystallography();

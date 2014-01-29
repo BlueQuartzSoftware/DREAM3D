@@ -100,6 +100,8 @@ class AlignSections : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     AlignSections();

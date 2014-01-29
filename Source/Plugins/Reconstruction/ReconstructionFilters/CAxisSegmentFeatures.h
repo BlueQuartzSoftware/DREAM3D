@@ -101,6 +101,8 @@ class CAxisSegmentFeatures : public SegmentFeatures
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     CAxisSegmentFeatures();

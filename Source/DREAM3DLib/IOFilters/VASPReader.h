@@ -92,6 +92,8 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     VASPReader();

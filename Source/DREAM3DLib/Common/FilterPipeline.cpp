@@ -316,29 +316,29 @@ void FilterPipeline::execute()
             m_MessageReceivers.at(i), SLOT(processPipelineMessage(const PipelineMessage&)) );
   }
 
-  // Start a Benchmark Clock so we can keep track of each filter's execution time
   PipelineMessage progValue("", "", 0, PipelineMessage::ProgressValue, -1);
-  for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
+  for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
   {
     progress = progress + 1.0f;
     progValue.setType(PipelineMessage::ProgressValue);
     progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
     emit pipelineGeneratedMessage(progValue);
 
-    QString ss = QObject::tr("[%1/%2] %3 ").arg(progress).arg(m_Pipeline.size()).arg( (*iter)->getHumanLabel());
+    QString ss = QObject::tr("[%1/%2] %3 ").arg(progress).arg(m_Pipeline.size()).arg( (*filter)->getHumanLabel());
 
     progValue.setType(PipelineMessage::StatusMessage);
     progValue.setText(ss);
     emit pipelineGeneratedMessage(progValue);
 
 
-    (*iter)->setMessagePrefix(ss);
-    connectFilterNotifications( (*iter).get() );
-    (*iter)->setDataContainerArray(dca);
-    setCurrentFilter(*iter);
-    (*iter)->execute();
-    disconnectFilterNotifications( (*iter).get() );
-    err = (*iter)->getErrorCondition();
+    (*filter)->setMessagePrefix(ss);
+    connectFilterNotifications( (*filter).get() );
+    (*filter)->setDataContainerArray(dca);
+    setCurrentFilter(*filter);
+    (*filter)->execute();
+    disconnectFilterNotifications( (*filter).get() );
+    (*filter)->setDataContainerArray(DataContainerArray::NullPointer());
+    err = (*filter)->getErrorCondition();
     if(err < 0)
     {
       setErrorCondition(err);
@@ -354,7 +354,7 @@ void FilterPipeline::execute()
     {
       break;
     }
-    ss = QObject::tr("%1 Filter Complete").arg((*iter)->getNameOfClass());
+    ss = QObject::tr("%1 Filter Complete").arg((*filter)->getNameOfClass());
   }
 
   PipelineMessage completMessage("", "Pipeline Complete", 0, PipelineMessage::StatusMessage, -1);

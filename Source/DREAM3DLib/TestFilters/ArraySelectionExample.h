@@ -67,40 +67,18 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ArraySelectionExample, AbstractFilter)
 
     virtual ~ArraySelectionExample();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    /* this class is sort of special in that we are going to directly use the DataContainerName and the AttributeMatrix name
+     * as input parameters
+     */
 
-    // -----------------------------------------------------------------------------
-    /* These methods are needed if you use the ArraySelectionWidget as an input */
-    typedef QSet<QString> ArrayList_t;
-
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellFeatureArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellEnsembleArrays)
-
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceFeatureArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceEnsembleArrays)
-
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeFeatureArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeEnsembleArrays)
-
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexFeatureArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexEnsembleArrays)
-    /* END BLOCK FOR ArraySelectionWidget Input */
-    // -----------------------------------------------------------------------------
-
-
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AttributeMatrixName)
+    Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedArrayName)
+    Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -119,7 +97,7 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const QString getSubGroupName() { return "Test"; }
+    virtual const QString getSubGroupName() { return "Misc"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -149,26 +127,6 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
-
-
-    virtual void setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                             QSet<QString> selectedFaceArrays,
-                                             QSet<QString> selectedEdgeArrays,
-                                             QSet<QString> selectedCellArrays,
-                                             QSet<QString> selectedFeatureArrays,
-                                             QSet<QString> selectedEnsembleArrays);
-    virtual void setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                              QSet<QString> selectedEdgeArrays,
-                                              QSet<QString> selectedFaceArrays,
-                                              QSet<QString> selectedFeatureArrays,
-                                              QSet<QString> selectedEnsembleArrays);
-    virtual void setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                           QSet<QString> selectedEdgeArrays,
-                                           QSet<QString> selectedFeatureArrays,
-                                           QSet<QString> selectedEnsembleArrays);
-    virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                             QSet<QString> selectedFeatureArrays,
-                                             QSet<QString> selectedEnsembleArrays);
 
   signals:
     void parametersChanged();

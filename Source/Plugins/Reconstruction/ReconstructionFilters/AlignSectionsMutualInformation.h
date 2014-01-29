@@ -99,6 +99,8 @@ class AlignSectionsMutualInformation : public AlignSections
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     AlignSectionsMutualInformation();

@@ -104,6 +104,8 @@ class ClearData : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     ClearData();

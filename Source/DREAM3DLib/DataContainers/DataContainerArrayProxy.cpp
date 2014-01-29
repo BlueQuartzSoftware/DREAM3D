@@ -37,6 +37,10 @@
 
 #include "DREAM3DLib/DataContainers/DataContainerProxy.h"
 
+#include "DREAM3DLib/DataContainers/DataContainerArray.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -56,6 +60,50 @@ DataContainerArrayProxy::DataContainerArrayProxy(const DataContainerArrayProxy& 
   isValid = rhs.isValid;
   list = rhs.list;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
+  isValid(false)
+{
+
+  if(NULL == dca) { return; }
+
+  QList<DataContainer::Pointer> containers = dca->getDataContainerArray();
+  for(int i = 0; i < containers.size(); i++) // Loop on each Data Container
+  {
+    DataContainer::Pointer container = containers.at(i);
+    DataContainerProxy dcProxy(container->getName(), false, container->getDCType()); // Create a new DataContainerProxy
+
+    // Now loop over each AttributeMatrix in the data container that was selected
+    DataContainer::AttributeMatrixMap_t attrMats = container->getAttributeMatrices();
+    QMapIterator<QString, AttributeMatrix::Pointer> iter(attrMats);
+    while(iter.hasNext())
+    {
+      iter.next();
+      QString amName = iter.key();
+      AttributeMatrix::Pointer attrMat = iter.value();
+      AttributeMatrixProxy amProxy(amName, false, attrMat->getType());
+
+      QList<QString> attrArrayNames = attrMat->getAttributeArrayNameList();
+      QListIterator<QString> attrArrayNamesIter(attrArrayNames);
+      while(attrArrayNamesIter.hasNext())
+      {
+        QString aaName = attrArrayNamesIter.next();
+        QString daPath = container->getName() + "/" + amName + "/";
+        IDataArray::Pointer attrArray = attrMat->getAttributeArray(aaName);
+        DataArrayProxy daProxy(daPath, aaName, false, attrArray->getTypeAsString(), attrArray->getClassVersion() );
+        amProxy.dataArrays.insert(aaName, daProxy);
+      }
+      dcProxy.attributeMatricies.insert(amName, amProxy); // Add the new AttributeMatrix to the DataContainerProxy
+    }
+    list.push_back(dcProxy);
+  }
+  isValid = true;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

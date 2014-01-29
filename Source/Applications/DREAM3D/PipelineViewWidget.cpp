@@ -335,7 +335,7 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
   if (index < 0) // If the programmer wants to add it to the end of the list
   {
     index = filterCount() - 1; // filterCount will come back with the vertical spacer, and if index is still
-     // -1 then the spacer is not there and it will get added so the next time throught this should work
+    // -1 then the spacer is not there and it will get added so the next time throught this should work
   }
 
   // Create a FilterWidget object
@@ -384,7 +384,7 @@ void PipelineViewWidget::addFilterWidget(QFilterWidget* w, int index)
   // Set the Parent
   w->setParent(this);
 
-/// Now setup all the conections between the various widgets
+  /// Now setup all the conections between the various widgets
   connect(w, SIGNAL(filterWidgetRemoved(QFilterWidget*)),
           this, SLOT(removeFilterWidget(QFilterWidget*)) );
 
@@ -410,8 +410,7 @@ void PipelineViewWidget::addFilterWidget(QFilterWidget* w, int index)
     m_FilterWidgetLayout->insertSpacerItem(-1, verticalSpacer);
   }
 
-  setSelectedFilterWidget(w);
-
+  w->setIsSelected(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -421,8 +420,10 @@ void PipelineViewWidget::preflightPipeline()
 {
 
   std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
+
   // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
   qint32 count = filterCount();
   for(qint32 i = 0; i < count; ++i)
   {
@@ -497,11 +498,6 @@ void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
     m_SelectedFilterWidget->setIsSelected(false);
   }
   m_SelectedFilterWidget = w;
-
-  if(NULL != m_SelectedFilterWidget)
-  {
-    m_SelectedFilterWidget->setIsSelected(true);
-  }
 }
 
 // -----------------------------------------------------------------------------

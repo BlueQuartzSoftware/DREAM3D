@@ -101,6 +101,8 @@ class EBSDSegmentFeatures : public SegmentFeatures
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     EBSDSegmentFeatures();

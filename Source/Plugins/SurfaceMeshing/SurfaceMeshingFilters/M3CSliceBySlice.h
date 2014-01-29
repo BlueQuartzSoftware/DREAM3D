@@ -138,6 +138,8 @@ class M3CSliceBySlice : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     M3CSliceBySlice();

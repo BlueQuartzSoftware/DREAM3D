@@ -124,6 +124,8 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected slots:
 

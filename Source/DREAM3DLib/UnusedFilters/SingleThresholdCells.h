@@ -97,6 +97,8 @@ class SingleThresholdCells : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     SingleThresholdCells();

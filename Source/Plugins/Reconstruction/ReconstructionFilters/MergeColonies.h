@@ -100,6 +100,8 @@ class MergeColonies : public GroupFeatures
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     MergeColonies();

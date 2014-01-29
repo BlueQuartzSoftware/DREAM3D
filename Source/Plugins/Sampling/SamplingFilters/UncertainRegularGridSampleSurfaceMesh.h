@@ -104,6 +104,8 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     UncertainRegularGridSampleSurfaceMesh();

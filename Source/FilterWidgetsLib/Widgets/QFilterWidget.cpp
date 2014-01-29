@@ -317,6 +317,7 @@ void QFilterWidget::setIsSelected(bool b)
 {
   m_IsSelected = b;
   changeStyle();
+  if(true == b) { emit widgetSelected(this); }
 }
 
 // -----------------------------------------------------------------------------
@@ -492,7 +493,7 @@ void QFilterWidget::mouseReleaseEvent(QMouseEvent* event)
   }
   else
   {
-    emit widgetSelected(this);
+    setIsSelected(true);
     event->setAccepted(true);
   }
 }

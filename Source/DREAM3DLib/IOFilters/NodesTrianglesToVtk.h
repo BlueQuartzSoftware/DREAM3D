@@ -123,6 +123,8 @@ class DREAM3DLib_EXPORT NodesTrianglesToVtk : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     NodesTrianglesToVtk();

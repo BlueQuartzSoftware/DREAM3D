@@ -44,25 +44,8 @@
 ArraySelectionExample::ArraySelectionExample() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName)
-//  m_SelectedVolumeVertexArrays(FIX_ME<<<<<<<<),
-//  m_SelectedVolumeEdgeArrays(FIX_ME<<<<<<<<),
-//  m_SelectedVolumeFaceArrays(FIX_ME<<<<<<<<),
-//  m_SelectedVolumeCellArrays(FIX_ME<<<<<<<<),
-//  m_SelectedVolumeCellFeatureArrays(FIX_ME<<<<<<<<),
-//  m_SelectedVolumeCellEnsembleArrays(FIX_ME<<<<<<<<),
-//  m_SelectedSurfaceVertexArrays(FIX_ME<<<<<<<<),
-//  m_SelectedSurfaceEdgeArrays(FIX_ME<<<<<<<<),
-//  m_SelectedSurfaceFaceArrays(FIX_ME<<<<<<<<),
-//  m_SelectedSurfaceFaceFeatureArrays(FIX_ME<<<<<<<<),
-//  m_SelectedSurfaceFaceEnsembleArrays(FIX_ME<<<<<<<<),
-//  m_SelectedEdgeVertexArrays(FIX_ME<<<<<<<<),
-//  m_SelectedEdgeEdgeArrays(FIX_ME<<<<<<<<),
-//  m_SelectedEdgeEdgeFeatureArrays(FIX_ME<<<<<<<<),
-//  m_SelectedEdgeEdgeEnsembleArrays(FIX_ME<<<<<<<<),
-//  m_SelectedVertexVertexArrays(FIX_ME<<<<<<<<),
-//  m_SelectedVertexVertexFeatureArrays(FIX_ME<<<<<<<<),
-//  m_SelectedVertexVertexEnsembleArrays(FIX_ME<<<<<<<<)
+  m_AttributeMatrixName(DREAM3D::Defaults::AttributeMatrixName),
+  m_SelectedArrayName("")
 {
   setupFilterParameters();
 }
@@ -83,8 +66,8 @@ void ArraySelectionExample::setupFilterParameters()
   /* To select arrays */
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Arrays to Remember");
-    parameter->setPropertyName("ArraysToRemember");
+    parameter->setHumanLabel("Array to Select");
+    parameter->setPropertyName("SelectedArrayName");
     parameter->setWidgetType(FilterParameterWidgetType::ArraySelectionWidget);
     parameters.push_back(parameter);
   }
@@ -101,27 +84,9 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
   reader->openFilterGroup(this, index);
-  READ_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeFace)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-  READ_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
-
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-  READ_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
-
-  READ_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-  READ_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
-
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-  READ_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
+  setAttributeMatrixName( reader->readString("AttributeMatrixName", getAttributeMatrixName()) );
+  setSelectedArrayName( reader->readString("SelectedArrayName", getSelectedArrayName()) );
   reader->closeFilterGroup();
 }
 
@@ -131,27 +96,9 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
 int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCell)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(VolumeCellEnsemble)
-
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFace)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(SurfaceFaceEnsemble)
-
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdge)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(EdgeEdgeEnsemble)
-
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertex)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexFeature)
-  WRITE_ARRAY_SELECTION_PARAMETER(VertexVertexEnsemble)
+  writer->writeValue("DataContainerName", getDataContainerName());
+  writer->writeValue("AttributeMatrixName", getAttributeMatrixName());
+  writer->writeValue("SelectedArrayName", getSelectedArrayName());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -160,70 +107,9 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                        QSet<QString> selectedEdgeArrays,
-                                                        QSet<QString> selectedFaceArrays,
-                                                        QSet<QString> selectedCellArrays,
-                                                        QSet<QString> selectedFeatureArrays,
-                                                        QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedVolumeVertexArrays = selectedVertexArrays;
-  m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
-  m_SelectedVolumeFaceArrays = selectedFaceArrays;
-  m_SelectedVolumeCellArrays = selectedCellArrays;
-  m_SelectedVolumeCellFeatureArrays = selectedFeatureArrays;
-  m_SelectedVolumeCellEnsembleArrays = selectedEnsembleArrays;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ArraySelectionExample::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                         QSet<QString> selectedEdgeArrays,
-                                                         QSet<QString> selectedFaceArrays,
-                                                         QSet<QString> selectedFeatureArrays,
-                                                         QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedSurfaceVertexArrays = selectedVertexArrays;
-  m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
-  m_SelectedSurfaceFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceFaceFeatureArrays = selectedFeatureArrays;
-  m_SelectedSurfaceFaceEnsembleArrays = selectedEnsembleArrays;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ArraySelectionExample::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                      QSet<QString> selectedEdgeArrays,
-                                                      QSet<QString> selectedFeatureArrays,
-                                                      QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedEdgeVertexArrays = selectedVertexArrays;
-  m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
-  m_SelectedEdgeEdgeFeatureArrays = selectedFeatureArrays;
-  m_SelectedEdgeEdgeEnsembleArrays = selectedEnsembleArrays;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ArraySelectionExample::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                        QSet<QString> selectedFeatureArrays,
-                                                        QSet<QString> selectedEnsembleArrays)
-{
-  m_SelectedVertexVertexArrays = selectedVertexArrays;
-  m_SelectedVertexVertexFeatureArrays = selectedFeatureArrays;
-  m_SelectedVertexVertexEnsembleArrays = selectedEnsembleArrays;
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ArraySelectionExample::dataCheck()
 {
+  std::cout << " ArraySelectionExample   Preflighting " << std::endl;
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);

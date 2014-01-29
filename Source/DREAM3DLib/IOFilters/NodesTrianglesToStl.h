@@ -117,6 +117,8 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     NodesTrianglesToStl();

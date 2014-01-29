@@ -49,6 +49,7 @@
 
 #include "FilterWidgetsLib/ui_ArraySelectionWidget.h"
 
+class QListWidgetItem;
 
 /**
 * @brief
@@ -57,7 +58,7 @@
 */
 class FilterWidgetsLib_EXPORT ArraySelectionWidget : public QWidget, private Ui::ArraySelectionWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**
@@ -76,17 +77,26 @@ class FilterWidgetsLib_EXPORT ArraySelectionWidget : public QWidget, private Ui:
     void setupGui();
 
   public slots:
-    void updateWidget();
+
     void beforePreflight();
     void afterPreflight();
-    void on_dataContainerList_itemClicked();
+
+    void on_dataContainerList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+    void on_attributeMatrixList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+    void on_attributeArrayList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+
 
   protected:
-    void populateLists();
+    void initializeHeirarchy();
+
+  signals:
+    void errorSettingFilterParameter(const QString& msg);
 
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
+
+    DataContainerArrayProxy m_DcaProxy;
 
     ArraySelectionWidget(const ArraySelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const ArraySelectionWidget&); // Operator '=' Not Implemented

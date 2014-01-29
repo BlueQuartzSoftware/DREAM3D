@@ -100,6 +100,8 @@ class MinSize : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     MinSize();

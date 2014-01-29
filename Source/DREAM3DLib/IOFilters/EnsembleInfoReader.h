@@ -90,6 +90,8 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     EnsembleInfoReader();
