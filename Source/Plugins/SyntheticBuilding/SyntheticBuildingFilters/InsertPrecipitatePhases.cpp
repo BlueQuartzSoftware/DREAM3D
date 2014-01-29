@@ -372,7 +372,7 @@ void InsertPrecipitatePhases::execute()
 void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featureOwnersPtr)
 {
   bool writeErrorFile = true;
-  std::ofstream outFile
+  std::ofstream outFile;
   if(m_ErrorOutputFile.isEmpty() == false)
   {
     outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
