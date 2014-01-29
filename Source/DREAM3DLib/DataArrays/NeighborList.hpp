@@ -236,13 +236,13 @@ class NeighborList : public IDataArray
     int getNumberOfComponents() { return 1; }
 
     QVector<size_t> getComponentDimensions()
-    { 
+    {
       QVector<size_t> dims(1, 1);
-      return dims; 
+      return dims;
     }
 
     void SetRank(int rnk) { }
-    
+
     int getRank() { return 1; }
 
     size_t getTypeSize()  { return sizeof(SharedVectorType); }
@@ -641,6 +641,9 @@ class NeighborList : public IDataArray
     NeighborList(const NeighborList&); // Copy Constructor Not Implemented
     void operator=(const NeighborList&); // Operator '=' Not Implemented
 };
+
+typedef NeighborList<int32_t> Int32NeighborListType;
+typedef NeighborList<float> FloatNeighborListType;
 
 #endif /* NEIGHBORLIST_H_ */
 
