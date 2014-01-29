@@ -97,7 +97,6 @@ class FilterWidgetsLib_EXPORT QFilterWidget : public QFrame, private Ui::QFilter
 
     QWidget* getScrollWidgetContents();
 
-
   signals:
     void dragStarted(QFilterWidget* widget);
     void parametersChanged();
