@@ -47,8 +47,6 @@
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
-#include "DREAM3DLib/GenericFilters/FindCellQuats.h"
-
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 

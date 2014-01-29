@@ -49,7 +49,7 @@
 MultiThresholdObjects::MultiThresholdObjects() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_AttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
   m_Output(NULL)
 {
@@ -126,8 +126,8 @@ void MultiThresholdObjects::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
+  AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0 || NULL == attrMat.get() ) { return; }
 
   if (m_ComparisonInputs.size() == 0)
   {
@@ -136,7 +136,7 @@ void MultiThresholdObjects::dataCheck()
   }
 
   QVector<size_t> dims(1, 1);
-  m_OutputPtr = cellAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_OutputArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_OutputPtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_OutputArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_OutputPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Output = m_OutputPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -162,28 +162,15 @@ void MultiThresholdObjects::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-
-  IDataArray::Pointer outputArrayPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_OutputArrayName);
-  BoolArrayType* outputArray = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(outputArrayPtr.get());
-  if (NULL == outputArray)
-  {
-    setErrorCondition(-11002);
-    notifyErrorMessage(getHumanLabel(), "Could not properly cast the output array to a BoolArrayType", getErrorCondition());
-    return;
-  }
-  m_Output = outputArray->getPointer(0);
+  int64_t totalTuples = m->getAttributeMatrix(getAttributeMatrixName())->getNumTuples();
 
   // Prime our output array with the result of the first comparison
   {
     ComparisonInput_t& comp_0 = m_ComparisonInputs[0];
 
-    ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(comp_0.compOperator),
-                                 comp_0.compValue,
-                                 outputArray);
+    ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(comp_0.compOperator), comp_0.compValue, m_OutputPtr.lock().get());
 
-    err = filter.execute(m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(comp_0.arrayName).get(), outputArrayPtr.get());
-
+    err = filter.execute(m->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(comp_0.arrayName).get(), m_OutputPtr.lock().get());
     if (err < 0)
     {
       setErrorCondition(-13001);
@@ -193,35 +180,29 @@ void MultiThresholdObjects::execute()
   }
   for(size_t i = 1; i < m_ComparisonInputs.size(); ++i)
   {
-
-    BoolArrayType::Pointer currentArrayPtr = BoolArrayType::CreateArray(m->getTotalPoints(), "TEMP");
+    BoolArrayType::Pointer currentArrayPtr = BoolArrayType::CreateArray(totalTuples, "TEMP");
     currentArrayPtr->initializeWithZeros();
     bool* currentArray = currentArrayPtr->getPointer(0);
 
     ComparisonInput_t& compRef = m_ComparisonInputs[i];
 
-    ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(compRef.compOperator),
-                                 compRef.compValue,
-                                 currentArrayPtr.get());
+    ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(compRef.compOperator), compRef.compValue, currentArrayPtr.get());
 
-    err = filter.execute(m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(compRef.arrayName).get(), currentArrayPtr.get());
+    err = filter.execute(m->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(compRef.arrayName).get(), currentArrayPtr.get());
     if (err < 0)
     {
       setErrorCondition(-13002);
       notifyErrorMessage(getHumanLabel(), "Error Executing threshold filter on array", getErrorCondition());
       return;
     }
-    for (int64_t p = 0; p < totalPoints; ++p)
+    for (int64_t p = 0; p < totalTuples; ++p)
     {
       if(m_Output[p] == false || currentArray[p] == false)
       {
         m_Output[p] = false;
       }
     }
-
   }
-
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

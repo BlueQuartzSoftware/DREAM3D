@@ -39,12 +39,6 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "Statistics/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/FindSurfaceFeatures.h"
-#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

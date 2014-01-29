@@ -42,12 +42,6 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "DREAM3DLib/GenericFilters/FindCellQuats.h"
-#include "Statistics/StatisticsFilters/FindAvgOrientations.h"
-#include "Statistics/StatisticsFilters/FindEuclideanDistMap.h"
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

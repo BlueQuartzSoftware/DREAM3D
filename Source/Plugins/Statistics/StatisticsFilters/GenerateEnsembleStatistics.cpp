@@ -43,12 +43,6 @@
 #include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
 #include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
 
-#include "Statistics/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/FindSurfaceFeatures.h"
-#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

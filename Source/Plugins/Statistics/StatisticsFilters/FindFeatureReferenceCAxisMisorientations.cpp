@@ -43,12 +43,6 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "DREAM3DLib/GenericFilters/FindCellQuats.h"
-#include "Statistics/StatisticsFilters/FindAvgCAxes.h"
-#include "Statistics/StatisticsFilters/FindEuclideanDistMap.h"
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

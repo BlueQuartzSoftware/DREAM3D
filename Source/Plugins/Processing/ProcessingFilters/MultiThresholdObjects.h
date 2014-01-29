@@ -60,7 +60,7 @@ class MultiThresholdObjects : public AbstractFilter
 
     virtual ~MultiThresholdObjects();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
@@ -81,7 +81,7 @@ class MultiThresholdObjects : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Multi Threshold (Cell Data)"; }
+    virtual const QString getHumanLabel() { return "Threshold Objects"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

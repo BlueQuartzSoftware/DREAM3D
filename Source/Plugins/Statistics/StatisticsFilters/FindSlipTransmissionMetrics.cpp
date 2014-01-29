@@ -38,10 +38,6 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/GenericFilters/FindFeaturePhases.h"
-#include "Statistics/StatisticsFilters/FindNeighbors.h"
-
-
 
 // -----------------------------------------------------------------------------
 //

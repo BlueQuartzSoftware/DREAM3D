@@ -5,39 +5,20 @@ Number_Filters=24
 [0]
 Filter_Name=ReadH5Ebsd
 InputFile=Data/Output/SmallIN100.h5ebsd
+RefFrameZDir=1
 ZStartIndex=1
 ZEndIndex=117
-UseTransformations=true
-ArraySelections_VolumeVertex\size=0
-ArraySelections_VolumeEdge\size=0
-ArraySelections_VolumeFace\size=0
-ArraySelections_VolumeCell\size=6
-ArraySelections_VolumeCell\1\VolumeCell=EulerAngles
-ArraySelections_VolumeCell\2\VolumeCell=Phases
-ArraySelections_VolumeCell\3\VolumeCell=SEM Signal
-ArraySelections_VolumeCell\4\VolumeCell=Confidence Index
-ArraySelections_VolumeCell\5\VolumeCell=Fit
-ArraySelections_VolumeCell\6\VolumeCell=Image Quality
-ArraySelections_VolumeField\size=0
-ArraySelections_VolumeEnsemble\size=3
-ArraySelections_VolumeEnsemble\1\VolumeEnsemble=CrystalStructures
-ArraySelections_VolumeEnsemble\2\VolumeEnsemble=MaterialName
-ArraySelections_VolumeEnsemble\3\VolumeEnsemble=LatticeConstants
-ArraySelections_SurfaceVertex\size=0
-ArraySelections_SurfaceFace\size=0
-ArraySelections_SurfaceEdge\size=0
-ArraySelections_SurfaceField\size=0
-ArraySelections_SurfaceEnsemble\size=0
-ArraySelections_EdgeVertex\size=0
-ArraySelections_EdgeEdge\size=0
-ArraySelections_EdgeField\size=0
-ArraySelections_EdgeEnsemble\size=0
-ArraySelections_VertexVertex\size=0
-ArraySelections_VertexField\size=0
-ArraySelections_VertexEnsemble\size=0
+UseTransformations=1
+ArraySelections_SelectedArrayNames\size=6
+ArraySelections_SelectedArrayNames\1\SelectedArrayNames=EulerAngles
+ArraySelections_SelectedArrayNames\2\SelectedArrayNames=SEM Signal
+ArraySelections_SelectedArrayNames\3\SelectedArrayNames=Phases
+ArraySelections_SelectedArrayNames\4\SelectedArrayNames=Confidence Index
+ArraySelections_SelectedArrayNames\5\SelectedArrayNames=Fit
+ArraySelections_SelectedArrayNames\6\SelectedArrayNames=Image Quality
 
 [1]
-Filter_Name=MultiThresholdCells
+Filter_Name=MultiThresholdObjects
 OutputArrayName=GoodVoxels
 ComparisonInputs\size=2
 ComparisonInputs\1\ArrayName=Image Quality
@@ -134,7 +115,7 @@ ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
 [20]
-Filter_Name=RenameCellArray
+Filter_Name=RenameAttributeArray
 SelectedCellArrayName=IPFColor
 NewCellArrayName=IPFColor_Z
 
@@ -147,15 +128,11 @@ ReferenceAxis\3\z=1
 ReferenceAngle=0
 
 [22]
-Filter_Name=RenameCellArray
+Filter_Name=RenameAttributeArray
 SelectedCellArrayName=MisorientationColor
 NewCellArrayName=SchuhColor
 
 [23]
 Filter_Name=DataContainerWriter
 OutputFile=Data/Output/SmallIN100Cleaned.dream3d
-WriteVolumeData=true
-WriteSurfaceData=true
-WriteEdgeData=true
-WriteVertexData=true
 WriteXdmfFile=true
