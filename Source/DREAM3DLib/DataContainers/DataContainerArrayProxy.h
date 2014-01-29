@@ -44,6 +44,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DataContainers/DataContainerProxy.h"
 
+class DataContainerArray;
+
 /**
  * @brief DataContainerArrayProxy
  */
@@ -54,6 +56,12 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
      * @brief DataContainerArrayProxy
      */
     DataContainerArrayProxy();
+
+    /**
+     * @brief DataContainerArrayProxy
+     * @param dca
+     */
+    explicit DataContainerArrayProxy(DataContainerArray* dca);
 
     /**
      * @brief DataContainerArrayProxy
