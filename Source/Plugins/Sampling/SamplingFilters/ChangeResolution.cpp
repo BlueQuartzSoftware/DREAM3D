@@ -128,7 +128,7 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->openFilterGroup(this, index);
   writer->writeValue("Resolution", getResolution() );
   writer->writeValue("RenumberFeatures", getRenumberFeatures() );
-  writer->writeValue("SaveAsNewDataContiner", getSaveAsNewDataContiner() );
+  writer->writeValue("SaveAsNewDataContiner", getSaveAsNewDataContainer() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

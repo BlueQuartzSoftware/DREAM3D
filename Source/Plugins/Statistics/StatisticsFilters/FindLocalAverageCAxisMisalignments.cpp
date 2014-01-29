@@ -236,45 +236,30 @@ void FindLocalAverageCAxisMisalignments::execute()
   size_t numFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t newNumFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
 
-  std::vector<std::vector<int> > afterNeighborList;
-  std::vector<std::vector<float> > afterCAxisMisalignmentList;
-
-  for(int i=0;i<numFeatures;i++)
+  if(m_CalcUnbiasedAvg == true)
   {
-    if (m_CalcUnbiasedAvg == true)
+    NeighborList<int>& neighborlist = *m_NeighborList;
+    NeighborList<float>& caxismisalignmentList = *m_CAxisMisalignmentList;
+    for(int i=0;i<numFeatures;i++)
     {
-      NeighborList<int>& neighborlist = *m_NeighborList;
-      NeighborList<float>& caxismisalignmentList = *m_CAxisMisalignmentList;
-
-      for(int i=0;i<numFeatures;i++)
+      int parentid = m_FeatureParentIds[i];
+      for (size_t j = 0; j < neighborlist[i].size(); j++)
       {
-        for (size_t j = 0; j < neighborlist[i].size(); j++)
+        if (m_FeatureParentIds[neighborlist[i][j]] == m_FeatureParentIds[i])
         {
-          afterNeighborList[i][j] = neighborlist[i][j];
-          afterCAxisMisalignmentList[i][j] = caxismisalignmentList[i][j];
+          m_NumFeaturesPerParent[parentid]++;
+          m_AvgParentAvgCAxisMisalignments[parentid] += caxismisalignmentList[i][j];
         }
       }
     }
   }
-
-  for(int i=0;i<numFeatures;i++)
+  else
   {
-    int parentid = m_FeatureParentIds[i];
-    if (m_CalcUnbiasedAvg == false)
+    for(int i=0;i<numFeatures;i++)
     {
+      int parentid = m_FeatureParentIds[i];
       m_NumFeaturesPerParent[parentid]++;
       m_AvgParentAvgCAxisMisalignments[parentid] += m_AvgCAxisMisalignments[i];
-    }
-    else if (m_CalcUnbiasedAvg == true)
-    {
-      for (size_t j = 0; j < afterNeighborList[i].size(); j++)
-      {
-        if (m_FeatureParentIds[afterNeighborList[i][j]] == m_FeatureParentIds[i])
-        {
-          m_NumFeaturesPerParent[parentid]++;
-          m_AvgParentAvgCAxisMisalignments[parentid] += m_AvgCAxisMisalignments[i];
-        }
-      }
     }
   }
 

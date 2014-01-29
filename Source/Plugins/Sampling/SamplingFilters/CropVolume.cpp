@@ -192,7 +192,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->writeValue("YMax", getYMax() );
   writer->writeValue("ZMax", getZMax() );
   writer->writeValue("RenumberFeatures", getRenumberFeatures() );
-  writer->writeValue("SaveAsNewDataContiner", getSaveAsNewDataContiner() );
+  writer->writeValue("SaveAsNewDataContiner", getSaveAsNewDataContainer() );
   writer->writeValue("UpdateOrigin", getUpdateOrigin() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
