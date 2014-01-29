@@ -1,6 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,7 +31,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                   FA8650-07-D-5800 and FA8650-10-D-5226
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -218,15 +219,13 @@ void FindMisorientations::execute()
   //float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
   // int mbin = 0;
   float w;
-  float neighMisoTot = 0.0f;
+  size_t tempMisoList = 0;
   QuatF q1;
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 
   unsigned int phase1, phase2;
-
-  float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
 
   size_t nname;
   // float nsa;
@@ -242,19 +241,25 @@ void FindMisorientations::execute()
       nname = neighborlist[i][j];
       QuaternionMathF::Copy(avgQuats[nname], q2);
       phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
+      tempMisoList = neighborlist[i].size();
       if (phase1 == phase2)
       {
         w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-        misorientationlists[i][j] = w * radToDeg;
+        misorientationlists[i][j] = DREAM3D::Constants::k_180OverPi;
+		if (m_FindAvgMisors == true) m_AvgMisorientations[i] += misorientationlists[i][j];
       }
       else
       {
-        misorientationlists[i][j] = -100;
+        if (m_FindAvgMisors == true) tempMisoList--;
+        misorientationlists[i][j] = -100.0f;
       }
-      if (m_FindAvgMisors == true) neighMisoTot += misorientationlists[i][j];
     }
-    if (m_FindAvgMisors == true) m_AvgMisorientations[i] = neighMisoTot / neighborlist[i].size();
-    if (m_FindAvgMisors == true) neighMisoTot = 0.0f;
+    if (m_FindAvgMisors == true)
+    {
+      if (tempMisoList > 0) m_AvgMisorientations[i] /= tempMisoList;
+      else m_AvgMisorientations[i] = -100.0f;
+      tempMisoList = 0;
+    }
   }
 
   // We do this to create new set of MisorientationList objects
