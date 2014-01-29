@@ -606,6 +606,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     m_Centroids[3 * i + 2] = zc;
     insert_precipitate(i);
 //    fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
+
+// try moving precipitate around 10 times, figure out which one of those is the best
 //    for (int iter_fill = 0; iter_fill < 10; iter_fill++)
 //    {
 //      random = static_cast<float>(rg.genrand_res53());
