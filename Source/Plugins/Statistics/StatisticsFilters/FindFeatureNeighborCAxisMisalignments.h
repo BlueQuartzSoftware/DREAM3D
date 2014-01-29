@@ -57,7 +57,7 @@
  * @class FindFeatureNeighborCAxisMisalignments FindFeatureNeighborCAxisMisalignments.h Plugins/Statistics/StatisticsFilters/FindFeatureNeighborCAxisMisalignments.h
  * @brief
  * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES) 
- * @date Jan 28, 2014
+ * @date Jan 29, 2014
  * @version 5.0
  */
 class FindFeatureNeighborCAxisMisalignments : public AbstractFilter

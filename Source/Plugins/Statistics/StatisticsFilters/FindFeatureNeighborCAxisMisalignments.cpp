@@ -272,9 +272,16 @@ void FindFeatureNeighborCAxisMisalignments::execute()
         w = GeometryMath::CosThetaBetweenVectors(c1, c2);
         DREAM3DMath::boundF(w, -1, 1);
         w = acosf(w);
-        if (m_FindAvgMisals == true) m_AvgCAxisMisalignments[i] += w * DREAM3D::Constants::k_180OverPi;;
+        if (w > (DREAM3D::Constants::k_Pi / 2)) w = DREAM3D::Constants::k_Pi - w;
+
+        misalignmentlists[i][j] = w * DREAM3D::Constants::k_180OverPi;
+        if (m_FindAvgMisals == true) m_AvgCAxisMisalignments[i] += misalignmentlists[i][j];
       }
-      else if (m_FindAvgMisals == true) hexneighborlistsize--;
+      else
+      {
+        if (m_FindAvgMisals == true) hexneighborlistsize--;
+        misalignmentlists[i][j] = -100.0f;
+      }
     }
     if (m_FindAvgMisals == true)
     {
