@@ -206,9 +206,9 @@ void FindNeighborhoods::find_neighborhoods()
 
   QVector<QVector<int> > neighborhoodlist;
 
-  int64_t totalPoints = m->getTotalPoints();
+  //int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t totalEnsembles = 0;
+ // size_t totalEnsembles = 0;
   dataCheck();
 
   neighborhoodlist.resize(totalFeatures);
@@ -249,7 +249,7 @@ void FindNeighborhoods::find_neighborhoods()
   float sizeZ = float(zP) * zRes;
   int numXBins = int(sizeX / criticalDistance);
   int numYBins = int(sizeY / criticalDistance);
-  int numZBins = int(sizeZ / criticalDistance);
+  //int numZBins = int(sizeZ / criticalDistance);
 
   int xbin, ybin, zbin, bin, bin1, bin2;
   QVector<size_t> bins(totalFeatures, 0);
