@@ -98,6 +98,8 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     PhReader();

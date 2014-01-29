@@ -114,6 +114,8 @@ class FindBoundaryStrengths : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     FindBoundaryStrengths();

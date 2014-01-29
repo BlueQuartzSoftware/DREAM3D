@@ -94,6 +94,8 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     DxReader();

@@ -99,6 +99,8 @@ class DREAM3DLib_EXPORT FeatureDataCSVWriter : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     FeatureDataCSVWriter();

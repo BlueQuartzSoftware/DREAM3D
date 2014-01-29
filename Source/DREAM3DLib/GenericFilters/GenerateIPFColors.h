@@ -114,6 +114,8 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     GenerateIPFColors();

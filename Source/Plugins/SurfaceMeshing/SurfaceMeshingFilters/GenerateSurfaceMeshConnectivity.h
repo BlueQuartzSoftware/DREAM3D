@@ -118,6 +118,8 @@ class GenerateSurfaceMeshConnectivity : public SurfaceMeshFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     GenerateSurfaceMeshConnectivity();

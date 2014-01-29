@@ -113,6 +113,8 @@ class CropVolume : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     CropVolume();

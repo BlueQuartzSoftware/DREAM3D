@@ -137,6 +137,8 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     ReadH5Ebsd();

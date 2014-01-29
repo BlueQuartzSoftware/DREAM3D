@@ -80,6 +80,8 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     YSChoiAbaqusReader();

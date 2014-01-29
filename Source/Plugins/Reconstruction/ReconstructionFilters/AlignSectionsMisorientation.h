@@ -95,6 +95,8 @@ class AlignSectionsMisorientation : public AlignSections
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     AlignSectionsMisorientation();

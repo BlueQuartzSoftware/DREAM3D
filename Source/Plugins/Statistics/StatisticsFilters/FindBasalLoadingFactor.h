@@ -97,6 +97,8 @@ class FindBasalLoadingFactor : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     FindBasalLoadingFactor();

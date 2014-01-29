@@ -99,6 +99,8 @@ class ChangeResolution : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     ChangeResolution();

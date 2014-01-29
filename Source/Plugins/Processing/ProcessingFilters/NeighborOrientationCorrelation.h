@@ -96,6 +96,8 @@ class NeighborOrientationCorrelation : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     NeighborOrientationCorrelation();

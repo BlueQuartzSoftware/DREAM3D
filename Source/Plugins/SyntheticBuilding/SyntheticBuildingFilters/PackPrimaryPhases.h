@@ -124,6 +124,8 @@ class PackPrimaryPhases : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     PackPrimaryPhases();

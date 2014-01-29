@@ -120,6 +120,8 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     ConvertData();

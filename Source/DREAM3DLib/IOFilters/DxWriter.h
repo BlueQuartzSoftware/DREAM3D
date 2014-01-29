@@ -88,6 +88,8 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     DxWriter();

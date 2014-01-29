@@ -131,6 +131,8 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     ReadOrientationData();

@@ -125,6 +125,8 @@ class VisualizeGBCD : public SurfaceMeshFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     VisualizeGBCD();

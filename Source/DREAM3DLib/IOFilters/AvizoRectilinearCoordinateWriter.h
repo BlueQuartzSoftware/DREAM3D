@@ -118,6 +118,8 @@ class DREAM3DLib_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     AvizoRectilinearCoordinateWriter();

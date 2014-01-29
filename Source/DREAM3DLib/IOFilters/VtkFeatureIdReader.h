@@ -93,6 +93,8 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     VtkFeatureIdReader();

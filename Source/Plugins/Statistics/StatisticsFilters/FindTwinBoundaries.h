@@ -104,6 +104,8 @@ class FindTwinBoundaries : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     FindTwinBoundaries();

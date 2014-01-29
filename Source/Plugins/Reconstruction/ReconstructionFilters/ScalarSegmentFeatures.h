@@ -104,6 +104,8 @@ class ScalarSegmentFeatures : public SegmentFeatures
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     ScalarSegmentFeatures();

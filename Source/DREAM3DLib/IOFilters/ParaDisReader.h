@@ -94,6 +94,8 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     ParaDisReader();

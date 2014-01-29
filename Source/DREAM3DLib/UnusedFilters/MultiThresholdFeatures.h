@@ -114,6 +114,8 @@ class MultiThresholdFeatures : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     MultiThresholdFeatures();

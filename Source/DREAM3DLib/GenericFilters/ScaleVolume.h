@@ -117,6 +117,8 @@ class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
 
   signals:
     void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     ScaleVolume();
