@@ -51,7 +51,7 @@ FindNeighborhoods::FindNeighborhoods() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_NeighborhoodListArrayName(DREAM3D::FeatureData::NeighborhoodList),
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
-  m_MultiplesOfAverage(1),
+  m_MultiplesOfAverage(1.0f),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
@@ -214,7 +214,7 @@ void FindNeighborhoods::find_neighborhoods()
 
   neighborhoodlist.resize(totalFeatures);
 
-  float aveDiam = 0;
+  float aveDiam = 0.0f;
   for (size_t i = 1; i < totalFeatures; i++)
   {
     m_Neighborhoods[i] = 0;
@@ -282,10 +282,19 @@ void FindNeighborhoods::find_neighborhoods()
       bin2 = bins[j];
       if(bin1 == bin2)
       {
-        m_Neighborhoods[i]++;
-        neighborhoodlist[i].push_back(j);
-        m_Neighborhoods[j]++;
-        neighborhoodlist[j].push_back(i);
+        xn = m_Centroids[3 * j];
+        yn = m_Centroids[3 * j + 1];
+        zn = m_Centroids[3 * j + 2];
+        dx = fabs(x - xn);
+        dy = fabs(y - yn);
+        dz = fabs(z - zn);
+        if (dx < criticalDistance && dy < criticalDistance && dz < criticalDistance)
+        {
+          m_Neighborhoods[i]++;
+          neighborhoodlist[i].push_back(j);
+          m_Neighborhoods[j]++;
+          neighborhoodlist[j].push_back(i);
+        }
       }
       else if(abs(bin1 - bin2) == 1 || abs(bin1 - bin2) == numXBins || abs(bin1 - bin2) == (numXBins * numYBins))
       {
