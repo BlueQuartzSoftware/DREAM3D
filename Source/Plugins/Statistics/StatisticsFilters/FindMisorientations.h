@@ -80,9 +80,9 @@ class FindMisorientations : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighbor Misorientations"; }
 
-	DREAM3D_FILTER_PARAMETER(bool, FindAvgMisors)
+    DREAM3D_FILTER_PARAMETER(bool, FindAvgMisors)
 
-	virtual void setupFilterParameters();
+    virtual void setupFilterParameters();
 
     /**
     * @brief This method will write the options to a file
@@ -101,6 +101,11 @@ class FindMisorientations : public AbstractFilter
      */
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     FindMisorientations();

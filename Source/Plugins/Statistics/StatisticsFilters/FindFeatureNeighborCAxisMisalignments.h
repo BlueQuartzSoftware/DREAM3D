@@ -56,7 +56,7 @@
 /**
  * @class FindFeatureNeighborCAxisMisalignments FindFeatureNeighborCAxisMisalignments.h Plugins/Statistics/StatisticsFilters/FindFeatureNeighborCAxisMisalignments.h
  * @brief
- * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES) 
+ * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
  * @date Jan 29, 2014
  * @version 5.0
  */
@@ -81,9 +81,9 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighbor C-Axis Misalignments"; }
 
-	DREAM3D_FILTER_PARAMETER(bool, FindAvgMisals)
+    DREAM3D_FILTER_PARAMETER(bool, FindAvgMisals)
 
-	virtual void setupFilterParameters();
+    virtual void setupFilterParameters();
 
     /**
     * @brief This method will write the options to a file
@@ -103,6 +103,10 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+  signals:
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
   protected:
     FindFeatureNeighborCAxisMisalignments();
 
