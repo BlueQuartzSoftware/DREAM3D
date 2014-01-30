@@ -291,15 +291,7 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
   // Load the pipeline from the file resulting in a FilterPipeline Object
   FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(filePath, format, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
 
-  updateFilterPipeline(pipeline, false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::updateFilterPipeline(FilterPipeline::Pointer pipeline, bool append)
-{
-
+  bool append = false;
   // Clear the Pipeline First
   if (false == append) { clearWidgets(); }
   // get a reference to the filters which are in some type of container object.
@@ -307,14 +299,16 @@ void PipelineViewWidget::updateFilterPipeline(FilterPipeline::Pointer pipeline, 
   int fCount = filters.size();
   int index = -1;
   // Start looping on each filter
-  for(int i = 0; i < fCount; i++)
+  for (int i = 0; i < fCount; i++)
   {
     // Create a QFilterWidget using the current AbstractFilter instance to initialize it
     QFilterWidget* w = new QFilterWidget(filters.at(i));
     index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
-    addFilterWidget(w, index);
+    addFilterWidget(w, filters.at(i), index);
   }
 
+  // Now preflight the pipeline for this filter.
+  preflightPipeline();
 }
 
 // -----------------------------------------------------------------------------
@@ -322,7 +316,6 @@ void PipelineViewWidget::updateFilterPipeline(FilterPipeline::Pointer pipeline, 
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
 {
-
   FilterManager::Pointer wm = FilterManager::Instance();
   if(NULL == wm.get() ) { return; }
   IFilterFactory::Pointer wf = wm->getFactoryForFilter(filterClassName);
@@ -342,14 +335,11 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
   // Create a FilterWidget object
   QFilterWidget* w = new QFilterWidget(filter);
 
-  // Add the filter widget to teh
-  addFilterWidget(w, index);
-  connect(filter.get(), SIGNAL(parametersChanged()),
-          this, SLOT(preflightPipeline()));
+  // Add the filter widget to this view widget
+  addFilterWidget(w, filter, index);
 
-  // Clear the Issues Table and then preflight
+  // Clear the pipeline Issues table first so we can collect all the error messages
   emit pipelineIssuesCleared();
-
   // Now preflight the pipeline for this filter.
   preflightPipeline();
 }
@@ -358,7 +348,7 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::addFilterWidget(QFilterWidget* w, int index)
+void PipelineViewWidget::addFilterWidget(QFilterWidget* w, AbstractFilter::Pointer filter, int index)
 {
   bool addSpacer = false;
   if (filterCount() <= 0)
@@ -388,23 +378,28 @@ void PipelineViewWidget::addFilterWidget(QFilterWidget* w, int index)
   // Set the Parent
   w->setParent(this);
 
-  /// Now setup all the conections between the various widgets
+  /// Now setup all the connections between the various widgets
+
+  // When the filter is removed from this view
   connect(w, SIGNAL(filterWidgetRemoved(QFilterWidget*)),
           this, SLOT(removeFilterWidget(QFilterWidget*)) );
 
-  if(NULL != m_InputParametersWidget) {
-    connect(w, SIGNAL(widgetSelected(QFilterWidget*)),
-            m_InputParametersWidget, SLOT(displayFilterParameters(QFilterWidget*)) );
-  }
-
+  // When the FilterWidget is selected
   connect(w, SIGNAL(widgetSelected(QFilterWidget*)),
           this, SLOT(setSelectedFilterWidget(QFilterWidget*)) );
 
-
+  // When the filter widget is dragged
   connect(w, SIGNAL(dragStarted(QFilterWidget*)),
           this, SLOT(setFilterBeingDragged(QFilterWidget*)) );
 
+  // Conditionally when the filter widget is selected, show the inputs on another widget
+  if (NULL != m_InputParametersWidget) {
+    connect(w, SIGNAL(widgetSelected(QFilterWidget*)),
+      m_InputParametersWidget, SLOT(displayFilterParameters(QFilterWidget*)));
+  }
 
+  connect(filter.get(), SIGNAL(parametersChanged()),
+    this, SLOT(preflightPipeline()));
 
   // Check to make sure at least the vertical spacer is in the Layout
   if (addSpacer)
@@ -413,6 +408,7 @@ void PipelineViewWidget::addFilterWidget(QFilterWidget* w, int index)
     m_FilterWidgetLayout->insertSpacerItem(-1, verticalSpacer);
   }
 
+  // Finally, set this new filter widget as selected in order to show the input parameters right away
   w->setIsSelected(true);
 }
 
@@ -644,7 +640,6 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       }
       // Now that we have an index, insert the filter.
       addFilter(name, count);
-      preflightPipeline();
     }
   }
   event->acceptProposedAction();
