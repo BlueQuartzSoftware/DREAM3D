@@ -286,9 +286,11 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString nam
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Format format)
 {
-  //std::cout << " PipelineViewWidget::loadPipelineFile() filePath=" << filePath.toStdString() << std::endl;
+  // Clear the pipeline Issues table first so we can collect all the error messages
   emit pipelineIssuesCleared();
+  // Load the pipeline from the file resulting in a FilterPipeline Object
   FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(filePath, format, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
+
   updateFilterPipeline(pipeline, false);
 }
 
@@ -312,8 +314,7 @@ void PipelineViewWidget::updateFilterPipeline(FilterPipeline::Pointer pipeline, 
     index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
     addFilterWidget(w, index);
   }
-  // Now preflight the pipeline for this filter.
-  preflightPipeline();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -328,19 +329,20 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
   if (NULL == wf.get()) { return; }
 
   // Create an instance of the filter. Since we are dealing with the AbstractFilter interface we can not
-  // actually use the actual filter class. We are going to have to rely on QProperties or Signals/Slots
+  // actually use the concrete filter class. We are going to have to rely on QProperties or Signals/Slots
   // to communicate changes back to the filter.
   AbstractFilter::Pointer filter = wf->create();
 
   if (index < 0) // If the programmer wants to add it to the end of the list
   {
     index = filterCount() - 1; // filterCount will come back with the vertical spacer, and if index is still
-    // -1 then the spacer is not there and it will get added so the next time throught this should work
+    // -1 then the spacer is not there and it will get added so the next time through. this should work
   }
 
   // Create a FilterWidget object
   QFilterWidget* w = new QFilterWidget(filter);
 
+  // Add the filter widget to teh
   addFilterWidget(w, index);
   connect(filter.get(), SIGNAL(parametersChanged()),
           this, SLOT(preflightPipeline()));

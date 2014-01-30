@@ -67,7 +67,7 @@ class FindLargestCrossSections : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, Plane)
+    DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

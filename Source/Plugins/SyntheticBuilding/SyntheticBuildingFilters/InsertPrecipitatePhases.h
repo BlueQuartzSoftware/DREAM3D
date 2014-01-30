@@ -91,11 +91,11 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)
+    DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
     Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
+    DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
     Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
+    DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }

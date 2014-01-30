@@ -72,7 +72,7 @@ class AddOrientationNoise : public AbstractFilter
     //------ Required Cell Data
 
 
-    DREAM3D_INSTANCE_PROPERTY(float, Magnitude)
+    DREAM3D_FILTER_PARAMETER(float, Magnitude)
     Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }

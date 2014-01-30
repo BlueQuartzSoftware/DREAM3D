@@ -76,7 +76,7 @@ class FindFeatureReferenceMisorientations : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Reference Misorientations"; }
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, ReferenceOrientation)
+    DREAM3D_FILTER_PARAMETER(unsigned int, ReferenceOrientation)
     Q_PROPERTY(unsigned int ReferenceOrientation READ getReferenceOrientation WRITE setReferenceOrientation NOTIFY parametersChanged)
 
     virtual void setupFilterParameters();

@@ -73,13 +73,13 @@ class AddBadData : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const QString getHumanLabel() { return "Add Bad Data"; }
 
-    DREAM3D_INSTANCE_PROPERTY(bool, PoissonNoise)
+    DREAM3D_FILTER_PARAMETER(bool, PoissonNoise)
     Q_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(float, PoissonVolFraction)
+    DREAM3D_FILTER_PARAMETER(float, PoissonVolFraction)
     Q_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, BoundaryNoise)
+    DREAM3D_FILTER_PARAMETER(bool, BoundaryNoise)
     Q_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(float, BoundaryVolFraction)
+    DREAM3D_FILTER_PARAMETER(float, BoundaryVolFraction)
     Q_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction NOTIFY parametersChanged)
 
     virtual void setupFilterParameters();

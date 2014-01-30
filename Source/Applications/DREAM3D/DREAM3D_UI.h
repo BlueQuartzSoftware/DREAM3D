@@ -55,7 +55,7 @@
 #include <ui_DREAM3D_UI.h>
 
 #include "DREAM3DLib/Common/FilterManager.h"
-
+#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
 #include "FilterWidgetsLib/FilterWidgetManager.h"
 
 
@@ -86,6 +86,13 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
   public:
     DREAM3D_UI(QWidget *parent = 0);
     virtual ~DREAM3D_UI();
+
+
+    /**
+     * @brief setLoadedPlugins
+     * @param plugins
+     */
+    void setLoadedPlugins(QVector<DREAM3DPluginInterface::Pointer> plugins);
 
   protected slots:
 
@@ -134,6 +141,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     void versionCheckReply(UpdateCheckData*);
 
+
   private slots:
     // slots for our worker thread to communicate
     void threadHasMessage(QString message);
@@ -150,7 +158,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
   protected:
 
-    void loadPlugins(FilterManager* fm);
     void populateMenus(QObject *plugin);
     void addToPluginMenu(QObject *plugin, const QString &text,
                          QMenu *menu, const char *member,
@@ -231,16 +238,16 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
   private:
     QList<QWidget*>             m_WidgetList;
     QThread*                    m_WorkerThread;
-    QStringList                 m_PluginDirs;
-    QStringList                 m_PluginFileNames;
+//    QStringList                 m_PluginDirs;
+//    QStringList                 m_PluginFileNames;
     QActionGroup*               m_PluginActionGroup;
     QActionGroup*               m_PluginPrefsActionGroup;
     DREAM3DPluginInterface*     m_ActivePlugin;
-    QVector<DREAM3DPluginInterface*> m_LoadedPlugins;
+    QVector<DREAM3DPluginInterface::Pointer> m_LoadedPlugins;
     QToolBar*                   m_PluginToolBar;
     HelpDialog*                 m_HelpDialog;
 
-    UpdateCheck*                m_UpdateCheck;
+    QSharedPointer<UpdateCheck>   m_UpdateCheck;
 
     QString                     m_OpenDialogLastDirectory;
 

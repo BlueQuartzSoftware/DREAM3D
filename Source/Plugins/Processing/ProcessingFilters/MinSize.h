@@ -71,11 +71,11 @@ class MinSize : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedFeatureSize)
+    DREAM3D_FILTER_PARAMETER(int, MinAllowedFeatureSize)
     Q_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, ApplyToAll)
+    DREAM3D_FILTER_PARAMETER(bool, ApplyToAll)
     Q_PROPERTY(bool ApplyToAll READ getApplyToAll WRITE setApplyToAll NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
+    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
     Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

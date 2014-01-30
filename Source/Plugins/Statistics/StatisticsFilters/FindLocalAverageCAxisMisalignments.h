@@ -75,8 +75,11 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CAxisMisalignmentListArrayName)
-    DREAM3D_INSTANCE_PROPERTY(bool, CalcUnbiasedAvg)
-    DREAM3D_INSTANCE_PROPERTY(bool, CalcBiasedAvg)
+
+    DREAM3D_FILTER_PARAMETER(float, CalcUnbiasedAvg)
+    Q_PROPERTY(float CalcUnbiasedAvg READ getCalcUnbiasedAvg WRITE setCalcUnbiasedAvg NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(float, CalcBiasedAvg)
+    Q_PROPERTY(float CalcBiasedAvg READ getCalcBiasedAvg WRITE setCalcBiasedAvg NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::CrystallographicFilters;}
@@ -110,6 +113,11 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
      * @brief preflight
      */
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     FindLocalAverageCAxisMisalignments();

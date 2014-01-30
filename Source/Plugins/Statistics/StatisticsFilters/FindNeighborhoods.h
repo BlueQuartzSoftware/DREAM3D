@@ -70,7 +70,7 @@ class FindNeighborhoods : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(float, MultiplesOfAverage)
+    DREAM3D_FILTER_PARAMETER(float, MultiplesOfAverage)
     Q_PROPERTY(int MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
