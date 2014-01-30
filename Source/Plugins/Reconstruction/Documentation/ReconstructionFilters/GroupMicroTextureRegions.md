@@ -8,7 +8,7 @@ Reconstruction Filters (Grouping)
 This Filter groups neighboring **Features** that have c-axes aligned within a user defined tolerance.  The algorithm for grouping the **Features** is analogous to the algorithm for segmenting the **Features** - only the average orientation of the **Features** are used instead of the orientations of the individual **Cells** and the criterion for grouping only considers the alignment of the c-axes.  The user can specify a tolerance for how closely aligned the c-axes must be for neighbor **Features** to be grouped.
 
 
-NOTE: This filter is intended for use with *Heaxgonal* materials.  While the c-axis is actually just referring to the <001> direction and thus will operate on any symmetry, the utility of grouping by <001> alignment is likely only important/useful in materials with anisotropy in that direction (like materials with *Hexagonal* symmetry). 
+NOTE: This filter is intended for use with *Hexagonal* materials.  While the c-axis is actually just referring to the <001> direction and thus will operate on any symmetry, the utility of grouping by <001> alignment is likely only important/useful in materials with anisotropy in that direction (like materials with *Hexagonal* symmetry). 
 
 
 ## Parameters ##
@@ -16,9 +16,10 @@ NOTE: This filter is intended for use with *Heaxgonal* materials.  While the c-a
 | Name | Type |
 |------|------|
 | C-Axis Alignment Tolerance | Double |
+| Use Running Average | Boolean |
 
 ## Required DataContainers ##
-Voxel
+Volume
 
 ## Required Arrays ##
 
@@ -39,11 +40,11 @@ Voxel
 
 ## Authors ##
 
-**Copyright:** 2013 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 
-**Version:** 1.0.0
+**Version:** 5.0.0
 
 **License:**  See the License.txt file that came with DREAM3D.
 
