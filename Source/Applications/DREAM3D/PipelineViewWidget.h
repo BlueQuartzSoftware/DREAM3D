@@ -70,12 +70,6 @@ class PipelineViewWidget : public QFrame
     QFilterWidget* filterWidgetAt(int index);
     void clearWidgets();
 
-    /**
-     * @brief updateFilterPipeline
-     * @param pipeline
-     * @param append Should the incoming pipeline be appended to the current pipeline
-     */
-    void updateFilterPipeline(FilterPipeline::Pointer pipeline, bool append = false);
 
     void savePipeline(const QString& filePath, const QString name, QSettings::Format = QSettings::IniFormat);
 
@@ -137,7 +131,7 @@ class PipelineViewWidget : public QFrame
 
   public slots:
     void addFilter(const QString& filterClassName, int index = -1);
-    void addFilterWidget(QFilterWidget *w, int index = -1);
+    void addFilterWidget(QFilterWidget *w, AbstractFilter::Pointer filter, int index = -1);
 
     void removeFilterWidget(QFilterWidget *whoSent);
     void setSelectedFilterWidget(QFilterWidget* w);
