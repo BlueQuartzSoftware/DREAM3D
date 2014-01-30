@@ -15,10 +15,10 @@ This Filter determines the number of **Features** whose *centroids* lie within a
 
 
 ## Parameters ##
-None
+| Multiples Of Average Diameter | Float |
 
 ## Required DataContainers ##
-Voxel
+Volume
 
 ## Required Arrays ##
 
@@ -36,7 +36,7 @@ Voxel
 
 ## Authors ##
 
-**Copyright:** Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 
