@@ -51,7 +51,7 @@
  * @class FindNeighborhoods FindNeighborhoods.h DREAM3DLib/GenericFilters/FindNeighborhoods.h
  * @brief
  * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Jan 28, 2014
+ * @date Jan 30, 2014
  * @version 5.0
  */
 class FindNeighborhoods : public AbstractFilter

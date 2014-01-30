@@ -80,8 +80,9 @@ void FindNeighborhoods::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setPropertyName("MultiplesOfAverage");
     parameter->setHumanLabel("Multiples Of Average Diameter");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+	parameter->setCastableValueType("double");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
