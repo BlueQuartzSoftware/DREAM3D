@@ -257,7 +257,7 @@ void FindLocalAverageCAxisMisalignments::execute()
   size_t numFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t newNumFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
 
-  std::vector<int32_t> NumUnbiasedFeaturesPerParent(numFeatures,0);
+  QVector<int32_t> NumUnbiasedFeaturesPerParent(numFeatures,0);
 
   if(m_CalcUnbiasedAvg == true)
   {
