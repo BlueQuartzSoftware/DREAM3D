@@ -33,30 +33,214 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
- #include "BrandedInitializer.h"
+#include "BrandedInitializer.h"
 
+#include <QtCore/QTime>
+#include <QtCore/QPluginLoader>
+#include <QtCore/QCoreApplication>
+#include <QtGui/QSplashScreen>
+#include <QtGui/QBitMap>
+#include <QtGui/QMessageBox>
+
+
+
+
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
+
+#include "QtSupport/QRecentFileList.h"
+
+#include "DREAM3D_UI.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BrandedInitializer::BrandedInitializer()
+BrandedInitializer::BrandedInitializer() :
+  show_splash(true),
+  Splash(NULL),
+  MainWindow(NULL)
 {
 
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 BrandedInitializer::~BrandedInitializer()
 {
+  delete this->Splash;
+  this->Splash = NULL;
 
+  delete this->MainWindow;
+  this->MainWindow = NULL;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BrandedInitializer::Initialize(int argc, char* argv)
+void delay(int seconds)
+{
+  QTime dieTime= QTime::currentTime().addSecs(seconds);
+  while( QTime::currentTime() < dieTime ) {
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool BrandedInitializer::initialize(int argc, char* argv[])
 {
 
+  QApplication::setApplicationVersion(DREAM3DLib::Version::Complete());
 
-    return false;
+  // Create and show the splash screen as the main window is being created.
+  QPixmap pixmap(":/branded_splash.png");
+  this->Splash = new QSplashScreen(pixmap, Qt::WindowStaysOnTopHint);
+  this->Splash->setMask(pixmap.createMaskFromColor(QColor(Qt::transparent)));
+  this->Splash->show();
+
+  // Not sure why this is needed. Andy added this ages ago with comment saying
+  // needed for Mac apps. Need to check that it's indeed still required.
+  QDir dir(QApplication::applicationDirPath());
+  dir.cdUp();
+  dir.cd("Plugins");
+  QApplication::addLibraryPath(dir.absolutePath());
+
+
+  // Load application plugins.
+  loadPlugins();
+
+  // just put in a delay
+   delay(2);
+
+  // Create main window.
+  this->MainWindow = new DREAM3D_UI();
+  this->MainWindow->setWindowTitle("DREAM3D");
+  this->MainWindow->setLoadedPlugins(m_LoadedPlugins);
+
+  // give GUI components time to update before the mainwindow is shown
+  QApplication::instance()->processEvents();
+  this->MainWindow->show();
+
+  QApplication::instance()->processEvents();
+  if (show_splash)
+  {
+    this->Splash->finish(this->MainWindow);
+  }
+  return true;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::loadPlugins()
+{
+  FilterManager::Pointer fm = FilterManager::Instance();
+
+  qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
+
+  //  foreach (QObject *plugin, QPluginLoader::staticInstances())
+  //    populateMenus(plugin);
+  QStringList m_PluginDirs;
+
+  m_PluginDirs << qApp->applicationDirPath();
+
+  QDir aPluginDir = QDir(qApp->applicationDirPath());
+  // qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
+  QString thePath;
+
+#if defined(Q_OS_WIN)
+  if (aPluginDir.cd("plugins") )
+  {
+    thePath = aPluginDir.absolutePath();
+    m_PluginDirs << thePath;
+  }
+#elif defined(Q_OS_MAC)
+  if (aPluginDir.dirName() == "MacOS")
+  {
+    aPluginDir.cdUp();
+    thePath = aPluginDir.absolutePath() + "/Plugins";
+    m_PluginDirs << thePath;
+    aPluginDir.cdUp();
+    aPluginDir.cdUp();
+  }
+  // aPluginDir.cd("Plugins");
+  thePath = aPluginDir.absolutePath() + "/Plugins";
+  m_PluginDirs << thePath;
+
+  // This is here for Xcode compatibility
+#ifdef CMAKE_INTDIR
+  aPluginDir.cdUp();
+  thePath = aPluginDir.absolutePath() + "/Plugins/" + CMAKE_INTDIR;
+  m_PluginDirs << thePath;
+#endif
+#else
+  // We are on Linux - I think
+  aPluginDir.cdUp();
+  if (aPluginDir.cd("plugins"))
+  {
+    thePath = aPluginDir.absolutePath();
+    m_PluginDirs << thePath;
+  }
+#endif
+
+  QStringList pluginFilePaths;
+
+  foreach (QString pluginDirString, m_PluginDirs)
+  {
+    //qDebug() << "Plugin Directory being Searched: " << pluginDirString() << "\n";
+    aPluginDir = QDir(pluginDirString);
+    foreach (QString fileName, aPluginDir.entryList(QDir::Files))
+    {
+      //   qDebug() << "File: " << fileName() << "\n";
+#ifdef QT_DEBUG
+      if (fileName.endsWith("_debug.plugin", Qt::CaseSensitive))
+#else
+      if (fileName.endsWith( ".plugin", Qt::CaseSensitive) )
+#endif
+      {
+        pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
+        //qWarning(aPluginDir.absoluteFilePath(fileName).toAscii(), "%s");
+        //qDebug() << "Adding " << aPluginDir.absoluteFilePath(fileName)() << "\n";
+      }
+    }
+  }
+
+  // Now that we have a sorted list of plugins, go ahead and load them all from the
+  // file system and add each to the toolbar and menu
+  foreach(QString path, pluginFilePaths)
+  {
+    qDebug() << "Plugin Being Loaded:";
+    qDebug() << "    File Extension: .plugin";
+    qDebug() << "    Path: " << path;
+    QPluginLoader loader(path);
+    QFileInfo fi(path);
+    QString fileName = fi.fileName();
+    QObject *plugin = loader.instance();
+    qDebug() << "    Pointer: " << plugin << "\n";
+    if (plugin )
+    {
+      DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface*>(plugin);
+      if (ipPlugin)
+      {
+        QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
+        this->Splash->showMessage(msg);
+        DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
+        m_LoadedPlugins.push_back(ipPluginPtr);
+        ipPlugin->registerFilterWidgets();
+        ipPlugin->registerFilters(fm.get());
+      }
+    }
+    else
+    {
+      QString message("The plugin did not load with the following error\n");
+      message.append(loader.errorString());
+      QMessageBox::critical(MainWindow, "DREAM.3D Plugin Load Error",
+                            message,
+                            QMessageBox::Ok | QMessageBox::Default);
+    }
+  }
+
 }

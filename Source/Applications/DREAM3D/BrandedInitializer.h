@@ -39,16 +39,33 @@
 
 #include <QtCore/QObject>
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+
+
+
+class QSplashScreen;
+class DREAM3D_UI;
+
+
 class BrandedInitializer : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
   public:
     BrandedInitializer();
     virtual ~BrandedInitializer();
 
-    static bool Initialize(int argc, char* argv);
+    bool initialize(int argc, char *argv[]);
+  protected:
+    void loadPlugins();
 
-    private:
+  private:
+    bool show_splash;
+    QSplashScreen* Splash;
+    DREAM3D_UI*    MainWindow;
+    QVector<DREAM3DPluginInterface::Pointer> m_LoadedPlugins;
+
+
     BrandedInitializer(const BrandedInitializer&); // Copy Constructor Not Implemented
     void operator=(const BrandedInitializer&); // Operator '=' Not Implemented
 

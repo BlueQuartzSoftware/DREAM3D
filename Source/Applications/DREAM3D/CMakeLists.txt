@@ -118,6 +118,7 @@ cmp_IDE_GENERATED_PROPERTIES("DREAM3D/UI_Files" "${DREAM3D_UIS}" "")
 # and finally any resource files
 SET(DREAM3D_RCS
     ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
+    ${PROJECT_RESOURCES_DIR}/BrandedDREAM3D/branded_splash.qrc
 )
 
 # -- Run MOC and UIC on the necessary files

@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
+#if 0
 #include "DREAM3D_UI.h"
 #include "QtSupport/QRecentFileList.h"
 
@@ -67,3 +67,48 @@ int main (int argc, char *argv[])
 
   return app_return;
 }
+
+#else
+
+
+#include <QtGui/QApplication>
+#include "BrandedInitializer.h"
+
+#ifdef Q_WS_X11
+#include <QPlastiqueStyle>
+#endif
+
+#include <clocale>
+
+int main(int argc, char* argv[])
+{
+#ifdef Q_WS_X11
+  // Using motif style gives us test failures (and its ugly).
+  // Using cleanlooks style gives us errors when using valgrind (Trolltech's bug #179200)
+  // let's just use plastique for now
+  QApplication::setStyle(new QPlastiqueStyle);
+#endif
+
+
+  QCoreApplication::setApplicationName("DREAM3D");
+  QCoreApplication::setOrganizationDomain("bluequartz.net");
+  QCoreApplication::setOrganizationName("BlueQuartz Software");
+
+  QApplication qtapp(argc, argv);
+#if defined( Q_WS_MAC )
+  //Needed for typical Mac program behavior.
+  qtapp.setQuitOnLastWindowClosed( true );
+#endif //APPLE
+
+  setlocale(LC_NUMERIC,"C");
+  BrandedInitializer pvInitializer;
+  if (!pvInitializer.initialize(argc, argv))
+  {
+    return 1;
+  }
+
+  return qtapp.exec();
+}
+
+
+#endif
