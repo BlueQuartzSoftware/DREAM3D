@@ -72,7 +72,7 @@ class GroupFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ContiguousNeighborListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NonContiguousNeighborListArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, UseNonContiguousNeighbors)
+    DREAM3D_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
@@ -95,6 +95,11 @@ class GroupFeatures : public AbstractFilter
      */
     virtual void execute();
     virtual void preflight();
+
+  signals:
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     GroupFeatures();
