@@ -58,9 +58,9 @@ class RotateSampleRefFrame : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, RotationAxis)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
     Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(float, RotationAngle)
+    DREAM3D_FILTER_PARAMETER(float, RotationAngle)
     Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, SliceBySlice)
     Q_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice NOTIFY parametersChanged)

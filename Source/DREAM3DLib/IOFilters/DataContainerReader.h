@@ -63,11 +63,11 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
     virtual ~DataContainerReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, OverwriteExistingDataContainers)
+    DREAM3D_FILTER_PARAMETER(bool, OverwriteExistingDataContainers)
     Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
+    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataContainerArrayProxy)
     Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy NOTIFY parametersChanged)
 
 

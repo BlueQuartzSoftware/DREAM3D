@@ -65,11 +65,11 @@ class RegularizeZSpacing : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
 
 
-    DREAM3D_INSTANCE_PROPERTY(float, NewZRes)
+    DREAM3D_FILTER_PARAMETER(float, NewZRes)
     Q_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }

@@ -263,23 +263,30 @@
 * @brief Creates a QString constant for the Property so that the property
 * can be retrieved by name.
 */
-#define DREAM3D_PROPERTY_CONSTANT(prpty) \
+#define DREAM3D_PROPERTY_CONSTANT(prpty)\
   const QString prpty ( #prpty );
 
 /**
 * @brief Creates a "setter" method to set the property.
 */
-#define DREAM3D_SET_PROPERTY(type, prpty) \
+#define DREAM3D_SET_PROPERTY(type, prpty)\
   void set##prpty(type value) { this->m_##prpty = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
-#define DREAM3D_GET_PROPERTY(type, prpty) \
+#define DREAM3D_GET_PROPERTY(type, prpty)\
   type get##prpty() const { return m_##prpty; }
 
+/**
+* @brief
+*/
+#define DREAM3D_SET_FILTER_PARAMETER(type, prpty)\
+  void set##prpty(type value) { this->m_##prpty = value; emit parametersChanged(); }
 
-
+/**
+* @brief
+*/
 #define DREAM3D_VIRTUAL_INSTANCE_PROPERTY(type, prpty)\
   private:\
   type   m_##prpty;\
@@ -295,7 +302,15 @@
   DREAM3D_SET_PROPERTY(type, prpty)\
   DREAM3D_GET_PROPERTY(type, prpty)
 
-
+/**
+* @brief
+*/
+#define DREAM3D_FILTER_PARAMETER(type, prpty)\
+  private:\
+  type   m_##prpty;\
+  public:\
+  DREAM3D_SET_FILTER_PARAMETER(type, prpty)\
+  DREAM3D_GET_PROPERTY(type, prpty)
 
 #define DREAM3D_SET_2DVECTOR_PROPERTY(type, prpty, varname)\
   void set##prpty(type value[2]) {\

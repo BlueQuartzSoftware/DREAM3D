@@ -71,11 +71,11 @@ class VisualizeGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceEnsembleAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
+    DREAM3D_FILTER_PARAMETER(float, MisAngle)
     Q_PROPERTY(float MisAngle READ getMisAngle WRITE setMisAngle NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, MisAxis)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, MisAxis)
     Q_PROPERTY(FloatVec3_t MisAxis READ getMisAxis WRITE setMisAxis NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)

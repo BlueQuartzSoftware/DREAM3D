@@ -71,8 +71,8 @@ void ArraySelectionWidget::setupGui()
 {
 
   // The filter should emit this signal when a filter changes.
-  connect(m_Filter, SIGNAL(parametersChanged()),
-          this, SLOT(initializeHeirarchy() ) );
+  //  connect(m_Filter, SIGNAL(parametersChanged()),
+  //          this, SLOT(initializeHeirarchy() ) );
 
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight() ) );
@@ -192,7 +192,7 @@ void ArraySelectionWidget::on_attributeArrayList_currentItemChanged(QListWidgetI
   // Set this value into the m_FilterInstance as the specified Filter Property, Which will cause a preflight to occur
   // because the parameters have changed. which will reset the lists, which causes a preflight..
   this->blockSignals(true);
-
+  m_Filter->blockSignals(true); // Make sure the filter does not fire off the parametersChanged() signal too soon
   bool ok = false;
   // Set the DataContainerName
   QVariant dcName = dataContainerList->currentItem()->data(Qt::UserRole);
@@ -203,7 +203,9 @@ void ArraySelectionWidget::on_attributeArrayList_currentItemChanged(QListWidgetI
     emit errorSettingFilterParameter(ss);
   }
 
-  QVariant amName = attributeMatrixList->currentItem()->data(Qt::UserRole);
+  QListWidgetItem* amSelectedItem = attributeMatrixList->currentItem();
+  if(NULL == amSelectedItem) { return; }
+  QVariant amName = amSelectedItem->data(Qt::UserRole);
   ok = m_Filter->setProperty("AttributeMatrixName", amName);
   if(false == ok)
   {
@@ -211,6 +213,7 @@ void ArraySelectionWidget::on_attributeArrayList_currentItemChanged(QListWidgetI
     emit errorSettingFilterParameter(ss);
   }
 
+  m_Filter->blockSignals(false); // Let the filter instance now fire the parameters Changed signal when we set this last parameter
   QVariant daName = attributeArrayList->currentItem()->data(Qt::UserRole);
   ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, daName);
   if(false == ok)
@@ -290,6 +293,7 @@ void ArraySelectionWidget::beforePreflight()
     }
   }
 
+  attributeArrayList->blockSignals(true);
   // Set the correct Data Array (if Possible). It may have changed since we started
   count = attributeArrayList->count();
   attributeArrayList->setCurrentRow(-1);
@@ -301,7 +305,7 @@ void ArraySelectionWidget::beforePreflight()
       break;
     }
   }
-
+  attributeArrayList->blockSignals(false);
 
 
 }

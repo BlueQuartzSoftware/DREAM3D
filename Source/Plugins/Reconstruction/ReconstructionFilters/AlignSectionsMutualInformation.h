@@ -70,7 +70,7 @@ class AlignSectionsMutualInformation : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
+    DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance NOTIFY parametersChanged)
     DREAM3D_DECLARE_ARRAY(int, featurecounts, FeatureCounts)
 

@@ -68,7 +68,7 @@ class GBCDTriangleDumper : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
 
 

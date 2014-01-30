@@ -70,15 +70,15 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(int, NRing)
+    DREAM3D_FILTER_PARAMETER(int, NRing)
     Q_PROPERTY(int NRing READ getNRing WRITE setNRing NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, ComputePrincipalDirectionVectors)
+    DREAM3D_FILTER_PARAMETER(bool, ComputePrincipalDirectionVectors)
     Q_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, ComputeMeanCurvature)
+    DREAM3D_FILTER_PARAMETER(bool, ComputeMeanCurvature)
     Q_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, ComputeGaussianCurvature)
+    DREAM3D_FILTER_PARAMETER(bool, ComputeGaussianCurvature)
     Q_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, UseNormalsForCurveFitting)
+    DREAM3D_FILTER_PARAMETER(bool, UseNormalsForCurveFitting)
     Q_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting NOTIFY parametersChanged)
 
     /**

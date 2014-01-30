@@ -69,16 +69,16 @@ class WritePoleFigure : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(ImagePrefix)
+    DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
+    DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
-    DREAM3D_INSTANCE_PROPERTY(int, ImageSize)
+    DREAM3D_FILTER_PARAMETER(int, ImageSize)
     Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, LambertSize)
+    DREAM3D_FILTER_PARAMETER(int, LambertSize)
     Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, NumColors)
+    DREAM3D_FILTER_PARAMETER(int, NumColors)
     Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors NOTIFY parametersChanged)
 
 
