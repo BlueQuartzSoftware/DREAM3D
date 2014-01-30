@@ -62,9 +62,9 @@ class RotateEulerRefFrame : public AbstractFilter
 
     //------ Required Cell Data
 
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, RotationAxis)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
     Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(float, RotationAngle)
+    DREAM3D_FILTER_PARAMETER(float, RotationAngle)
     Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle NOTIFY parametersChanged)
 
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }

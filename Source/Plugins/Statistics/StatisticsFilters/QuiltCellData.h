@@ -72,17 +72,17 @@ class QuiltCellData : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(int, QStepX)
+    DREAM3D_FILTER_PARAMETER(int, QStepX)
     Q_PROPERTY(int QStepX READ getQStepX WRITE setQStepX NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, QStepY)
+    DREAM3D_FILTER_PARAMETER(int, QStepY)
     Q_PROPERTY(int QStepY READ getQStepY WRITE setQStepY NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, QStepZ)
+    DREAM3D_FILTER_PARAMETER(int, QStepZ)
     Q_PROPERTY(int QStepZ READ getQStepZ WRITE setQStepZ NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, PSizeX)
+    DREAM3D_FILTER_PARAMETER(int, PSizeX)
     Q_PROPERTY(int PSizeX READ getPSizeX WRITE setPSizeX NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, PSizeY)
+    DREAM3D_FILTER_PARAMETER(int, PSizeY)
     Q_PROPERTY(int PSizeY READ getPSizeY WRITE setPSizeY NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, PSizeZ)
+    DREAM3D_FILTER_PARAMETER(int, PSizeZ)
     Q_PROPERTY(int PSizeZ READ getPSizeZ WRITE setPSizeZ NOTIFY parametersChanged)
 
     /**

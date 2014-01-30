@@ -71,11 +71,11 @@ class NeighborOrientationCorrelation : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
+    DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)
+    DREAM3D_FILTER_PARAMETER(float, MinConfidence)
     Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, Level)
+    DREAM3D_FILTER_PARAMETER(int, Level)
     Q_PROPERTY(int Level READ getLevel WRITE setLevel NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

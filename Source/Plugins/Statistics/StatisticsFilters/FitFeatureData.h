@@ -71,12 +71,12 @@ class FitFeatureData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SelectedFeatureArrayName)
     Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName NOTIFY parametersChanged)
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, DistributionType)
+    DREAM3D_FILTER_PARAMETER(unsigned int, DistributionType)
     Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, RemoveBiasedFeatures)
+    DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
     Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures NOTIFY parametersChanged)
 
     /**

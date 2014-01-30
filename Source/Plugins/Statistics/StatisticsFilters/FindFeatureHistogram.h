@@ -70,12 +70,12 @@ class FindFeatureHistogram : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SelectedFeatureArrayName)
     Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName NOTIFY parametersChanged)
 
-    DREAM3D_INSTANCE_PROPERTY(int, NumBins)
+    DREAM3D_FILTER_PARAMETER(int, NumBins)
     Q_PROPERTY(int NumBins READ getNumBins WRITE setNumBins NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, RemoveBiasedFeatures)
+    DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
     Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures NOTIFY parametersChanged)
 
     /**

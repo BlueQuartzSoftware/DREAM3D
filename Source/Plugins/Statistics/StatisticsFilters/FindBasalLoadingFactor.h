@@ -76,7 +76,7 @@ class FindBasalLoadingFactor : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Basal Loading Factors"; }
 
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, LoadingDir)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
     Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir NOTIFY parametersChanged)
 
 

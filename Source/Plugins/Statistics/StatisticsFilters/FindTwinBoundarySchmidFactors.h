@@ -74,9 +74,9 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(TwinBoundarySchmidFactorsFile)
+    DREAM3D_FILTER_PARAMETER(QString, TwinBoundarySchmidFactorsFile)
     Q_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, LoadingDir)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
     Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

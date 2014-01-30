@@ -71,9 +71,9 @@ class BadDataNeighborOrientationCheck : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
+    DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, NumberOfNeighbors)
+    DREAM3D_FILTER_PARAMETER(int, NumberOfNeighbors)
     Q_PROPERTY(int NumberOfNeighbors READ getNumberOfNeighbors WRITE setNumberOfNeighbors NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

@@ -70,15 +70,15 @@ class OpenCloseBadData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, Direction)
+    DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
     Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, NumIterations)
+    DREAM3D_FILTER_PARAMETER(int, NumIterations)
     Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, XDirOn)
+    DREAM3D_FILTER_PARAMETER(bool, XDirOn)
     Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, YDirOn)
+    DREAM3D_FILTER_PARAMETER(bool, YDirOn)
     Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, ZDirOn)
+    DREAM3D_FILTER_PARAMETER(bool, ZDirOn)
     Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

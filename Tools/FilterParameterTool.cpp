@@ -224,7 +224,7 @@ QString findPath(const QString& groupName, const QString& filtName)
 
   prefix = prefix + "Plugins/";
   QStringList libs;
-  libs << "ImageImport" << "OrientationAnalysis" << "Reconstruction" << "Sampling" << "SurfaceMeshing";
+  libs << "ImageImport" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
 
   for (int i = 0; i < libs.size(); ++i)
   {
@@ -260,7 +260,8 @@ void LoopOnFilters()
     //std::cout << "  public:" << std::endl;
     IFilterFactory::Pointer factory = i.value();
     AbstractFilter::Pointer filter = factory->create();
-   // if (filter->getGroupName().compare(DREAM3D::FilterGroups::TestFilters) == 0)
+    //if (filter->getGroupName().compare(DREAM3D::FilterGroups::StatisticsFilters) == 0)
+   // if(filter->getNameOfClass().compare("FindSchmids") == 0)
     {
       std::cout << "" << filter->getGroupName().toStdString() << "Filters/" << filter->getNameOfClass().toStdString() << ".h" << std::endl;
       QString path = findPath(filter->getGroupName(), filter->getNameOfClass());
