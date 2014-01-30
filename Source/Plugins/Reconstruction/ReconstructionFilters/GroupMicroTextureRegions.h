@@ -73,15 +73,27 @@ class GroupMicroTextureRegions : public GroupFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
+    DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
+    Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(bool, UseRunningAverage)
+    Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
 
-    DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
-    Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
-
+    /**
+     * @brief setupFilterParameters
+     */
     virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters
+     * @param writer
+     * @param index
+     * @return
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -119,6 +131,8 @@ class GroupMicroTextureRegions : public GroupFeatures
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+
+  	float avgCaxes[3];
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 

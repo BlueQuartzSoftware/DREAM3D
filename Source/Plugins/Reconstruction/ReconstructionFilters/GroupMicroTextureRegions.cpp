@@ -68,6 +68,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CAxisTolerance(1.0f),
+  m_UseRunningAverage(false),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
@@ -122,6 +123,15 @@ void GroupMicroTextureRegions::setupFilterParameters()
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Group C-Axes With Running Average");
+    parameter->setPropertyName("UseRunningAverage");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
 
   setFilterParameters(parameters);
 }
@@ -136,6 +146,7 @@ void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersRead
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setCAxisTolerance( reader->readValue("CAxisTolerance", getCAxisTolerance()) );
   setUseNonContiguousNeighbors( reader->readValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors()) );
+  setUseRunningAverage( reader->readValue("UseRunningAverage", getUseRunningAverage()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -148,6 +159,7 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
   writer->openFilterGroup(this, index);
   writer->writeValue("CAxisTolerance", getCAxisTolerance() );
   writer->writeValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors() );
+  writer->writeValue("UseRunningAverage", getUseRunningAverage() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -249,6 +261,10 @@ void GroupMicroTextureRegions::execute()
   // Convert user defined tolerance to radians.
   m_CAxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
+  avgCaxes[0] = 0.0f;
+  avgCaxes[1] = 0.0f;
+  avgCaxes[2] = 0.0f;
+
   // Tell the user we are starting the filter
   notifyStatusMessage(getHumanLabel(), "Starting");
   GroupFeatures::execute();
@@ -341,6 +357,14 @@ int GroupMicroTextureRegions::getSeed(int newFid)
 
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
+  float c1[3];
+  unsigned int phase1;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  float caxis[3] = {0, 0, 1};
+  QuatF q1;
+  float g1[3][3];
+  float g1t[3][3];
+
   DREAM3D_RANDOMNG_NEW()
   int seed = -1;
   int randfeature = 0;
@@ -363,6 +387,23 @@ int GroupMicroTextureRegions::getSeed(int newFid)
     QVector<size_t> tDims(1, newFid+1);
     m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
+
+	if (m_UseRunningAverage == true)
+	{
+	  QuaternionMathF::Copy(avgQuats[seed], q1);
+	  phase1 = m_CrystalStructures[m_FeaturePhases[seed]];
+	  OrientationMath::QuattoMat(q1, g1);
+	  //transpose the g matrix so when caxis is multiplied by it
+	  //it will give the sample direction that the caxis is along
+	  MatrixMath::Transpose3x3(g1, g1t);
+	  MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+	  //normalize so that the dot product can be taken below without
+	  //dividing by the magnitudes (they would be 1)
+	  MatrixMath::Normalize3x1(c1);
+
+	  MatrixMath::Copy3x1(c1,avgCaxes);
+	  MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[seed]);
+	}
   }
   return seed;
 }
@@ -388,16 +429,19 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
 
   if (m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
-    QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
-    phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
-    OrientationMath::QuattoMat(q1, g1);
-    //transpose the g matrix so when caxis is multiplied by it
-    //it will give the sample direction that the caxis is along
-    MatrixMath::Transpose3x3(g1, g1t);
-    MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
-    //normalize so that the dot product can be taken below without
-    //dividing by the magnitudes (they would be 1)
-    MatrixMath::Normalize3x1(c1);
+	if (m_UseRunningAverage == false)
+	{
+	  QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
+	  phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
+	  OrientationMath::QuattoMat(q1, g1);
+	  //transpose the g matrix so when caxis is multiplied by it
+	  //it will give the sample direction that the caxis is along
+	  MatrixMath::Transpose3x3(g1, g1t);
+	  MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+	  //normalize so that the dot product can be taken below without
+	  //dividing by the magnitudes (they would be 1)
+	  MatrixMath::Normalize3x1(c1);
+	}
     phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
     if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
     {
@@ -411,12 +455,20 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
       //dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c2);
 
-      w = GeometryMath::CosThetaBetweenVectors(c1, c2);
+	  if (m_UseRunningAverage == true) w = GeometryMath::CosThetaBetweenVectors(avgCaxes, c2);
+	  else w = GeometryMath::CosThetaBetweenVectors(c1, c2);
       DREAM3DMath::boundF(w, -1, 1);
       w = acosf(w);
       if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - w) <= m_CAxisTolerance)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
+		if (m_UseRunningAverage == true)
+		{
+		  MatrixMath::Multiply3x1withConstant(c2, m_Volumes[neighborFeature]);
+		  avgCaxes[0] = avgCaxes[0] + c2[0];
+		  avgCaxes[1] = avgCaxes[1] + c2[1];
+		  avgCaxes[2] = avgCaxes[2] + c2[2];
+		}
         return true;
       }
     }
