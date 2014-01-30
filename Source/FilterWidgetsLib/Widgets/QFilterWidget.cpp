@@ -195,7 +195,6 @@ void QFilterWidget::initialize(AbstractFilter::Pointer filter)
 QFilterWidget::~QFilterWidget()
 {
 //  std::cout << "~QFilterWidget() " << m_Filter->getNameOfClass().toStdString() << std::endl;
-    delete m_BasicInputsScrollWidget;
 }
 
 // -----------------------------------------------------------------------------
