@@ -43,6 +43,7 @@
 #include <QtCore/QString>
 
 
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 #ifdef NDEBUG
@@ -141,6 +142,8 @@ class FilterManager;
 class DREAM3DPluginInterface
 {
   public:
+    DREAM3D_SHARED_POINTERS(DREAM3DPluginInterface)
+
     virtual ~DREAM3DPluginInterface() {}
 
     /**

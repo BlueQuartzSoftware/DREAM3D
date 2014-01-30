@@ -36,7 +36,6 @@
 #include "DREAM3D_UI.h"
 
 //-- Qt Includes
-#include <QtCore/QPluginLoader>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -57,7 +56,6 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
@@ -386,20 +384,6 @@ void DREAM3D_UI::writeDockWidgetSettings(QSettings &prefs, QDockWidget *dw)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::checkForUpdatesAtStartup()
 {
-  m_UpdateCheck = new UpdateCheck(this);
-
-  connect(m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ),
-          this, SLOT( versionCheckReply(UpdateCheckData*) ) );
-
-  m_UpdateCheck->checkVersion(Detail::UpdateWebSite);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::setupGui()
-{
-  // Automatically check for updates at startup if the user has indicated that preference before
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
   if ( d->getAutomaticallyBtn()->isChecked() )
   {
@@ -420,35 +404,36 @@ void DREAM3D_UI::setupGui()
     QDate weeklyThreshold = lastUpdateCheckDate.addDays(7);
     QDate monthlyThreshold = lastUpdateCheckDate.addMonths(1);
 
-    if ( (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily
-          && currentDateToday >= dailyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly
-                                                     && currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
-                                                                                                 && currentDateToday >= monthlyThreshold))
+    if ( (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily && currentDateToday >= dailyThreshold)
+         || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly && currentDateToday >= weeklyThreshold)
+         || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly && currentDateToday >= monthlyThreshold) )
     {
-      checkForUpdatesAtStartup();
+      m_UpdateCheck = QSharedPointer<UpdateCheck>(new UpdateCheck(this));
+
+      connect(m_UpdateCheck.data(), SIGNAL( LatestVersion(UpdateCheckData*) ),
+              this, SLOT( versionCheckReply(UpdateCheckData*) ) );
+
+      m_UpdateCheck->checkVersion(Detail::UpdateWebSite);
     }
   }
+
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::setupGui()
+{
+  // Automatically check for updates at startup if the user has indicated that preference before
+  checkForUpdatesAtStartup();
 
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
   pipelineViewWidget->setInputParametersWidget(filterInputWidget);
-  pipelineViewWidget->setScrollArea(scrollArea);
+  pipelineViewWidget->setScrollArea(pipelineViewScrollArea);
 
-  // Hook up signals from the DockWidgets
-  //  connect(topSideBarWidget, SIGNAL(pipelineFileActivated(const QString&)),
-  //          pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
-  //  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
-  //          pipelineViewWidget, SLOT(loadPipelineFile(const QString&)) );
-  //  connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&, int)),
-  //          pipelineViewWidget, SLOT(addFilter(const QString&, int)) );
-
-#if 0
-  FilterWidgetsLib::RegisterKnownQFilterWidgets();
-  // Look for plugins
-#endif
-  // Load up the plugins which will register their filters and custom widgets
-  loadPlugins(m_FilterManager.get());
   // Tell the Filter Library that we have more Filters (potentially)
   filterLibraryDockWidget->refreshFilterGroups();
 
@@ -517,6 +502,14 @@ void DREAM3D_UI::setWidgetListEnabled(bool b)
   foreach (QWidget* w, m_WidgetList) {
     w->setEnabled(b);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::setLoadedPlugins(QVector<DREAM3DPluginInterface::Pointer> plugins)
+{
+  m_LoadedPlugins = plugins;
 }
 
 
@@ -726,131 +719,6 @@ void DREAM3D_UI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::loadPlugins(FilterManager *fm)
-{
-  qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
-
-  foreach (QObject *plugin, QPluginLoader::staticInstances())
-    populateMenus(plugin);
-
-  m_PluginDirs.clear();
-  m_PluginDirs << qApp->applicationDirPath();
-
-  QDir aPluginDir = QDir(qApp->applicationDirPath());
-  // qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
-  QString thePath;
-
-#if defined(Q_OS_WIN)
-  if (aPluginDir.cd("plugins") )
-  {
-    thePath = aPluginDir.absolutePath();
-    m_PluginDirs << thePath;
-  }
-#elif defined(Q_OS_MAC)
-  if (aPluginDir.dirName() == "MacOS")
-  {
-    aPluginDir.cdUp();
-    thePath = aPluginDir.absolutePath() + "/Plugins";
-    m_PluginDirs << thePath;
-    aPluginDir.cdUp();
-    aPluginDir.cdUp();
-  }
-  // aPluginDir.cd("Plugins");
-  thePath = aPluginDir.absolutePath() + "/Plugins";
-  m_PluginDirs << thePath;
-
-  // This is here for Xcode compatibility
-#ifdef CMAKE_INTDIR
-  aPluginDir.cdUp();
-  thePath = aPluginDir.absolutePath() + "/Plugins/" + CMAKE_INTDIR;
-  m_PluginDirs << thePath;
-#endif
-#else
-  // We are on Linux - I think
-  aPluginDir.cdUp();
-  if (aPluginDir.cd("plugins"))
-  {
-    thePath = aPluginDir.absolutePath();
-    m_PluginDirs << thePath;
-  }
-#endif
-
-  this->setWindowTitle("DREAM3D");
-
-  QStringList pluginFilePaths;
-
-  foreach (QString pluginDirString, m_PluginDirs)
-  {
-    //qDebug() << "Plugin Directory being Searched: " << pluginDirString() << "\n";
-    aPluginDir = QDir(pluginDirString);
-    foreach (QString fileName, aPluginDir.entryList(QDir::Files))
-    {
-      //   qDebug() << "File: " << fileName() << "\n";
-#ifdef QT_DEBUG
-      if (fileName.endsWith("_debug.plugin", Qt::CaseSensitive))
-#else
-      if (fileName.endsWith( ".plugin", Qt::CaseSensitive) )
-#endif
-      {
-        pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
-        //qWarning(aPluginDir.absoluteFilePath(fileName).toAscii(), "%s");
-        //qDebug() << "Adding " << aPluginDir.absoluteFilePath(fileName)() << "\n";
-      }
-    }
-  }
-
-
-  // Now that we have a sorted list of plugins, go ahead and load them all from the
-  // file system and add each to the toolbar and menu
-  foreach(QString path, pluginFilePaths)
-  {
-    qDebug() << "Plugin Being Loaded:";
-    qDebug() << "    File Extension: .plugin";
-    qDebug() << "    Path: " << path;
-    QPluginLoader loader(path);
-    QFileInfo fi(path);
-    QString fileName = fi.fileName();
-    QObject *plugin = loader.instance();
-    qDebug() << "    Pointer: " << plugin << "\n";
-    if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
-    {
-      //populateMenus(plugin);
-      DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
-      if (ipPlugin)
-      {
-        m_LoadedPlugins.push_back(ipPlugin);
-        ipPlugin->registerFilterWidgets();
-        ipPlugin->registerFilters(fm);
-      }
-
-      m_PluginFileNames += fileName;
-    }
-    else
-    {
-      QString message("The plugin did not load with the following error\n");
-      message.append(loader.errorString());
-      QMessageBox::critical(this, "DREAM.3D Plugin Load Error",
-                            message,
-                            QMessageBox::Ok | QMessageBox::Default);
-      //qDebug() << "The plugin did not load with the following error\n   " << loader.errorString() << "\n";
-    }
-  }
-#if 0
-  if (NULL != m_PluginActionGroup)
-  {
-    QList<QAction*> actions = m_PluginActionGroup->actions();
-    if (actions.isEmpty() == false)
-    {
-      menuPlugins->setEnabled(true);
-    }
-  }
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
 void DREAM3D_UI::populateMenus(QObject *plugin)
 {
 #if 0
