@@ -68,11 +68,11 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
 
     
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory)
+    DREAM3D_FILTER_PARAMETER(QString, OutputStlDirectory)
     Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlPrefix)
+    DREAM3D_FILTER_PARAMETER(QString, OutputStlPrefix)
     Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, GroupByPhase)
+    DREAM3D_FILTER_PARAMETER(bool, GroupByPhase)
     Q_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase NOTIFY parametersChanged)
     
     /**

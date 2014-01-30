@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
 
 

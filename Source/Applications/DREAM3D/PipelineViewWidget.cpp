@@ -342,6 +342,8 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
   QFilterWidget* w = new QFilterWidget(filter);
 
   addFilterWidget(w, index);
+  connect(filter.get(), SIGNAL(parametersChanged()),
+          this, SLOT(preflightPipeline()));
 
   // Clear the Issues Table and then preflight
   emit pipelineIssuesCleared();
@@ -400,8 +402,7 @@ void PipelineViewWidget::addFilterWidget(QFilterWidget* w, int index)
   connect(w, SIGNAL(dragStarted(QFilterWidget*)),
           this, SLOT(setFilterBeingDragged(QFilterWidget*)) );
 
-  connect(w, SIGNAL(parametersChanged()),
-          this, SLOT(preflightPipeline()));
+
 
   // Check to make sure at least the vertical spacer is in the Layout
   if (addSpacer)
@@ -421,6 +422,7 @@ void PipelineViewWidget::preflightPipeline()
 
   std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
 
+  emit pipelineIssuesCleared();
   // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 

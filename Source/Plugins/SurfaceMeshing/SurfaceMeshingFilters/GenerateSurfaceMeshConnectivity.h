@@ -66,11 +66,11 @@ class GenerateSurfaceMeshConnectivity : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(bool, GenerateVertexTriangleLists)
+    DREAM3D_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)
     Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, GenerateTriangleNeighbors)
+    DREAM3D_FILTER_PARAMETER(bool, GenerateTriangleNeighbors)
     Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, GenerateEdgeIdList)
+    DREAM3D_FILTER_PARAMETER(bool, GenerateEdgeIdList)
     Q_PROPERTY(bool GenerateEdgeIdList READ getGenerateEdgeIdList WRITE setGenerateEdgeIdList NOTIFY parametersChanged)
 
     /**

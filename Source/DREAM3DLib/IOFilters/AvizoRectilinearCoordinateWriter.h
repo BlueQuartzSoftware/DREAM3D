@@ -67,10 +67,10 @@ class DREAM3DLib_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
+    DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile NOTIFY parametersChanged)
 
     /**

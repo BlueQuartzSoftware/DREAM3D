@@ -64,9 +64,9 @@ class SaveImages : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(ImagePrefix)
+    DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
+    DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
 

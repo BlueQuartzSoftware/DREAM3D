@@ -68,9 +68,9 @@ class AlignSectionsFeatureCentroid : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(int, ReferenceSlice)
+    DREAM3D_FILTER_PARAMETER(int, ReferenceSlice)
     Q_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, UseReferenceSlice)
+    DREAM3D_FILTER_PARAMETER(bool, UseReferenceSlice)
     Q_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice NOTIFY parametersChanged)
 
 

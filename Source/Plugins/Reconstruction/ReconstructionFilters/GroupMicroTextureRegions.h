@@ -77,7 +77,7 @@ class GroupMicroTextureRegions : public GroupFeatures
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
 
-    DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance)
+    DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
     Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 

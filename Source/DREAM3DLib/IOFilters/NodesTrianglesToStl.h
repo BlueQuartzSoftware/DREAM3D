@@ -63,13 +63,13 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
 
     virtual ~NodesTrianglesToStl();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
+    DREAM3D_FILTER_PARAMETER(QString, NodesFile);
     Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);
+    DREAM3D_FILTER_PARAMETER(QString, TrianglesFile);
     Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory);
+    DREAM3D_FILTER_PARAMETER(QString, OutputStlDirectory);
     Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlPrefix);
+    DREAM3D_FILTER_PARAMETER(QString, OutputStlPrefix);
     Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix NOTIFY parametersChanged)
 
     /**

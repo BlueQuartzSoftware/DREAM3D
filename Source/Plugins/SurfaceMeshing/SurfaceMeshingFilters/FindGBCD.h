@@ -71,7 +71,7 @@ class FindGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(float, GBCDRes)
+    DREAM3D_FILTER_PARAMETER(float, GBCDRes)
     Q_PROPERTY(float GBCDRes READ getGBCDRes WRITE setGBCDRes NOTIFY parametersChanged)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, GBCDArrayNames)

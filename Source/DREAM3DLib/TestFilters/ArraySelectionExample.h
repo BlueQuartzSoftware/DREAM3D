@@ -73,11 +73,11 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
      * as input parameters
      */
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, AttributeMatrixName)
     Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayName)
     Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
 
     /**

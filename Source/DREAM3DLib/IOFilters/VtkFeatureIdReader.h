@@ -60,13 +60,13 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(Comment)
     DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType)
     DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FeatureIdScalarName)
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdScalarName)
     Q_PROPERTY(QString FeatureIdScalarName READ getFeatureIdScalarName WRITE setFeatureIdScalarName NOTIFY parametersChanged)
 
     //------ Created Cell Data

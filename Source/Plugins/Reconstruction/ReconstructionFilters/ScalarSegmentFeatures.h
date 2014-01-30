@@ -72,10 +72,10 @@ class ScalarSegmentFeatures : public SegmentFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ScalarArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, ScalarArrayName)
     Q_PROPERTY(QString ScalarArrayName READ getScalarArrayName WRITE setScalarArrayName NOTIFY parametersChanged)
 
-    DREAM3D_INSTANCE_PROPERTY(float, ScalarTolerance)
+    DREAM3D_FILTER_PARAMETER(float, ScalarTolerance)
     Q_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance NOTIFY parametersChanged)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 

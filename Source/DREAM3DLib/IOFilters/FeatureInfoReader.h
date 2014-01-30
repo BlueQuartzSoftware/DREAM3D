@@ -67,11 +67,11 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     /* Input Parameters */
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, CreateCellLevelArrays)
+    DREAM3D_FILTER_PARAMETER(bool, CreateCellLevelArrays)
     Q_PROPERTY(bool CreateCellLevelArrays READ getCreateCellLevelArrays WRITE setCreateCellLevelArrays NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(bool, RenumberFeatures)
+    DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
     Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
