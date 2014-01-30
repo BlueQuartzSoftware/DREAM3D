@@ -63,6 +63,7 @@ FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments() :
   m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
   m_CAxisMisalignmentListArrayName(DREAM3D::FeatureData::CAxisMisalignmentList),
   m_CalcUnbiasedAvg(false),
+  m_CalcBiasedAvg(false),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
@@ -73,8 +74,10 @@ FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments() :
   m_NumFeaturesPerParent(NULL),
   m_AvgCAxisMisalignmentsArrayName(DREAM3D::FeatureData::AvgCAxisMisalignments),
   m_AvgCAxisMisalignments(NULL),
-  m_AvgParentAvgCAxisMisalignmentsArrayName(DREAM3D::FeatureData::AvgParentAvgCAxisMisalignments),
-  m_AvgParentAvgCAxisMisalignments(NULL),
+  m_LocalCAxisMisalignmentsArrayName(DREAM3D::FeatureData::LocalCAxisMisalignments),
+  m_LocalCAxisMisalignments(NULL),
+  m_UnbiasedLocalCAxisMisalignmentsArrayName(DREAM3D::FeatureData::UnbiasedLocalCAxisMisalignments),
+  m_UnbiasedLocalCAxisMisalignments(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
@@ -98,8 +101,17 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Calculate Unbiased Average C-Axis Misorientation");
+    option->setHumanLabel("Calculate Unbiased Local C-Axis Misalignments");
     option->setPropertyName("CalcUnbiasedAvg");
+    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    option->setValueType("bool");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Calculate Local C-Axis Misalignments");
+    option->setPropertyName("CalcBiasedAvg");
     option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     option->setValueType("bool");
     option->setUnits("");
@@ -118,6 +130,7 @@ void FindLocalAverageCAxisMisalignments::readFilterParameters(AbstractFilterPara
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setCalcUnbiasedAvg( reader->readValue("CalcUnbiasedAvg", getCalcUnbiasedAvg()) );
+  setCalcBiasedAvg( reader->readValue("CalcBiasedAvg", getCalcBiasedAvg()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -130,6 +143,7 @@ int FindLocalAverageCAxisMisalignments::writeFilterParameters(AbstractFilterPara
   writer->openFilterGroup(this, index);
   writer->closeFilterGroup();
   writer->writeValue("CalcUnbiasedAvg", getCalcUnbiasedAvg() );
+  writer->writeValue("CalcBiasedAvg", getCalcBiasedAvg() );
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -165,6 +179,9 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
   // Feature Data
   if ( m_CalcUnbiasedAvg == true)
   {
+	m_UnbiasedLocalCAxisMisalignmentsPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_UnbiasedLocalCAxisMisalignmentsArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+	if( NULL != m_UnbiasedLocalCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+	{ m_UnbiasedLocalCAxisMisalignments = m_UnbiasedLocalCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
     IDataArray::Pointer neighborListPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborListArrayName);
     if (NULL == neighborListPtr.get())
@@ -192,11 +209,14 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
       m_CAxisMisalignmentList->resize(cellFeatureAttrMat->getNumTuples());
     }
   }
-  else
+  if (m_CalcBiasedAvg == true)
   {
 	m_AvgCAxisMisalignmentsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgCAxisMisalignmentsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 	if( NULL != m_AvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 	{ m_AvgCAxisMisalignments = m_AvgCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+	m_LocalCAxisMisalignmentsPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_LocalCAxisMisalignmentsArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+	if( NULL != m_LocalCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+	{ m_LocalCAxisMisalignments = m_LocalCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   m_FeatureParentIdsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureParentIdsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -207,9 +227,6 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
   m_NumFeaturesPerParentPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, float>(this, m_NumFeaturesPerParentArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPerParentPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeaturesPerParent = m_NumFeaturesPerParentPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_AvgParentAvgCAxisMisalignmentsPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_AvgParentAvgCAxisMisalignmentsArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AvgParentAvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_AvgParentAvgCAxisMisalignments = m_AvgParentAvgCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -240,7 +257,7 @@ void FindLocalAverageCAxisMisalignments::execute()
   size_t numFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   size_t newNumFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
 
-  std::vector<int32_t> NumMTRGrainsPerParent(numFeatures,0);
+  std::vector<int32_t> NumUnbiasedFeaturesPerParent(numFeatures,0);
 
   if(m_CalcUnbiasedAvg == true)
   {
@@ -253,30 +270,30 @@ void FindLocalAverageCAxisMisalignments::execute()
       {
         if (m_FeatureParentIds[neighborlist[i][j]] == m_FeatureParentIds[i])
         {
-          m_AvgParentAvgCAxisMisalignments[parentid] += caxismisalignmentList[i][j];
-		  NumMTRGrainsPerParent[parentid]++;
+          m_UnbiasedLocalCAxisMisalignments[parentid] += caxismisalignmentList[i][j];
+		  NumUnbiasedFeaturesPerParent[parentid]++;
 
         }
       }
     }
   }
-  else
+  if (m_CalcBiasedAvg == true)
   {
     for(int i=1;i<numFeatures;i++)
     {
       int parentid = m_FeatureParentIds[i];
       m_NumFeaturesPerParent[parentid]++;
-      m_AvgParentAvgCAxisMisalignments[parentid] += m_AvgCAxisMisalignments[i];
+      m_LocalCAxisMisalignments[parentid] += m_AvgCAxisMisalignments[i];
     }
   }
 
   for(int i=1;i<newNumFeatures;i++)
   {
-    if (m_CalcUnbiasedAvg == false) m_AvgParentAvgCAxisMisalignments[i] /= m_NumFeaturesPerParent[i];
+    if (m_CalcBiasedAvg == true) m_LocalCAxisMisalignments[i] /= m_NumFeaturesPerParent[i];
     if (m_CalcUnbiasedAvg == true)
     {
-      if(NumMTRGrainsPerParent[i] > 0) m_AvgParentAvgCAxisMisalignments[i] /= NumMTRGrainsPerParent[i];
-      else m_AvgParentAvgCAxisMisalignments[i] = 0.0f;
+      if(NumUnbiasedFeaturesPerParent[i] > 0) m_UnbiasedLocalCAxisMisalignments[i] /= NumUnbiasedFeaturesPerParent[i];
+      else m_UnbiasedLocalCAxisMisalignments[i] = 0.0f;
     }
   }
 

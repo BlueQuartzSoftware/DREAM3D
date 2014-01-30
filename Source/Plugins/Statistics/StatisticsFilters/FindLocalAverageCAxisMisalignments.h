@@ -53,7 +53,7 @@
  * @class FindLocalAverageCAxisMisalignments FindLocalAverageCAxisMisalignments.h Plugins/Statistics/StatisticsFilters/FindLocalAverageCAxisMisalignments.h
  * @brief
  * @author Joseph C. Tucker
- * @date Jan 28, 2014
+ * @date Jan 30, 2014
  * @version 5.0
  */
 class FindLocalAverageCAxisMisalignments : public AbstractFilter
@@ -76,6 +76,7 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CAxisMisalignmentListArrayName)
     DREAM3D_INSTANCE_PROPERTY(bool, CalcUnbiasedAvg)
+    DREAM3D_INSTANCE_PROPERTY(bool, CalcBiasedAvg)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::CrystallographicFilters;}
@@ -119,7 +120,8 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeaturesPerParent)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgCAxisMisalignments)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgParentAvgCAxisMisalignments)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LocalCAxisMisalignments)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, UnbiasedLocalCAxisMisalignments)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     Int32NeighborListType::Pointer m_NeighborList;
