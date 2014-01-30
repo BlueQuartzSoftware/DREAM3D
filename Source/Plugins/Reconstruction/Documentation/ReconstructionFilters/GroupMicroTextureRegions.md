@@ -16,6 +16,7 @@ NOTE: This filter is intended for use with *Hexagonal* materials.  While the c-a
 | Name | Type |
 |------|------|
 | C-Axis Alignment Tolerance | Double |
+| Use Non-Contiguous Neighbors | Boolean |
 | Use Running Average | Boolean |
 
 ## Required DataContainers ##
