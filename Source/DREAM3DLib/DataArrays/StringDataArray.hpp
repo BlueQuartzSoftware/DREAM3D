@@ -293,7 +293,6 @@ class StringDataArray : public IDataArray
       return 0;
     }
 
-
     /**
      * @brief Does Nothing
      * @param pos The index of the Tuple
@@ -311,6 +310,17 @@ class StringDataArray : public IDataArray
     {
       m_Array.fill(QString(""), m_Array.size());
     }
+
+    virtual IDataArray::Pointer deepCopy()
+    {
+      StringDataArray::Pointer daCopy = StringDataArray::CreateArray(getNumberOfTuples(), getName());
+      for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
+      {
+        daCopy->setValue(i, m_Array[i]);
+      }
+      return daCopy;
+    }
+
 
     /**
      * @brief Reseizes the internal array

@@ -206,6 +206,7 @@ void FindNeighborhoods::find_neighborhoods()
   float dx, dy, dz;
 
   QVector<QVector<int> > neighborhoodlist;
+  QVector<float> criticalDistance;
 
   //int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
@@ -213,15 +214,22 @@ void FindNeighborhoods::find_neighborhoods()
   dataCheck();
 
   neighborhoodlist.resize(totalFeatures);
+  criticalDistance.resize(totalFeatures);
 
   float aveDiam = 0.0f;
   for (size_t i = 1; i < totalFeatures; i++)
   {
     m_Neighborhoods[i] = 0;
     aveDiam += m_EquivalentDiameters[i];
+	criticalDistance[i] = m_EquivalentDiameters[i] * m_MultiplesOfAverage;
   }
   aveDiam /= totalFeatures;
-  float criticalDistance = aveDiam * m_MultiplesOfAverage;
+  for (size_t i = 1; i < totalFeatures; i++)
+  {
+    criticalDistance[i] /= aveDiam;
+  }
+
+  float aveCriticalDistance = aveDiam * m_MultiplesOfAverage;
 
   float m_OriginX, m_OriginY, m_OriginZ;
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
@@ -248,23 +256,29 @@ void FindNeighborhoods::find_neighborhoods()
   float sizeX = float(xP) * xRes;
   float sizeY = float(yP) * yRes;
   float sizeZ = float(zP) * zRes;
-  int numXBins = int(sizeX / criticalDistance);
-  int numYBins = int(sizeY / criticalDistance);
-  //int numZBins = int(sizeZ / criticalDistance);
+  int numXBins = int(sizeX / aveCriticalDistance);
+  int numYBins = int(sizeY / aveCriticalDistance);
+  int numZBins = int(sizeZ / aveCriticalDistance);
 
   int xbin, ybin, zbin, bin, bin1, bin2;
-  QVector<size_t> bins(totalFeatures, 0);
+  QVector<size_t> bins(3*totalFeatures, 0);
   for (size_t i = 1; i < totalFeatures; i++)
   {
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
-    xbin = int((x - m_OriginX) / criticalDistance);
-    ybin = int((y - m_OriginY) / criticalDistance);
-    zbin = int((z - m_OriginZ) / criticalDistance);
-    bin = (zbin * numXBins * numYBins) + (ybin * numXBins) + (xbin);
-    bins[i] = bin;
+    xbin = int((x - m_OriginX) / aveCriticalDistance);
+    ybin = int((y - m_OriginY) / aveCriticalDistance);
+    zbin = int((z - m_OriginZ) / aveCriticalDistance);
+	bins[3*i] = xbin;
+	bins[3*i+1] = ybin;
+	bins[3*i+2] = zbin;
   }
+
+  int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z;
+  int dBinX, dBinY, dBinZ;
+  int criticalDistance1, criticalDistance2;
+
   for (size_t i = 1; i < totalFeatures; i++)
   {
     if (i % 1000 == 0)
@@ -276,42 +290,33 @@ void FindNeighborhoods::find_neighborhoods()
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
-    bin1 = bins[i];
-    for (size_t j = i + 1; j < totalFeatures; j++)
+    bin1x = bins[3*i];
+	bin1y = bins[3*i+1];
+	bin1z = bins[3*i+2];
+	criticalDistance1 = criticalDistance[i];
+    
+	for (size_t j = i + 1; j < totalFeatures; j++)
     {
-      bin2 = bins[j];
-      if(bin1 == bin2)
-      {
-        xn = m_Centroids[3 * j];
-        yn = m_Centroids[3 * j + 1];
-        zn = m_Centroids[3 * j + 2];
-        dx = fabs(x - xn);
-        dy = fabs(y - yn);
-        dz = fabs(z - zn);
-        if (dx < criticalDistance && dy < criticalDistance && dz < criticalDistance)
-        {
-          m_Neighborhoods[i]++;
-          neighborhoodlist[i].push_back(j);
-          m_Neighborhoods[j]++;
-          neighborhoodlist[j].push_back(i);
-        }
-      }
-      else if(abs(bin1 - bin2) == 1 || abs(bin1 - bin2) == numXBins || abs(bin1 - bin2) == (numXBins * numYBins))
-      {
-        xn = m_Centroids[3 * j];
-        yn = m_Centroids[3 * j + 1];
-        zn = m_Centroids[3 * j + 2];
-        dx = fabs(x - xn);
-        dy = fabs(y - yn);
-        dz = fabs(z - zn);
-        if (dx < criticalDistance && dy < criticalDistance && dz < criticalDistance)
-        {
-          m_Neighborhoods[i]++;
-          neighborhoodlist[i].push_back(j);
-          m_Neighborhoods[j]++;
-          neighborhoodlist[j].push_back(i);
-        }
-      }
+      bin2x = bins[3*j];
+	  bin2y = bins[3*j+1];
+	  bin2z = bins[3*j+2];
+	  criticalDistance2 = criticalDistance[j];
+
+	  dBinX = abs(bin2x - bin1x);
+	  dBinY = abs(bin2y - bin1y);
+	  dBinZ = abs(bin2z - bin1z);
+
+	  if (dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
+	  {
+		m_Neighborhoods[i]++;
+		neighborhoodlist[i].push_back(j);
+	  }
+
+	  if (dBinX < criticalDistance2 && dBinY < criticalDistance2 && dBinZ < criticalDistance2)
+	  {
+		m_Neighborhoods[j]++;
+		neighborhoodlist[j].push_back(i);
+	  }
     }
   }
   for (size_t i = 1; i < totalFeatures; i++)

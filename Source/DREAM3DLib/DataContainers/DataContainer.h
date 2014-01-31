@@ -290,6 +290,12 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual int readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, const DataContainerProxy& dcProxy);
 
     /**
+     * @brief creates copy of dataContainer
+     * @return
+     */
+    virtual DataContainer::Pointer deepCopy();
+
+    /**
      * @brief writeMeshToHDF5
      * @param dcGid
      * @return

@@ -465,9 +465,7 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
 		if (m_UseRunningAverage == true)
 		{
 		  MatrixMath::Multiply3x1withConstant(c2, m_Volumes[neighborFeature]);
-		  avgCaxes[0] = avgCaxes[0] + c2[0];
-		  avgCaxes[1] = avgCaxes[1] + c2[1];
-		  avgCaxes[2] = avgCaxes[2] + c2[2];
+		  MatrixMath::Add3x1s(avgCaxes, c2, avgCaxes);
 		}
         return true;
       }

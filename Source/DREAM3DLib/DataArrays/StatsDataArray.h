@@ -228,7 +228,6 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual size_t getTypeSize();
 
-
     /**
      * @brief Removes Tuples from the Array. If the size of the vector is Zero nothing is done. If the size of the
      * vector is greater than or Equal to the number of Tuples then the Array is Resized to Zero. If there are
@@ -258,6 +257,9 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      * @brief Sets all the values to zero.
      */
     virtual void initializeWithZeros();
+
+
+    virtual IDataArray::Pointer deepCopy();
 
     /**
        * @brief Reseizes the internal array

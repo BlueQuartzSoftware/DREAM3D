@@ -244,6 +244,38 @@ int VolumeDataContainer::writeCellsToHDF5(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataContainer::Pointer VolumeDataContainer::deepCopy()
+{
+  VolumeDataContainer::Pointer dcCopy = VolumeDataContainer::New(getName());
+
+  dcCopy->setCells(getCells());
+  size_t dims[3];
+  getDimensions(dims[0], dims[1], dims[2]);
+  dcCopy->setDimensions(dims[0], dims[1], dims[2]);
+  dcCopy->setEdges(getEdges());
+  dcCopy->setFaces(getFaces());
+  dcCopy->setMeshLinks(getMeshLinks());
+  dcCopy->setName(getName());
+  float origin[3];
+  getOrigin(origin[0], origin[1], origin[2]);
+  dcCopy->setOrigin(origin[0], origin[1], origin[2]);
+  float res[3];
+  getResolution(res[0], res[1], res[2]);
+  dcCopy->setResolution(res[0], res[1], res[2]);
+  dcCopy->setVertices(getVertices());
+
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
+  {
+    AttributeMatrix::Pointer attrMat = (*iter)->deepCopy();
+    dcCopy->addAttributeMatrix(attrMat->getName(), attrMat);
+  }
+
+  return dcCopy;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int VolumeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
   herr_t err = 0;

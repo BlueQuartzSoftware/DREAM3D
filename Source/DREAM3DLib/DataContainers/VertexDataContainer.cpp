@@ -102,6 +102,26 @@ int VertexDataContainer::writeVerticesToHDF5(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataContainer::Pointer VertexDataContainer::deepCopy()
+{
+  VertexDataContainer::Pointer dcCopy = VertexDataContainer::New(getName());
+
+  size_t dims[3];
+  dcCopy->setName(getName());
+  dcCopy->setVertices(getVertices());
+
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
+  {
+    AttributeMatrix::Pointer attrMat = (*iter)->deepCopy();
+    dcCopy->addAttributeMatrix(attrMat->getName(), attrMat);
+  }
+
+  return dcCopy;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int VertexDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
   herr_t err = 0;

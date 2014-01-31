@@ -160,6 +160,26 @@ DataContainer::Pointer DataContainerArray::getDataContainer(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataContainerArray::duplicateDataContainer(const QString& name, const QString& newName)
+{
+  DataContainer::Pointer f = DataContainer::NullPointer();
+  for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
+  {
+    if((*it)->getName().compare(name) == 0)
+    {
+      f = *it;
+      break;
+    }
+  }
+
+  DataContainer::Pointer new_f = f->deepCopy();
+  new_f->setName(newName);
+  pushBack(new_f);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QList<QString> DataContainerArray::getDataContainerNames()
 {
   QList<QString> names;

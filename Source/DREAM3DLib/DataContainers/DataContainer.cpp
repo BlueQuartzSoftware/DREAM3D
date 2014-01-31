@@ -312,6 +312,15 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataContainer::Pointer DataContainer::deepCopy()
+{
+  BOOST_ASSERT(false);
+  return DataContainer::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int DataContainer::writeMeshToHDF5(hid_t dcGid)
 {
   BOOST_ASSERT(false);

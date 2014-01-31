@@ -140,17 +140,6 @@ void FindNeighbors::dataCheck()
     }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
                      (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborListArrayName).get());
-
-    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
-    e->setFilterName(this->getNameOfClass());
-    e->setFilterHumanLabel(this->getHumanLabel());
-    e->setFilterGroup(this->getGroupName());
-    e->setFilterSubGroup(this->getSubGroupName());
-    e->setArrayDefaultName(m_NeighborListArrayName);
-    e->setArrayGroup("Feature");
-    e->setArrayNumComponents(0);
-    e->setArrayType("NeighborList");
-    addCreatedArrayHelpIndexEntry(e);
   }
 
   // And we do the same for the SharedSurfaceArea list
@@ -172,16 +161,6 @@ void FindNeighbors::dataCheck()
     }
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
                               (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SharedSurfaceAreaListArrayName).get());
-    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
-    e->setFilterName(this->getNameOfClass());
-    e->setFilterHumanLabel(this->getHumanLabel());
-    e->setFilterGroup(this->getGroupName());
-    e->setFilterSubGroup(this->getSubGroupName());
-    e->setArrayDefaultName(m_SharedSurfaceAreaListArrayName);
-    e->setArrayGroup("Feature");
-    e->setArrayNumComponents(0);
-    e->setArrayType("SurfaceAreaLists");
-    addCreatedArrayHelpIndexEntry(e);
   }
 }
 

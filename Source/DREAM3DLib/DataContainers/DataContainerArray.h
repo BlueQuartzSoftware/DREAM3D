@@ -90,6 +90,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      */
     virtual DataContainer::Pointer removeDataContainer(const QString& name);
     virtual DataContainer::Pointer getDataContainer(const QString& name);
+    virtual void duplicateDataContainer(const QString& name, const QString& newName);
     QList<QString> getDataContainerNames();
     QList<DataContainer::Pointer>& getDataContainerArray();
 

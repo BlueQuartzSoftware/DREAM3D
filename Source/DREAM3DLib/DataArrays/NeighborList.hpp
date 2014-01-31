@@ -212,8 +212,6 @@ class NeighborList : public IDataArray
       BOOST_ASSERT(false);
     }
 
-
-
     size_t getNumberOfTuples() {   return _data.size(); }
 
     /**
@@ -247,9 +245,22 @@ class NeighborList : public IDataArray
 
     size_t getTypeSize()  { return sizeof(SharedVectorType); }
 
-
     void initializeWithZeros() { _data.clear(); }
 
+    IDataArray::Pointer deepCopy()
+    {
+      NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::New();
+      daCopyPtr->resize(getNumberOfTuples());
+      NeighborList<T>*daCopy = NeighborList<T>::SafeObjectDownCast<IDataArray*, NeighborList<T>*>(daCopyPtr.get());
+      for(size_t i=0;i<getNumberOfTuples();i++)
+      {
+        NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
+        sharedNeiLst = _data[i];
+        daCopy->setList(static_cast<int>(i), sharedNeiLst);
+      }
+
+      return daCopyPtr;
+    }
 
     int32_t resizeTotalElements(size_t size)
     {
