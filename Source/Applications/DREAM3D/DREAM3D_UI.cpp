@@ -62,15 +62,15 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/HelpDialog.h"
-#include "QtSupport/DREAM3DUpdateCheckDialog.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
-#include "QtSupport/UpdateCheck.h"
 
-#include "FilterWidgetsLib/FilterWidgetManager.h"
-
-#include "PipelineViewWidget.h"
-#include "QFilterLibraryDockWidget.h"
-#include "QPrebuiltPipelinesDockWidget.h"
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+#include "DREAM3DWidgetsLib/UpdateCheck.h"
+#include "DREAM3DWidgetsLib/UpdateCheckData.h"
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
+#include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
+#include "DREAM3DWidgetsLib/Widgets/FilterLibraryDockWidget.h"
+#include "DREAM3DWidgetsLib/Widgets/PrebuiltPipelinesDockWidget.h"
 
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
@@ -255,6 +255,12 @@ void DREAM3D_UI::readWindowSettings()
     readDockWidgetSettings(prefs, documentsDockWidget);
     readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
     readDockWidgetSettings(prefs, issuesDockWidget);
+
+    QByteArray splitterGeometry = prefs.value(QString("Splitter_Geometry")).toByteArray();
+    splitter->restoreGeometry(splitterGeometry);
+    QByteArray splitterSizes = prefs.value(QString("Splitter_Sizes")).toByteArray();
+    splitter->restoreState(splitterSizes);
+
     prefs.endGroup();
 
   }
@@ -367,6 +373,11 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
   writeDockWidgetSettings(prefs, documentsDockWidget);
   writeDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
   writeDockWidgetSettings(prefs, issuesDockWidget);
+
+  QByteArray splitterGeometry = splitter->saveGeometry();
+  QByteArray splitterSizes = splitter->saveState();
+  prefs.setValue(QString("Splitter_Geometry"), splitterGeometry);
+  prefs.setValue(QString("Splitter_Sizes"), splitterSizes);
 
   prefs.endGroup();
 }

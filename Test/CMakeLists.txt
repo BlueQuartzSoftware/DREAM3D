@@ -11,11 +11,6 @@
 
 project(DREAM3DTest)
 
-set(DREAM3D_DATA_DIR ""  CACHE PATH "The directory where to find test data files")
-
-if("${DREAM3D_DATA_DIR}" STREQUAL "")
- message(FATAL_ERROR "The DREAM3D_DATA_DIR variable is not set and it needs to be set to a location where the test data is located")
-endif()
 # --------------------------------------------------------------------------
 macro(ConvertPathToHeaderCompatible INPUT)
     if(WIN32)

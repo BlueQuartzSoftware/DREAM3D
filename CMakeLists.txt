@@ -16,7 +16,7 @@ project(DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.9)
 #cmake_policy(VERSION 2.8.12.1)
 
-include (CMakeParseArguments)
+include(CMakeParseArguments)
 
 # ---------- Setup output Directories -------------------------
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
@@ -66,7 +66,15 @@ if(UNIX AND NOT APPLE)
     set(DREAM3D_LINUX_SYSTEM ${CMAKE_SYSTEM_NAME} CACHE STRING "The Name of the linux distrubution for packaging")
 endif()
 
+# --------------------------------------------------------------------
+#
+if("${DREAM3D_DATA_DIR}" STREQUAL "")
+  set(DREAM3D_DATA_DIR "${DREAM3DProj_SOURCE_DIR}/../DREAM3D_Data/"  CACHE PATH "The directory where to find test data files")
+endif()
 
+if("${DREAM3D_DATA_DIR}" STREQUAL "")
+   message(FATAL_ERROR "The DREAM3D_DATA_DIR variable is not set and it needs to be set to a location where the test data is located")
+endif()
 
 # --------------------------------------------------------------------
 # This is set to "1" so that our test files are deleted at the end of the tests
@@ -305,7 +313,7 @@ set(DREAM3D_PLUGIN_LIST
      ImageImport
      OrientationAnalysis
      Processing
-     Reconstruction     
+     Reconstruction
      Sampling
      Statistics
      SurfaceMeshing
@@ -338,7 +346,7 @@ if(DREAM3D_BUILD_DREAM3D)
 
   # --------------------------------------------------------------------
   # Build the FilterWidgets Static Library
-  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgetsLib/ ${PROJECT_BINARY_DIR}/FilterWidgetsLib)
+  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DWidgetsLib ${PROJECT_BINARY_DIR}/DREAM3DWidgetsLib)
 
   #- Add in the Main DREAM.3D Application
   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)

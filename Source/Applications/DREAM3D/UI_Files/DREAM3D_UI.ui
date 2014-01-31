@@ -52,6 +52,9 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
+      <property name="opaqueResize">
+       <bool>false</bool>
+      </property>
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="spacing">
@@ -171,12 +174,19 @@ color: white;
         </item>
        </layout>
       </widget>
-      <widget class="QFilterInputDockWidget" name="filterInputWidget" native="true">
+      <widget class="FilterInputDockWidget" name="filterInputWidget" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QDockWidget
+{
+	border-color: rgb(0, 0, 0);
+border: 2px solid;
+}</string>
        </property>
       </widget>
      </widget>
@@ -238,7 +248,7 @@ color: white;
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDream3DDocumentsDockWidget" name="documentsDockWidget">
+  <widget class="FavoritesDockWidget" name="documentsDockWidget">
    <property name="windowTitle">
     <string>Favorite Pipelines</string>
    </property>
@@ -246,7 +256,7 @@ color: white;
     <number>1</number>
    </attribute>
   </widget>
-  <widget class="QIssuesDockWidget" name="issuesDockWidget">
+  <widget class="IssuesDockWidget" name="issuesDockWidget">
    <property name="windowTitle">
     <string>Pipeline Issues</string>
    </property>
@@ -254,7 +264,7 @@ color: white;
     <number>1</number>
    </attribute>
   </widget>
-  <widget class="QPrebuiltPipelinesDockWidget" name="prebuiltPipelinesDockWidget">
+  <widget class="PrebuiltPipelinesDockWidget" name="prebuiltPipelinesDockWidget">
    <property name="windowTitle">
     <string>Prebuilt Pipelines</string>
    </property>
@@ -262,7 +272,7 @@ color: white;
     <number>1</number>
    </attribute>
   </widget>
-  <widget class="QFilterLibraryDockWidget" name="filterLibraryDockWidget">
+  <widget class="FilterLibraryDockWidget" name="filterLibraryDockWidget">
    <property name="windowTitle">
     <string>Filter Library</string>
    </property>
@@ -270,7 +280,7 @@ color: white;
     <number>1</number>
    </attribute>
   </widget>
-  <widget class="QFilterListDockWidget" name="filterListDockWidget">
+  <widget class="FilterListDockWidget" name="filterListDockWidget">
    <property name="windowTitle">
     <string>Filter List</string>
    </property>
@@ -347,39 +357,39 @@ color: white;
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>QPrebuiltPipelinesDockWidget</class>
+   <class>PrebuiltPipelinesDockWidget</class>
    <extends>QDockWidget</extends>
-   <header location="global">QPrebuiltPipelinesDockWidget.h</header>
+   <header location="global">PrebuiltPipelinesDockWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>QFilterLibraryDockWidget</class>
+   <class>FilterLibraryDockWidget</class>
    <extends>QDockWidget</extends>
-   <header location="global">QFilterLibraryDockWidget.h</header>
+   <header location="global">FilterLibraryDockWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>QDream3DDocumentsDockWidget</class>
+   <class>FavoritesDockWidget</class>
    <extends>QDockWidget</extends>
-   <header location="global">QDream3DDocumentsDockWidget.h</header>
+   <header location="global">FavoritesDockWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>QFilterListDockWidget</class>
+   <class>FilterListDockWidget</class>
    <extends>QDockWidget</extends>
-   <header location="global">QFilterListDockWidget.h</header>
+   <header location="global">FilterListDockWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>QFilterInputDockWidget</class>
+   <class>FilterInputDockWidget</class>
    <extends>QWidget</extends>
-   <header location="global">QFilterInputDockWidget.h</header>
+   <header location="global">FilterInputDockWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>QIssuesDockWidget</class>
+   <class>IssuesDockWidget</class>
    <extends>QDockWidget</extends>
-   <header location="global">QIssuesDockWidget.h</header>
+   <header location="global">IssuesDockWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

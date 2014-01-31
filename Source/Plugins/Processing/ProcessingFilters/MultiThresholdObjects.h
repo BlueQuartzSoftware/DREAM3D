@@ -63,6 +63,7 @@ class MultiThresholdObjects : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(AttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
     Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
 
     DREAM3D_FILTER_PARAMETER(QVector<ComparisonInput_t>, ComparisonInputs)
@@ -131,7 +132,7 @@ class MultiThresholdObjects : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Output)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Destination)
 
     MultiThresholdObjects(const MultiThresholdObjects&); // Copy Constructor Not Implemented
     void operator=(const MultiThresholdObjects&); // Operator '=' Not Implemented

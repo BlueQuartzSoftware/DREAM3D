@@ -51,19 +51,19 @@
 #include <QtGui/QToolBar>
 
 
-//-- UIC generated Header
-#include <ui_DREAM3D_UI.h>
-
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
-#include "FilterWidgetsLib/FilterWidgetManager.h"
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+
+
+//-- UIC generated Header
+#include "ui_DREAM3D_UI.h"
 
 
 class DREAM3DPluginInterface;
-
-class QFilterLibraryDockWidget;
-class QDream3DDocumentsDockWidget;
-class QPrebuiltPipelinesDockWidget;
+class FilterLibraryDockWidget;
+class FavoritesDockWidget;
+class PrebuiltPipelinesDockWidget;
 class FilterListWidget;
 class DREAM3DUpdateCheckDialog;
 class UpdateCheckData;
@@ -256,9 +256,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     FilterWidgetManager::Pointer m_FilterWidgetManager;
 
 
-    QFilterLibraryDockWidget*     m_FilterLibrary;
-    QDream3DDocumentsDockWidget*  m_FavoritePipelines;
-    QPrebuiltPipelinesDockWidget* m_PrebuiltPipelines;
+    FilterLibraryDockWidget*     m_FilterLibrary;
+    FavoritesDockWidget*  m_FavoritePipelines;
+    PrebuiltPipelinesDockWidget* m_PrebuiltPipelines;
     FilterListWidget*             m_FilterListWidget;
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented

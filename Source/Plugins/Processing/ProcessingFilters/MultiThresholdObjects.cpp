@@ -51,7 +51,8 @@ MultiThresholdObjects::MultiThresholdObjects() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_AttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
-  m_Output(NULL)
+  m_DestinationArrayName(""),
+  m_Destination(NULL)
 {
   setupFilterParameters();
 }
@@ -136,9 +137,9 @@ void MultiThresholdObjects::dataCheck()
   }
 
   QVector<size_t> dims(1, 1);
-  m_OutputPtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_OutputArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_OutputPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Output = m_OutputPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_DestinationPtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_OutputArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_DestinationPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Destination = m_DestinationPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 
@@ -168,9 +169,9 @@ void MultiThresholdObjects::execute()
   {
     ComparisonInput_t& comp_0 = m_ComparisonInputs[0];
 
-    ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(comp_0.compOperator), comp_0.compValue, m_OutputPtr.lock().get());
+    ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(comp_0.compOperator), comp_0.compValue, m_DestinationPtr.lock().get());
 
-    err = filter.execute(m->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(comp_0.arrayName).get(), m_OutputPtr.lock().get());
+    err = filter.execute(m->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(comp_0.arrayName).get(), m_DestinationPtr.lock().get());
     if (err < 0)
     {
       setErrorCondition(-13001);
@@ -197,9 +198,9 @@ void MultiThresholdObjects::execute()
     }
     for (int64_t p = 0; p < totalTuples; ++p)
     {
-      if(m_Output[p] == false || currentArray[p] == false)
+      if(m_Destination[p] == false || currentArray[p] == false)
       {
-        m_Output[p] = false;
+        m_Destination[p] = false;
       }
     }
   }

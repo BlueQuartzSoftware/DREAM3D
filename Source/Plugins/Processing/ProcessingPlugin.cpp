@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
 //#include "PipelineBuilder/FilterWidgetManager.h"
-//#include "FilterWidgets/QFilterWidgetFactory.hpp"
+//#include "FilterWidgets/PipelineFilterWidgetFactory.hpp"
 
 #include "moc_ProcessingPlugin.cxx"
 
