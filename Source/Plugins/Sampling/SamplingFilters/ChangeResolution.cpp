@@ -149,9 +149,15 @@ void ChangeResolution::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void ChangeResolution::dataCheck()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m;
+  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  else
+  {
+    getDataContainerArray()->duplicateDataContainer(getDataContainerName(), getNewDataContainerName());
+    m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+  }
   if(getErrorCondition() < 0 || NULL == m) { return; }
-
+  
   if (m_RenumberFeatures == true)
   {
     AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
@@ -174,8 +180,10 @@ void ChangeResolution::preflight()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
+  VolumeDataContainer* m;
+  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  else m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName());
+  
   size_t dims[3];
   m->getDimensions(dims);
 
@@ -214,7 +222,10 @@ void ChangeResolution::execute()
   if(getErrorCondition() < 0) { return; }
 
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  VolumeDataContainer* m;
+  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  else m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName());
 
   if(m->getXRes() == m_Resolution.x
       && m->getYRes() == m_Resolution.y

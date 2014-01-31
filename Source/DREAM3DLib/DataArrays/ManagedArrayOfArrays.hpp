@@ -485,6 +485,15 @@ class ManagedArrayOfArrays : public IDataArray
       }
     }
 
+    virtual IDataArray::Pointer deepCopy()
+    {
+      IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName());
+      Data_t* src = getPointer(0);
+      void* dest = daCopy->getVoidPointer(0);
+      size_t totalBytes = (getNumberOfTuples()*getNumberOfComponents()*sizeof(T));
+      ::memcpy(dest, src, totalBytes);
+      return daCopy;
+    }
 
     /**
      * @brief Reseizes the internal array

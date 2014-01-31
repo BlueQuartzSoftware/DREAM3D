@@ -173,7 +173,7 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
   setYMax( reader->readValue("YMax", getYMax()) );
   setZMax( reader->readValue("ZMax", getZMax()) );
   setRenumberFeatures( reader->readValue("RenumberFeatures", false) );
-  setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContiner", false) );
+  setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", false) );
   setUpdateOrigin( reader->readValue("UpdateOrigin", false) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -216,7 +216,13 @@ void CropVolume::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m;
+  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  else
+  {
+    getDataContainerArray()->duplicateDataContainer(getDataContainerName(), getNewDataContainerName());
+    m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+  }
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
   if (m_RenumberFeatures == true)
@@ -242,7 +248,9 @@ void CropVolume::preflight()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m;
+  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  else m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName());
 
   if (getXMax() < getXMin())
   {
@@ -324,7 +332,10 @@ void CropVolume::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m;
+  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  else m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName());
+
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   size_t udims[3] =
