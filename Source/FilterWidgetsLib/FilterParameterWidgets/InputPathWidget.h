@@ -74,6 +74,11 @@ class FilterWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::Inpu
     * @brief This method does additional GUI widget connections
     */
     void setupGui();
+   
+    /**
+    * @brief
+    */
+    bool verifyPathExists(QString filePath, QLineEdit* lineEdit);
 
   public slots:
     void parametersChanged(const QString& text);

@@ -77,8 +77,10 @@ InputFileWidget::~InputFileWidget()
 void InputFileWidget::setupGui()
 {
   connect(value, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&)));
+    this, SLOT(checkInputFilePath(const QString&)));
 
+  connect(value, SIGNAL(returnPressed()),
+    this, SLOT(updateFilter()));
 
   QFileCompleter* com = new QFileCompleter(this, false);
   value->setCompleter(com);
@@ -96,14 +98,51 @@ void InputFileWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InputFileWidget::parametersChanged(const QString& text)
+bool InputFileWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
 {
-  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
-  if(false == ok)
+  QFileInfo fileinfo(filePath);
+  if (false == fileinfo.exists())
+  {
+    lineEdit->setStyleSheet("border: 1px solid red;");
+  }
+  else
+  {
+    lineEdit->setStyleSheet("");
+  }
+  return fileinfo.exists();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputFileWidget::updateFilter()
+{
+  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, value->text());
+  if (false == ok)
   {
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputFileWidget::checkInputFilePath(const QString& text)
+{
+  verifyPathExists(text, value);
+#if 0
+  if (verifyPathExists(text, value) == true) 
+  {
+    bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
+    if (false == ok)
+    {
+      QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
+      emit errorSettingFilterParameter(ss);
+    }
+  }
+#endif
+
 }
 
 // -----------------------------------------------------------------------------

@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
   * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
   * a subgroup. It should be readable and understandable by humans.
   */
-    virtual const QString getSubGroupName() { return "Test"; }
+    virtual const QString getSubGroupName() { return "Create Stuff"; }
 
 
 

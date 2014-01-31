@@ -87,17 +87,36 @@ void InputPathWidget::setupGui()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool InputPathWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
+{
+  QFileInfo fileinfo(filePath);
+  if (false == fileinfo.exists())
+  {
+    lineEdit->setStyleSheet("border: 1px solid red;");
+  }
+  else
+  {
+    lineEdit->setStyleSheet("");
+  }
+  return fileinfo.exists();
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void InputPathWidget::parametersChanged(const QString& text)
 {
-  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
-  if(false == ok)
+  if (verifyPathExists(text, value) == true)
   {
-    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
+    bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
+    if (false == ok)
+    {
+      QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
+      emit errorSettingFilterParameter(ss);
+    }
   }
 }
 

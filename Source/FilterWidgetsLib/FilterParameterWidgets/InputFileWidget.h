@@ -75,8 +75,14 @@ class FilterWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inpu
     */
     void setupGui();
 
+    /**
+    * @brief                                                                     
+    */
+    bool verifyPathExists(QString filePath, QLineEdit* lineEdit);
+
   public slots:
-    void parametersChanged(const QString& text);
+    void checkInputFilePath(const QString& text);
+    void updateFilter();
     void on_selectBtn_clicked();
 
   signals:
