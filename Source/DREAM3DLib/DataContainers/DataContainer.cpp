@@ -314,22 +314,8 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, co
 // -----------------------------------------------------------------------------
 DataContainer::Pointer DataContainer::deepCopy()
 {
-  if(getDCType() == DREAM3D::DataContainerType::VertexDataContainer)
-  {
-    
-  }
-  else if(getDCType() == DREAM3D::DataContainerType::EdgeDataContainer)
-  {
-
-  }
-  else if(getDCType() == DREAM3D::DataContainerType::SurfaceDataContainer)
-  {
-
-  }
-  else(getDCType() == DREAM3D::DataContainerType::VolumeDataContainer)
-  {
-
-  }
+  BOOST_ASSERT(false);
+  return DataContainer::NullPointer();
 }
 
 // -----------------------------------------------------------------------------

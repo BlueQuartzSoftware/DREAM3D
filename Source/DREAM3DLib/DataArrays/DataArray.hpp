@@ -703,6 +703,7 @@ class DataArray : public IDataArray
     {
       return m_CompDims;
     }
+
     /**
     * @brief Returns the number component values at each Tuple location. For example if you have a
     * 3 element component (vector) then this will be 3. If you are storing a small image of size 80x60
@@ -941,6 +942,16 @@ class DataArray : public IDataArray
       return "UnknownType";
     }
 
+
+    virtual IDataArray::Pointer deepCopy()
+    {
+      IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName());
+      T* src = getPointer(0);
+      void* dest = daCopy->getVoidPointer(0);
+      size_t totalBytes = (getNumberOfTuples()*getNumberOfComponents()*sizeof(T));
+      ::memcpy(dest, src, totalBytes);
+      return daCopy;
+    }
 
     /**
      *

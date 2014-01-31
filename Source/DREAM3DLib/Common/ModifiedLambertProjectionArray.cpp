@@ -253,6 +253,22 @@ void ModifiedLambertProjectionArray::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+IDataArray::Pointer ModifiedLambertProjectionArray::deepCopy()
+{
+  ModifiedLambertProjectionArray::Pointer daCopyPtr = ModifiedLambertProjectionArray::New();
+  daCopyPtr->resize(getNumberOfTuples());
+  ModifiedLambertProjectionArray& daCopy = *daCopyPtr;
+  for(size_t i=0;i<getNumberOfTuples();i++)
+  {
+    daCopy[i] = m_ModifiedLambertProjectionArray[i];
+  }
+
+  return daCopyPtr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int32_t ModifiedLambertProjectionArray::resizeTotalElements(size_t size)
 {
   m_ModifiedLambertProjectionArray.resize(size);

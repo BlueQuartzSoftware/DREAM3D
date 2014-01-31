@@ -366,6 +366,22 @@ int AttributeMatrix::getNumAttributeArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+AttributeMatrix::Pointer AttributeMatrix::deepCopy()
+{
+  AttributeMatrix::Pointer newAttrMat = AttributeMatrix::New(getTupleDimensions(), getName(), getType());
+
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)
+  {
+    IDataArray::Pointer d = iter.value();
+    IDataArray::Pointer new_d = d->deepCopy();
+    newAttrMat->addAttributeArray(new_d->getName(), new_d);
+  }
+
+  return newAttrMat;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int AttributeMatrix::writeAttributeArraysToHDF5(hid_t parentId)
 {
   int err;

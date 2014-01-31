@@ -253,6 +253,8 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual void initializeWithZeros();
 
+    virtual IDataArray::Pointer deepCopy();
+
     /**
        * @brief Reseizes the internal array
        * @param size The new size of the internal array

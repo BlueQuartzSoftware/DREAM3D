@@ -189,6 +189,27 @@ int EdgeDataContainer::writeEdgesToHDF5(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataContainer::Pointer EdgeDataContainer::deepCopy()
+{
+  EdgeDataContainer::Pointer dcCopy = EdgeDataContainer::New(getName());
+
+  dcCopy->setEdges(getEdges());
+  dcCopy->setMeshLinks(getMeshLinks());
+  dcCopy->setName(getName());
+  dcCopy->setVertices(getVertices());
+
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
+  {
+    AttributeMatrix::Pointer attrMat = (*iter)->deepCopy();
+    dcCopy->addAttributeMatrix(attrMat->getName(), attrMat);
+  }
+
+  return dcCopy;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int EdgeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
   herr_t err = 0;

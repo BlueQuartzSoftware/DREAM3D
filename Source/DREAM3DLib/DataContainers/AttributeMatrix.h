@@ -389,6 +389,12 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     */
     size_t getNumTuples();
 
+    /**
+    * @brief creates and returns a copy of the attribute matrix
+    * @return
+    */
+    virtual AttributeMatrix::Pointer deepCopy();
+
     virtual int writeAttributeArraysToHDF5(hid_t parentId);
     virtual int addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool preflight);
     virtual int readAttributeArraysFromHDF5(hid_t amGid, bool preflight, AttributeMatrixProxy& attrMatProxy);

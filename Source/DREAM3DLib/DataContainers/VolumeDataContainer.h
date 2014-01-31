@@ -115,6 +115,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
 
     virtual unsigned int getDCType() {return DREAM3D::DataContainerType::VolumeDataContainer;}
 
+    virtual DataContainer::Pointer deepCopy();
     virtual int writeMeshToHDF5(hid_t dcGid);
     virtual int writeCellsToHDF5(hid_t dcGid);
     virtual int writeMetaInfo(hid_t dcGid, QString& hdfPath, int64_t volDims[3], float spacing[3], float origin[3]);
