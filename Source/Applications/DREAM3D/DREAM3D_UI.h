@@ -94,34 +94,39 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void setLoadedPlugins(QVector<DREAM3DPluginInterface::Pointer> plugins);
 
-  protected slots:
+    void displayHelp(QString helpFile);
 
-    /* Menu Slots */
-    // File MENU
-    void on_actionExit_triggered();
-    void on_actionOpenPipeline_triggered();
-    void on_actionSavePipeline_triggered();
-    void on_actionCheck_For_Updates_triggered();
-
-    //Pipeline Menu
-    void on_actionClearPipeline_triggered();
-
-    // Help Menu
-    void on_actionLicense_Information_triggered();
-    void on_actionAbout_triggered();
-    void on_actionShow_User_Manual_triggered();
-
-
+    void versionCheckReply(UpdateCheckData*);
 
     /**
      * @brief Writes the preferences to the users pref file
      */
     void writeSettings();
 
-    /**
-     * @brief Writes the pipeline order to a text file
-     */
-    void savePipeline(QSettings &prefs);
+
+  protected slots:
+
+    /* Menu Slots */
+    // File MENU
+
+    void on_actionOpenPipeline_triggered();
+    void on_actionSavePipeline_triggered();
+    void on_actionSavePipelineAs_triggered();
+
+    void on_actionExit_triggered();
+
+    //Pipeline Menu
+    void on_actionClearPipeline_triggered();
+
+    // Help Menu
+    void on_actionCheck_For_Updates_triggered();
+    void on_actionLicense_Information_triggered();
+    void on_actionAbout_triggered();
+    void on_actionShow_User_Manual_triggered();
+
+    // Buttons and other widgets that send signals that we want to catch
+    void on_startPipelineBtn_clicked();
+
 
     /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
@@ -135,17 +140,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void openRecentFile();
 
-    void setInputUI();
 
-    void displayHelp(QString helpFile);
+    void pipelineDidFinish();
 
-    void versionCheckReply(UpdateCheckData*);
-
-
-  private slots:
-    // slots for our worker thread to communicate
-    void threadHasMessage(QString message);
-
+    void processPipelineMessage(const PipelineMessage& msg);
 
     // Our Signals that we can emit custom for this class
   signals:
@@ -154,14 +152,16 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     /**
      * @brief A signal that is emitted when we want to cancel a process
      */
-    void sig_CancelWorker();
+    void pipelineCanceled();
+
+    /**
+     * @brief pipelineStarted
+     */
+    void pipelineStarted();
 
   protected:
 
     void populateMenus(QObject *plugin);
-    void addToPluginMenu(QObject *plugin, const QString &text,
-                         QMenu *menu, const char *member,
-                         QActionGroup *actionGroup, QIcon icon);
 
 
     /**
@@ -179,12 +179,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief Drag and drop implementation
      */
     void dropEvent(QDropEvent*);
-
-    /**
-     * @brief Enables or Disables all the widgets in a list
-     * @param b
-     */
-    void setWidgetListEnabled(bool b);
 
     /**
      *
@@ -236,30 +230,21 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void resizeEvent ( QResizeEvent * event );
 
   private:
-    QList<QWidget*>             m_WidgetList;
     QThread*                    m_WorkerThread;
-//    QStringList                 m_PluginDirs;
-//    QStringList                 m_PluginFileNames;
-    QActionGroup*               m_PluginActionGroup;
-    QActionGroup*               m_PluginPrefsActionGroup;
     DREAM3DPluginInterface*     m_ActivePlugin;
     QVector<DREAM3DPluginInterface::Pointer> m_LoadedPlugins;
-    QToolBar*                   m_PluginToolBar;
+
     HelpDialog*                 m_HelpDialog;
 
     QSharedPointer<UpdateCheck>   m_UpdateCheck;
-
-    QString                     m_OpenDialogLastDirectory;
 
     QThread*                    m_UpdateCheckThread;
     FilterManager::Pointer      m_FilterManager;
     FilterWidgetManager::Pointer m_FilterWidgetManager;
 
+    FilterPipeline::Pointer      m_PipelineInFlight;
 
-    FilterLibraryDockWidget*     m_FilterLibrary;
-    FavoritesDockWidget*  m_FavoritePipelines;
-    PrebuiltPipelinesDockWidget* m_PrebuiltPipelines;
-    FilterListWidget*             m_FilterListWidget;
+    static QString    m_OpenDialogLastDirectory;
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
     void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented

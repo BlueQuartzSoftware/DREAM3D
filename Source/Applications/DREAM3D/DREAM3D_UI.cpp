@@ -74,6 +74,9 @@
 
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
+// Initialize private static member variable
+QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
+
 namespace Detail
 {
   static const QString VersionCheckGroupName("VersionCheck");
@@ -88,10 +91,10 @@ namespace Detail
 DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   QMainWindow(parent),
   m_WorkerThread(NULL),
-  m_PluginActionGroup(NULL),
-  m_PluginPrefsActionGroup(NULL),
+  //  m_PluginActionGroup(NULL),
+  //  m_PluginPrefsActionGroup(NULL),
   m_ActivePlugin(NULL),
-  m_PluginToolBar(NULL),
+  //  m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
   m_UpdateCheckThread(NULL)
 {
@@ -132,9 +135,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
 // -----------------------------------------------------------------------------
 DREAM3D_UI::~DREAM3D_UI()
 {
-  if (m_WorkerThread != NULL) {
-    delete m_WorkerThread;
-  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -162,13 +163,11 @@ void DREAM3D_UI::on_actionExit_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionOpenPipeline_triggered()
 {
-
-  //FIXME: Implement on_actionOpenPipeline_triggered()
-  //  QString file = QFileDialog::getOpenFileName(this, tr("Select Pipeline File"),
-  //                                              this->getLastDirectory(),
-  //                                              tr("Pipeline File (*.txt *.ini)") );
-  //  if ( true == file.isEmpty() ) { return; }
-  //  m_PipelineBuilderWidget->openPipelineFile(file);
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Pipeline File"),
+                                              m_OpenDialogLastDirectory,
+                                              tr("Pipeline File (*.txt *.ini)") );
+  if ( true == file.isEmpty() ) { return; }
+  pipelineViewWidget->loadPipelineFile(file, QSettings::IniFormat);
 }
 
 // -----------------------------------------------------------------------------
@@ -176,31 +175,38 @@ void DREAM3D_UI::on_actionOpenPipeline_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionSavePipeline_triggered()
 {
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.txt";
+  QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
+                                                  proposedFile,
+                                                  tr("Pipeline File (*.txt *.ini)") );
+  if ( true == filePath.isEmpty() ) { return; }
 
-  //FIXME: Implement on_actionSavePipeline_triggered()
+  //If the filePath already exists - delete it so that we get a clean write to the file
+  QFileInfo fi(filePath);
+  if (fi.exists() == true)
+  {
+    QFile f(filePath);
+    if (f.remove() == false)
+    {
+      QMessageBox::warning ( this, QString::fromAscii("File Save Error"),
+                             QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
+      return;
+    }
+  }
 
-
-  //  QString proposedFile = m_PipelineBuilderWidget->getLastDirectory() + QDir::separator() + "Untitled.txt";
-  //  QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
-  //                                                  proposedFile,
-  //                                                  tr("Pipeline File (*.txt *.ini)") );
-  //  if ( true == filePath.isEmpty() ) { return; }
-
-  //  //If the filePath already exists - delete it so that we get a clean write to the file
-  //  QFileInfo fi(filePath);
-  //  if (fi.exists() == true)
-  //  {
-  //    QFile f(filePath);
-  //    if (f.remove() == false)
-  //    {
-  //      QMessageBox::warning ( this, QString::fromAscii("File Save Error"),
-  //                             QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
-  //      return;
-  //    }
-  //  }
-
-  //  m_PipelineBuilderWidget->getPipelineViewWidget()->savePipeline(filePath, fi.baseName());
+  pipelineViewWidget->savePipeline(filePath, fi.baseName());
+  m_OpenDialogLastDirectory = fi.path();
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionSavePipelineAs_triggered()
+{
+
+}
+
 
 // -----------------------------------------------------------------------------
 //  Called when the main window is closed.
@@ -314,7 +320,6 @@ void DREAM3D_UI::readLastPipeline()
 #endif
     filePath = prefs.fileName();
   }
-  //FIXME: Implement opening of Pipeline from Prefs
   pipelineViewWidget->loadPipelineFile(filePath, QSettings::NativeFormat);
 }
 
@@ -337,9 +342,9 @@ void DREAM3D_UI::writeSettings()
 
     writeVersionCheckSettings(prefs);
   }
+
   QFileInfo fi(filePath);
-  //FIXME: Implement saving of the pipeline to the prefs file
-  //m_PipelineBuilderWidget->getPipelineViewWidget()->savePipeline(filePath, fi.baseName(), QSettings::NativeFormat);
+  pipelineViewWidget->savePipeline(filePath, fi.baseName(), QSettings::NativeFormat);
 }
 
 // -----------------------------------------------------------------------------
@@ -347,13 +352,6 @@ void DREAM3D_UI::writeSettings()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::writeVersionCheckSettings(QSettings &prefs)
 {
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::savePipeline(QSettings &prefs) {
 
 }
 
@@ -508,16 +506,6 @@ void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::setWidgetListEnabled(bool b)
-{
-  foreach (QWidget* w, m_WidgetList) {
-    w->setEnabled(b);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DREAM3D_UI::setLoadedPlugins(QVector<DREAM3DPluginInterface::Pointer> plugins)
 {
   m_LoadedPlugins = plugins;
@@ -598,6 +586,7 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionClearPipeline_triggered()
 {
+  filterInputWidget->clearInputWidgets();
   pipelineViewWidget->clearWidgets();
 }
 
@@ -721,10 +710,82 @@ void DREAM3D_UI::openRecentFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::threadHasMessage(QString message)
+void DREAM3D_UI::on_startPipelineBtn_clicked()
 {
-  qDebug() << "DREAM3D_UI::threadHasMessage()" << message << "\n";
-  this->statusBar()->showMessage(message);
+
+  if (startPipelineBtn->text().compare("Cancel") == 0)
+  {
+    qDebug() << "canceling from GUI...." << "\n";
+    emit pipelineCanceled();
+    m_WorkerThread->wait(); // Wait until the thread is complete
+    if (m_WorkerThread->isFinished() == true)
+    {
+      delete m_WorkerThread;
+      m_WorkerThread = NULL;
+    }
+    return;
+  }
+
+  // Save the preferences file NOW in case something happens
+  writeSettings();
+
+
+  pipelineViewWidget->setEnabled(false);
+
+  // Clear out the Issues Table
+  issuesDockWidget->clearIssues();
+
+  //  m_hasErrors = false;
+  //  m_hasWarnings = false;
+  if (m_WorkerThread != NULL)
+  {
+    m_WorkerThread->wait(); // Wait until the thread is complete
+    if (m_WorkerThread->isFinished() == true)
+    {
+      delete m_WorkerThread;
+      m_WorkerThread = NULL;
+    }
+  }
+  m_WorkerThread = new QThread(); // Create a new Thread Resource
+
+  // Ask the PipelineViewWidget to create a FilterPipeline Object
+  m_PipelineInFlight = pipelineViewWidget->getFilterPipeline();
+
+  // Move the FilterPipeline object into the thread that we just created.
+  m_PipelineInFlight->moveToThread(m_WorkerThread);
+
+  // Allow the GUI to receive messages - We are only interested in the progress messages
+  m_PipelineInFlight->addMessageReceiver(this);
+
+  /* Connect the signal 'started()' from the QThread to the 'run' slot of the
+   * PipelineBuilder object. Since the PipelineBuilder object has been moved to another
+   * thread of execution and the actual QThread lives in *this* thread then the
+   * type of connection will be a Queued connection.
+   */
+  // When the thread starts its event loop, start the PipelineBuilder going
+  connect(m_WorkerThread, SIGNAL(started()),
+          m_PipelineInFlight.get(), SLOT(run()));
+
+  // When the PipelineBuilder ends then tell the QThread to stop its event loop
+  connect(m_PipelineInFlight.get(), SIGNAL(pipelineFinished() ),
+          m_WorkerThread, SLOT(quit()) );
+
+  // When the QThread finishes, tell this object that it has finished.
+  connect(m_WorkerThread, SIGNAL(finished()),
+          this, SLOT( pipelineDidFinish() ) );
+
+  // If the use clicks on the "Cancel" button send a message to the PipelineBuilder object
+  // We need a Direct Connection so the
+  connect(this, SIGNAL(pipelineCanceled() ),
+          m_PipelineInFlight.get(), SLOT (cancelPipeline() ) , Qt::DirectConnection);
+
+  qRegisterMetaType<PipelineMessage>();
+
+
+  emit pipelineStarted();
+  m_WorkerThread->start();
+  startPipelineBtn->setText("Cancel");
+
 }
 
 // -----------------------------------------------------------------------------
@@ -759,6 +820,54 @@ void DREAM3D_UI::populateMenus(QObject *plugin)
 #endif
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::processPipelineMessage(const PipelineMessage &msg)
+{
+  switch(msg.getType())
+  {
+    case PipelineMessage::ProgressValue:
+      this->m_ProgressBar->setValue(msg.getProgressValue());
+      break;
+    case PipelineMessage::StatusMessage:
+      if(NULL != this->statusBar())
+      {
+        QString s = (msg.getPrefix());
+        s = s.append(" ").append(msg.getText().toLatin1().data());
+        this->statusBar()->showMessage(s);
+      }
+      break;
+    case PipelineMessage::StatusMessageAndProgressValue:
+      this->m_ProgressBar->setValue(msg.getProgressValue());
+      if(NULL != this->statusBar())
+      {
+        QString s = (msg.getPrefix());
+        s = s.append(" ").append(msg.getText().toLatin1().data());
+        this->statusBar()->showMessage(s);
+      }
+      break;
+
+    default:
+      return;
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::pipelineDidFinish()
+{
+  std::cout << "DREAM3D_UI::pipelineDidFinish()" << std::endl;
+  m_PipelineInFlight = FilterPipeline::NullPointer();// This _should_ remove all the filters and deallocate them
+  startPipelineBtn->setText("Go");
+  m_ProgressBar->setValue(0);
+  pipelineViewWidget->setEnabled(true);
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -766,57 +875,6 @@ void DREAM3D_UI::displayHelp(QString file)
 {
   m_HelpDialog->setContentFile(file);
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::addToPluginMenu(QObject *plugin, const QString &text,
-                                 QMenu *menu, const char *member,
-                                 QActionGroup *actionGroup, QIcon icon)
-{
-  QAction *action = new QAction(icon, text, plugin);
-  connect(action, SIGNAL(triggered()), this, member);
-  menu->addAction(action);
-  m_PluginToolBar->addAction(action);
-
-  if (actionGroup)
-  {
-    action->setCheckable(true);
-    actionGroup->addAction(action);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::setInputUI()
-{
-#if 0
-  // Get the current QWidget
-  if (NULL != m_ActivePlugin)
-  {
-    QWidget* activeInputWidget = m_ActivePlugin->getInputWidget(this);
-    centralWidget->layout()->removeWidget(activeInputWidget);
-  }
-  // Get the action Associated with the Plugin that was just activated
-  QAction *action = qobject_cast<QAction*>(sender());
-  // Get a pointer to the new active plugin instance
-  m_ActivePlugin = qobject_cast<DREAM3DPluginInterface*>(action->parent());
-  this->setWindowTitle(m_ActivePlugin->getPluginName() + " is now Active");
-
-  // Get a pointer to the plugins Input Widget
-  QWidget* inputWidget = m_ActivePlugin->getInputWidget(this);
-  centralWidget->layout()->addWidget(inputWidget);
-
-  DREAM3DPluginFrame* frame = m_ActivePlugin->getPluginFrame(NULL);
-  if (frame)
-  {
-    frame->setStatusBar(this->statusBar());
-  }
-#endif
-}
-
 
 
 // -----------------------------------------------------------------------------
