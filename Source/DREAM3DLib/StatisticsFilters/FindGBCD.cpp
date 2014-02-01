@@ -69,7 +69,7 @@ class CalculateGBCDImpl
 
   public:
     CalculateGBCDImpl(size_t i, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures,
-                    int32_t* Bins, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
+                      int32_t* Bins, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
       startOffset(i),
       m_Labels(Labels),
       m_Normals(Normals),
@@ -81,7 +81,7 @@ class CalculateGBCDImpl
       m_GBCDlimits(GBCDlimits),
       m_CrystalStructures(CrystalStructures)
     {
-    m_OrientationOps = OrientationOps::getOrientationOpsVector();
+      m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
     virtual ~CalculateGBCDImpl(){}
 
@@ -275,7 +275,7 @@ FindGBCD::FindGBCD() :
   m_FieldEulerAngles(NULL),
   m_FieldPhases(NULL),
   m_CrystalStructures(NULL),
-    m_GBCD(NULL)
+  m_GBCD(NULL)
 {
   setupFilterParameters();
 }
@@ -311,13 +311,13 @@ void FindGBCD::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader)
 {
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("GBCDResolution", getGBCDRes() );
 }
@@ -353,10 +353,10 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
     else
     {
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
+          GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
+          GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
 
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, ensembles, 1)
+          CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, ensembles, 1)
     }
 
   }
@@ -378,8 +378,8 @@ void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size
   else
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
-    typedef DataArray<unsigned int> XTalStructArrayType;
+        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
+        typedef DataArray<unsigned int> XTalStructArrayType;
     GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
@@ -489,7 +489,7 @@ void FindGBCD::execute()
 
   CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4])
 
-  uint64_t millis = MXA::getMilliSeconds();
+      uint64_t millis = MXA::getMilliSeconds();
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;

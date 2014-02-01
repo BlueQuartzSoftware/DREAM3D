@@ -65,6 +65,7 @@ VisualizeGBCD::VisualizeGBCD() :
   m_StereoOutputFile(""),
   m_SphericalOutputFile(""),
   m_GMTOutputFile(""),
+  m_CrystalStructure(1),
   m_CrystalStructures(NULL),
   m_GBCD(NULL)
 {
@@ -119,6 +120,27 @@ void VisualizeGBCD::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
+  {
+    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
+    option->setHumanLabel("Crystal Structure");
+    option->setPropertyName("CrystalStructure");
+    option->setWidgetType(FilterParameter::ChoiceWidget);
+    option->setValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Hexagonal_High");
+    choices.push_back("Cubic_High");
+    choices.push_back("Hexagonal_Low");
+    choices.push_back("Cubic_Low");
+    choices.push_back("Triclinic");
+    choices.push_back("Monoclinic");
+    choices.push_back("OrthoRhombic");
+    choices.push_back("Tetragonal_Low");
+    choices.push_back("Tetragonal_High");
+    choices.push_back("Trigonal_Low");
+    choices.push_back("Trigonal_High");
+    option->setChoices(choices);
+    parameters.push_back(option);
+  }
 #if WRITE_XYZ_POINTS
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -165,13 +187,13 @@ void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader)
 //
 // -----------------------------------------------------------------------------
 void VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("MisorientationAngle", getMisAngle() );
   writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("StereoOutputFile", getStereoOutputFile() );
   writer->writeValue("SphericalOutputFile", getSphericalOutputFile() );
+  writer->writeValue("CrystalStructure", getCrystalStructure() );
 }
 
 // -----------------------------------------------------------------------------
@@ -360,7 +382,7 @@ void VisualizeGBCD::execute()
 
   //  int inversion = 1;
   //get number of symmetry operators
-  int n_sym = m_OrientationOps[1]->getNumSymOps();
+  int n_sym = m_OrientationOps[m_CrystalStructure]->getNumSymOps();
 
   int xpoints = 500;
   int ypoints = 500;
@@ -419,14 +441,14 @@ void VisualizeGBCD::execute()
     for(int i=0; i<n_sym; i++)
     {
       //get symmetry operator1
-      m_OrientationOps[1]->getMatSymOp(i, sym1);
+      m_OrientationOps[m_CrystalStructure]->getMatSymOp(i, sym1);
       MatrixMath::Multiply3x3with3x3(sym1,dg,dg1);
       //get transpose for rotation of directions
       MatrixMath::Transpose3x3(sym1, sym1t);
       for(int j=0; j<n_sym; j++)
       {
         //get symmetry operator2
-        m_OrientationOps[1]->getMatSymOp(j, sym2);
+        m_OrientationOps[m_CrystalStructure]->getMatSymOp(j, sym2);
         MatrixMath::Transpose3x3(sym2,sym2t);
         //calculate symmetric misorientation
         MatrixMath::Multiply3x3with3x3(dg1,sym2t,dg2);
@@ -554,7 +576,7 @@ void VisualizeGBCD::execute()
     fclose(f);
   }
 
-// Write the GMT file
+  // Write the GMT file
   {
     std::string parentPath = MXAFileInfo::parentPath(m_GMTOutputFile);
     std::string basename = MXAFileInfo::fileNameWithOutExtension(m_GMTOutputFile);
