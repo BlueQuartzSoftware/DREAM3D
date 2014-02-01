@@ -404,15 +404,14 @@ int CtfReader::readData(QFile& in)
       {
         buf = in.readLine(); // Read the line into a QByteArray including the newline
         buf = buf.trimmed(); // Remove leading and trailing whitespace
-        //buf = buf.simplified(); // Remove duplicate internal whitespace values
 
         if ( (m_SingleSliceRead < 0) || (m_SingleSliceRead >= 0 && slice == m_SingleSliceRead) )
         {
-          //          idx = 0;
-          //          while (buf[idx] != 0 && idx < kBufferSize) { ++idx; }
-          //          if(buf[idx - 1] < 32) { buf[idx - 1] = 0; } // Replaces the last non printable with a Zero (NULL Term)
-          if(in.atEnd() == true)
+
+          if(in.atEnd() == true && buf.isEmpty() == true) // We have to have read to the end of the file AND the buffer is empty
+          // otherwise we read EXACTLY the last line and we still need to parse the line.
           {
+          //  ++counter; // We need to make sure this gets incremented before leaving
             break;
           }
           parseDataLine(buf, row, col, counter, xCells, yCells);

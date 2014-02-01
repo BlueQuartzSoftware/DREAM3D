@@ -246,7 +246,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     if(err < 0)
     {
       setErrorCode(reader->getErrorCode());
-      setErrorMessage(getErrorMessage());
+      setErrorMessage(reader->getErrorMessage());
       return getErrorCode();
     }
     readerIndex = 0;

@@ -251,6 +251,15 @@ int H5CtfReader::readData(hid_t parId)
     return -1;
   }
 
+  if(m_ArrayNames.size() == 0 && m_ReadAllArrays == false)
+  {
+    err = H5Gclose(gid);
+    err = -90013;
+    setErrorMessage("H5CtfReader Error: ReadAllArrays was FALSE and no other arrays were requested to be read.");
+    setErrorCode(err);
+    return err;
+  }
+
   Ebsd::NumType numType = Ebsd::UnknownNumType;
   QList<QString> columnNames;
   err = QH5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, columnNames);

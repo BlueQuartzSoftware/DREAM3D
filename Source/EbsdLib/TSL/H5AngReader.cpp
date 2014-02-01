@@ -105,9 +105,10 @@ int H5AngReader::readFile()
   err = readData(gid);
 
   err = H5Gclose(gid);
+
   err = QH5Utilities::closeFile(fileId);
 
-  return err;
+  return getErrorCode();
 }
 
 // -----------------------------------------------------------------------------
@@ -321,7 +322,10 @@ int H5AngReader::readData(hid_t parId)
 
   if (nRows < 1)
   {
-    return -200;
+    err = -200;
+    setErrorMessage("H5AngReader Error: The number of Rows was < 1.");
+    setErrorCode(err);
+    return err;
   }
   else if (grid.startsWith(Ebsd::Ang::SquareGrid) == true)
   {
@@ -360,7 +364,6 @@ int H5AngReader::readData(hid_t parId)
     setErrorCode(-90012);
     return -90012;
   }
-
   setNumberOfElements(totalDataRows);
   size_t numBytes = totalDataRows * sizeof(float);
   QString sBuf;
@@ -368,9 +371,11 @@ int H5AngReader::readData(hid_t parId)
 
   if(m_ArrayNames.size() == 0 && m_ReadAllArrays == false)
   {
+    err = H5Gclose(gid);
+    err = -90013;
     setErrorMessage("H5AngReader Error: ReadAllArrays was FALSE and no other arrays were requested to be read.");
-    setErrorCode(-90013);
-    return -90013;
+    setErrorCode(err);
+    return err;
   }
 
   ANG_READER_ALLOCATE_AND_READ(Phi1, float);

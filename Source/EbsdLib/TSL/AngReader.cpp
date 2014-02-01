@@ -358,7 +358,7 @@ void AngReader::readData(QFile& in, QByteArray& buf)
     return;
   }
 
-  size_t counter = 0;
+  size_t counter = 1;  //Because we are on the first line now.
 
   bool onEvenRow = false;
   int col = 0;
