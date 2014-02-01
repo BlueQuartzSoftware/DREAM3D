@@ -71,13 +71,11 @@ OutputFileWidget::~OutputFileWidget()
 // -----------------------------------------------------------------------------
 void OutputFileWidget::setupGui()
 {
-    connect(value, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&)));
 
   QFileCompleter* com = new QFileCompleter(this, false);
   value->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(parametersChanged(const QString &)));
+                    this, SLOT(on_value_textChanged(const QString &)));
 
   if (m_FilterParameter != NULL)
   {
@@ -91,13 +89,47 @@ void OutputFileWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OutputFileWidget::parametersChanged(const QString& text)
+bool OutputFileWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
 {
-  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
-  if(false == ok)
+  QFileInfo fileinfo(filePath);
+  if (false == fileinfo.exists())
+  {
+    lineEdit->setStyleSheet("border: 1px solid red;");
+  }
+  else
+  {
+    lineEdit->setStyleSheet("");
+  }
+  return fileinfo.exists();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OutputFileWidget::on_value_returnPressed()
+{
+  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, value->text());
+  if (false == ok)
   {
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OutputFileWidget::on_value_textChanged(const QString& text)
+{
+  if (verifyPathExists(text, value) == true )
+  {
+    bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
+    if (false == ok)
+    {
+      QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
+      emit errorSettingFilterParameter(ss);
+    }
   }
 }
 

@@ -64,7 +64,7 @@ class Q@CLASS_NAME@ : public QObject, public FilterPipeline
     {
     }
     virtual ~Q@CLASS_NAME@() {}
-;lkijhjkilkjjhhhj
+
     /**
      * @brief Either prints a message or sends the message to the User Interface
      * @param message The message to print

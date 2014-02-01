@@ -422,7 +422,7 @@ void ReadH5Ebsd::preflight()
 void ReadH5Ebsd::execute()
 {
   dataCheck();
-
+  if(getErrorCondition() < 0) { return; }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int err = 0;
@@ -528,6 +528,7 @@ void ReadH5Ebsd::execute()
   if(err < 0)
   {
     setErrorCondition(err);
+    notifyErrorMessage(ebsdReader->getNameOfClass(), ebsdReader->getErrorMessage(), getErrorCondition());
     notifyErrorMessage(getHumanLabel(), "Error Loading Data from Ebsd Data file.", -1);
     return;
   }
@@ -682,10 +683,12 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
     m_SelectedArrayNames.insert(Ebsd::Ang::Phi1);
     m_SelectedArrayNames.insert(Ebsd::Ang::Phi);
     m_SelectedArrayNames.insert(Ebsd::Ang::Phi2);
+    m_SelectedArrayNames.remove(m_CellEulerAnglesArrayName);
   }
   if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end())
   {
     m_SelectedArrayNames.insert(Ebsd::Ang::PhaseData);
+    m_SelectedArrayNames.remove(m_CellPhasesArrayName);
   }
   return ebsdReader;
 }
@@ -716,10 +719,12 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHKLEbsdVolumeReader()
     m_SelectedArrayNames.insert(Ebsd::Ctf::Euler1);
     m_SelectedArrayNames.insert(Ebsd::Ctf::Euler2);
     m_SelectedArrayNames.insert(Ebsd::Ctf::Euler3);
+    m_SelectedArrayNames.remove(m_CellEulerAnglesArrayName);
   }
   if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end())
   {
     m_SelectedArrayNames.insert(Ebsd::Ctf::Phase);
+    m_SelectedArrayNames.remove(m_CellPhasesArrayName);
   }
   return ebsdReader;
 
@@ -751,10 +756,12 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHEDMEbsdVolumeReader()
     m_SelectedArrayNames.insert(Ebsd::Mic::Euler1);
     m_SelectedArrayNames.insert(Ebsd::Mic::Euler2);
     m_SelectedArrayNames.insert(Ebsd::Mic::Euler3);
+    m_SelectedArrayNames.remove(m_CellEulerAnglesArrayName);
   }
   if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end())
   {
     m_SelectedArrayNames.insert(Ebsd::Mic::Phase);
+    m_SelectedArrayNames.remove(m_CellPhasesArrayName);
   }
   m_SelectedArrayNames.insert(Ebsd::Mic::X);
   m_SelectedArrayNames.insert(Ebsd::Mic::Y);

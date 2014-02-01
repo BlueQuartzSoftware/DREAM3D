@@ -194,28 +194,7 @@ void IssuesDockWidget::processPipelineMessage(const PipelineMessage &msg)
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
       break;
-#if 0
-    case PipelineMessage::StatusValue:
-      this->m_progressBar->setValue(msg.getProgressValue());
-      break;
-    case PipelineMessage::StatusMessage:
-      if(NULL != this->statusBar())
-      {
-        QString s = (msg.getPrefix());
-        s = s.append(" ").append(msg.getText().toLatin1().data());
-        this->statusBar()->showMessage(s);
-      }
-      break;
-    case PipelineMessage::StatusMessageAndValue:
-      this->m_progressBar->setValue(msg.getProgressValue());
-      if(NULL != this->statusBar())
-      {
-        QString s = (msg.getPrefix());
-        s = s.append(" ").append(msg.getText().toLatin1().data());
-        this->statusBar()->showMessage(s);
-      }
-      break;
-#endif
+
     default:
       return;
   }

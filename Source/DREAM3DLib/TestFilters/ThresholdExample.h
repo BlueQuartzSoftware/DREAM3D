@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT ThresholdExample : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "ThresholdExample"; }
+    virtual const QString getHumanLabel() { return "Threshold Example"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into

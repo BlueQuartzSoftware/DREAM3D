@@ -73,10 +73,6 @@ class DREAM3DLib_EXPORT FilterPipeline : public QObject
     virtual void setCancel(bool value);
     virtual bool getCancel();
 
-    /**
-     * @brief This method is called to start the pipeline for a plugin
-     */
-    virtual void run();
 
     /**
      * @brief A pure virtual function that gets called from the "run()" method. Subclasses
@@ -89,12 +85,6 @@ class DREAM3DLib_EXPORT FilterPipeline : public QObject
      * execution of the pipeline
      */
     virtual int preflightPipeline();
-
-    /**
-     * @brief This method is called from the run() method just before exiting and
-     * signals the end of the pipeline execution
-     */
-    virtual void pipelineFinished();
 
 
     /**
@@ -131,6 +121,18 @@ class DREAM3DLib_EXPORT FilterPipeline : public QObject
     void connectFilterNotifications(QObject* filter);
     void disconnectFilterNotifications(QObject* filter);
 
+  public slots:
+
+    /**
+     * @brief This method is called to start the pipeline for a plugin
+     */
+    virtual void run();
+
+    /**
+     * @brief cancelPipeline
+     */
+    virtual void cancelPipeline();
+
   protected:
     FilterPipeline();
 
@@ -139,6 +141,12 @@ class DREAM3DLib_EXPORT FilterPipeline : public QObject
 
   signals:
     void pipelineGeneratedMessage(const PipelineMessage& message);
+
+     /**
+     * @brief This method is called from the run() method just before exiting and
+     * signals the end of the pipeline execution
+     */
+    void pipelineFinished();
 
   private:
     bool m_Cancel;

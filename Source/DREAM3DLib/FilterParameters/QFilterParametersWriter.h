@@ -43,9 +43,12 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
+
+
 /*
  *
  */
@@ -59,11 +62,43 @@ class DREAM3DLib_EXPORT QFilterParametersWriter : public AbstractFilterParameter
 
     virtual ~QFilterParametersWriter();
 
+    /**
+     * @brief WritePipelineToFile
+     * @param pipeline
+     * @param path
+     * @param name
+     * @param format
+     * @param obs
+     * @return
+     */
+    static int WritePipelineToFile(FilterPipeline::Pointer pipeline, const QString& path, const QString& name,
+                                    QSettings::Format format = QSettings::IniFormat, IObserver* obs = NULL);
+
     QSettings* getPrefs();
 
+    /**
+     * @brief openFile
+     * @param filename
+     * @param format
+     */
     void openFile(QString filename, QSettings::Format format);
+
+    /**
+     * @brief closeFile
+     */
     void closeFile();
+
+    /**
+     * @brief setNumberOfFilters
+     * @param numFilters
+     */
     void setNumberOfFilters(int numFilters);
+
+    /**
+     * @brief setPipelineName
+     * @param pipelineName
+     */
+    void setPipelineName(const QString& pipelineName = QString("Unknown Name") );
 
     virtual int openFilterGroup(AbstractFilter* unused, int index);
     virtual int closeFilterGroup();

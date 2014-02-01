@@ -255,31 +255,41 @@ void PipelineViewWidget::clearWidgets()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::savePipeline(const QString& filePath, const QString name, QSettings::Format format)
+FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
 {
+    // Create a Pipeline Object and fill it with the filters from this View
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
   qint32 count = filterCount();
-
-  QFilterParametersWriter::Pointer writer = QFilterParametersWriter::New();
-  writer->openFile(filePath, format);
-  // Write the top part of the pipeline file
-  QSettings* prefs = writer->getPrefs();
-  prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-  prefs->setValue(DREAM3D::Settings::NumFilters, count);
-  prefs->setValue("Name", name);
-  prefs->endGroup();
-
-  // Loop over each filter and write it's input parameters to the file
   for(qint32 i = 0; i < count; ++i)
   {
     PipelineFilterWidget* fw = filterWidgetAt(i);
     if (fw)
     {
-      //      QString groupName = QString::number(i);
-      //      prefs->beginGroup(groupName);
+      fw->setHasPreflightErrors(false);
       AbstractFilter::Pointer filter = fw->getFilter();
-      filter->writeFilterParameters(writer.get(), i);
-      //      prefs->endGroup();
+      filter->setErrorCondition(0); // Reset the error condition as we are going to preflight
+      pipeline->pushBack(filter);
     }
+
+  }
+  pipeline->addMessageReceiver(m_PipelineMessageObserver);
+  return pipeline;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::savePipeline(const QString& filePath, const QString name, QSettings::Format format)
+{
+
+    // Create a Pipeline Object and fill it with the filters from this View
+  FilterPipeline::Pointer pipeline = getFilterPipeline();
+  int err = QFilterParametersWriter::WritePipelineToFile(pipeline, filePath, name, format, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
+  if (err < 0)
+  {
+
   }
 }
 
@@ -424,25 +434,12 @@ void PipelineViewWidget::preflightPipeline()
 
   emit pipelineIssuesCleared();
   // Create a Pipeline Object and fill it with the filters from this View
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  FilterPipeline::Pointer pipeline = getFilterPipeline();
 
-  qint32 count = filterCount();
-  for(qint32 i = 0; i < count; ++i)
-  {
-    PipelineFilterWidget* fw = filterWidgetAt(i);
-    if (fw)
-    {
-      fw->setHasPreflightErrors(false);
-      AbstractFilter::Pointer filter = fw->getFilter();
-      filter->setErrorCondition(0); // Reset the error condition as we are going to preflight
-      pipeline->pushBack(filter);
-    }
-
-  }
-  pipeline->addMessageReceiver(m_PipelineMessageObserver);
-
+  // Preflight the pipeline
   int err = pipeline->preflightPipeline();
 
+  int count = pipeline->getFilterContainer().size();
   //Now that the preflight has been executed loop through the filters and check their error condition and set the
   // outline on the filter widget if there were errors or warnings
   for(qint32 i = 0; i < count; ++i)

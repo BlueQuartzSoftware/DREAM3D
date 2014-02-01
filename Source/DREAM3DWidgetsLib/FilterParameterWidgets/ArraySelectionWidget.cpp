@@ -96,7 +96,7 @@ void ArraySelectionWidget::on_dataContainerList_currentItemChanged(QListWidgetIt
   {
     return;
   }
-  std::cout << "void ArraySelectionWidget::on_dataContainerList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous)" << std::endl;
+  //std::cout << "void ArraySelectionWidget::on_dataContainerList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous)" << std::endl;
 
   // Clear the AttributeMatrix List
   attributeMatrixList->clear();
@@ -134,7 +134,7 @@ void ArraySelectionWidget::on_attributeMatrixList_currentItemChanged(QListWidget
   {
     return;
   }
-  std::cout << "on_attributeMatrixList_currentItemChanged" << std::endl;
+  //std::cout << "on_attributeMatrixList_currentItemChanged" << std::endl;
 
   // Get the selected Data Container Name from the DataContainerList Widget
   QListWidgetItem* dcWidgetItem = dataContainerList->currentItem();
@@ -187,7 +187,7 @@ void ArraySelectionWidget::on_attributeArrayList_currentItemChanged(QListWidgetI
   {
     return;
   }
-  std::cout << "on_attributeArrayList_currentItemChanged" << std::endl;
+  //std::cout << "on_attributeArrayList_currentItemChanged" << std::endl;
 
   // Set this value into the m_FilterInstance as the specified Filter Property, Which will cause a preflight to occur
   // because the parameters have changed. which will reset the lists, which causes a preflight..
@@ -230,7 +230,7 @@ void ArraySelectionWidget::on_attributeArrayList_currentItemChanged(QListWidgetI
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::initializeHeirarchy()
 {
-  std::cout << "Filter Parameter Widget should update" << std::endl;
+//  std::cout << "Filter Parameter Widget should update" << std::endl;
   dataContainerList->clear();
   attributeMatrixList->clear();
   attributeArrayList->clear();
@@ -253,7 +253,7 @@ void ArraySelectionWidget::initializeHeirarchy()
 void ArraySelectionWidget::beforePreflight()
 {
   if (NULL == m_Filter) { return; }
-  std::cout << "Before Preflight" << std::endl;
+//  std::cout << "Before Preflight" << std::endl;
   // Save what was selected from the filter
   QString dcName = m_Filter->property("DataContainerName").toString();
   QString amName = m_Filter->property("AttributeMatrixName").toString();
@@ -263,7 +263,7 @@ void ArraySelectionWidget::beforePreflight()
   DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
   if(NULL == dca.get()) { return; }
 
-  std::cout << "    Making a DataContainerArrayProxy copy into ArraySelectionWidget" << std::endl;
+  //std::cout << "    Making a DataContainerArrayProxy copy into ArraySelectionWidget" << std::endl;
   // update our local cache of the DataContainerProxy to be that of the current DataContainerArray
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
@@ -315,5 +315,5 @@ void ArraySelectionWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::afterPreflight()
 {
-  std::cout << "After Preflight" << std::endl;
+ // std::cout << "After Preflight" << std::endl;
 }

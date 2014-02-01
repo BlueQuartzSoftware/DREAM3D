@@ -70,8 +70,19 @@ class PipelineViewWidget : public QFrame
     PipelineFilterWidget* filterWidgetAt(int index);
     void clearWidgets();
 
-
+    /**
+     * @brief savePipeline
+     * @param filePath
+     * @param name
+     */
     void savePipeline(const QString& filePath, const QString name, QSettings::Format = QSettings::IniFormat);
+
+    /**
+     * @brief getFilterPipeline
+     * @return
+     */
+    FilterPipeline::Pointer getFilterPipeline();
+
 
     /**
      * @brief setScrollArea

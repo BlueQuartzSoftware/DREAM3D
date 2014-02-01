@@ -69,16 +69,42 @@ class H5DataArrayWriter
       hsize_t h5Rank = tDims.size() + cDims.size();
 
       QVector<hsize_t> h5Dims(tDims.size() + cDims.size());
+
+      #if 0
+       /*** !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  *  VERY IMPORTANT. MAKE SURE YOU UNDERSTAND THIS NEXT SECTION FULLY BEFORE CHANGING ANYTHING.
+  * HDF5 wants the dimensions written from slowest to fastest, so "C" style or ZYX style. DREAM3D stores
+  * the dimensions in the opposite order (XYZ) (even though the data is laid out in memory correctly). So using the
+  * Small IN100 data set as an example the NCOLS(189) NROWS(201) and NSLICES(117) are stored in the tDims vector as
+  * [189,201,117] BUT we need to reverse the order so that HDF5 can properly store the arrays and also properly
+  * load data into the HDFView program. These next few loops will reverse the order in addition to calculating the
+  * total number of elements in the array
+  */
+  qint32 count = tDims.size() - 1;
+      for (int i = count; i >= 0; i--)
+      {
+//        std::cout << "  " << tDims[i] << std::endl;
+        h5Dims[count - i] = tDims[i];
+      }
+//      std::cout << "  Comp Dims: " << std::endl;
+      count = cDims.size() - 1;
+      for (int i = count; i >= 0; i--)
+      {
+//        std::cout << "  " << cDims[i] << std::endl;
+        h5Dims[count - i + tDims.size()] = cDims[i];
+      }
+
+#endif
       std::cout << dataArray->getName().toStdString() << " Tuple Dims " << std::endl;
       for (int i = 0; i < tDims.size(); i++)
       {
-        std::cout << "  " << tDims[i] << std::endl;
+        std::cout << i <<  "  " << tDims[i] << std::endl;
         h5Dims[i] = tDims[i];
       }
       std::cout << "  Comp Dims: " << std::endl;
       for(int i = 0;i < cDims.size(); i++)
       {
-              std::cout << "  " << cDims[i] << std::endl;
+        std::cout << (i+tDims.size()) << "  " << cDims[i] << std::endl;
         h5Dims[i + tDims.size()] = cDims[i];
       }
 

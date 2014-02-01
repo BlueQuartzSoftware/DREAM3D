@@ -129,8 +129,8 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
 
-  signals:
-    void parametersChanged();
+    signals:
+      void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
 
@@ -228,6 +228,16 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+
+      // Now reset the internal ensemble array references to these new arrays
+      m_CrystalStructuresPtr = crystalStructures;
+      if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
+      m_LatticeConstantsPtr = latticeConstants;
+      if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
       return 0;
     }
 

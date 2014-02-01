@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "ArraySelectionExample"; }
+    virtual const QString getHumanLabel() { return "Array Selection Example"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into

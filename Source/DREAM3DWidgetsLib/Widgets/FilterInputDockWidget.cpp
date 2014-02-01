@@ -78,6 +78,14 @@ void FilterInputDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FilterInputDockWidget::clearInputWidgets()
+{
+  QWidget* widget = scrollArea->takeWidget();
+  scrollArea->setWidget(new QFrame);
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FilterInputDockWidget::displayFilterParameters(PipelineFilterWidget* w)
 {
 

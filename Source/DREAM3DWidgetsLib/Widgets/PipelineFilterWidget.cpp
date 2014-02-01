@@ -150,7 +150,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
   if (NULL != m_Filter.get())
   {
     // Create the Widget that will be placed into the Basic Inputs Scroll Area
-    m_BasicInputsScrollWidget = new QWidget();
+    m_BasicInputsScrollWidget = new QWidget(this);
     QString name = QString::fromUtf8("basicInputsScrollWidget_") + m_Filter->getNameOfClass();
     m_BasicInputsScrollWidget->setObjectName(name);
     m_BasicInputsScrollWidget->setGeometry(QRect(0, 0, 250, 267));
@@ -194,7 +194,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 // -----------------------------------------------------------------------------
 PipelineFilterWidget::~PipelineFilterWidget()
 {
-//  std::cout << "~PipelineFilterWidget() " << m_Filter->getNameOfClass().toStdString() << std::endl;
+ // std::cout << "~PipelineFilterWidget() " << m_Filter->getNameOfClass().toStdString() << std::endl;
 }
 
 // -----------------------------------------------------------------------------

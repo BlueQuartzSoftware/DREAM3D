@@ -76,16 +76,11 @@ InputFileWidget::~InputFileWidget()
 // -----------------------------------------------------------------------------
 void InputFileWidget::setupGui()
 {
-//  connect(value, SIGNAL(textChanged(const QString&)),
-//    this, SLOT(checkInputFilePath(const QString&)));
-
-//  connect(value, SIGNAL(returnPressed()),
-//    this, SLOT(updateFilter()));
 
   QFileCompleter* com = new QFileCompleter(this, false);
   value->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(parametersChanged(const QString &)));
+                    this, SLOT(on_value_textChanged(const QString &)));
 
   if (m_FilterParameter != NULL)
   {

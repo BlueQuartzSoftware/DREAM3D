@@ -35,6 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "QFilterParametersWriter.h"
 
+#include <QtCore/QFileInfo>
+
+
+#include "DREAM3DLib/DREAM3DVersion.h"
 
 #include <QtCore/QStringListIterator>
 // -----------------------------------------------------------------------------
@@ -66,6 +70,51 @@ QFilterParametersWriter::~QFilterParametersWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int QFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipeline, const QString& filePath, const QString &name, QSettings::Format format, IObserver* obs)
+{
+
+  if(NULL == pipeline.get())
+  {
+    if(NULL != obs)
+    {
+      PipelineMessage pm(QFilterParametersWriter::ClassName(), "FilterPipeline Object was NULL for writing", -1, PipelineMessage::Error);
+      obs->processPipelineMessage(pm);
+    }
+    return -1;
+  }
+
+  FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
+
+  QFilterParametersWriter::Pointer writer = QFilterParametersWriter::New();
+  // This will open the file, and write/update the initial group of settings like the name and DREAM3D Version
+  writer->openFile(filePath, format);
+  // Loop over each filter and write it's input parameters to the file
+  int count = filters.size();
+  for(qint32 i = 0; i < count; ++i)
+  {
+    AbstractFilter::Pointer filter = filters.at(i);
+    if(NULL != filter.get())
+    {
+      filter->writeFilterParameters(writer.get(), i);
+    }
+    else
+    {
+      AbstractFilter::Pointer badFilter = AbstractFilter::New();
+      writer->openFilterGroup(badFilter.get(), i);
+      writer->writeValue("Unkown Filter", "ERROR: Filter instance was NULL within the PipelineFilterWidget instance. Report this error to the DREAM3D Developers");
+      writer->closeFilterGroup();
+    }
+  }
+
+  writer->setNumberOfFilters(count);
+  writer->setPipelineName(name);
+  writer->closeFile(); // Close the file
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QSettings* QFilterParametersWriter::getPrefs()
 {
   return m_Prefs;
@@ -80,11 +129,14 @@ void QFilterParametersWriter::openFile(QString filename, QSettings::Format forma
   if(NULL != m_Prefs)
   {
     closeFile();
+    delete m_Prefs;
+    m_Prefs = NULL;
   }
   m_Prefs = new QSettings(filename, format);
   m_Prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   m_Prefs->setValue("Name", "Unnamed Pipeline");
   m_Prefs->setValue(DREAM3D::Settings::NumFilters, 0);
+  m_Prefs->setValue(DREAM3D::Settings::Version, DREAM3DLib::Version::Package() );
   m_Prefs->endGroup();
 }
 
@@ -104,6 +156,16 @@ void QFilterParametersWriter::setNumberOfFilters(int numFilters)
 {
   m_Prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   m_Prefs->setValue(DREAM3D::Settings::NumFilters, numFilters);
+  m_Prefs->endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterParametersWriter::setPipelineName(const QString& pipelineName)
+{
+  m_Prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+  m_Prefs->setValue("Name", pipelineName);
   m_Prefs->endGroup();
 }
 
@@ -529,7 +591,7 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
     m_Prefs->endArray();
   }
 
-// Reset the iterator to the start of the QList
+  // Reset the iterator to the start of the QList
   dcIter.toFront();
   while (dcIter.hasNext()) // DataContainerLevel
   {

@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
   * @brief This returns a string that is displayed in the GUI. It should be readable
   * and understandable by humans.
   */
-    virtual const QString getHumanLabel() { return "MakeVolumeDataContainer"; }
+    virtual const QString getHumanLabel() { return "Make Volume DataContainer"; }
 
     /**
   * @brief This returns a string that is displayed in the GUI and helps to sort the filters into

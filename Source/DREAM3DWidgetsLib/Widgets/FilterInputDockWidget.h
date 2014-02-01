@@ -61,14 +61,13 @@ class FilterInputDockWidget : public QWidget, private Ui::FilterInputDockWidget
 
   protected:
 
-  protected slots:
-
+  public slots:
+    void clearInputWidgets();
     void displayFilterParameters(PipelineFilterWidget *w);
 
   signals:
 
   protected:
-    //void initInputFileWidget(FilterParameter* option, QVBoxLayout* vertLayout, AbstractFilter* filter);
 
   private:
 
