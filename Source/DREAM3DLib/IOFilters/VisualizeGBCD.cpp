@@ -91,6 +91,27 @@ void VisualizeGBCD::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
+    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
+    option->setHumanLabel("Crystal Structure");
+    option->setPropertyName("CrystalStructure");
+    option->setWidgetType(FilterParameter::ChoiceWidget);
+    option->setValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Hexagonal-High 6/mmm");
+    choices.push_back("Cubic-High m-3m");
+    choices.push_back("Hexagonal-Low 6/m");
+    choices.push_back("Cubic-Low m-3 (Tetrahedral)");
+    choices.push_back("TriClinic -1");
+    choices.push_back("Monoclinic 2/m");
+    choices.push_back("OrthoRhombic mmm");
+    choices.push_back("Tetragonal-Low 4/m");
+    choices.push_back("Tetragonal-High 4/mmm");
+    choices.push_back("Trigonal-Low -3");
+    choices.push_back("Trigonal-High -3m");
+    option->setChoices(choices);
+    parameters.push_back(option);
+  }
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisAngle");
     option->setHumanLabel("Misorientation Angle");
@@ -102,7 +123,6 @@ void VisualizeGBCD::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-
     option->setHumanLabel("Misorientation Axis");
     option->setPropertyName("MisAxis");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
@@ -120,27 +140,7 @@ void VisualizeGBCD::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
-  {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Crystal Structure");
-    option->setPropertyName("CrystalStructure");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
-    option->setValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("Hexagonal_High");
-    choices.push_back("Cubic_High");
-    choices.push_back("Hexagonal_Low");
-    choices.push_back("Cubic_Low");
-    choices.push_back("Triclinic");
-    choices.push_back("Monoclinic");
-    choices.push_back("OrthoRhombic");
-    choices.push_back("Tetragonal_Low");
-    choices.push_back("Tetragonal_High");
-    choices.push_back("Trigonal_Low");
-    choices.push_back("Trigonal_High");
-    option->setChoices(choices);
-    parameters.push_back(option);
-  }
+
 #if WRITE_XYZ_POINTS
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -193,6 +193,7 @@ void VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("StereoOutputFile", getStereoOutputFile() );
   writer->writeValue("SphericalOutputFile", getSphericalOutputFile() );
+  writer->writeValue("GMTOutputFile", getGMTOutputFile() );
   writer->writeValue("CrystalStructure", getCrystalStructure() );
 }
 
@@ -227,6 +228,13 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
+  if(getGMTOutputFile().empty() == true)
+  {
+    ss.str("");
+    ss << ClassName() << " needs the GMT Data Output File Set and it was not.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-387);
+  }
 #endif
 
   if(NULL == sm)
@@ -251,21 +259,21 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
 
     }
+
+
+    IDataArray::Pointer iDataArray = sm->getEnsembleData(DREAM3D::EnsembleData::GBCD);
+    if (NULL == iDataArray.get())
+    {
+      setErrorCondition(-387);
+      addErrorMessage(getHumanLabel(), "The GBCD Array was not found in the Surface Mesh Ensemble Data. ", getErrorCondition());
+    }
     else
     {
-      IDataArray::Pointer iDataArray = sm->getEnsembleData(DREAM3D::EnsembleData::GBCD);
-      if (NULL == iDataArray.get())
-      {
-        setErrorCondition(-387);
-        addErrorMessage(getHumanLabel(), "The GBCD Array was not found in the Surface Mesh Ensemble Data. ", getErrorCondition());
-      }
-      else
-      {
-        int numComp = iDataArray->GetNumberOfComponents();
-        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
-      }
+      int numComp = iDataArray->GetNumberOfComponents();
+      GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
     }
   }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -290,18 +298,18 @@ void VisualizeGBCD::execute()
   if(NULL == sm)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
+    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -998);
     return;
   }
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
+    notifyErrorMessage("The VoxelDataContainer DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
-  notifyStatusMessage("Starting");
+  notifyStatusMessage("Initializing GBCD Visualization Data");
 
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
 
@@ -381,8 +389,12 @@ void VisualizeGBCD::execute()
   OrientationMath::AxisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
 
   //  int inversion = 1;
+
+  // Get our OrientationOps pointer for the selected crystal structure
+  OrientationOps::Pointer orientOps = m_OrientationOps[m_CrystalStructure];
+
   //get number of symmetry operators
-  int n_sym = m_OrientationOps[m_CrystalStructure]->getNumSymOps();
+  int n_sym = orientOps->getNumSymOps();
 
   int xpoints = 500;
   int ypoints = 500;
@@ -408,6 +420,8 @@ void VisualizeGBCD::execute()
 #if WRITE_XYZ_POINTS
   size_t nPoints = 0;
 #endif
+
+// What does this code do?
   for (int64_t k = 0; k < (gbcdSizes[3]); k++)
   {
     for (int64_t l = 0; l < (gbcdSizes[4]); l++)
@@ -427,8 +441,12 @@ void VisualizeGBCD::execute()
 
   std::vector<float> gmtValues;
 
-  for(int q=0;q<2;q++)
+  for(int q = 0; q < 2; q++)
   {
+    ss.str("");
+    ss << "Executing part " << q << "/2";
+    notifyStatusMessage(ss.str());
+
     if(q == 1)
     {
       //copy original misorientation for use later
@@ -438,17 +456,19 @@ void VisualizeGBCD::execute()
       MatrixMath::Copy3x3(dgt, dg);
 
     }
+
+    // Loop over all the symetry operators in the given cystal symmetry
     for(int i=0; i<n_sym; i++)
     {
       //get symmetry operator1
-      m_OrientationOps[m_CrystalStructure]->getMatSymOp(i, sym1);
+      orientOps->getMatSymOp(i, sym1);
       MatrixMath::Multiply3x3with3x3(sym1,dg,dg1);
       //get transpose for rotation of directions
       MatrixMath::Transpose3x3(sym1, sym1t);
       for(int j=0; j<n_sym; j++)
       {
         //get symmetry operator2
-        m_OrientationOps[m_CrystalStructure]->getMatSymOp(j, sym2);
+        orientOps->getMatSymOp(j, sym2);
         MatrixMath::Transpose3x3(sym2,sym2t);
         //calculate symmetric misorientation
         MatrixMath::Multiply3x3with3x3(dg1,sym2t,dg2);
@@ -464,6 +484,7 @@ void VisualizeGBCD::execute()
         int location2 = int((mis_euler1[1]-gbcdLimits[1])/gbcdDeltas[1]);
         int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
         //make sure that euler angles are within the GBCD space
+        //// THIS IS NOT WORKING FOR HEXAGONAL Crystal Structure. 'location2' is always equal for gbcdSizes[1] so this section never executes
         if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2])
         {
           //calculate slot in the flattened GBCD that corresponds to the misorientation and then the next m_GBCDsizes[3]*m_GBCDsizes[4] slots are the phi,theta bins
@@ -539,9 +560,16 @@ void VisualizeGBCD::execute()
     }
   }
 
+
+
+  notifyStatusMessage(ss.str());
 #if WRITE_XYZ_POINTS
+  if (verifyPathExists(getStereoOutputFile()) == true)
   {
-    FILE* f = fopen(m_StereoOutputFile.c_str(), "wb");
+    ss.str("");
+    ss << "Writing VTK Stereo Output File '" << getStereoOutputFile() << "'";
+    notifyStatusMessage(ss.str());
+    FILE* f = fopen(getStereoOutputFile().c_str(), "wb");
     // Write the correct header
     fprintf(f, "# vtk DataFile Version 2.0\n");
     fprintf(f, "GBCD Stereograhic Projection irregular grid data\n");
@@ -558,7 +586,11 @@ void VisualizeGBCD::execute()
     fclose(f);
   }
 
+  if (verifyPathExists(getSphericalOutputFile()) == true)
   {
+    ss.str("");
+    ss << "Writing VTK Spherical Output File '" << getSphericalOutputFile() << "'";
+    notifyStatusMessage(ss.str());
     FILE* f = fopen(m_SphericalOutputFile.c_str(), "wb");
     // Write the correct header
     fprintf(f, "# vtk DataFile Version 2.0\n");
@@ -577,11 +609,17 @@ void VisualizeGBCD::execute()
   }
 
   // Write the GMT file
+
+  if (verifyPathExists(getGMTOutputFile()) == true)
   {
-    std::string parentPath = MXAFileInfo::parentPath(m_GMTOutputFile);
-    std::string basename = MXAFileInfo::fileNameWithOutExtension(m_GMTOutputFile);
-    std::string extension = MXAFileInfo::extension(m_GMTOutputFile);
+    std::string parentPath = MXAFileInfo::parentPath(getGMTOutputFile());
+    std::string basename = MXAFileInfo::fileNameWithOutExtension(getGMTOutputFile());
+    std::string extension = MXAFileInfo::extension(getGMTOutputFile());
     std::string path = parentPath + MXAFileInfo::Separator + basename + std::string("_gmt_1.") + extension;
+
+    ss.str("");
+    ss << "Writing GMT Output File '" << path << "'";
+    notifyStatusMessage(ss.str());
 
     FILE* f = fopen(path.c_str(), "wb");
     fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle * 180/M_PI);
@@ -593,10 +631,12 @@ void VisualizeGBCD::execute()
     }
     fclose(f);
   }
-
-
-
 #endif
+
+
+  ss.str("");
+  ss << "Generating data for VTK Polefigure File '" << getOutputFile() << "'";
+  notifyStatusMessage(ss.str());
 
   int neighbors[4];
   neighbors[0] = -1;
@@ -609,6 +649,7 @@ void VisualizeGBCD::execute()
   std::vector<int> neighs(xpoints*ypoints,-1);
   while(counter != 0)
   {
+
     counter = 0;
     for (int64_t k = 0; k < (xpoints); k++)
     {
@@ -646,34 +687,23 @@ void VisualizeGBCD::execute()
         poleFigure[n] = poleFigure[neighs[n]];
       }
     }
+    if(getCancel() == true) { break; }
   }
 
-
-  // Make sure any directory path is also available as the user may have just typed
-  // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
-  if(!MXADir::mkdir(parentPath, true))
+  if (verifyPathExists(getOutputFile()) == true)
   {
     ss.str("");
-    ss << "Error creating parent path '" << parentPath << "'";
-    setErrorCondition(-998);
-    notifyErrorMessage(ss.str(), getErrorCondition());
-    return;
-  }
-
-  {
+    ss << "Writing VTK Polefigure File '" << getOutputFile() << "'";
+    notifyStatusMessage(ss.str());
     FILE* f = NULL;
     f = fopen(m_OutputFile.c_str(), "wb");
     if(NULL == f)
     {
-
       ss.str("");
       ss << "Could not open GBCD viz file " << m_OutputFile << " for writing. Please check access permissions and the path to the output location exists";
       notifyErrorMessage(ss.str(), getErrorCondition());
       return;
     }
-
-
 
     // Write the correct header
     fprintf(f, "# vtk DataFile Version 2.0\n");
@@ -718,4 +748,23 @@ void VisualizeGBCD::execute()
   }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool VisualizeGBCD::verifyPathExists(const std::string &file)
+{
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(file);
+  if(!MXADir::mkdir(parentPath, true))
+  {
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    setErrorCondition(-998);
+    notifyErrorMessage(ss.str(), getErrorCondition());
+    return false;
+  }
+  return true;
 }
