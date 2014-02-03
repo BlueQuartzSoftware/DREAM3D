@@ -46,7 +46,10 @@
 
 #include "ui_DREAM3DUpdateCheckDialog.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/UpdateCheck.h"
+
+
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -54,7 +57,7 @@ class UpdateCheck;
 class UpdateCheckData;
 
 
-class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckDialog
+class DREAM3DWidgetsLib_EXPORT DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckDialog
 {
     Q_OBJECT
 

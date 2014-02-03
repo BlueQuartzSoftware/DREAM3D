@@ -38,9 +38,11 @@
 #ifndef _ADDFAVORITEWIDGET_H_
 #define _ADDFAVORITEWIDGET_H_
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+
 #include "ui_AddFavoriteWidget.h"
 
-class AddFavoriteWidget : public QDialog, public Ui::Dialog
+class DREAM3DWidgetsLib_EXPORT AddFavoriteWidget : public QDialog, public Ui::Dialog
 {
     Q_OBJECT
 

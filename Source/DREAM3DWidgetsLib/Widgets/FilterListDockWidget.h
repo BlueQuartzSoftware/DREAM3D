@@ -38,13 +38,13 @@
 
 #include <QtGui/QWidget>
 
-
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 #include "ui_FilterListDockWidget.h"
 
 
 
-class FilterListDockWidget : public QDockWidget, private Ui::FilterListDockWidget
+class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, private Ui::FilterListDockWidget
 {
 
     Q_OBJECT

@@ -43,6 +43,7 @@
 #include "DREAM3DLib/Common/IObserver.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 #include "ui_IssuesDockWidget.h"
 
@@ -50,7 +51,7 @@ class FilterListDockWidget;
 class QLabel;
 class QTableWidgetItem;
 
-class IssuesDockWidget : public QDockWidget, public IObserver, private Ui::IssuesDockWidget
+class DREAM3DWidgetsLib_EXPORT IssuesDockWidget : public QDockWidget, public IObserver, private Ui::IssuesDockWidget
 {
 
     Q_OBJECT

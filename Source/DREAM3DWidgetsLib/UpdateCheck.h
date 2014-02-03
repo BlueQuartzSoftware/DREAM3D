@@ -40,13 +40,13 @@
 
 #include <QtCore/QUrl>
 
-
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
 class UpdateCheckData;
 
-class UpdateCheck : public QObject
+class DREAM3DWidgetsLib_EXPORT UpdateCheck : public QObject
 {
     Q_OBJECT
 

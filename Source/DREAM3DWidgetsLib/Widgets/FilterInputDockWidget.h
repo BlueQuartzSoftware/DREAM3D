@@ -41,6 +41,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 #include "ui_FilterInputDockWidget.h"
 
@@ -49,7 +50,7 @@ class PipelineFilterWidget;
 /**
  * @brief The FilterInputDockWidget class
  */
-class FilterInputDockWidget : public QWidget, private Ui::FilterInputDockWidget
+class DREAM3DWidgetsLib_EXPORT FilterInputDockWidget : public QWidget, private Ui::FilterInputDockWidget
 {
 
     Q_OBJECT

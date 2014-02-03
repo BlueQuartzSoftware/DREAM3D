@@ -43,6 +43,7 @@
 
 #include "DREAM3DLib/Common/FilterManager.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 #include "ui_FavoritesDockWidget.h"
 
@@ -51,7 +52,7 @@ class QTreeWidgetItem;
 class FilterListDockWidget;
 
 
-class FavoritesDockWidget : public QDockWidget, private Ui::FavoritesDockWidget
+class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private Ui::FavoritesDockWidget
 {
 
     enum ItemType
