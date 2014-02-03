@@ -428,14 +428,18 @@ bool closeEnough(const float& a, const float& b,
 // -----------------------------------------------------------------------------
 void OrientationMath::MattoEuler(float g[3][3], float& phi1, float& Phi, float& phi2)
 {
-  if(closeEnough(g[2][2], 1.0) || closeEnough(g[2][2], -1.0))
+  if(closeEnough(g[2][2], 1.0) )
   {
-    phi1 = atan(g[0][1] / g[0][0]) / 2.0f;
+    phi1 = atan(g[0][1]/g[0][0]) / 2.0f;
     Phi = 0.0;
     phi2 = phi1;
   }
-  else
+  else if ( closeEnough(g[2][2], -1.0) )
   {
+    phi1 = atan(g[0][1]/g[0][0]) / 2.0f;
+    Phi = 180.0;
+    phi2 = -phi1;
+  } else {
     Phi = acos(g[2][2]);
     double s = sin(Phi);
     phi1 = atan2(g[2][0] / s, -g[2][1] / s );
