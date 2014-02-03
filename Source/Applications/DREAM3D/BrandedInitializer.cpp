@@ -96,7 +96,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 
   // Create and show the splash screen as the main window is being created.
   QPixmap pixmap(":/branded_splash.png");
-  this->Splash = new QSplashScreen(pixmap, Qt::WindowStaysOnTopHint);
+  this->Splash = new QSplashScreen(pixmap);
   this->Splash->setMask(pixmap.createMaskFromColor(QColor(Qt::transparent)));
   this->Splash->show();
 
