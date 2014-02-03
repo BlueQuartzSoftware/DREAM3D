@@ -108,6 +108,12 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     EBSD_POINTER_PROP(BandContrast, BC, int)
     EBSD_POINTER_PROP(BandSlope, BS, int)
 
+    /* These will be in a 3D ctf file */
+    EBSD_POINTER_PROP(GrainIndex, GrainIndex, int)
+    EBSD_POINTER_PROP(GrainRandomColourR, GrainRandomColourR, int)
+    EBSD_POINTER_PROP(GrainRandomColourG, GrainRandomColourG, int)
+    EBSD_POINTER_PROP(GrainRandomColourB, GrainRandomColourB, int)
+
     /**
      * @brief Returns the pointer to the data for a given field
      * @param fieldName The name of the field to return the pointer to.

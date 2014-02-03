@@ -54,7 +54,7 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5CtfReader::H5CtfReader() :
-CtfReader(),
+  CtfReader(),
   m_ReadAllArrays(true)
 {
 }
@@ -128,11 +128,11 @@ int H5CtfReader::readFile()
   }
 
   // Read all the header information
- // std::cout << "H5CtfReader:: reading Header .. " << std::endl;
+  // std::cout << "H5CtfReader:: reading Header .. " << std::endl;
   err = readHeader(gid);
 
   // Read and transform data
- // std::cout << "H5CtfReader:: Reading Data .. " << std::endl;
+  // std::cout << "H5CtfReader:: Reading Data .. " << std::endl;
   err = readData(gid);
 
   err = H5Gclose(gid);
@@ -156,24 +156,24 @@ int H5CtfReader::readHeader(hid_t parId)
   }
 
   READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, YStep, Ebsd::Ctf::YStep)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Euler, Ebsd::Ctf::Euler)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, KV, Ebsd::Ctf::KV)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
-  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
+      READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
+      READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, YStep, Ebsd::Ctf::YStep)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
+      READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Euler, Ebsd::Ctf::Euler)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, KV, Ebsd::Ctf::KV)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
+      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
 
-  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
+      hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
     std::cout << "H5CtfReader Error: Could not open Header/Phases HDF Group. Is this an older file?" << std::endl;
@@ -198,15 +198,15 @@ int H5CtfReader::readHeader(hid_t parId)
 
     READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, std::vector<float>, Ebsd::Ctf::LatticeConstants, LatticeConstants, m_CurrentPhase);
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::PhaseName, PhaseName, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, Ebsd::Ctf::LaueGroupTable, int, Ebsd::Ctf::LaueGroup, LaueGroup, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, int, int, Ebsd::Ctf::SpaceGroup, SpaceGroup, m_CurrentPhase)
-    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Internal1, Internal1, m_CurrentPhase)
-    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Internal2, Internal2, m_CurrentPhase)
-    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Comment, Comment, m_CurrentPhase)
+        READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, Ebsd::Ctf::LaueGroupTable, int, Ebsd::Ctf::LaueGroup, LaueGroup, m_CurrentPhase)
+        READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, int, int, Ebsd::Ctf::SpaceGroup, SpaceGroup, m_CurrentPhase)
+        READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Internal1, Internal1, m_CurrentPhase)
+        READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Internal2, Internal2, m_CurrentPhase)
+        READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Comment, Comment, m_CurrentPhase)
 
-    // For HKL Imports, the phase index is the HDF5 Group Name for this phase so
-    // convert the phaseGroupName string variable into an integer
-    int pIndex = 0;
+        // For HKL Imports, the phase index is the HDF5 Group Name for this phase so
+        // convert the phaseGroupName string variable into an integer
+        int pIndex = 0;
     StringUtils::stringToNum(pIndex, *phaseGroupName);
     m_CurrentPhase->setPhaseIndex(pIndex);
     m_Phases.push_back(m_CurrentPhase);
@@ -221,6 +221,27 @@ int H5CtfReader::readHeader(hid_t parId)
   err = H5Gclose(gid);
   return err;
 }
+
+
+
+#define CTF_READER_ALLOCATE_AND_READ(name, type)\
+  if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ctf::name) != m_ArrayNames.end()) {\
+    type* _##name = allocateArray<type>(totalDataRows);\
+    if (NULL != _##name) {\
+      ::memset(_##name, 0, numBytes);\
+      err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::name, _##name);\
+      if (err < 0) {\
+        deallocateArrayData(_##name); /*deallocate the array*/\
+        setErrorCode(-90020);\
+        ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
+        "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
+        setErrorMessage(ss.str());\
+        err = H5Gclose(gid);\
+        return -90020;\
+      }\
+    }\
+    setPointerByName(#name, _##name);\
+  }
 
 // -----------------------------------------------------------------------------
 //
@@ -245,41 +266,24 @@ int H5CtfReader::readData(hid_t parId)
     return -1;
   }
 
-  Ebsd::NumType numType = Ebsd::UnknownNumType;
-  std::list<std::string> columnNames;
-  err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, columnNames);
-  for (std::list<std::string>::iterator iter = columnNames.begin(); iter != columnNames.end(); ++iter )
-  {
-    if (m_ReadAllArrays == true || m_ArrayNames.find(*iter) != m_ArrayNames.end())
-    {
-      numType = getPointerType(*iter);
-      if(numType == Ebsd::Int32)
-      {
-        int32_t* dataPtr = allocateArray<int32_t>(totalDataRows);
-        if(NULL == dataPtr)
-        {
-          BOOST_ASSERT(false);
-        } // We are going to crash here. I would rather crash than have bad data
-        err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
-        setPointerByName(*iter, dataPtr);
-      }
-      else if(numType == Ebsd::Float)
-      {
-        float* dataPtr = allocateArray<float>(totalDataRows);
-        if(NULL == dataPtr)
-        {
-          BOOST_ASSERT(false);
-        } // We are going to crash here. I would rather crash than have bad data
-        err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
-        setPointerByName(*iter, dataPtr);
-      }
-      else
-      {
-        BOOST_ASSERT(false);
-        // We are going to crash here because I would rather crash than have bad data
-      }
-    }
-  }
+  setNumberOfElements(totalDataRows);
+  size_t numBytes = totalDataRows * sizeof(float);
+  std::stringstream ss;
+
+  CTF_READER_ALLOCATE_AND_READ(Phase, int);
+  CTF_READER_ALLOCATE_AND_READ(Bands, int);
+  CTF_READER_ALLOCATE_AND_READ(Error, int);
+  CTF_READER_ALLOCATE_AND_READ(Euler1, float);
+  CTF_READER_ALLOCATE_AND_READ(Euler2, float);
+  CTF_READER_ALLOCATE_AND_READ(Euler3, float);
+  CTF_READER_ALLOCATE_AND_READ(MAD, float);
+  CTF_READER_ALLOCATE_AND_READ(BC, float);
+  CTF_READER_ALLOCATE_AND_READ(BS, float);
+  CTF_READER_ALLOCATE_AND_READ(GrainIndex, float);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourR, float);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourG, float);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourB, float);
+
 
   err = H5Gclose(gid);
 
