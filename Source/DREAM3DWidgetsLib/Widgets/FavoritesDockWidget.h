@@ -74,13 +74,18 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
   protected:
 
     void addFavorite(QString favoriteTitle);
-    void readFavoritePipelines(QTreeWidgetItem *m_favorites);
+    virtual QDir findPipelinesDirectory();
+    virtual void readPipelines();
     QStringList generateFilterListFromPipelineFile(QString path);
     void populateFilterList(QStringList filterNames);
     bool checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
     QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
     bool hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
     bool hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
+
+    void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem);
+    void setupContextMenus();
+
 
   protected slots:
     //// Slots to catch signals from the QTreeWidget

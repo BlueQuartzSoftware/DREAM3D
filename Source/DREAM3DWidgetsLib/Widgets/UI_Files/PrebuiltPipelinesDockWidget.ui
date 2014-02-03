@@ -41,16 +41,7 @@ padding-left: 5px;
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>0</number>
     </property>
     <item>
@@ -94,7 +85,7 @@ padding-left: 5px;
        <enum>Qt::ScrollBarAsNeeded</enum>
       </property>
       <property name="editTriggers">
-       <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+       <set>QAbstractItemView::NoEditTriggers</set>
       </property>
       <property name="alternatingRowColors">
        <bool>true</bool>

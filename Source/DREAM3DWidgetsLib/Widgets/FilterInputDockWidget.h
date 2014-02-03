@@ -64,7 +64,9 @@ class DREAM3DWidgetsLib_EXPORT FilterInputDockWidget : public QWidget, private U
 
   public slots:
     void clearInputWidgets();
-    void displayFilterParameters(PipelineFilterWidget *w);
+    void displayFilterParameters(PipelineFilterWidget* w);
+    void removeWidgetInputs(PipelineFilterWidget* w);
+
 
   signals:
 

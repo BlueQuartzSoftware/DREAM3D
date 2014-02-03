@@ -83,6 +83,21 @@ void FilterInputDockWidget::clearInputWidgets()
   QWidget* widget = scrollArea->takeWidget();
   scrollArea->setWidget(new QFrame);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputDockWidget::removeWidgetInputs(PipelineFilterWidget* w)
+{
+  // Check to see if the filter that just got removed from the pipeline is the one we are displaying
+  // the inputs for.
+  if (scrollArea->widget() == w->getScrollWidgetContents() )
+  {
+    clearInputWidgets();
+  }
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -143,5 +158,5 @@ void FilterInputDockWidget::displayFilterParameters(PipelineFilterWidget* w)
   QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
   verticalLayout->addItem(verticalSpacer);
-  #endif
+#endif
 }

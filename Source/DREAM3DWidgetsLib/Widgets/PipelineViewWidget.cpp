@@ -238,6 +238,8 @@ void PipelineViewWidget::resetLayout()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::clearWidgets()
 {
+  emit pipelineIssuesCleared();
+
   qint32 count = filterCount();
   for(qint32 i = count - 1; i >= 0; --i)
   {
@@ -250,6 +252,7 @@ void PipelineViewWidget::clearWidgets()
   }
   m_SelectedFilterWidget = NULL;
   resetLayout();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -408,6 +411,8 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
   if (NULL != m_InputParametersWidget) {
     connect(w, SIGNAL(widgetSelected(PipelineFilterWidget*)),
       m_InputParametersWidget, SLOT(displayFilterParameters(PipelineFilterWidget*)));
+    connect(w, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
+      m_InputParametersWidget, SLOT(removeWidgetInputs(PipelineFilterWidget*)));
   }
 
   connect(filter.get(), SIGNAL(parametersChanged()),
