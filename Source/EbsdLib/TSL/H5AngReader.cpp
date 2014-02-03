@@ -291,6 +291,7 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
       ::memset(_##name, 0, numBytes);\
       err = QH5Lite::readPointerDataset(gid, Ebsd::Ang::name, _##name);\
       if (err < 0) {\
+        deallocateArrayData(_##name); /*deallocate the array*/\
         setErrorCode(-90020);\
         ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
            "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\

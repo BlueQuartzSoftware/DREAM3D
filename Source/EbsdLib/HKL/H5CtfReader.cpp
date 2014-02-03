@@ -223,6 +223,26 @@ int H5CtfReader::readHeader(hid_t parId)
   return err;
 }
 
+
+#define CTF_READER_ALLOCATE_AND_READ(name, type)\
+  if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ctf::name) != m_ArrayNames.end()) {\
+    type* _##name = allocateArray<type>(totalDataRows);\
+    if (NULL != _##name) {\
+      ::memset(_##name, 0, numBytes);\
+      err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::name, _##name);\
+      if (err < 0) {\
+        deallocateArrayData(_##name); /*deallocate the array*/\
+        setErrorCode(-90020);\
+        ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
+        "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
+        setErrorMessage(ss.str());\
+        err = H5Gclose(gid);\
+        return -90020;\
+      }\
+    }\
+    setPointerByName(#name, _##name);\
+  }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -237,64 +257,33 @@ int H5CtfReader::readData(hid_t parId)
   size_t xCells = getXCells();
   size_t totalDataRows = yCells * xCells;
 
-  if(m_ArrayNames.size() == 0 && m_ReadAllArrays == false)
-  {
-    setErrorMessage("H5CtfReader Error: ReadAllArrays was FALSE and no other arrays were requested to be read.");
-    setErrorCode(-90013);
-    return -90013;
-  }
 
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toAscii().data(), H5P_DEFAULT);
+
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
-    qDebug() << "H5CtfReader Error: Could not open 'Data' Group";
+    std::cout << "H5CtfReader Error: Could not open 'Data' Group" << std::endl;
     return -1;
   }
 
-  if(m_ArrayNames.size() == 0 && m_ReadAllArrays == false)
-  {
-    err = H5Gclose(gid);
-    err = -90013;
-    setErrorMessage("H5CtfReader Error: ReadAllArrays was FALSE and no other arrays were requested to be read.");
-    setErrorCode(err);
-    return err;
-  }
+  setNumberOfElements(totalDataRows);
+  size_t numBytes = totalDataRows * sizeof(float);
+  std::stringstream ss;
 
-  Ebsd::NumType numType = Ebsd::UnknownNumType;
-  QList<QString> columnNames;
-  err = QH5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, columnNames);
-  for (QList<QString>::iterator iter = columnNames.begin(); iter != columnNames.end(); ++iter )
-  {
-    if (m_ReadAllArrays == true || m_ArrayNames.find(*iter) != m_ArrayNames.end())
-    {
-      numType = getPointerType(*iter);
-      if(numType == Ebsd::Int32)
-      {
-        int32_t* dataPtr = allocateArray<int32_t>(totalDataRows);
-        if(NULL == dataPtr)
-        {
-          BOOST_ASSERT(false);
-        } // We are going to crash here. I would rather crash than have bad data
-        err = QH5Lite::readPointerDataset(gid, *iter, dataPtr);
-        setPointerByName(*iter, dataPtr);
-      }
-      else if(numType == Ebsd::Float)
-      {
-        float* dataPtr = allocateArray<float>(totalDataRows);
-        if(NULL == dataPtr)
-        {
-          BOOST_ASSERT(false);
-        } // We are going to crash here. I would rather crash than have bad data
-        err = QH5Lite::readPointerDataset(gid, *iter, dataPtr);
-        setPointerByName(*iter, dataPtr);
-      }
-      else
-      {
-        BOOST_ASSERT(false);
-        // We are going to crash here because I would rather crash than have bad data
-      }
-    }
-  }
+  CTF_READER_ALLOCATE_AND_READ(Phase, int);
+  CTF_READER_ALLOCATE_AND_READ(Bands, int);
+  CTF_READER_ALLOCATE_AND_READ(Error, int);
+  CTF_READER_ALLOCATE_AND_READ(Euler1, float);
+  CTF_READER_ALLOCATE_AND_READ(Euler2, float);
+  CTF_READER_ALLOCATE_AND_READ(Euler3, float);
+  CTF_READER_ALLOCATE_AND_READ(MAD, float);
+  CTF_READER_ALLOCATE_AND_READ(BC, float);
+  CTF_READER_ALLOCATE_AND_READ(BS, float);
+  CTF_READER_ALLOCATE_AND_READ(GrainIndex, float);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourR, float);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourG, float);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourB, float);
+
 
   err = H5Gclose(gid);
 
