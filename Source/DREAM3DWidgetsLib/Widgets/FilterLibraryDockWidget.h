@@ -41,13 +41,14 @@
 
 #include "DREAM3DLib/Common/FilterManager.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 #include "ui_FilterLibraryDockWidget.h"
 
 class FilterListDockWidget;
 
 
-class FilterLibraryDockWidget : public QDockWidget, private Ui::FilterLibraryDockWidget
+class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, private Ui::FilterLibraryDockWidget
 {
 
     Q_OBJECT

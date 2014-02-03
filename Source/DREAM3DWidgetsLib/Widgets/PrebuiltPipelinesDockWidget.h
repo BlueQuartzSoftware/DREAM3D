@@ -43,6 +43,7 @@
 
 #include "DREAM3DLib/Common/FilterManager.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 #include "ui_PrebuiltPipelinesDockWidget.h"
 
@@ -51,7 +52,7 @@ class QTreeWidget;
 class QTreeWidgetItem;
 class FilterListDockWidget;
 
-class PrebuiltPipelinesDockWidget : public QDockWidget, private Ui::PrebuiltPipelinesDockWidget
+class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget, private Ui::PrebuiltPipelinesDockWidget
 {
 
     enum ItemType

@@ -11,10 +11,12 @@
 #include <QtCore/QPoint>
 #include <QtGui/QListWidget>
 
+
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 /*
  *
  */
-class FilterListWidget: public QListWidget
+class DREAM3DWidgetsLib_EXPORT FilterListWidget: public QListWidget
 {
     Q_OBJECT
 

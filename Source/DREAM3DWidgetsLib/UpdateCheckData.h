@@ -44,7 +44,13 @@
 #include <QtCore/QMetaType>
 #endif
 
-class UpdateCheckData : public QObject
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+
+
+/**
+*                                                                     
+*/                                                                    
+class DREAM3DWidgetsLib_EXPORT UpdateCheckData : public QObject
 {
     Q_OBJECT
 

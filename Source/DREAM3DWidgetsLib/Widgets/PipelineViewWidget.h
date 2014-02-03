@@ -50,6 +50,7 @@
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
 
@@ -58,7 +59,7 @@ class QScrollArea;
 /*
  *
  */
-class PipelineViewWidget : public QFrame
+class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
 {
     Q_OBJECT
 
