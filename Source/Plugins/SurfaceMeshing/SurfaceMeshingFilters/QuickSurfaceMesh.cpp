@@ -136,28 +136,27 @@ void QuickSurfaceMesh::dataCheck()
   }
 
   //// Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
-  SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
   if(getErrorCondition() < 0) { return; }
-//  QVector<size_t> tDims(1, 0);
-//  AttributeMatrix* vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
-//  if(getErrorCondition() < 0) { return; }
-//  AttributeMatrix* faceAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
-//  if(getErrorCondition() < 0) { return; }
+  QVector<size_t> tDims(1, 1);
+  AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix::Pointer faceAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
+  if(getErrorCondition() < 0) { return; }
 
   VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
   FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
-  dims[0] = 2;
-  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodeType);
-
   sm->setVertices(vertices);
   sm->setFaces(triangles);
-  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->getName(), faceLabelPtr);
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->getName(), nodeTypePtr);
+  dims[0] = 2;
+  faceAttrMat->createAndAddAttributeArray<Int32ArrayType, int32_t>(DREAM3D::FaceData::SurfaceMeshFaceLabels, 0, dims);
+  dims[0] = 1;
+  vertexAttrMat->createAndAddAttributeArray<Int8ArrayType, int8_t>(DREAM3D::VertexData::SurfaceMeshNodeType, 0, dims);
+
   if(m_TransferPhaseId == true)
   {
-    DataArray<int32_t>::Pointer phaseLabelPtr = DataArray<int32_t>::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshPhaseLabels);
-    sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(phaseLabelPtr->getName(), phaseLabelPtr);
+    dims[0] = 1;
+    faceAttrMat->createAndAddAttributeArray<Int32ArrayType, int32_t>(DREAM3D::FaceData::SurfaceMeshPhaseLabels, 0, dims);
   }
 }
 
