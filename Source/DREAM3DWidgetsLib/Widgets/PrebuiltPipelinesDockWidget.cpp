@@ -130,16 +130,16 @@ QDir PrebuiltPipelinesDockWidget::findPipelinesDirectory()
   }
 #else
   // We are on Linux - I think
-  prebuiltDir.cdUp();
+  pipelinesDir.cdUp();
 #endif
 
 #if defined(Q_OS_WIN)
-  QFileInfo fi( prebuiltDir.absolutePath() + QDir::separator() + dirName);
+  QFileInfo fi(pipelinesDir.absolutePath() + QDir::separator() + dirName);
   if (fi.exists() == false)
   {
     // The help file does not exist at the default location because we are probably running from visual studio.
     // Try up one more directory
-    prebuiltDir.cdUp();
+    pipelinesDir.cdUp();
   }
 #endif
   pipelinesDir = pipelinesDir.absolutePath() + QDir::separator() + dirName;
