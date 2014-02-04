@@ -160,7 +160,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     /**
      * @brief Recursively adds all filters (.txt files) to the Prebuilt list
      */
-    void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem);
+    void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName, bool allowEditing, QString fileExtension, PipelineTreeWidget::ItemType itemType);
 
     /**
      * @brief Getter for the m_FavoritesActionList private variable
