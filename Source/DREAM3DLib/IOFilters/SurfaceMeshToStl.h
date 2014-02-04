@@ -138,7 +138,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshPhaseLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFacePhases)
 
     int writeHeader(FILE* f, const QString& header, int triCount);
     int writeNumTrianglesToFile(const QString& filename, int triCount);

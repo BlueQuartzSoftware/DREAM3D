@@ -271,7 +271,7 @@ namespace DREAM3D
     const DREAM3D_STRING SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
     const DREAM3D_STRING SurfaceMeshFaceMisorientationColors("SurfaceMeshFaceMisorientationColors");
     const DREAM3D_STRING SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
-    const DREAM3D_STRING SurfaceMeshPhaseLabels("SurfaceMeshPhaseLabels");
+    const DREAM3D_STRING SurfaceMeshFacePhases("SurfaceMeshFacePhases");
     const DREAM3D_STRING SurfaceMeshF1s("SurfaceMeshF1s");
     const DREAM3D_STRING SurfaceMeshF1spts("SurfaceMeshF1spts");
     const DREAM3D_STRING SurfaceMeshF7s("SurfaceMeshF7s");

@@ -87,8 +87,13 @@ class QuickSurfaceMesh : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FaceLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, NodeTypes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FacePhases)
 
     void dataCheck();
+    void updateFaceInstancePointers();
+    void updateVertexInstancePointers();
 
     QuickSurfaceMesh(const QuickSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const QuickSurfaceMesh&); // Operator '=' Not Implemented

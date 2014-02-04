@@ -56,8 +56,8 @@ SurfaceMeshToStl::SurfaceMeshToStl() :
   m_OutputStlPrefix(""),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshPhaseLabelsArrayName(DREAM3D::FaceData::SurfaceMeshPhaseLabels),
-  m_SurfaceMeshPhaseLabels(NULL)
+  m_SurfaceMeshFacePhasesArrayName(DREAM3D::FaceData::SurfaceMeshFacePhases),
+  m_SurfaceMeshFacePhases(NULL)
 {
   setupFilterParameters();
 }
@@ -160,9 +160,9 @@ void SurfaceMeshToStl::dataCheck()
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if (m_GroupByPhase == true) {
-      m_SurfaceMeshPhaseLabelsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshPhaseLabelsArrayName, -387, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_SurfaceMeshPhaseLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_SurfaceMeshPhaseLabels = m_SurfaceMeshPhaseLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+      m_SurfaceMeshFacePhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFacePhasesArrayName, -387, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if( NULL != m_SurfaceMeshFacePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      { m_SurfaceMeshFacePhases = m_SurfaceMeshFacePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -209,8 +209,8 @@ void SurfaceMeshToStl::execute()
   if (m_GroupByPhase == true) {
     for (int i = 0; i < nTriangles; i++)
     {
-      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2], m_SurfaceMeshPhaseLabels[i*2]);
-      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2+1], m_SurfaceMeshPhaseLabels[i*2]);
+      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2], m_SurfaceMeshFacePhases[i*2]);
+      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2+1], m_SurfaceMeshFacePhases[i*2+1]);
     }
   }
   else
