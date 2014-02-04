@@ -106,52 +106,68 @@ void PrebuiltPipelinesDockWidget::setupGui()
   prebuiltTreeWidgetItem->setExpanded(true);
 #endif
 
-  readPrebuiltPipelines(filterLibraryTree->invisibleRootItem());
 
+  readPipelines();
+
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QDir PrebuiltPipelinesDockWidget::findPipelinesDirectory()
+{
+  QString dirName("PrebuiltPipelines");
+
+  QString appPath = qApp->applicationDirPath();
+  QDir pipelinesDir = QDir(appPath);
+#if defined(Q_OS_WIN)
+
+#elif defined(Q_OS_MAC)
+  if (pipelinesDir.dirName() == "MacOS")
+  {
+    pipelinesDir.cdUp();
+    pipelinesDir.cdUp();
+    pipelinesDir.cdUp();
+  }
+#else
+  // We are on Linux - I think
+  pipelinesDir.cdUp();
+#endif
+
+#if defined(Q_OS_WIN)
+  QFileInfo fi(pipelinesDir.absolutePath() + QDir::separator() + dirName);
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    pipelinesDir.cdUp();
+  }
+#endif
+  pipelinesDir = pipelinesDir.absolutePath() + QDir::separator() + dirName;
+  return pipelinesDir;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::readPrebuiltPipelines(QTreeWidgetItem* prebuiltTreeWidgetItem)
+void PrebuiltPipelinesDockWidget::readPipelines()
 {
-  QString appPath = qApp->applicationDirPath();
-  QDir prebuiltDir = QDir(appPath);
-#if defined(Q_OS_WIN)
-
-#elif defined(Q_OS_MAC)
-  if (prebuiltDir.dirName() == "MacOS")
-  {
-    prebuiltDir.cdUp();
-    prebuiltDir.cdUp();
-    prebuiltDir.cdUp();
-  }
-#else
-  // We are on Linux - I think
-  prebuiltDir.cdUp();
-#endif
-
-#if defined(Q_OS_WIN)
-  QFileInfo fi( prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines");
-  if (fi.exists() == false)
-  {
-    // The help file does not exist at the default location because we are probably running from visual studio.
-    // Try up one more directory
-    prebuiltDir.cdUp();
-  }
-#endif
-  prebuiltDir = prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines";
-
-  // So Now we have the top level Directory for the Prebuilts
-  addFiltersRecursively(prebuiltDir, prebuiltTreeWidgetItem);
+  QDir pipelinesDir = findPipelinesDirectory();
+    // Now block signals and load up all the pipelines in the folder
+  filterLibraryTree->blockSignals(true);
+  addFiltersRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem());
+  filterLibraryTree->blockSignals(false);
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem)
 {
+  ItemType itemType = Prebuilt_Item_Type;
+  QString iconFileName(":/bullet_ball_blue.png");
+  bool allowEditing = false;
+  QString fileExtension("*.txt");
+
   QTreeWidgetItem* nextDirItem;
 
   // Get a list of all the directories
@@ -172,25 +188,27 @@ void PrebuiltPipelinesDockWidget::addFiltersRecursively(QDir currentDir, QTreeWi
   }
 
   QStringList filters;
-  filters << "*.txt";
-  QFileInfoList pblist = currentDir.entryInfoList(filters);
-  foreach(QFileInfo pbinfo, pblist)
+  filters << fileExtension;
+  QFileInfoList itemList = currentDir.entryInfoList(filters);
+  foreach(QFileInfo itemInfo, itemList)
   {
-    QString pbFilePath = pbinfo.absoluteFilePath();
-    QSettings pbPref(pbFilePath, QSettings::IniFormat);
-    pbPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-    QString pbName = pbPref.value("Name").toString();
-    pbPref.endGroup();
+    QString itemFilePath = itemInfo.absoluteFilePath();
+    QSettings itemPref(itemFilePath, QSettings::IniFormat);
+    itemPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+    QString itemName = itemPref.value("Name").toString();
+    itemPref.endGroup();
     //qDebug() << pbinfo.absoluteFilePath() << "\n";
     // Add tree widget for this Prebuilt Pipeline
-    QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(currentDirItem, Prebuilt_Item_Type);
-    prebuiltItem->setText(0, pbName);
-    prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
-    prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
+    QTreeWidgetItem* itemWidget = new QTreeWidgetItem(currentDirItem, itemType);
+    itemWidget->setText(0, itemName);
+    itemWidget->setIcon(0, QIcon(iconFileName));
+    itemWidget->setData(0, Qt::UserRole, QVariant(itemInfo.absoluteFilePath()));
+    if(allowEditing == true)
+    {
+      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
+    }
   }
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -245,21 +263,6 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeW
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
-  QTreeWidgetItem* parent = item->parent();
-
-  while(NULL != parent)
-  {
-    if (NULL == parent->parent() )
-    {
-      break;
-    }
-    parent = parent->parent();
-  }
-  if (parent == NULL)
-  {
-    return;
-  }
-
   QString pipelinePath = item->data(0, Qt::UserRole).toString();
   if (pipelinePath.isEmpty() == false)
   {

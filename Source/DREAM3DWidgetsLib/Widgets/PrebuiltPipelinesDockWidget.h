@@ -72,8 +72,8 @@ public:
     void connectFilterList(FilterListDockWidget *filterListWidget);
 
 protected:
-
-    virtual void readPrebuiltPipelines(QTreeWidgetItem *prebuiltTreeWidgetItem);
+    virtual QDir findPipelinesDirectory();
+    virtual void readPipelines();
     virtual void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem);
     virtual QStringList generateFilterListFromPipelineFile(QString path);
 

@@ -158,12 +158,12 @@ namespace Detail
 
 #define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, AttributeMatrixName, OutputName)\
   if(false == completed) {\
-    Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
-    if (NULL != Type##Ptr) {\
-      QVector<size_t> dims = Array->getComponentDimensions();\
-      Detail::ConvertData<Type>(Type##Ptr, dims, DataContainer, ScalarType, AttributeMatrixName, OutputName);\
-      completed = true;\
-    }\
+  Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
+  if (NULL != Type##Ptr) {\
+  QVector<size_t> dims = Array->getComponentDimensions();\
+  Detail::ConvertData<Type>(Type##Ptr, dims, DataContainer, ScalarType, AttributeMatrixName, OutputName);\
+  completed = true;\
+  }\
   }
 
 // -----------------------------------------------------------------------------
@@ -294,16 +294,19 @@ void ConvertData::dataCheck(bool preflight)
   }
 
   int numberOfComponents = 0;
-  IDataArray::Pointer iArray = cellAttrMat->getAttributeArray(m_SelectedCellArrayName);
-  if (NULL != iArray)
-  {
-    numberOfComponents = iArray->getNumberOfComponents();
-    
-  }
-
   if (true == preflight)
   {
-    IDataArray::Pointer p = IDataArray::NullPointer();
+    //  IDataArray::Pointer  = IDataArray::NullPointer();
+    IDataArray::Pointer p = cellAttrMat->getAttributeArray(m_SelectedCellArrayName);
+    if (NULL == p.get())
+    {
+      ss = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_SelectedCellArrayName).arg(m_CellAttributeMatrixName);
+      setErrorCondition(-398);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    numberOfComponents = p->getNumberOfComponents();
     QVector<size_t> dims = p->getComponentDimensions();
     int64_t voxels = cellAttrMat->getNumTuples();
     if (m_ScalarType == Detail::Int8)
@@ -376,17 +379,17 @@ void ConvertData::execute()
   bool completed = false;
 
   CHECK_AND_CONVERT(UInt8ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-  CHECK_AND_CONVERT(Int8ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-  CHECK_AND_CONVERT(UInt16ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-  CHECK_AND_CONVERT(Int16ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-  CHECK_AND_CONVERT(UInt32ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-  CHECK_AND_CONVERT(Int32ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-  CHECK_AND_CONVERT(UInt64ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-  CHECK_AND_CONVERT(Int64ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+      CHECK_AND_CONVERT(Int8ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+      CHECK_AND_CONVERT(UInt16ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+      CHECK_AND_CONVERT(Int16ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+      CHECK_AND_CONVERT(UInt32ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+      CHECK_AND_CONVERT(Int32ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+      CHECK_AND_CONVERT(UInt64ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+      CHECK_AND_CONVERT(Int64ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
 
-  CHECK_AND_CONVERT(FloatArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-  CHECK_AND_CONVERT(DoubleArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+      CHECK_AND_CONVERT(FloatArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+      CHECK_AND_CONVERT(DoubleArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+      /* Let the GUI know we are done with this filter */
+      notifyStatusMessage(getHumanLabel(), "Complete");
 }
