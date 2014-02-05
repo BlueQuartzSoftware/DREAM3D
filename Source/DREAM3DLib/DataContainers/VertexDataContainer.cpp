@@ -190,6 +190,18 @@ void VertexDataContainer::writeXdmfMeshStructureFooter(QTextStream& xdmf)
 int VertexDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
 {
   int err = 0;
+
+  readVertices(dcGid, preflight);
+
+  return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainer::readVertices(hid_t dcGid, bool preflight)
+{
+  int err = 0;
   QVector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size;

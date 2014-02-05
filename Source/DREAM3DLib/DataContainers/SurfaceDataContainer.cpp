@@ -275,6 +275,20 @@ void SurfaceDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QStrin
 int SurfaceDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
 {
   int err = 0;
+
+  readVertices(dcGid, preflight);
+  readEdges(dcGid, preflight);
+  readFaces(dcGid, preflight);
+
+  return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SurfaceDataContainer::readFaces(hid_t dcGid, bool preflight)
+{
+  int err = 0;
   QVector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size;

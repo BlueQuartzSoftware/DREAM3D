@@ -56,7 +56,8 @@ GenerateUniqueEdges::GenerateUniqueEdges() :
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
-  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges)
+  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
+  m_SurfaceMeshUniqueEdges(NULL)
 {
   setupFilterParameters();
 }
@@ -105,6 +106,17 @@ int GenerateUniqueEdges::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GenerateUniqueEdges::updateEdgeInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_SurfaceMeshUniqueEdgesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshUniqueEdges = m_SurfaceMeshUniqueEdgesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateUniqueEdges::dataCheck()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
@@ -124,11 +136,15 @@ void GenerateUniqueEdges::dataCheck()
     notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer edgeAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEdgeAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Edge);
+
   // We do not know the size of the array so we can not use the macro so we just manually call
   // the needed methods that will propagate these array additions to the pipeline
   QVector<size_t> dims(1, 2);
-  DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, dims, m_SurfaceMeshUniqueEdgesArrayName);
-  sm->getAttributeMatrix(getEdgeAttributeMatrixName())->addAttributeArray(m_SurfaceMeshUniqueEdgesArrayName, uniqueEdgesArray);
+  m_SurfaceMeshUniqueEdgesPtr = edgeAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshUniqueEdgesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshUniqueEdgesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshUniqueEdges = m_SurfaceMeshUniqueEdgesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 
@@ -150,8 +166,6 @@ void GenerateUniqueEdges::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-
   /* Place all your code to execute your filter here. */
   generateUniqueEdgeIds();
 
@@ -165,6 +179,7 @@ void GenerateUniqueEdges::execute()
 void GenerateUniqueEdges::generateUniqueEdgeIds()
 {
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  AttributeMatrix::Pointer edgeAttrMat = sm->getAttributeMatrix(getEdgeAttributeMatrixName());
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalPoints = trianglesPtr->getNumberOfTuples();
@@ -204,19 +219,20 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   }
 
   notifyStatusMessage(getHumanLabel(), "Stage 1 of 2");
-// qDebug() << "uedges_id_set size: " << uedges_id_set.size() << "\n";
-  QVector<size_t> dims(1, 2);
-  DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), dims, m_SurfaceMeshUniqueEdgesArrayName);
-  int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->getPointer(0);
+
+  QVector<size_t> tDims(1, uedges_id_set.size());
+  edgeAttrMat->resizeAttributeArrays(tDims);
+
+  updateEdgeInstancePointers();
+
   int index = 0;
   for(EdgeSet_t::iterator iter = uedges_id_set.begin(); iter != uedges_id_set.end(); ++iter)
   {
     *u64Edge = *iter;
-    surfaceMeshUniqueEdges[index * 2] = edge.v0;
-    surfaceMeshUniqueEdges[index * 2 + 1] = edge.v1;
+    m_SurfaceMeshUniqueEdges[index * 2] = edge.v0;
+    m_SurfaceMeshUniqueEdges[index * 2 + 1] = edge.v1;
     ++index;
   }
-  sm->getAttributeMatrix(getEdgeAttributeMatrixName())->addAttributeArray(uniqueEdgesArrayPtr->getName(), uniqueEdgesArrayPtr);
 }
 
 

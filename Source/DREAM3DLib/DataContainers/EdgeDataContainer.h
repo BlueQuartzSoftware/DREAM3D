@@ -103,6 +103,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
     virtual int writeMeshToHDF5(hid_t dcGid);
     virtual int writeEdgesToHDF5(hid_t dcGid);
     virtual int writeXdmf(QTextStream &out, QString hdfFileName);
+    virtual int readEdges(hid_t dcGid, bool preflight);
     virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 
   protected:

@@ -332,6 +332,21 @@ void VolumeDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString
 int VolumeDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
 {
   int err = 0;
+
+  readVertices(dcGid, preflight);
+  readEdges(dcGid, preflight);
+  readFaces(dcGid, preflight);
+  readCells(dcGid, preflight);
+
+  return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VolumeDataContainer::readCells(hid_t dcGid, bool preflight)
+{
+  int err = 0;
   QVector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size;

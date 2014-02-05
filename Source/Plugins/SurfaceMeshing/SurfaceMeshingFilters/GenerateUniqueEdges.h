@@ -71,7 +71,6 @@ class GenerateUniqueEdges : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
 
 
     /**
@@ -128,9 +127,10 @@ class GenerateUniqueEdges : public SurfaceMeshFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck();
+    void updateEdgeInstancePointers();
 
   private:
-    int32_t* m_SurfaceMeshUniqueEdges;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshUniqueEdges)
 
     /**
      * @brief generateConnectivity This is the method that actually implements the algorithm.
