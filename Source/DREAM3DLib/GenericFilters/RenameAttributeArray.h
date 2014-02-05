@@ -63,12 +63,15 @@ class DREAM3DLib_EXPORT RenameAttributeArray : public AbstractFilter
 
     virtual ~RenameAttributeArray();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName NOTIFY parametersChanged)
-    DREAM3D_FILTER_PARAMETER(QString, AttributeMatrixName)
-    Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName NOTIFY parametersChanged)
-    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayName)
-    Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_PROPERTY(QString, DataContainerName)
+ //   Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName NOTIFY parametersChanged)
+    DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixName)
+ //   Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName NOTIFY parametersChanged)
+
+
+    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayPath)
+    Q_PROPERTY(QString SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath NOTIFY parametersChanged)
+
     DREAM3D_FILTER_PARAMETER(QString, NewArrayName)
     Q_PROPERTY(QString NewArrayName READ getNewArrayName WRITE setNewArrayName NOTIFY parametersChanged)
 

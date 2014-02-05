@@ -234,7 +234,7 @@ void GroupMicroTextureRegions::dataCheck()
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_CrystalStructuresArrayName, -305, dims)
-                           ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -298,7 +298,7 @@ void GroupMicroTextureRegions::execute()
     typedef boost::uniform_int<int> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;
     typedef boost::variate_generator < RandomNumberGenerator&,
-            NumberDistribution > Generator;
+        NumberDistribution > Generator;
 
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
@@ -366,7 +366,7 @@ int GroupMicroTextureRegions::getSeed(int newFid)
   float g1t[3][3];
 
   DREAM3D_RANDOMNG_NEW()
-  int seed = -1;
+      int seed = -1;
   int randfeature = 0;
 
   // Precalculate some constants
@@ -388,22 +388,22 @@ int GroupMicroTextureRegions::getSeed(int newFid)
     m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
 
-	if (m_UseRunningAverage == true)
-	{
-	  QuaternionMathF::Copy(avgQuats[seed], q1);
-	  phase1 = m_CrystalStructures[m_FeaturePhases[seed]];
-	  OrientationMath::QuattoMat(q1, g1);
-	  //transpose the g matrix so when caxis is multiplied by it
-	  //it will give the sample direction that the caxis is along
-	  MatrixMath::Transpose3x3(g1, g1t);
-	  MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
-	  //normalize so that the dot product can be taken below without
-	  //dividing by the magnitudes (they would be 1)
-	  MatrixMath::Normalize3x1(c1);
+    if (m_UseRunningAverage == true)
+    {
+      QuaternionMathF::Copy(avgQuats[seed], q1);
+      phase1 = m_CrystalStructures[m_FeaturePhases[seed]];
+      OrientationMath::QuattoMat(q1, g1);
+      //transpose the g matrix so when caxis is multiplied by it
+      //it will give the sample direction that the caxis is along
+      MatrixMath::Transpose3x3(g1, g1t);
+      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+      //normalize so that the dot product can be taken below without
+      //dividing by the magnitudes (they would be 1)
+      MatrixMath::Normalize3x1(c1);
 
-	  MatrixMath::Copy3x1(c1,avgCaxes);
-	  MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[seed]);
-	}
+      MatrixMath::Copy3x1(c1,avgCaxes);
+      MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[seed]);
+    }
   }
   return seed;
 }
@@ -413,9 +413,9 @@ int GroupMicroTextureRegions::getSeed(int newFid)
 // -----------------------------------------------------------------------------
 bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neighborFeature, int newFid)
 {
-  float angcur = 180.0f;
-  unsigned int phase1, phase2;
-  float w;
+  //float angcur = 180.0f;
+  unsigned int phase1 = 0, phase2 = 0;
+  float w = 0.0f;
   float g1[3][3];
   float g2[3][3];
   float g1t[3][3];
@@ -423,25 +423,26 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
   float c1[3];
   float c2[3];
   float caxis[3] = {0, 0, 1};
-  QuatF q1;
-  QuatF q2;
+  QuatF q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+  QuatF q2 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   if (m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
-	if (m_UseRunningAverage == false)
-	{
-	  QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
-	  phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
-	  OrientationMath::QuattoMat(q1, g1);
-	  //transpose the g matrix so when caxis is multiplied by it
-	  //it will give the sample direction that the caxis is along
-	  MatrixMath::Transpose3x3(g1, g1t);
-	  MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
-	  //normalize so that the dot product can be taken below without
-	  //dividing by the magnitudes (they would be 1)
-	  MatrixMath::Normalize3x1(c1);
-	}
+    if (m_UseRunningAverage == false)
+    {
+      QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
+      phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
+      OrientationMath::QuattoMat(q1, g1);
+      //transpose the g matrix so when caxis is multiplied by it
+      //it will give the sample direction that the caxis is along
+      MatrixMath::Transpose3x3(g1, g1t);
+      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+      //normalize so that the dot product can be taken below without
+      //dividing by the magnitudes (they would be 1)
+      MatrixMath::Normalize3x1(c1);
+    }
     phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
     if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
     {
@@ -455,18 +456,18 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
       //dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c2);
 
-	  if (m_UseRunningAverage == true) w = GeometryMath::CosThetaBetweenVectors(avgCaxes, c2);
-	  else w = GeometryMath::CosThetaBetweenVectors(c1, c2);
+      if (m_UseRunningAverage == true) w = GeometryMath::CosThetaBetweenVectors(avgCaxes, c2);
+      else w = GeometryMath::CosThetaBetweenVectors(c1, c2);
       DREAM3DMath::boundF(w, -1, 1);
       w = acosf(w);
       if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - w) <= m_CAxisTolerance)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
-		if (m_UseRunningAverage == true)
-		{
-		  MatrixMath::Multiply3x1withConstant(c2, m_Volumes[neighborFeature]);
-		  MatrixMath::Add3x1s(avgCaxes, c2, avgCaxes);
-		}
+        if (m_UseRunningAverage == true)
+        {
+          MatrixMath::Multiply3x1withConstant(c2, m_Volumes[neighborFeature]);
+          MatrixMath::Add3x1s(avgCaxes, c2, avgCaxes);
+        }
         return true;
       }
     }

@@ -33,40 +33,68 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "EdgeEdgeArrayNameSelectionWidget.h"
-
-#include <QtCore/QMetaProperty>
-
-
-#include "FilterWidgetsLib/Widgets/moc_EdgeEdgeArrayNameSelectionWidget.cxx"
+#ifndef _SingleArraySelectionWidget_H_
+#define _SingleArraySelectionWidget_H_
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-EdgeEdgeArrayNameSelectionWidget::EdgeEdgeArrayNameSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
+
+
+#include <QtCore/QObject>
+#include <QtGui/QWidget>
+
+
+#include "DREAM3DLib/Common/AbstractFilter.h"
+
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+
+#include "DREAM3DWidgetsLib/ui_SingleArraySelectionWidget.h"
+
+
+/**
+* @brief
+* @author
+* @version
+*/
+class DREAM3DWidgetsLib_EXPORT SingleArraySelectionWidget : public QWidget, private Ui::SingleArraySelectionWidget
 {
-  setupUi(this);
-  setupGui();
-}
+    Q_OBJECT
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-EdgeEdgeArrayNameSelectionWidget::~EdgeEdgeArrayNameSelectionWidget()
-{}
+  public:
+    /**
+    * @brief Constructor
+    * @param parameter The FilterParameter object that this widget represents
+    * @param filter The instance of the filter that this parameter is a part of
+    * @param parent The parent QWidget for this Widget
+    */
+    SingleArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeEdgeArrayNameSelectionWidget::setupGui()
-{
-  if (m_FilterParameter != NULL)
-  {
-    EdgeEdgeArrayNameSelectionWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
-  }
-}
+    virtual ~SingleArraySelectionWidget();
+
+    /**
+    * @brief This method does additional GUI widget connections
+    */
+    void setupGui();
+  protected:
+    void initializeHeirarchy();
+
+
+  public slots:
+    void beforePreflight();
+    void afterPreflight();
+
+    void on_dataContainerList_currentIndexChanged(int index);
+    void on_attributeMatrixList_currentIndexChanged(int index);
+    void on_attributeArrayList_currentIndexChanged(int index);
+
+  private:
+    AbstractFilter*   m_Filter;
+    FilterParameter*  m_FilterParameter;
+
+    SingleArraySelectionWidget(const SingleArraySelectionWidget&); // Copy Constructor Not Implemented
+    void operator=(const SingleArraySelectionWidget&); // Operator '=' Not Implemented
+
+};
+
+#endif /* _SingleArraySelectionWidget_H_ */
+
 

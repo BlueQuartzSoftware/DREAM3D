@@ -352,7 +352,7 @@ void GenerateFaceIPFColoring::execute()
 
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   notifyStatusMessage(getHumanLabel(), "Starting");
 
   // Run the data check to allocate the memory for the centroid array

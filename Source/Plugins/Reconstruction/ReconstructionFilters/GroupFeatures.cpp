@@ -154,7 +154,7 @@ void GroupFeatures::execute()
 
   QVector<int> grouplist;
 
-  int numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  //int numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int parentcount = 0;
   int seed = 0;
   int list1size=0, list2size=0, listsize=0;
@@ -178,7 +178,7 @@ void GroupFeatures::execute()
           else if (k == 1) { listsize = list2size; }
           for (int l = 0; l < listsize; l++)
           {
-            int twin = 0;
+            //int twin = 0;
             if (k == 0) { neigh = neighborlist[firstfeature][l]; }
             else if (k == 1) { neigh = neighborlist2[firstfeature][l]; }
             if (neigh != firstfeature)

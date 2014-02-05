@@ -200,7 +200,7 @@ void GBCDTriangleDumper::execute()
   dataCheckVoxel();
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   setErrorCondition(0);
   notifyStatusMessage(getHumanLabel(), "Starting");

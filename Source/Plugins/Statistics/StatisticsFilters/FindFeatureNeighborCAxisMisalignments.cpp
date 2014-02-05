@@ -233,7 +233,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
 
   unsigned int phase1, phase2;
 
-  float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
+  //float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
 
   size_t nname;
   // float nsa;

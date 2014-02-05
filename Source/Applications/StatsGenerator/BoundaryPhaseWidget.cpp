@@ -101,10 +101,10 @@ if (err < 0) {\
 BoundaryPhaseWidget::BoundaryPhaseWidget(QWidget *parent) :
 SGWidget(parent),
 m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
+m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
+m_PhaseIndex(0),
 m_PhaseFraction(1.0),
 m_TotalPhaseFraction(1.0),
-m_PhaseIndex(0),
-m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
 m_grid(NULL)
 {
   setupUi(this);
@@ -127,39 +127,6 @@ void BoundaryPhaseWidget::setupGui()
 {
 
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BoundaryPhaseWidget::setPhaseIndex(int index)
-{
-  m_PhaseIndex = index;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int BoundaryPhaseWidget::getPhaseIndex()
-{
-  return m_PhaseIndex;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BoundaryPhaseWidget::setCrystalStructure(unsigned int xtal)
-{
-  m_CrystalStructure = xtal;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-unsigned int BoundaryPhaseWidget::getCrystalStructure()
-{
-  return m_CrystalStructure;
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -194,7 +161,7 @@ int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   int retErr = 0;
   float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
 
-  size_t ensembles = attrMat->getNumTuples();
+  //size_t ensembles = attrMat->getNumTuples();
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);

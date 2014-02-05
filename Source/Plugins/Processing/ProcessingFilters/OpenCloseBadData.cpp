@@ -216,10 +216,10 @@ void OpenCloseBadData::execute()
 
   int good = 1;
   size_t count = 0;
-  size_t point = 0;
+  //size_t point = 0;
   int kstride, jstride;
   int featurename, feature;
-  int coordination = 0;
+  //int coordination = 0;
   int current = 0;
   int most = 0;
   int neighpoint;

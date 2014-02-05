@@ -295,7 +295,7 @@ void PrecipitatePhaseWidget::setPhaseIndex(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrecipitatePhaseWidget::getPhaseIndex()
+int PrecipitatePhaseWidget::getPhaseIndex() const
 {
   return m_PhaseIndex;
 }
@@ -319,7 +319,7 @@ void PrecipitatePhaseWidget::setCrystalStructure(unsigned int xtal)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int PrecipitatePhaseWidget::getCrystalStructure()
+unsigned int PrecipitatePhaseWidget::getCrystalStructure() const
 {
   return m_CrystalStructure;
 }
@@ -499,7 +499,7 @@ void PrecipitatePhaseWidget::calculateNumberOfBins()
     return;
   }
 
-  
+
   int n = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
   m_NumberBinsGenerated->setText(QString::number(n));
 }
@@ -510,7 +510,7 @@ void PrecipitatePhaseWidget::calculateNumberOfBins()
 int PrecipitatePhaseWidget::calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize)
 {
   float max, min; // Only needed for the method. Not used otherwise.
-  
+
   return StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
 }
 
@@ -530,7 +530,7 @@ int PrecipitatePhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   int err = 0;
   int size = 250;
 
-  
+
   err = StatsGen::GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
   if (err == 1)
   {
@@ -755,7 +755,6 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  size_t ensembles = attrMat->getNumTuples();
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);

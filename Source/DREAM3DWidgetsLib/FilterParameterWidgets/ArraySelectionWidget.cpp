@@ -69,7 +69,7 @@ ArraySelectionWidget::~ArraySelectionWidget()
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::setupGui()
 {
-
+  qRegisterMetaType<DataContainerArrayProxy>("DataContainerArrayProxy");
   // The filter should emit this signal when a filter changes.
   //  connect(m_Filter, SIGNAL(parametersChanged()),
   //          this, SLOT(initializeHeirarchy() ) );
@@ -124,6 +124,33 @@ void ArraySelectionWidget::on_dataContainerList_currentItemChanged(QListWidgetIt
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_dataContainerList_itemClicked(QListWidgetItem* dcWidgetItem)
+{
+  if(true) return;
+  if(NULL == dcWidgetItem)
+  {
+    return;
+  }
+
+  // Nothing is selected
+  if(dataContainerList->currentRow() == -1)
+  {
+    dcWidgetItem->setCheckState(Qt::Checked);
+  }
+
+  if(dcWidgetItem->checkState() == Qt::Unchecked )
+  {
+    attributeMatrixList->clear();
+    dataContainerList->setCurrentRow(-1);
+  }
+  if(dcWidgetItem->checkState() == Qt::Checked )
+  {
+    on_dataContainerList_currentItemChanged(dcWidgetItem, NULL);
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -187,13 +214,32 @@ void ArraySelectionWidget::on_attributeArrayList_currentItemChanged(QListWidgetI
   {
     return;
   }
-  //std::cout << "on_attributeArrayList_currentItemChanged" << std::endl;
+  qDebug() << m_Filter->getNameOfClass() << "::" << m_FilterParameter->getHumanLabel() << "::" << "on_attributeArrayList_currentItemChanged" ;
 
   // Set this value into the m_FilterInstance as the specified Filter Property, Which will cause a preflight to occur
   // because the parameters have changed. which will reset the lists, which causes a preflight..
   this->blockSignals(true);
   m_Filter->blockSignals(true); // Make sure the filter does not fire off the parametersChanged() signal too soon
+
+  // Generate the DataContainerArrayProxy object to pass over to the filter, letting the filter know what the
+  // user has selected
+  DataContainerArrayProxy dcaProxy = generateDCAProxy();
+
+
+  QVariant var;
+  var.setValue(m_DcaProxy);
   bool ok = false;
+
+  ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
+  if(false == ok)
+  {
+    QString ss = QObject::tr("Error occurred setting Filter Parameter '%1'").arg(m_FilterParameter->getPropertyName() );
+    emit errorSettingFilterParameter(ss);
+    qDebug() << ss;
+  }
+
+
+#if 0
   // Set the DataContainerName
   QVariant dcName = dataContainerList->currentItem()->data(Qt::UserRole);
   ok = m_Filter->setProperty("DataContainerName", dcName);
@@ -221,8 +267,10 @@ void ArraySelectionWidget::on_attributeArrayList_currentItemChanged(QListWidgetI
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
-
+#endif
   this->blockSignals(false);
+  m_Filter->blockSignals(false); // Make sure the filter does not fire off the parametersChanged() signal too soon
+
 }
 
 // -----------------------------------------------------------------------------
@@ -230,7 +278,7 @@ void ArraySelectionWidget::on_attributeArrayList_currentItemChanged(QListWidgetI
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::initializeHeirarchy()
 {
-//  std::cout << "Filter Parameter Widget should update" << std::endl;
+  //  std::cout << "Filter Parameter Widget should update" << std::endl;
   dataContainerList->clear();
   attributeMatrixList->clear();
   attributeArrayList->clear();
@@ -244,6 +292,7 @@ void ArraySelectionWidget::initializeHeirarchy()
     DataContainerProxy dc = iter.next();
     QListWidgetItem* listItem = new QListWidgetItem(dc.name, dataContainerList);
     listItem->setData( Qt::UserRole, dc.name);
+    // listItem->setCheckState(Qt::Checked);
   }
 }
 
@@ -253,22 +302,36 @@ void ArraySelectionWidget::initializeHeirarchy()
 void ArraySelectionWidget::beforePreflight()
 {
   if (NULL == m_Filter) { return; }
-//  std::cout << "Before Preflight" << std::endl;
-  // Save what was selected from the filter
-  QString dcName = m_Filter->property("DataContainerName").toString();
-  QString amName = m_Filter->property("AttributeMatrixName").toString();
-  QString daName = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
+  //  std::cout << "Before Preflight" << std::endl;
+
+
+
 
   // Now get the DataContainerArray from the Filter instance
+  // We are going to use this to get all the current DataContainers
   DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
   if(NULL == dca.get()) { return; }
-
-  //std::cout << "    Making a DataContainerArrayProxy copy into ArraySelectionWidget" << std::endl;
-  // update our local cache of the DataContainerProxy to be that of the current DataContainerArray
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
   initializeHeirarchy(); // Now actually populate the QListWidgets based on the Proxy values
 
+
+  // now get the selection from the filter
+  DataContainerArrayProxy dcaProxy = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataContainerArrayProxy>();
+  QString dcName;
+  QString amName;
+  QString daName;
+  QStringList names = dcaProxy.flattenHeirarchy();
+  // Save what was selected from the filter
+  if( names.size() > 0)
+  {
+    QString selectedPath = names.at(0);
+    QStringList tokens = selectedPath.split(DREAM3D::PathSep);
+
+    if(tokens.size() > 0) dcName = tokens.at(0);
+    if(tokens.size() > 1) amName = tokens.at(1);
+    if(tokens.size() > 2) daName = tokens.at(2);
+  }
   // Set the correct DataContainer
   int count = dataContainerList->count();
   dataContainerList->setCurrentRow(-1);
@@ -315,5 +378,27 @@ void ArraySelectionWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::afterPreflight()
 {
- // std::cout << "After Preflight" << std::endl;
+  // std::cout << "After Preflight" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerArrayProxy ArraySelectionWidget::generateDCAProxy()
+{
+  // This will only work for a single selection
+  DataContainerArrayProxy dcaProxy(true);
+  QString dcaName = dataContainerList->currentItem()->text();
+  DataContainerProxy dcProxy(dcaName, true);
+
+  QString amName = attributeMatrixList->currentItem()->text();
+  AttributeMatrixProxy amProxy(amName, true);
+
+  QString daName = attributeArrayList->currentItem()->text();
+  DataArrayProxy daProxy(dcaName + "|" + amName, daName, true);
+  amProxy.dataArrays.insert(daName, daProxy);
+  dcProxy.attributeMatricies.insert(amName, amProxy);
+  dcaProxy.list.push_back(dcProxy);
+
+  return dcaProxy;
 }

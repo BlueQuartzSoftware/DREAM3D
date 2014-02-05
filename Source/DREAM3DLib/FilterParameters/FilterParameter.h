@@ -73,7 +73,7 @@ namespace FilterParameterWidgetType
       const QString UnknownWidget("UnknownWidget");
       const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
       const QString ArraySelectionWidget("ArraySelectionWidget"); // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
-
+      const QString SingleArraySelectionWidget("SingleArraySelectionWidget");
 
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
       const QString VolumeVertexArrayNameSelectionWidget("VolumeVertexArrayNameSelectionWidget"); // ComboBox where the Cell Array names are used to populate

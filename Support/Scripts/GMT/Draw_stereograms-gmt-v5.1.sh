@@ -12,9 +12,56 @@
 #    plots sets of pole figures on top of one another
 #  added DA option for overlaid stereo projections
 #   PSTEXT now uses "-h1" instead of "-H1" for header line
+#  added "gmt " in front of each command to adapt to the OSX app version
+#  added Windows support through the MSys prompt. Sanity checking to make sure we have all the executables.
 
-echo "last revised 29 Jul 12, ADR"
+DS_VERSION=2
+DS_LAST_REVISION="3 Feb 2014"
+echo "Draw_stereograms: Last Revised ${DS_LAST_REVISION}"
 
+# Sanity check the user's environment first
+# Check for GMT Version 5
+echo "Checking for the GMT executable...."
+GIT=`type -P gmt`
+if [[ $GIT == "" ]];
+  then
+  echo "GMT is needed for this script. Please install it on your system and be sure it is on your path."
+  exit 1
+fi
+
+# Get the GMT Version we are using
+GMT_MIN_VERSION="5"
+GMT_VERSION=`gmt --version`
+if (( ${#GMT_VERSION[0]} < ${GMT_MIN_VERSION} ))
+then
+	echo "Version Check Failed: GMT Version found '${GMT_VERSION}', Needed Version '${GMT_MIN_VERSION}'"
+	exit 1
+fi
+
+# Check for the 'convert' program which is part of the ImageMagick installation
+echo "Checking for the 'convert' executable..."
+CONVERT=`type -P convert`
+if [[ $CONVERT == "" ]];
+	then
+	echo "Missing 'convert' program from the ImageMagick installation. Please install ImageMagick and make sure the executables are available on your path"
+	exit 1
+fi
+
+# In order to convert postscript to an image format Ghostscript is used (Linux) or Native OS X functions
+# but for Windows we need to make sure Ghostscript is installed
+if [ ${OSTYPE} = "msys" ]
+then
+	echo "Checking for 32bit Ghostscript executables...."
+	GSWIN32=`type -P gswin32c`
+	if [[ $GSWIN32 == "" ]];
+	then
+		echo "Missing 'gswin32c' program from the Ghostscript package. Please install ImageMagick and make sure the executables are available on your path"
+		exit 1
+	fi
+fi
+
+
+ 
 STRING="
  0  90
    0.0000       45.000    
@@ -47,9 +94,30 @@ STRING="
 #  for clipping, drawing boxes around cubic Inv PF
 #  echo $STRING
 
+HEXSTRING="
+ 0.0  90.0
+ 0.0   0.0
+ 2.0   0.0
+ 4.0   0.0
+ 6.0   0.0
+ 8.0   0.0
+10.0   0.0
+12.0   0.0
+14.0   0.0
+16.0   0.0
+18.0   0.0
+20.0   0.0
+22.0   0.0
+24.0   0.0
+26.0   0.0
+28.0   0.0
+30.0  0.0
+ 0.0  90.0"
+#  for clipping, drawing boxes around hex Inv PF
+
 #  don't really want to proceed unless we have at least 3 arguments
 if [ $# -le 2 ]; then
-    echo " number of args = " $#
+   echo " number of args = " $#
    echo " usage= ./Draw_stereograms number_of_files Stereo_file_name [2d/5d/PF/IF] [wysiwyg/gray/polar/...] [Lo] [Hi] [step] [stereo/equal/ortho]  [CUBIC/HEX/ORT]"
    echo " If #3='2d' then it looks for only one file (with extension .dat )"
    echo " If #3='5d' then it looks for several stereogram files (with extension .dat )"
@@ -115,13 +183,13 @@ var1="$2"
 # t=${var1%*.*}
 # t=${var1%.*}
 t="$2"
-#  echo "var1 (with everything from the last . on stripped out) = $t"
-echo "filename base: " $t
-#  $t now contains the basename
+#  echo "var1 (with everything from the last . on stripped out) = "$t""
+echo "filename base: " "$t"
+#  "$t" now contains the basename
 #  exit 0
 
-if [ -e ${t}.ps ] ; then
-    rm ${t}.ps
+if [ -e "${t}".ps ] ; then
+    rm "${t}".ps
 fi
 #  get rid of any PS file left over
 
@@ -172,12 +240,14 @@ if [ $# -ge 4 ]; then
    COLORSCHEME="$4"
 fi
 
+PDF_CPT_FILE="${t}PDF.cpt"
+
 if [ $# -ge 7 ]; then
-   gmt makecpt -C"$COLORSCHEME"  -T"$5"/"$6"/"$7" > PDF.cpt
+   gmt makecpt -C"$COLORSCHEME"  -T"$5"/"$6"/"$7" > "${PDF_CPT_FILE}"
 #  was -T0.0/3/0.5
 else
-   gmt makecpt -C"$COLORSCHEME"  -T0.0/8./1.0 > PDF.cpt
-#    gmt makecpt -C"$COLORSCHEME"  -Qo -V > PDF.cpt
+   gmt makecpt -C"$COLORSCHEME"  -T0.0/8./1.0 > "${PDF_CPT_FILE}"
+#    makecpt -C"$COLORSCHEME"  -Qo -V > "${PDF_CPT_FILE}"
 #  tried the log scale (Q) option briefly but it's basically for powers of 10
 fi
 
@@ -190,9 +260,15 @@ FIRST_TIME=0    #  to track whether it's the first plot or not, and for offsets
 CLIPPED=0   #  did we clip?
 
 if [ "$3" = IF ] || [ "$3" = DI ] || [ "$3" = IX ] ; then
-   OFFSET=-4.0i
    Y_OFFSET=3.5i
-   PROJ="-JA-90/90/18c"
+   if [ $m9 = CUBIC ] || [ $m9 = cubic ] ; then
+      OFFSET=-4.0i
+      PROJ="-JA-90/90/18c"
+   fi
+   if [ $m9 = HEX ] || [ $m9 = hex ] ; then
+      OFFSET=-2.5i
+      PROJ="-JA-90/90/11c"
+   fi
 fi
 
 # set up size for accumulated pole figures
@@ -204,33 +280,35 @@ if [ "$3" = DA ] ; then
    PROJ="-JA-90/90/18c"
 fi
 
-# echo 'gmt grdimage TempPDF.grd -CPDF.cpt -JA-90/90/5 -Bwesn -K -P'
-# echo gmt grdimage -X$COUNTER
+# echo 'grdimage "${t}TempPDF.grd" -C"${PDF_CPT_FILE}" -JA-90/90/5 -Bwesn -K -P'
+# echo grdimage -X$COUNTER
 
 while [  $COUNTER -le $1 ]; do
    echo  
    echo Working on stereogram number ${COUNTER}
-# echo gmt grdimage TempPDF.grd -CPDF.cpt -JA-90/90/5 -Bwesn -K -P -X$COUNTER"i" -Y3i
+# echo grdimage "${t}TempPDF.grd" -C"${PDF_CPT_FILE}" -JA-90/90/5 -Bwesn -K -P -X$COUNTER"i" -Y3i
 #             let OFFSET=COUNTER*3+2
 #  echo offset = $OFFSET cm
 #             let COUNTER=COUNTER+1 
 #  incremented below
 
    if [ $3 = 2d ] ; then
-      echo "current input file: " ${t}.dat
-      read HEADER < ${t}.dat
-#  gmt nearneighbor $t.st$COUNTER -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -Lxy -S15
-#  gmt nearneighbor ${t}_5d_degr${COUNTER}.dat -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -Lxy -S15
-#	gmt nearneighbor ${t}.dat -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -S15
-#  GMT4:      gmt nearneighbor ${t}.dat -GTempPDFnn.grd  -E0. -N2/2 -Lg -I2.5 -fg -Rg -H1 -S30
+      echo "current input file: " "${t}".dat
+      read HEADER < "${t}".dat
+#  nearneighbor "$t".st$COUNTER -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -Lxy -S15
+#  nearneighbor "${t}"_5d_degr${COUNTER}.dat -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -Lxy -S15
+#	nearneighbor "${t}".dat -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -S15
+#  GMT4:      nearneighbor "${t}".dat -G"${t}TempPDFnn.grd"  -E0. -N2/2 -Lg -I2.5 -fg -Rg -H1 -S30
 #  Region = global, seems to eliminate the problem of contours not crossing the x-axis
-      gmt nearneighbor ${t}.dat -GTempPDFnn.grd  -E0. -N2/2 -I2.5 -fg -Rg -h1 -S30
+      #gmt nearneighbor "${t}".dat -G"${t}TempPDFnn.grd"  -E0. -N2/2 -I2.5 -fg -Rg -h1 -S30
+  #  old version above
+      gmt nearneighbor "${t}".dat -G"${t}TempPDFnn.grd" -fg -I2.5 -Rg -h1 -S15d -N4/4 #-Vl #-i1,2,3 #-S15
    fi
 
    if [ $3 = PF ] ||  [ $3 = IF ] ; then
-      if [ -e ${t}${COUNTER}.gpf ]
+      if [ -e "${t}"${COUNTER}.gpf ]
       then
-	 echo "current input file: " ${t}${COUNTER}.gpf
+	 echo "current input file: " "${t}"${COUNTER}.gpf
 	 if [ $3 = IF ] ; then
 	    HDRCOORDS="-D-1.6i/10.2i"
 	    ARROWCOORDS="-D5.0i/10.5i"
@@ -244,139 +322,142 @@ while [  $COUNTER -le $1 ]; do
 	    STEREOCOORDS="-D5.0i/10.4i"
 	 fi
       else
-	 echo "you asked for " ${t}${COUNTER}.gpf " but it does not exist!  Exiting ..."
+	 echo "you asked for " "${t}"${COUNTER}.gpf " but it does not exist!  Exiting ..."
 	 exit 1
       fi
-      read HEADER < ${t}${COUNTER}.gpf
-#  gmt nearneighbor $t.st$COUNTER -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -Lxy -S15
-#  gmt nearneighbor ${t}_5d_degr${COUNTER}.dat -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -Lxy -S15
-#	gmt nearneighbor ${t}${COUNTER}.gpf -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -S15
-#	gmt nearneighbor ${t}${COUNTER}.gpf -GTempPDFnn.grd -fg -I3/3 $REGION -H1 -S15
-      gmt nearneighbor ${t}${COUNTER}.gpf -GTempPDFnn.grd -fg -I2.5 -Rg -h1 -S15d -N4/4 #-Vl #-i1,2,3 #-S15
+      read HEADER < "${t}"${COUNTER}.gpf
+#  nearneighbor "$t".st$COUNTER -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -Lxy -S15
+#  nearneighbor "${t}"_5d_degr${COUNTER}.dat -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -Lxy -S15
+#	nearneighbor "${t}"${COUNTER}.gpf -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -S15
+#	nearneighbor "${t}"${COUNTER}.gpf -G"${t}TempPDFnn.grd" -fg -I3/3 $REGION -H1 -S15
+      gmt nearneighbor "${t}"${COUNTER}.gpf -G"${t}TempPDFnn.grd" -fg -I2.5 -Rg -h1 -S15d -N4/4 #-Vl #-i1,2,3 #-S15
    fi
 
    if  [ $3 = DP ]; then
-      if [ -e ${t}${COUNTER}.dpf ]
+      if [ -e "${t}"${COUNTER}.dpf ]
       then
-	 echo "current input file: " ${t}${COUNTER}.dpf
+	 echo "current input file: " "${t}"${COUNTER}.dpf
       else
-	 echo "you asked for " ${t}${COUNTER}.dpf " but it does not exist!  Exiting ..."
+	 echo "you asked for " "${t}"${COUNTER}.dpf " but it does not exist!  Exiting ..."
 	 exit 1
       fi
-      read HEADER < ${t}${COUNTER}.dpf
-#  no need to do gmt nearneighbor on discrete PFs
+      read HEADER < "${t}"${COUNTER}.dpf
+#  no need to do nearneighbor on discrete PFs
    fi
 
    if  [ $3 = DA ]; then
-      if [ -e ${t}.da${COUNTER} ]
+      if [ -e "${t}".da${COUNTER} ]
       then
-	 echo "cumulative PFs: input file = " ${t}.da${COUNTER}
+	 echo "cumulative PFs: input file = " "${t}".da${COUNTER}
       else
-	 echo "you asked for " ${t}.da${COUNTER} " but it does not exist!  Exiting ..."
+	 echo "you asked for " "${t}".da${COUNTER} " but it does not exist!  Exiting ..."
 	 exit 1
       fi
-      if [ -e ${t}.db${COUNTER} ]
+      if [ -e "${t}".db${COUNTER} ]
       then
-	 echo "cumulative PFs: input file = " ${t}.db${COUNTER}
+	 echo "cumulative PFs: input file = " "${t}".db${COUNTER}
       else
-	 echo "you asked for " ${t}.db${COUNTER} " but it does not exist!  Exiting ..."
+	 echo "you asked for " "${t}".db${COUNTER} " but it does not exist!  Exiting ..."
 	 exit 1
       fi
-      read HEADER < ${t}.da${COUNTER}
-#  no need to do gmt nearneighbor on discrete PFs
+      read HEADER < "${t}".da${COUNTER}
+#  no need to do nearneighbor on discrete PFs
    fi
 
    if  [ $3 = PX ]; then
-      if [ -e ${t}${COUNTER}.dpx ]
+      if [ -e "${t}"${COUNTER}.dpx ]
       then
-	 echo "current input file: " ${t}${COUNTER}.dpx
+	 echo "current input file: " "${t}"${COUNTER}.dpx
       else
-	 echo "you asked for " ${t}${COUNTER}.dpx " but it does not exist!  Exiting ..."
+	 echo "you asked for " "${t}"${COUNTER}.dpx " but it does not exist!  Exiting ..."
 	 exit 1
       fi
-      read HEADER < ${t}${COUNTER}.dpx
-#  no need to do gmt nearneighbor on discrete PFs
+      read HEADER < "${t}"${COUNTER}.dpx
+#  no need to do nearneighbor on discrete PFs
    fi
 
    if  [ $3 = P2 ]; then
-      if [ -e ${t}${COUNTER}.dpx ] && [ -e ${t}${COUNTER}.dpx2 ]
+      if [ -e "${t}"${COUNTER}.dpx ] && [ -e "${t}"${COUNTER}.dpx2 ]
       then
-	 echo "current input files: " ${t}${COUNTER}.dpx  ${t}${COUNTER}.dpx2
+	 echo "current input files: " "${t}"${COUNTER}.dpx  "${t}"${COUNTER}.dpx2
       else
-	 echo "you asked for " ${t}${COUNTER}.dpx " and "  ${t}${COUNTER}.dpx2 " but they do not exist!  Exiting ..."
+	 echo "you asked for " "${t}"${COUNTER}.dpx " and "  "${t}"${COUNTER}.dpx2 " but they do not exist!  Exiting ..."
 	 exit 1
       fi
-      read HEADER < ${t}${COUNTER}.dpx
-      read HEADER < ${t}${COUNTER}.dpx2
-#  no need to do gmt nearneighbor on discrete PFs
+      read HEADER < "${t}"${COUNTER}.dpx
+      read HEADER < "${t}"${COUNTER}.dpx2
+#  no need to do nearneighbor on discrete PFs
    fi
 
    if  [ $3 = DI ]; then
-      if [ -e ${t}${COUNTER}.dip ]
+      if [ -e "${t}"${COUNTER}.dip ]
       then
-	 echo "current input file: " ${t}${COUNTER}.dip
+	 echo "current input file: " "${t}"${COUNTER}.dip
       else
-	 echo "you asked for " ${t}${COUNTER}.dip " but it does not exist!  Exiting ..."
+	 echo "you asked for " "${t}"${COUNTER}.dip " but it does not exist!  Exiting ..."
 	 exit 1
       fi
-      read HEADER < ${t}${COUNTER}.dip
-#  no need to do gmt nearneighbor on discrete IPFs
+      read HEADER < "${t}"${COUNTER}.dip
+#  no need to do nearneighbor on discrete IPFs
    fi
 
    if  [ $3 = DL ]; then
-      if [ -e ${t}${COUNTER}.txt ]
+      if [ -e "${t}"${COUNTER}.txt ]
       then
-	 echo "current input file: " ${t}${COUNTER}.txt
+	 echo "current input file: " "${t}"${COUNTER}.txt
       else
-	 echo "you asked for " ${t}${COUNTER}.txt " but it does not exist!  Exiting ..."
+	 echo "you asked for " "${t}"${COUNTER}.txt " but it does not exist!  Exiting ..."
 	 exit 1
       fi
-      read HEADER < ${t}${COUNTER}.txt
-#  no need to do gmt nearneighbor on discrete PFs for PSTEXT
+      read HEADER < "${t}"${COUNTER}.txt
+#  no need to do nearneighbor on discrete PFs for PSTEXT
    fi
 
    if  [ $3 = IX ]; then
-      if [ -e ${t}${COUNTER}.ipx1 ] && [ -e ${t}${COUNTER}.ipx2 ]
+      if [ -e "${t}"${COUNTER}.ipx1 ] && [ -e "${t}"${COUNTER}.ipx2 ]
       then
-	 echo "current input files: " ${t}${COUNTER}.ipx1  ${t}${COUNTER}.ipx2
+	 echo "current input files: " "${t}"${COUNTER}.ipx1  "${t}"${COUNTER}.ipx2
       else
-         echo "you asked for " ${t}${COUNTER}.ipx[1 and 2] " but they do not exist!  Exiting ..."
+         echo "you asked for " "${t}"${COUNTER}.ipx[1 and 2] " but they do not exist!  Exiting ..."
 	 exit 1
       fi
-      read HEADER < ${t}${COUNTER}.ipx1
-      read HEADER < ${t}${COUNTER}.ipx2
-#  no need to do gmt nearneighbor on discrete IPFs
+      read HEADER < "${t}"${COUNTER}.ipx1
+      read HEADER < "${t}"${COUNTER}.ipx2
+#  no need to do nearneighbor on discrete IPFs
    fi
 
    if [ $3 = 5d ] ; then
-      if [ -e ${t}${COUNTER}.dat ]
+      if [ -e "${t}"${COUNTER}.dat ]
       then
-	 echo "current input file: " ${t}${COUNTER}.dat
+	 echo "current input file: " "${t}"${COUNTER}.dat
       else
-	 echo "you asked for " ${t}${COUNTER}.dat " but it does not exist!"
+	 echo "you asked for " "${t}"${COUNTER}.dat " but it does not exist!"
 	 exit 1
       fi
-#      echo "current input file: " ${t}${COUNTER}.dat
-      read HEADER < ${t}${COUNTER}.dat
-#  gmt nearneighbor $t.st$COUNTER -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -Lxy -S15
-#  gmt nearneighbor ${t}_5d_degr${COUNTER}.dat -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -Lxy -S15
-#	gmt nearneighbor ${t}${COUNTER}.dat -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -S15
+#      echo "current input file: " "${t}"${COUNTER}.dat
+      read HEADER < "${t}"${COUNTER}.dat
+#  nearneighbor "$t".st$COUNTER -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -Lxy -S15
+#  nearneighbor "${t}"_5d_degr${COUNTER}.dat -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -Lxy -S15
+#	nearneighbor "${t}"${COUNTER}.dat -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -S15
 
-#  GMT4:      gmt nearneighbor ${t}${COUNTER}.dat -GTempPDFnn.grd  -E0. -N2/2 -Lg -I10/10 -fg -Rg -H1 -S20
-#  for GMT5:
-      gmt nearneighbor ${t}${COUNTER}.dat -GTempPDFnn.grd  -E0. -N2/2  -I10/10 -fg -Rg -h1 -S20
+#  GMT4:      nearneighbor "${t}"${COUNTER}.dat -G"${t}TempPDFnn.grd"  -E0. -N2/2 -Lg -I10/10 -fg -Rg -H1 -S20
+  #  for GMT5:
+  #    gmt nearneighbor "${t}"${COUNTER}.dat -G"${t}TempPDFnn.grd"  -E0. -N2/2  -I10/10 -fg -Rg -h1 -S20
+  #  old version above
+      gmt nearneighbor "${t}"${COUNTER}.dat -G"${t}TempPDFnn.grd" -fg -I2.5 -Rg -h1 -S15d -N4/4 #-Vl #-i1,2,3 #-S15
+
 #      if [ $# -ge 8 ] && [ $8 = ortho ] ; then
 # defaults to stereo projection - similar below
-#	gmt nearneighbor ${t}${COUNTER}.dat -GTempPDFnn.grd -I3/3 -Rg -H1 -S15
+#	nearneighbor "${t}"${COUNTER}.dat -G"${t}TempPDFnn.grd" -I3/3 -Rg -H1 -S15
 #      else
-#	gmt nearneighbor ${t}${COUNTER}.dat -GTempPDFnn.grd -I3/3 -R0/360/0/90 -H1 -S15
+#	nearneighbor "${t}"${COUNTER}.dat -G"${t}TempPDFnn.grd" -I3/3 -R0/360/0/90 -H1 -S15
 #      fi
    fi  
 #  end of 5d section
    echo "1st line =" $HEADER
 
-#  gmt nearneighbor $t.st$COUNTER -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -Lxy -S15
-#  gmt nearneighbor ${t}_5d_degr${COUNTER}.dat -GTempPDF.grd -I3/3 -R0/360/0/90 -H1 -Lxy -S15
+#  nearneighbor "$t".st$COUNTER -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -Lxy -S15
+#  nearneighbor "${t}"_5d_degr${COUNTER}.dat -G"${t}TempPDF.grd" -I3/3 -R0/360/0/90 -H1 -Lxy -S15
 #  -H = 1 header line
 #  -R  = range
 #  -I  grid spacing
@@ -385,47 +466,47 @@ while [  $COUNTER -le $1 ]; do
 
    if  [ $3 != DP ] && [ $3 != DI ] && [ $3 != DL ] &&  [ $3 != IX ] && [ $3 != PX ]  && [ $3 != P2 ] && [ $3 != DA ] ; then
 
-#    gmt grd2xyz TempPDF.grd>TempPDF.out
-# gmt surface TempPDF.out -GTempPDF.grd -T0.5 -I.5/.5 -R0/360/0/90 -H1 -L
-#    gmt surface TempPDF.out -GTempPDF.grd -T0.9 -I.5/.5 -R0/360/0/90 -H1 -f0x,1y
+#    grd2xyz "${t}TempPDF.grd">TempPDF.out
+# surface TempPDF.out -G"${t}TempPDF.grd" -T0.5 -I.5/.5 -R0/360/0/90 -H1 -L
+#    surface TempPDF.out -G"${t}TempPDF.grd" -T0.9 -I.5/.5 -R0/360/0/90 -H1 -f0x,1y
 #  was -T1  =  tension
 #  -f0x,1y  defines longitude, latitude
 
-#  this version pipes the output from gmt grd2xyz (faster?)
+#  this version pipes the output from grd2xyz (faster?)
 #  and also uses blockmedian to perform a bit of smoothing
-#    gmt grd2xyz TempPDFnn.grd |  gmt surface -GTempPDF.grd -T0.9 -I.5/.5 -R0/360/0/90 -H1 -f0x,1y
+#    grd2xyz "${t}TempPDFnn.grd" |  surface -G"${t}TempPDF.grd" -T0.9 -I.5/.5 -R0/360/0/90 -H1 -f0x,1y
 
-#   gmt grd2xyz TempPDFnn.grd | blockmedian $REGION -I5 | gmt surface -GTempPDF.grd -fg -T0.9 -I.5/.5 $REGION -H1 -f0x,1y
-#   gmt grd2xyz -Rg TempPDFnn.grd | blockmedian -I15 -Rg | gmt surface -GTempPDF.grd -fg -T0./0.8 -I1 $REGION -H1
-#      gmt grd2xyz $REGION TempPDFnn.grd | gmt blockmean $REGION -I15 | gmt surface -GTempPDF.grd -fg -T0.8 -I.5 $REGION -H1
-#   gmt grd2xyz -Rg TempPDFnn.grd | blockmedian -I15 -Rg | gmt surface -GTempPDF0.nc -fg -T0./0.8 -I1 -Rg -H1
+#   grd2xyz "${t}TempPDFnn.grd" | blockmedian $REGION -I5 | surface -G"${t}TempPDF.grd" -fg -T0.9 -I.5/.5 $REGION -H1 -f0x,1y
+#   grd2xyz -Rg "${t}TempPDFnn.grd" | blockmedian -I15 -Rg | surface -G"${t}TempPDF.grd" -fg -T0./0.8 -I1 $REGION -H1
+#      grd2xyz $REGION "${t}TempPDFnn.grd" | blockmean $REGION -I15 | surface -G"${t}TempPDF.grd" -fg -T0.8 -I.5 $REGION -H1
+#   grd2xyz -Rg "${t}TempPDFnn.grd" | blockmedian -I15 -Rg | surface -GTempPDF0.nc -fg -T0./0.8 -I1 -Rg -H1
 #   grdfilter TempPDF0.nc  -D4 -Fg250 -I1 -Rg -GTempPDF1.nc -V
-#   gmt grd2xyz -Rg TempPDF1.nc | xyz2grd -GTempPDF.grd -I1 $REGION -H1
+#   grd2xyz -Rg TempPDF1.nc | xyz2grd -G"${t}TempPDF.grd" -I1 $REGION -H1
 #  new idea= use grdfilter, 30 v 11
 
 #  next 2 lines:  attempt to filter the data - not obvious that this helped
-#   grdfilter TempPDFnn.grd -D4 -Fc1000 -GTemp00.grd $REGION -I.5
-#   gmt grd2xyz Temp00.grd | gmt blockmean $REGION -I2.5 | gmt surface -GTempPDF.grd -fg -T0 -I.5/.5 $REGION -H1 -f0x,1y
+#   grdfilter "${t}TempPDFnn.grd" -D4 -Fc1000 -GTemp00.grd $REGION -I.5
+#   grd2xyz Temp00.grd | blockmean $REGION -I2.5 | surface -G"${t}TempPDF.grd" -fg -T0 -I.5/.5 $REGION -H1 -f0x,1y
 
 #  for GMT5
-      gmt grd2xyz $REGION TempPDFnn.grd | gmt blockmean $REGION -I15 | gmt surface -GTempPDF.grd -fg -T0.8 -I.5 $REGION -h1
+      gmt grd2xyz $REGION "${t}TempPDFnn.grd" | gmt blockmean $REGION -I15 | gmt surface -G"${t}TempPDF.grd" -fg -T0.8 -I.5 $REGION -h1
 
 #    if [ $# -ge 8 ] && [ $8 = ortho ] ; then
-#       gmt grd2xyz TempPDFnn.grd | blockmedian -Rg -I5 | gmt surface -GTempPDF.grd -T0.9 -I.5/.5 -Rg -H1 -f0x,1y
+#       grd2xyz "${t}TempPDFnn.grd" | blockmedian -Rg -I5 | surface -G"${t}TempPDF.grd" -T0.9 -I.5/.5 -Rg -H1 -f0x,1y
 #    else
-#       gmt grd2xyz TempPDFnn.grd | blockmedian -R0/360/0/90 -I5 | gmt surface -GTempPDF.grd -T0.9 -I.5/.5 -R0/360/0/90 -H1 -f0x,1y
+#       grd2xyz "${t}TempPDFnn.grd" | blockmedian -R0/360/0/90 -I5 | surface -G"${t}TempPDF.grd" -T0.9 -I.5/.5 -R0/360/0/90 -H1 -f0x,1y
 #    fi
 
-      gmt grdinfo TempPDF.grd -C -M > gridinfo.txt
+      gmt grdinfo "${t}TempPDF.grd" -C -M > "${t}gridinfo.txt"
 
    fi
 #  end of gridding (not for discrete plots)
 
-# MakePDFInfo $t $3
+# MakePDFInfo "$t" $3
 #
 # Generates color codes for contours
 # -T command parameters are lowest, highest and step
-
+FILENAME=`basename "${t}"`
    if [ $FIRST_TIME -eq 0 ] ; then
       LINE=0
 #      echo "1st plot, LINE = " $LINE ;
@@ -434,46 +515,46 @@ while [  $COUNTER -le $1 ]; do
 
       if [ $3 != DP ] && [ $3 != DI ] && [ $3 != DL ] &&  [ $3 != IX ] && [ $3 != PX ] && [ $3 != P2 ] && [ $3 != DA ] ; then
 
-         gmt psscale -CPDF.cpt -D2.5i/9.9i/4i/.25ih -B"$TEMP":"Multiples of Random": -K -P > $t.ps
+         gmt psscale -C"${PDF_CPT_FILE}" -D2.5i/9.9i/4i/.25ih -B"$TEMP":"Multiples of Random": -K -P > "$t".ps
 
-         gmt pstext -F+a0+f16p,Times-Roman,blue+jLM -K -O -P -N -R0/11/0/11 -JX11i <<EOF >> $t.ps
-0. 10.1 Filename root: $t
+         gmt pstext -F+a0+f16p,Times-Roman,blue+jLM -K -O -P -N -R0/11/0/11 -JX11i <<EOF >> "$t".ps
+0. 10.1 Filename root: "$FILENAME"
 EOF
 
       else
 
-#	 gmt pstext -K -P -N -R0/11/0/11 -JX11i -Gblue <<EOF > $t.ps
-#.15 10.3 16 0 0 LM Filename root: $t
+#	 pstext -K -P -N -R0/11/0/11 -JX11i -Gblue <<EOF > "$t".ps
+#.15 10.3 16 0 0 LM Filename root: "$t"
 #EOF
-	 gmt pstext -F+a0+f16p,Times-Roman,blue+jLM -K -P -N -R0/11/0/11 -JX11i <<EOF > $t.ps
-0. 10.1 Filename root: $t
+	 gmt pstext -F+a0+f16p,Times-Roman,blue+jLM -K -P -N -R0/11/0/11 -JX11i <<EOF > "$t".ps
+0. 10.1 Filename root: "$FILENAME"
 EOF
 
 #  do not want the scale for discrete plots
       fi
 
-#      echo "gmt psxy first"
-      gmt psxy -K -P -O -N -R0/11/0/11 -JX11i -Sv+e -Gblack -Wthin,black <<EOF >> $t.ps
+#      echo "psxy first"
+      gmt psxy -K -P -O -N -R0/11/0/11 -JX11i -Sv+e -Gblack -Wthin,black <<EOF >> "$t".ps
 5. 10.4 0.35 0. 2. 
 EOF
-#      echo "gmt psxy first: END"
-      gmt pstext -F+a0+f16p,Times-Roman,black+jLM -K -P -O -N -R0/11/0/11 -JX11i <<EOF >>$t.ps
+#      echo "psxy first: END"
+      gmt pstext -F+a0+f16p,Times-Roman,black+jLM -K -P -O -N -R0/11/0/11 -JX11i <<EOF >>"$t".ps
 6 10.4 X
 EOF
 
       if [ $m8 = equal ] ; then
-	 gmt pstext -F+a0+f16p,Times-Roman,blue+jLM -K -O -N -R0/11/0/11 -JX11i  <<EOF >>$t.ps
+	 gmt pstext -F+a0+f16p,Times-Roman,blue+jLM -K -O -N -R0/11/0/11 -JX11i  <<EOF >>"$t".ps
 5.5 9.9 Equal Area
 EOF
       fi
       if [ $m8 = ortho ] ; then
-	 gmt pstext -F+a0+f16p,Times-Roman,blue+jLM -K -O -N -R0/11/0/11 -JX11i  <<EOF >>$t.ps
+	 gmt pstext -F+a0+f16p,Times-Roman,blue+jLM -K -O -N -R0/11/0/11 -JX11i  <<EOF >>"$t".ps
 5.5 9.9 Orthographic
 EOF
       fi
       if [ $m8 = stereo ] ; then
-#	 gmt pstext -K -O -N -R0/11/0/11 -JX11i  <<EOF >>$t.ps
-	 gmt pstext -F+a0+f16p,Times-Roman,blue+jLM -K -O -N -R0/11/0/11 -JX11i  <<EOF >>$t.ps
+#	 pstext -K -O -N -R0/11/0/11 -JX11i  <<EOF >>"$t".ps
+	 gmt pstext -F+a0+f16p,Times-Roman,blue+jLM -K -O -N -R0/11/0/11 -JX11i  <<EOF >>"$t".ps
 5.5 9.9 Stereographic
 EOF
       fi
@@ -484,10 +565,17 @@ EOF
 #  clip the region to plot
          CLIPPED=1
 #	 echo "at CLIP, CLIPPED = " $CLIPPED "SHIFT= " $SHIFT ;
-#         gmt psxy  $PROJ $REGION $BORDER -K -P $SHIFT << END > $t.ps
-         psclip  $PROJ $REGION -K -O -P $SHIFT << END >> $t.ps
+#         psxy  $PROJ $REGION $BORDER -K -P $SHIFT << END > "$t".ps
+      if [ $m9 = CUBIC ] || [ $m9 = cubic ] ; then
+         gmt psclip  $PROJ $REGION -K -O -P $SHIFT << END >> "$t".ps
 $STRING
 END
+fi
+      if [ $m9 = HEX ] || [ $m9 = hex ] ; then
+         gmt psclip  $PROJ $REGION -K -O -P $SHIFT << END >> "$t".ps
+$HEXSTRING
+END
+fi
 	 SHIFT=""
 #	 echo "SHIFT =  " $SHIFT
       fi
@@ -496,9 +584,9 @@ END
       if  [ $3 != DP ] && [ $3 != DI ] && [ $3 != DL ] &&  [ $3 != IX ] && [ $3 != PX ] && [ $3 != P2 ] && [ $3 != DA ] ; then
 #  if not discrete, then do this
          #echo REGION = $REGION
-         gmt grdimage TempPDF.grd -CPDF.cpt $PROJ $REGION -O -K -P $SHIFT >> $t.ps
-#      gmt grdimage TempPDF.grd -CPDF.cpt $PROJ $REGION -O -K -P $SHIFT >> $t.ps
-#      gmt grdimage TempPDF.grd -fg -CPDF.cpt $PROJ -Rg -O -K -P $SHIFT >> $t.ps
+         gmt grdimage "${t}TempPDF.grd" -C"${PDF_CPT_FILE}" $PROJ $REGION -O -K -P $SHIFT >> "$t".ps
+#      grdimage "${t}TempPDF.grd" -C"${PDF_CPT_FILE}" $PROJ $REGION -O -K -P $SHIFT >> "$t".ps
+#      grdimage "${t}TempPDF.grd" -fg -C"${PDF_CPT_FILE}" $PROJ -Rg -O -K -P $SHIFT >> "$t".ps
 #      echo "added  description" 
       fi
 
@@ -515,16 +603,23 @@ END
             CLIPPED=1
 #	    echo "at -X12c -Y-6.3c, CLIPPED = " $CLIPPED ;
 #  now to clip
-            psclip $PROJ $REGION -V -K -O -P $SHIFT << END >> $t.ps
+      if [ $m9 = CUBIC ] || [ $m9 = cubic ] ; then
+            gmt psclip $PROJ $REGION -V -K -O -P $SHIFT << END >> "$t".ps
 $STRING
 END
+fi
+      if [ $m9 = HEX ] || [ $m9 = hex ] ; then
+            gmt psclip $PROJ $REGION -V -K -O -P $SHIFT << END >> "$t".ps
+$HEXSTRING
+END
+fi
 	    SHIFT=""
 	    #echo "SHIFT =  " $SHIFT
          fi  #  end of inv. PF section
            
 	 if  [ $3 != DP ] && [ $3 != DI ] && [ $3 != DL ] &&  [ $3 != IX ] && [ $3 != PX ] && [ $3 != P2 ] && [ $3 != DA ] ; then
 #  if not discrete, then do this
-	    gmt grdimage TempPDF.grd -fg -CPDF.cpt $PROJ $REGION -K -O -P $SHIFT >> $t.ps
+	    gmt grdimage "${t}TempPDF.grd" -fg -C"${PDF_CPT_FILE}" $PROJ $REGION -K -O -P $SHIFT >> "$t".ps
 	 fi
       else   #  LINE not eq 0
          SHIFT=" -X6c -Y0c "
@@ -533,15 +628,22 @@ END
 #  clip the region to plot
             CLIPPED=1
 #	    echo "at -X6c -Y0c, CLIPPED = " $CLIPPED ;
-            psclip $PROJ $REGION -V -K -O -P $SHIFT << END >> $t.ps
+      if [ $m9 = CUBIC ] || [ $m9 = cubic ] ; then
+            gmt psclip $PROJ $REGION -V -K -O -P $SHIFT << END >> "$t".ps
 $STRING
 END
+fi
+      if [ $m9 = HEX ] || [ $m9 = hex ] ; then
+            gmt psclip $PROJ $REGION -V -K -O -P $SHIFT << END >> "$t".ps
+$HEXSTRING
+END
+fi
 	    SHIFT=""
 #	     echo "SHIFT =  " $SHIFT
          fi
 	 if  [ $3 != DP ] && [ $3 != DI ] && [ $3 != DL ] &&  [ $3 != IX ] && [ $3 != PX ] && [ $3 != P2 ] && [ $3 != DA ] ; then
 #  if not discrete, then do this
-            gmt grdimage TempPDF.grd -fg -CPDF.cpt $PROJ $REGION -K -O -P $SHIFT >> $t.ps
+            gmt grdimage "${t}TempPDF.grd" -fg -C"${PDF_CPT_FILE}" $PROJ $REGION -K -O -P $SHIFT >> "$t".ps
 	 fi
       fi  #  test whether LINE=0 or not
    fi  #  first image?
@@ -551,58 +653,58 @@ END
 # Adds the contour line
    if  [ $3 != DP ] && [ $3 != DI ] && [ $3 != DL ] &&  [ $3 != IX ] && [ $3 != PX ] && [ $3 != P2 ] && [ $3 != DA ] ; then
 #  if not discrete, then do this
-       gmt grdcontour TempPDF.grd -fg -CPDF.cpt $PROJ $REGION -K -O -A- >>$t.ps
+       gmt grdcontour "${t}TempPDF.grd" -fg -C"${PDF_CPT_FILE}" $PROJ $REGION -K -O -A- >>"$t".ps
    else
 #  here we do the discrete plot
       if  [ $3 = DA ] ; then
 	  SHIFT=""
           #SHIFT=" -X6c -Y0c "
 	  if [ $COUNTER = 1 ] ; then 
-	      gmt psxy ${t}.da${COUNTER} -Ss0.3i -Gred $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
-	      gmt psxy ${t}.db${COUNTER} -Ss0.3i -Gblue $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
+	      gmt psxy "${t}".da${COUNTER} -Ss0.3i -Gred $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
+	      gmt psxy "${t}".db${COUNTER} -Ss0.3i -Gblue $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
 	  fi
 	  if [ $COUNTER = 2 ] ; then
-	      gmt psxy ${t}.da${COUNTER} -St0.25i -Gred $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
-	      gmt psxy ${t}.db${COUNTER} -St0.25i -Gblue $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
+	      gmt psxy "${t}".da${COUNTER} -St0.25i -Gred $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
+	      gmt psxy "${t}".db${COUNTER} -St0.25i -Gblue $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
 	  fi
 	  if [ $COUNTER = 3 ] ; then
-	      gmt psxy ${t}.da${COUNTER} -Sd0.2i -Gred $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
-	      gmt psxy ${t}.db${COUNTER} -Sd0.2i -Gblue $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
+	      gmt psxy "${t}".da${COUNTER} -Sd0.2i -Gred $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
+	      gmt psxy "${t}".db${COUNTER} -Sd0.2i -Gblue $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
 	  fi
 	  if [ $COUNTER = 4 ] ; then
-	      gmt psxy ${t}.da${COUNTER} -Sc0.15i -Gred $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
-	      gmt psxy ${t}.db${COUNTER} -Sc0.15i -Gblue $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
+	      gmt psxy "${t}".da${COUNTER} -Sc0.15i -Gred $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
+	      gmt psxy "${t}".db${COUNTER} -Sc0.15i -Gblue $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
 	  fi
 	  if [ $COUNTER = 5 ] ; then
-	      gmt psxy ${t}.da${COUNTER} -Sa0.13i -Gred $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
-	      gmt psxy ${t}.db${COUNTER} -Sa0.13i -Gblue $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
+	      gmt psxy "${t}".da${COUNTER} -Sa0.13i -Gred $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
+	      gmt psxy "${t}".db${COUNTER} -Sa0.13i -Gblue $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
 	  fi
 	  if [ $COUNTER = 6 ] ; then
-	      gmt psxy ${t}.da${COUNTER} -S+0.10i -Wthin,red  $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
-	      gmt psxy ${t}.db${COUNTER} -S+0.10i -Wthin,blue  $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
+	      gmt psxy "${t}".da${COUNTER} -S+0.10i -Wthin,red  $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
+	      gmt psxy "${t}".db${COUNTER} -S+0.10i -Wthin,blue  $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
 	  fi
       fi
       if  [ $3 = DP ] ; then
-	  gmt psxy ${t}${COUNTER}.dpf -Sc0.03i $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
+	  gmt psxy "${t}"${COUNTER}.dpf -Sc0.03i $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
       fi
       if  [ $3 = DI ] ; then
-	  gmt psxy ${t}${COUNTER}.dip -Sc0.03i $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
+	  gmt psxy "${t}"${COUNTER}.dip -Sc0.03i $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
       fi
       if  [ $3 = DL ] ; then
-	  gmt pstext ${t}${COUNTER}.txt $PROJ $REGION -N -K -O -P $SHIFT >> $t.ps
+	  gmt pstext "${t}"${COUNTER}.txt $PROJ $REGION -N -K -O -P $SHIFT >> "$t".ps
       fi
       if  [ $3 = PX ] ; then
-	  gmt psxy ${t}${COUNTER}.dpx -Svs0.025c/0.15c/0.05c -Gblue $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
+	  gmt psxy "${t}"${COUNTER}.dpx -Svs0.025c/0.15c/0.05c -Gblue $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
 #      -Svs draws a vector from col1+col2 to col3+col4
       fi
       if  [ $3 = P2 ] ; then
-	  gmt psxy ${t}${COUNTER}.dpx -Svs0.025c/0.15c/0.05c -Gblue $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
-	  gmt psxy ${t}${COUNTER}.dpx2 -Svs0.025c/0.15c/0.05c -Gred  $PROJ $REGION  -K -O -P       >> $t.ps
+	  gmt psxy "${t}"${COUNTER}.dpx -Svs0.025c/0.15c/0.05c -Gblue $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
+	  gmt psxy "${t}"${COUNTER}.dpx2 -Svs0.025c/0.15c/0.05c -Gred  $PROJ $REGION  -K -O -P       >> "$t".ps
 #      -Svs draws a vector from col1+col2 to col3+col4
       fi
       if  [ $3 = IX ] ; then
-	  gmt psxy ${t}${COUNTER}.ipx1 -Svs0.025c/0.15c/0.05c -Gblue $PROJ $REGION  -K -O -P $SHIFT >> $t.ps
-	  gmt psxy ${t}${COUNTER}.ipx2 -Svs0.025c/0.15c/0.05c -Gred $PROJ $REGION  -K -O -P         >> $t.ps
+	  gmt psxy "${t}"${COUNTER}.ipx1 -Svs0.025c/0.15c/0.05c -Gblue $PROJ $REGION  -K -O -P $SHIFT >> "$t".ps
+	  gmt psxy "${t}"${COUNTER}.ipx2 -Svs0.025c/0.15c/0.05c -Gred $PROJ $REGION  -K -O -P         >> "$t".ps
 #      -Svs draws a vector from col1+col2 to col3+col4
       fi
    fi     # end of discrete plot section
@@ -612,142 +714,184 @@ END
 
 #   echo "after drawing: CLIPPED = " $CLIPPED
    if [ $3 = IF ] || [ $3 = DI ] || [ $3 = IX ] ; then
-      if [ $CLIPPED -eq 1 ] ; then
-	 gmt psxy -Wthick $PROJ $REGION  -K -O -P $SHIFT << END >> $t.ps
+       if [ $m9 = CUBIC ] || [ $m9 = cubic ] ; then
+           gmt psclip $PROJ $REGION -V -K -O -C $SHIFT << END >> "$t".ps
 $STRING
 END
-	 psclip  $PROJ $REGION -V -K -C -O >> $t.ps
-#      psclip -K -O -C >> $t.ps
+	   if [ $CLIPPED -eq 1 ] ; then
+	       gmt psxy -Wthick $PROJ $REGION  -K -O -P $SHIFT << END >> "$t".ps
+$STRING
+END
+	   fi
+       fi  #  CUBIC
+       if [ $m9 = HEX ] || [ $m9 = hex ] ; then
+           gmt psclip $PROJ $REGION -V -K -O -C $SHIFT << END >> "$t".ps
+$HEXSTRING
+END
+	   if [ $CLIPPED -eq 1 ] ; then
+	       gmt psxy -Wthick $PROJ $REGION  -K -O -P $SHIFT << END >> "$t".ps
+$HEXSTRING
+END
+	   fi
+       fi  #  HEX
 	 let CLIPPED=0
-      fi
+      #fi
    fi
 
    if [ $3 = PF  ] || [ $3 = IF ] ||  [ $3 = DP ] || [ $3 = DI ] || [ $3 = DL ] || [ $3 = IX ] || [ $3 = PX ]  || [ $3 = P2 ] || [ $3 = DA ] ; then
       if [ $3 = IF  ] || [ $3 = DI ] || [ $3 = IX ] ; then
-         gmt pstext -K -O -N $REGION -D3.2i/2.9i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> $t.ps
+#         gmt pstext -K -O -N $REGION -D3.2i/2.9i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
+#-125 -30 ${HEADER:0:6}
+#EOF
+#         gmt pstext -K -O -N $REGION -D2.4i/3.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
+#-125 -30 001
+#EOF
+#         gmt pstext -K -O -N $REGION -D4.1i/3.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
+#-125 -30 101
+#EOF
+#         gmt pstext -K -O -N $REGION -D3.5i/5.1i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
+#-125 -30 111
+#EOF
+      if [ $m9 = CUBIC ] || [ $m9 = cubic ] ; then
+         gmt pstext -K -O -N $REGION -D3.2i/2.9i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
 -125 -30 ${HEADER:0:6}
 EOF
-         gmt pstext -K -O -N $REGION -D2.4i/3.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> $t.ps
+         gmt pstext -K -O -N $REGION -D2.4i/3.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
 -125 -30 001
 EOF
-         gmt pstext -K -O -N $REGION -D4.1i/3.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> $t.ps
+         gmt pstext -K -O -N $REGION -D4.1i/3.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
 -125 -30 101
 EOF
-         gmt pstext -K -O -N $REGION -D3.5i/5.1i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> $t.ps
+         gmt pstext -K -O -N $REGION -D3.5i/5.1i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
 -125 -30 111
 EOF
       fi
-      if [ $3 = PF  ] ; then   #  do Pole Figures
-         #echo "${HEADER} ${HEADER:0:6}"
-         gmt pstext -K -O -N $REGION -D-0.2i/2.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> $t.ps
+      if [ $m9 = HEX ] || [ $m9 = hex ] ; then
+         gmt pstext -K -O -N $REGION -D2.0i/3.1i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
 -125 -30 ${HEADER:0:6}
 EOF
-	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         gmt pstext -K -O -N $REGION -D1.55i/2.6i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
+-125 -30 0001
+EOF
+         gmt pstext -K -O -N $REGION -D3.2i/2.0i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
+-125 -30 2110
+EOF
+         gmt pstext -K -O -N $REGION -D2.9i/3.4i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
+-125 -30 1010
+EOF
+      fi  #  HEX
+      fi   #   if IF
+      if [ $3 = PF  ] ; then   #  do Pole Figures
+         #echo "${HEADER} ${HEADER:0:6}"
+         gmt pstext -K -O -N $REGION -D-0.2i/2.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
+-125 -30 ${HEADER:0:6}
+EOF
+	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 180 0 
 END
-	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 270 0 
 END
       fi
       #  need something with offsets for the DA option (stacked PFs)
       if [ $3 = DA ] ; then   #  do discrete Pole Figures
-#         gmt pstext -K -O -N $REGION -D-0.2i/2.3i $PROJ << EOF >> $t.ps
+#         pstext -K -O -N $REGION -D-0.2i/2.3i $PROJ << EOF >> "$t".ps
 #-125 -30 16 0 0 LM  ${HEADER:0:6}
 #EOF
-	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 90 0 
 180 0 
 270 0 
 360 0
 END
-	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 180 0 
 END
- 	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+ 	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 270 0 
 END
       fi
       if [ $3 = DP ] || [ $3 = PX ] || [ $3 = P2 ] ; then   #  do discrete Pole Figures
-         gmt pstext -K -O -N $REGION -D-0.2i/2.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> $t.ps
+         gmt pstext -K -O -N $REGION -D-0.2i/2.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
 -125 -30 ${HEADER:0:6}
 EOF
-	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 90 0 
 180 0 
 270 0 
 360 0
 END
-	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 180 0 
 END
- 	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+ 	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 270 0 
 END
       fi
       if [ $3 = DL  ] ; then   #  do discrete Pole Figures with labels
-         gmt pstext -K -O -N $REGION -D-0.2i/2.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> $t.ps
+         gmt pstext -K -O -N $REGION -D-0.2i/2.3i $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >> "$t".ps
 -125 -30 ${HEADER:1:6}
 EOF
-	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 90 0 
 180 0 
 270 0 
 360 0
 END
-	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 180 0 
 END
-	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 270 0 
 END
 	 if [ $m9 = CUBIC ] || [ $m9 = cubic ] ; then
 #  default to cubic
-	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 45 0 
 45 90 
 225 0
 END
-	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 90 45 
 180 0
 END
-	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 270 45 
 180 0
 END
-	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 135 0 
 45 90 
 315 0
 END
-	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 0 45 
 270 0
 END
-	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 180 45 
 270 0
 END
-	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 270 0 
 END
-	    gmt psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+	    psxy -Wthin,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 180 0 
 END
@@ -755,93 +899,93 @@ END
       fi
 #   fi
    else   #  do 2d / 5d 
-      gmt pstext -K -O -N $REGION $TXTCOORDS $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >>$t.ps
+      gmt pstext -K -O -N $REGION $TXTCOORDS $PROJ -F+a0+f16p,Helvetica,black+jLM << EOF >>"$t".ps
 -125 -30 ${HEADER:0:18}
 EOF
    fi
 
    if [ $3 = 5d ] || [ $3 = 2d ] ; then
       if [ $m9 = HEX ] || [ $m9 = hex ] ; then
-         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 180 0 
 END
-         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 60 0 
 240 0 
 END
-         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 120 0 
 300 0 
 END
-         gmt psxy -Wthinnest,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         gmt psxy -Wthinnest,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 30 0 
 210 0 
 END
-         gmt psxy -Wthinnest,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         gmt psxy -Wthinnest,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 270 0 
 END
-         gmt psxy -Wthinnest,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         gmt psxy -Wthinnest,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 150 0 
 330 0 
 END
       fi
       if [ $m9 = ORT ] || [ $m9 = ort ] ; then
-         echo "gmt psxy1"
-         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         echo "psxy1"
+         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 270 0 
 END
-         echo "gmt psxy2"
-         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         echo "psxy2"
+         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 180 0 
 END
       fi
       if [ $m9 = CUBIC ] || [ $m9 = cubic ] ; then
 #  default to cubic
-         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 45 0 
 45 90 
 225 0
 END
-         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 90 45 
 180 0
 END
-         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+         gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 270 45 
 180 0
 END
-	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 135 0 
 45 90 
 315 0
 END
-	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 0 45 
 270 0
 END
-	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 180 45 
 270 0
 END
-	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 90 0 
 270 0 
 END
-	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> $t.ps
+	 gmt psxy -Wthin,white  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0 
 180 0 
 END
       fi
-      echo "gmt psxy3"
-      gmt psxy -Wthick,black  $PROJ $REGION -O -K -P  << END >> $t.ps
+#      echo "psxy3"
+      gmt psxy -Wthick,black  $PROJ $REGION -O -K -P  << END >> "$t".ps
 0 0
 90 0 
 180 0
@@ -856,30 +1000,32 @@ END
 done     
 #  end of the WHILE loop
 
-echo "done: now to convert and clean up graphics files"
+echo "Figure creation Complete"
 
-gmt convert ${t}.ps ${t}.png
+echo "Converting Postscript file to PNG graphic file"
+convert "${t}".ps "${t}".png
+
 #  changed to JPG Dec 06 - more efficient than pdf
 #  changed again, to GIF, Jun 08, for Intel Macs
 #  changed again, to PNG, Oct 09
 
 #  if [ $? -eq 0 ] ; then
 #  successful convert, hopefully
-#     rm ${t}.ps
+#     rm "${t}".ps
 #  fi
-
+echo "Removing Temp Files"
 if  [ $3 != DP ] && [ $3 != DI ] && [ $3 != DL ] && [ $3 != DI ] && [ $3 != IX ] && [ $3 != PX ] && [ $3 != P2 ] && [ $3 != DA ]  ; then
-    rm TempPDFnn.grd
-    rm TempPDF.grd
-    rm gridinfo.txt
+    rm "${t}TempPDFnn.grd"
+    rm "${t}TempPDF.grd"
+    rm "${t}gridinfo.txt"
 fi
 #rm TempPDF.out
-rm PDF.cpt
+rm "${PDF_CPT_FILE}"
 	     
 # __________________________________
 #  left over code .....
 
-# gmt pstext  -K -O -N -R0/360/0/90 -D3i/2i -JA-90/90/5>>$t.ps
+# pstext  -K -O -N -R0/360/0/90 -D3i/2i -JA-90/90/5>>"$t".ps
 # 5 Parameter Analysis plotted by GMT
 # echo "added title"
 # "-K" and "-O" means continuing on
@@ -888,8 +1034,8 @@ rm PDF.cpt
 #    if [ "$8" = "spot" ] ; then
 #	echo "adding the spot at the max."
 # Add maximum and spot at the location
-#	gmt psxy PDFMax.txt -K -O -Sc0.25i -N -G0/0/255 -R0/360/0/90 -JA-90/90/5>>$t.ps
-# gmt psxy "max" -K -O -Sc0.25i -N -G0/0/255 -R0/360/0/90 -JA-90/90/5>>$t.ps
+#	psxy PDFMax.txt -K -O -Sc0.25i -N -G0/0/255 -R0/360/0/90 -JA-90/90/5>>"$t".ps
+# psxy "max" -K -O -Sc0.25i -N -G0/0/255 -R0/360/0/90 -JA-90/90/5>>"$t".ps
 # "-K" and "-O" means continuing on
 
 #    fi
@@ -903,7 +1049,7 @@ rm PDF.cpt
 # Make PDF file
 # perl c:\utils\epstopdf.pl --outfile=$1.pdf $1.eps
 
-# psclip -JA-90/90/5c -R0/360/0/90 -V -K -O -P << END >>$t.ps
+# psclip -JA-90/90/5c -R0/360/0/90 -V -K -O -P << END >>"$t".ps
 # 0 90
 # 0 45
 # 45 35.3

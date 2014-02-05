@@ -18,6 +18,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       FloatVec3Widget
       AxisAngleWidget
       ArraySelectionWidget
+      SingleArraySelectionWidget
 #      VolumeVertexArrayNameSelectionWidget
 #      VolumeEdgeArrayNameSelectionWidget
 #      VolumeFaceArrayNameSelectionWidget

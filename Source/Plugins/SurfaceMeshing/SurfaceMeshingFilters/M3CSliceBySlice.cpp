@@ -454,8 +454,8 @@ void M3CSliceBySlice::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  int64_t totalPoints = m->getTotalPoints();
+  //SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  //int64_t totalPoints = m->getTotalPoints();
 
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
 

@@ -295,7 +295,7 @@ void TransformationPhaseWidget::setPhaseIndex(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TransformationPhaseWidget::getPhaseIndex()
+int TransformationPhaseWidget::getPhaseIndex() const
 {
   return m_PhaseIndex;
 }
@@ -319,7 +319,7 @@ void TransformationPhaseWidget::setCrystalStructure(unsigned int xtal)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int TransformationPhaseWidget::getCrystalStructure()
+unsigned int TransformationPhaseWidget::getCrystalStructure() const
 {
   return m_CrystalStructure;
 }
@@ -499,7 +499,7 @@ void TransformationPhaseWidget::calculateNumberOfBins()
     return;
   }
 
-  
+
   int n = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
   m_NumberBinsGenerated->setText(QString::number(n));
 }
@@ -510,7 +510,7 @@ void TransformationPhaseWidget::calculateNumberOfBins()
 int TransformationPhaseWidget::calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize)
 {
   float max, min; // Only needed for the method. Not used otherwise.
-  
+
   return StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
 }
 
@@ -530,7 +530,7 @@ int TransformationPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   int err = 0;
   int size = 250;
 
-  
+
   err = StatsGen::GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
   if (err == 1)
   {
@@ -749,8 +749,6 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   float avglogdiam = mu;
   float sdlogdiam = sigma;
   float stepSize = binStep;
-
-  size_t ensembles = attrMat->getNumTuples();
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);

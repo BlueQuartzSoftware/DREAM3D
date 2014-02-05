@@ -260,7 +260,7 @@ void MovingFiniteElementSmoothing::dataCheck()
   if (getErrorCondition() >= 0)
   {
     // Check for Node Type Array
-    int size = sm->getVertices()->getNumberOfTuples();
+    //int size = sm->getVertices()->getNumberOfTuples();
     QVector<size_t> dims(1, 1);
     m_SurfaceMeshNodeTypePtr = vertexAttrMat->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceMeshNodeTypeArrayName, -390, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */

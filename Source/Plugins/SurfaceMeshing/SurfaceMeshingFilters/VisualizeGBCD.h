@@ -77,7 +77,10 @@ class VisualizeGBCD : public SurfaceMeshFilter
     Q_PROPERTY(FloatVec3_t MisAxis READ getMisAxis WRITE setMisAxis NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(unsigned int, CrystalStructure)
+    Q_PROPERTY(unsigned int CrystalStructure READ getCrystalStructure WRITE setCrystalStructure NOTIFY parametersChanged)
 
+    // Local Instance variables
     DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)
 
     /**

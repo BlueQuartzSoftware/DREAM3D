@@ -60,6 +60,7 @@ VisualizeGBCD::VisualizeGBCD() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_MisAngle(60.0f),
   m_OutputFile(""),
+  m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL),
   m_GBCDdimensionsArrayName(DREAM3D::EnsembleData::GBCDdimensions),
@@ -86,6 +87,27 @@ VisualizeGBCD::~VisualizeGBCD()
 void VisualizeGBCD::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  {
+    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
+    option->setHumanLabel("Crystal Structure");
+    option->setPropertyName("CrystalStructure");
+    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    option->setValueType("unsigned int");
+    QVector<QString> choices;
+    choices.push_back("Hexagonal-High 6/mmm");
+    choices.push_back("Cubic-High m-3m");
+    choices.push_back("Hexagonal-Low 6/m");
+    choices.push_back("Cubic-Low m-3 (Tetrahedral)");
+    choices.push_back("TriClinic -1");
+    choices.push_back("Monoclinic 2/m");
+    choices.push_back("OrthoRhombic mmm");
+    choices.push_back("Tetragonal-Low 4/m");
+    choices.push_back("Tetragonal-High 4/mmm");
+    choices.push_back("Trigonal-Low -3");
+    choices.push_back("Trigonal-High -3m");
+    option->setChoices(choices);
+    parameters.push_back(option);
+  }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Misorientation Axis Angles");
@@ -137,7 +159,8 @@ void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader,
   setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
   setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
-  setMisorientationRotations(reader->readAxisAngles("MisorientationRotations", getMisorientationRotations()));
+  setMisorientationRotations(reader->readAxisAngles("MisorientationRotations", getMisorientationRotations() ) );
+  setCrystalStructure(reader->readValue("CrystalStructure", getCrystalStructure() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -152,6 +175,7 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("MisorientationRotations", getMisorientationRotations() );
+  writer->writeValue("CrystalStructure", getCrystalStructure() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -168,6 +192,12 @@ void VisualizeGBCD::dataCheckSurfaceMesh()
   AttributeMatrix::Pointer attrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceEnsembleAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
+  if(getCrystalStructure() == Ebsd::CrystalStructure::UnknownCrystalStructure)
+  {
+    QString ss = QObject::tr("%1 needs a valid crystal structure set.").arg(ClassName());
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-381);
+  }
   if(getOutputFile().isEmpty() == true)
   {
 
@@ -293,10 +323,10 @@ void VisualizeGBCD::execute()
   m_MisAngle = m_MisAngle * DREAM3D::Constants::k_Pi / 180.0f;
   //convert axis angle to matrix representation of misorientation
   OrientationMath::AxisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
-
+  OrientationOps::Pointer orientOps = m_OrientationOps[m_CrystalStructure];
   //  int inversion = 1;
   //get number of symmetry operators
-  int n_sym = m_OrientationOps[1]->getNumSymOps();
+  int n_sym = orientOps->getNumSymOps();
 
   int xpoints = 200;
   int ypoints = 200;
@@ -361,14 +391,14 @@ void VisualizeGBCD::execute()
     for(int i = 0; i < n_sym; i++)
     {
       //get symmetry operator1
-      m_OrientationOps[1]->getMatSymOp(i, sym1);
+      orientOps->getMatSymOp(i, sym1);
       MatrixMath::Multiply3x3with3x3(sym1, dg, dg1);
       //get transpose for rotation of directions
       MatrixMath::Transpose3x3(sym1, sym1t);
       for(int j = 0; j < n_sym; j++)
       {
         //get symmetry operator2
-        m_OrientationOps[1]->getMatSymOp(j, sym2);
+        orientOps->getMatSymOp(j, sym2);
         MatrixMath::Transpose3x3(sym2, sym2t);
         //calculate symmetric misorientation
         MatrixMath::Multiply3x3with3x3(dg1, sym2t, dg2);

@@ -804,7 +804,7 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
   float hkl2[3], uvw2[3];
   float slipDirection[3], slipPlane[3];
   float directionMisalignment = 0, totalDirectionMisalignment = 0;
-  float schmidFactor1 = 0, schmidFactor2 = 0, maxSchmidFactor = 0;
+  float schmidFactor1 = 0, maxSchmidFactor = 0;
   float directionComponent1 = 0, planeComponent1 = 0;
   float directionComponent2 = 0, planeComponent2 = 0;
   float maxF1 = 0;
@@ -873,7 +873,7 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
   float slipDirection[3], slipPlane[3];
   float directionMisalignment = 0, totalDirectionMisalignment = 0;
   float planeMisalignment = 0, totalPlaneMisalignment = 0;
-  float schmidFactor1 = 0, schmidFactor2 = 0, maxSchmidFactor = 0;
+  float schmidFactor1 = 0, maxSchmidFactor = 0;
   float directionComponent1 = 0, planeComponent1 = 0;
   float directionComponent2 = 0, planeComponent2 = 0;
   float maxF1spt = 0;
@@ -944,7 +944,7 @@ void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
   float hkl2[3], uvw2[3];
   float slipDirection[3], slipPlane[3];
   float directionMisalignment = 0, totalDirectionMisalignment = 0;
-  float schmidFactor1 = 0, schmidFactor2 = 0, maxSchmidFactor = 0;
+  float schmidFactor1 = 0, maxSchmidFactor = 0;
   float directionComponent1 = 0, planeComponent1 = 0;
   float directionComponent2 = 0, planeComponent2 = 0;
   float maxF7 = 0;
