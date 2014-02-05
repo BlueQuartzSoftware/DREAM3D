@@ -121,11 +121,11 @@ QStringList DataContainerArrayProxy::flattenHeirarchy()
 {
   QStringList strList;
   QListIterator<DataContainerProxy> dcIter(list);
+
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
     if(dcProxy.read == false) { continue; } // Skip to the next DataContainer if we are not reading this one.
-
     QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
     while(amIter.hasNext()) // AttributeMatrixLevel
     {
@@ -142,12 +142,10 @@ QStringList DataContainerArrayProxy::flattenHeirarchy()
         const DataArrayProxy& daProxy = dIter.value();
         if(daProxy.read == false) { continue; } // Skip to the next DataArray if not reading this one
 
-        QString path = QString("%1/%2").arg(dIter.value().path).arg(dIter.value().name);
+        QString path = QString("%1|%2|%3").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name);
         strList << path;
       }
     }
   }
-
-
   return strList;
 }

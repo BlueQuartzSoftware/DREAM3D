@@ -82,12 +82,15 @@ class DREAM3DWidgetsLib_EXPORT ArraySelectionWidget : public QWidget, private Ui
     void afterPreflight();
 
     void on_dataContainerList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+    void on_dataContainerList_itemClicked(QListWidgetItem* dcWidgetItem);
+
     void on_attributeMatrixList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
     void on_attributeArrayList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
 
 
   protected:
     void initializeHeirarchy();
+    DataContainerArrayProxy generateDCAProxy();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
