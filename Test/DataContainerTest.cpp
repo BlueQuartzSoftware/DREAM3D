@@ -376,9 +376,9 @@ void TestDataContainerWriter()
 // -----------------------------------------------------------------------------
 void TestDataContainerReader()
 {
-  size_t nx = 0;
-  size_t ny = 0;
-  size_t nz = 0;
+//  size_t nx = 0;
+//  size_t ny = 0;
+//  size_t nz = 0;
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
@@ -412,7 +412,7 @@ void TestDataContainerReader()
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
   QList<DataContainerProxy>& dcsToRead = dcaProxy.list;
-  uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+  //uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
   for(int i=(dcsToRead.size()-1); i>=0; i--)
   {
     DataContainerProxy& dcProxy = dcsToRead[i];

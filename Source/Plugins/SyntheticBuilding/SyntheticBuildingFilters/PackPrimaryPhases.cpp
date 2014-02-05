@@ -501,7 +501,7 @@ void PackPrimaryPhases::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
+  //int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
   int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
   int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
 
@@ -2053,8 +2053,8 @@ void PackPrimaryPhases::assign_gaps_only()
   m_Neighbors = neighborsPtr->getPointer(0);
 
   QVector<int > n(totalFeatures + 1, 0);
-  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
-  uint64_t currentMillis = millis;
+  //uint64_t millis = QDateTime::currentMSecsSinceEpoch();
+  //uint64_t currentMillis = millis;
 
   while (count != 0)
   {
