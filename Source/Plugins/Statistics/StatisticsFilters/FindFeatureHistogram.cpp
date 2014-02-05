@@ -81,7 +81,7 @@ void FindFeatureHistogram::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Feature Array To Bin");
     parameter->setPropertyName("SelectedFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);

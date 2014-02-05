@@ -74,21 +74,35 @@ class DREAM3DWidgetsLib_EXPORT SingleArraySelectionWidget : public QWidget, priv
     * @brief This method does additional GUI widget connections
     */
     void setupGui();
-  protected:
-    void initializeHeirarchy();
-
 
   public slots:
     void beforePreflight();
     void afterPreflight();
 
     void on_dataContainerList_currentIndexChanged(int index);
+
     void on_attributeMatrixList_currentIndexChanged(int index);
+
     void on_attributeArrayList_currentIndexChanged(int index);
+
+  protected:
+    void populateComboBoxes();
+    void populateAttributeMatrixList();
+    void populateAttributeArrayList();
+
+    DataContainerArrayProxy generateDCAProxy();
+    void setSelectedPath(QString dcName, QString attrMatName, QString attrArrName);
+    void selectDefaultPath();
+
+  signals:
+    void errorSettingFilterParameter(const QString& msg);
 
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
+    bool m_DidCausePreflight;
+
+    DataContainerArrayProxy m_DcaProxy;
 
     SingleArraySelectionWidget(const SingleArraySelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const SingleArraySelectionWidget&); // Operator '=' Not Implemented

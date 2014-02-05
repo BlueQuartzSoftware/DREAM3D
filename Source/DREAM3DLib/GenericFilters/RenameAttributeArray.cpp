@@ -122,6 +122,7 @@ void RenameAttributeArray::dataCheck()
   setErrorCondition(0);
 
 
+  qDebug() << "RenameAttributeArray::dataCheck() ==> " << getSelectedArrayPath();
 
   if(m_NewArrayName.isEmpty() == true)
   {
@@ -162,12 +163,13 @@ void RenameAttributeArray::dataCheck()
       //  if(getErrorCondition() < 0 || NULL == m) { return; }
       //  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getAttributeMatrixName(), -301);
       //  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
+      DataContainerArray::Pointer dca = getDataContainerArray();
+      if (NULL == dca.get() ) { return; }
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
       if(NULL == dc.get())
       {
         setErrorCondition(-11003);
-        QString ss = QObject::tr("The DataContainer '%1' is was not found in the DataContainerArray").arg(dcName);
+        QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
@@ -176,27 +178,27 @@ void RenameAttributeArray::dataCheck()
        if(NULL == attrMat.get())
       {
         setErrorCondition(-11004);
-        QString ss = QObject::tr("The AttributeMatrix '%1' is was not found in the DataContainer '%2'").arg(amName).arg(dcName);
+        QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
 
 
       // We the AttributeMatrix, now lets try to get the AttributeArray object and rename it if it exists
-      IDataArray::Pointer dataArray = attrMat->getAttributeArray(amName);
+      IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
 
       if(NULL == dataArray.get() )
       {
         setErrorCondition(-11005);
-        QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(tokens.at(2));
+        QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
-      bool check = attrMat->renameAttributeArray(amName, m_NewArrayName);
+      bool check = attrMat->renameAttributeArray(daName, m_NewArrayName);
       if(check == false)
       {
         setErrorCondition(-11006);
-        QString ss = QObject::tr("Attempt to rename AttributeArray '%1' to '%2' Failed.").arg(tokens.at(2)).arg(m_NewArrayName);
+        QString ss = QObject::tr("Attempt to rename AttributeArray '%1' to '%2' Failed.").arg(daName).arg(m_NewArrayName);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       }
     }

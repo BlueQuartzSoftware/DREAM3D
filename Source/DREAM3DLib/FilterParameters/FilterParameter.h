@@ -75,8 +75,9 @@ namespace FilterParameterWidgetType
       const QString ArraySelectionWidget("ArraySelectionWidget"); // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
       const QString SingleArraySelectionWidget("SingleArraySelectionWidget");
 
+#if 0
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
-      const QString VolumeVertexArrayNameSelectionWidget("VolumeVertexArrayNameSelectionWidget"); // ComboBox where the Cell Array names are used to populate
+      const QString SingleArraySelectionWidget("SingleArraySelectionWidget"); // ComboBox where the Cell Array names are used to populate
       const QString VolumeEdgeArrayNameSelectionWidget("VolumeEdgeArrayNameSelectionWidget"); //ComboBox where the Feature Array names are used to populate
       const QString VolumeFaceArrayNameSelectionWidget("VolumeFaceArrayNameSelectionWidget"); //ComboBox where the Ensemble Array names are used to populate
       const QString VolumeCellArrayNameSelectionWidget("VolumeCellArrayNameSelectionWidget"); // ComboBox where the Cell Array names are used to populate
@@ -95,6 +96,7 @@ namespace FilterParameterWidgetType
       const QString VertexFeatureArrayNameSelectionWidget("VertexFeatureArrayNameSelectionWidget");
       const QString VertexEnsembleArrayNameSelectionWidget("VertexEnsembleArrayNameSelectionWidget");
       /* ****  AND THIS LINE ******** */
+#endif
       /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
       const QString CellArrayComparisonSelectionWidget("CellArrayComparisonSelectionWidget");
       const QString FeatureArrayComparisonSelectionWidget("FeatureArrayComparisonSelectionWidget");
@@ -102,6 +104,9 @@ namespace FilterParameterWidgetType
       const QString VertexArrayComparisonSelectionWidget("VertexArrayComparisonSelectionWidget");
       const QString FaceArrayComparisonSelectionWidget("FaceArrayComparisonSelectionWidget");
       const QString EdgeArrayComparisonSelectionWidget("EdgeArrayComparisonSelectionWidget");
+
+
+
       const QString CustomWidget("CustomWidget");
 }
 

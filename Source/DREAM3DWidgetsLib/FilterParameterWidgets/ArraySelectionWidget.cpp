@@ -304,9 +304,6 @@ void ArraySelectionWidget::beforePreflight()
   if (NULL == m_Filter) { return; }
   //  std::cout << "Before Preflight" << std::endl;
 
-
-
-
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
   DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
@@ -314,7 +311,6 @@ void ArraySelectionWidget::beforePreflight()
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
   initializeHeirarchy(); // Now actually populate the QListWidgets based on the Proxy values
-
 
   // now get the selection from the filter
   DataContainerArrayProxy dcaProxy = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataContainerArrayProxy>();

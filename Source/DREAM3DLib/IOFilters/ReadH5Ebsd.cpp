@@ -150,18 +150,18 @@ void ReadH5Ebsd::setupFilterParameters()
     parameter->setValueType("int");
     parameters.push_back(parameter);
   }
-  {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Reference Z Direction");
-    parameter->setPropertyName("RefFrameZDir");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
-    QVector<QString> choices;
-    choices.push_back("Low to High");
-    choices.push_back("High to Low");
-    parameter->setChoices(choices);
-    parameters.push_back(parameter);
-  }
+//  {
+//    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+//    parameter->setHumanLabel("Reference Z Direction");
+//    parameter->setPropertyName("RefFrameZDir");
+//    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+//    parameter->setValueType("unsigned int");
+//    QVector<QString> choices;
+//    choices.push_back("Low to High");
+//    choices.push_back("High to Low");
+//    parameter->setChoices(choices);
+//    parameters.push_back(parameter);
+//  }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Use Transformations");
@@ -170,6 +170,14 @@ void ReadH5Ebsd::setupFilterParameters()
     parameter->setValueType("bool");
     parameters.push_back(parameter);
   }
+    {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Array to Read");
+    parameter->setPropertyName("SelectedArrayNames");
+    parameter->setWidgetType(FilterParameterWidgetType::ArraySelectionWidget);
+    parameters.push_back(parameter);
+  }
+
   setFilterParameters(parameters);
 }
 
