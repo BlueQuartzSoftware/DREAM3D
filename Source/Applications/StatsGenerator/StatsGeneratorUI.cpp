@@ -781,7 +781,6 @@ void StatsGeneratorUI::on_actionOpen_triggered()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::openFile(QString h5file)
 {
-  int err = 0;
   // Make sure the file path is not empty and does exist on the system
   if (true == h5file.isEmpty())
   {
@@ -803,7 +802,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   m_FilePath = h5file;
   m_FileSelected = true;
 
-  QString path;
+ // QString path;
 
   // Delete any existing phases from the GUI
   phaseTabs->clear();

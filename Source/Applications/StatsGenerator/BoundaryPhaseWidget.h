@@ -28,63 +28,56 @@ class QwtPlotMarker;
 class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-   public:
-     BoundaryPhaseWidget(QWidget *parent = 0);
-     virtual ~BoundaryPhaseWidget();
+  public:
+    BoundaryPhaseWidget(QWidget *parent = 0);
+    virtual ~BoundaryPhaseWidget();
 
-     void updatePlots();
+    void updatePlots();
 
-     void setPhaseIndex(int index);
-     int getPhaseIndex();
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, PhaseType)
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex)
+    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
+    DREAM3D_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+    //    DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
-     DREAM3D_INSTANCE_PROPERTY(unsigned int, PhaseType)
-     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
-     DREAM3D_INSTANCE_PROPERTY(float, TotalPhaseFraction)
- //    DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
+    void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 
-     void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
+    QString getComboString();
+    QString getTabTitle();
 
-     void setCrystalStructure(unsigned int xtal);
-     unsigned int getCrystalStructure();
+    int gatherStatsData(AttributeMatrix::Pointer attrMat);
 
-     QString getComboString();
-     QString getTabTitle();
+    // public slots:
+    //   void on_m_GenerateDefaultData_clicked();
 
-     int gatherStatsData(AttributeMatrix::Pointer attrMat);
+  protected slots:
 
-  // public slots:
-  //   void on_m_GenerateDefaultData_clicked();
+    void dataWasEdited();
+  protected:
 
-   protected slots:
-
-     void dataWasEdited();
-   protected:
-
-     /**
+    /**
       * @brief Enables or Disables all the widgets in a list
       * @param b
       */
-     void setWidgetListEnabled(bool b);
+    void setWidgetListEnabled(bool b);
 
-     void setupGui();
+    void setupGui();
 
-     /**
+    /**
       * @brief Enables or disables the various PlotWidgetTabs
       * @param b Enable or disable the plotwidgets
       */
-     void setTabsPlotTabsEnabled(bool b);
+    void setTabsPlotTabsEnabled(bool b);
 
-   private:
-     int                  m_PhaseIndex;
-     unsigned int  m_CrystalStructure;
+  private:
+    QList<QWidget*>      m_WidgetList;
+    QwtPlotGrid*         m_grid;
 
-     QList<QWidget*>      m_WidgetList;
-     QwtPlotGrid*         m_grid;
-
-     BoundaryPhaseWidget(const BoundaryPhaseWidget&); // Copy Constructor Not Implemented
-     void operator=(const BoundaryPhaseWidget&); // Operator '=' Not Implemented
+    BoundaryPhaseWidget(const BoundaryPhaseWidget&); // Copy Constructor Not Implemented
+    void operator=(const BoundaryPhaseWidget&); // Operator '=' Not Implemented
 };
 
 #endif /* BoundaryPhaseWidget_H_ */

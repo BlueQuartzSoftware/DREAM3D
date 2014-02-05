@@ -60,95 +60,93 @@ class QwtPlotMarker;
 class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPhaseWidget
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-   public:
-     TransformationPhaseWidget(QWidget *parent = 0);
-     virtual ~TransformationPhaseWidget();
+  public:
+    TransformationPhaseWidget(QWidget *parent = 0);
+    virtual ~TransformationPhaseWidget();
 
-     void updatePlots();
+    void updatePlots();
 
-     void setPhaseIndex(int index);
-     int getPhaseIndex();
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, PhaseType)
+    void setCrystalStructure(unsigned int xtal);
+    unsigned int getCrystalStructure() const;
+    void setPhaseIndex(int index);
+    int getPhaseIndex() const;
+    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
+    DREAM3D_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, ParentPhase)
+    DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
-     DREAM3D_INSTANCE_PROPERTY(unsigned int, PhaseType)
-     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
-     DREAM3D_INSTANCE_PROPERTY(float, TotalPhaseFraction)
-     DREAM3D_INSTANCE_PROPERTY(unsigned int, ParentPhase)
-     DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
-
-
-     void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
-
-     void setCrystalStructure(unsigned int xtal);
-     unsigned int getCrystalStructure();
-
-     void plotSizeDistribution();
-     void updateSizeDistributionPlot();
-     int computeBinsAndCutOffs( float mu, float sigma,
-                                float minCutOff, float maxCutOff,
-                                float binStepSize,
-                                QwtArray<float> &binsizes,
-                                QwtArray<float> &xCo,
-                                QwtArray<float> &yCo,
-                                float &xMax, float &yMax,
-                                QwtArray<float> &x,
-                                QwtArray<float> &y);
-
-     QString getComboString();
-     QString getTabTitle();
+    void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 
 
-     void calculateNumberOfBins();
-     int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
-     int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
+    void plotSizeDistribution();
+    void updateSizeDistributionPlot();
+    int computeBinsAndCutOffs( float mu, float sigma,
+                               float minCutOff, float maxCutOff,
+                               float binStepSize,
+                               QwtArray<float> &binsizes,
+                               QwtArray<float> &xCo,
+                               QwtArray<float> &yCo,
+                               float &xMax, float &yMax,
+                               QwtArray<float> &x,
+                               QwtArray<float> &y);
 
-     int gatherStatsData(AttributeMatrix::Pointer attrMat);
-
-  // public slots:
-     void on_m_GenerateDefaultData_clicked();
-
-   protected slots:
-
-     void on_m_Mu_SizeDistribution_textChanged(const QString &text);
-     void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
-     void on_m_MinSigmaCutOff_textChanged(const QString &text);
-     void on_m_MaxSigmaCutOff_textChanged(const QString &text);
-     void on_m_BinStepSize_valueChanged(double v);
-
-     void on_microstructurePresetCombo_currentIndexChanged(int index);
+    QString getComboString();
+    QString getTabTitle();
 
 
-     void dataWasEdited();
-   protected:
+    void calculateNumberOfBins();
+    int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
+    int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
 
-     /**
+    int gatherStatsData(AttributeMatrix::Pointer attrMat);
+
+    // public slots:
+    void on_m_GenerateDefaultData_clicked();
+
+  protected slots:
+
+    void on_m_Mu_SizeDistribution_textChanged(const QString &text);
+    void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
+    void on_m_MinSigmaCutOff_textChanged(const QString &text);
+    void on_m_MaxSigmaCutOff_textChanged(const QString &text);
+    void on_m_BinStepSize_valueChanged(double v);
+
+    void on_microstructurePresetCombo_currentIndexChanged(int index);
+
+
+    void dataWasEdited();
+  protected:
+
+    /**
       * @brief Enables or Disables all the widgets in a list
       * @param b
       */
-     void setWidgetListEnabled(bool b);
+    void setWidgetListEnabled(bool b);
 
-     void setupGui();
+    void setupGui();
 
-     /**
+    /**
       * @brief Enables or disables the various PlotWidgetTabs
       * @param b Enable or disable the plotwidgets
       */
-     void setTabsPlotTabsEnabled(bool b);
+    void setTabsPlotTabsEnabled(bool b);
 
-   private:
-     int                  m_PhaseIndex;
-     unsigned int  m_CrystalStructure;
+  private:
+    int                  m_PhaseIndex;
+    unsigned int  m_CrystalStructure;
 
-     QList<QWidget*>      m_WidgetList;
-     QwtPlotCurve*        m_SizeDistributionCurve;
-     QwtPlotMarker*       m_CutOffMin;
-     QwtPlotMarker*       m_CutOffMax;
-     QwtPlotGrid*         m_grid;
-     AbstractMicrostructurePreset::Pointer m_MicroPreset;
+    QList<QWidget*>      m_WidgetList;
+    QwtPlotCurve*        m_SizeDistributionCurve;
+    QwtPlotMarker*       m_CutOffMin;
+    QwtPlotMarker*       m_CutOffMax;
+    QwtPlotGrid*         m_grid;
+    AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
-     TransformationPhaseWidget(const TransformationPhaseWidget&); // Copy Constructor Not Implemented
-     void operator=(const TransformationPhaseWidget&); // Operator '=' Not Implemented
+    TransformationPhaseWidget(const TransformationPhaseWidget&); // Copy Constructor Not Implemented
+    void operator=(const TransformationPhaseWidget&); // Operator '=' Not Implemented
 };
 
 #endif /* TransformationPhaseWidget_H_ */

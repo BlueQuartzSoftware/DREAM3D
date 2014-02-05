@@ -300,7 +300,7 @@ void PrimaryPhaseWidget::setPhaseIndex(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrimaryPhaseWidget::getPhaseIndex()
+int PrimaryPhaseWidget::getPhaseIndex() const
 {
   return m_PhaseIndex;
 }
@@ -324,7 +324,7 @@ void PrimaryPhaseWidget::setCrystalStructure(unsigned int xtal)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int PrimaryPhaseWidget::getCrystalStructure()
+unsigned int PrimaryPhaseWidget::getCrystalStructure() const
 {
   return m_CrystalStructure;
 }
@@ -754,8 +754,6 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   float avglogdiam = mu;
   float sdlogdiam = sigma;
   float stepSize = binStep;
-
-  size_t ensembles = attrMat->getNumTuples();
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
