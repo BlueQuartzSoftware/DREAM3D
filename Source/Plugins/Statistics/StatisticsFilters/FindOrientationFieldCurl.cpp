@@ -39,6 +39,68 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/atomic.h>
+#include <tbb/tick_count.h>
+#include <tbb/task_scheduler_init.h>
+#include <tbb/task_group.h>
+#endif
+
+class FindMisorientationVectorsImpl
+{
+  public:
+    FindMisorientationVectorsImpl(QuatF* quats, float* misoVecs, int64_t* neighbors, int64_t* faceIds) :
+      m_Quats(quats),
+      m_MisoVecs(misoVecs),
+      m_Neighbors(neighbors),
+      m_FaceIds(faceIds)
+    {
+      m_OrientationOps = OrientationOps::getOrientationOpsVector();
+    }
+    virtual ~FindMisorientationVectorsImpl() {}
+
+    void convert(size_t start, size_t end) const
+    {
+      QuatF q1;
+      QuatF q2;
+      QuatF delq;
+      float misoVec[3];
+      for (size_t i = start; i < end; i++)
+      {
+        for(int j = 0; j < 3; j++)
+        {
+          QuaternionMathF::Copy(m_Quats[i], q1);
+          if(m_Neighbors[3*i+j] > 0)
+          {
+            QuaternionMathF::Copy(m_Quats[m_Neighbors[3*i+j]], q2);
+            QuaternionMathF::Conjugate(q2);
+            QuaternionMathF::Multiply(q2, q1, delq);
+            m_OrientationOps[1]->getFZQuat(delq);
+            QuaternionMathF::GetMisorientationVector(delq, misoVec);
+            m_MisoVecs[3*m_FaceIds[3*i+j]+0] = misoVec[0];
+            m_MisoVecs[3*m_FaceIds[3*i+j]+1] = misoVec[1];
+            m_MisoVecs[3*m_FaceIds[3*i+j]+2] = misoVec[2];
+          }
+        }
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t>& r) const
+    {
+      convert(r.begin(), r.end());
+    }
+#endif
+  private:
+    QuatF* m_Quats;
+    float* m_MisoVecs;
+    int64_t* m_Neighbors;
+    int64_t* m_FaceIds;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -49,8 +111,8 @@ FindOrientationFieldCurl::FindOrientationFieldCurl() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_OrientationCurlsArrayName(DREAM3D::CellData::OrientationCurls),
-  m_OrientationCurls(NULL),
+  m_DislocationTensorsArrayName(DREAM3D::CellData::DislocationTensors),
+  m_DislocationTensors(NULL),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
@@ -131,10 +193,12 @@ void FindOrientationFieldCurl::dataCheck()
   m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_OrientationCurlsPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_OrientationCurlsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_OrientationCurlsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_OrientationCurls = m_OrientationCurlsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  dims[0] = 9;
+  m_DislocationTensorsPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_DislocationTensorsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_DislocationTensorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_DislocationTensors = m_DislocationTensorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
+  dims[0] = 1;
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_CrystalStructuresArrayName, -305, dims)
                            ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -166,12 +230,66 @@ void FindOrientationFieldCurl::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  size_t xP = m->getXPoints();
+  size_t yP = m->getYPoints();
+  size_t zP = m->getZPoints();
 
   QuatF q1;
   QuatF q2;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  size_t totalFaces = ((xP+1)*yP*zP)+((yP+1)*xP*zP)+((zP+1)*xP*yP);
+  QVector<size_t> tDims(1, totalFaces);
+  QVector<size_t> cDims(1, 3);
+  FloatArrayType::Pointer misoVecsPtr = FloatArrayType::CreateArray(tDims, cDims, "misoVecs");
+  misoVecsPtr->initializeWithValue(0);
+  float* misoVecs = misoVecsPtr->getPointer(0);
+  tDims[0] = (xP*yP*zP);
+  Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(tDims, cDims, "neighbors");
+  neighborsPtr->initializeWithValue(-1);
+  int64_t* neighbors = neighborsPtr->getPointer(0);
+  Int64ArrayType::Pointer faceIdsPtr = Int64ArrayType::CreateArray(tDims, cDims, "faceIds");
+  faceIdsPtr->initializeWithValue(-1);
+  int64_t* faceIds = faceIdsPtr->getPointer(0);
 
-  int numVoxel; // number of voxels in the feature...
+  size_t count = 0;
+  size_t yshift = (xP+1)*yP*zP;
+  size_t zshift = ((xP+1)*yP*zP) + ((yP+1)*xP*zP);
+
+  for(size_t i = 0; i < zP; i++)
+  {
+    for(size_t j = 0; j < yP; j++)
+    {
+      for(size_t k = 0; k < xP; k++)
+      {
+        if(k != xP-1) neighbors[3*count+0] = count+1, faceIds[3*count+0] = k + (j*(xP+1)) + (i*(xP+1)*yP) + 1;
+        if(j != yP-1) neighbors[3*count+1] = count+xP, faceIds[3*count+1] = j + (k*(yP+1)) + (i*(yP+1)*xP) + yshift + 1;
+        if(i != zP-1) neighbors[3*count+2] = count+(xP*yP), faceIds[3*count+2] = i + (k*(zP+1)) + (j*(zP+1)*xP) + zshift + 1;
+        count++;
+      }
+    }
+  }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
+
+//first determine the misorientation vectors on all the voxel faces
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, (xP*yP*zP)),
+                      FindMisorientationVectorsImpl(quats, misoVecs, neighbors, faceIds), tbb::auto_partitioner());
+
+  }
+  else
+#endif
+  {
+    FindMisorientationVectorsImpl serial(quats, misoVecs, neighbors, faceIds);
+    serial.convert(0, (xP*yP*zP));
+  }
+
+
   int good = 0;
 
   float w, totalmisorientation;
@@ -188,62 +306,120 @@ void FindOrientationFieldCurl::execute()
   DimType xPoints = static_cast<DimType>(udims[0]);
   DimType yPoints = static_cast<DimType>(udims[1]);
   DimType zPoints = static_cast<DimType>(udims[2]);
+
   DimType point;
   size_t neighbor = 0;
-//  int m_KernelSize = 1;
-  DimType jStride;
-  DimType kStride;
-  for (DimType col = 0; col < xPoints; col++)
+  DimType rowShift = xPoints;
+  DimType planeShift = xPoints*yPoints;
+  DimType rowStride;
+  DimType planeStride;
+
+  float kappa11 = 0;
+  float kappa21 = 0;
+  float kappa31 = 0;
+  float kappa12 = 0;
+  float kappa22 = 0;
+  float kappa32 = 0;
+  float kappa13 = 0;
+  float kappa23 = 0;
+  float kappa33 = 0;
+  for (DimType plane = 0; plane < zPoints; plane++)
   {
+    planeStride = plane * planeShift;
     for (DimType row = 0; row < yPoints; row++)
     {
-      for (DimType plane = 0; plane < zPoints; plane++)
+      rowStride = row * rowShift;
+      for (DimType col = 0; col < xPoints; col++)
       {
-        point = (plane * xPoints * yPoints) + (row * xPoints) + col;
+        point = planeStride + rowStride + col;
         if (m_CellPhases[point] > 0)
         {
-          totalmisorientation = 0.0;
-          numVoxel = 0;
-          QuaternionMathF::Copy(quats[point], q1);
-          phase1 = m_CrystalStructures[m_CellPhases[point]];
-          for (int j = -m_CurlSize.z; j < m_CurlSize.z + 1; j++)
+          count = 0;
+          kappa11 = 0;
+          kappa21 = 0;
+          kappa31 = 0;
+          kappa12 = 0;
+          kappa22 = 0;
+          kappa32 = 0;
+          kappa13 = 0;
+          kappa23 = 0;
+          kappa33 = 0;
+          for (int j = -m_CurlSize.z; j < m_CurlSize.z; j++)
           {
-            jStride = j * xPoints * yPoints;
-            for (int k = -m_CurlSize.y; k < m_CurlSize.y + 1; k++)
+            good = 1;
+            if(plane + j < 0) { good = 0; }
+            else if(plane + j >= zPoints - 1) { good = 0; }
+            if(good == 1)
             {
-              kStride = k * xPoints;
-              for (int l = -m_CurlSize.x; l < m_CurlSize.z + 1; l++)
-              {
-                good = 1;
-                neighbor = point + (jStride) + (kStride) + (l);
-                if(plane + j < 0) { good = 0; }
-                else if(plane + j > zPoints - 1) { good = 0; }
-                else if(row + k < 0) { good = 0; }
-                else if(row + k > yPoints - 1) { good = 0; }
-                else if(col + l < 0) { good = 0; }
-                else if(col + l > xPoints - 1) { good = 0; }
-                if(good == 1)
-                {
-                  w = 10000.0;
-                  QuaternionMathF::Copy(quats[neighbor], q2);
-                  phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-                  w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-                  w = w * (180.0f / DREAM3D::Constants::k_Pi);
-                  totalmisorientation = totalmisorientation + w;
-                  numVoxel++;
-                }
-              }
+              neighbor = point + (j*planeShift);
+              kappa13 += misoVecs[3*faceIds[3*neighbor+2]];
+              kappa23 += misoVecs[3*faceIds[3*neighbor+2]+1];
+              kappa33 += misoVecs[3*faceIds[3*neighbor+2]+2];
+              count++;
             }
           }
-          m_OrientationCurls[point] = totalmisorientation / (float)numVoxel;
-          if(numVoxel == 0)
+          if(count > 0)
           {
-            m_OrientationCurls[point] = 0;
+            kappa13 /= count;
+            kappa23 /= count;
+            kappa33 /= count;
+            count = 0;
           }
-        }
-        if (m_CellPhases[point] == 0)
-        {
-          m_OrientationCurls[point] = 0;
+
+          count = 0;
+          for (int k = -m_CurlSize.y; k < m_CurlSize.y; k++)
+          {
+            good = 1;
+            if(row + k < 0) { good = 0; }
+            else if(row + k >= yPoints - 1) { good = 0; }
+            if(good == 1)
+            {
+              neighbor = point + (k*rowShift);
+              kappa12 += misoVecs[3*faceIds[3*neighbor+1]];
+              kappa22 += misoVecs[3*faceIds[3*neighbor+1]+1];
+              kappa32 += misoVecs[3*faceIds[3*neighbor+1]+2];
+              count++;
+            }
+          }
+          if(count > 0)
+          {
+            kappa12 /= count;
+            kappa22 /= count;
+            kappa32 /= count;
+            count = 0;
+          }
+
+          for (int l = -m_CurlSize.x; l < m_CurlSize.z; l++)
+          {
+            good = 1;
+            if(col + l < 0) { good = 0; }
+            else if(col + l >= xPoints - 1) { good = 0; }
+            if(good == 1)
+            {
+              neighbor = point + l;
+              kappa11 += misoVecs[3*faceIds[3*neighbor]];
+              kappa21 += misoVecs[3*faceIds[3*neighbor]+1];
+              kappa31 += misoVecs[3*faceIds[3*neighbor]+2];
+              count++;
+            }
+          }
+          if(count > 0)
+          {
+            kappa11 /= count;
+            kappa21 /= count;
+            kappa31 /= count;
+            count = 0;
+          }
+
+          m_DislocationTensors[9*point] = -kappa22-kappa33;
+          m_DislocationTensors[9*point+1] = kappa21;
+          m_DislocationTensors[9*point+2] = kappa31;
+          m_DislocationTensors[9*point+3] = kappa12;
+          m_DislocationTensors[9*point+4] = -kappa11-kappa33;
+          m_DislocationTensors[9*point+5] = kappa32;
+          m_DislocationTensors[9*point+6] = kappa13;
+          m_DislocationTensors[9*point+7] = kappa23;
+          m_DislocationTensors[9*point+8] = -kappa11-kappa22;
         }
       }
     }

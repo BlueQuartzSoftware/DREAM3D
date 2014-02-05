@@ -140,6 +140,7 @@ namespace DREAM3D
     const DREAM3D_STRING CellPhases("Phases");
     const DREAM3D_STRING ConfidenceIndex("Confidence Index");
     const DREAM3D_STRING ConfidenceIndexNoSpace("ConfidenceIndex");
+    const DREAM3D_STRING DislocationTensors("DislocationTensors");
     const DREAM3D_STRING EulerAngles("EulerAngles");
     const DREAM3D_STRING EulerColor("EulerColor");
     const DREAM3D_STRING FarFeatureQuats("FarFeatureQuats");
@@ -155,7 +156,6 @@ namespace DREAM3D
     const DREAM3D_STRING ImageData("ImageData");
     const DREAM3D_STRING ImageQuality("Image Quality");
     const DREAM3D_STRING ImageQualityNoSpace("ImageQuality");
-    const DREAM3D_STRING OrientationCurls("OrientationCurls");
     const DREAM3D_STRING KernelAverageMisorientations("KernelAverageMisorientations");
     const DREAM3D_STRING MicroTexVolFrac("MicroTexVolFrac");
     const DREAM3D_STRING MisorientationColor("MisorientationColor");

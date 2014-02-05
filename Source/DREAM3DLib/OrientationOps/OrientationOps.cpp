@@ -77,6 +77,11 @@ OrientationOps::~OrientationOps()
 {
 }
 
+void OrientationOps::getFZQuat(QuatF& qr)
+{
+  BOOST_ASSERT(false);
+}
+
 float OrientationOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
                                     QuatF& q1, QuatF& q2,
                                     float& n1, float& n2, float& n3)

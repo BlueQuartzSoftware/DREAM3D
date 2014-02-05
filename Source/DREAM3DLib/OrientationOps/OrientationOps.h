@@ -124,6 +124,7 @@ class DREAM3DLib_EXPORT OrientationOps
     virtual void getODFFZRod(float& r1, float& r2, float& r3) = 0;
     virtual void getMDFFZRod(float& r1, float& r2, float& r3) = 0;
     virtual void getNearestQuat(QuatF& q1, QuatF& q2) = 0;
+    virtual void getFZQuat(QuatF& qr);
     virtual int getMisoBin(float r1, float r2, float r3) = 0;
     virtual bool inUnitTriangle(float eta, float chi) = 0;
     virtual void determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3) = 0;

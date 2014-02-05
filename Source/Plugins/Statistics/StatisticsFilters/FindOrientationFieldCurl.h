@@ -107,7 +107,7 @@ class FindOrientationFieldCurl : public AbstractFilter
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, OrientationCurls)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, DislocationTensors)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)

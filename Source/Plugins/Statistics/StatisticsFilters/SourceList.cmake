@@ -29,7 +29,7 @@ set(_PublicFilters
   FindNeighborhoods
   FindNeighbors
   FindNumFeatures
- # FindOrientationFieldCurl
+  FindOrientationFieldCurl
   FindSchmids
   FindShapes
   FindSizes

@@ -296,7 +296,7 @@ void VisualizeGBCD::execute()
 
   //  int inversion = 1;
   //get number of symmetry operators
-  int n_sym = m_OrientationOps[0]->getNumSymOps();
+  int n_sym = m_OrientationOps[1]->getNumSymOps();
 
   int xpoints = 200;
   int ypoints = 200;
@@ -361,14 +361,14 @@ void VisualizeGBCD::execute()
     for(int i = 0; i < n_sym; i++)
     {
       //get symmetry operator1
-      m_OrientationOps[0]->getMatSymOp(i, sym1);
+      m_OrientationOps[1]->getMatSymOp(i, sym1);
       MatrixMath::Multiply3x3with3x3(sym1, dg, dg1);
       //get transpose for rotation of directions
       MatrixMath::Transpose3x3(sym1, sym1t);
       for(int j = 0; j < n_sym; j++)
       {
         //get symmetry operator2
-        m_OrientationOps[0]->getMatSymOp(j, sym2);
+        m_OrientationOps[1]->getMatSymOp(j, sym2);
         MatrixMath::Transpose3x3(sym2, sym2t);
         //calculate symmetric misorientation
         MatrixMath::Multiply3x3with3x3(dg1, sym2t, dg2);

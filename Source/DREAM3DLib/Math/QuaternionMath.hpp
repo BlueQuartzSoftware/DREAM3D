@@ -282,7 +282,6 @@ class QuaternionMath
       return sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
     }
 
-    // -----------------------------------------------------------------------------
     /**
     * @brief UnitQuaternion (Normalize) Converts the quaternion into its normalized values
     * @param qr
@@ -296,6 +295,21 @@ class QuaternionMath
       qr.w = static_cast<T>( qr.w / length );
     }
 
+    /**
+    * @brief GetMisorientationVector Converts the quaternion into a misorientation vector in the reference frame of the quaternion
+    * @param qr
+    * @param misoVec
+    */
+    static void GetMisorientationVector(Quaternion& qr, float misoVec[3])
+    {
+      float qw = qr.w;
+      DREAM3DMath::boundF(qw, -1, 1);
+      double constVal = 2*acos(qw)/(sqrt(1-(qw*qw)));
+      if(qw == 1.0 || qw == -1.0) constVal = 0.0;
+      misoVec[0] = float( qr.x * constVal );
+      misoVec[1] = float( qr.y * constVal );
+      misoVec[2] = float( qr.z * constVal );
+    }
 
   protected:
 
