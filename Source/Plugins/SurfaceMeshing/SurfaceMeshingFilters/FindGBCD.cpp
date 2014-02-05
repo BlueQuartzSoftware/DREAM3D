@@ -377,7 +377,8 @@ void FindGBCD::dataCheckSurfaceMesh()
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -302);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer faceEnsembleAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceEnsembleAttributeMatrixName(), -302);
+  QVector<size_t> tDims(1, m_CrystalStructuresPtr.lock()->getNumberOfTuples());
+  AttributeMatrix::Pointer faceEnsembleAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::FaceEnsemble);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
@@ -452,8 +453,9 @@ void FindGBCD::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void FindGBCD::preflight()
 {
-  dataCheckSurfaceMesh();
   dataCheckVoxel();
+  //order here matters...because we are going to use the size of the crystal structures out of the dataCheckVoxel to size the faceAttrMat in dataCheckSurfaceMesh
+  dataCheckSurfaceMesh();
 }
 
 // -----------------------------------------------------------------------------
@@ -464,12 +466,10 @@ void FindGBCD::execute()
   int err = 0;
   setErrorCondition(err);
 
-  // Run the data check to allocate the memory for the centroid array
-  // Note the use of the voxel datacontainer num ensembles to set the gbcd size
-  dataCheckSurfaceMesh();
-  if(getErrorCondition() < 0) { return; }
-
   dataCheckVoxel();
+  if(getErrorCondition() < 0) { return; }
+  //order here matters...because we are going to use the size of the crystal structures out of the dataCheckVoxel to size the faceAttrMat in dataCheckSurfaceMesh
+  dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Starting");
