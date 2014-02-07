@@ -42,6 +42,7 @@
 #include <QtCore/QFileInfoList>
 #include <QtCore/QPropertyAnimation>
 #include <QtCore/QResource>
+#include <QtCore/QDebug>
 
 #include <QtGui/QFileDialog>
 #include <QtGui/QCloseEvent>
@@ -73,16 +74,6 @@
 
 #include "QFilterWidget.h"
 #include "AddFavoriteWidget.h"
-
-//namespace Detail
-//{
-//  const QString Library("Filter Library");
-//  const QString PrebuiltPipelines("Prebuilt Pipelines");
-//  const QString FavoritePipelines("Favorite Pipelines");
-//  const QString PipelineBuilderGroup("PipelineBuilder");
-//  const QString FavoriteConfig("favorite_config");
-//}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -145,7 +136,7 @@ void PipelineBuilderWidget::initFilterListMenu()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 {
- this->m_MenuPipeline = menuPipeline;
+  this->m_MenuPipeline = menuPipeline;
 
   QAction* separator = new QAction(this);
   separator->setSeparator(true);
@@ -161,6 +152,17 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
           this, SLOT( actionAddFavorite_triggered() ) );
   m_FavoriteItemActions << actionAddFavorite;
   m_FavoriteCategoryActions << actionAddFavorite;
+
+  QAction* actionAddFavoriteFolder = new QAction(m_MenuPipeline);
+  actionAddFavoriteFolder->setObjectName(QString::fromUtf8("actionAddFavoriteFolder"));
+  actionAddFavoriteFolder->setText(QApplication::translate("DREAM3D_UI", "Add Folder", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionAddFavoriteFolder);
+  //QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_Plus);
+  //actionAddFavoriteFolder->setShortcut(actionAddFavKeySeq);
+  connect(actionAddFavoriteFolder, SIGNAL(triggered()),
+          this, SLOT( actionAddFavoriteFolder_triggered() ) );
+  m_FavoriteCategoryActions << actionAddFavoriteFolder;
+
 
   QAction* actionUpdateFavorite = new QAction(m_MenuPipeline);
   actionUpdateFavorite->setObjectName(QString::fromUtf8("actionUpdateFavorite"));
@@ -342,10 +344,8 @@ void PipelineBuilderWidget::readFavoritePipelines()
   {
 #if defined (Q_OS_MAC)
     QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-    QString extension = ".ini";
 #else
     QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-    QString extension = ".ini";
 #endif
     prefFile = prefs.fileName();
   }
@@ -362,53 +362,13 @@ void PipelineBuilderWidget::readFavoritePipelines()
   QString fileExtension("*.ini");
 
   addFiltersRecursively(favDir, m_favorites, iconFileName, allowEditing, fileExtension, itemType);
-
-#if 0
-  QStringList filters;
-  filters << "*.ini";
-  QFileInfoList dirList = favDir.entryInfoList(filters);
-  foreach(QFileInfo fi, dirList)
-  {
-    QString favFilePath = fi.absoluteFilePath();
-    QSettings favPref(favFilePath, QSettings::IniFormat);
-    QString favName;
-    {
-      favPref.beginGroup(DREAM3D::Settings::FavoriteConfig);
-      favName = favPref.value("Name").toString();
-      favPref.endGroup();
-      // This next code section is here to move from the old "favorite_config" to the newer DREAM3D::Settings::PipelineBuilderGroup ini group
-      if (favName.isEmpty() == false)
-      {
-        favPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-        favPref.setValue("Name", favName);
-        favPref.endGroup();
-        favPref.remove("favorite_config"); // Now that we transfered the value, remove the old value
-      }
-    }
-
-    {
-      favPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-      favName = favPref.value("Name").toString();
-      favPref.endGroup();
-    }
-
-    // Add a tree widget item for this favorite
-    QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites, PipelineTreeWidget::Favorite_Item_Type);
-    favoriteItem->setText(0, favName);
-    favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
-    favoriteItem->setData(0, Qt::UserRole, QVariant(favFilePath));
-    favoriteItem->setFlags(favoriteItem->flags() | Qt::ItemIsEditable);
-    //   m_favoritesMap[favoriteItem] = favFilePath;
-  }
-
-  #endif
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
-  bool allowEditing, QString fileExtension, PipelineTreeWidget::ItemType itemType)
+                                                  bool allowEditing, QString fileExtension, PipelineTreeWidget::ItemType itemType)
 {
 
 
@@ -424,9 +384,11 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
       // 1.Create an entry in the tree widget with this name
       // 2.drop into the directory and look for all the .txt files and add entries for those items.
       //qDebug() << fi.absoluteFilePath() << "\n";
-      // Add a tree widget item for this Prebuilt Group
-      nextDirItem = new QTreeWidgetItem(currentDirItem);
+      // Add a tree widget item for this  Group
+      //qDebug() << fi.absoluteFilePath();
+      nextDirItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Favorite_Category_Item_Type);
       nextDirItem->setText(0, fi.baseName());
+      nextDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath() ) );
       addFiltersRecursively( QDir( fi.absoluteFilePath() ), nextDirItem, iconFileName, allowEditing, fileExtension, itemType );   // Recursive call
     }
   }
@@ -441,7 +403,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
     itemPref.beginGroup(QString::fromStdString(DREAM3D::Settings::PipelineBuilderGroup));
     QString itemName = itemPref.value("Name").toString();
     itemPref.endGroup();
-    // qDebug() << itemInfo.absoluteFilePath() << "\n";
+    //qDebug() << itemInfo.absoluteFilePath() << "\n";
     // Add tree widget for this Prebuilt Pipeline
     QTreeWidgetItem* itemWidget = new QTreeWidgetItem(currentDirItem, itemType);
     itemWidget->setText(0, itemName);
@@ -785,7 +747,24 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column )
 {
-  if (NULL != item->parent() && item->parent()->text(0).compare(QString::fromStdString(DREAM3D::Settings::FavoritePipelines)) == 0)
+  bool flag = false;
+  if (NULL == item) { return; }
+  QTreeWidgetItem* temp = item;
+  //QTreeWidgetItem* parent = temp->parent();
+  while(temp != NULL)
+  {
+    if(temp->parent() == NULL)
+    {
+      if(temp->text(0).compare(QString::fromStdString(DREAM3D::Settings::FavoritePipelines)) == 0)
+      {
+        flag = true;
+      }
+    }
+    temp = temp->parent();
+  }
+
+  // we are in the "Favorites" group
+  if (flag == true && item->text(0).compare(QString::fromStdString(DREAM3D::Settings::FavoritePipelines)) != 0)
   {
     QString favoritePath = item->data(0, Qt::UserRole).toString();
     QString newFavoriteTitle = item->text(0);
@@ -952,7 +931,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   else
   {
     // Update filter list with preview of current item
-  on_filterLibraryTree_itemClicked(item, 0);
+    on_filterLibraryTree_itemClicked(item, 0);
   }
 }
 
@@ -1370,7 +1349,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 
       errorTableWidget->insertRow(rc);
 
-    QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
+      QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
       filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
@@ -1381,14 +1360,14 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-    if (hyperlinkLabel == NULL)
-    {
-      errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
-    }
-    else
-    {
-      errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-    }
+      if (hyperlinkLabel == NULL)
+      {
+        errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+      }
+      else
+      {
+        errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+      }
       errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1423,14 +1402,14 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-    if (hyperlinkLabel == NULL)
-    {
-      msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
-    }
-    else
-    {
-      msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-    }
+      if (hyperlinkLabel == NULL)
+      {
+        msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
+      }
+      else
+      {
+        msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+      }
       msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
       msgTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1474,47 +1453,25 @@ void PipelineBuilderWidget::addProgressMessage(QString message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::addFavorite(QString favoriteTitle)
+void PipelineBuilderWidget::addFavorite(QString path, QString favoriteTitle)
 {
   //Remove all spaces and illegal characters from favorite name
   favoriteTitle = favoriteTitle.trimmed();
   favoriteTitle = favoriteTitle.remove(" ");
   favoriteTitle = favoriteTitle.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
 
+  QString newPrefPath = path + QDir::separator() + favoriteTitle + ".ini";
 
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-  QString extension = ".ini";
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-  QString extension = ".ini";
-#endif
-
-  QString prefFile = prefs.fileName();
-  QFileInfo prefFileInfo = QFileInfo(prefFile);
-  QString parentPath = prefFileInfo.path();
-  QDir parentPathDir = QDir(parentPath);
-
-  if(parentPathDir.mkpath(parentPath))
+  // Scope this section so the prefs file is written immediately
   {
-    QString newParentPrefPath = parentPath + "/DREAM3D_Favorites";
-    QString newPrefPath = newParentPrefPath + "/" + favoriteTitle + extension;
-
-    newPrefPath = QDir::toNativeSeparators(newPrefPath);
-    newParentPrefPath = QDir::toNativeSeparators(newParentPrefPath);
-
-    QDir newParentPrefPathDir = QDir(newParentPrefPath);
-
-    if(newParentPrefPathDir.mkpath(newParentPrefPath))
-    {
-      QSettings newPrefs(newPrefPath, QSettings::IniFormat);
-      newPrefs.beginGroup(QString::fromStdString(DREAM3D::Settings::PipelineBuilderGroup));
-      newPrefs.setValue("Name", favoriteTitle);
-      newPrefs.endGroup();
-      writeSettings(newPrefs, m_PipelineViewWidget);
-    }
+    QSettings newPrefs(newPrefPath, QSettings::IniFormat);
+    newPrefs.beginGroup(QString::fromStdString(DREAM3D::Settings::PipelineBuilderGroup));
+    newPrefs.setValue("Name", favoriteTitle);
+    newPrefs.endGroup();
+    writeSettings(newPrefs, m_PipelineViewWidget);
   }
 
+#if 0
   QList<QTreeWidgetItem*> items = m_favorites->takeChildren();
   int count = items.count();
   for(int i = 0; i < count; ++i)
@@ -1526,22 +1483,72 @@ void PipelineBuilderWidget::addFavorite(QString favoriteTitle)
   filterLibraryTree->blockSignals(false);
   // Tell everyone to save their preferences NOW instead of waiting until the app quits
   emit fireWriteSettings();
+#endif
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::actionAddFavorite_triggered() {
-  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget(this);
-  addfavoriteDialog->exec();
+void PipelineBuilderWidget::actionAddFavoriteFolder_triggered()
+{
 
+  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Folder", this);
+  addfavoriteDialog->exec();
   if(addfavoriteDialog->getBtnClicked())
   {
-
     QString favoriteTitle = addfavoriteDialog->getFavoriteName();
-    addFavorite(favoriteTitle);
-  }
+    QTreeWidgetItem* currentDirItem = filterLibraryTree->currentItem();
+    QString path = currentDirItem->data(0, Qt::UserRole).toString();
+    QFileInfo fi(path + QDir::separator() + favoriteTitle);
+    QDir currentDir = fi.absoluteFilePath();
+    currentDir.mkpath(".");
 
+    fi = QFileInfo(path + QDir::separator() + favoriteTitle);
+
+    QTreeWidgetItem* nextDirItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Favorite_Category_Item_Type);
+    nextDirItem->setText(0, fi.baseName());
+    nextDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath() ) );
+    //Nothing to add as this was a brand new folder
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::actionAddFavorite_triggered()
+{
+  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite", this);
+  addfavoriteDialog->exec();
+
+  filterLibraryTree->blockSignals(true);
+  if(addfavoriteDialog->getBtnClicked())
+  {
+    QTreeWidgetItem* selection = filterLibraryTree->currentItem();
+    // qDebug() << selection->data(0, Qt::UserRole).toString();
+    QString favoriteTitle = addfavoriteDialog->getFavoriteName();
+
+    favoriteTitle = favoriteTitle.trimmed();
+    favoriteTitle = favoriteTitle.remove(" ");
+    favoriteTitle = favoriteTitle.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
+    bool allowEditing = true;
+    QString path = selection->data(0, Qt::UserRole).toString();
+    QString newPrefPath = path + QDir::separator() + favoriteTitle + ".ini";
+
+    addFavorite(path, favoriteTitle);
+
+    QTreeWidgetItem* itemWidget = new QTreeWidgetItem(selection, PipelineTreeWidget::Favorite_Item_Type);
+    itemWidget->setText(0, favoriteTitle);
+    itemWidget->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
+    itemWidget->setData(0, Qt::UserRole, QVariant(newPrefPath));
+    if(allowEditing == true)
+    {
+      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
+    }
+    // Tell everyone to save their preferences NOW instead of waiting until the app quits
+    emit fireWriteSettings();
+  }
+  filterLibraryTree->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -1551,18 +1558,18 @@ void PipelineBuilderWidget::actionUpdateFavorite_triggered()
 {
   // Lets get the name of the favorite
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+  //QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
 
   QString filePath = item->data(0, Qt::UserRole).toString();
   QFileInfo filePathInfo = QFileInfo(filePath);
   // QString fileParentPath = filePathInfo.path();
   QString fileName = filePathInfo.baseName();
 
-  if (NULL != parent && parent->text(0).compare(QString::fromStdString(DREAM3D::Settings::FavoritePipelines)) == 0 )
+  // if (NULL != parent && parent->text(0).compare(QString::fromStdString(DREAM3D::Settings::FavoritePipelines)) == 0 )
   {
     removeFavorite(item);
     item = NULL;
-    addFavorite(fileName);
+    addFavorite(filePathInfo.absolutePath(), fileName);
   }
 
 }
@@ -1595,7 +1602,7 @@ void PipelineBuilderWidget::removeFavorite(QTreeWidgetItem* item)
 void PipelineBuilderWidget::actionRemoveFavorite_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+ // QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
 
   QMessageBox msgBox;
   msgBox.setText("Are you sure that you want to remove \"" + item->text(0) + "\"?");
@@ -1603,7 +1610,8 @@ void PipelineBuilderWidget::actionRemoveFavorite_triggered()
   msgBox.setDefaultButton(QMessageBox::Yes);
   int ret = msgBox.exec();
 
-  if (NULL != parent && parent->text(0).compare(QString::fromStdString(DREAM3D::Settings::FavoritePipelines)) == 0 && ret == QMessageBox::Yes)
+  // if (NULL != parent && parent->text(0).compare(QString::fromStdString(DREAM3D::Settings::FavoritePipelines)) == 0 && ret == QMessageBox::Yes)
+  if(ret == QMessageBox::Yes)
   {
     removeFavorite(item);
   }
@@ -1617,7 +1625,7 @@ void PipelineBuilderWidget::actionRenameFavorite_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
 
-  if (NULL != item->parent() && item->parent()->text(0).compare(QString::fromStdString(DREAM3D::Settings::FavoritePipelines)) == 0)
+  //if (NULL != item->parent() && item->parent()->text(0).compare(QString::fromStdString(DREAM3D::Settings::FavoritePipelines)) == 0)
   {
     filterLibraryTree->editItem(item, 0);
   }
@@ -1652,7 +1660,7 @@ void PipelineBuilderWidget::actionShowInFileSystem_triggered()
   QString pipelinePathDir = pipelinePathInfo.path();
 
   QString s("file://");
-  #if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
   s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
 #elif defined(Q_OS_MAC)
 

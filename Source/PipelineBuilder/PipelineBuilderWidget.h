@@ -217,6 +217,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void actionShowInFileSystem_triggered();
     void actionFilterListHelp_triggered();
     void actionUpdateFavorite_triggered();
+    void actionAddFavoriteFolder_triggered();
 
     void on_m_GoBtn_clicked();
     void disableGoBtn();
@@ -251,7 +252,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
   protected:
     void removeFavorite(QTreeWidgetItem* item);
-    void addFavorite(QString favoriteTitle);
+    void addFavorite(QString parentPath, QString favoriteTitle);
 
   signals:
     void fireWriteSettings();

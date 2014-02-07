@@ -37,10 +37,11 @@
 
 #include "AddFavoriteWidget.h"
 
-AddFavoriteWidget::AddFavoriteWidget(QWidget *parent) {
+AddFavoriteWidget::AddFavoriteWidget(QString text, QWidget *parent) {
   setupUi(this);
   addfavoriteOKButton->setEnabled(false);
   BtnClicked = false;
+  label->setText(text);
 }
 
 // -----------------------------------------------------------------------------

@@ -45,7 +45,7 @@ class AddFavoriteWidget : public QDialog, public Ui::Dialog
   Q_OBJECT
 
   public:
-    AddFavoriteWidget(QWidget* parent = 0);
+    AddFavoriteWidget(QString text, QWidget* parent = 0);
     bool getBtnClicked();
     QString getFavoriteName();
 
