@@ -941,7 +941,10 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
 void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
   QTreeWidgetItem* parent = item->parent();
-
+  if (item->type() == PipelineTreeWidget::Favorite_Category_Item_Type || item->type() ==PipelineTreeWidget::Prebuilt_Category_Item_Type)
+  {
+    return;
+  }
   while(NULL != parent)
   {
     if (NULL == parent->parent() )
