@@ -36,7 +36,7 @@
 #include "RotateEulerRefFrame.h"
 
 
-#include <boost/math/special_functions/fpclassify.hpp> // isnan
+//#include <boost/math/special_functions/fpclassify.hpp> // isnan
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -54,12 +54,12 @@
 const static float m_pi = static_cast<float>(M_PI);
 
 
-namespace Detail
-{
-  bool closeEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon()) {
-    return (epsilon > std::abs(a - b));
-  }
-}
+//namespace Detail
+//{
+//  bool closeEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon()) {
+//    return (epsilon > std::abs(a - b));
+//  }
+//}
 class RotateEulerRefFrameImpl
 {
     float* m_CellEulerAngles;
