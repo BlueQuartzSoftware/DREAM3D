@@ -560,6 +560,34 @@ void FindGBCD::execute()
     m_GBCD[i] *= MRDfactor;
   }
 
+  std::ofstream outFile;
+  outFile.open("c:/Users/groebema/Desktop/Greg_GBCD.txt");
+
+  size_t bin;
+  size_t n1 =  m_GBCDsizes[0];
+  size_t n1n2 = n1*( m_GBCDsizes[1]);
+  size_t n1n2n3 = n1n2*( m_GBCDsizes[2]);
+  size_t n1n2n3n4 = n1n2n3*( m_GBCDsizes[3]);
+
+  for(int a=0;a<m_GBCDsizes[0];a++)
+  {
+    for(int b=0;b<m_GBCDsizes[1];b++)
+    {
+      for(int c=0;c<m_GBCDsizes[2];c++)
+      {
+        for(int d=0;d<m_GBCDsizes[3];d++)
+        {
+          for(int e=0;e<m_GBCDsizes[4];e++)
+          {
+            bin = a + n1*b + n1n2*c + n1n2n3*d + n1n2n3n4*e;
+            outFile << m_GBCD[bin];
+          }
+        }
+      }
+    }
+  }
+  outFile.close();
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
