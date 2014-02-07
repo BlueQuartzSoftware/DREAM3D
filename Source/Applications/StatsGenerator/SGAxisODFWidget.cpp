@@ -73,14 +73,14 @@
 //
 // -----------------------------------------------------------------------------
 SGAxisODFWidget::SGAxisODFWidget(QWidget *parent) :
-QWidget(parent),
-m_EnableAxisDecorations(false),
-m_Initializing(true),
-m_PhaseIndex(-1),
-m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic),
-m_ODFTableModel(NULL),
-m_MDFWidget(NULL),
-m_PoleFigureFuture(NULL)
+  QWidget(parent),
+  m_EnableAxisDecorations(false),
+  m_Initializing(true),
+  m_PhaseIndex(-1),
+  m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic),
+  m_ODFTableModel(NULL),
+  m_MDFWidget(NULL),
+  m_PoleFigureFuture(NULL)
 {
   this->setupUi(this);
   this->setupGui();
@@ -121,26 +121,26 @@ void SGAxisODFWidget::extractStatsData(VoxelDataContainer::Pointer m, int index,
     arrays = tp->getAxisODF_Weights();
   }
   if (arrays.size() > 0 ) {
-  QVector<float> e1(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-  ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
+    QVector<float> e1(static_cast<int>(arrays[0]->GetNumberOfTuples()));
+    ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
 
-  QVector<float> e2(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-  ::memcpy( &(e2.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e2.size() );
+    QVector<float> e2(static_cast<int>(arrays[1]->GetNumberOfTuples()));
+    ::memcpy( &(e2.front()), arrays[1]->GetVoidPointer(0), sizeof(float)*e2.size() );
 
-  QVector<float> e3(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-  ::memcpy( &(e3.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e3.size() );
+    QVector<float> e3(static_cast<int>(arrays[2]->GetNumberOfTuples()));
+    ::memcpy( &(e3.front()), arrays[2]->GetVoidPointer(0), sizeof(float)*e3.size() );
 
-  QVector<float> weights(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-  ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
+    QVector<float> sigmas(static_cast<int>(arrays[3]->GetNumberOfTuples()));
+    ::memcpy( &(sigmas.front()), arrays[3]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
 
-  QVector<float> sigmas(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-  ::memcpy( &(sigmas.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
+    QVector<float> weights(static_cast<int>(arrays[4]->GetNumberOfTuples()));
+    ::memcpy( &(weights.front()), arrays[4]->GetVoidPointer(0), sizeof(float)*weights.size() );
 
-  if(e1.size() > 0)
-  {
-    // Load the data into the table model
-    m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
-  }
+    if(e1.size() > 0)
+    {
+      // Load the data into the table model
+      m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
+    }
   }
   updatePlots();
 }
@@ -177,21 +177,21 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
   if (aodf.size() > 0)
   {
     FloatArrayType::Pointer aodfData = FloatArrayType::FromStdVector(aodf, DREAM3D::HDF5::AxisOrientation);
-  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
-  {
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
-    pp->setAxisOrientation(aodfData);
-  }
-  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
-  {
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
-    pp->setAxisOrientation(aodfData);
-  }
-  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
-  {
-    TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
-    tp->setAxisOrientation(aodfData);
-  }
+    if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+      pp->setAxisOrientation(aodfData);
+    }
+    if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+    {
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+      pp->setAxisOrientation(aodfData);
+    }
+    if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+    {
+      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+      tp->setAxisOrientation(aodfData);
+    }
 
     if(e1s.size() > 0)
     {
@@ -207,21 +207,21 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
       aodfWeights.push_back(euler3);
       aodfWeights.push_back(sigma);
       aodfWeights.push_back(weight);
-    if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
-    {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
-      pp->setAxisODF_Weights(aodfWeights);
-    }
-    if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
-    {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
-      pp->setAxisODF_Weights(aodfWeights);
-    }
-    if(phaseType == DREAM3D::PhaseType::TransformationPhase)
-    {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
-      tp->setAxisODF_Weights(aodfWeights);
-    }
+      if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+      {
+        PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+        pp->setAxisODF_Weights(aodfWeights);
+      }
+      if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+      {
+        PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+        pp->setAxisODF_Weights(aodfWeights);
+      }
+      if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+      {
+        TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+        tp->setAxisODF_Weights(aodfWeights);
+      }
     }
 
   }
@@ -249,7 +249,7 @@ void SGAxisODFWidget::setPhaseIndex(int value)
 // -----------------------------------------------------------------------------
 int SGAxisODFWidget::getPhaseIndex()
 {
-return m_PhaseIndex;
+  return m_PhaseIndex;
 }
 
 // -----------------------------------------------------------------------------
@@ -317,7 +317,7 @@ void SGAxisODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot*
   plot->setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
   plot->setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
 
-// These set the plot axis to NOT show anything except the axis labels.
+  // These set the plot axis to NOT show anything except the axis labels.
   plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Backbone, m_EnableAxisDecorations);
   plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Ticks, m_EnableAxisDecorations);
   plot->axisScaleDraw(QwtPlot::yLeft)->enableComponent(QwtAbstractScaleDraw::Labels, m_EnableAxisDecorations);
@@ -425,19 +425,19 @@ void SGAxisODFWidget::updatePlots()
 // -----------------------------------------------------------------------------
 void SGAxisODFWidget::showPoleFigure(int imageIndex)
 {
- // labels[num]->setPixmap(QPixmap::fromImage(imageScaling->resultAt(num)));
+  // labels[num]->setPixmap(QPixmap::fromImage(imageScaling->resultAt(num)));
   switch(imageIndex)
   {
     case 0:
-    //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_001.tif");
+      //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_001.tif");
       m_001PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
       break;
     case 1:
-    //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_011.tif");
+      //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_011.tif");
       m_011PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
       break;
     case 2:
-    //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_111.tif");
+      //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_111.tif");
       m_111PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
       break;
     default:
@@ -451,7 +451,7 @@ void SGAxisODFWidget::showPoleFigure(int imageIndex)
 // -----------------------------------------------------------------------------
 void SGAxisODFWidget::poleFigureGenerationComplete()
 {
-//  std::cout << "ODF Pole Figure generation complete" << std::endl;
+  //  std::cout << "ODF Pole Figure generation complete" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -463,7 +463,7 @@ QImage generateAxisODFPoleFigure(const PoleFigureData &data)
 #if COLOR_POLE_FIGURES
   return colorPoleFigure.generateColorPoleFigureImage(data);
 #else
-    return colorPoleFigure.generatePoleFigureImage(data);
+  return colorPoleFigure.generatePoleFigureImage(data);
 #endif
 }
 
@@ -474,7 +474,7 @@ QImage generateAxisODFPoleFigure(const PoleFigureData &data)
 void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
- // std::cout << "SGAxisODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
+  // std::cout << "SGAxisODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
   QwtArray<float> x001;
   QwtArray<float> y001;
   QwtArray<float> x011;
@@ -587,9 +587,9 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
     std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
   }
 
-//  QwtSymbol symbol;
-//  symbol.setStyle(QwtSymbol::Ellipse);
-//  symbol.setSize(1,1);
+  //  QwtSymbol symbol;
+  //  symbol.setStyle(QwtSymbol::Ellipse);
+  //  symbol.setSize(1,1);
 
   QwtPlotCurve* curve = m_PlotCurves[0];
 #if QWT_VERSION >= 0x060000
@@ -599,7 +599,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 #endif
   curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_ODF_001Plot);
-//  curve->setSymbol(symbol);
+  //  curve->setSymbol(symbol);
   m_ODF_001Plot->replot();
 
   curve = m_PlotCurves[1];
@@ -609,7 +609,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   curve->setData(x011d, y011d);
 #endif
   curve->setStyle(QwtPlotCurve::Dots);
- // curve->setSymbol(symbol);
+  // curve->setSymbol(symbol);
   curve->attach(m_ODF_011Plot);
   m_ODF_011Plot->replot();
 
@@ -620,7 +620,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   curve->setData(x111d, y111d);
 #endif
   curve->setStyle(QwtPlotCurve::Dots);
- // curve->setSymbol(symbol);
+  // curve->setSymbol(symbol);
   curve->attach(m_ODF_111Plot);
   m_ODF_111Plot->replot();
 #endif
@@ -684,27 +684,27 @@ void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
   else
   {
     size_t numOrients = 0;
-  std::string filename = file.toStdString();
-  std::ifstream inFile;
-  inFile.open(filename.c_str());
+    std::string filename = file.toStdString();
+    std::ifstream inFile;
+    inFile.open(filename.c_str());
 
-  inFile >> numOrients;
+    inFile >> numOrients;
 
-  float e1, e2, e3, weight, sigma;
-  for(size_t i = 0; i < numOrients; i++)
-  {
-    inFile >> e1 >> e2 >> e3 >> weight >> sigma;
+    float e1, e2, e3, weight, sigma;
+    for(size_t i = 0; i < numOrients; i++)
+    {
+      inFile >> e1 >> e2 >> e3 >> weight >> sigma;
 
-    if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
-    int row = m_ODFTableModel->rowCount() - 1;
-    m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
+      if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
+      int row = m_ODFTableModel->rowCount() - 1;
+      m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
 
-    m_ODFTableView->resizeColumnsToContents();
-    m_ODFTableView->scrollToBottom();
-    m_ODFTableView->setFocus();
-    QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
-    m_ODFTableView->setCurrentIndex(index);
-  }
+      m_ODFTableView->resizeColumnsToContents();
+      m_ODFTableView->scrollToBottom();
+      m_ODFTableView->setFocus();
+      QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
+      m_ODFTableView->setCurrentIndex(index);
+    }
   }
 }
 // -----------------------------------------------------------------------------
