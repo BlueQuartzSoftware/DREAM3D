@@ -2,10 +2,11 @@
 #--
 #--  Copyright (c) 2011, Michael A. Jackson. BlueQuartz Software
 #--  Copyright (c) 2011, Michael Groeber, US Air Force Research Laboratory
+#--  Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
 #--  All rights reserved.
 #--  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #--
-#-- This code was partly written under US Air Force Contract FA8650-07-D-5800
+#-- This code was partly written under US Air Force Contract FA8650-07-D-5800 & FA8650-10-D-5226
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
@@ -40,6 +41,7 @@ set(_PublicFilters
   RawBinaryReader
   ReadH5Ebsd
   ReadOrientationData
+  R3DanalyticsReader
   SPParksWriter
   SolidMeshToVtk
   SurfaceMeshToNodesTrianglesEdges
