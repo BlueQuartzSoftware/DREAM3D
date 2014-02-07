@@ -41,7 +41,6 @@ set(_PublicFilters
   RawBinaryReader
   ReadH5Ebsd
   ReadOrientationData
-  R3DanalyticsReader
   SPParksWriter
   SolidMeshToVtk
   SurfaceMeshToNodesTrianglesEdges
@@ -83,7 +82,7 @@ set(_PrivateFilters
 
   SolidMeshDataContainerWriter
   SolidMeshDataContainerReader
-  
+
   VrmlWriter
 )
 
