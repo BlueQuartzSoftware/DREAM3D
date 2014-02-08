@@ -92,20 +92,26 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BinaryNodesTrianglesReader::readFilterParameters(AbstractFilterParametersReader* reader)
+void BinaryNodesTrianglesReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+////!!##
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
  writer->writeValue("BinaryNodesFile", getBinaryNodesFile() );
  writer->writeValue("BinaryTrianglesFile", getBinaryTrianglesFile() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

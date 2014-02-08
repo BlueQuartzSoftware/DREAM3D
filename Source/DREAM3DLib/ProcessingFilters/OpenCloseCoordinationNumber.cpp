@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -98,18 +98,27 @@ void OpenCloseCoordinationNumber::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseCoordinationNumber::readFilterParameters(AbstractFilterParametersReader* reader)
+void OpenCloseCoordinationNumber::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setCoordinationNumber( reader->readValue("CoordinationNumber", getCoordinationNumber()) );
+  setLoop( reader->readValue("Loop", false) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("CoordinationNumber", getCoordinationNumber() );
   writer->writeValue("Loop", getLoop() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

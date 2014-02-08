@@ -58,4 +58,4 @@ class AddFavoriteWidget : public QDialog, public Ui::Dialog
     bool BtnClicked;
 };
 
-#endif
+#endif /* _AddFavoriteWidget_H */

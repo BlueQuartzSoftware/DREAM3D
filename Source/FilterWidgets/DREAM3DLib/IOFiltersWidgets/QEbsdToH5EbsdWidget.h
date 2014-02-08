@@ -79,7 +79,7 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     QEbsdToH5EbsdWidget(QWidget *parent = 0);
     virtual ~QEbsdToH5EbsdWidget();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
@@ -87,6 +87,8 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
 
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
+
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
     /**
      * @brief Enables or Disables all the widgets in a list
      * @param b
@@ -109,11 +111,14 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     void m_findEbsdMaxSliceAndPrefix();
     void m_generateExampleEbsdInputFile();
     Ebsd::RefFrameZDir getRefFrameZDir();
+    void setRefFrameZDir(Ebsd::RefFrameZDir ref);
 
     std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
                                               bool stackLowToHigh, QString filename);
 
     virtual void openHtmlHelpFile();
+    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
+
   protected:
 
 

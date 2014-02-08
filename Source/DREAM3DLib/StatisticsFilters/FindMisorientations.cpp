@@ -43,7 +43,7 @@
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -71,17 +71,25 @@ FindMisorientations::~FindMisorientations()
 {
 }
 // -----------------------------------------------------------------------------
-void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -182,7 +190,7 @@ void FindMisorientations::execute()
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
 
-  float radToDeg = 180.0/m_pi;
+  float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
 
   size_t nname;
   // float nsa;

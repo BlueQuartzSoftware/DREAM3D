@@ -278,7 +278,7 @@ namespace DREAM3D
   {
     const DREAM3D_STRING FileVersionName("FileVersion");
     const DREAM3D_STRING DREAM3DVersion("DREAM3D Version");
-    const DREAM3D_STRING FileVersion("5.0");
+    const DREAM3D_STRING FileVersion("4.0");
     const DREAM3D_STRING DataContainerName("DataContainer");
     const DREAM3D_STRING VoxelDataContainerName("VoxelDataContainer");
     const DREAM3D_STRING VolumeDataContainerName("VolumeDataContainer");

@@ -126,18 +126,26 @@ void AlignSectionsMisorientation::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::readFilterParameters(AbstractFilterParametersReader* reader)
+void AlignSectionsMisorientation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersWriter* writer)
+int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

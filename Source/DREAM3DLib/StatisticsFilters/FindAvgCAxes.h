@@ -78,13 +78,13 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find Average C-Axis Orientations"; }
 
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

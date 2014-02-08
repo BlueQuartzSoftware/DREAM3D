@@ -63,17 +63,25 @@ FindGrainCentroids::~FindGrainCentroids()
 {
 }
 // -----------------------------------------------------------------------------
-void FindGrainCentroids::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindGrainCentroids::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainCentroids::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindGrainCentroids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -139,8 +147,10 @@ void FindGrainCentroids::find_centroids()
   VoxelDataContainer* m = getVoxelDataContainer();
   float x, y, z;
   size_t numgrains = m->getNumFieldTuples();
+  if (numgrains == 0) { return; }
   m_GrainCenters->SetNumberOfComponents(5);
   m_GrainCenters->Resize(numgrains);
+  
   graincenters = m_GrainCenters->GetPointer(0);
 
   int xPoints = static_cast<int>(m->getXPoints());
@@ -194,6 +204,7 @@ void FindGrainCentroids::find_centroids2D()
   float x, y;
  // int col, row;
   size_t numgrains = m->getNumFieldTuples();
+  if (0 == numgrains) { return; }
   m_GrainCenters->SetNumberOfComponents(5);
   m_GrainCenters->Resize(numgrains);
   graincenters = m_GrainCenters->GetPointer(0);

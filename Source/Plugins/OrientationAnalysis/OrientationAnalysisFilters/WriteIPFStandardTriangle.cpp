@@ -175,29 +175,29 @@ void WriteIPFStandardTriangle::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteIPFStandardTriangle::readFilterParameters(AbstractFilterParametersReader* reader)
+void WriteIPFStandardTriangle::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  //  reader->openFilterGroup(this, index);
+  reader->openFilterGroup(this, index);
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue("OutputFile", getOutputFile()));
   setImageFormat( reader->readValue("ImageFormat", getImageFormat()));
   setImageSize( reader->readValue("ImageSize", getImageSize()));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
-  //  reader->closeFilterGroup();
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWriter* writer)
+int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  //  writer->openFilterGroup(this, index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("ImageFormat", getImageFormat() );
   writer->writeValue("ImageSize", getImageSize() );
   writer->writeValue("CystalSymmetry", getCrystalSymmetry());
-  // writer->closeFilterGroup();
-  // return ++index; // we want to return the next index that was just written to
+  writer->closeFilterGroup();
+   return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

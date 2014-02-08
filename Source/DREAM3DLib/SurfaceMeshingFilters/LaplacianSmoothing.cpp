@@ -288,16 +288,21 @@ void LaplacianSmoothing::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* reader)
+void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
 
@@ -308,8 +313,9 @@ void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* w
   writer->writeValue("SurfacePointLambda", getSurfacePointLambda());
   writer->writeValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda());
   writer->writeValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda());
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

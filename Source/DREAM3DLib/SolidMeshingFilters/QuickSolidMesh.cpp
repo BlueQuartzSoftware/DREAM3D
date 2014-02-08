@@ -59,17 +59,24 @@ QuickSolidMesh::~QuickSolidMesh()
 {
 }
 // -----------------------------------------------------------------------------
-void QuickSolidMesh::readFilterParameters(AbstractFilterParametersReader* reader)
+void QuickSolidMesh::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+////!!##
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int QuickSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

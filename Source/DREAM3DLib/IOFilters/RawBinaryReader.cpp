@@ -306,16 +306,32 @@ void RawBinaryReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reader)
+void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setInputFile( reader->readValue( "InputFile", getInputFile() ) );
+  setScalarType( reader->readValue("ScalarType", getScalarType()) );
+  setDimensionality( reader->readValue("Dimensionality", getDimensionality()) );
+  setNumberOfComponents( reader->readValue("NumberOfComponents", getNumberOfComponents()) );
+  setEndian( reader->readValue("Endian", getEndian()) );
+  setDimensions( reader->readValue("Dimensions", getDimensions() ) );
+  setOrigin( reader->readValue("Origin", getOrigin() ) );
+  setResolution( reader->readValue("Resolution", getResolution() ) );
+  setOverRideOriginResolution( reader->readValue("OverRideOriginResolution", getOverRideOriginResolution()) );
+  setSkipHeaderBytes( reader->readValue("SkipHeaderBytes", getSkipHeaderBytes()) );
+  setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("ScalarType", getScalarType() );
@@ -329,6 +345,8 @@ void RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->writeValue("OverRideOriginResolution", getOverRideOriginResolution() );
   writer->writeValue("SkipHeaderBytes", getSkipHeaderBytes() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

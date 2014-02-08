@@ -705,7 +705,7 @@ static herr_t writePointerAttribute(hid_t loc_id,
   /* Get the type of object */
 
   if (H5Oget_info_by_name(loc_id, objName.c_str(), &statbuf, H5P_DEFAULT) < 0) {
-    std::cout << "Error getting object info." << std::endl;
+    std::cout << "Error getting object info at loc_id (" << loc_id << ") with object name (" << objName << ")" << std::endl;
     return -1;
   }
   /* Open the object */
@@ -808,7 +808,7 @@ static herr_t writeVectorAttribute(hid_t loc_id,
   }
   /* Get the type of object */
   if (H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT) < 0) {
-    std::cout << "Error getting object info." << std::endl;
+    std::cout << "Error getting object info at loc_id (" << loc_id << ") with object name (" << objName << ")" << std::endl;
     return -1;
   }
   /* Open the object */
@@ -953,7 +953,7 @@ static herr_t  writeScalarAttribute(hid_t loc_id,
   }
   /* Get the type of object */
   if (H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT) < 0) {
-    std::cout << "Error getting object info." << std::endl;
+    std::cout << "Error getting object info at loc_id (" << loc_id << ") with object name (" << objName << ")" << std::endl;
     return -1;
   }
   /* Open the object */
@@ -1107,7 +1107,7 @@ static herr_t readVectorDataset(hid_t loc_id,
 // std::cout << "  Opening " << dsetName << " for data Retrieval.  " << std::endl;
   did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT);
   if ( did < 0 ) {
-    std::cout << " Error opening Dataset: " << dsetName << std::endl;
+    std::cout << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
     return -1;
   }
   if ( did >= 0 ) {
@@ -1117,7 +1117,7 @@ static herr_t readVectorDataset(hid_t loc_id,
       if (rank > 0) {
         std::vector<hsize_t> dims;
         dims.resize(rank);// Allocate enough room for the dims
-        rank = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
+        err = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
         hsize_t numElements = 1;
         for (std::vector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter ) {
           numElements = numElements * (*iter);
@@ -1177,7 +1177,7 @@ static herr_t readScalarDataset(hid_t loc_id,
  /* Open the dataset. */
   did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT );
   if ( did < 0 ) {
-    std::cout << "Error opening Dataset." << std::endl;
+    std::cout << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
     return -1;
   }
   if ( did >= 0 ) {
@@ -1187,20 +1187,20 @@ static herr_t readScalarDataset(hid_t loc_id,
       if (rank > 0) {
         std::vector<hsize_t> dims;
         dims.resize(rank);// Allocate enough room for the dims
-        rank = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
+        err = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
         hsize_t numElements = 1;
         for (std::vector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter ) {
           numElements = numElements * (*iter);
         }
         err = H5Dread(did, dataType, H5S_ALL, H5S_ALL, H5P_DEFAULT, &data );
         if (err < 0) {
-          std::cout << "Error Reading Data." << std::endl;
+          std::cout << "Error Reading Data at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
           retErr = err;
         }
       }
       err = H5Sclose(spaceId);
       if (err < 0 ) {
-        std::cout << "Error Closing Data Space" << std::endl;
+        std::cout << "Error Closing Data Space at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
         retErr = err;
       }
     }
@@ -1210,7 +1210,7 @@ static herr_t readScalarDataset(hid_t loc_id,
     }
     err = H5Dclose( did );
     if (err < 0 ) {
-      std::cout << "Error Closing Dataset" << std::endl;
+      std::cout << "Error Closing Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
       retErr = err;
     }
   }

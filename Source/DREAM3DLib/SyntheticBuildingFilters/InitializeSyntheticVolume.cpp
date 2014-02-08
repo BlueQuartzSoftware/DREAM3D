@@ -42,6 +42,12 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 
+
+#define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
+  if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; addErrorMessage(getHumanLabel(), ss.str(), errCond);}
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -79,87 +85,41 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 void InitializeSyntheticVolume::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Statistics File");
-    option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
-    option->setFileExtension("*.dream3d *.h5stats");
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("X Voxels");
-    option->setPropertyName("XVoxels");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Y Voxels");
-    option->setPropertyName("YVoxels");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Z Voxels");
-    option->setPropertyName("ZVoxels");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("X Res");
-    option->setPropertyName("XRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Y Res");
-    option->setPropertyName("YRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Z Res");
-    option->setPropertyName("ZRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    parameters.push_back(option);
-  }
+
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersReader* reader)
+void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  setInputFile( reader->readValue("InputFile", getInputFile() ) );
+  setXVoxels( reader->readValue("XVoxels", getXVoxels() ) );
+  setYVoxels( reader->readValue("YVoxels", getYVoxels() ) );
+  setZVoxels( reader->readValue("ZVoxels", getZVoxels() ) );
+  setXRes( reader->readValue("XRes", getXRes() ) );
+  setYRes( reader->readValue("YRes", getYRes() ) );
+  setZRes( reader->readValue("ZRes", getZRes() ) );
+  setShapeTypes( reader->readValue("ShapeTypes", getShapeTypes() ) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("X Voxels", getXVoxels() );
-  writer->writeValue("Y Voxels", getYVoxels() );
-  writer->writeValue("Z Voxels", getZVoxels() );
-  writer->writeValue("X Res", getXRes() );
-  writer->writeValue("Y Res", getYRes() );
-  writer->writeValue("Z Res", getZRes() );
+  writer->writeValue("XVoxels", getXVoxels() );
+  writer->writeValue("YVoxels", getYVoxels() );
+  writer->writeValue("ZVoxels", getZVoxels() );
+  writer->writeValue("XRes", getXRes() );
+  writer->writeValue("YRes", getYRes() );
+  writer->writeValue("ZRes", getZRes() );
+  writer->writeValue("ShapeTypes", getShapeTypes() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
-
-#define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-  if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; addErrorMessage(getHumanLabel(), ss.str(), errCond); }
 
 // -----------------------------------------------------------------------------
 //
@@ -189,7 +149,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   INIT_SYNTH_VOLUME_CHECK(YRes, -5004);
   INIT_SYNTH_VOLUME_CHECK(ZRes, -5005);
 
-  if (m_ShapeTypes.get() ==  NULL || m_ShapeTypes->GetNumberOfTuples() == 0)
+  if (m_ShapeTypes.size() ==  0)
   {
     ss << "No ShapeTypes have been set and a shape type for each phase.\n";
     setErrorCondition(-801);
@@ -279,11 +239,13 @@ void InitializeSyntheticVolume::execute()
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);
-  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
+
+  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromStdVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
+  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   int64_t totalPoints = m->getTotalPoints();
   int totalFields = m->getNumFieldTuples();
-  int totalEnsembles = m_ShapeTypes->GetNumberOfTuples();
+  int totalEnsembles = m_ShapeTypes.size();
 
   // Check to make sure we have all of our data arrays available or make them available.
   dataCheck(false, totalPoints, totalFields, totalEnsembles);

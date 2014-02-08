@@ -42,7 +42,7 @@
 static const float k_MachineEpsilon = 5E-16f;
 //static const float k_MaxRealNumber = 1E300;
 //static const float k_MinRealNumber = 1E-300;
-const static float m_pi = static_cast<float>(M_PI);
+
 
 MXAMath::MXAMath()
 {
@@ -118,7 +118,7 @@ float MXAMath::Gamma(float x)
         if (fabs(x) > 1.0f) {
             ga *= r;
             if (x < 0.0f) {
-                ga = -1 * m_pi/(x*ga*sinf(m_pi*x));
+                ga = -1 * M_PI/(x*ga*sinf(M_PI*x));
             }
         }
     }
@@ -193,7 +193,7 @@ float MXAMath::LnGamma(float x, float& sgngam)
             p = p+1;
             z = p-q;
         }
-        z = q*sinf(m_pi*z);
+        z = q*sinf(M_PI*z);
         result = logpi-log(z)-w;
         return result;
     }

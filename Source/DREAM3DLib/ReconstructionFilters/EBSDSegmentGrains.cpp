@@ -123,17 +123,24 @@ void EBSDSegmentGrains::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EBSDSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader)
+void EBSDSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EBSDSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int EBSDSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 // -----------------------------------------------------------------------------
 //

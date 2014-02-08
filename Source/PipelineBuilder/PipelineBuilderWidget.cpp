@@ -32,6 +32,8 @@
 #include <string>
 #include <set>
 
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
 //-- Qt Includes
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
@@ -43,6 +45,7 @@
 #include <QtCore/QPropertyAnimation>
 #include <QtCore/QResource>
 #include <QtCore/QDebug>
+#include <QtCore/QTime>
 
 #include <QtGui/QFileDialog>
 #include <QtGui/QCloseEvent>
@@ -68,9 +71,13 @@
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
+
 
 #include "QFilterWidget.h"
 #include "AddFavoriteWidget.h"
@@ -78,13 +85,14 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *parent) :
+PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, FilterManager* fm, QWidget *parent) :
   DREAM3DPluginFrame(parent),
   m_FilterPipeline(NULL),
   m_MenuPipeline(NULL),
   m_WorkerThread(NULL),
   m_DocErrorTabsIsOpen(false),
-  m_HelpDialog(NULL)
+  m_HelpDialog(NULL),
+  m_FilterManager(fm)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
   setPipelineMenu(pipelineMenu);
@@ -270,6 +278,62 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
   return m_MenuPipeline;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
+{
+  hid_t fid = H5Utilities::openFile( filePath.toStdString() );
+  if (fid <= 0)
+  {
+    //Present a error dialog
+    QMessageBox::critical(this, "Error Opening DREAM3D File", QString("Error opening file ") + filePath, QMessageBox::Ok, QMessageBox::Ok);
+    return;
+  }
+  HDF5ScopedFileSentinel sentinel(&fid, true);
+  fid = *(sentinel.getFileId());
+  int err = readPipelineFromFile(fid);
+  if (err < 0)
+  {
+    QMessageBox::critical(this, "Error Extracting Pipeline from DREAM3D file.",
+                          "An error occured with extracting the pipeline from the DREAM3D file.",QMessageBox::Ok, QMessageBox::Ok);
+    return;
+  }
+  FilterPipeline::FilterContainerType filters = m_PipelineFromFile->getFilterContainer();
+
+  FilterPipeline::FilterContainerType::iterator iter = filters.begin();
+
+  for (; iter != filters.end(); iter++)
+  {
+
+    std::string filterName = (*iter)->getNameOfClass();
+  //  qDebug() << QTime::currentTime() << " Creating Filter: " << QString::fromStdString(filterName);
+    QFilterWidget* w = m_PipelineViewWidget->addFilter( QString::fromStdString(filterName) );
+   // qDebug() << QTime::currentTime() << " Loading GUI Values: " << QString::fromStdString(filterName);
+    if(w) {
+      QTime qtime = QTime::currentTime();
+      m_PipelineViewWidget->preflightPipeline();
+    //  qDebug() << "ms: " << qtime.msecsTo(QTime::currentTime());
+      qtime = QTime::currentTime();
+      w->getGuiParametersFromFilter( (*iter).get() );
+     // qDebug() << "ms: " << qtime.msecsTo(QTime::currentTime());
+    }
+  }
+  // One last preflight to get the changes introduced by the last filter
+ // m_PipelineViewWidget->preflightPipeline();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::addDREAM3DReaderFilter(const QString &filePath)
+{
+
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -278,6 +342,59 @@ void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
   QSettings prefs(filePath, QSettings::IniFormat, this);
   readSettings(prefs, true);
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
+{
+  int err = 0;
+  m_PipelineFromFile->clear();
+
+  H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
+
+  // HDF5: Open the "Pipeline" Group
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  reader->setGroupId(pipelineGroupId);
+
+  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
+  std::list<std::string> groupList;
+  err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
+
+  // Loop over the items getting the "ClassName" attribute from each group
+  std::string classNameStr = "";
+  for (int i=0; i<groupList.size(); i++)
+  {
+    std::stringstream ss;
+    ss << i;
+    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+
+    // Instantiate a new filter using the FilterFactory based on the value of the className attribute
+    IFilterFactory::Pointer ff = m_FilterManager->getFactoryForFilter(classNameStr);
+    if (NULL != ff)
+    {
+      AbstractFilter::Pointer filter = ff->create();
+      if(NULL != ff)
+      {
+        // Read the parameters
+        filter->readFilterParameters( reader.get(), i );
+
+        // Add filter to m_PipelineFromFile
+        m_PipelineFromFile->pushBack(filter);
+      }
+    }
+    else
+    {
+      QMessageBox::critical(this, "Error Adding Filter to Pipeline",
+                            QString("The filter was not known to DREAM3D:") + QString::fromStdString(classNameStr),
+                            QMessageBox::Ok, QMessageBox::Ok);
+    }
+
+  }
+
+  H5Gclose(pipelineGroupId);
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -1260,7 +1377,7 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
     QFilterWidget* fw = m_PipelineViewWidget->filterWidgetAt(i);
     if (fw)
     {
-      m_FilterPipeline->pushBack(fw->getFilter());
+      m_FilterPipeline->pushBack(fw->getFilter(false));
     }
   }
 

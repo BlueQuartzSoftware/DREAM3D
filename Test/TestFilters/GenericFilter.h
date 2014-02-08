@@ -9,7 +9,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -23,9 +23,9 @@
 class GenericFilter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenericFilter);
-    DREAM3D_STATIC_NEW_MACRO(GenericFilter);
-    DREAM3D_TYPE_MACRO_SUPER(GenericFilter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GenericFilter)
+    DREAM3D_STATIC_NEW_MACRO(GenericFilter)
+    DREAM3D_TYPE_MACRO_SUPER(GenericFilter, AbstractFilter)
 
     virtual ~GenericFilter();
 
@@ -99,7 +99,7 @@ class GenericFilter : public AbstractFilter
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
    /**
     * @brief Reimplemented from @see AbstractFilter class

@@ -15,6 +15,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DDLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/FilterManager.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjection.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjectionArray.h
@@ -35,6 +36,7 @@ set(DREAM3DLib_Common_HDRS
 set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AppVersion.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/FilterManager.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjection.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjectionArray.cpp

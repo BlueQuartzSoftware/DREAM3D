@@ -55,7 +55,7 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
     QDataContainerReaderWidget(QWidget* parent = NULL);
     virtual ~QDataContainerReaderWidget();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     void writeOptions(QSettings &prefs);
     void readOptions(QSettings &prefs);
@@ -84,6 +84,8 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
 
     virtual void openHtmlHelpFile();
+
+    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
   public slots:
     void setInputFile(const QString &v);

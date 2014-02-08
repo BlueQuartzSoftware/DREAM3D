@@ -109,17 +109,33 @@ void AddBadData::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader)
+void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setPoissonNoise( reader->readValue("PoissonNoise", getPoissonNoise()) );
+  setPoissonVolFraction( reader->readValue("PoissonVolFraction", getPoissonVolFraction()) );
+  setBoundaryNoise( reader->readValue("BoundaryNoise", getBoundaryNoise()) );
+  setBoundaryVolFraction( reader->readValue("BoundaryVolFraction", getBoundaryVolFraction()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->writeValue("PoissonNoise", getPoissonNoise() );
+  writer->writeValue("PoissonVolFraction", getPoissonVolFraction() );
+  writer->writeValue("BoundaryNoise", getBoundaryNoise() );
+  writer->writeValue("BoundaryVolFraction", getBoundaryVolFraction() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

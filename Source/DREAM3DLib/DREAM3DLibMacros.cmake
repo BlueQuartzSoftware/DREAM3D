@@ -7,6 +7,9 @@ macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
    file(APPEND ${CodeGeneratorFile} "//----- ${filterGroup} --------------- \n")
    file(APPEND ${AllFilterWidgetsHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
    file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
+   file(APPEND ${RegisterKnownFiltersFile} "\n    /* ------ ${filterGroup} --------- */\n")
+
+
 
 
    file(APPEND "${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList" "${filterGroup}\n")
@@ -98,6 +101,9 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocPat
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetFactory<Q${filterName}Widget>::Pointer q${filterName}WidgetFactory = QFilterWidgetFactory<Q${filterName}Widget>::New();\n")
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   FilterWidgetManager::Instance()->addFilterWidgetFactory(\"${filterName}\",q${filterName}WidgetFactory);\n\n")
 
+
+        file(APPEND ${RegisterKnownFiltersFile} "   FilterFactory<${filterName}>::Pointer ${filterName}Factory = FilterFactory<${filterName}>::New();\n")
+        file(APPEND ${RegisterKnownFiltersFile} "   fm->addFilterFactory(\"${filterName}\",${filterName}Factory);\n\n")
 
        #-- Check to make sure we have a Documentation file for the filter
         if(NOT EXISTS ${filterDocPath} )

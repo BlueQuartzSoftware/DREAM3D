@@ -63,7 +63,8 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionTableModel : public QAbstract
     };
 
 
-    ComparisonSelectionTableModel(QObject* parent = 0);
+    ComparisonSelectionTableModel(bool showOperators, QObject* parent = 0);
+
     virtual ~ComparisonSelectionTableModel();
 
     /**

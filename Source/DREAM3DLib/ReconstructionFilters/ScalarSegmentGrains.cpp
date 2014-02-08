@@ -94,24 +94,24 @@ class TSpecificCompareFunctor : public CompareFunctor
     {
       // Sanity check the indices that are being passed in.
       if (referencepoint >= m_Length || neighborpoint >= m_Length) { return false; }
-      
+
       if(m_Data[referencepoint] >= m_Data[neighborpoint])
       {
-        if ((m_Data[referencepoint]-m_Data[neighborpoint]) <= m_Tolerance) { 
+        if ((m_Data[referencepoint]-m_Data[neighborpoint]) <= m_Tolerance) {
           m_GrainIds[neighborpoint] = gnum;
-          return true; 
+          return true;
         }
       }
       else
       {
-        if ((m_Data[neighborpoint]-m_Data[referencepoint]) <= m_Tolerance) { 
+        if ((m_Data[neighborpoint]-m_Data[referencepoint]) <= m_Tolerance) {
           m_GrainIds[neighborpoint] = gnum;
-          return true; 
+          return true;
         }
       }
       return false;
     }
-  
+
 protected:
    TSpecificCompareFunctor(){}
 
@@ -190,18 +190,25 @@ void ScalarSegmentGrains::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader)
+void ScalarSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int ScalarSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("ScalarArrayName", getScalarArrayName() );
   writer->writeValue("ScalarTolerance", getScalarTolerance() );
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 // -----------------------------------------------------------------------------
 //

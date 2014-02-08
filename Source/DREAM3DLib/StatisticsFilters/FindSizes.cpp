@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -73,17 +73,25 @@ void FindSizes::setupFilterParameters()
 {
 }
 // -----------------------------------------------------------------------------
-void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -162,7 +170,7 @@ void FindSizes::find_sizes()
     graincounts[gnum]++;
   }
   float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-  float vol_term = static_cast<double>( (4.0/3.0)*m_pi );
+  float vol_term = static_cast<double>( (4.0/3.0)*DREAM3D::Constants::k_Pi );
   for (size_t i = 1; i < numgrains; i++)
   {
     m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
@@ -202,7 +210,7 @@ void FindSizes::find_sizes2D()
   {
     m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
     m_Volumes[i] = (graincounts[i] * res_scalar);
-    radsquared = m_Volumes[i] / m_pi;
+    radsquared = m_Volumes[i] / DREAM3D::Constants::k_Pi;
     diameter = (2 * sqrt(radsquared));
     m_EquivalentDiameters[i] = diameter;
   }

@@ -62,7 +62,7 @@ class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGen
     QGenerateEnsembleStatisticsWidget(QWidget* parent = NULL);
     ~QGenerateEnsembleStatisticsWidget();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
     void writeOptions(QSettings &prefs);
     void readOptions(QSettings &prefs);
 
@@ -75,7 +75,7 @@ class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGen
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
 
     virtual void openHtmlHelpFile();
-
+    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
   protected:
     void setupGui();

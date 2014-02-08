@@ -44,6 +44,9 @@
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SolidMeshDataContainerReader.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 // -----------------------------------------------------------------------------
@@ -57,6 +60,7 @@ DataContainerReader::DataContainerReader() :
   m_ReadSolidMeshData(false),
   m_ReadAllArrays(true)
 {
+  m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();
 }
 
@@ -73,46 +77,6 @@ DataContainerReader::~DataContainerReader()
 void DataContainerReader::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Input File");
-    option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Read Voxel Data");
-    option->setPropertyName("ReadVoxelData");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Read SurfaceMesh Data");
-    option->setPropertyName("ReadSurfaceMeshData");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Read SolidMesh Data");
-    option->setPropertyName("ReadSolidMeshData");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Arrays to Read");
-    parameter->setPropertyName("ArraysToRead");
-    parameter->setWidgetType(FilterParameter::ArraySelectionWidget);
-    parameters.push_back(parameter);
-  }
 
   setFilterParameters(parameters);
 }
@@ -120,21 +84,55 @@ void DataContainerReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader)
+void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  setInputFile( reader->readValue("InputFile", getInputFile() ) );
+  setReadVoxelData( reader->readValue("ReadVoxelData", getReadVoxelData() ) );
+  setReadSurfaceMeshData( reader->readValue("ReadSurfaceMeshData", getReadSurfaceMeshData() ) );
+  setReadSolidMeshData( reader->readValue("ReadSolidMeshData", getReadSolidMeshData() ) );
 
+  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() ) );
+  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() ) );
+  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() ) );
+  setSelectedSurfaceVertexArrays( reader->readValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() ) );
+  setSelectedSurfaceFaceArrays( reader->readValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() ) );
+  setSelectedSurfaceEdgeArrays( reader->readValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() ) );
+  setSelectedSurfaceFieldArrays( reader->readValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() ) );
+  setSelectedSurfaceEnsembleArrays( reader->readValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() ) );
+//  setSelectedSolidVertexArrays( reader->readValue("SelectedSolidVertexArrays", getSelectedSolidVertexArrays() ) );
+//  setSelectedSolidFaceArrays( reader->readValue("SelectedSolidFaceArrays", getSelectedSolidFaceArrays() ) );
+//  setSelectedSolidEdgeArrays( reader->readValue("SelectedSolidEdgeArrays", getSelectedSolidEdgeArrays() ) );
+
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  index = writeExistingPipelineToFile(writer, index);
+
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ReadVoxelData", getReadVoxelData() );
   writer->writeValue("ReadSurfaceMeshData", getReadSurfaceMeshData() );
   writer->writeValue("ReadSolidMeshData", getReadSolidMeshData() );
+
+  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() );
+  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() );
+  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() );
+  writer->writeValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() );
+  writer->writeValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() );
+  writer->writeValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() );
+  writer->writeValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() );
+  writer->writeValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() );
+//  writer->writeValue("SelectedSolidVertexArrays", getSelectedSolidVertexArrays() );
+//  writer->writeValue("SelectedSolidFaceArrays", getSelectedSolidFaceArrays() );
+//  writer->writeValue("SelectedSolidEdgeArrays", getSelectedSolidEdgeArrays() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the index after the one we just wrote to
 }
 
 // -----------------------------------------------------------------------------
@@ -193,7 +191,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       }
     }
 
-    /* READ THE SurfaceMesh DATA TO THE HDF5 FILE */
+    /* READ THE Surface DATA TO THE HDF5 FILE */
     if (NULL != getSurfaceMeshDataContainer() && m_ReadSurfaceMeshData == true)
     {
       SurfaceMeshDataContainerReader::Pointer smReader = SurfaceMeshDataContainerReader::New();
@@ -201,7 +199,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       smReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
       smReader->setObservers(getObservers());
       ss.str("");
-      ss << getMessagePrefix() << " |--> Reading SurfaceMesh Data ";
+      ss << getMessagePrefix() << " |--> Reading Surface Data ";
       smReader->setMessagePrefix(ss.str());
       smReader->preflight();
       if (smReader->getErrorCondition() < 0)
@@ -212,7 +210,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       }
     }
 
-    /* READ THE SolidMesh DATA TO THE HDF5 FILE */
+    /* READ THE Solid DATA TO THE HDF5 FILE */
     if (NULL != getSolidMeshDataContainer() && m_ReadSolidMeshData == true)
     {
       SolidMeshDataContainerReader::Pointer smReader = SolidMeshDataContainerReader::New();
@@ -268,6 +266,7 @@ void DataContainerReader::execute()
 
   err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
 
+  err = readExistingPipelineFromFile(fileId);
 
   /* READ THE VOXEL DATA TO THE HDF5 FILE */
   if (getVoxelDataContainer() != NULL && m_ReadVoxelData == true)
@@ -291,31 +290,31 @@ void DataContainerReader::execute()
     }
   }
 
-  /* READ THE SurfaceMesh DATA TO THE HDF5 FILE */
+  /* READ THE Surface DATA TO THE HDF5 FILE */
   if (NULL != getSurfaceMeshDataContainer() && m_ReadSurfaceMeshData == true)
   {
     SurfaceMeshDataContainerReader::Pointer smReader = SurfaceMeshDataContainerReader::New();
     smReader->setHdfFileId(fileId);
-    smReader->setVertexArraysToRead(m_SelectedSurfaceMeshVertexArrays);
-    smReader->setFaceArraysToRead(m_SelectedSurfaceMeshFaceArrays);
-    smReader->setEdgeArraysToRead(m_SelectedSurfaceMeshEdgeArrays);
-    smReader->setFieldArraysToRead(m_SelectedSurfaceMeshFieldArrays);
-    smReader->setEnsembleArraysToRead(m_SelectedSurfaceMeshEnsembleArrays);
+    smReader->setVertexArraysToRead(m_SelectedSurfaceVertexArrays);
+    smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
+    smReader->setEdgeArraysToRead(m_SelectedSurfaceEdgeArrays);
+    smReader->setFieldArraysToRead(m_SelectedSurfaceFieldArrays);
+    smReader->setEnsembleArraysToRead(m_SelectedSurfaceEnsembleArrays);
     smReader->setReadAllArrays(m_ReadAllArrays);
     smReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
     smReader->setObservers(getObservers());
     ss.str("");
-    ss << getMessagePrefix() << " |--> Reading SurfaceMesh Data ";
+    ss << getMessagePrefix() << " |--> Reading Surface Data ";
     smReader->setMessagePrefix(ss.str());
     smReader->execute();
     if (smReader->getErrorCondition() < 0)
     {
-      notifyErrorMessage("Error Reading the SurfaceMesh Data", smReader->getErrorCondition());
+      notifyErrorMessage("Error Reading the Surface Data", smReader->getErrorCondition());
       return;
     }
   }
 
-  /* READ THE SolidMesh DATA TO THE HDF5 FILE */
+  /* READ THE Solid DATA TO THE HDF5 FILE */
   if (NULL != getSolidMeshDataContainer() && m_ReadSolidMeshData == true)
   {
     SolidMeshDataContainerReader::Pointer smReader = SolidMeshDataContainerReader::New();
@@ -343,6 +342,68 @@ void DataContainerReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
+{
+  int err = 0;
+  m_PipelineFromFile->clear();
+
+  H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
+
+  // HDF5: Open the "Pipeline" Group
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  reader->setGroupId(pipelineGroupId);
+
+  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
+  std::list<std::string> groupList;
+  err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
+
+  // Loop over the items getting the "ClassName" attribute from each group
+  std::string classNameStr = "";
+  for (int i=0; i<groupList.size(); i++)
+  {
+    std::stringstream ss;
+    ss << i;
+    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+#if (__APPLE__)
+#warning DOES THIS FILTER MANAGER GET THE CORRECT SINGLETON?
+#endif
+    // Instantiate a new filter using the FilterFactory based on the value of the className attribute
+    FilterManager::Pointer fm = FilterManager::Instance();
+    IFilterFactory::Pointer ff = fm->getFactoryForFilter(classNameStr);
+    if (NULL != ff.get())
+    {
+      AbstractFilter::Pointer filter = ff->create();
+      if(NULL != filter.get())
+      {
+        // Read the parameters
+        filter->readFilterParameters( reader.get(), i);
+
+        // Add filter to m_PipelineFromFile
+        m_PipelineFromFile->pushBack(filter);
+      }
+    }
+  }
+  err = H5Gclose(pipelineGroupId);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWriter* writer, int index)
+{
+  FilterPipeline::FilterContainerType container = m_PipelineFromFile->getFilterContainer();
+
+  for(FilterPipeline::FilterContainerType::iterator iter = container.begin(); iter != container.end(); ++iter)
+  {
+    index = (*iter)->writeFilterParameters(writer, index);
+  }
+  return index;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataContainerReader::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
                                                      std::set<std::string> selectedFieldArrays,
                                                      std::set<std::string> selectedEnsembleArrays)
@@ -356,17 +417,17 @@ void DataContainerReader::setVoxelSelectedArrayNames(std::set<std::string> selec
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+void DataContainerReader::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                            std::set<std::string> selectedFaceArrays,
                                                            std::set<std::string> selectedEdgeArrays,
                                                            std::set<std::string> selectedFieldArrays,
                                                            std::set<std::string> selectedEnsembleArrays)
 {
-  m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
-  m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
-  m_SelectedSurfaceMeshFieldArrays = selectedFieldArrays;
-  m_SelectedSurfaceMeshEnsembleArrays = selectedEnsembleArrays;
+  m_SelectedSurfaceVertexArrays = selectedVertexArrays;
+  m_SelectedSurfaceFaceArrays = selectedFaceArrays;
+  m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
+  m_SelectedSurfaceFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
 

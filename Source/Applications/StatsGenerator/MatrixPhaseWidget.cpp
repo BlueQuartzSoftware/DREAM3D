@@ -189,7 +189,6 @@ int MatrixPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
     return -1;
   }
   int retErr = 0;
- // int err = 0;
   float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -201,23 +200,23 @@ int MatrixPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
   unsigned int* crystalStructures = m->getEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(DREAM3D::EnsembleData::CrystalStructures, ensembles, 1, NULL);
   unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
 
-  //unsigned int* shapeTypes = m->getEnsembleDataSizeCheck<unsigned int, ShapeTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::ShapeTypes, ensembles*1, NULL);
-
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
-  StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
-  MatrixStatsData* matrixStatsData = MatrixStatsData::SafePointerDownCast(statsData.get());
-  if(NULL != matrixStatsData)
-  {
-    matrixStatsData->setPhaseFraction(calcPhaseFraction);
-  }
-  else
-  {
-    retErr = -1000;
-  }
-
+    if (NULL != statsDataArray)
+    {
+      StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
+      MatrixStatsData* matrixStatsData = MatrixStatsData::SafePointerDownCast(statsData.get());
+      if(NULL != matrixStatsData)
+      {
+        matrixStatsData->setPhaseFraction(calcPhaseFraction);
+      }
+      else
+      {
+        retErr = -1000;
+      }
+    }
   return retErr;
 }
 

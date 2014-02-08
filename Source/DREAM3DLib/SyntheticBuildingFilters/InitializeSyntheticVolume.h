@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, XRes)
     DREAM3D_INSTANCE_PROPERTY(float, YRes)
     DREAM3D_INSTANCE_PROPERTY(float, ZRes)
-    DREAM3D_INSTANCE_PROPERTY(UInt32ArrayType::Pointer, ShapeTypes)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<uint32_t>, ShapeTypes)
 
 
     virtual void setupFilterParameters();
@@ -86,13 +86,13 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void preflight();
 

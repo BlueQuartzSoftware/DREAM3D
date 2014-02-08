@@ -148,21 +148,23 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const std:
             ++count;
           }
         }
-        ptr = StringDataArray::CreateArray(count, name);
-        StringDataArray* strArray = StringDataArray::SafePointerDownCast(ptr.get());
-        size_t start = 0;
-        size_t index = 0;
-        for(size_t i = 0; i < size; ++i)
+        if (count > 0)
         {
-          if(buf[i] == 0)
+          ptr = StringDataArray::CreateArray(count, name);
+          StringDataArray* strArray = StringDataArray::SafePointerDownCast(ptr.get());
+          size_t start = 0;
+          size_t index = 0;
+          for(size_t i = 0; i < size; ++i)
           {
-            std::string str( &(buf[start]) );
-            strArray->SetValue(index, str);
-            ++index;
-            start = i + 1;
+            if(buf[i] == 0)
+            {
+              std::string str( &(buf[start]) );
+              strArray->SetValue(index, str);
+              ++index;
+              start = i + 1;
+            }
           }
         }
-
       }
       else // We are preflighting only so just create a StringDataArray of lenght 1
       {
@@ -322,7 +324,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
 {
 
   herr_t err = -1;
-  herr_t retErr = 1;
   hid_t typeId = -1;
   H5T_class_t attr_type;
   size_t attr_size;
@@ -438,7 +439,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           std::cout << "Unknown Type: " << typeId << " at " << name << std::endl;
           err = -1;
-          retErr = -1;
         }
         break;
       case H5T_FLOAT:
@@ -466,16 +466,19 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           std::cout << "Unknown Floating point type" << std::endl;
           err = -1;
-          retErr = -1;
         }
         break;
       default:
         std::cout << "Error: readUserMetaData() Unknown attribute type: " << attr_type << std::endl;
         H5Utilities::printHDFClassType(attr_type);
     }
-
+    int retErr = 0;
     CloseH5T(typeId, err, retErr);
     //Close the H5A type Id that was retrieved during the loop
+  }
+  if (err < 0 )
+  {
+    iDataArray = IDataArray::NullPointer();
   }
   return iDataArray;
 }

@@ -107,17 +107,26 @@ void AlignSections::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::readFilterParameters(AbstractFilterParametersReader* reader)
+void AlignSections::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer)
+int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

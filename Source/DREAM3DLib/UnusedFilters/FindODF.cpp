@@ -78,17 +78,24 @@ FindODF::~FindODF()
 {
 }
 // -----------------------------------------------------------------------------
-void FindODF::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindODF::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+////!!##
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindODF::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindODF::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

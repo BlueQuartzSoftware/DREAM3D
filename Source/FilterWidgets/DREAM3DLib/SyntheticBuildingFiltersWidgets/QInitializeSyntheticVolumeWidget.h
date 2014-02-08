@@ -66,7 +66,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
     QInitializeSyntheticVolumeWidget(QWidget* parent = NULL);
     virtual ~QInitializeSyntheticVolumeWidget();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
@@ -82,6 +82,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
     virtual QString getFilterGroup();
 
     virtual void openHtmlHelpFile();
+    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
   protected slots:
     // Auto Hookup Slots

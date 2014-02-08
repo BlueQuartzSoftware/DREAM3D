@@ -160,10 +160,10 @@ QVariant AxisAngleTableModel::headerData(int section, Qt::Orientation orientatio
     switch(section)
     {
       case Angle:
-        return QVariant(QString("Angle\n(w)"));
+        return QVariant(QString("Angle (w)"));
         break;
       case Axis:
-        return QVariant(QString("Axis\n(<h,k,l>)"));
+        return QVariant(QString("Axis <h,k,l>"));
         break;
       default:
         break;

@@ -100,7 +100,7 @@ void ArraySelectionWidget::populateArrayNames(VoxelDataContainer::Pointer vdc,
                                               SolidMeshDataContainer::Pointer sdc)
 {
   populateVoxelArrayNames(vdc);
-  populateSurfaceMeshArrayNames(smdc);
+  populateSurfaceArrayNames(smdc);
   populateSolidMeshArrayNames(sdc);
 }
 
@@ -123,7 +123,7 @@ void ArraySelectionWidget::populateVoxelArrayNames(VoxelDataContainer::Pointer v
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer vdc)
+void ArraySelectionWidget::populateSurfaceArrayNames(SurfaceMeshDataContainer::Pointer vdc)
 {
   std::list<std::string> cellNames = vdc->getPointArrayNameList();
   populateArrayList(surfaceMeshVertexArrayList, cellNames, smVertexArraysCB);
@@ -371,6 +371,8 @@ void ArraySelectionWidget::removeSelectionsFromDataContainers(VoxelDataContainer
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Vertex, Selected)
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Face, Selected)
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Edge, Selected)
+  REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Field, Selected)
+  REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Ensemble, Selected)
 
   REMOVE_ARRAYS_HELPER(solidMesh, sdc, Vertex, Selected)
   REMOVE_ARRAYS_HELPER(solidMesh, sdc, Face, Selected)
@@ -391,6 +393,8 @@ void ArraySelectionWidget::removeNonSelectionsFromDataContainers(VoxelDataContai
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Vertex, NonSelected)
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Face, NonSelected)
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Edge, NonSelected)
+  REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Field, NonSelected)
+  REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Ensemble, NonSelected)
 
   REMOVE_ARRAYS_HELPER(solidMesh, sdc, Vertex, NonSelected)
   REMOVE_ARRAYS_HELPER(solidMesh, sdc, Face, NonSelected)
@@ -413,6 +417,28 @@ std::set<std::string> ArraySelectionWidget::getSelectedArrays(QListWidget*listWi
     }
   }
   return selectedArrays;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::setSelectedArrays(std::set<std::string> names, QListWidget*listWidget)
+{
+  if (names.empty() == true)
+  {
+    return;
+  }
+  std::set<std::string>::iterator iter = names.begin();
+  for (; iter != names.end(); iter++)
+  {
+    for(qint32 i = 0; i < listWidget->count(); ++i)
+    {
+      if (listWidget->item(i)->text().toStdString() == *iter)
+      {
+        listWidget->item(i)->setCheckState(Qt::Checked);
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -540,7 +566,7 @@ void ArraySelectionWidget::setVoxelDataEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::setSurfaceMeshEnabled(bool b)
+void ArraySelectionWidget::setSurfaceEnabled(bool b)
 {
   surfacemesh_data->setEnabled(b);
 }
@@ -565,7 +591,7 @@ void ArraySelectionWidget::removeVoxelData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::removeSurfaceMeshData()
+void ArraySelectionWidget::removeSurfaceData()
 {
   int index = indexOf(surfacemesh_data);
   removeTab(index);
