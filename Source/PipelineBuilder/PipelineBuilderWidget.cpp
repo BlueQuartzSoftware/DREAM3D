@@ -403,6 +403,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
     QSettings itemPref(itemFilePath, QSettings::IniFormat);
     itemPref.beginGroup(QString::fromStdString(DREAM3D::Settings::PipelineBuilderGroup));
     QString itemName = itemPref.value("Name").toString();
+    //itemPref.setValue("DREAM3D_Version", QString::fromStdString(DREAM3DLib::Version::Package()));
     itemPref.endGroup();
     //qDebug() << itemInfo.absoluteFilePath() << "\n";
     // Add tree widget for this Prebuilt Pipeline
@@ -550,7 +551,7 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* 
 
   prefs.setValue("Number_Filters", count);
   prefs.setValue("Name", fi.baseName()); // Put a default value in here
-  prefs.setValue("DREAM3D_Version", QString::fromStdString(DREAM3DLib::Version::PackageComplete()));
+  prefs.setValue("DREAM3D_Version", QString::fromStdString(DREAM3DLib::Version::Package()));
   prefs.endGroup();
 
   for(qint32 i = 0; i < count; ++i)
