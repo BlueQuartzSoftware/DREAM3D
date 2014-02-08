@@ -354,6 +354,7 @@ void PipelineBuilderWidget::readFavoritePipelines()
   QString parentPath = prefFileInfo.path();
   QString favPath = parentPath + QDir::separator() + "DREAM3D_Favorites";
   QDir favDir = QDir(favPath);
+  m_favorites->setData(0, Qt::UserRole, favPath);
 
 
   PipelineTreeWidget::ItemType itemType = PipelineTreeWidget::Favorite_Item_Type;
