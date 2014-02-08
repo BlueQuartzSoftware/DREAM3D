@@ -1503,15 +1503,20 @@ void PipelineBuilderWidget::actionAddFavoriteFolder_triggered()
     QString favoriteTitle = addfavoriteDialog->getFavoriteName();
     QTreeWidgetItem* currentDirItem = filterLibraryTree->currentItem();
     QString path = currentDirItem->data(0, Qt::UserRole).toString();
-    QFileInfo fi(path + QDir::separator() + favoriteTitle);
-    QDir currentDir = fi.absoluteFilePath();
-    currentDir.mkpath(".");
 
-    fi = QFileInfo(path + QDir::separator() + favoriteTitle);
+    QString folderPath = path + QDir::separator() + favoriteTitle + QDir::separator();
+
+    QDir dir(path);
+
+    bool created = dir.mkpath(favoriteTitle);
+    if(created == false)
+    {
+      qDebug() << "Could not create path " << folderPath;
+    }
 
     QTreeWidgetItem* nextDirItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Favorite_Category_Item_Type);
-    nextDirItem->setText(0, fi.baseName());
-    nextDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath() ) );
+    nextDirItem->setText(0, favoriteTitle);
+    nextDirItem->setData(0, Qt::UserRole, QVariant(folderPath ) );
     //Nothing to add as this was a brand new folder
   }
 }
@@ -1605,7 +1610,7 @@ void PipelineBuilderWidget::removeFavorite(QTreeWidgetItem* item)
 void PipelineBuilderWidget::actionRemoveFavorite_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
- // QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+  // QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
 
   QMessageBox msgBox;
   msgBox.setText("Are you sure that you want to remove \"" + item->text(0) + "\"?");
