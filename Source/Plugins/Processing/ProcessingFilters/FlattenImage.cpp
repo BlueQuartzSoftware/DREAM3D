@@ -193,7 +193,10 @@ void FlattenImage::dataCheck()
 // -----------------------------------------------------------------------------
 void FlattenImage::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

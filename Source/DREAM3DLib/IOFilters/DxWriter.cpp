@@ -160,7 +160,10 @@ void DxWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void DxWriter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

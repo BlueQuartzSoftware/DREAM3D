@@ -134,7 +134,10 @@ void SPParksWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void SPParksWriter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

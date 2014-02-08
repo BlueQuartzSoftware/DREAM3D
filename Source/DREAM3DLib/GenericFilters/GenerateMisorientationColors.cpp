@@ -192,7 +192,10 @@ void GenerateMisorientationColors::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateMisorientationColors::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

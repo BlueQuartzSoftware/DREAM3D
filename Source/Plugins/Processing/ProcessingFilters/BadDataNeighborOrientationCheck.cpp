@@ -167,7 +167,10 @@ void BadDataNeighborOrientationCheck::dataCheck()
 // -----------------------------------------------------------------------------
 void BadDataNeighborOrientationCheck::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

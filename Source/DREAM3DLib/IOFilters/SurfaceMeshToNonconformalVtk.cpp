@@ -168,7 +168,10 @@ void SurfaceMeshToNonconformalVtk::dataCheck()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNonconformalVtk::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 /**

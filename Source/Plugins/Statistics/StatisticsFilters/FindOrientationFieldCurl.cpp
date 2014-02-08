@@ -217,7 +217,10 @@ void FindOrientationFieldCurl::dataCheck()
 // -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

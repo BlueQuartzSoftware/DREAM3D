@@ -206,7 +206,10 @@ void FindMDF::dataCheck()
 void FindMDF::preflight()
 void FindMDF::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

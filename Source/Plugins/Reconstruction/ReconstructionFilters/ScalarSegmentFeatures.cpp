@@ -269,7 +269,10 @@ void ScalarSegmentFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

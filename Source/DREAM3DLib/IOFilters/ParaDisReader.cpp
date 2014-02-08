@@ -184,7 +184,10 @@ void ParaDisReader::dataCheck()
 // -----------------------------------------------------------------------------
 void ParaDisReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

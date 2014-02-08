@@ -115,7 +115,10 @@ void VtkGrainIdWriter::dataCheck()
 void VtkGrainIdWriter::preflight()
 void VtkGrainIdWriter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -88,6 +88,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual const QString getGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
     virtual const QString getSubGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
     virtual const QString getHumanLabel() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
+    virtual const QString getBrandingString() { return "DREAM3D Core Filter"; }
 
     /**
      * @brief setupFilterParameters
@@ -187,6 +188,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

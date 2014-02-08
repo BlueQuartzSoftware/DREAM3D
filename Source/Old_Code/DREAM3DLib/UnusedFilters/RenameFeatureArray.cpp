@@ -143,7 +143,10 @@ void RenameFeatureArray::dataCheck()
 // -----------------------------------------------------------------------------
 void RenameFeatureArray::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 

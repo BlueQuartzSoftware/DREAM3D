@@ -161,7 +161,10 @@ void AddBadData::dataCheck()
 // -----------------------------------------------------------------------------
 void AddBadData::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

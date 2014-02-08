@@ -208,7 +208,10 @@ void PhReader::dataCheck()
 // -----------------------------------------------------------------------------
 void PhReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

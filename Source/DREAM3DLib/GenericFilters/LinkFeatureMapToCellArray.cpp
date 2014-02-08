@@ -150,7 +150,10 @@ void LinkFeatureMapToCellArray::dataCheck()
 // -----------------------------------------------------------------------------
 void LinkFeatureMapToCellArray::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 

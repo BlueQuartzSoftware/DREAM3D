@@ -113,7 +113,10 @@ void FindNumFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void FindNumFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -76,11 +76,14 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public QWidget, private Ui::Choice
     */
     void setupGui();
 
+
   public slots:
-    void parametersChanged(int index);
+    void widgetChanged(int index);
+    void filterNeedsInputParameters(AbstractFilter* filter);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
 
   private:

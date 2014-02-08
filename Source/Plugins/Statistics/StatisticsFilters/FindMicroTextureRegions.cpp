@@ -126,7 +126,10 @@ void FindMicroTextureRegions::dataCheck()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

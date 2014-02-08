@@ -149,7 +149,10 @@ void BinaryNodesTrianglesReader::dataCheck()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

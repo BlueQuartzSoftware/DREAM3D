@@ -103,6 +103,7 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     virtual void preflight();
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

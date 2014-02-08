@@ -309,7 +309,7 @@
   private:\
   type   m_##prpty;\
   public:\
-  DREAM3D_SET_FILTER_PARAMETER(type, prpty)\
+  DREAM3D_SET_PROPERTY(type, prpty)\
   DREAM3D_GET_PROPERTY(type, prpty)
 
 #define DREAM3D_SET_2DVECTOR_PROPERTY(type, prpty, varname)\

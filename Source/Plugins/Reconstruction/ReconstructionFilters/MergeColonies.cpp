@@ -312,7 +312,10 @@ void MergeColonies::dataCheck()
 // -----------------------------------------------------------------------------
 void MergeColonies::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

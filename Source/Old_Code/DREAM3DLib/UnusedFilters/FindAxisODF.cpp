@@ -166,7 +166,10 @@ void FindAxisODF::dataCheck()
 void FindAxisODF::preflight()
 void FindAxisODF::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

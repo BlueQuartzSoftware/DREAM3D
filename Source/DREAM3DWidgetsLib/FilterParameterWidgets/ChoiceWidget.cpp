@@ -65,7 +65,7 @@ ChoiceWidget::~ChoiceWidget()
 void ChoiceWidget::setupGui()
 {
   connect(value, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(parametersChanged(int) ) );
+          this, SLOT(widgetChanged(int) ) );
 
   if (m_FilterParameter != NULL)
   {
@@ -85,11 +85,19 @@ void ChoiceWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChoiceWidget::parametersChanged(int index)
+void ChoiceWidget::widgetChanged(int index)
 {
+  emit parametersChanged();
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ChoiceWidget::filterNeedsInputParameters(AbstractFilter* filter)
+{
+  int index = value->currentIndex();
   QVariant v(index);
-  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
 
   if(false == ok)
   {
@@ -97,4 +105,5 @@ void ChoiceWidget::parametersChanged(int index)
     emit errorSettingFilterParameter(ss);
   }
 }
+
 

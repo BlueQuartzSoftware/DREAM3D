@@ -299,7 +299,10 @@ void GenerateEnsembleStatistics::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

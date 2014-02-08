@@ -167,7 +167,10 @@ void ConvertEulerAngles::dataCheck()
 // -----------------------------------------------------------------------------
 void ConvertEulerAngles::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

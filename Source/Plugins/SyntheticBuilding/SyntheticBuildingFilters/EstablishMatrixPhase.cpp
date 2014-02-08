@@ -150,7 +150,10 @@ void EstablishMatrixPhase::dataCheck()
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

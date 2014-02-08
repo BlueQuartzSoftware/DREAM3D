@@ -146,7 +146,10 @@ void FindFeatureClustering::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

@@ -197,7 +197,10 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureNeighborCAxisMisalignments::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

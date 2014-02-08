@@ -114,7 +114,10 @@ void FindBoundingBoxFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

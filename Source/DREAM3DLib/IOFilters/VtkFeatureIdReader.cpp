@@ -156,7 +156,10 @@ void VtkFeatureIdReader::dataCheck()
 // -----------------------------------------------------------------------------
 void VtkFeatureIdReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

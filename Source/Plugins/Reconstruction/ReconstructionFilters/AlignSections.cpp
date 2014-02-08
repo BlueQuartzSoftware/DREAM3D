@@ -148,7 +148,10 @@ void AlignSections::dataCheck()
 // -----------------------------------------------------------------------------
 void AlignSections::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

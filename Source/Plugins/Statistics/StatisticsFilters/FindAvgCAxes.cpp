@@ -117,7 +117,10 @@ void FindAvgCAxes::dataCheck()
 // -----------------------------------------------------------------------------
 void FindAvgCAxes::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

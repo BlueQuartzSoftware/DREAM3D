@@ -76,11 +76,16 @@ class DREAM3DWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::String
     void setupGui();
 
   public slots:
-    void on_value_textChanged(const QString& text);
+    void beforePreflight();
+    void afterPreflight();
+    void filterNeedsInputParameters(AbstractFilter* filter);
+
+    void widgetChanged(const QString& msg);
     void on_value_returnPressed();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
   private:
     AbstractFilter*   m_Filter;

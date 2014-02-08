@@ -47,14 +47,16 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 
+
 class DataArrayProxy
 {
+
   public:
     /**
      * @brief DataArrayProxy
      */
     DataArrayProxy() :
-      read(false),
+      flag(DREAM3D::Unchecked),
       version(0),
       path(""),
       name(""),
@@ -65,12 +67,12 @@ class DataArrayProxy
      * @brief DataArrayProxy
      * @param da_path
      * @param da_name
-     * @param da_read
+     * @param da_flag
      * @param da_objectType
      * @param da_version
      */
-    DataArrayProxy(QString da_path, QString da_name, bool da_read = true, QString da_objectType = "NOT_DEFINED", int da_version = 0) :
-      read(da_read),
+    DataArrayProxy(QString da_path, QString da_name, uint8_t da_flag = DREAM3D::Checked, QString da_objectType = "NOT_DEFINED", int da_version = 0) :
+      flag(da_flag),
       version(da_version),
       path(da_path),
       name(da_name),
@@ -82,7 +84,7 @@ class DataArrayProxy
     */
     DataArrayProxy(const DataArrayProxy& rhs)
     {
-      read = rhs.read;
+      flag = rhs.flag;
       version = rhs.version;
       path = rhs.path;
       name = rhs.name;
@@ -105,7 +107,7 @@ class DataArrayProxy
       {
         if(__SHOW_DEBUG_MSG__) { std::cout << "        DataArray: " << dataArrayName.toStdString()  << std::endl; }
 
-        DataArrayProxy proxy(h5InternalPath, dataArrayName, true);
+        DataArrayProxy proxy(h5InternalPath, dataArrayName, DREAM3D::Checked);
 
         herr_t err = QH5Lite::readVectorAttribute(attrMatGid, dataArrayName, DREAM3D::HDF5::TupleDimensions, proxy.tupleDims);
         if(err < 0) { std::cout << "Error Reading the Tuple Dimensions for DataArray " << dataArrayName.toStdString() << std::endl; }
@@ -131,7 +133,7 @@ class DataArrayProxy
     */
     void operator=(const DataArrayProxy& rhs)
     {
-      read = rhs.read;
+      flag = rhs.flag;
       version = rhs.version;
       path = rhs.path;
       name = rhs.name;
@@ -141,7 +143,7 @@ class DataArrayProxy
     }
 
     //----- Our variables, publicly available
-    bool read;
+    uint8_t flag;
     int version;
     QString path;
     QString name;

@@ -97,6 +97,7 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     virtual void execute();
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

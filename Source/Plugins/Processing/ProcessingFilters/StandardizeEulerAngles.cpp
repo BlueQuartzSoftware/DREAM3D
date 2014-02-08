@@ -199,7 +199,10 @@ void StandardizeEulerAngles::dataCheck()
 // -----------------------------------------------------------------------------
 void StandardizeEulerAngles::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

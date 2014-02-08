@@ -112,12 +112,7 @@ bool InputFileWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_value_returnPressed()
 {
-  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, value->text());
-  if (false == ok)
-  {
-    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
-  }
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -125,15 +120,7 @@ void InputFileWidget::on_value_returnPressed()
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_value_textChanged(const QString& text)
 {
-  if (verifyPathExists(text, value) == true )
-  {
-    bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
-    if (false == ok)
-    {
-      QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-      emit errorSettingFilterParameter(ss);
-    }
-  }
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -141,8 +128,6 @@ void InputFileWidget::on_value_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_selectBtn_clicked()
 {
-
-
   QString currentPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
   QString Ftype = m_FilterParameter->getFileType();
   QString ext = m_FilterParameter->getFileExtension();
@@ -159,4 +144,30 @@ void InputFileWidget::on_selectBtn_clicked()
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
   value->setText(file);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputFileWidget::widgetChanged(const QString &text)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputFileWidget::filterNeedsInputParameters(AbstractFilter* filter)
+{
+  QString text = value->text();
+  if (verifyPathExists(text, value) == true )
+  {
+    bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
+    if (false == ok)
+    {
+      QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
+      emit errorSettingFilterParameter(ss);
+    }
+  }
 }

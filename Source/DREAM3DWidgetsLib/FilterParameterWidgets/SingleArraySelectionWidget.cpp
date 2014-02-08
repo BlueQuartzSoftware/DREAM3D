@@ -76,10 +76,13 @@ void SingleArraySelectionWidget::setupGui()
   //          this, SLOT(initializeHeirarchy() ) );
 
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight() ) );
+          this, SLOT(beforePreflight()));
 
   connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()) );
+          this, SLOT(afterPreflight()));
+
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   if (m_FilterParameter == NULL)
   {
@@ -100,8 +103,6 @@ void SingleArraySelectionWidget::setupGui()
   attributeArrayList->blockSignals(false);
 
   populateComboBoxes();
-
-
 }
 
 
@@ -136,24 +137,44 @@ void SingleArraySelectionWidget::populateComboBoxes()
     dataContainerList->addItem(dc.name);
   }
 
-  // Default to empty strings
-  QString dcName;
-  QString amName;
-  QString daName;
+  // Grab what is currently selected
+  QString curDcName = dataContainerList->currentText();
+  QString curAmName = attributeMatrixList->currentText();
+  QString curDaName = attributeArrayList->currentText();
 
-  // now get the selection from the filter instance
+  // Get what is in the filter
   QString selectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
   // Split the path up to make sure we have a valid path separated by the "|" character
+
+  QString filtDcName;
+  QString filtAmName;
+  QString filtDaName;
   QStringList tokens = selectedPath.split(DREAM3D::PathSep);
   if(tokens.size() == 3) {
-    dcName = tokens.at(0);
-    amName = tokens.at(1);
-    daName = tokens.at(2);
+    filtDcName = tokens.at(0);
+    filtAmName = tokens.at(1);
+    filtDaName = tokens.at(2);
   }
 
+  // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
+  // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
+  // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
+  // to determine if the change from the GUI should over ride the filter or vice versa. there is a potential that in future
+  // versions that something else is driving DREAM3D and pushing the changes to the filter and we need to reflect those
+  // changes in the GUI, like a testing script?
+
+  QString dcName = checkStringValues(curDcName, filtDcName);
+  QString amName = checkStringValues(curAmName, filtAmName);
+  QString daName = checkStringValues(curDaName, filtDaName);
+
+
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false) { dataContainerList->addItem(dcName); } // the string was not found so just set it to the first index
+  if(dcIndex < 0 && dcName.isEmpty() == false) {
+    dataContainerList->addItem(dcName);
+  } // the string was not found so just set it to the first index
   else {
+    // dcIndex = -1, which means the 'dcName' was not found and it is empty which means no default selection.
+    if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
     dataContainerList->blockSignals(true);
     dataContainerList->setCurrentIndex(dcIndex);
     populateAttributeMatrixList();
@@ -163,6 +184,7 @@ void SingleArraySelectionWidget::populateComboBoxes()
   int amIndex = attributeMatrixList->findText(amName);
   if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
   else {
+    if(amIndex < 0) { amIndex = 0; }
     attributeMatrixList->blockSignals(true);
     attributeMatrixList->setCurrentIndex(amIndex);
     populateAttributeArrayList();
@@ -172,12 +194,28 @@ void SingleArraySelectionWidget::populateComboBoxes()
   int daIndex = attributeArrayList->findText(daName);
   if(daIndex < 0 && daName.isEmpty() == false) { attributeArrayList->addItem(daName); } // The name of the attribute array was not found in the list
   {
+    if (daIndex < 0) { daIndex = 0; }
     attributeArrayList->blockSignals(true);
     attributeArrayList->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we shoudl
     attributeArrayList->blockSignals(false);// not be triggering an infinte recursion of preflights
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SingleArraySelectionWidget::checkStringValues(QString curDcName, QString filtDcName)
+{
+  if(curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
+  {return filtDcName;}
+  else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == true)
+  {return curDcName;}
+  else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == false && m_DidCausePreflight == true)
+  { return curDcName;}
+
+  return filtDcName;
+
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -374,24 +412,9 @@ void SingleArraySelectionWidget::populateAttributeArrayList()
 void SingleArraySelectionWidget::on_attributeArrayList_currentIndexChanged(int index)
 {
   //qDebug() << "void SingleArraySelectionWidget::on_attributeArrayList_currentIndexChanged(int index)";
-
-  // Geenerate the path to the AttributeArray
-  QString path = QString("%1|%2|%3").arg(dataContainerList->currentText()).arg(attributeMatrixList->currentText()).arg(attributeArrayList->currentText());
-
-  QVariant var;
-  var.setValue(path);
-  bool ok = false;
-  // Set the value into the Filter which will cause the preflight to run
   m_DidCausePreflight = true;
-  ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
+  emit parametersChanged();
   m_DidCausePreflight = false;
-  if(false == ok)
-  {
-    QString ss = QObject::tr("Error occurred setting Filter Parameter '%1'").arg(m_FilterParameter->getPropertyName() );
-    emit errorSettingFilterParameter(ss);
-    qDebug() << ss;
-  }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -420,7 +443,6 @@ void SingleArraySelectionWidget::beforePreflight()
   dataContainerList->blockSignals(false);
   attributeMatrixList->blockSignals(false);
   attributeArrayList->blockSignals(false);
-  // setSelectedPath(dcName, amName, daName);
 }
 
 // -----------------------------------------------------------------------------
@@ -451,4 +473,26 @@ DataContainerArrayProxy SingleArraySelectionWidget::generateDCAProxy()
   dcaProxy.list.push_back(dcProxy);
 
   return dcaProxy;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SingleArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
+{
+  // Geenerate the path to the AttributeArray
+  QString path = QString("%1|%2|%3").arg(dataContainerList->currentText()).arg(attributeMatrixList->currentText()).arg(attributeArrayList->currentText());
+
+  QVariant var;
+  var.setValue(path);
+  bool ok = false;
+  // Set the value into the Filter
+  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
+  if(false == ok)
+  {
+    QString ss = QObject::tr("Filter '%1': Error occurred setting Filter Parameter '%2'").arg(m_Filter->getNameOfClass()).arg(m_FilterParameter->getPropertyName() );
+    emit errorSettingFilterParameter(ss);
+    qDebug() << ss;
+  }
+
 }

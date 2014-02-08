@@ -162,7 +162,7 @@ void DataContainerWriter::dataCheck()
 
   if (m_OutputFile.isEmpty() == true)
   {
-    ss = QObject::tr(": The output file must be set before executing this filter.");
+    ss = QObject::tr("The output file must be set before executing this filter.");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
@@ -186,7 +186,10 @@ void DataContainerWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void DataContainerWriter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------
@@ -221,6 +224,7 @@ void DataContainerWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
+  qDebug() << "DREAM3D File: " << m_OutputFile;
 
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&m_FileId, true);

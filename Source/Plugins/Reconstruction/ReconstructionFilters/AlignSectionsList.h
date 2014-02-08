@@ -94,6 +94,7 @@ class AlignSectionsList : public AlignSections
 
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

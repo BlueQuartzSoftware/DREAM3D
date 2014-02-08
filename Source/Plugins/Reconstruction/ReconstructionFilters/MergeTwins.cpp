@@ -219,7 +219,10 @@ void MergeTwins::dataCheck()
 // -----------------------------------------------------------------------------
 void MergeTwins::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

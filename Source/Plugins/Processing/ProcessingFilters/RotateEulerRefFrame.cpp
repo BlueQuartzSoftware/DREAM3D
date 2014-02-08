@@ -209,7 +209,10 @@ void RotateEulerRefFrame::dataCheck()
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

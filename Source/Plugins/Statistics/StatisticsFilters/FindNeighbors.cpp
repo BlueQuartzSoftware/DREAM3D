@@ -170,7 +170,10 @@ void FindNeighbors::dataCheck()
 // -----------------------------------------------------------------------------
 void FindNeighbors::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

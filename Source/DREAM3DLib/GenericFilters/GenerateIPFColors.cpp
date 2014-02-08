@@ -175,7 +175,10 @@ void GenerateIPFColors::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

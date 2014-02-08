@@ -142,7 +142,10 @@ void SharedFeatureFaceFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void SharedFeatureFaceFilter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

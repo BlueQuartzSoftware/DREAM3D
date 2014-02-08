@@ -194,7 +194,10 @@ void AlignSectionsMisorientation::dataCheck()
 // -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

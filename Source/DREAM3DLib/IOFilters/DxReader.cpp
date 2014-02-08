@@ -202,7 +202,10 @@ void DxReader::dataCheck()
 // -----------------------------------------------------------------------------
 void DxReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

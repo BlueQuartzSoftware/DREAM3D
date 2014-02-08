@@ -116,7 +116,10 @@ void FindFeatureCentroids::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureCentroids::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

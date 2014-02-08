@@ -240,10 +240,29 @@ if [ $# -ge 4 ]; then
    COLORSCHEME="$4"
 fi
 
+
+
+#  gsr note: The nex few lines will make contours appear continuous.
+#  If you want the traditional discrete plot style, comment out "z=$(echo "scale=9; $y/10.0" | bc)" and uncomment z=$7, below.
+#  If you want to add the lines between contours, find "Adds the contour line" and remove all 
+#  comments in that section that are marked by "#g"
+DO_DISCRETE=0
+if [ ${DO_DISCRETE} = "0" ] ; then
+y=$7
+z=$(echo "scale=9; $y/10.0" | bc)
+#z=$7
+else
+y=$7
+#z=$(echo "scale=9; $y/10.0" | bc)
+z=$7
+fi
+echo "z =" $z
+
+      
 PDF_CPT_FILE="${t}PDF.cpt"
 
 if [ $# -ge 7 ]; then
-   gmt makecpt -C"$COLORSCHEME"  -T"$5"/"$6"/"$7" > "${PDF_CPT_FILE}"
+   gmt makecpt -C"$COLORSCHEME"  -T"$5"/"$6"/"$z" > "${PDF_CPT_FILE}"
 #  was -T0.0/3/0.5
 else
    gmt makecpt -C"$COLORSCHEME"  -T0.0/8./1.0 > "${PDF_CPT_FILE}"
@@ -651,7 +670,7 @@ fi
 #   echo "made image, no labeling"
 
 # Adds the contour line
-   if  [ $3 != DP ] && [ $3 != DI ] && [ $3 != DL ] &&  [ $3 != IX ] && [ $3 != PX ] && [ $3 != P2 ] && [ $3 != DA ] ; then
+   if  [ $3 != DP ] && [ $3 != DI ] && [ $3 != DL ] &&  [ $3 != IX ] && [ $3 != PX ] && [ $3 != P2 ] && [ $3 != DA ] && [ $DO_DISCRETE = "1" ] ; then
 #  if not discrete, then do this
        gmt grdcontour "${t}TempPDF.grd" -fg -C"${PDF_CPT_FILE}" $PROJ $REGION -K -O -A- >>"$t".ps
    else

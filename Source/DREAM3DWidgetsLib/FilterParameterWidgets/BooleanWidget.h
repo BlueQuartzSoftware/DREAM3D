@@ -77,10 +77,12 @@ class DREAM3DWidgetsLib_EXPORT BooleanWidget : public QWidget, private Ui::Boole
 
 
   public slots:
-    void parametersChanged(int state);
+    void widgetChanged(int state);
+    void filterNeedsInputParameters(AbstractFilter* filter);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
   private:
     AbstractFilter*   m_Filter;

@@ -152,7 +152,10 @@ void FindShapes::dataCheck()
 // -----------------------------------------------------------------------------
 void FindShapes::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

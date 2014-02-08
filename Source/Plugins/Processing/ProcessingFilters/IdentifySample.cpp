@@ -124,7 +124,10 @@ void IdentifySample::dataCheck()
 // -----------------------------------------------------------------------------
 void IdentifySample::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

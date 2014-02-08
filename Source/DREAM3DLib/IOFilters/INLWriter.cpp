@@ -184,7 +184,10 @@ void INLWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void INLWriter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

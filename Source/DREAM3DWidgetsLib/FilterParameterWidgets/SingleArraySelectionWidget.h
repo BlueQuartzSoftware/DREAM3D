@@ -75,9 +75,19 @@ class DREAM3DWidgetsLib_EXPORT SingleArraySelectionWidget : public QWidget, priv
     */
     void setupGui();
 
+    /**
+     * @brief checkStringValues
+     * @param current
+     * @param filt
+     * @return
+     */
+    QString checkStringValues(QString current, QString filtDcName);
+
+
   public slots:
     void beforePreflight();
     void afterPreflight();
+    void filterNeedsInputParameters(AbstractFilter* filter);
 
     void on_dataContainerList_currentIndexChanged(int index);
 
@@ -96,6 +106,7 @@ class DREAM3DWidgetsLib_EXPORT SingleArraySelectionWidget : public QWidget, priv
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
   private:
     AbstractFilter*   m_Filter;

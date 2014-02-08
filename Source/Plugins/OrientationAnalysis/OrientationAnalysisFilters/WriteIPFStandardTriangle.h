@@ -133,6 +133,7 @@ class WriteIPFStandardTriangle : public AbstractFilter
 
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

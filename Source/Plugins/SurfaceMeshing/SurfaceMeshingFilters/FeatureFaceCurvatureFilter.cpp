@@ -245,7 +245,10 @@ void FeatureFaceCurvatureFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

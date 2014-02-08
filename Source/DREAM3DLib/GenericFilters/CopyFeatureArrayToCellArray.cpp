@@ -139,7 +139,10 @@ void CopyFeatureArrayToCellArray::dataCheck()
 // -----------------------------------------------------------------------------
 void CopyFeatureArrayToCellArray::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 

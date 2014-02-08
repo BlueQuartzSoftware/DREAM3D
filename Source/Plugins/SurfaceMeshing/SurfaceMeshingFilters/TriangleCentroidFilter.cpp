@@ -179,7 +179,10 @@ void TriangleCentroidFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

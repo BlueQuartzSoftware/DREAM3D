@@ -142,8 +142,11 @@ void DataContainerReader::dataCheck()
 // -----------------------------------------------------------------------------
 void DataContainerReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
   readData(true);
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

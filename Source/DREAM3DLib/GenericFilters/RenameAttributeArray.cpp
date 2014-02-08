@@ -123,7 +123,7 @@ void RenameAttributeArray::dataCheck()
 
 
   qDebug() << "RenameAttributeArray::dataCheck() ==> " << getSelectedArrayPath();
-
+  qDebug() << "RenameAttributeArray::dataCheck() ==> " << getNewArrayName();
   if(m_NewArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
@@ -212,6 +212,7 @@ void RenameAttributeArray::dataCheck()
 void RenameAttributeArray::preflight()
 {
   emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
 }

@@ -138,7 +138,10 @@ void PhWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void PhWriter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

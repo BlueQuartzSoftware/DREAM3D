@@ -172,7 +172,10 @@ void SurfaceMeshToStl::dataCheck()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToStl::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

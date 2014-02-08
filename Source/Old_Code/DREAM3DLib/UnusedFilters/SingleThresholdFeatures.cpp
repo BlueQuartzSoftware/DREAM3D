@@ -173,7 +173,10 @@ void SingleThresholdFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void SingleThresholdFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

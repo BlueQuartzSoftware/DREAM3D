@@ -133,7 +133,10 @@ void FindCellQuats::dataCheck()
 // -----------------------------------------------------------------------------
 void FindCellQuats::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

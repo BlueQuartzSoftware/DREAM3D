@@ -152,7 +152,10 @@ void AbaqusSurfaceMeshWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void AbaqusSurfaceMeshWriter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -158,7 +158,10 @@ void FindKernelAvgMisorientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -127,7 +127,10 @@ void FindSizes::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSizes::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

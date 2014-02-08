@@ -66,11 +66,11 @@ void IntVec3Widget::setupGui()
 {
 
   connect(xData, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&) ) );
+          this, SLOT(widgetChanged(const QString&) ) );
   connect(yData, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&) ) );
+          this, SLOT(widgetChanged(const QString&) ) );
   connect(zData, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&) ) );
+          this, SLOT(widgetChanged(const QString&) ) );
 
   QIntValidator* xVal = new QIntValidator(xData);
   xData->setValidator(xVal);
@@ -89,11 +89,18 @@ void IntVec3Widget::setupGui()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IntVec3Widget::widgetChanged(const QString &text)
+{
+  emit parametersChanged();
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IntVec3Widget::parametersChanged(const QString &text)
+void IntVec3Widget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = false;
   IntVec3_t data;
@@ -103,7 +110,7 @@ void IntVec3Widget::parametersChanged(const QString &text)
 
   QVariant v;
   v.setValue(data);
-  ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
   if(false == ok)
   {
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());

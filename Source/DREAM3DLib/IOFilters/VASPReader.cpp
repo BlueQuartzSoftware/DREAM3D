@@ -172,7 +172,10 @@ void VASPReader::dataCheck()
 // -----------------------------------------------------------------------------
 void VASPReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

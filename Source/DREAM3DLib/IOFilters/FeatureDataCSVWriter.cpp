@@ -156,7 +156,10 @@ void FeatureDataCSVWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void FeatureDataCSVWriter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

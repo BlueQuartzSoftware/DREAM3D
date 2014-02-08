@@ -194,7 +194,10 @@ void TriangleNormalFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

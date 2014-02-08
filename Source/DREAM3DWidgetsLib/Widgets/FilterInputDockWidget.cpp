@@ -135,6 +135,8 @@ void FilterInputDockWidget::displayFilterParameters(PipelineFilterWidget* w)
 
   // Add a label at the top of the Inputs Tabs to show what filter we are working on
   filterHumanLabel->setText(w->getHumanLabel());
+  AbstractFilter::Pointer filter = w->getFilter();
+  brandingLabel->setText(filter->getBrandingString() );
 #if 0
   QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Maximum);
   sizePolicy2.setHorizontalStretch(0);

@@ -430,7 +430,7 @@ void TestDataContainerReader()
           QMap<QString, DataArrayProxy>& dasToRead = iter.value().dataArrays;
           for (QMap<QString, DataArrayProxy>::iterator iter2 = dasToRead.begin(); iter2 != dasToRead.end(); ++iter2)
           {
-            if(iter2->name.compare(DREAM3D::CellData::FeatureIds) != 0 && iter2->name.compare(DREAM3D::FeatureData::AxisEulerAngles) != 0) iter2->read = false;
+            if(iter2->name.compare(DREAM3D::CellData::FeatureIds) != 0 && iter2->name.compare(DREAM3D::FeatureData::AxisEulerAngles) != 0) iter2->flag = DREAM3D::Unchecked;
           }
         }
       }

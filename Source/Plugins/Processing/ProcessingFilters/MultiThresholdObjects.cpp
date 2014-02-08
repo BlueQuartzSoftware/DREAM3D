@@ -148,7 +148,10 @@ void MultiThresholdObjects::dataCheck()
 // -----------------------------------------------------------------------------
 void MultiThresholdObjects::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

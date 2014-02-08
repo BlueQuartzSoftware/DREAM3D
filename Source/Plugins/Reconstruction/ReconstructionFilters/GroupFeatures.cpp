@@ -131,7 +131,10 @@ void GroupFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void GroupFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

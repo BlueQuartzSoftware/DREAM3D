@@ -183,7 +183,10 @@ void FindSlipTransmissionMetrics::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

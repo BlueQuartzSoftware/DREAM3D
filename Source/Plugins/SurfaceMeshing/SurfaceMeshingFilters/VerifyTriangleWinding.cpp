@@ -311,7 +311,10 @@ void VerifyTriangleWinding::dataCheck()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

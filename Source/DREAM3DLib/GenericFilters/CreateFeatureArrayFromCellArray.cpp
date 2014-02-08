@@ -136,7 +136,10 @@ void CreateFeatureArrayFromCellArray::dataCheck()
 // -----------------------------------------------------------------------------
 void CreateFeatureArrayFromCellArray::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 

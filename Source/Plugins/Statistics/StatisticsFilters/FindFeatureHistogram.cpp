@@ -180,7 +180,10 @@ void FindFeatureHistogram::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureHistogram::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

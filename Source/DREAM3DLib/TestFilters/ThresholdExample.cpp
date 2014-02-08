@@ -199,7 +199,10 @@ void ThresholdExample::dataCheck()
 // -----------------------------------------------------------------------------
 void ThresholdExample::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

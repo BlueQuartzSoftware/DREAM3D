@@ -221,7 +221,10 @@ void FitCorrelatedFeatureData::dataCheck()
 // -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

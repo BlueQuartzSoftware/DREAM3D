@@ -77,6 +77,8 @@ class DREAM3DWidgetsLib_EXPORT ArraySelectionWidget : public QWidget, private Ui
     void setupGui();
 
   public slots:
+    void widgetChanged(const QString& msg);
+    void filterNeedsInputParameters(AbstractFilter* filter);
 
     void beforePreflight();
     void afterPreflight();
@@ -95,6 +97,7 @@ class DREAM3DWidgetsLib_EXPORT ArraySelectionWidget : public QWidget, private Ui
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
   private:
     AbstractFilter*   m_Filter;

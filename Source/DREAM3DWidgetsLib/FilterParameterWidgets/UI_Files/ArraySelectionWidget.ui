@@ -14,28 +14,12 @@
    <string>ArraySelectionWidget</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>2</number>
-   </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>2</number>
    </property>
    <property name="spacing">
     <number>4</number>
    </property>
-   <item row="1" column="0">
-    <widget class="QLabel" name="ArraySelectionWidgetLabel">
-     <property name="text">
-      <string>Property</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1">
     <widget class="QListWidget" name="dataContainerList">
      <property name="minimumSize">
@@ -43,6 +27,9 @@
        <width>150</width>
        <height>0</height>
       </size>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
      </property>
     </widget>
    </item>
@@ -53,6 +40,9 @@
        <width>150</width>
        <height>0</height>
       </size>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
      </property>
     </widget>
    </item>
@@ -65,7 +55,7 @@
       </size>
      </property>
      <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
+      <set>QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
      </property>
      <property name="uniformItemSizes">
       <bool>true</bool>
@@ -99,6 +89,13 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" rowspan="2">
+    <widget class="QLabel" name="ArraySelectionWidgetLabel">
+     <property name="text">
+      <string>Property</string>
      </property>
     </widget>
    </item>

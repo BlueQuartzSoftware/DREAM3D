@@ -421,7 +421,9 @@ void ReadH5Ebsd::dataCheck()
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::preflight()
 {
+  emit preflightAboutToExecute();
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

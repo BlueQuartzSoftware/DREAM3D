@@ -295,7 +295,10 @@ void SegmentBetaGrains::dataCheck()
 void SegmentBetaGrains::preflight()
 void SegmentBetaGrains::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

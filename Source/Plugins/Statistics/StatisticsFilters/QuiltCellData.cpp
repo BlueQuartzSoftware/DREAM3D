@@ -213,7 +213,10 @@ void QuiltCellData::dataCheck()
 // -----------------------------------------------------------------------------
 void QuiltCellData::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

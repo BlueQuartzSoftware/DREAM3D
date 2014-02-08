@@ -184,7 +184,10 @@ void TriangleAreaFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void TriangleAreaFilter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

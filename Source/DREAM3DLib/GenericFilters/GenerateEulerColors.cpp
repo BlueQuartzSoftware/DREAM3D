@@ -138,7 +138,10 @@ void GenerateEulerColors::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateEulerColors::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -173,7 +173,10 @@ void SingleThresholdCells::dataCheck()
 // -----------------------------------------------------------------------------
 void SingleThresholdCells::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

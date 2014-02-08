@@ -57,7 +57,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::InputFileWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**
@@ -81,6 +81,8 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
     bool verifyPathExists(QString filePath, QLineEdit* lineEdit);
 
   public slots:
+    void widgetChanged(const QString &text);
+    void filterNeedsInputParameters(AbstractFilter* filter);
 
     void on_value_textChanged(const QString& text);
     void on_value_returnPressed();
@@ -89,6 +91,7 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
   private:
     AbstractFilter*   m_Filter;

@@ -100,6 +100,7 @@ class EBSDSegmentFeatures : public SegmentFeatures
 
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

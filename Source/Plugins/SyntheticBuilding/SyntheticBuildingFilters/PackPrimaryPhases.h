@@ -123,6 +123,7 @@ class PackPrimaryPhases : public AbstractFilter
 
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
