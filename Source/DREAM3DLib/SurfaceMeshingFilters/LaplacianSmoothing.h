@@ -45,7 +45,7 @@
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 
-#define OUTPUT_DEBUG_VTK_FILES 0
+#define OUTPUT_DEBUG_VTK_FILES 1
 
 
 /**
@@ -67,6 +67,13 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 
     // We need these arrays for this filter to work correctly
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
+
+    #if OUTPUT_DEBUG_VTK_FILES
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VtkIterationOutputPath)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputVTKPrefix)
+    DREAM3D_INSTANCE_PROPERTY(int, GrainId)
+    #endif
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
@@ -112,7 +119,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -166,6 +173,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 
 #if OUTPUT_DEBUG_VTK_FILES
     void writeVTKFile(const std::string &outputVtkFile);
+    int32_t* m_SurfaceMeshFaceLabels;
 #endif
 
 
