@@ -125,17 +125,24 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t field
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::readFilterParameters(AbstractFilterParametersReader* reader)
+void AlignSectionsFeature::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* writer)
+int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -40,8 +40,8 @@
 
 
 
-const static float m_pi = static_cast<float>(M_PI);
-const static float m_one_over_pi = 1.0f/m_pi;
+
+const static float m_one_over_pi = 1.0f/DREAM3D::Constants::k_Pi;
 
 // -----------------------------------------------------------------------------
 //

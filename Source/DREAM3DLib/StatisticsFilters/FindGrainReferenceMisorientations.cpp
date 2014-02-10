@@ -105,17 +105,24 @@ void FindGrainReferenceMisorientations::setupFilterParameters()
 }
 
 // -----------------------------------------------------------------------------
-void FindGrainReferenceMisorientations::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindGrainReferenceMisorientations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainReferenceMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindGrainReferenceMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("ReferenceOrientation", getReferenceOrientation() );
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -263,7 +270,7 @@ void FindGrainReferenceMisorientations::execute()
           m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
           w = w *(180.0f/m_pi);
           m_GrainReferenceMisorientations[point] = w;
-		  float val = 
+      float val =
           avgmiso[m_GrainIds[point]*2]++;
           avgmiso[m_GrainIds[point]*2 + 1] = avgmiso[m_GrainIds[point]*2+1] + w;
         }

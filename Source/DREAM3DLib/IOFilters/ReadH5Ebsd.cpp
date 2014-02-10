@@ -62,7 +62,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 
@@ -114,20 +114,54 @@ ReadH5Ebsd::~ReadH5Ebsd()
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader)
+void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  setInputFile( reader->readValue("InputFile", getInputFile() ) );
+  setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex() ) );
+  setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex() ) );
+  setUseTransformations( reader->readValue("UseTransformations", getUseTransformations() ) );
+  setRefFrameZDir( static_cast<Ebsd::RefFrameZDir>( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
+
+  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() ) );
+  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() ) );
+  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() ) );
+  setSelectedSurfaceVertexArrays( reader->readValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() ) );
+  setSelectedSurfaceFaceArrays( reader->readValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() ) );
+  setSelectedSurfaceEdgeArrays( reader->readValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() ) );
+  setSelectedSurfaceFieldArrays( reader->readValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() ) );
+  setSelectedSurfaceEnsembleArrays( reader->readValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() ) );
+//  setSelectedSolidVertexArrays( reader->readValue("SelectedSolidVertexArrays", getSelectedSolidVertexArrays() ) );
+//  setSelectedSolidFaceArrays( reader->readValue("SelectedSolidFaceArrays", getSelectedSolidFaceArrays() ) );
+//  setSelectedSolidEdgeArrays( reader->readValue("SelectedSolidEdgeArrays", getSelectedSolidEdgeArrays() ) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("UseTransformations", getUseTransformations() );
+  writer->writeValue("RefFrameZDir", getRefFrameZDir());
+
+  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() );
+  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() );
+  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() );
+  writer->writeValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() );
+  writer->writeValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() );
+  writer->writeValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() );
+  writer->writeValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() );
+  writer->writeValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() );
+//  writer->writeValue("SelectedSolidVertexArrays", getSelectedSolidVertexArrays() );
+//  writer->writeValue("SelectedSolidFaceArrays", getSelectedSolidFaceArrays() );
+//  writer->writeValue("SelectedSolidEdgeArrays", getSelectedSolidEdgeArrays() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -541,7 +575,7 @@ void ReadH5Ebsd::setVoxelSelectedArrayNames(std::set<std::string> selectedCellAr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+void ReadH5Ebsd::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                            std::set<std::string> selectedFaceArrays,
                                                            std::set<std::string> selectedEdgeArrays,
                                                            std::set<std::string> selectedFieldArrays,

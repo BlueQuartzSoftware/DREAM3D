@@ -11,7 +11,10 @@
 //
 // -----------------------------------------------------------------------------
 GenericExample::GenericExample() :
-  AbstractFilter()
+  AbstractFilter(),
+  m_StlFilePrefix(""),
+  m_MaxIterations(0),
+  m_MisorientationTolerance(0)
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;
@@ -125,120 +128,6 @@ void GenericExample::setupFilterParameters()
     option->setChoices(choices);
     options.push_back(option);
   }
-  /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Voxel Cell Array Name");
-    option->setPropertyName("SelectedCellArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
-  /* To Display a Combobox with a list of current Voxel Field Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Voxel Field Array Name");
-    option->setPropertyName("SelectedFieldArrayName");
-    option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
-  /* To Display a Combobox with a list of current Voxel Ensemble Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Voxel Ensemble Array Name");
-    option->setPropertyName("SelectedEnsembleArrayName");
-    option->setWidgetType(FilterParameter::VoxelEnsembleArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
-
-  /* To Display a Combobox with a list of current SurfaceMesh Point Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("SurfaceMesh Point Array Name");
-    option->setPropertyName("SurfaceMeshPointArrayName");
-    option->setWidgetType(FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
-  /* To Display a Combobox with a list of current SurfaceMesh Face Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("SurfaceMesh Face Array Name");
-    option->setPropertyName("SurfaceMeshFaceArrayName");
-    option->setWidgetType(FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
-  /* To Display a Combobox with a list of current SurfaceMesh Edge Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("SurfaceMesh Edge Array Name");
-    option->setPropertyName("SurfaceMeshEdgeArrayName");
-    option->setWidgetType(FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
-  /* To Display a Combobox with a list of current SurfaceMesh Field Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("SurfaceMesh Field Array Name");
-    option->setPropertyName("SurfaceMeshFieldArrayName");
-    option->setWidgetType(FilterParameter::SurfaceMeshFieldArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
-
-  /* To Display a Combobox with a list of current SurfaceMesh Ensemble Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("SurfaceMesh Ensemble Array Name");
-    option->setPropertyName("SurfaceMeshEnsembleArrayName");
-    option->setWidgetType(FilterParameter::SurfaceMeshEnsembleArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
-
-
-  /* To Display a Combobox with a list of current SolidMesh Point Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("SolidMesh Point Array Name");
-    option->setPropertyName("SolidMeshPointArrayName");
-    option->setWidgetType(FilterParameter::SolidMeshVertexArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
-  /* To Display a Combobox with a list of current SolidMesh Face Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("SolidMesh Face Array Name");
-    option->setPropertyName("SolidMeshFaceArrayName");
-    option->setWidgetType(FilterParameter::SolidMeshFaceArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
-  /* To Display a Combobox with a list of current SolidMesh Edge Arrays in it */
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("SolidMesh Edge Array Name");
-    option->setPropertyName("SolidMeshEdgeArrayName");
-    option->setWidgetType(FilterParameter::SolidMeshEdgeArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    options.push_back(option);
-  }
 
 
   /* Display a group of 3 text boxes to collect 3 integer values */
@@ -262,15 +151,108 @@ void GenericExample::setupFilterParameters()
     options.push_back(option);
   }
 
+
+  /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Voxel Cell Array Name");
+    option->setPropertyName("SelectedVoxelCellArrayName");
+    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
+  /* To Display a Combobox with a list of current Voxel Field Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Voxel Field Array Name");
+    option->setPropertyName("SelectedVoxelFieldArrayName");
+    option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
+  /* To Display a Combobox with a list of current Voxel Ensemble Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Voxel Ensemble Array Name");
+    option->setPropertyName("SelectedVoxelEnsembleArrayName");
+    option->setWidgetType(FilterParameter::VoxelEnsembleArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
+
+  /* To Display a Combobox with a list of current SurfaceMesh Point Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("SurfaceMesh Point Array Name");
+    option->setPropertyName("SelectedSurfaceMeshPointArrayName");
+    option->setWidgetType(FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
+  /* To Display a Combobox with a list of current SurfaceMesh Face Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("SurfaceMesh Face Array Name");
+    option->setPropertyName("SelectedSurfaceMeshFaceArrayName");
+    option->setWidgetType(FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
+  /* To Display a Combobox with a list of current SurfaceMesh Edge Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("SurfaceMesh Edge Array Name");
+    option->setPropertyName("SelectedSurfaceMeshEdgeArrayName");
+    option->setWidgetType(FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
+
+  /* To Display a Combobox with a list of current SolidMesh Point Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("SolidMesh Point Array Name");
+    option->setPropertyName("SelectedSolidMeshPointArrayName");
+    option->setWidgetType(FilterParameter::SolidMeshVertexArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
+  /* To Display a Combobox with a list of current SolidMesh Face Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("SolidMesh Face Array Name");
+    option->setPropertyName("SelectedSolidMeshFaceArrayName");
+    option->setWidgetType(FilterParameter::SolidMeshFaceArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
+  /* To Display a Combobox with a list of current SolidMesh Edge Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("SolidMesh Edge Array Name");
+    option->setPropertyName("SelectedSolidMeshEdgeArrayName");
+    option->setWidgetType(FilterParameter::SolidMeshEdgeArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
+
   /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Crystal Rotations");
-    option->setPropertyName("AxisAngleRotations");
+    option->setPropertyName("CrystalSymmetryRotations");
     option->setWidgetType(FilterParameter::AxisAngleWidget);
     options.push_back(option);
   }
-
 
   setFilterParameters(options);
 }
@@ -278,48 +260,74 @@ void GenericExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader)
+void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+
+  reader->openFilterGroup(this, index);
+  setStlFilePrefix( reader->readValue("StlFilePrefix", getStlFilePrefix()) );
+  setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
+  setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
+  setInputFile( reader->readValue("InputFile", getInputFile()) );
+  setInputPath( reader->readValue("InputPath", getInputPath()) );
+  setOutputFile( reader->readValue("OutputFile", getOutputFile()) );
+  setOutputPath( reader->readValue("OutputPath", getOutputPath()) );
+  setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", getWriteAlignmentShifts()) );
+  setConversionType( reader->readValue("ConversionType", getConversionType()) );
+  setDimensions( reader->readValue("Dimensions", getDimensions()) );
+  setOrigin( reader->readValue("Origin", getOrigin()) );
+  setCrystalSymmetryRotations( reader->readValue("CrystalSymmetryRotations", getCrystalSymmetryRotations()) );
+
+  setSelectedVoxelCellArrayName( reader->readValue("SelectedVoxelCellArrayName", getSelectedVoxelCellArrayName()) );
+  setSelectedVoxelFieldArrayName( reader->readValue("SelectedVoxelFieldArrayName", getSelectedVoxelFieldArrayName()) );
+  setSelectedVoxelEnsembleArrayName( reader->readValue("SelectedVoxelEnsembleArrayName", getSelectedVoxelEnsembleArrayName()) );
+  setSelectedSurfaceMeshPointArrayName( reader->readValue("SelectedSurfaceMeshPointArrayName", getSelectedSurfaceMeshPointArrayName()) );
+  setSelectedSurfaceMeshFaceArrayName( reader->readValue("SelectedSurfaceMeshFaceArrayName", getSelectedSurfaceMeshFaceArrayName()) );
+  setSelectedSurfaceMeshEdgeArrayName( reader->readValue("SelectedSurfaceMeshEdgeArrayName", getSelectedSurfaceMeshEdgeArrayName()) );
+  setSelectedSolidMeshPointArrayName( reader->readValue("SelectedSolidMeshPointArrayName", getSelectedSolidMeshPointArrayName()) );
+  setSelectedSolidMeshFaceArrayName( reader->readValue("SelectedSolidMeshFaceArrayName", getSelectedSolidMeshFaceArrayName()) );
+  setSelectedSolidMeshEdgeArrayName( reader->readValue("SelectedSolidMeshEdgeArrayName", getSelectedSolidMeshEdgeArrayName()) );
 
 
+  setStrVector( reader->readValue("StrVector", getStrVector() ) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("StlFilePrefix", getStlFilePrefix() );
-  writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
+  writer->writeValue("StlFilePrefix", getStlFilePrefix());
+  writer->writeValue("MaxIterations", getMaxIterations());
+  writer->writeValue("MisorientationTolerance", getMisorientationTolerance());
+  writer->writeValue("InputFile", getInputFile());
+  writer->writeValue("InputPath", getInputPath());
+  writer->writeValue("OutputFile", getOutputFile());
+  writer->writeValue("OutputPath", getOutputPath());
+  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
+  writer->writeValue("ConversionType", getConversionType());
+  writer->writeValue("Dimensions", getDimensions());
+  writer->writeValue("Origin", getOrigin());
+  writer->writeValue("CrystalSymmetryRotations", getCrystalSymmetryRotations());
 
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("InputPath", getInputPath() );
-  writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("OutputPath", getOutputPath() );
-  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts() );
-  writer->writeValue("ConversionType", getConversionType() );
+  writer->writeValue("SelectedVoxelCellArrayName", getSelectedVoxelCellArrayName());
+  writer->writeValue("SelectedVoxelFieldArrayName", getSelectedVoxelFieldArrayName());
+  writer->writeValue("SelectedVoxelEnsembleArrayName", getSelectedVoxelEnsembleArrayName());
+  writer->writeValue("SelectedSurfaceMeshPointArrayName", getSelectedSurfaceMeshPointArrayName());
+  writer->writeValue("SelectedSurfaceMeshFaceArrayName", getSelectedSurfaceMeshFaceArrayName());
+  writer->writeValue("SelectedSurfaceMeshEdgeArrayName", getSelectedSurfaceMeshEdgeArrayName());
+  writer->writeValue("SelectedSolidMeshPointArrayName", getSelectedSolidMeshPointArrayName());
+  writer->writeValue("SelectedSolidMeshFaceArrayName", getSelectedSolidMeshFaceArrayName());
+  writer->writeValue("SelectedSolidMeshEdgeArrayName", getSelectedSolidMeshEdgeArrayName());
 
-  writer->writeValue("Dimensions", getDimensions() );
-  writer->writeValue("Origin", getOrigin() );
+  writer->writeValue("StrVector", getStrVector());
 
-  writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName());
-  writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName());
-  writer->writeValue("SelectedEnsembleArrayName", getSelectedEnsembleArrayName());
-
-  writer->writeValue("SurfaceMeshPointArrayName", getSurfaceMeshPointArrayName());
-  writer->writeValue("SurfaceMeshFaceArrayName", getSurfaceMeshFaceArrayName());
-  writer->writeValue("SurfaceMeshEdgeArrayName", getSurfaceMeshEdgeArrayName());
-  writer->writeValue("SurfaceMeshFieldArrayName", getSurfaceMeshFieldArrayName());
-  writer->writeValue("SurfaceMeshEnsembleArrayName", getSurfaceMeshEnsembleArrayName());
-
-  writer->writeValue("SolidMeshPointArrayName", getSolidMeshPointArrayName());
-  writer->writeValue("SolidMeshFaceArrayName", getSolidMeshFaceArrayName());
-  writer->writeValue("SolidMeshEdgeArrayName", getSolidMeshEdgeArrayName());
-
-  writer->writeValue("AxisAngleRotations", getAxisAngleRotations());
+  writer->closeFilterGroup();
+  return ++index;
 }
 
 

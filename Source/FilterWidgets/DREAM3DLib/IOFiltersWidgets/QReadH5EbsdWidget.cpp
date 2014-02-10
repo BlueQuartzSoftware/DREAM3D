@@ -76,6 +76,7 @@ QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
   setInputFile( QString::fromStdString(filter->getInputFile() ) );
   m_FilterGroup = QString::fromStdString(filter->getGroupName());
   setupGui();
+  getGuiParametersFromFilter( filter.get() );
   setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
 
@@ -95,13 +96,30 @@ QString QReadH5EbsdWidget::getFilterGroup()
   return m_FilterGroup;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QReadH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  ReadH5Ebsd* filter = ReadH5Ebsd::SafeObjectDownCast<AbstractFilter*, ReadH5Ebsd*>(filt);
+
+  m_InputFile->setText( QString::fromStdString( filter->getInputFile() ) );
+  m_ZStartIndex->setValue( filter->getZStartIndex() );
+  m_ZEndIndex->setValue( filter->getZEndIndex() );
+  m_UseTransformations->setChecked( filter->getUseTransformations() );
+  m_RefFrameZDir->setText( QString::fromStdString( Ebsd::StackingOrder::Utils::getStringForEnum( filter->getRefFrameZDir() ) ) );
+
+  arraySelectionWidget->setArraySelections(filter);
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QReadH5EbsdWidget::getFilter()
+AbstractFilter::Pointer QReadH5EbsdWidget::getFilter(bool defaultValues)
 {
   ReadH5Ebsd::Pointer filter =  ReadH5Ebsd::New();
+  if (defaultValues == true) { return filter; }
+
   filter->setInputFile(m_InputFile->text().toStdString());
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
@@ -145,9 +163,9 @@ void QReadH5EbsdWidget::setupGui()
   connect(arraySelectionWidget, SIGNAL(arrayListsChanged()),
           this, SLOT(arraySelectionWidgetChanged()));
 
-  arraySelectionWidget->setSurfaceMeshEnabled(false);
+  arraySelectionWidget->setSurfaceEnabled(false);
   arraySelectionWidget->setSolidMeshEnabled(false);
-  arraySelectionWidget->removeSurfaceMeshData();
+  arraySelectionWidget->removeSurfaceData();
   arraySelectionWidget->removeSolidMeshData();
 }
 

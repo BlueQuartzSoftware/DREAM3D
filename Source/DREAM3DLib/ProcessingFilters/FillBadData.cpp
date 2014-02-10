@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -89,18 +89,27 @@ void FillBadData::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader)
+void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setMinAllowedDefectSize( reader->readValue("MinAllowedDefectSize", getMinAllowedDefectSize()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("MinAllowedDefectSize", getMinAllowedDefectSize() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

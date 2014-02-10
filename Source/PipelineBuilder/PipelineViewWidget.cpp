@@ -330,7 +330,7 @@ void PipelineViewWidget::preflightPipeline()
       fw->setHasPreflightWarnings(false);
       fw->preflightAboutToExecute(m, sm, solid);
 
-      AbstractFilter::Pointer filter = fw->getFilter();
+      AbstractFilter::Pointer filter = fw->getFilter(false);
 
       filter->setVoxelDataContainer(m.get());
       filter->setSurfaceMeshDataContainer(sm.get());
@@ -558,7 +558,6 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
         {
           m_FilterWidgetLayout->insertWidget(count - 1, m_FilterBeingDragged);
           setSelectedFilterWidget(m_FilterBeingDragged);
-          didInsert = true;
         }
       }
     }

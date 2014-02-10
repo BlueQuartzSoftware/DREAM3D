@@ -45,7 +45,7 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 /**
  * @brief The CalculateDihedralAnglesImpl class
@@ -70,7 +70,7 @@ class CalculateDihedralAnglesImpl
       DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
       DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
-    float radToDeg = 180.0/m_pi;
+    float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
 
     float ABx, ABy, ABz, ACx, ACy, ACz, BCx, BCy, BCz;
     float magAB, magAC, magBC;
@@ -147,19 +147,26 @@ void TriangleDihedralAngleFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersReader* reader)
+void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -111,10 +111,11 @@ QString QImportImageStackWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QImportImageStackWidget::getFilter()
+AbstractFilter::Pointer QImportImageStackWidget::getFilter(bool defaultValues)
 {
   //bool ok = false;
   ImportImageStack::Pointer filter =  ImportImageStack::New();
+  if (defaultValues == true) { return filter; }
 
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());

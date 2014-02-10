@@ -142,17 +142,24 @@ void StandardizeEulerAngles::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StandardizeEulerAngles::readFilterParameters(AbstractFilterParametersReader* reader)
+void StandardizeEulerAngles::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StandardizeEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int StandardizeEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-
+  writer->openFilterGroup(this, index);
+     writer->openFilterGroup(this, index);
+ writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

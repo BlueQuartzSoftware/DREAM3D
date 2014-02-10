@@ -85,18 +85,27 @@ void RenameCellArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reader)
+void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
+  setNewCellArrayName( reader->readValue( "NewCellArrayName", getNewCellArrayName() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
   writer->writeValue("NewCellArrayName", getNewCellArrayName() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

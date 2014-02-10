@@ -73,6 +73,16 @@ Q_DECLARE_METATYPE(FloatVec3Widget_t)
   QFILTERWIDGET_SET_PROPERTY(type, prpty)\
   QFILTERWIDGET_GET_PROPERTY(type, prpty)
 
+#define QFILTERWIDGET_INSTANCE_QPROPERTY(type, prpty)\
+  private:\
+    type m_##prpty;\
+  public:\
+    Q_PROPERTY(type ##prpty READ get##prpty WRITE set##prpty)\
+  public slots:\
+    QFILTERWIDGET_SET_PROPERTY(type, prpty)\
+  public:\
+    QFILTERWIDGET_GET_PROPERTY(type, prpty)\
+
 #endif
 
 
@@ -106,7 +116,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual void setupGui();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
@@ -126,6 +136,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+
+    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
     /** @brief Subclasses can implement this method to add in any custom internal updates that are necessary */
     virtual void arrayNameComboBoxUpdated(QComboBox* cb);
@@ -232,6 +244,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
                                      FilterParameter::WidgetType arrayListType);
     void setupAxisAngleWidget(QFormLayout* frmLayout, int optIndex,
                                          FilterParameter* option, QLabel* label );
+
   private:
     QRect										m_DeleteRect;
     QPoint										dragStartPosition;

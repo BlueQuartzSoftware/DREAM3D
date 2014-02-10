@@ -98,16 +98,40 @@ void EbsdToH5Ebsd::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader)
+void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  setOutputFile( reader->readValue("OutputFile", getOutputFile()) );
+  setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
+  setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
+  setZResolution( reader->readValue("ZResolution", getZResolution()) );
+  setSampleTransformationAngle( reader->readValue("SampleTransformationAngle", getSampleTransformationAngle()) );
+  setSampleTransformationAxis( reader->readValue("SampleTransformationAxis", getSampleTransformationAxis()) );
+  setEulerTransformationAngle( reader->readValue("EulerTransformationAngle", getEulerTransformationAngle()) );
+  setEulerTransformationAxis( reader->readValue("EulerTransformationAxis", getEulerTransformationAxis()) );
+  setRefFrameZDir( static_cast<Ebsd::RefFrameZDir>( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
+  setEbsdFileList( reader->readValue("EbsdFileList", getEbsdFileList()) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->writeValue("OutputFile", getOutputFile());
+  writer->writeValue("ZStartIndex", getZStartIndex());
+  writer->writeValue("ZEndIndex", getZEndIndex());
+  writer->writeValue("ZResolution", getZResolution());
+  writer->writeValue("SampleTransformationAngle", getSampleTransformationAngle());
+  writer->writeValue("SampleTransformationAxis", getSampleTransformationAxis());
+  writer->writeValue("EulerTransformationAngle", getEulerTransformationAngle());
+  writer->writeValue("EulerTransformationAxis", getEulerTransformationAxis());
+  writer->writeValue("RefFrameZDir", getRefFrameZDir());
+  writer->writeValue("EbsdFileList", getEbsdFileList());
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -343,8 +367,8 @@ void EbsdToH5Ebsd::execute()
   float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
   int progress = 0;
   int64_t z = m_ZStartIndex;
-  int64_t xDim, yDim;
-  float xRes, yRes;
+  int64_t xDim = 0, yDim = 0;
+  float xRes = 0.0f, yRes = 0.0f;
   /* There is a frailness about the z index and the file list. The programmer
    * using this code MUST ensure that the list of files that is sent into this
    * class is in the appropriate order to match up with the z index (slice index)

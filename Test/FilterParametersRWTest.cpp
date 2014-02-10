@@ -43,7 +43,7 @@
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
-#include "TestFilter.h"
+#include "TestFilters/GenericFilter.h"
 
 
 #define StlFilePrefixTestValue "StlFilePrefixTestValue"
@@ -85,7 +85,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::FilterParametersReaderTest::OutputFile);
+  MXADir::remove(UnitTest::FilterParametersRWTest::OutputFile);
 #endif
 }
 
@@ -98,7 +98,7 @@ void FilterParametersRWTest()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
 
-  TestFilter::Pointer filt = TestFilter::New();
+  GenericFilter::Pointer filt = GenericFilter::New();
 
   // Set something for each and every property so you have something to compare against.
   // You may want to make some constants for these values
@@ -154,7 +154,7 @@ void FilterParametersRWTest()
   filt->setAxisAngleRotations(axisAngleInputsVector);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FilterParametersReaderTest::OutputFile);
+  writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
 
   pipeline->pushBack(filt);
   pipeline->pushBack(writer);
@@ -166,7 +166,7 @@ void FilterParametersRWTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
 
-  hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersReaderTest::OutputFile);
+  hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
@@ -174,11 +174,11 @@ void FilterParametersRWTest()
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
-  err = reader->openOptionsGroup( filt.get() ); // Open the HDF5 Group for this filter
+  err = reader->openFilterGroup( filt.get(), 0); // Open the HDF5 Group for this filter
   DREAM3D_REQUIRED(err, >=, 0)
 
   // This next line should read all the filter parameters into the filter.
-  filt->readFilterParameters( reader.get() );
+  filt->readFilterParameters( reader.get(), 0);
 
   // Now one by one, compare each of the filter parameters that you have stored in some constant somewhere to the values that are now in the filt variable.
   // Use DREAM3D_REQUIRED() to make sure each one is what you think it is.
@@ -227,7 +227,7 @@ void FilterParametersRWTest()
   DREAM3D_REQUIRED(axisAngles2.k, ==, axisAngles2Read.k)
   DREAM3D_REQUIRED(axisAngles2.l, ==, axisAngles2Read.l)
 
-  err = reader->closeOptionsGroup(); // Close the HDF5 group for this filter
+  err = reader->closeFilterGroup(); // Close the HDF5 group for this filter
   DREAM3D_REQUIRED(err, >=, 0)
 
 

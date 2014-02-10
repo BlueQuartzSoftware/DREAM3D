@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _TestFilter_H_
-#define _TestFilter_H_
+#ifndef _GenericFilter_H_
+#define _GenericFilter_H_
 
 #include <string>
 
@@ -14,20 +14,20 @@
 
 
 /**
- * @class TestFilter TestFilter.h ExamplePlugin/Code/ExamplePluginFilters/TestFilter.h
+ * @class GenericFilter GenericFilter.h ExamplePlugin/Code/ExamplePluginFilters/GenericFilter.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class TestFilter : public AbstractFilter
+class GenericFilter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(TestFilter);
-    DREAM3D_STATIC_NEW_MACRO(TestFilter);
-    DREAM3D_TYPE_MACRO_SUPER(TestFilter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GenericFilter);
+    DREAM3D_STATIC_NEW_MACRO(GenericFilter);
+    DREAM3D_TYPE_MACRO_SUPER(GenericFilter, AbstractFilter);
 
-    virtual ~TestFilter();
+    virtual ~GenericFilter();
 
    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(StlFilePrefix)
@@ -39,23 +39,22 @@ class TestFilter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
     DREAM3D_INSTANCE_PROPERTY(int, ConversionType)
-	DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, CellComparisonInputs)
-	DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEnsembleArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshPointArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgeArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshPointArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshFaceArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshEdgeArrayName)
-
 
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
-	DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, AxisAngleRotations)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, TestAxisAngleRotations)
+
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, StrVector)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelCellArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelEnsembleArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshPointArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshFaceArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshEdgeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshPointArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshFaceArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshEdgeArrayName)
 
 
     /**
@@ -69,7 +68,7 @@ class TestFilter : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "TestFilter"; }
+    virtual const std::string getHumanLabel() { return "GenericFilter"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
@@ -87,13 +86,13 @@ class TestFilter : public AbstractFilter
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
    /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -107,7 +106,7 @@ class TestFilter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    TestFilter();
+    GenericFilter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -121,8 +120,8 @@ class TestFilter : public AbstractFilter
 
   private:
 
-    TestFilter(const TestFilter&); // Copy Constructor Not Implemented
-    void operator=(const TestFilter&); // Operator '=' Not Implemented
+    GenericFilter(const GenericFilter&); // Copy Constructor Not Implemented
+    void operator=(const GenericFilter&); // Operator '=' Not Implemented
 };
 
-#endif /* _TestFilter_H_ */
+#endif /* _GenericFilter_H_ */

@@ -109,21 +109,27 @@ void GenerateMisorientationColors::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateMisorientationColors::readFilterParameters(AbstractFilterParametersReader* reader)
+void GenerateMisorientationColors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-
+    reader->openFilterGroup(this, index);
+    /* Code to read the values goes between these statements */
+    setReferenceAxis( reader->readValue( "ReferenceAxis", getReferenceAxis() ) );
+    setReferenceAngle( reader->readValue( "ReferenceAngle", getReferenceAngle() ) );
+    reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateMisorientationColors::writeFilterParameters(AbstractFilterParametersWriter* writer)
+int GenerateMisorientationColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
+  writer->openFilterGroup(this, index);
   writer->writeValue("ReferenceAxis", getReferenceAxis() );
   writer->writeValue("ReferenceAngle", getReferenceAngle() );
-
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

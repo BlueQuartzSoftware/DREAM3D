@@ -98,18 +98,27 @@ void RegularizeZSpacing::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* reader)
+void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setInputFile( reader->readValue( "InputFile", getInputFile() ) );
+  setNewZRes( reader->readValue("NewZRes", getNewZRes()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("NewZRes", getNewZRes() );
+    writer->closeFilterGroup();
+  return ++index;
 }
 
 // -----------------------------------------------------------------------------

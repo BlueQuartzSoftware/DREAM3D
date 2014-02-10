@@ -327,19 +327,26 @@ void PackPrimaryPhases::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* reader)
+void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
   writer->writeValue("WriteGoalAttributes", getWriteGoalAttributes() );
   writer->writeValue("CsvOutputFile", getCsvOutputFile() );
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 // -----------------------------------------------------------------------------
 //

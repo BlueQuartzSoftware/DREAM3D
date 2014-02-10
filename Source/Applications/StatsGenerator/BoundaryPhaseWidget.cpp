@@ -209,11 +209,13 @@ int BoundaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
-  StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
-  BoundaryStatsData* boundaryStatsData = BoundaryStatsData::SafePointerDownCast(statsData.get());
+  if (NULL != statsDataArray)
+  {
+    StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
+    BoundaryStatsData* boundaryStatsData = BoundaryStatsData::SafePointerDownCast(statsData.get());
 
-  boundaryStatsData->setPhaseFraction(calcPhaseFraction);
-
+    boundaryStatsData->setPhaseFraction(calcPhaseFraction);
+  }
   return retErr;
 }
 

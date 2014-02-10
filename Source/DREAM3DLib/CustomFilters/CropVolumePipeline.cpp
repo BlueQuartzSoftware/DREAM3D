@@ -118,17 +118,23 @@ void CropVolumePipeline::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolumePipeline::readFilterParameters(AbstractFilterParametersReader* reader)
+void CropVolumePipeline::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+////!!##
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolumePipeline::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int CropVolumePipeline::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

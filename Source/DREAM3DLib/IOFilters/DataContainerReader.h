@@ -43,7 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
-
+#include "DREAM3DLib/Common/FilterPipeline.h"
 
 /**
  * @class DataContainerReader DataContainerReader.h DREAM3DLib/IOFilters/DataContainerReader.h
@@ -67,7 +67,31 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadSolidMeshData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
 
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEnsembleArrays)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeEnsembleArrays)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexEnsembleArrays)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
@@ -78,13 +102,13 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -95,7 +119,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
                                             std::set<std::string> selectedFieldArrays,
                                             std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+    virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                   std::set<std::string> selectedFaceArrays,
                                                   std::set<std::string> selectedEdgeArrays,
                                                   std::set<std::string> selectedFieldArrays,
@@ -118,20 +142,11 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+    int readExistingPipelineFromFile(hid_t fileId);
+    int writeExistingPipelineToFile(AbstractFilterParametersWriter* writer, int index);
+
   private:
-    std::set<std::string> m_SelectedVoxelCellArrays;
-    std::set<std::string> m_SelectedVoxelFieldArrays;
-    std::set<std::string> m_SelectedVoxelEnsembleArrays;
-
-    std::set<std::string> m_SelectedSurfaceMeshVertexArrays;
-    std::set<std::string> m_SelectedSurfaceMeshFaceArrays;
-    std::set<std::string> m_SelectedSurfaceMeshEdgeArrays;
-    std::set<std::string> m_SelectedSurfaceMeshFieldArrays;
-    std::set<std::string> m_SelectedSurfaceMeshEnsembleArrays;
-
-    std::set<std::string> m_SelectedSolidMeshVertexArrays;
-    std::set<std::string> m_SelectedSolidMeshFaceArrays;
-    std::set<std::string> m_SelectedSolidMeshEdgeArrays;
+    FilterPipeline::Pointer m_PipelineFromFile;
 
     DataContainerReader(const DataContainerReader&); // Copy Constructor Not Implemented
     void operator=(const DataContainerReader&); // Operator '=' Not Implemented

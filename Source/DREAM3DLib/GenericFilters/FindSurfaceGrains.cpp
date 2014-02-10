@@ -58,17 +58,25 @@ FindSurfaceGrains::~FindSurfaceGrains()
 {
 }
 // -----------------------------------------------------------------------------
-void FindSurfaceGrains::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindSurfaceGrains::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -177,8 +185,8 @@ void FindSurfaceGrains::find_surfacegrains2D()
 
   //size_t dims[3] = {0,0,0};
 
-  int xPoints, yPoints;
-  float xRes, yRes;
+  int xPoints = 0, yPoints = 0;
+  float xRes= 0.0f, yRes = 0.0f;
 
   if(m->getXPoints() == 1)
   {

@@ -41,7 +41,7 @@
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -118,18 +118,24 @@ void FindDeformationStatistics::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void FindDeformationStatistics::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindDeformationStatistics::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+////!!##
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("DeformationStatisticsFile", getDeformationStatisticsFile() );
   writer->writeValue("VtkOutputFile", getVtkOutputFile() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -305,7 +311,7 @@ void FindDeformationStatistics::execute()
       if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
         w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
-        w = w *(180.0f/m_pi);
+        w = w *(180.0f/DREAM3D::Constants::k_Pi);
       }
       else
       {
@@ -352,7 +358,7 @@ void FindDeformationStatistics::execute()
       if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
         w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
-        w = w *(180.0f/m_pi);
+        w = w *(180.0f/DREAM3D::Constants::k_Pi);
       }
       else
       {

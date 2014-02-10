@@ -75,19 +75,42 @@ void RemoveArrays::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader)
+void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() ) );
+  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() ) );
+  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() ) );
+  setSelectedSurfaceVertexArrays( reader->readValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() ) );
+  setSelectedSurfaceFaceArrays( reader->readValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() ) );
+  setSelectedSurfaceEdgeArrays( reader->readValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() ) );
+  setSelectedSurfaceFieldArrays( reader->readValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() ) );
+  setSelectedSurfaceEnsembleArrays( reader->readValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() ) );
+  setSelectedSolidMeshVertexArrays( reader->readValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays() ) );
+  setSelectedSolidMeshFaceArrays( reader->readValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays() ) );
+  setSelectedSolidMeshEdgeArrays( reader->readValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays() ) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  //writer->writeValue("DropAllData", getDropAllData() );
+  writer->openFilterGroup(this, index);
+  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() );
+  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() );
+  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() );
+  writer->writeValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() );
+  writer->writeValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() );
+  writer->writeValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() );
+  writer->writeValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() );
+  writer->writeValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() );
+  writer->writeValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays() );
+  writer->writeValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays() );
+  writer->writeValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays() );
+  writer->closeFilterGroup();
+  return ++index;
 }
 
 // -----------------------------------------------------------------------------
@@ -120,23 +143,23 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if (NULL != sm)
   {
-    for(NameList_t::iterator iter = m_SelectedSurfaceMeshVertexArrays.begin(); iter != m_SelectedSurfaceMeshVertexArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceVertexArrays.begin(); iter != m_SelectedSurfaceVertexArrays.end(); ++iter)
     {
       sm->removeVertexData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceMeshFaceArrays.begin(); iter != m_SelectedSurfaceMeshFaceArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceFaceArrays.begin(); iter != m_SelectedSurfaceFaceArrays.end(); ++iter)
     {
       sm->removeFaceData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceMeshEdgeArrays.begin(); iter != m_SelectedSurfaceMeshEdgeArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceEdgeArrays.begin(); iter != m_SelectedSurfaceEdgeArrays.end(); ++iter)
     {
       sm->removeEdgeData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceMeshFieldArrays.begin(); iter != m_SelectedSurfaceMeshFieldArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceFieldArrays.begin(); iter != m_SelectedSurfaceFieldArrays.end(); ++iter)
     {
       sm->removeFieldData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceMeshEnsembleArrays.begin(); iter != m_SelectedSurfaceMeshEnsembleArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceEnsembleArrays.begin(); iter != m_SelectedSurfaceEnsembleArrays.end(); ++iter)
     {
       sm->removeEnsembleData(*iter);
     }
@@ -208,17 +231,17 @@ void RemoveArrays::setVoxelSelectedArrayNames(std::set<std::string> selectedCell
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveArrays::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+void RemoveArrays::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                            std::set<std::string> selectedFaceArrays,
                                                            std::set<std::string> selectedEdgeArrays,
                                                            std::set<std::string> selectedFieldArrays,
                                                            std::set<std::string> selectedEnsembleArrays)
 {
-  m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
-  m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
-  m_SelectedSurfaceMeshFieldArrays = selectedFieldArrays;
-  m_SelectedSurfaceMeshEnsembleArrays = selectedEnsembleArrays;
+  m_SelectedSurfaceVertexArrays = selectedVertexArrays;
+  m_SelectedSurfaceFaceArrays = selectedFaceArrays;
+  m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
+  m_SelectedSurfaceFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceEnsembleArrays = selectedEnsembleArrays;
 }
 
 // -----------------------------------------------------------------------------

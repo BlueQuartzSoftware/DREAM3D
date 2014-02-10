@@ -49,7 +49,7 @@
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -95,18 +95,25 @@ void FindRadialDist::setupFilterParameters()
   }
 }
 // -----------------------------------------------------------------------------
-void FindRadialDist::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindRadialDist::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+////!!##
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile());
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -274,7 +281,7 @@ void FindRadialDist::find_radialdist()
       {
         if(j < int(distToSurface[i]/binSize))
         {
-          volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] = volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] + ((4.0/3.0)*m_pi*float((j+1)*binSize)*float((j+1)*binSize)*float((j+1)*binSize)) - ((4.0/3.0)*m_pi*float(j*binSize)*float(j*binSize)*float(j*binSize));
+          volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] = volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] + ((4.0/3.0)*DREAM3D::Constants::k_Pi*float((j+1)*binSize)*float((j+1)*binSize)*float((j+1)*binSize)) - ((4.0/3.0)*DREAM3D::Constants::k_Pi*float(j*binSize)*float(j*binSize)*float(j*binSize));
         }
       }
       x = m_Centroids[3*i];

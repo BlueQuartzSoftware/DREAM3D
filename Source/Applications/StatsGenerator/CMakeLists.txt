@@ -54,7 +54,6 @@ include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/main.cpp
     ${StatsGenerator_SOURCE_DIR}/SGApplication.cpp
-  #  ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.cpp

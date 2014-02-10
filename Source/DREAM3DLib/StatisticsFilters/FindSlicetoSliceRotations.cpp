@@ -41,7 +41,7 @@
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -86,17 +86,23 @@ void FindSlicetoSliceRotations::setupFilterParameters()
 }
 
 // -----------------------------------------------------------------------------
-void FindSlicetoSliceRotations::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindSlicetoSliceRotations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+////!!##
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSlicetoSliceRotations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindSlicetoSliceRotations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("SlicetoSliceRotationsFile", getSlicetoSliceRotationsFile() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -222,7 +228,7 @@ void FindSlicetoSliceRotations::execute()
 //                q2[3] = m_Quats[outNeighbor*5 + 3];
 //                q2[4] = m_Quats[outNeighbor*5 + 4];
                 w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
-                if(w < 5.0f*m_pi/180.0f)
+                if(w < 5.0f*DREAM3D::Constants::k_Pi/180.0f)
                 {
                     OrientationMath::ChangeAxisReferenceFrame(q1, n1, n2, n3);
                     outPlaneAngle = outPlaneAngle + w;
@@ -249,7 +255,7 @@ void FindSlicetoSliceRotations::execute()
 //             q2[3] = m_Quats[inNeighbor*5 + 3];
 //             q2[4] = m_Quats[inNeighbor*5 + 4];
              w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
-             if(w < 5.0f*m_pi/180.0f)
+             if(w < 5.0f*DREAM3D::Constants::k_Pi/180.0f)
              {
                 OrientationMath::ChangeAxisReferenceFrame(q1, n1, n2, n3);
                 inPlaneAngle = inPlaneAngle + w;

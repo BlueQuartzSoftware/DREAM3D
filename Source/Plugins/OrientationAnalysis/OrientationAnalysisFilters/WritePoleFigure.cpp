@@ -203,9 +203,9 @@ void WritePoleFigure::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reader)
+void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  //  reader->openFilterGroup(this, index);
+  reader->openFilterGroup(this, index);
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setImagePrefix( reader->readValue("ImagePrefix", getImagePrefix()));
   setOutputPath( reader->readValue("OutputPath", getOutputPath()));
@@ -214,23 +214,23 @@ void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reade
   setImageSize( reader->readValue("ImageSize", getImageSize()));
   setLambertSize( reader->readValue("LambertSize", getLambertSize()));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
-  // reader->closeFilterGroup();
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer)
+int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  //  writer->openFilterGroup(this, index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("ImagePrefix", getImagePrefix() );
   writer->writeValue("OutputPath", getOutputPath() );
   writer->writeValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() );
   writer->writeValue("ImageFormat", getImageFormat() );
   writer->writeValue("ImageSize", getImageSize() );
   writer->writeValue("LambertSize", getLambertSize() );
-  //  writer->closeFilterGroup();
-  //  return ++index; // we want to return the next index that was just written to
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

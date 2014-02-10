@@ -112,20 +112,31 @@ void SingleThresholdFields::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SingleThresholdFields::readFilterParameters(AbstractFilterParametersReader* reader)
+void SingleThresholdFields::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setSelectedFieldArrayName( reader->readValue( "SelectedFieldArrayName", getSelectedFieldArrayName() ) );
+  setComparisonOperator( reader->readValue("ComparisonOperator", getComparisonOperator()) );
+  setComparisonValue( reader->readValue("ComparisonValue", getComparisonValue()) );
+  setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SingleThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int SingleThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
   writer->writeValue("ComparisonOperator", getComparisonOperator() );
   writer->writeValue("ComparisonValue", getComparisonValue() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
