@@ -46,8 +46,10 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
+const static float m_piOver2 = static_cast<float>(M_PI/2.0);
 const static float m_pi = static_cast<float>(M_PI);
-const static float m_pi2 = static_cast<float>(2*M_PI);
+const static float m_pi2 = static_cast<float>(2.0*M_PI);
+const static float m_180Overpi = static_cast<float>(180.0/M_PI);
 
 #define WRITE_XYZ_POINTS 1
 
@@ -62,8 +64,6 @@ VisualizeGBCD::VisualizeGBCD() :
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_MisAngle(60.0f),
   m_OutputFile(""),
-  m_StereoOutputFile(""),
-  m_SphericalOutputFile(""),
   m_GMTOutputFile(""),
   m_CrystalStructure(1),
   m_CrystalStructures(NULL),
@@ -144,26 +144,6 @@ void VisualizeGBCD::setupFilterParameters()
 #if WRITE_XYZ_POINTS
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Stereographic Projection");
-    option->setPropertyName("StereoOutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("*.vtk");
-    option->setFileType("VTK File");
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Spherical Data");
-    option->setPropertyName("SphericalOutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("*.vtk");
-    option->setFileType("VTK File");
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("GMT Output File");
     option->setPropertyName("GMTOutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
@@ -191,8 +171,6 @@ void VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("MisorientationAngle", getMisAngle() );
   writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("StereoOutputFile", getStereoOutputFile() );
-  writer->writeValue("SphericalOutputFile", getSphericalOutputFile() );
   writer->writeValue("GMTOutputFile", getGMTOutputFile() );
   writer->writeValue("CrystalStructure", getCrystalStructure() );
 }
@@ -214,20 +192,6 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     setErrorCondition(-387);
   }
 #if WRITE_XYZ_POINTS
-  if(getStereoOutputFile().empty() == true)
-  {
-    ss.str("");
-    ss << ClassName() << " needs the Stereographic Projection Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-387);
-  }
-  if(getSphericalOutputFile().empty() == true)
-  {
-    ss.str("");
-    ss << ClassName() << " needs the Spherical Data Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-387);
-  }
   if(getGMTOutputFile().empty() == true)
   {
     ss.str("");
@@ -336,27 +300,40 @@ void VisualizeGBCD::execute()
   int* gbcdSizes = gbcdSizesArray->GetPointer(0);
   float* gbcdLimits = gbcdLimitsArray->GetPointer(0);
 
+  //Original Ranges from Dave R.
+  //m_GBCDlimits[0] = 0.0;
+  //m_GBCDlimits[1] = cosf(1.0*m_pi);
+  //m_GBCDlimits[2] = 0.0;
+  //m_GBCDlimits[3] = 0.0;
+  //m_GBCDlimits[4] = cosf(1.0*m_pi);
+  //m_GBCDlimits[5] = 2.0*m_pi;
+  //m_GBCDlimits[6] = cosf(0.0);
+  //m_GBCDlimits[7] = 2.0*m_pi;
+  //m_GBCDlimits[8] = 2.0*m_pi;
+  //m_GBCDlimits[9] = cosf(0.0);
+
+  //Greg's Ranges
   gbcdLimits[0] = 0.0;
-  gbcdLimits[1] = cosf(1.0*m_pi);
+  gbcdLimits[1] = 0.0;
   gbcdLimits[2] = 0.0;
   gbcdLimits[3] = 0.0;
-  gbcdLimits[4] = cosf(1.0*m_pi);
-  gbcdLimits[5] = 2.0*m_pi;
-  gbcdLimits[6] = cosf(0.0);
-  gbcdLimits[7] = 2.0*m_pi;
-  gbcdLimits[8] = 2.0*m_pi;
-  gbcdLimits[9] = cosf(0.0);
+  gbcdLimits[4] = 0.0;
+  gbcdLimits[5] = m_pi/2.0;
+  gbcdLimits[6] = 1.0;
+  gbcdLimits[7] = m_pi/2.0;
+  gbcdLimits[8] = 1.0;
+  gbcdLimits[9] = 2.0*m_pi;
 
   //get num components of GBCD
   int numComp = sm->getEnsembleData(DREAM3D::EnsembleData::GBCD)->GetNumberOfComponents();
   //determine the size of the 1,3,4 dimensions of the GBCD - 2,4 are dim/1.5
-  int dim = int(pow((numComp/(2.0*2.0*2.0)),(1.0/5.0))+0.5);
+  int dim = int(pow((numComp/(4.0)),(1.0/5.0))+0.5);
 
-  gbcdSizes[0] = dim*2;
+  gbcdSizes[0] = dim;
   gbcdSizes[1] = dim;
-  gbcdSizes[2] = dim*2;
-  gbcdSizes[3] = dim*2;
-  gbcdSizes[4] = dim;
+  gbcdSizes[2] = dim;
+  gbcdSizes[3] = dim;
+  gbcdSizes[4] = dim*4;
 
   float binsize = gbcdLimits[5]/float(gbcdSizes[0]);
   float binsize2 = binsize*(2.0/m_pi);
@@ -367,8 +344,11 @@ void VisualizeGBCD::execute()
   gbcdDeltas[4] = binsize2;
 
   float vec[3];
+  float vec2[3];
   float rotNormal[3];
   float rotNormal2[3];
+  float rotNormal_sc[2];
+  float rotNormal2_sc[2];
   float dg[3][3];
   float dgOrig[3][3];
   float dgt[3][3];
@@ -387,8 +367,8 @@ void VisualizeGBCD::execute()
   m_MisAngle = m_MisAngle * m_pi/180.0f;
   //convert axis angle to matrix representation of misorientation
   OrientationMath::AxisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
-
-  //  int inversion = 1;
+  //take inverse of misorientation variable to use for switching symmetry
+  MatrixMath::Transpose3x3(dg, dgt);
 
   // Get our OrientationOps pointer for the selected crystal structure
   OrientationOps::Pointer orientOps = m_OrientationOps[m_CrystalStructure];
@@ -396,8 +376,8 @@ void VisualizeGBCD::execute()
   //get number of symmetry operators
   int n_sym = orientOps->getNumSymOps();
 
-  int xpoints = 500;
-  int ypoints = 500;
+  int xpoints = 100;
+  int ypoints = 100;
   int zpoints = 1;
   int xpointshalf = xpoints/2;
   int ypointshalf = ypoints/2;
@@ -406,210 +386,124 @@ void VisualizeGBCD::execute()
   float zres = (xres+yres)/2.0;
   float x, y, z;
   int xbin, ybin;
+  float sum = 0;
+  int count = 0;
+
+  int shift1 = gbcdSizes[0];
+  int shift2 = gbcdSizes[0]*gbcdSizes[1];
+  int shift3 = gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2];
+  int shift4 = gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3];
 
   DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
   poleFigureArray = DoubleArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigure");
-  poleFigureArray->initializeWithValues(-1);
+  poleFigureArray->initializeWithValues(0);
   double* poleFigure = poleFigureArray->GetPointer(0);
 
-  FloatArrayType::Pointer xyzArray = FloatArrayType::NullPointer();
-  xyzArray = FloatArrayType::CreateArray(gbcdSizes[3]*gbcdSizes[4], 3, "xyz");
-  xyzArray->initializeWithValues(0.0);
-  float* xyz = xyzArray->GetPointer(0);
-
 #if WRITE_XYZ_POINTS
-  size_t nPoints = 0;
-#endif
-
-// What does this code do?
-  for (int64_t k = 0; k < (gbcdSizes[3]); k++)
-  {
-    for (int64_t l = 0; l < (gbcdSizes[4]); l++)
-    {
-      theta = float(k)*gbcdDeltas[3]+gbcdLimits[3]+(gbcdDeltas[3]/2.0);
-      cosPhi = float(l)*gbcdDeltas[4]+gbcdLimits[4]+(gbcdDeltas[4]/2.0);
-      phi = acosf(cosPhi);
-      xyz[3*(l*gbcdSizes[3]+k)+0] = cosf(theta)*sinf(phi);
-      xyz[3*(l*gbcdSizes[3]+k)+1] = sinf(theta)*sinf(phi);
-      xyz[3*(l*gbcdSizes[3]+k)+2] = cosPhi;
-    }
-  }
-
-  std::stringstream positions;
-  std::stringstream scalars;
-  std::stringstream sphericalPositions;
-
   std::vector<float> gmtValues;
+#endif
 
-  for(int q = 0; q < 2; q++)
+  for (int64_t k = 0; k < ypoints; k++)
   {
-    ss.str("");
-    ss << "Executing part " << q << "/2";
-    notifyStatusMessage(ss.str());
-
-    if(q == 1)
+    for (int64_t l = 0; l < xpoints; l++)
     {
-      //copy original misorientation for use later
-      MatrixMath::Copy3x3(dg, dgOrig);
-      //take inverse of misorientation, then copy into misorientation variable to use for switching symmetry
-      MatrixMath::Transpose3x3(dg, dgt);
-      MatrixMath::Copy3x3(dgt, dg);
-
-    }
-
-    // Loop over all the symetry operators in the given cystal symmetry
-    for(int i=0; i<n_sym; i++)
-    {
-      //get symmetry operator1
-      orientOps->getMatSymOp(i, sym1);
-      MatrixMath::Multiply3x3with3x3(sym1,dg,dg1);
-      //get transpose for rotation of directions
-      MatrixMath::Transpose3x3(sym1, sym1t);
-      for(int j=0; j<n_sym; j++)
+      //get (x,y) for stereographic projection pixel
+      x = float(k - xpointshalf) * xres + (xres / 2.0);
+      y = float(l - ypointshalf) * yres + (yres / 2.0);
+      if((x * x + y * y) <= 1.0)
       {
-        //get symmetry operator2
-        orientOps->getMatSymOp(j, sym2);
-        MatrixMath::Transpose3x3(sym2,sym2t);
-        //calculate symmetric misorientation
-        MatrixMath::Multiply3x3with3x3(dg1,sym2t,dg2);
-        //convert to euler angle
-        OrientationMath::MatToEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-        OrientationMath::EulertoQuat(qtest, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-        OrientationMath::QuattoAxisAngle(qtest, w, n1, n2, n3);
+        sum = 0;
+        count = 0;
+        vec[2] = -((x * x + y * y) - 1) / ((x * x + y * y) + 1);
+        vec[0] = x * (1 + vec[2]);
+        vec[1] = y * (1 + vec[2]);
+        MatrixMath::Multiply3x3with3x1(dgt, vec, vec2);
 
-        mis_euler1[1] = cosf(mis_euler1[1]);
-
-        //find bins in GBCD
-        int location1 = int((mis_euler1[0]-gbcdLimits[0])/gbcdDeltas[0]);
-        int location2 = int((mis_euler1[1]-gbcdLimits[1])/gbcdDeltas[1]);
-        int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
-        //make sure that euler angles are within the GBCD space
-        //// THIS IS NOT WORKING FOR HEXAGONAL Crystal Structure. 'location2' is always equal for gbcdSizes[1] so this section never executes
-        if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2])
+#if WRITE_XYZ_POINTS
+        float lon = atan2(vec[1], vec[0]) * m_180Overpi;
+        if (lon < 0.0)
         {
-          //calculate slot in the flattened GBCD that corresponds to the misorientation and then the next m_GBCDsizes[3]*m_GBCDsizes[4] slots are the phi,theta bins
-          int shift = (location1)+(location2*gbcdSizes[0])+(location3*gbcdSizes[0]*gbcdSizes[1]);
+          lon =lon + 360.0;
+        }
+        float lat = asin(vec[2]) * m_180Overpi;
+        gmtValues.push_back(lon);
+        gmtValues.push_back(lat);
+#endif
 
-          for (int64_t k = 0; k < (gbcdSizes[3]); k++)
+        // Loop over all the symetry operators in the given cystal symmetry
+        for(int i=0; i<n_sym; i++)
+        {
+          //get symmetry operator1
+          orientOps->getMatSymOp(i, sym1);
+          for(int j=0; j<n_sym; j++)
           {
-            for (int64_t l = 0; l < (gbcdSizes[4]); l++)
+            //get symmetry operator2
+            orientOps->getMatSymOp(j, sym2);
+            MatrixMath::Transpose3x3(sym2,sym2t);
+            //calculate symmetric misorientation
+            MatrixMath::Multiply3x3with3x3(dg,sym2t,dg1);
+            MatrixMath::Multiply3x3with3x3(sym1,dg1,dg2);
+            //convert to euler angle
+            OrientationMath::MatToEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+            if(mis_euler1[0] < m_piOver2 && mis_euler1[1] < m_piOver2 && mis_euler1[2] < m_piOver2)
             {
-              vec[0] = xyz[3*(l*gbcdSizes[3]+k)+0];
-              vec[1] = xyz[3*(l*gbcdSizes[3]+k)+1];
-              vec[2] = xyz[3*(l*gbcdSizes[3]+k)+2];
+              mis_euler1[1] = cosf(mis_euler1[1]);
+              //find bins in GBCD
+              int location1 = int((mis_euler1[0]-gbcdLimits[0])/gbcdDeltas[0]);
+              int location2 = int((mis_euler1[1]-gbcdLimits[1])/gbcdDeltas[1]);
+              int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
               //find symmetric poles using the first symmetry operator
-              MatrixMath::Multiply3x3with3x1(sym1t, vec, rotNormal);
-              if(q == 1)
-              {
-                //rotate symmetric pole by original misorientation
-                MatrixMath::Multiply3x3with3x1(dgOrig, rotNormal, rotNormal2);
-                //take negative of vector
-                rotNormal[0] = -rotNormal2[0];
-                rotNormal[1] = -rotNormal2[1];
-                rotNormal[2] = -rotNormal2[2];
-              }
-#if WRITE_XYZ_POINTS
-              sphericalPositions  << rotNormal[0] << " " << rotNormal[1] << " " << rotNormal[2] << "\n";
-              if(rotNormal[2] < 0) {
-                x = -rotNormal[0];
-                y = -rotNormal[1];
-                z = -rotNormal[2];
-              }
-              float lon = atan2(y, x) * 180.0/M_PI;
-              if (lon < 0.0)
-              {
-                lon =lon + 360.0;
-              }
-              float lat = asin(z) * 180/M_PI;
-              // IntReverse(rotNormal[0], rotNormal[1], rotNormal[2], lat, lon, h, NULL);
-              gmtValues.push_back(lon);
-              gmtValues.push_back(lat);
-#endif
-              if(rotNormal[2] < 0) {
-                rotNormal[0] = -rotNormal[0];
-                rotNormal[1] = -rotNormal[1];
-                rotNormal[2] = -rotNormal[2];
-              }
-              //find x,y point in stereographic projection
-              x = rotNormal[0]/(rotNormal[2]+1);
-              y = rotNormal[1]/(rotNormal[2]+1);
+              MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
+              //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
+              rotNormal_sc[0] = atan2f(rotNormal[1], rotNormal[0]);
+              if (rotNormal_sc[0] < 0) rotNormal_sc[0] += m_pi2;
+              rotNormal_sc[1] = rotNormal[2];
+              //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
+              int location4 = int((rotNormal_sc[1]-gbcdLimits[3])/gbcdDeltas[3]);
+              int location5 = int((rotNormal_sc[0]-gbcdLimits[4])/gbcdDeltas[4]);
+              sum += m_GBCD[(location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1];
+              count++;
+            }
 
-#if WRITE_XYZ_POINTS
-              positions << x << " " << y << " 0.0\n";
-              nPoints++;
-#endif
-              //shift projection from -1 to 1 to 0 to 2
-              x = x+1.0;
-              y = y+1.0;
-              //find bin in poleFigure array
-              xbin = int(x/xres);
-              ybin = int(y/yres);
-              if(xbin < 0) xbin = 0;
-              if(ybin < 0) ybin = 0;
-              if(xbin >= xpoints) xbin = xpoints-1;
-              if(ybin >= ypoints) ybin = ypoints-1;
-              poleFigure[(ybin*xpoints)+xbin] = m_GBCD[shift+(k*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(l*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-#if WRITE_XYZ_POINTS
-              scalars << poleFigure[(ybin*xpoints)+xbin] << "\n";
-              gmtValues.push_back(poleFigure[(ybin*xpoints)+xbin]);
-#endif
+            //again in second crystal reference frame
+            //calculate symmetric misorientation
+            MatrixMath::Multiply3x3with3x3(dgt,sym2,dg1);
+            MatrixMath::Multiply3x3with3x3(sym1,dg1,dg2);
+            //convert to euler angle
+            OrientationMath::MatToEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+            if(mis_euler1[0] < m_piOver2 && mis_euler1[1] < m_piOver2 && mis_euler1[2] < m_piOver2)
+            {
+              mis_euler1[1] = cosf(mis_euler1[1]);
+              //find bins in GBCD
+              int location1 = int((mis_euler1[0]-gbcdLimits[0])/gbcdDeltas[0]);
+              int location2 = int((mis_euler1[1]-gbcdLimits[1])/gbcdDeltas[1]);
+              int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
+              //find symmetric poles using the first symmetry operator
+              MatrixMath::Multiply3x3with3x1(sym1, vec2, rotNormal2);
+              //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
+              rotNormal2_sc[0] = atan2f(rotNormal2[1], rotNormal2[0]);
+              if (rotNormal2_sc[0] < 0) rotNormal2_sc[0] += m_pi2;
+              rotNormal2_sc[1] = rotNormal2[2];
+              //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
+              int location4 = int((rotNormal2_sc[1]-gbcdLimits[3])/gbcdDeltas[3]);
+              int location5 = int((rotNormal2_sc[0]-gbcdLimits[4])/gbcdDeltas[4]);
+              sum += m_GBCD[(location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1];
+              count++;
             }
           }
         }
+        poleFigure[(k*xpoints)+l] = sum/float(count);;
+#if WRITE_XYZ_POINTS
+        gmtValues.push_back(poleFigure[(k*xpoints)+l]);
+#endif
       }
     }
   }
 
-
-
   notifyStatusMessage(ss.str());
 #if WRITE_XYZ_POINTS
-  if (verifyPathExists(getStereoOutputFile()) == true)
-  {
-    ss.str("");
-    ss << "Writing VTK Stereo Output File '" << getStereoOutputFile() << "'";
-    notifyStatusMessage(ss.str());
-    FILE* f = fopen(getStereoOutputFile().c_str(), "wb");
-    // Write the correct header
-    fprintf(f, "# vtk DataFile Version 2.0\n");
-    fprintf(f, "GBCD Stereograhic Projection irregular grid data\n");
-    fprintf(f, "ASCII"); fprintf(f, "\n");
-    fprintf(f, "DATASET POLYDATA\n");
-    fprintf(f, "POINTS %lu float\n", nPoints);
-    fprintf(f, "%s\n", positions.str().c_str());
-
-    fprintf(f, "\n");
-    fprintf(f, "POINT_DATA %lu\n", nPoints);
-    fprintf(f, "SCALARS GBCD float 1\n");
-    fprintf(f, "LOOKUP_TABLE default\n");
-    fprintf(f, "%s\n", scalars.str().c_str());
-    fclose(f);
-  }
-
-  if (verifyPathExists(getSphericalOutputFile()) == true)
-  {
-    ss.str("");
-    ss << "Writing VTK Spherical Output File '" << getSphericalOutputFile() << "'";
-    notifyStatusMessage(ss.str());
-    FILE* f = fopen(m_SphericalOutputFile.c_str(), "wb");
-    // Write the correct header
-    fprintf(f, "# vtk DataFile Version 2.0\n");
-    fprintf(f, "GBCD Spherical Data irregular grid\n");
-    fprintf(f, "ASCII"); fprintf(f, "\n");
-    fprintf(f, "DATASET POLYDATA\n");
-    fprintf(f, "POINTS %lu float\n", nPoints);
-    fprintf(f, "%s\n", sphericalPositions.str().c_str());
-
-    fprintf(f, "\n");
-    fprintf(f, "POINT_DATA %lu\n", nPoints);
-    fprintf(f, "SCALARS GBCD float 1\n");
-    fprintf(f, "LOOKUP_TABLE default\n");
-    fprintf(f, "%s\n", scalars.str().c_str());
-    fclose(f);
-  }
 
   // Write the GMT file
-
   if (verifyPathExists(getGMTOutputFile()) == true)
   {
     std::string parentPath = MXAFileInfo::parentPath(getGMTOutputFile());
@@ -622,7 +516,7 @@ void VisualizeGBCD::execute()
     notifyStatusMessage(ss.str());
 
     FILE* f = fopen(path.c_str(), "wb");
-    fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle * 180/M_PI);
+    fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle * m_180Overpi);
     size_t size = gmtValues.size()/3;
 
     for(size_t i = 0; i < size; i=i+3)
@@ -637,58 +531,6 @@ void VisualizeGBCD::execute()
   ss.str("");
   ss << "Generating data for VTK Polefigure File '" << getOutputFile() << "'";
   notifyStatusMessage(ss.str());
-
-  int neighbors[4];
-  neighbors[0] = -1;
-  neighbors[1] = 1;
-  neighbors[2] = -xpoints;
-  neighbors[3] = xpoints;
-  int counter = 1;
-  int point, neighbor;
-  int good = 1;
-  std::vector<int> neighs(xpoints*ypoints,-1);
-  while(counter != 0)
-  {
-
-    counter = 0;
-    for (int64_t k = 0; k < (xpoints); k++)
-    {
-      for (int64_t l = 0; l < (ypoints); l++)
-      {
-        x = (k-xpointshalf)*(xres)+(xres/2.0);
-        y = (l-ypointshalf)*(yres)+(yres/2.0);
-        if((x*x+y*y) <= 1)
-        {
-          point = l*xpoints+k;
-          if(poleFigure[point] == -1)
-          {
-            counter++;
-            for(int m = 0; m< 4; m++)
-            {
-              good = 1;
-              if(k == 0 && m == 0) good = 0;
-              if(k == xpoints-1 && m == 1) good = 0;
-              if(l == 0 && m == 2) good = 0;
-              if(l == ypoints-1 && m == 3) good = 0;
-              if(good == 1)
-              {
-                neighbor = point + neighbors[m];
-                if(poleFigure[neighbor] != -1) neighs[point] = neighbor;
-              }
-            }
-          }
-        }
-      }
-    }
-    for(int n = 0; n < (neighs.size()); n++)
-    {
-      if(neighs[n] != -1 && poleFigure[n] == -1)
-      {
-        poleFigure[n] = poleFigure[neighs[n]];
-      }
-    }
-    if(getCancel() == true) { break; }
-  }
 
   if (verifyPathExists(getOutputFile()) == true)
   {
