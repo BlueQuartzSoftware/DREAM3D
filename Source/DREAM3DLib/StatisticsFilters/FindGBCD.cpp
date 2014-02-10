@@ -277,6 +277,7 @@ FindGBCD::FindGBCD() :
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
+  m_GBCDTextFile(""),
   m_GBCDRes(9.0),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabels(NULL),
@@ -312,6 +313,16 @@ void FindGBCD::setupFilterParameters()
     option->setUnits("Degrees");
     parameters.push_back(option);
   }
+    {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("GBCD File");
+    option->setPropertyName("GBCDTextFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setFileExtension("*.txt");
+    option->setFileType("GBCD Text File");
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -323,6 +334,8 @@ void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int 
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+setGBCDRes(reader->readValue("GBCDResolution", getGBCDRes() ));
+setGBCDTextFile(reader->readValue("GBCDTextFile", getGBCDTextFile() ));
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -334,6 +347,7 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("GBCDResolution", getGBCDRes() );
+  writer->writeValue("GBCDTextFile", getGBCDTextFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -592,33 +606,37 @@ void FindGBCD::execute()
     m_GBCD[i] *= MRDfactor;
   }
 
-  std::ofstream outFile;
-  outFile.open("/tmp/GBCD_FROM_DREAM3D.txt");
 
-  size_t bin;
-  size_t n1 =  m_GBCDsizes[0];
-  size_t n1n2 = n1*( m_GBCDsizes[1]);
-  size_t n1n2n3 = n1n2*( m_GBCDsizes[2]);
-  size_t n1n2n3n4 = n1n2n3*( m_GBCDsizes[3]);
-
-  for(int a=0;a<m_GBCDsizes[0];a++)
+  if (getGBCDTextFile().empty() == false)
   {
-    for(int b=0;b<m_GBCDsizes[1];b++)
+    std::ofstream outFile;
+    outFile.open(getGBCDTextFile().c_str());
+
+    size_t bin;
+    size_t n1 =  m_GBCDsizes[0];
+    size_t n1n2 = n1*( m_GBCDsizes[1]);
+    size_t n1n2n3 = n1n2*( m_GBCDsizes[2]);
+    size_t n1n2n3n4 = n1n2n3*( m_GBCDsizes[3]);
+
+    for(int a=0;a<m_GBCDsizes[0];a++)
     {
-      for(int c=0;c<m_GBCDsizes[2];c++)
+      for(int b=0;b<m_GBCDsizes[1];b++)
       {
-        for(int d=0;d<m_GBCDsizes[3];d++)
+        for(int c=0;c<m_GBCDsizes[2];c++)
         {
-          for(int e=0;e<m_GBCDsizes[4];e++)
+          for(int d=0;d<m_GBCDsizes[3];d++)
           {
-            bin = a + n1*b + n1n2*c + n1n2n3*d + n1n2n3n4*e;
-            outFile << bin << " " << m_GBCD[bin] << std::endl;
+            for(int e=0;e<m_GBCDsizes[4];e++)
+            {
+              bin = a + n1*b + n1n2*c + n1n2n3*d + n1n2n3n4*e;
+              outFile << bin << " " << m_GBCD[bin] << std::endl;
+            }
           }
         }
       }
     }
+    outFile.close();
   }
-  outFile.close();
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
