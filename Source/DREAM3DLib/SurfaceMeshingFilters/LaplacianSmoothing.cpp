@@ -154,6 +154,11 @@ class LaplacianSmoothingImpl
 LaplacianSmoothing::LaplacianSmoothing() :
   SurfaceMeshFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
+  #if OUTPUT_DEBUG_VTK_FILES
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceLabels(NULL),
+  m_GrainId(0),
+  #endif
   m_IterationSteps(1),
   m_Lambda(0.1),
   m_SurfacePointLambda(0.0),
@@ -249,7 +254,34 @@ void LaplacianSmoothing::setupFilterParameters()
     parameter->setCastableValueType("double");
     parameters.push_back(parameter);
   }
-
+#if OUTPUT_DEBUG_VTK_FILES
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("VTK File Prefix");
+    option->setPropertyName("OutputVTKPrefix");
+    option->setWidgetType(FilterParameter::StringWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Output VTK Directory");
+    option->setPropertyName("VtkIterationOutputPath");
+    option->setWidgetType(FilterParameter::OutputPathWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+    {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Grain Id");
+    parameter->setPropertyName("GrainId");
+    parameter->setWidgetType(FilterParameter::IntWidget);
+    //parameter->setUnits("Zero will Lock them in Place");
+    parameter->setValueType("int");
+    parameter->setCastableValueType("int");
+    parameters.push_back(parameter);
+  }
+#endif
   setFilterParameters(parameters);
 }
 
@@ -314,6 +346,9 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
     {
       m_DoConnectivityFilter = false;
     }
+    #if OUTPUT_DEBUG_VTK_FILES
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -30, int32_t, Int32ArrayType, sm->getNumFaceTuples(), 2)
+    #endif
   }
 
 }
@@ -547,7 +582,8 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 
 #if OUTPUT_DEBUG_VTK_FILES
     std::stringstream testFile;
-    testFile << "/tmp/Laplacian_" << q << ".vtk";
+    MXADir::mkdir(getVtkIterationOutputPath(), true);
+    testFile << getVtkIterationOutputPath() << "/" << getOutputVTKPrefix() << q << ".vtk";
     writeVTKFile(testFile.str());
 #endif
   }
@@ -656,7 +692,8 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     // -----------
 #if OUTPUT_DEBUG_VTK_FILES
     std::stringstream testFile;
-    testFile << "/tmp/Laplacian_" << q << ".vtk";
+    MXADir::mkdir(getVtkIterationOutputPath(), true);
+    testFile << getVtkIterationOutputPath() << "/" << getOutputVTKPrefix() << q << ".vtk";
     writeVTKFile(testFile.str());
 #endif
   }
@@ -697,9 +734,14 @@ namespace Detail {
 void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
 {
 
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+
+    // Get the Labels(GrainIds or Region Ids) for the triangles
+  Int32ArrayType::Pointer faceLabelsPtr = boost::dynamic_pointer_cast<Int32ArrayType>(sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels));
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+
   /* Place all your code to execute your filter here. */
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = m->getVertices();
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
   DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
   bool m_WriteBinaryFile = true;
@@ -718,7 +760,7 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   Detail::ScopedFileMonitor vtkFileMonitor(vtkFile);
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
-  fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
+  fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module GrainId = %d\n", m_GrainId);
   if (m_WriteBinaryFile) {
     fprintf(vtkFile, "BINARY\n");
   }
@@ -759,14 +801,14 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(m->getFaces());
+  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(sm->getFaces());
   int triangleCount = 0;
   int end = triangles.GetNumberOfTuples();
-  int grainInterest = 25;
+  int grainInterest = m_GrainId;
   for(int i = 0; i < end; ++i)
   {
     DREAM3D::SurfaceMesh::Face_t* tri = triangles.GetPointer(i);
-    if (tri->labels[0] == grainInterest || tri->labels[1] == grainInterest)
+    if(faceLabels[i*2] == grainInterest || faceLabels[i*2+1] == grainInterest)
     {
       ++triangleCount;
     }
@@ -784,7 +826,7 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   for (int tid = 0; tid < end; ++tid)
   {
     DREAM3D::SurfaceMesh::Face_t* tri = triangles.GetPointer(tid);
-    if (tri->labels[0] == grainInterest || tri->labels[1] == grainInterest)
+    if(faceLabels[tid*2] == grainInterest || faceLabels[tid*2+1] == grainInterest)
     {
       tData[1] = triangles[tid].verts[0];
       tData[2] = triangles[tid].verts[1];

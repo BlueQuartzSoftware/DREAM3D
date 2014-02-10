@@ -227,7 +227,7 @@ int INLWriter::writeFile()
   }
 
   // Write the header, Each line starts with a "#" symbol
-  fprintf(f, "# File written from %s\r\n", DREAM3DLib::Version::PackageComplete().c_str());
+  fprintf(f, "# File written from %s\r\n", DREAM3DLib::Version::Package().c_str());
   fprintf(f, "# DateTime: %s\r\n", tifDateTime().c_str());
   fprintf(f, "# X_STEP: %f\r\n", res[0]);
   fprintf(f, "# Y_STEP: %f\r\n", res[1]);

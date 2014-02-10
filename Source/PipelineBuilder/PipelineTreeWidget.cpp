@@ -116,6 +116,9 @@ void PipelineTreeWidget::showContextMenu(QTreeWidgetItem* item, const QPoint& gl
   m_Menu.exec(globalPos);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineTreeWidget::setActionList(ItemType type, QList<QAction*> list)
 {
   switch (type)
