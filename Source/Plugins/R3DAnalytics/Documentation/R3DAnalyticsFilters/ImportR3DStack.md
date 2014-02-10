@@ -1,46 +1,36 @@
-Import Image Stack Filter {#r3danalyticsreader}
-======
+Name of Filter {#name_of_file_in_lower_case}
+=====
 
 ## Group (Subgroup) ##
-R3D Analytics Reader (Input)
+Filter Group (Filter Subgroup)
 
 
 ## Description ##
-Reads in a stack of 2D segmented slices from output of R3D Analytics.
-
-
-## Notes
-
+This filter does the following...
 
 ## Parameters ##
-
-
-| Name             |  Type  |
-|------------------|--------|
+| Name             | Type |
+|------------------|------|
 | Field Array Name | String |
-
-
-## Required DataContainers ##
-
-Voxel
 
 ## Required Arrays ##
 
-
-None
+| Type | Default Array Name | Description | Comment |
+|------|--------------------|-------------|---------|
+| Int  | SomeName           | ....        | other   |
 
 
 ## Created Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | User Defined       | ....        | other   |
+| Int  | SomeName           | ....        | other   |
 
 
 
 ## Authors ##
 
-**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info** dream3d@bluequartz.net
 
@@ -51,4 +41,3 @@ None
 
 
 See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)
-

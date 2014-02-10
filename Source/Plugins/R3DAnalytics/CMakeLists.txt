@@ -1,28 +1,20 @@
 #--////////////////////////////////////////////////////////////////////////////
-#--
-#--  Copyright (c) 2011, Michael A. Jackson. BlueQuartz Software
-#--  Copyright (c) 2011, Michael Groeber, US Air Force Research Laboratory
-#--  Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
-#--  All rights reserved.
-#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
-#--
-#-- This code was partly written under US Air Force Contract FA8650-07-D-5800 & FA8650-13-M-5048
-#--
+#-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-project(R3DAnalyticsReaderPlugin)
+project(R3DAnalytics)
 
-set(PLUGIN_NAME R3DAnalyticsReaderPlugin)
+set(PLUGIN_NAME R3DAnalytics)
 
 # --------------------------------------------------------------------
 # Look for Qt 4 as we need it for the plugin GUI to be generated
 if(NOT QT4_FOUND)
-    message(FATAL_ERROR "Qt 4 is Needed for this R3DAnalyticsReaderPlugin.")
+    message(FATAL_ERROR "Qt 4 is Needed for this R3DAnalytics.")
 endif()
 include( ${QT_USE_FILE} )
 
 
-set(R3DAnalyticsReaderPlugin_Project_SRCS "")
+set(R3DAnalytics_Project_SRCS "")
 
 include(${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/DREAM3DLibMacros.cmake)
 
@@ -48,11 +40,11 @@ file(WRITE ${RegisterKnownFilterWidgetsFile} "/* This file was AUTO GENERATED Du
 file(APPEND ${RegisterKnownFilterWidgetsFile} "#include \"PipelineBuilder/FilterWidgetManager.h\"\n")
 file(APPEND ${RegisterKnownFilterWidgetsFile} "#include \"QFilterWidgetFactory.hpp\"\n")
 file(APPEND ${RegisterKnownFilterWidgetsFile} "#include \"FilterWidgetHeaders.h\"\n")
-file(APPEND ${RegisterKnownFilterWidgetsFile} "\nvoid R3DAnalyticsReaderPlugin::registerFilterWidgets()\n{\n")
+file(APPEND ${RegisterKnownFilterWidgetsFile} "\nvoid R3DAnalytics::registerFilterWidgets()\n{\n")
 # --------------------------------------------------------------------
 # Generate a file with all of our MOC'ed sources and  headers
-set(FilterWidget_GEN_HDRS_File ${R3DAnalyticsReaderPlugin_BINARY_DIR}/FilterWidget_GEN_HDRS_File.cmake)
-set(FilterWidget_GEN_SRCS_File ${R3DAnalyticsReaderPlugin_BINARY_DIR}/FilterWidget_GEN_SRCS_File.cmake)
+set(FilterWidget_GEN_HDRS_File ${R3DAnalytics_BINARY_DIR}/FilterWidget_GEN_HDRS_File.cmake)
+set(FilterWidget_GEN_SRCS_File ${R3DAnalytics_BINARY_DIR}/FilterWidget_GEN_SRCS_File.cmake)
 file(WRITE ${FilterWidget_GEN_HDRS_File})
 file(WRITE ${FilterWidget_GEN_SRCS_File})
 
@@ -70,7 +62,7 @@ file(APPEND ${AllFiltersHeaderFile} "\n#endif\n")
 file(APPEND ${AllFilterWidgetsHeaderFile} "\n#endif\n")
 file(APPEND ${RegisterKnownFilterWidgetsFile} "}\n")
 
-cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/R3DAnalyticsReaderFilters.h
+cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/ImageImportFilters.h
                           NEW_FILE_PATH  ${AllFiltersHeaderFile} )
 cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetHeaders.h
                           NEW_FILE_PATH  ${AllFilterWidgetsHeaderFile} )
@@ -78,7 +70,7 @@ cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_N
                           NEW_FILE_PATH  ${RegisterKnownFilterWidgetsFile} )
 
 
-set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/R3DAnalyticsReaderFilters.h)
+set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/ImageImportFilters.h)
 set(AllFilterWidgetsHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetHeaders.h)
 set(RegisterKnownFilterWidgetsFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/RegisterKnownFilterWidgets.cpp)
 
@@ -151,29 +143,29 @@ endif()
 # --------------------------------------------------------------------
 # These are the NON-Filter but Qt derived sources of the plugin. In case you have
 # additional Qt source files that you need compiled.
-set(R3DAnalyticsReaderPlugin_HDRS
-  ${PROJECT_SOURCE_DIR}/R3DAnalyticsReaderPlugin.h
+set(R3DAnalytics_HDRS
+  ${PROJECT_SOURCE_DIR}/R3DAnalytics.h
 )
 
-set(R3DAnalyticsReaderPlugin_SRCS
- ${PROJECT_SOURCE_DIR}/R3DAnalyticsReaderPlugin.cpp
+set(R3DAnalytics_SRCS
+ ${PROJECT_SOURCE_DIR}/R3DAnalytics.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "R3DAnalyticsReader/" "${R3DAnalyticsReaderPlugin_HDRS}" "${R3DAnalyticsReaderPlugin_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "ImageImport/" "${R3DAnalytics_HDRS}" "${R3DAnalytics_SRCS}" "0")
 
 
 # --------------------------------------------------------------------
 # This section is for a Custom GUI for a Filter. We need to add the Header, Source and UI file here so that
 # they do not get auto generated during cmake and build time.
 set(${PLUGIN_NAME}_CustomWidgets_HDRS
-   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/QR3DAnalyticsReaderWidget.h
+   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/QImportR3DStackWidget.h
 )
 
 set(${PLUGIN_NAME}_CustomWidgets_SRCS
-   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/QR3DAnalyticsReaderWidget.cpp
+   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/QImportR3DStackWidget.cpp
 )
 
 QT4_WRAP_UI( ${PLUGIN_NAME}_Generated_UI_HDRS
-   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/QR3DAnalyticsReaderWidget.ui
+   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/QImportR3DStackWidget.ui
 )
 
 # --------------------------------------------------------------------

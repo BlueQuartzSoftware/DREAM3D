@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QR3DAnalyticsReaderWidget</class>
- <widget class="QFilterWidget" name="QR3DAnalyticsReaderWidget">
+ <class>QImportR3DStackWidget</class>
+ <widget class="QFilterWidget" name="QImportR3DStackWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

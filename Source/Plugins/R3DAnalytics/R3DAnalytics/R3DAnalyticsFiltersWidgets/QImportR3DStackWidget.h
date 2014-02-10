@@ -1,7 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -14,10 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
- * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
- * may be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -31,12 +30,12 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                   FA8650-07-D-5800 and FA8650-13-M-5048
+ *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef R3DAnalyticsReaderWidget_H_
-#define R3DAnalyticsReaderWidget_H_
+#ifndef EbsdImportWIDGET_H_
+#define EbsdImportWIDGET_H_
 
 #include <string>
 #include <vector>
@@ -53,28 +52,27 @@
 
 #include "PipelineBuilder/QFilterWidget.h"
 
-#include "ui_QR3DAnalyticsReaderWidget.h"
+#include "ui_QImportR3DStackWidget.h"
 
 
 /**
- * @class QR3DAnalyticsReaderWidget QR3DAnalyticsReaderWidget.h Plugins/EbsdImport/UI/R3DAnalyticsReaderWidget.h
- * @brief This class represents the User Interface for the R3D Analytics module
+ * @class QImportR3DStackWidget QImportR3DStackWidget.h Plugins/EbsdImport/UI/ImportR3DStackWidget.h
+ * @brief This class represents the User Interface for the Image file import module
  * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications. This module controls
- * the import of R3D Analytics output data files into DREAM3D data structure file
+ * the import of Image data files into  DREAM3D data structure file
  * for better data management and archiving.
  * @author Michael A. Jackson for BlueQuartz Software
- * @author Joseph C. Tucker for UES, Inc.
- * @date Feb 10, 2014
+ * @date Jan 30, 2011
  * @version 1.0
  */
-class QR3DAnalyticsReaderWidget : public QFilterWidget, private Ui::QR3DAnalyticsReaderWidget
+class QImportR3DStackWidget : public QFilterWidget, private Ui::QImportR3DStackWidget
 {
   Q_OBJECT
 
   public:
-    QR3DAnalyticsReaderWidget(QWidget *parent = 0);
-    virtual ~QR3DAnalyticsReaderWidget();
+    QImportR3DStackWidget(QWidget *parent = 0);
+    virtual ~QImportR3DStackWidget();
 
     virtual AbstractFilter::Pointer getFilter();
 
@@ -130,8 +128,8 @@ class QR3DAnalyticsReaderWidget : public QFilterWidget, private Ui::QR3DAnalytic
 
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
-    QR3DAnalyticsReaderWidget(const QR3DAnalyticsReaderWidget&); // Copy Constructor Not Implemented
-    void operator=(const QR3DAnalyticsReaderWidget&); // Operator '=' Not Implemented
+    QImportR3DStackWidget(const QImportR3DStackWidget&); // Copy Constructor Not Implemented
+    void operator=(const QImportR3DStackWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* R3DAnalyticsReaderWidget_H_ */
+#endif /* EbsdImportWIDGET_H_ */

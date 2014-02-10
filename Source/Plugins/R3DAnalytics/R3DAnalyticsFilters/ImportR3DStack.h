@@ -1,7 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -14,10 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
- * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
- * may be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -31,11 +30,11 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                   FA8650-07-D-5800 and FA8650-13-M-5048
+ *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef R3DAnalyticsReader_H_
-#define R3DAnalyticsReader_H_
+#ifndef ImportR3DStack_H_
+#define ImportR3DStack_H_
 
 #include <string>
 
@@ -46,20 +45,20 @@
 
 
 /**
- * @class R3DAnalyticsReader R3DAnalyticsReader.h ImageImport/Code/ImageImportFilters/R3DAnalyticsReader.h
+ * @class ImportR3DStack ImportR3DStack.h ImageImport/Code/ImageImportFilters/ImportR3DStack.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class R3DAnalyticsReader : public AbstractFilter
+class ImportR3DStack : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(R3DAnalyticsReader)
-    DREAM3D_STATIC_NEW_MACRO(R3DAnalyticsReader)
-    DREAM3D_TYPE_MACRO_SUPER(R3DAnalyticsReader, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ImportR3DStack)
+    DREAM3D_STATIC_NEW_MACRO(ImportR3DStack)
+    DREAM3D_TYPE_MACRO_SUPER(ImportR3DStack, AbstractFilter)
 
-    virtual ~R3DAnalyticsReader();
+    virtual ~ImportR3DStack();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
@@ -75,7 +74,7 @@ class R3DAnalyticsReader : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return "ImageImport"; }
+    virtual const std::string getGroupName() { return "R3D Analytics"; }
 
     /**
      * @brief getSubGroupName This returns the subgroup within the main group for this filter.
@@ -87,7 +86,7 @@ class R3DAnalyticsReader : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "R3D Analytics Reader)"; }
+    virtual const std::string getHumanLabel() { return "Import R3D Image Stack"; }
 
 
     /**
@@ -120,7 +119,7 @@ class R3DAnalyticsReader : public AbstractFilter
     virtual void preflight();
 
   protected:
-    R3DAnalyticsReader();
+    ImportR3DStack();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -135,8 +134,8 @@ class R3DAnalyticsReader : public AbstractFilter
   private:
     uint8_t* m_ImageData;
 
-    R3DAnalyticsReader(const R3DAnalyticsReader&); // Copy Constructor Not Implemented
-    void operator=(const R3DAnalyticsReader&); // Operator '=' Not Implemented
+    ImportR3DStack(const ImportR3DStack&); // Copy Constructor Not Implemented
+    void operator=(const ImportR3DStack&); // Operator '=' Not Implemented
 };
 
-#endif /* R3DAnalyticsReader_H_ */
+#endif /* ImportR3DStack_H_ */

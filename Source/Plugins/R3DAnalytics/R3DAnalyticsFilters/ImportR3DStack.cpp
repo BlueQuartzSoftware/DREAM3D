@@ -1,7 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -14,10 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
- * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
- * may be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -31,11 +30,11 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                   FA8650-07-D-5800 and FA8650-13-M-5048
+ *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "R3DAnalyticsReader.h"
+#include "ImportR3DStack.h"
 
 #include <string.h>
 
@@ -46,7 +45,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-R3DAnalyticsReader::R3DAnalyticsReader() :
+ImportR3DStack::ImportR3DStack() :
   AbstractFilter(),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_ZStartIndex(0),
@@ -69,14 +68,14 @@ R3DAnalyticsReader::R3DAnalyticsReader() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-R3DAnalyticsReader::~R3DAnalyticsReader()
+ImportR3DStack::~ImportR3DStack()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DAnalyticsReader::setupFilterParameters()
+void ImportR3DStack::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> options;
 
@@ -88,14 +87,14 @@ void R3DAnalyticsReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DAnalyticsReader::readFilterParameters(AbstractFilterParametersReader* reader)
+void ImportR3DStack::readFilterParameters(AbstractFilterParametersReader* reader)
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DAnalyticsReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void ImportR3DStack::writeFilterParameters(AbstractFilterParametersWriter* writer)
 
 {
   /* Place code that will write the inputs values into a file. reference the
@@ -112,7 +111,7 @@ void R3DAnalyticsReader::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DAnalyticsReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ImportR3DStack::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -140,7 +139,7 @@ void R3DAnalyticsReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DAnalyticsReader::preflight()
+void ImportR3DStack::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -150,7 +149,7 @@ void R3DAnalyticsReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DAnalyticsReader::execute()
+void ImportR3DStack::execute()
 {
   int err = 0;
   setErrorCondition(err);
