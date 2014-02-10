@@ -46,8 +46,9 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
+const static float m_piOver2 = static_cast<float>(M_PI/2.0);
 const static float m_pi = static_cast<float>(M_PI);
-const static float m_pi2 = static_cast<float>(2*M_PI);
+const static float m_pi2 = static_cast<float>(2.0*M_PI);
 
 
 /**
@@ -119,6 +120,7 @@ class CalculateGBCDImpl
         normal[2] = m_Normals[3*i+2];
         if(m_Phases[grain1] == m_Phases[grain2])
         {
+          unsigned int cryst = m_CrystalStructures[m_Phases[grain1]];
           for(int q=0;q<2;q++)
           {
             if(q == 1)
@@ -139,17 +141,14 @@ class CalculateGBCDImpl
             OrientationMath::EulerToMat(g1ea[0], g1ea[1], g1ea[2], g1);
             OrientationMath::EulerToMat(g2ea[0], g2ea[1], g2ea[2], g2);
 
-            //get the crystal directions along the triangle normals
-            MatrixMath::Multiply3x3with3x1(g1,normal,xstl1_norm0);
-            //get the misorientation between grain1 and grain2
-            int nsym = m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getNumSymOps();
+            int nsym = m_OrientationOps[cryst]->getNumSymOps();
             for (j=0; j< nsym;j++)
             {
               //rotate g1 by symOp
-              m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getMatSymOp(j, sym1);
+              m_OrientationOps[cryst]->getMatSymOp(j, sym1);
               MatrixMath::Multiply3x3with3x3(sym1,g1,g1s);
-              //find symmetric crystal directions
-              MatrixMath::Multiply3x3with3x1(sym1, xstl1_norm0,xstl1_norm1);
+              //get the crystal directions along the triangle normals
+              MatrixMath::Multiply3x3with3x1(g1s, normal,xstl1_norm1);
               //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
               xstl1_norm_sc[0] = atan2f(xstl1_norm1[1], xstl1_norm1[0]);
               if (xstl1_norm_sc[0] < 0) xstl1_norm_sc[0] += m_pi2;
@@ -164,7 +163,7 @@ class CalculateGBCDImpl
               for (k=0; k < nsym; k++)
               {
                 //calculate the symmetric misorienation
-                m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getMatSymOp(k, sym2);
+                m_OrientationOps[cryst]->getMatSymOp(k, sym2);
                 //rotate g2 by symOp
                 MatrixMath::Multiply3x3with3x3(sym2,g2,g2s);
                 //transpose rotated g2
@@ -173,30 +172,36 @@ class CalculateGBCDImpl
                 MatrixMath::Multiply3x3with3x3(g1s,g2t,dg);
                 //translate matrix to euler angles
                 OrientationMath::MatToEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
-                euler_mis[1] = cosf(euler_mis[1]);
 
-                //get the indexes that this point would be in the GBCD histogram
-                gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc);
-                if (gbcd_index != -1)
+                if(euler_mis[0] < m_piOver2 && euler_mis[1] < m_piOver2 && euler_mis[2] < m_piOver2)
                 {
-                  // Add the points and up the count on the gbcd histograms.  Broke this out
-                  // so that it could be protected in an openMP thread
-                  {
-                    m_Bins[(TRIcounter*1152)+SYMcounter] = gbcd_index;
-                  }
-                }
-                //if inversion is on, do the same for that
-                if (inversion == 1)
-                {
-                  gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc_inv);
+                  //PHI euler angle is stored in GBCD as cos(PHI)
+                  euler_mis[1] = cosf(euler_mis[1]);
+                  //get the indexes that this point would be in the GBCD histogram
+                  gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc);
                   if (gbcd_index != -1)
                   {
+                    // Add the points and up the count on the gbcd histograms.  Broke this out
+                    // so that it could be protected in an openMP thread
                     {
-                      m_Bins[(TRIcounter*1152)+SYMcounter] = gbcd_index;
+                      m_Bins[(TRIcounter*576)+SYMcounter] = gbcd_index;
                     }
                   }
+                  SYMcounter++;
+                  //if inversion is on, do the same for that
+                  if (inversion == 1)
+                  {
+                    gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc_inv);
+                    if (gbcd_index != -1)
+                    {
+                      {
+                        m_Bins[(TRIcounter*576)+SYMcounter] = gbcd_index;
+                      }
+                    }
+                  }
+                  SYMcounter++;
                 }
-                SYMcounter++;
+                else SYMcounter += 2;
               }
             }
           }
@@ -221,8 +226,12 @@ class CalculateGBCDImpl
       float mis_eulerNorm[5];
 
       //concatonate the normalized euler angles and normalized spherical corrdinate normal
-      for (i=0; i<3; i++) mis_eulerNorm[i] = eulerN[i];
-      for (i=0; i<2; i++) mis_eulerNorm[i+3] = xstl_norm_sc[i];
+      mis_eulerNorm[0] = eulerN[0];
+      mis_eulerNorm[1] = eulerN[1];
+      mis_eulerNorm[2] = eulerN[2];
+      //note the switch here where cos(Phi) goes in the 3 slot and theta goes in the 4 slot
+      mis_eulerNorm[3] = xstl_norm_sc[1];
+      mis_eulerNorm[4] = xstl_norm_sc[0];
       //Check for a valid point in the GBCD space
       for (i=0; i<5; i++){
         if (mis_eulerNorm[i] < gbcdlimits[i]) flag_good = 0;
@@ -462,31 +471,44 @@ void FindGBCD::execute()
   gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
   gbcdSizesArray->SetNumberOfComponents(1);
   gbcdSizesArray->initializeWithZeros();
-  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, 1152, "GBCDBins");
+  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, 576, "GBCDBins");
   gbcdBinsArray->initializeWithZeros();
   float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
   int32_t* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
   float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
   int32_t* m_Bins = gbcdBinsArray->GetPointer(0);
 
+  //Original Ranges from Dave R.
+  //m_GBCDlimits[0] = 0.0;
+  //m_GBCDlimits[1] = cosf(1.0*m_pi);
+  //m_GBCDlimits[2] = 0.0;
+  //m_GBCDlimits[3] = 0.0;
+  //m_GBCDlimits[4] = cosf(1.0*m_pi);
+  //m_GBCDlimits[5] = 2.0*m_pi;
+  //m_GBCDlimits[6] = cosf(0.0);
+  //m_GBCDlimits[7] = 2.0*m_pi;
+  //m_GBCDlimits[8] = 2.0*m_pi;
+  //m_GBCDlimits[9] = cosf(0.0);
+
+  //Greg's Ranges
   m_GBCDlimits[0] = 0.0;
-  m_GBCDlimits[1] = cosf(1.0*m_pi);
+  m_GBCDlimits[1] = 0.0;
   m_GBCDlimits[2] = 0.0;
   m_GBCDlimits[3] = 0.0;
-  m_GBCDlimits[4] = cosf(1.0*m_pi);
-  m_GBCDlimits[5] = 2.0*m_pi;
-  m_GBCDlimits[6] = cosf(0.0);
-  m_GBCDlimits[7] = 2.0*m_pi;
-  m_GBCDlimits[8] = 2.0*m_pi;
-  m_GBCDlimits[9] = cosf(0.0);
+  m_GBCDlimits[4] = 0.0;
+  m_GBCDlimits[5] = m_pi/2.0;
+  m_GBCDlimits[6] = 1.0;
+  m_GBCDlimits[7] = m_pi/2.0;
+  m_GBCDlimits[8] = 1.0;
+  m_GBCDlimits[9] = 2.0*m_pi;
 
   float binsize = m_GBCDRes*m_pi/180.0;
   float binsize2 = binsize*(2.0/m_pi);
   m_GBCDdeltas[0] = binsize;
   m_GBCDdeltas[1] = binsize2;
   m_GBCDdeltas[2] = binsize;
-  m_GBCDdeltas[3] = binsize;
-  m_GBCDdeltas[4] = binsize2;
+  m_GBCDdeltas[3] = binsize2;
+  m_GBCDdeltas[4] = binsize;
 
   m_GBCDsizes[0] = int(0.5+(m_GBCDlimits[5]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
   m_GBCDsizes[1] = int(0.5+(m_GBCDlimits[6]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
@@ -517,7 +539,7 @@ void FindGBCD::execute()
     {
       faceChunkSize = totalFaces-i;
     }
-    gbcdBinsArray->initializeWithZeros();
+    gbcdBinsArray->initializeWithValues(-1);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
@@ -548,10 +570,13 @@ void FindGBCD::execute()
 
     for(int j=0;j<faceChunkSize;j++)
     {
-      for(int k=0;k<1152;k++)
+      for(int k=0;k<576;k++)
       {
-        m_GBCD[m_Bins[j*1152+k]] += m_SurfaceMeshFaceAreas[i+j];
-        totalFaceArea += m_SurfaceMeshFaceAreas[i+j];
+        if(m_Bins[j*576+k] >= 0)
+        {
+          m_GBCD[m_Bins[j*576+k]] += m_SurfaceMeshFaceAreas[i+j];
+          totalFaceArea += m_SurfaceMeshFaceAreas[i+j];
+        }
       }
     }
   }
@@ -566,6 +591,34 @@ void FindGBCD::execute()
   {
     m_GBCD[i] *= MRDfactor;
   }
+
+  std::ofstream outFile;
+  outFile.open("c:/Users/groebema/Desktop/Greg_GBCD.txt");
+
+  size_t bin;
+  size_t n1 =  m_GBCDsizes[0];
+  size_t n1n2 = n1*( m_GBCDsizes[1]);
+  size_t n1n2n3 = n1n2*( m_GBCDsizes[2]);
+  size_t n1n2n3n4 = n1n2n3*( m_GBCDsizes[3]);
+
+  for(int a=0;a<m_GBCDsizes[0];a++)
+  {
+    for(int b=0;b<m_GBCDsizes[1];b++)
+    {
+      for(int c=0;c<m_GBCDsizes[2];c++)
+      {
+        for(int d=0;d<m_GBCDsizes[3];d++)
+        {
+          for(int e=0;e<m_GBCDsizes[4];e++)
+          {
+            bin = a + n1*b + n1n2*c + n1n2n3*d + n1n2n3n4*e;
+            outFile << m_GBCD[bin] << std::endl;
+          }
+        }
+      }
+    }
+  }
+  outFile.close();
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

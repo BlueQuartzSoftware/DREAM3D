@@ -33,48 +33,40 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _VisualizeGBCD_H_
-#define _VisualizeGBCD_H_
+#ifndef ImportR3DStack_H_
+#define ImportR3DStack_H_
 
 #include <string>
-
-#include "MXA/Common/MXAEndian.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 
-
-typedef float real;
 
 /**
- * @class VisualizeGBCD VisualizeGBCD.h DREAM3DLib/SurfaceMeshFilters/VisualizeGBCD.h
- * @brief This filter calculates the centroid of each triangle in the surface mesh.
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 12, 2012
+ * @class ImportR3DStack ImportR3DStack.h ImageImport/Code/ImageImportFilters/ImportR3DStack.h
+ * @brief
+ * @author
+ * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
+class ImportR3DStack : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VisualizeGBCD)
-    DREAM3D_STATIC_NEW_MACRO(VisualizeGBCD)
-    DREAM3D_TYPE_MACRO_SUPER(VisualizeGBCD, SurfaceMeshFilter)
+    DREAM3D_SHARED_POINTERS(ImportR3DStack)
+    DREAM3D_STATIC_NEW_MACRO(ImportR3DStack)
+    DREAM3D_TYPE_MACRO_SUPER(ImportR3DStack, AbstractFilter)
 
-    virtual ~VisualizeGBCD();
+    virtual ~ImportR3DStack();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
-    DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, MisAxis)
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GMTOutputFile)
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, ImageFileList)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
+
 
 
     /**
@@ -82,14 +74,20 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const std::string getGroupName() { return "R3D Analytics"; }
+
+    /**
+     * @brief getSubGroupName This returns the subgroup within the main group for this filter.
+     * @return
+     */
+    virtual const std::string getSubGroupName() { return "IO"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Visualize GBCD"; }
+    virtual const std::string getHumanLabel() { return "Import R3D Image Stack"; }
+
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -101,15 +99,15 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
 
-    /**
+   /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
@@ -120,11 +118,8 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     */
     virtual void preflight();
 
-    bool verifyPathExists(const std::string &file);
-
-
   protected:
-    VisualizeGBCD();
+    ImportR3DStack();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -134,52 +129,13 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     * @param fields The number of fields
     * @param ensembles The number of ensembles
     */
-    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    uint8_t* m_ImageData;
 
-    unsigned int* m_CrystalStructures;
-    double* m_GBCD;
-
-    /**
-     * @brief This function writes a set of Axis coordinates to that are needed
-     * for a Rectilinear Grid based data set.
-     * @param f The "C" FILE* pointer to the file being written to.
-     * @param axis The name of the Axis that is being written
-     * @param type The type of primitive being written (float, int, ...)
-     * @param npoints The total number of points in the array
-     * @param min The minimum value of the axis
-     * @param max The maximum value of the axis
-     * @param step The step value between each point on the axis.
-     */
-
-    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
-    {
-      int err = 0;
-      fprintf(f, "%s %lld %s\n", axis, npoints, type);
-      float* data = new float[npoints];
-      float d;
-      for (int idx = 0; idx < npoints; ++idx)
-      {
-        d = idx * step + min;
-        MXA::Endian::FromSystemToBig::convert<float>(d);
-        data[idx] = d;
-      }
-      size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
-      delete[] data;
-      if (totalWritten != static_cast<size_t>(npoints) )
-      {
-        std::cout << "Error Writing Binary VTK Data into file " << std::endl;
-        fclose(f);
-        return -1;
-      }
-      return err;
-    }
-
-
-    VisualizeGBCD(const VisualizeGBCD&); // Copy Constructor Not Implemented
-    void operator=(const VisualizeGBCD&); // Operator '=' Not Implemented
+    ImportR3DStack(const ImportR3DStack&); // Copy Constructor Not Implemented
+    void operator=(const ImportR3DStack&); // Operator '=' Not Implemented
 };
 
-#endif /* _VisualizeGBCD_H_ */
+#endif /* ImportR3DStack_H_ */
