@@ -416,8 +416,8 @@ void VisualizeGBCD::execute()
     for (int64_t l = 0; l < xpoints; l++)
     {
       //get (x,y) for stereographic projection pixel
-      x = float(k - xpointshalf) * xres + (xres / 2.0);
-      y = float(l - ypointshalf) * yres + (yres / 2.0);
+      x = float(l - xpointshalf) * xres + (xres / 2.0);
+      y = float(k - ypointshalf) * yres + (yres / 2.0);
       if((x * x + y * y) <= 1.0)
       {
         sum = 0;
@@ -462,6 +462,7 @@ void VisualizeGBCD::execute()
               int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
               //find symmetric poles using the first symmetry operator
               MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
+              if(rotNormal[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal, -1);
               //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
               rotNormal_sc[0] = atan2f(rotNormal[1], rotNormal[0]);
               if (rotNormal_sc[0] < 0) rotNormal_sc[0] += m_pi2;
@@ -469,8 +470,12 @@ void VisualizeGBCD::execute()
               //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
               int location4 = int((rotNormal_sc[1]-gbcdLimits[3])/gbcdDeltas[3]);
               int location5 = int((rotNormal_sc[0]-gbcdLimits[4])/gbcdDeltas[4]);
-              sum += m_GBCD[(location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1];
-              count++;
+              if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
+                location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
+              {
+                sum += m_GBCD[(location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1];
+                count++;
+              }
             }
 
             //again in second crystal reference frame
@@ -488,6 +493,7 @@ void VisualizeGBCD::execute()
               int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
               //find symmetric poles using the first symmetry operator
               MatrixMath::Multiply3x3with3x1(sym1, vec2, rotNormal2);
+              if(rotNormal2[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal2, -1);
               //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
               rotNormal2_sc[0] = atan2f(rotNormal2[1], rotNormal2[0]);
               if (rotNormal2_sc[0] < 0) rotNormal2_sc[0] += m_pi2;
@@ -495,8 +501,12 @@ void VisualizeGBCD::execute()
               //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
               int location4 = int((rotNormal2_sc[1]-gbcdLimits[3])/gbcdDeltas[3]);
               int location5 = int((rotNormal2_sc[0]-gbcdLimits[4])/gbcdDeltas[4]);
-              sum += m_GBCD[(location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1];
-              count++;
+              if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
+                location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
+              {
+                sum += m_GBCD[(location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1];
+                count++;
+              }
             }
           }
         }
@@ -527,9 +537,9 @@ void VisualizeGBCD::execute()
     fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle * m_180Overpi);
     size_t size = gmtValues.size()/3;
 
-    for(size_t i = 0; i < size; i=i+3)
+    for(size_t i = 0; i < size; i++)
     {
-      fprintf(f, "%f %f %f\n", gmtValues[i], gmtValues[i+1], gmtValues[i+2]);
+      fprintf(f, "%f %f %f\n", gmtValues[3*i], gmtValues[3*i+1], gmtValues[3*i+2]);
     }
     fclose(f);
   }
