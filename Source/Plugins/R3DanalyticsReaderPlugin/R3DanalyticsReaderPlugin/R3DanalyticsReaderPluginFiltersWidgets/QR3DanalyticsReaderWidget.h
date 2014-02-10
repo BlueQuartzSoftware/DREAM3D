@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef R3DanalyticsReader_H_
-#define R3DanalyticsReader_H_
+#ifndef R3DanalyticsReaderWidget_H_
+#define R3DanalyticsReaderWidget_H_
 
 #include <string>
 #include <vector>
@@ -134,4 +134,4 @@ class QR3DanalyticsReaderWidget : public QFilterWidget, private Ui::QR3Danalytic
     void operator=(const QR3DanalyticsReaderWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* EbsdImportWIDGET_H_ */
+#endif /* R3DanalyticsReaderWidget_H_ */
