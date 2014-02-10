@@ -35,7 +35,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "R3DanalyticsReader.h"
+#include "R3DAnalyticsReader.h"
 
 #include <string.h>
 
@@ -46,7 +46,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-R3DanalyticsReader::R3DanalyticsReader() :
+R3DAnalyticsReader::R3DAnalyticsReader() :
   AbstractFilter(),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_ZStartIndex(0),
@@ -69,14 +69,14 @@ R3DanalyticsReader::R3DanalyticsReader() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-R3DanalyticsReader::~R3DanalyticsReader()
+R3DAnalyticsReader::~R3DAnalyticsReader()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DanalyticsReader::setupFilterParameters()
+void R3DAnalyticsReader::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> options;
 
@@ -88,14 +88,14 @@ void R3DanalyticsReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DanalyticsReader::readFilterParameters(AbstractFilterParametersReader* reader)
+void R3DAnalyticsReader::readFilterParameters(AbstractFilterParametersReader* reader)
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DanalyticsReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void R3DAnalyticsReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 
 {
   /* Place code that will write the inputs values into a file. reference the
@@ -112,7 +112,7 @@ void R3DanalyticsReader::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DanalyticsReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void R3DAnalyticsReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -140,7 +140,7 @@ void R3DanalyticsReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DanalyticsReader::preflight()
+void R3DAnalyticsReader::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -150,7 +150,7 @@ void R3DanalyticsReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DanalyticsReader::execute()
+void R3DAnalyticsReader::execute()
 {
   int err = 0;
   setErrorCondition(err);

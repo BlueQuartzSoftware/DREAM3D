@@ -34,26 +34,26 @@
  *                   FA8650-07-D-5800 and FA8650-13-M-5048
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "R3DanalyticsReaderPlugin.h"
+#include "R3DAnalyticsReaderPlugin.h"
 
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "FilterWidgets/QFilterWidgetFactory.hpp"
 
-#include "moc_R3DanalyticsReaderPlugin.cxx"
+#include "moc_R3DAnalyticsReaderPlugin.cxx"
 
-Q_EXPORT_PLUGIN2(R3DanalyticsReaderPlugin, R3DanalyticsReaderPlugin)
+Q_EXPORT_PLUGIN2(R3DAnalyticsReaderPlugin, R3DAnalyticsReaderPlugin)
 
 namespace Detail
 {
-   const std::string R3DanalyticsReaderPluginFile("R3DanalyticsReaderPlugin");
-   const std::string R3DanalyticsReaderPluginDisplayName("R3DanalyticsReaderPlugin");
-   const std::string R3DanalyticsReaderPluginBaseName("R3DanalyticsReaderPlugin");
+   const std::string R3DAnalyticsReaderPluginFile("R3DAnalyticsReaderPlugin");
+   const std::string R3DAnalyticsReaderPluginDisplayName("R3DAnalyticsReaderPlugin");
+   const std::string R3DAnalyticsReaderPluginBaseName("R3DAnalyticsReaderPlugin");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-R3DanalyticsReaderPlugin::R3DanalyticsReaderPlugin()
+R3DAnalyticsReaderPlugin::R3DAnalyticsReaderPlugin()
 {
 
 }
@@ -61,22 +61,22 @@ R3DanalyticsReaderPlugin::R3DanalyticsReaderPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-R3DanalyticsReaderPlugin::~R3DanalyticsReaderPlugin()
+R3DAnalyticsReaderPlugin::~R3DAnalyticsReaderPlugin()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString R3DanalyticsReaderPlugin::getPluginName()
+QString R3DAnalyticsReaderPlugin::getPluginName()
 {
-  return QString::fromStdString(Detail::R3DanalyticsReaderPluginDisplayName);
+  return QString::fromStdString(Detail::R3DAnalyticsReaderPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DanalyticsReaderPlugin::writeSettings(QSettings &prefs)
+void R3DAnalyticsReaderPlugin::writeSettings(QSettings &prefs)
 {
 
 }
@@ -84,10 +84,10 @@ void R3DanalyticsReaderPlugin::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DanalyticsReaderPlugin::readSettings(QSettings &prefs)
+void R3DAnalyticsReaderPlugin::readSettings(QSettings &prefs)
 {
 
 }
 
-#include "R3DanalyticsReaderPluginFilters/RegisterKnownFilterWidgets.cpp"
+#include "R3DAnalyticsReaderPluginFilters/RegisterKnownFilterWidgets.cpp"
 

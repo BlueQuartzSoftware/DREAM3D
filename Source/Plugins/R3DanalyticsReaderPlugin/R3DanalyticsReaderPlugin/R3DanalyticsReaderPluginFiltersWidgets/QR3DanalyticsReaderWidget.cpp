@@ -35,7 +35,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "QR3DanalyticsReaderWidget.h"
+#include "QR3DAnalyticsReaderWidget.h"
 
 //-- Qt Includes
 #include <QtCore/QFileInfo>
@@ -59,14 +59,14 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 
 // Our own plugin headers
-#include "R3DanalyticsReaderPlugin/R3DanalyticsReaderPluginFilters/R3DanalyticsReader.h"
+#include "R3DAnalyticsReaderPlugin/R3DAnalyticsReaderPluginFilters/R3DAnalyticsReader.h"
 
-#include "R3DanalyticsReaderPlugin/R3DanalyticsReaderPluginFiltersWidgets/moc_QR3DanalyticsReaderWidget.cxx"
+#include "R3DAnalyticsReaderPlugin/R3DAnalyticsReaderPluginFiltersWidgets/moc_QR3DAnalyticsReaderWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QR3DanalyticsReaderWidget::QR3DanalyticsReaderWidget(QWidget *parent) :
+QR3DAnalyticsReaderWidget::QR3DAnalyticsReaderWidget(QWidget *parent) :
 QFilterWidget(parent)
 {
 
@@ -77,7 +77,7 @@ QFilterWidget(parent)
   setupUi(this);
 
   setupGui();
-  R3DanalyticsReader::Pointer filter = R3DanalyticsReader::New();
+  R3DAnalyticsReader::Pointer filter = R3DAnalyticsReader::New();
   FloatVec3Widget_t origin = filter->getOrigin();
   FloatVec3Widget_t resolution = filter->getResolution();
   // Get the default values from the filter
@@ -96,7 +96,7 @@ QFilterWidget(parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QR3DanalyticsReaderWidget::~QR3DanalyticsReaderWidget()
+QR3DAnalyticsReaderWidget::~QR3DAnalyticsReaderWidget()
 {
 
 }
@@ -104,7 +104,7 @@ QR3DanalyticsReaderWidget::~QR3DanalyticsReaderWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString QR3DanalyticsReaderWidget::getFilterGroup()
+QString QR3DAnalyticsReaderWidget::getFilterGroup()
 {
     return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
 }
@@ -112,10 +112,10 @@ QString QR3DanalyticsReaderWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QR3DanalyticsReaderWidget::getFilter()
+AbstractFilter::Pointer QR3DAnalyticsReaderWidget::getFilter()
 {
   //bool ok = false;
-  R3DanalyticsReader::Pointer filter =  R3DanalyticsReader::New();
+  R3DAnalyticsReader::Pointer filter =  R3DAnalyticsReader::New();
 
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
@@ -164,7 +164,7 @@ AbstractFilter::Pointer QR3DanalyticsReaderWidget::getFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFilterWidget* QR3DanalyticsReaderWidget::createDeepCopy()
+QFilterWidget* QR3DAnalyticsReaderWidget::createDeepCopy()
 {
   #if 0
   QFilterWidget* w = new QFilterWidget();
@@ -195,7 +195,7 @@ QFilterWidget* QR3DanalyticsReaderWidget::createDeepCopy()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::setWidgetListEnabled(bool b)
+void QR3DAnalyticsReaderWidget::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList) {
     w->setEnabled(b);
@@ -206,7 +206,7 @@ void QR3DanalyticsReaderWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::setupGui()
+void QR3DAnalyticsReaderWidget::setupGui()
 {
   setCheckable(true);
 
@@ -228,9 +228,9 @@ void QR3DanalyticsReaderWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::writeOptions(QSettings &prefs)
+void QR3DAnalyticsReaderWidget::writeOptions(QSettings &prefs)
 {
-  prefs.setValue("Filter_Name", "R3DanalyticsReader");
+  prefs.setValue("Filter_Name", "R3DAnalyticsReader");
   WRITE_STRING_SETTING(prefs, m_, InputDir)
   WRITE_STRING_SETTING(prefs, m_, FilePrefix)
   WRITE_STRING_SETTING(prefs, m_, FileSuffix)
@@ -273,7 +273,7 @@ void QR3DanalyticsReaderWidget::writeOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::readOptions(QSettings &prefs)
+void QR3DAnalyticsReaderWidget::readOptions(QSettings &prefs)
 {
   QString val;
   bool ok;
@@ -332,7 +332,7 @@ void QR3DanalyticsReaderWidget::readOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool QR3DanalyticsReaderWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
+bool QR3DAnalyticsReaderWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
 //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
   QFileInfo fileinfo(outFilePath);
@@ -350,7 +350,7 @@ bool QR3DanalyticsReaderWidget::verifyPathExists(QString outFilePath, QLineEdit*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::checkIOFiles()
+void QR3DAnalyticsReaderWidget::checkIOFiles()
 {
   if (true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
    {
@@ -361,7 +361,7 @@ void QR3DanalyticsReaderWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::on_m_InputDirBtn_clicked()
+void QR3DAnalyticsReaderWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
   QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
@@ -380,7 +380,7 @@ void QR3DanalyticsReaderWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::on_m_InputDir_textChanged(const QString & text)
+void QR3DAnalyticsReaderWidget::on_m_InputDir_textChanged(const QString & text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
@@ -402,7 +402,7 @@ void QR3DanalyticsReaderWidget::on_m_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::on_m_ZEndIndex_valueChanged(int value)
+void QR3DAnalyticsReaderWidget::on_m_ZEndIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
     emit parametersChanged();
@@ -411,7 +411,7 @@ void QR3DanalyticsReaderWidget::on_m_ZEndIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::on_m_ZStartIndex_valueChanged(int value)
+void QR3DAnalyticsReaderWidget::on_m_ZStartIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
     emit parametersChanged();
@@ -420,7 +420,7 @@ void QR3DanalyticsReaderWidget::on_m_ZStartIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::on_m_TotalDigits_valueChanged(int value)
+void QR3DAnalyticsReaderWidget::on_m_TotalDigits_valueChanged(int value)
 {
     m_generateExampleEbsdInputFile();
       emit parametersChanged();
@@ -429,7 +429,7 @@ void QR3DanalyticsReaderWidget::on_m_TotalDigits_valueChanged(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::on_m_FileExt_textChanged(const QString &string)
+void QR3DAnalyticsReaderWidget::on_m_FileExt_textChanged(const QString &string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -438,7 +438,7 @@ void QR3DanalyticsReaderWidget::on_m_FileExt_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::on_m_FileSuffix_textChanged(const QString &string)
+void QR3DAnalyticsReaderWidget::on_m_FileSuffix_textChanged(const QString &string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -447,7 +447,7 @@ void QR3DanalyticsReaderWidget::on_m_FileSuffix_textChanged(const QString &strin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::on_m_FilePrefix_textChanged(const QString &string)
+void QR3DAnalyticsReaderWidget::on_m_FilePrefix_textChanged(const QString &string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -456,7 +456,7 @@ void QR3DanalyticsReaderWidget::on_m_FilePrefix_textChanged(const QString &strin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> QR3DanalyticsReaderWidget::generateFileList(int start, int end, bool &hasMissingFiles,
+std::vector<std::string> QR3DAnalyticsReaderWidget::generateFileList(int start, int end, bool &hasMissingFiles,
                                                bool stackLowToHigh, QString filename)
 {
   int index = 0;
@@ -487,7 +487,7 @@ std::vector<std::string> QR3DanalyticsReaderWidget::generateFileList(int start, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::m_generateExampleEbsdInputFile()
+void QR3DAnalyticsReaderWidget::m_generateExampleEbsdInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
@@ -537,7 +537,7 @@ void QR3DanalyticsReaderWidget::m_generateExampleEbsdInputFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QR3DanalyticsReaderWidget::m_findEbsdMaxSliceAndPrefix()
+void QR3DAnalyticsReaderWidget::m_findEbsdMaxSliceAndPrefix()
 {
   if (m_InputDir->text().length() == 0) { return; }
   QDir dir(m_InputDir->text());
@@ -643,9 +643,9 @@ void QR3DanalyticsReaderWidget::m_findEbsdMaxSliceAndPrefix()
 
 
 // -----------------------------------------------------------------------------
-QUrl QR3DanalyticsReaderWidget::htmlHelpIndexFile()
+QUrl QR3DAnalyticsReaderWidget::htmlHelpIndexFile()
 {
-  QString lowerFilter = QString("R3DanalyticsReader").toLower();
+  QString lowerFilter = QString("R3DAnalyticsReader").toLower();
   QString appPath = qApp->applicationDirPath();
   QDir helpDir = QDir(appPath);
   QString s("file://");

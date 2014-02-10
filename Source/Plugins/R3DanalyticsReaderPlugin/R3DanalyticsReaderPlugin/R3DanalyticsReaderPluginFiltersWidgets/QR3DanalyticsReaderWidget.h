@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef R3DanalyticsReaderWidget_H_
-#define R3DanalyticsReaderWidget_H_
+#ifndef R3DAnalyticsReaderWidget_H_
+#define R3DAnalyticsReaderWidget_H_
 
 #include <string>
 #include <vector>
@@ -53,11 +53,11 @@
 
 #include "PipelineBuilder/QFilterWidget.h"
 
-#include "ui_QR3DanalyticsReaderWidget.h"
+#include "ui_QR3DAnalyticsReaderWidget.h"
 
 
 /**
- * @class QR3DanalyticsReaderWidget QR3DanalyticsReaderWidget.h Plugins/EbsdImport/UI/R3DanalyticsReaderWidget.h
+ * @class QR3DAnalyticsReaderWidget QR3DAnalyticsReaderWidget.h Plugins/EbsdImport/UI/R3DAnalyticsReaderWidget.h
  * @brief This class represents the User Interface for the R3D Analytics module
  * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications. This module controls
@@ -68,13 +68,13 @@
  * @date Feb 10, 2014
  * @version 1.0
  */
-class QR3DanalyticsReaderWidget : public QFilterWidget, private Ui::QR3DanalyticsReaderWidget
+class QR3DAnalyticsReaderWidget : public QFilterWidget, private Ui::QR3DAnalyticsReaderWidget
 {
   Q_OBJECT
 
   public:
-    QR3DanalyticsReaderWidget(QWidget *parent = 0);
-    virtual ~QR3DanalyticsReaderWidget();
+    QR3DAnalyticsReaderWidget(QWidget *parent = 0);
+    virtual ~QR3DAnalyticsReaderWidget();
 
     virtual AbstractFilter::Pointer getFilter();
 
@@ -130,8 +130,8 @@ class QR3DanalyticsReaderWidget : public QFilterWidget, private Ui::QR3Danalytic
 
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
-    QR3DanalyticsReaderWidget(const QR3DanalyticsReaderWidget&); // Copy Constructor Not Implemented
-    void operator=(const QR3DanalyticsReaderWidget&); // Operator '=' Not Implemented
+    QR3DAnalyticsReaderWidget(const QR3DAnalyticsReaderWidget&); // Copy Constructor Not Implemented
+    void operator=(const QR3DAnalyticsReaderWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* R3DanalyticsReaderWidget_H_ */
+#endif /* R3DAnalyticsReaderWidget_H_ */

@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef R3DanalyticsReaderPLUGIN_H_
-#define R3DanalyticsReaderPLUGIN_H_
+#ifndef R3DAnalyticsReaderPLUGIN_H_
+#define R3DAnalyticsReaderPLUGIN_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -44,20 +44,20 @@
 
 
 /**
- * @class R3DanalyticsReaderPlugin R3DanalyticsReaderPlugin.h R3DanalyticsReader/R3DanalyticsReaderPlugin.h
+ * @class R3DAnalyticsReaderPlugin R3DAnalyticsReaderPlugin.h R3DAnalyticsReader/R3DAnalyticsReaderPlugin.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date May 10, 2012
  * @version 1.0
  */
-class R3DanalyticsReaderPlugin : public QObject, public DREAM3DPluginInterface
+class R3DAnalyticsReaderPlugin : public QObject, public DREAM3DPluginInterface
 {
     Q_OBJECT;
     Q_INTERFACES(DREAM3DPluginInterface)
 
   public:
-    R3DanalyticsReaderPlugin();
-    virtual ~R3DanalyticsReaderPlugin();
+    R3DAnalyticsReaderPlugin();
+    virtual ~R3DAnalyticsReaderPlugin();
     /**
      * @brief Returns the name of the plugin
      */
@@ -82,8 +82,8 @@ class R3DanalyticsReaderPlugin : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings &prefs);
 
   private:
-    R3DanalyticsReaderPlugin(const R3DanalyticsReaderPlugin&); // Copy Constructor Not Implemented
-    void operator=(const R3DanalyticsReaderPlugin&); // Operator '=' Not Implemented
+    R3DAnalyticsReaderPlugin(const R3DAnalyticsReaderPlugin&); // Copy Constructor Not Implemented
+    void operator=(const R3DAnalyticsReaderPlugin&); // Operator '=' Not Implemented
 };
 
-#endif /* R3DanalyticsReaderPLUGIN_H_ */
+#endif /* R3DAnalyticsReaderPLUGIN_H_ */

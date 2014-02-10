@@ -34,8 +34,8 @@
  *                   FA8650-07-D-5800 and FA8650-13-M-5048
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef R3DanalyticsReader_H_
-#define R3DanalyticsReader_H_
+#ifndef R3DAnalyticsReader_H_
+#define R3DAnalyticsReader_H_
 
 #include <string>
 
@@ -46,20 +46,20 @@
 
 
 /**
- * @class R3DanalyticsReader R3DanalyticsReader.h ImageImport/Code/ImageImportFilters/R3DanalyticsReader.h
+ * @class R3DAnalyticsReader R3DAnalyticsReader.h ImageImport/Code/ImageImportFilters/R3DAnalyticsReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class R3DanalyticsReader : public AbstractFilter
+class R3DAnalyticsReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(R3DanalyticsReader)
-    DREAM3D_STATIC_NEW_MACRO(R3DanalyticsReader)
-    DREAM3D_TYPE_MACRO_SUPER(R3DanalyticsReader, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(R3DAnalyticsReader)
+    DREAM3D_STATIC_NEW_MACRO(R3DAnalyticsReader)
+    DREAM3D_TYPE_MACRO_SUPER(R3DAnalyticsReader, AbstractFilter)
 
-    virtual ~R3DanalyticsReader();
+    virtual ~R3DAnalyticsReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
@@ -120,7 +120,7 @@ class R3DanalyticsReader : public AbstractFilter
     virtual void preflight();
 
   protected:
-    R3DanalyticsReader();
+    R3DAnalyticsReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -135,8 +135,8 @@ class R3DanalyticsReader : public AbstractFilter
   private:
     uint8_t* m_ImageData;
 
-    R3DanalyticsReader(const R3DanalyticsReader&); // Copy Constructor Not Implemented
-    void operator=(const R3DanalyticsReader&); // Operator '=' Not Implemented
+    R3DAnalyticsReader(const R3DAnalyticsReader&); // Copy Constructor Not Implemented
+    void operator=(const R3DAnalyticsReader&); // Operator '=' Not Implemented
 };
 
-#endif /* R3DanalyticsReader_H_ */
+#endif /* R3DAnalyticsReader_H_ */
