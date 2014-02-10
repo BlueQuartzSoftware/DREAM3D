@@ -87,25 +87,32 @@ void ImportR3DStack::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportR3DStack::readFilterParameters(AbstractFilterParametersReader* reader)
+void ImportR3DStack::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  setImageDataArrayName( reader->readValue("ImageDataArrayName", getImageDataArrayName()) );
+  setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
+  setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
+  setOrigin( reader->readValue("Origin", getOrigin()) );
+  setResolution( reader->readValue("Resolution", getResolution()) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportR3DStack::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int ImportR3DStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  /* Place code that will write the inputs values into a file. reference the
-  * AbstractFilterParametersWriter class for the proper API to use.
-  */
+  writer->openFilterGroup(this, index);
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );
 
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

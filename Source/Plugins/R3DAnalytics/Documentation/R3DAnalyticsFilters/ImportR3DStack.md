@@ -1,4 +1,4 @@
-Name of Filter {#name_of_file_in_lower_case}
+Name of Filter {#importr3dstack}
 =====
 
 ## Group (Subgroup) ##

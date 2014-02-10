@@ -1,26 +1,30 @@
 /*
  * Your License or Copyright Information can go here
  */
-#include "R3DAnalytics.h"
+#include "R3DAnalyticsPlugin.h"
+
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
 
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "FilterWidgets/QFilterWidgetFactory.hpp"
 
-#include "moc_R3DAnalytics.cxx"
+#include "moc_R3DAnalyticsPlugin.cxx"
 
-Q_EXPORT_PLUGIN2(R3DAnalytics, R3DAnalytics)
+Q_EXPORT_PLUGIN2(R3DAnalyticsPlugin, R3DAnalyticsPlugin)
 
 namespace Detail
 {
-   const std::string R3DAnalyticsFile("R3DAnalytics");
-   const std::string R3DAnalyticsDisplayName("R3DAnalytics");
-   const std::string R3DAnalyticsBaseName("R3DAnalytics");
+   const std::string R3DAnalyticsPluginFile("R3DAnalyticsPlugin");
+   const std::string R3DAnalyticsPluginDisplayName("R3DAnalyticsPlugin");
+   const std::string R3DAnalyticsPluginBaseName("R3DAnalyticsPlugin");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-R3DAnalytics::R3DAnalytics()
+R3DAnalyticsPlugin::R3DAnalyticsPlugin()
 {
 
 }
@@ -28,22 +32,22 @@ R3DAnalytics::R3DAnalytics()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-R3DAnalytics::~R3DAnalytics()
+R3DAnalyticsPlugin::~R3DAnalyticsPlugin()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString R3DAnalytics::getPluginName()
+QString R3DAnalyticsPlugin::getPluginName()
 {
-  return QString::fromStdString(Detail::R3DAnalyticsDisplayName);
+  return QString::fromStdString(Detail::R3DAnalyticsPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DAnalytics::writeSettings(QSettings &prefs)
+void R3DAnalyticsPlugin::writeSettings(QSettings &prefs)
 {
 
 }
@@ -51,10 +55,10 @@ void R3DAnalytics::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void R3DAnalytics::readSettings(QSettings &prefs)
+void R3DAnalyticsPlugin::readSettings(QSettings &prefs)
 {
 
 }
 
 #include "R3DAnalyticsFilters/RegisterKnownFilterWidgets.cpp"
-
+#include "R3DAnalyticsFilters/RegisterKnownFilters.cpp"

@@ -11,20 +11,20 @@
 
 
 /**
- * @class R3DAnalytics R3DAnalytics.h SurfaceMeshing/R3DAnalytics.h
+ * @class R3DAnalyticsPlugin R3DAnalyticsPlugin.h SurfaceMeshing/R3DAnalyticsPlugin.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date May 10, 2012
  * @version 1.0
  */
-class R3DAnalytics : public QObject, public DREAM3DPluginInterface
+class R3DAnalyticsPlugin : public QObject, public DREAM3DPluginInterface
 {
     Q_OBJECT;
     Q_INTERFACES(DREAM3DPluginInterface)
 
   public:
-    R3DAnalytics();
-    virtual ~R3DAnalytics();
+    R3DAnalyticsPlugin();
+    virtual ~R3DAnalyticsPlugin();
     /**
      * @brief Returns the name of the plugin
      */
@@ -34,6 +34,11 @@ class R3DAnalytics : public QObject, public DREAM3DPluginInterface
      * @brief Register all the filters with the FilterWidgetFactory
      */
     virtual void registerFilterWidgets();
+
+    /**
+     * @brief registerFilters
+     */
+    virtual void registerFilters(FilterManager* fm);
 
     /**
      * @brief Writes the settings in the input gui to the Application's preference file
@@ -49,8 +54,8 @@ class R3DAnalytics : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings &prefs);
 
   private:
-    R3DAnalytics(const R3DAnalytics&); // Copy Constructor Not Implemented
-    void operator=(const R3DAnalytics&); // Operator '=' Not Implemented
+    R3DAnalyticsPlugin(const R3DAnalyticsPlugin&); // Copy Constructor Not Implemented
+    void operator=(const R3DAnalyticsPlugin&); // Operator '=' Not Implemented
 };
 
 #endif /* SURFACEMESHINGPLUGIN_H_ */

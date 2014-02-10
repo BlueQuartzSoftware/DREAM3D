@@ -111,10 +111,11 @@ QString QImportR3DStackWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QImportR3DStackWidget::getFilter()
+AbstractFilter::Pointer QImportR3DStackWidget::getFilter(bool defaultValues)
 {
   //bool ok = false;
   ImportR3DStack::Pointer filter =  ImportR3DStack::New();
+  if (defaultValues == true) { return filter; }
 
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());

@@ -74,7 +74,7 @@ class QImportR3DStackWidget : public QFilterWidget, private Ui::QImportR3DStackW
     QImportR3DStackWidget(QWidget *parent = 0);
     virtual ~QImportR3DStackWidget();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
