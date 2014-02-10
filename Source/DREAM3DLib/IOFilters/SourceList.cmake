@@ -51,7 +51,7 @@ set(_PublicFilters
   VtkGrainIdReader
   VtkRectilinearGridWriter
   YSChoiAbaqusReader
-
+GBCDTriangleDumper
 )
 
 
@@ -70,7 +70,7 @@ endforeach()
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
   GoldfeatherReader
-  GBCDTriangleDumper
+
   FileReader
   FileWriter
 

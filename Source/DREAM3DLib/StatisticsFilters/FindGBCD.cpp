@@ -593,7 +593,7 @@ void FindGBCD::execute()
   }
 
   std::ofstream outFile;
-  outFile.open("c:/Users/groebema/Desktop/Greg_GBCD.txt");
+  outFile.open("/tmp/GBCD_FROM_DREAM3D.txt");
 
   size_t bin;
   size_t n1 =  m_GBCDsizes[0];
