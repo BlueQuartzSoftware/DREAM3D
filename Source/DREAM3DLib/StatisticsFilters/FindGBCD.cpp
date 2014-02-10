@@ -629,7 +629,7 @@ void FindGBCD::execute()
             for(int e=0;e<m_GBCDsizes[4];e++)
             {
               bin = a + n1*b + n1n2*c + n1n2n3*d + n1n2n3n4*e;
-              outFile << bin << " " << m_GBCD[bin] << std::endl;
+              outFile << m_GBCD[bin] << std::endl;
             }
           }
         }
