@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "VisualizeGBCD.h"
+#include "VisualizeGBCDPoleFigure.h"
 
 
 #include <cmath>
@@ -51,20 +51,16 @@ const static float m_pi = static_cast<float>(M_PI);
 const static float m_pi2 = static_cast<float>(2.0*M_PI);
 const static float m_180Overpi = static_cast<float>(180.0/M_PI);
 
-#define WRITE_XYZ_POINTS 1
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VisualizeGBCD::VisualizeGBCD() :
+VisualizeGBCDPoleFigure::VisualizeGBCDPoleFigure() :
   SurfaceMeshFilter(),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_MisAngle(60.0f),
   m_OutputFile(""),
-  m_GMTOutputFile(""),
   m_CrystalStructure(1),
   m_CrystalStructures(NULL),
   m_GBCD(NULL)
@@ -80,14 +76,14 @@ VisualizeGBCD::VisualizeGBCD() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VisualizeGBCD::~VisualizeGBCD()
+VisualizeGBCDPoleFigure::~VisualizeGBCDPoleFigure()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::setupFilterParameters()
+void VisualizeGBCDPoleFigure::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
@@ -140,26 +136,13 @@ void VisualizeGBCD::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
-
-#if WRITE_XYZ_POINTS
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("GMT Output File");
-    option->setPropertyName("GMTOutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("*.dat");
-    option->setFileType("GMT File");
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-#endif
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void VisualizeGBCDPoleFigure::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -171,13 +154,12 @@ void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int VisualizeGBCDPoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("MisorientationAngle", getMisAngle() );
   writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("GMTOutputFile", getGMTOutputFile() );
   writer->writeValue("CrystalStructure", getCrystalStructure() );
       writer->closeFilterGroup();
     return ++index; // we want to return the next index that was just written to
@@ -186,7 +168,7 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VisualizeGBCDPoleFigure::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -199,15 +181,6 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
-#if WRITE_XYZ_POINTS
-  if(getGMTOutputFile().empty() == true)
-  {
-    ss.str("");
-    ss << ClassName() << " needs the GMT Data Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-387);
-  }
-#endif
 
   if(NULL == sm)
   {
@@ -251,7 +224,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::preflight()
+void VisualizeGBCDPoleFigure::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -261,7 +234,7 @@ void VisualizeGBCD::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::execute()
+void VisualizeGBCDPoleFigure::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -407,10 +380,6 @@ void VisualizeGBCD::execute()
   poleFigureArray->initializeWithValues(0);
   double* poleFigure = poleFigureArray->GetPointer(0);
 
-#if WRITE_XYZ_POINTS
-  std::vector<float> gmtValues;
-#endif
-
   for (int64_t k = 0; k < ypoints; k++)
   {
     for (int64_t l = 0; l < xpoints; l++)
@@ -426,17 +395,6 @@ void VisualizeGBCD::execute()
         vec[0] = x * (1 + vec[2]);
         vec[1] = y * (1 + vec[2]);
         MatrixMath::Multiply3x3with3x1(dgt, vec, vec2);
-
-#if WRITE_XYZ_POINTS
-        float lon = atan2(vec[1], vec[0]) * m_180Overpi;
-        if (lon < 0.0)
-        {
-          lon =lon + 360.0;
-        }
-        float lat = asin(vec[2]) * m_180Overpi;
-        gmtValues.push_back(lon);
-        gmtValues.push_back(lat);
-#endif
 
         // Loop over all the symetry operators in the given cystal symmetry
         for(int i=0; i<n_sym; i++)
@@ -511,40 +469,11 @@ void VisualizeGBCD::execute()
           }
         }
         poleFigure[(k*xpoints)+l] = sum/float(count);;
-#if WRITE_XYZ_POINTS
-        gmtValues.push_back(poleFigure[(k*xpoints)+l]);
-#endif
       }
     }
   }
 
   notifyStatusMessage(ss.str());
-#if WRITE_XYZ_POINTS
-
-  // Write the GMT file
-  if (verifyPathExists(getGMTOutputFile()) == true)
-  {
-    std::string parentPath = MXAFileInfo::parentPath(getGMTOutputFile());
-    std::string basename = MXAFileInfo::fileNameWithOutExtension(getGMTOutputFile());
-    std::string extension = MXAFileInfo::extension(getGMTOutputFile());
-    std::string path = parentPath + MXAFileInfo::Separator + basename + std::string("_gmt_1.") + extension;
-
-    ss.str("");
-    ss << "Writing GMT Output File '" << path << "'";
-    notifyStatusMessage(ss.str());
-
-    FILE* f = fopen(path.c_str(), "wb");
-    fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle * m_180Overpi);
-    size_t size = gmtValues.size()/3;
-
-    for(size_t i = 0; i < size; i++)
-    {
-      fprintf(f, "%f %f %f\n", gmtValues[3*i], gmtValues[3*i+1], gmtValues[3*i+2]);
-    }
-    fclose(f);
-  }
-#endif
-
 
   ss.str("");
   ss << "Generating data for VTK Polefigure File '" << getOutputFile() << "'";
@@ -613,7 +542,7 @@ void VisualizeGBCD::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VisualizeGBCD::verifyPathExists(const std::string &file)
+bool VisualizeGBCDPoleFigure::verifyPathExists(const std::string &file)
 {
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

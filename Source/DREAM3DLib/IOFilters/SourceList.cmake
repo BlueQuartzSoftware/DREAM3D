@@ -47,7 +47,8 @@ set(_PublicFilters
   SurfaceMeshToNonconformalVtk
   SurfaceMeshToStl
   SurfaceMeshToVtk
-  VisualizeGBCD
+  VisualizeGBCDGMT
+  VisualizeGBCDPoleFigure
   VtkGrainIdReader
   VtkRectilinearGridWriter
   YSChoiAbaqusReader
