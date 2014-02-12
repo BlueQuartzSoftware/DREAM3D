@@ -146,7 +146,7 @@ class StringDataArray : public IDataArray
       this->_ownsData = false;
     }
 
-     /**
+    /**
      * @brief Returns a void pointer pointing to the index of the array. NULL
      * pointers are entirely possible. No checks are performed to make sure
      * the index is with in the range of the internal data array.
@@ -155,15 +155,15 @@ class StringDataArray : public IDataArray
      */
     virtual void* GetVoidPointer ( size_t i)
     {
-        return static_cast<void*>( &(m_Array[i]));
+      return static_cast<void*>( &(m_Array[i]));
     }
 
-     /**
+    /**
      * @brief Returns the number of Tuples in the array.
      */
     virtual size_t GetNumberOfTuples ()
     {
-    return m_Array.size();
+      return m_Array.size();
     }
 
 
@@ -368,7 +368,7 @@ class StringDataArray : public IDataArray
      * @return
      */
     virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-                                    const std::string &groupPath, const std::string &labelb)
+                                   const std::string &groupPath, const std::string &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
@@ -417,8 +417,16 @@ class StringDataArray : public IDataArray
       return m_Array.at(i);
     }
 
+    /**
+     * @brief Returns a copy of the internal array
+     * @return
+     */
+    std::vector<std::string> getStringArray() {
+      return m_Array;
+    }
+
   protected:
-        /**
+    /**
      * @brief Protected Constructor
      * @param numElements The number of elements in the internal array.
      * @param takeOwnership Will the class clean up the memory. Default=true
@@ -427,21 +435,21 @@ class StringDataArray : public IDataArray
       _ownsData(ownsData)
     {
       m_Array.resize(numElements);
-    //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
+      //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
   private:
-      //  unsigned long long int MUD_FLAP_0;
+    //  unsigned long long int MUD_FLAP_0;
     std::vector<std::string> m_Array;
-  //  unsigned long long int MUD_FLAP_1;
+    //  unsigned long long int MUD_FLAP_1;
     //size_t Size;
-  //  unsigned long long int MUD_FLAP_4;
+    //  unsigned long long int MUD_FLAP_4;
     bool _ownsData;
-  //  unsigned long long int MUD_FLAP_2;
-  //  size_t MaxId;
- //   unsigned long long int MUD_FLAP_3;
+    //  unsigned long long int MUD_FLAP_2;
+    //  size_t MaxId;
+    //   unsigned long long int MUD_FLAP_3;
     std::string m_Name;
-  //  unsigned long long int MUD_FLAP_5;
+    //  unsigned long long int MUD_FLAP_5;
 
     StringDataArray(const StringDataArray&); //Not Implemented
     void operator=(const StringDataArray&); //Not Implemented
