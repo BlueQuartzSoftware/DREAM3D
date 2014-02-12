@@ -321,8 +321,8 @@ void VisualizeGBCDPoleFigure::execute()
   gbcdDeltas[0] = binsize;
   gbcdDeltas[1] = binsize2;
   gbcdDeltas[2] = binsize;
-  gbcdDeltas[3] = binsize;
-  gbcdDeltas[4] = binsize2;
+  gbcdDeltas[3] = binsize2;
+  gbcdDeltas[4] = binsize;
 
   float vec[3];
   float vec2[3];
