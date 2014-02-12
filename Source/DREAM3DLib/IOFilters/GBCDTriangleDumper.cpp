@@ -35,9 +35,16 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GBCDTriangleDumper.h"
 
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
+
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+
+
 
 const static float m_pi = static_cast<float>(M_PI);
 const static float m_pi2 = static_cast<float>(2*M_PI);
@@ -51,7 +58,9 @@ GBCDTriangleDumper::GBCDTriangleDumper() :
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_SurfaceMeshPhaseLabelsArrayName(DREAM3D::FaceData::SurfaceMeshPhaseLabels),
   m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
@@ -79,8 +88,8 @@ void GBCDTriangleDumper::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("*.ph");
-    option->setFileType("CMU Grain Growth");
+    option->setFileExtension("*.txt");
+    option->setFileType("CMU GBCD Triangles");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -117,13 +126,26 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
   setErrorCondition(0);
   std::stringstream ss;
 
-  if(getOutputFile().empty() == true)
+  if (getOutputFile().empty() == true)
+  {
+    ss <<  ": The output file must be set before executing this filter.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-1);
+  }
+
+  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  if (MXADir::exists(parentPath) == false)
   {
     ss.str("");
-    ss << ClassName() << " needs the Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-387);
+    ss <<  "The directory path for the output file does not exist but will be created during execution.";
+    addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
+
+  if (MXAFileInfo::extension(getOutputFile()).compare("") == 0)
+  {
+    setOutputFile(getOutputFile().append(".txt"));
+  }
+
 
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
@@ -150,8 +172,9 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
     else
     {
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
-          GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
-          GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshPhaseLabels, ss, -30, int32_t, Int32ArrayType, sm->getNumFaceTuples(), 2)
     }
 
   }
@@ -173,9 +196,9 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
   else
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-        //      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
-        //       typedef DataArray<unsigned int> XTalStructArrayType;
-        //   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+        // GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
+        typedef DataArray<unsigned int> XTalStructArrayType;
+    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 
@@ -215,6 +238,17 @@ void GBCDTriangleDumper::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  if(!MXADir::mkdir(parentPath, true))
+  {
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
+  }
 
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->GetNumberOfTuples();
@@ -226,6 +260,8 @@ void GBCDTriangleDumper::execute()
   size_t totalFields = m->getNumFieldTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();
 
+  dataCheckVoxel(false, 0, totalFields, totalEnsembles);
+
   FILE* f = fopen(getOutputFile().c_str(), "wb");
   if (NULL == f)
   {
@@ -234,16 +270,32 @@ void GBCDTriangleDumper::execute()
     return;
   }
 
+  UInt32ArrayType::Pointer xtalPtr = boost::dynamic_pointer_cast<UInt32ArrayType>(m->getEnsembleData(m_CrystalStructuresArrayName));
+
+  // Attempt to get the Material Name array if possible otherwise just use "Unknown" for everything
+  std::vector<std::string> matNames(xtalPtr->GetSize(), "Unkonwn");
+  StringDataArray::Pointer matNamesPtr = boost::dynamic_pointer_cast<StringDataArray>(m->getEnsembleData(DREAM3D::EnsembleData::MaterialName));
+  if(NULL != matNamesPtr.get() )
+  {
+    matNames = matNamesPtr->getStringArray();
+  }
   fprintf(f, "# Triangles Produced from DREAM3D version %s\n", DREAM3DLib::Version::Package().c_str() );
-  fprintf(f, "# Column 1-3:    right hand average orientation (phi1, PHI, phi2 in DEGREES)\n");
-  fprintf(f, "# Column 4-6:    left hand average orientation (phi1, PHI, phi2 in DEGREES)\n");
+  fprintf(f, "# This file is intended to be used by the GBCD codes to calculate the GBCD for this structure\n");
+  fprintf(f, "# Column 1-3:    right hand average orientation (phi1, PHI, phi2 in Radians)\n");
+  fprintf(f, "# Column 4-6:    left hand average orientation (phi1, PHI, phi2 in Radians)\n");
   fprintf(f, "# Column 7-9:    triangle normal\n");
   fprintf(f, "# Column 8:      surface area\n");
+  fprintf(f, "# Column 9,10:   Left hand Phase Id, Right hand Phase Id\n");
+  fprintf(f, "# Phase indexing starts at 1. Phase Zero is for Internal DREAM3D use only\n");
+  // Get a list of all the crystal structures
+  std::vector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsVector();
 
-  dataCheckVoxel(false, 0, totalFields, totalEnsembles);
-
-
-  float radToDeg = 180.0/M_PI;
+  size_t xtalCount = xtalPtr->GetSize();
+  // Start from 1 because the Zero slot is ALWAYS a dummy crystal structure
+  for(size_t i = 1; i < xtalCount; i++)
+  {
+    fprintf(f, "# Phase: %ld\n# Crystal Symmetry: %s\n# Material Name: %s \n", i, ops[m_CrystalStructures[i]]->getSymmetryName().c_str(), matNames[i].c_str() );
+  }
 
   int gid0 = 0; // Grain id 0
   int gid1 = 0; // Grain id 1
@@ -272,11 +324,9 @@ void GBCDTriangleDumper::execute()
     // Get the Triangle Normal
     tNorm = m_SurfaceMeshFaceNormals + (t * 3);
 
-    fprintf(f, "%0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f\n", euAng0[0]*radToDeg, euAng0[1]*radToDeg, euAng0[2]*radToDeg,
-        euAng1[0]*radToDeg, euAng1[1]*radToDeg, euAng1[2]*radToDeg,
-        tNorm[0], tNorm[1], tNorm[2], m_SurfaceMeshFaceAreas[t]);
-
-
+    fprintf(f, "%0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %d %d\n", euAng0[0], euAng0[1], euAng0[2],
+        euAng1[0], euAng1[1], euAng1[2],
+        tNorm[0], tNorm[1], tNorm[2], m_SurfaceMeshFaceAreas[t], m_SurfaceMeshPhaseLabels[t*2], m_SurfaceMeshPhaseLabels[t*2+1]);
   }
 
 

@@ -68,7 +68,9 @@ class DREAM3DLib_EXPORT GBCDTriangleDumper : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceAreasArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshPhaseLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
@@ -99,7 +101,7 @@ class DREAM3DLib_EXPORT GBCDTriangleDumper : public SurfaceMeshFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -138,7 +140,8 @@ class DREAM3DLib_EXPORT GBCDTriangleDumper : public SurfaceMeshFilter
     int32_t* m_SurfaceMeshFaceLabels;
     double* m_SurfaceMeshFaceNormals;
     float* m_FieldEulerAngles;
-
+    uint32_t* m_CrystalStructures;
+    int32_t* m_SurfaceMeshPhaseLabels;
 
     GBCDTriangleDumper(const GBCDTriangleDumper&); // Copy Constructor Not Implemented
     void operator=(const GBCDTriangleDumper&); // Operator '=' Not Implemented
