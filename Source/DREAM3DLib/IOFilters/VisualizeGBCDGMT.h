@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _VisualizeGBCD_H_
-#define _VisualizeGBCD_H_
+#ifndef _VisualizeGBCDGMT_H_
+#define _VisualizeGBCDGMT_H_
 
 #include <string>
 
@@ -53,26 +53,25 @@
 typedef float real;
 
 /**
- * @class VisualizeGBCD VisualizeGBCD.h DREAM3DLib/SurfaceMeshFilters/VisualizeGBCD.h
+ * @class VisualizeGBCDGMT VisualizeGBCDGMT.h DREAM3DLib/SurfaceMeshFilters/VisualizeGBCDGMT.h
  * @brief This filter calculates the centroid of each triangle in the surface mesh.
  * @author Michael A. Jackson (BlueQuartz Software)
  * @date Dec 12, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
+class DREAM3DLib_EXPORT VisualizeGBCDGMT : public SurfaceMeshFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VisualizeGBCD)
-    DREAM3D_STATIC_NEW_MACRO(VisualizeGBCD)
-    DREAM3D_TYPE_MACRO_SUPER(VisualizeGBCD, SurfaceMeshFilter)
+    DREAM3D_SHARED_POINTERS(VisualizeGBCDGMT)
+    DREAM3D_STATIC_NEW_MACRO(VisualizeGBCDGMT)
+    DREAM3D_TYPE_MACRO_SUPER(VisualizeGBCDGMT, SurfaceMeshFilter)
 
-    virtual ~VisualizeGBCD();
+    virtual ~VisualizeGBCDGMT();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
     DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, MisAxis)
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(GMTOutputFile)
     DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
 
@@ -89,7 +88,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Visualize GBCD"; }
+    virtual const std::string getHumanLabel() { return "Write GMT Visualization of GBCD"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -124,7 +123,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
 
 
   protected:
-    VisualizeGBCD();
+    VisualizeGBCDGMT();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -142,44 +141,9 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     unsigned int* m_CrystalStructures;
     double* m_GBCD;
 
-    /**
-     * @brief This function writes a set of Axis coordinates to that are needed
-     * for a Rectilinear Grid based data set.
-     * @param f The "C" FILE* pointer to the file being written to.
-     * @param axis The name of the Axis that is being written
-     * @param type The type of primitive being written (float, int, ...)
-     * @param npoints The total number of points in the array
-     * @param min The minimum value of the axis
-     * @param max The maximum value of the axis
-     * @param step The step value between each point on the axis.
-     */
 
-    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
-    {
-      int err = 0;
-      fprintf(f, "%s %lld %s\n", axis, npoints, type);
-      float* data = new float[npoints];
-      float d;
-      for (int idx = 0; idx < npoints; ++idx)
-      {
-        d = idx * step + min;
-        MXA::Endian::FromSystemToBig::convert<float>(d);
-        data[idx] = d;
-      }
-      size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
-      delete[] data;
-      if (totalWritten != static_cast<size_t>(npoints) )
-      {
-        std::cout << "Error Writing Binary VTK Data into file " << std::endl;
-        fclose(f);
-        return -1;
-      }
-      return err;
-    }
-
-
-    VisualizeGBCD(const VisualizeGBCD&); // Copy Constructor Not Implemented
-    void operator=(const VisualizeGBCD&); // Operator '=' Not Implemented
+    VisualizeGBCDGMT(const VisualizeGBCDGMT&); // Copy Constructor Not Implemented
+    void operator=(const VisualizeGBCDGMT&); // Operator '=' Not Implemented
 };
 
-#endif /* _VisualizeGBCD_H_ */
+#endif /* _VisualizeGBCDGMT_H_ */

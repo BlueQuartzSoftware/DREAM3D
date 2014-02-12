@@ -72,8 +72,9 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
     DREAM3D_INSTANCE_PROPERTY(float, GBCDRes)
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    DREAM3D_INSTANCE_STRING_PROPERTY(GBCDTextFile)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

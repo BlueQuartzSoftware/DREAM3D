@@ -33,65 +33,47 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef _LaplacianSmoothing_H_
-#define _LaplacianSmoothing_H_
+#ifndef _VisualizeGBCDPoleFigure_H_
+#define _VisualizeGBCDPoleFigure_H_
 
 #include <string>
+
+#include "MXA/Common/MXAEndian.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 
-#define OUTPUT_DEBUG_VTK_FILES 0
-
+typedef float real;
 
 /**
- * @class LaplacianSmoothing LaplacianSmoothing.h SurfaceMesh/Code/SurfaceMeshFilters/LaplacianSmoothing.h
- * @brief This filter performs a Laplacian smoothing operation on a surface mesh. Some of the options allow
- * the user to set specific lambda values for the various types of nodes that the surface meshers generate.
- * @author Michael Jackson (mike.jackson@bluequartz.net)
- * @date   Oct 2012
+ * @class VisualizeGBCDPoleFigure VisualizeGBCDPoleFigure.h DREAM3DLib/SurfaceMeshFilters/VisualizeGBCDPoleFigure.h
+ * @brief This filter calculates the centroid of each triangle in the surface mesh.
+ * @author Michael A. Jackson (BlueQuartz Software)
+ * @date Dec 12, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
+class DREAM3DLib_EXPORT VisualizeGBCDPoleFigure : public SurfaceMeshFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(LaplacianSmoothing)
-    DREAM3D_STATIC_NEW_MACRO(LaplacianSmoothing)
-    DREAM3D_TYPE_MACRO_SUPER(LaplacianSmoothing, SurfaceMeshFilter)
+    DREAM3D_SHARED_POINTERS(VisualizeGBCDPoleFigure)
+    DREAM3D_STATIC_NEW_MACRO(VisualizeGBCDPoleFigure)
+    DREAM3D_TYPE_MACRO_SUPER(VisualizeGBCDPoleFigure, SurfaceMeshFilter)
 
-    virtual ~LaplacianSmoothing();
+    virtual ~VisualizeGBCDPoleFigure();
 
-    // We need these arrays for this filter to work correctly
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-
-    #if OUTPUT_DEBUG_VTK_FILES
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VtkIterationOutputPath)
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputVTKPrefix)
-    DREAM3D_INSTANCE_PROPERTY(int, GrainId)
-    #endif
-
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
-    DREAM3D_INSTANCE_PROPERTY(float, Lambda)
-    DREAM3D_INSTANCE_PROPERTY(float, SurfacePointLambda)
-    DREAM3D_INSTANCE_PROPERTY(float, TripleLineLambda)
-    DREAM3D_INSTANCE_PROPERTY(float, QuadPointLambda)
-    DREAM3D_INSTANCE_PROPERTY(float, SurfaceTripleLineLambda)
-    DREAM3D_INSTANCE_PROPERTY(float, SurfaceQuadPointLambda)
-
-
-    /* This class is designed to be subclassed so that thoes subclasses can add
-     * more functionality such as constrained surface nodes or Triple Lines. We use
-     * this array to assign each vertex a specific Lambda value. Subclasses can set
-     * this array then simply call the 'smooth' protected method to actuall run the
-     * smoothing iterations
-     */
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(DataArray<float>::Pointer, LambdaArray)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
+    DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, MisAxis)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
 
 
     /**
@@ -99,14 +81,14 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-   virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Laplacian Smoothing"; }
+    virtual const std::string getHumanLabel() { return "Write VTK Pole Figure Visualization of GBCD"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -137,8 +119,11 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     */
     virtual void preflight();
 
+    bool verifyPathExists(const std::string &file);
+
+
   protected:
-    LaplacianSmoothing();
+    VisualizeGBCDPoleFigure();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -148,37 +133,52 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     * @param fields The number of fields
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
-    /**
-     * @brief This method generates the Lambda array that will be use during the smoothing
-     * @return
-     */
-    virtual int generateLambdaArray(DataArray<int8_t> *nodeTypePtr);
-
-    /**
-     * @brief This version of the smoothing algorithm uses Edge->Vertex connectivity information for its algorithm
-     * @return
-     */
-    virtual int edgeBasedSmoothing();
-
-    /**
-     * @brief vertexBasedSmoothing Uses the Vertex->Triangle connectivity information for its algorithm
-     * @return
-     */
-    virtual int vertexBasedSmoothing();
+    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    bool m_DoConnectivityFilter;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
-#if OUTPUT_DEBUG_VTK_FILES
-    void writeVTKFile(const std::string &outputVtkFile);
-    int32_t* m_SurfaceMeshFaceLabels;
-#endif
+    unsigned int* m_CrystalStructures;
+    double* m_GBCD;
+
+    /**
+     * @brief This function writes a set of Axis coordinates to that are needed
+     * for a Rectilinear Grid based data set.
+     * @param f The "C" FILE* pointer to the file being written to.
+     * @param axis The name of the Axis that is being written
+     * @param type The type of primitive being written (float, int, ...)
+     * @param npoints The total number of points in the array
+     * @param min The minimum value of the axis
+     * @param max The maximum value of the axis
+     * @param step The step value between each point on the axis.
+     */
+
+    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
+    {
+      int err = 0;
+      fprintf(f, "%s %lld %s\n", axis, npoints, type);
+      float* data = new float[npoints];
+      float d;
+      for (int idx = 0; idx < npoints; ++idx)
+      {
+        d = idx * step + min;
+        MXA::Endian::FromSystemToBig::convert<float>(d);
+        data[idx] = d;
+      }
+      size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
+      delete[] data;
+      if (totalWritten != static_cast<size_t>(npoints) )
+      {
+        std::cout << "Error Writing Binary VTK Data into file " << std::endl;
+        fclose(f);
+        return -1;
+      }
+      return err;
+    }
 
 
-    LaplacianSmoothing(const LaplacianSmoothing&); // Copy Constructor Not Implemented
-    void operator=(const LaplacianSmoothing&); // Operator '=' Not Implemented
+    VisualizeGBCDPoleFigure(const VisualizeGBCDPoleFigure&); // Copy Constructor Not Implemented
+    void operator=(const VisualizeGBCDPoleFigure&); // Operator '=' Not Implemented
 };
 
-#endif /* _LaplacianSmoothing_H_ */
+#endif /* _VisualizeGBCDPoleFigure_H_ */
