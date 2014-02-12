@@ -108,6 +108,9 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setOutputStlDirectory(reader->readValue("OutputStlDirectory", getOutputStlDirectory() ));
+  setOutputStlPrefix(reader->readValue("OutputStlPrefix", getOutputStlPrefix() ));
+  setGroupByPhase(reader->readValue("GroupByPhase", getGroupByPhase() ));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -117,7 +120,6 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(this, index);
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputStlDirectory", getOutputStlDirectory() );
   writer->writeValue("OutputStlPrefix", getOutputStlPrefix() );
@@ -159,7 +161,7 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, s
     std::stringstream ss;
     GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -30, int32_t, Int32ArrayType, sm->getNumFaceTuples(), 2)
 
-        if(m_GroupByPhase == true)
+    if(m_GroupByPhase == true)
     {
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshPhaseLabels, ss, -30, int32_t, Int32ArrayType, sm->getNumFaceTuples(), 2)
     }

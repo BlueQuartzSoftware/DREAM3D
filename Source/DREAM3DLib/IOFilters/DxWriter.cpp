@@ -132,7 +132,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   if (MXADir::exists(parentPath) == false)
   {
     ss.str("");
-    ss <<  "The directory path for the output file does not exist.";
+    ss <<  "The directory path for the output file does not exist but will be created during execution.";
     addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
 

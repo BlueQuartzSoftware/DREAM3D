@@ -127,7 +127,6 @@ void YSChoiAbaqusReader::readFilterParameters(AbstractFilterParametersReader* re
 int YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("InputGrainInfoFile", getInputGrainInfoFile() );
     writer->closeFilterGroup();
