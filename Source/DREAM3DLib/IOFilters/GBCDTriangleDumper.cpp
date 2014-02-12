@@ -37,13 +37,14 @@
 
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 GBCDTriangleDumper::GBCDTriangleDumper() :
-  SurfaceMeshFilter(),
+  AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
@@ -96,6 +97,7 @@ void GBCDTriangleDumper::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
+  setOutputFile(reader->readString("OutputFile", getOutputFile() ) );
 ////!!##
   reader->closeFilterGroup();
 }
@@ -215,6 +217,12 @@ void GBCDTriangleDumper::execute()
     notifyErrorMessage(getHumanLabel(), "Could not open Output file for writing.", getErrorCondition());
     return;
   }
+
+  fprintf(f, "# Triangles Produced from DREAM3D version %s\n", DREAM3DLib::Version::Package() );
+  fprintf(f, "# Column 1-3:    right hand average orientation (phi1, PHI, phi2 in DEGREES)\n");
+  fprintf(f, "# Column 4-6:    left hand average orientation (phi1, PHI, phi2 in DEGREES)\n");
+  fprintf(f, "# Column 7-9:    triangle normal\n");
+  fprintf(f, "# Column 8:      surface area\n");
 
   float radToDeg = 180.0 / M_PI;
 

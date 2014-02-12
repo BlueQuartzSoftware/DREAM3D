@@ -33,8 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "VisualizeGBCD.h"
-
+#include "VisualizeGBCDPoleFigure.h"
 
 #include <cmath>
 #include <algorithm>
@@ -47,17 +46,15 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VisualizeGBCD::VisualizeGBCD() :
-  SurfaceMeshFilter(),
+VisualizeGBCDPoleFigure::VisualizeGBCDPoleFigure() :
+  AbstractFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceEnsembleAttributeMatrixName(DREAM3D::Defaults::FaceEnsembleAttributeMatrixName),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_GMTOutputFile("C:/Users/groebema/Desktop/Data/GBCD_Greg/GregGBCD_gmt_1.dat"),
   m_MisAngle(60.0f),
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
@@ -77,14 +74,14 @@ VisualizeGBCD::VisualizeGBCD() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VisualizeGBCD::~VisualizeGBCD()
+VisualizeGBCDPoleFigure::~VisualizeGBCDPoleFigure()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::setupFilterParameters()
+void VisualizeGBCDPoleFigure::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
@@ -151,7 +148,7 @@ void VisualizeGBCD::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void VisualizeGBCDPoleFigure::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -168,7 +165,7 @@ void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int VisualizeGBCDPoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("MisorientationAngle", getMisAngle() );
@@ -183,7 +180,7 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::dataCheckSurfaceMesh()
+void VisualizeGBCDPoleFigure::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
 
@@ -245,7 +242,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::preflight()
+void VisualizeGBCDPoleFigure::preflight()
 {
   dataCheckSurfaceMesh();
 }
@@ -253,7 +250,7 @@ void VisualizeGBCD::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::execute()
+void VisualizeGBCDPoleFigure::execute()
 {
   int err = 0;
   setErrorCondition(err);
@@ -328,8 +325,8 @@ void VisualizeGBCD::execute()
   //get number of symmetry operators
   int n_sym = orientOps->getNumSymOps();
 
-  int xpoints = 200;
-  int ypoints = 200;
+  int xpoints = 50;
+  int ypoints = 50;
   int zpoints = 1;
   int xpointshalf = xpoints / 2;
   int ypointshalf = ypoints / 2;
@@ -377,6 +374,8 @@ void VisualizeGBCD::execute()
       count++;
     }
   }
+
+  float lon, lat;
 
   for(int q = 0; q < 2; q++)
   {
@@ -479,6 +478,15 @@ void VisualizeGBCD::execute()
                   interpolatedIntensity = ((intensity1 * (1 - modX) * (1 - modY)) + (intensity2 * (modX) * (1 - modY)) + (intensity3 * (1 - modX) * (modY)) + (intensity4 * (modX) * (modY)));
                   poleFigure[(l * xpoints) + k] += interpolatedIntensity;
                   poleFigureCounts[(l * xpoints) + k] += 1.0;
+                  lon = atan2(rotNormal[1], rotNormal[0]) * 180.0/M_PI;
+                  if (lon < 0.0)
+                  {
+                    lon =lon + 360.0;
+                  }
+                  lat = asin(rotNormal[2]) * 180/M_PI;
+                  gmtValues.push_back(lon);
+                  gmtValues.push_back(lat);
+                  gmtValues.push_back(interpolatedIntensity);
                 }
               }
               count++;
@@ -574,7 +582,32 @@ void VisualizeGBCD::execute()
     fclose(f);
   }
 
+  writeGMTFile();
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+void VisualizeGBCDPoleFigure::writeGMTFile()
+{
+  QFileInfo fi(getGMTOutputFile());
+  QDir parentPath = fi.path();
+
+  FILE* f = NULL;
+  f = fopen(m_GMTOutputFile.toLatin1().data(), "wb");
+  if(NULL == f)
+  {
+    QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle * 180/M_PI);
+  size_t size = gmtValues.size()/3;
+
+  for(size_t i = 0; i < size; i++)
+  {
+    fprintf(f, "%f %f %f\n", gmtValues[3*i], gmtValues[3*i+1], gmtValues[3*i+2]);
+  }
+  fclose(f);
+}

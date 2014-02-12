@@ -30,6 +30,7 @@ set(_PublicFilters
   EnsembleInfoReader
   FeatureDataCSVWriter
   FeatureInfoReader
+  GBCDTriangleDumper
   INLWriter
   LosAlamosFFTWriter
   NodesTrianglesToStl
@@ -46,6 +47,8 @@ set(_PublicFilters
   SurfaceMeshToStl
   SurfaceMeshToVtk
   VASPReader
+  VisualizeGBCDGMT
+  VisualizeGBCDPoleFigure
   VtkFeatureIdReader
   VtkRectilinearGridWriter
   YSChoiAbaqusReader

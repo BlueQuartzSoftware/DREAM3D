@@ -33,48 +33,55 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _GBCDTriangleDumper_H_
-#define _GBCDTriangleDumper_H_
+#ifndef _VisualizeGBCDPoleFigure_H_
+#define _VisualizeGBCDPoleFigure_H_
 
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+
+
+typedef float real;
 
 /**
- * @class GBCDTriangleDumper GBCDTriangleDumper.h DREAM3DLib/SurfaceMeshFilters/GBCDTriangleDumper.h
+ * @class VisualizeGBCDPoleFigure VisualizeGBCDPoleFigure.h DREAM3DLib/SurfaceMeshFilters/VisualizeGBCDPoleFigure.h
  * @brief This filter calculates the centroid of each triangle in the surface mesh.
  * @author Michael A. Jackson (BlueQuartz Software)
  * @date Dec 12, 2012
  * @version 1.0
  */
-class GBCDTriangleDumper : public SurfaceMeshFilter
+class VisualizeGBCDPoleFigure : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GBCDTriangleDumper)
-    DREAM3D_STATIC_NEW_MACRO(GBCDTriangleDumper)
-    DREAM3D_TYPE_MACRO_SUPER(GBCDTriangleDumper, SurfaceMeshFilter)
+    DREAM3D_SHARED_POINTERS(VisualizeGBCDPoleFigure)
+    DREAM3D_STATIC_NEW_MACRO(VisualizeGBCDPoleFigure)
+    DREAM3D_TYPE_MACRO_SUPER(VisualizeGBCDPoleFigure, AbstractFilter)
 
-    virtual ~GBCDTriangleDumper();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+    virtual ~VisualizeGBCDPoleFigure();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceEnsembleAttributeMatrixName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_FILTER_PARAMETER(float, MisAngle)
+    Q_PROPERTY(float MisAngle READ getMisAngle WRITE setMisAngle NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, MisAxis)
+    Q_PROPERTY(FloatVec3_t MisAxis READ getMisAxis WRITE setMisAxis NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(unsigned int, CrystalStructure)
+    Q_PROPERTY(unsigned int CrystalStructure READ getCrystalStructure WRITE setCrystalStructure NOTIFY parametersChanged)
 
-
-
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-
+    // Local Instance variables
+    DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -82,13 +89,13 @@ class GBCDTriangleDumper : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Write GBCD Triangles File"; }
+    virtual const QString getHumanLabel() { return "Visualize GBCD"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -119,15 +126,13 @@ class GBCDTriangleDumper : public SurfaceMeshFilter
     */
     virtual void preflight();
 
-    int GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc);
-
   signals:
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
 
   protected:
-    GBCDTriangleDumper();
+    VisualizeGBCDPoleFigure();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -138,20 +143,56 @@ class GBCDTriangleDumper : public SurfaceMeshFilter
     * @param ensembles The number of ensembles
     */
     void dataCheckSurfaceMesh();
-    void dataCheckVoxel();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceAreas)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceNormals)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
+    QVector<OrientationOps::Pointer> m_OrientationOps;
+
+    QVector<float> gmtValues;
+
+    unsigned int* m_CrystalStructures;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(double, GBCD)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GBCDdimensions)
+
+    /**
+     * @brief This function writes a set of Axis coordinates to that are needed
+     * for a Rectilinear Grid based data set.
+     * @param f The "C" FILE* pointer to the file being written to.
+     * @param axis The name of the Axis that is being written
+     * @param type The type of primitive being written (float, int, ...)
+     * @param npoints The total number of points in the array
+     * @param min The minimum value of the axis
+     * @param max The maximum value of the axis
+     * @param step The step value between each point on the axis.
+     */
+
+    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
+    {
+      int err = 0;
+      fprintf(f, "%s %lld %s\n", axis, npoints, type);
+      float* data = new float[npoints];
+      float d;
+      for (int idx = 0; idx < npoints; ++idx)
+      {
+        d = idx * step + min;
+        DREAM3D::Endian::FromSystemToBig::convert(d);
+        data[idx] = d;
+      }
+      size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
+      delete[] data;
+      if (totalWritten != static_cast<size_t>(npoints) )
+      {
+        qDebug() << "Error Writing Binary VTK Data into file " ;
+        fclose(f);
+        return -1;
+      }
+      return err;
+    }
 
 
-    GBCDTriangleDumper(const GBCDTriangleDumper&); // Copy Constructor Not Implemented
-    void operator=(const GBCDTriangleDumper&); // Operator '=' Not Implemented
+    VisualizeGBCDPoleFigure(const VisualizeGBCDPoleFigure&); // Copy Constructor Not Implemented
+    void operator=(const VisualizeGBCDPoleFigure&); // Operator '=' Not Implemented
 };
 
-#endif /* _GBCDTriangleDumper_H_ */
-
+#endif /* _VisualizeGBCDPoleFigure_H_ */
 
 

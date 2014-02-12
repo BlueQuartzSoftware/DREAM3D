@@ -12,7 +12,6 @@ START_FILTER_GROUP(${SurfaceMeshing_BINARY_DIR} "${_filterGroupName}" "Surface M
 
 set(_PublicFilters
   FindGBCD
-  GBCDTriangleDumper
   GenerateSurfaceMeshConnectivity
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
@@ -27,7 +26,6 @@ set(_PublicFilters
   TriangleDihedralAngleFilter
   TriangleNormalFilter
   VerifyTriangleWinding
-  VisualizeGBCD
 )
 
 if(EIGEN_FOUND)

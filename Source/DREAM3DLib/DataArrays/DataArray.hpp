@@ -995,6 +995,11 @@ class DataArray : public IDataArray
         out << "AttributeType=\"Scalar\" ";
         dimStr = QString("%1 %2 %3 ").arg(volDims[2]).arg(volDims[1]).arg(volDims[0]);
       }
+      else if( numComp == 9)
+      {
+        out << "AttributeType=\"Tensor\" ";
+        dimStr = QString("%1 %2 %3 %4 ").arg(volDims[2]).arg(volDims[1]).arg(volDims[0]).arg(numComp);
+      }
       else
       {
         out << "AttributeType=\"Vector\" ";
