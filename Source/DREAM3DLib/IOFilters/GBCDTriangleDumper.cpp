@@ -37,6 +37,7 @@
 
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 const static float m_pi2 = static_cast<float>(2*M_PI);
@@ -93,9 +94,7 @@ void GBCDTriangleDumper::setupFilterParameters()
 void GBCDTriangleDumper::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  setOutputFile(reader->readValue("OutputFile", getOutputFile() ) );
   reader->closeFilterGroup();
 }
 
@@ -105,12 +104,9 @@ void GBCDTriangleDumper::readFilterParameters(AbstractFilterParametersReader* re
 int GBCDTriangleDumper::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-   writer->openFilterGroup(this, index);
-    writer->writeValue("OutputFile", getOutputFile() );
-      writer->closeFilterGroup();
-    return ++index; // we want to return the next index that was just written to
+  writer->writeValue("OutputFile", getOutputFile() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -154,8 +150,8 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
     else
     {
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
+          GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
+          GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
     }
 
   }
@@ -177,9 +173,9 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
   else
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-  //      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
- //       typedef DataArray<unsigned int> XTalStructArrayType;
- //   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+        //      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
+        //       typedef DataArray<unsigned int> XTalStructArrayType;
+        //   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 
@@ -238,6 +234,12 @@ void GBCDTriangleDumper::execute()
     return;
   }
 
+  fprintf(f, "# Triangles Produced from DREAM3D version %s\n", DREAM3DLib::Version::Package().c_str() );
+  fprintf(f, "# Column 1-3:    right hand average orientation (phi1, PHI, phi2 in DEGREES)\n");
+  fprintf(f, "# Column 4-6:    left hand average orientation (phi1, PHI, phi2 in DEGREES)\n");
+  fprintf(f, "# Column 7-9:    triangle normal\n");
+  fprintf(f, "# Column 8:      surface area\n");
+
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
 
@@ -271,8 +273,8 @@ void GBCDTriangleDumper::execute()
     tNorm = m_SurfaceMeshFaceNormals + (t * 3);
 
     fprintf(f, "%0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f\n", euAng0[0]*radToDeg, euAng0[1]*radToDeg, euAng0[2]*radToDeg,
-    euAng1[0]*radToDeg, euAng1[1]*radToDeg, euAng1[2]*radToDeg,
-    tNorm[0], tNorm[1], tNorm[2], m_SurfaceMeshFaceAreas[t]);
+        euAng1[0]*radToDeg, euAng1[1]*radToDeg, euAng1[2]*radToDeg,
+        tNorm[0], tNorm[1], tNorm[2], m_SurfaceMeshFaceAreas[t]);
 
 
   }

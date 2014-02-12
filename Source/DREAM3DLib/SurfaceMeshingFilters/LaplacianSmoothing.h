@@ -45,7 +45,7 @@
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 
-#define OUTPUT_DEBUG_VTK_FILES 1
+#define OUTPUT_DEBUG_VTK_FILES 0
 
 
 /**
