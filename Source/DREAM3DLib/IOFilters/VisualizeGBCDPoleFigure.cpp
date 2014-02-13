@@ -63,9 +63,7 @@ VisualizeGBCDPoleFigure::VisualizeGBCDPoleFigure() :
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
-  m_GBCD(NULL),
-  m_GBCDdimensionsArrayName(DREAM3D::EnsembleData::GBCDdimensions),
-  m_GBCDdimensions(NULL)
+  m_GBCD(NULL)
 {
   m_MisAxis.x = 1;
   m_MisAxis.y = 1;
@@ -97,15 +95,15 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
     QVector<QString> choices;
     choices.push_back("Hexagonal-High 6/mmm");
     choices.push_back("Cubic-High m-3m");
-    choices.push_back("Hexagonal-Low 6/m");
-    choices.push_back("Cubic-Low m-3 (Tetrahedral)");
-    choices.push_back("TriClinic -1");
-    choices.push_back("Monoclinic 2/m");
-    choices.push_back("OrthoRhombic mmm");
-    choices.push_back("Tetragonal-Low 4/m");
-    choices.push_back("Tetragonal-High 4/mmm");
-    choices.push_back("Trigonal-Low -3");
-    choices.push_back("Trigonal-High -3m");
+    //choices.push_back("Hexagonal-Low 6/m");
+    //choices.push_back("Cubic-Low m-3 (Tetrahedral)");
+    //choices.push_back("TriClinic -1");
+    //choices.push_back("Monoclinic 2/m");
+    //choices.push_back("OrthoRhombic mmm");
+    //choices.push_back("Tetragonal-Low 4/m");
+    //choices.push_back("Tetragonal-High 4/mmm");
+    //choices.push_back("Trigonal-Low -3");
+    //choices.push_back("Trigonal-High -3m");
     option->setChoices(choices);
     parameters.push_back(option);
   }
@@ -234,7 +232,8 @@ void VisualizeGBCDPoleFigure::dataCheckSurfaceMesh()
   }
   else
   {
-    IDataArray::Pointer iDataArray = sm->getAttributeMatrix(getFaceEnsembleAttributeMatrixName())->getAttributeArray(DREAM3D::EnsembleData::GBCD);
+    //pull down GBCD as iData to get the component dimensions.
+    IDataArray::Pointer iDataArray = sm->getAttributeMatrix(getFaceEnsembleAttributeMatrixName())->getAttributeArray(m_GBCDArrayName);
     if (NULL == iDataArray.get())
     {
       setErrorCondition(-387);
@@ -242,12 +241,9 @@ void VisualizeGBCDPoleFigure::dataCheckSurfaceMesh()
     }
     else
     {
-      QVector<size_t> dims(1, 5);
-      m_GBCDdimensionsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_GBCDdimensionsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_GBCDdimensionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_GBCDdimensions = m_GBCDdimensionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-      int numComp = iDataArray->getNumberOfComponents();
-      dims[0] = numComp;
+      //get the component dimensions to use to pull down the GBCD array normally (not sure if this is all really necessary)
+      QVector<size_t> dims = iDataArray->getComponentDimensions();
+      iDataArray->NullPointer();
       m_GBCDPtr = attrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_GBCDArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -335,13 +331,13 @@ void VisualizeGBCDPoleFigure::execute()
   gbcdLimits[0] = 0.0;
   gbcdLimits[1] = 0.0;
   gbcdLimits[2] = 0.0;
-  gbcdLimits[3] = 0.0;
-  gbcdLimits[4] = 0.0;
+  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
+  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
   gbcdLimits[5] = m_pi/2.0;
   gbcdLimits[6] = 1.0;
   gbcdLimits[7] = m_pi/2.0;
-  gbcdLimits[8] = 1.0;
-  gbcdLimits[9] = 2.0*m_pi;
+  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
+  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
 
   //get num components of GBCD
   QVector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
@@ -352,20 +348,17 @@ void VisualizeGBCDPoleFigure::execute()
   gbcdSizes[3] = cDims[3];
   gbcdSizes[4] = cDims[4];
 
-  float binsize = gbcdLimits[5]/float(gbcdSizes[0]);
-  float binsize2 = binsize*(2.0/m_pi);
-  gbcdDeltas[0] = binsize;
-  gbcdDeltas[1] = binsize2;
-  gbcdDeltas[2] = binsize;
-  gbcdDeltas[3] = binsize2;
-  gbcdDeltas[4] = binsize;
+  gbcdDeltas[0] = (gbcdLimits[5]-gbcdLimits[0])/float(gbcdSizes[0]);
+  gbcdDeltas[1] = (gbcdLimits[6]-gbcdLimits[1])/float(gbcdSizes[1]);
+  gbcdDeltas[2] = (gbcdLimits[7]-gbcdLimits[2])/float(gbcdSizes[2]);
+  gbcdDeltas[3] = (gbcdLimits[8]-gbcdLimits[3])/float(gbcdSizes[3]);
+  gbcdDeltas[4] = (gbcdLimits[9]-gbcdLimits[4])/float(gbcdSizes[4]);
 
   float vec[3];
   float vec2[3];
   float rotNormal[3];
   float rotNormal2[3];
-  float rotNormal_sc[2];
-  float rotNormal2_sc[2];
+  float sqCoord[2];
   float dg[3][3];
   float dgOrig[3][3];
   float dgt[3][3];
@@ -405,6 +398,8 @@ void VisualizeGBCDPoleFigure::execute()
   int xbin, ybin;
   float sum = 0;
   int count = 0;
+  bool nhCheck;
+  int hemisphere;
 
   int shift1 = gbcdSizes[0];
   int shift2 = gbcdSizes[0]*gbcdSizes[1];
@@ -457,18 +452,18 @@ void VisualizeGBCDPoleFigure::execute()
               int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
               //find symmetric poles using the first symmetry operator
               MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
-              if(rotNormal[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal, -1);
-              //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
-              rotNormal_sc[0] = atan2f(rotNormal[1], rotNormal[0]);
-              if (rotNormal_sc[0] < 0) rotNormal_sc[0] += m_pi2;
-              rotNormal_sc[1] = rotNormal[2];
+//              if(rotNormal[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal, -1);
+              //get coordinates in square projection of crystal normal parallel to boundary normal
+              nhCheck = getSquareCoord(rotNormal, sqCoord);
               //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
-              int location4 = int((rotNormal_sc[1]-gbcdLimits[3])/gbcdDeltas[3]);
-              int location5 = int((rotNormal_sc[0]-gbcdLimits[4])/gbcdDeltas[4]);
+              int location4 = int((sqCoord[0]-gbcdLimits[3])/gbcdDeltas[3]);
+              int location5 = int((sqCoord[1]-gbcdLimits[4])/gbcdDeltas[4]);
               if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
                 location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
               {
-                sum += m_GBCD[(location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1];
+                hemisphere = 0;
+                if(nhCheck == false) hemisphere = 1;
+                sum += m_GBCD[2*((location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1) + hemisphere];
                 count++;
               }
             }
@@ -488,18 +483,18 @@ void VisualizeGBCDPoleFigure::execute()
               int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
               //find symmetric poles using the first symmetry operator
               MatrixMath::Multiply3x3with3x1(sym1, vec2, rotNormal2);
-              if(rotNormal2[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal2, -1);
-              //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
-              rotNormal2_sc[0] = atan2f(rotNormal2[1], rotNormal2[0]);
-              if (rotNormal2_sc[0] < 0) rotNormal2_sc[0] += m_pi2;
-              rotNormal2_sc[1] = rotNormal2[2];
+//              if(rotNormal2[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal2, -1);
+              //get coordinates in square projection of crystal normal parallel to boundary normal
+              nhCheck = getSquareCoord(rotNormal2, sqCoord);
               //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
-              int location4 = int((rotNormal2_sc[1]-gbcdLimits[3])/gbcdDeltas[3]);
-              int location5 = int((rotNormal2_sc[0]-gbcdLimits[4])/gbcdDeltas[4]);
+              int location4 = int((sqCoord[0]-gbcdLimits[3])/gbcdDeltas[3]);
+              int location5 = int((sqCoord[1]-gbcdLimits[4])/gbcdDeltas[4]);
               if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
                 location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
               {
-                sum += m_GBCD[(location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1];
+                hemisphere = 0;
+                if(nhCheck == false) hemisphere = 1;
+                sum += m_GBCD[2*((location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1) + hemisphere];
                 count++;
               }
             }
@@ -564,4 +559,26 @@ void VisualizeGBCDPoleFigure::execute()
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+bool VisualizeGBCDPoleFigure::getSquareCoord(float* xstl1_norm1, float* sqCoord)
+{
+  bool nhCheck = false;
+  float adjust = 1.0;
+  if(xstl1_norm1[2] >= 0.0)
+  {
+    adjust = -1.0;
+    nhCheck = true;
+  }
+  if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
+  {
+    sqCoord[0] = (xstl1_norm1[0] / fabs(xstl1_norm1[0])) * sqrt(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0);
+    sqCoord[1] = (xstl1_norm1[0] / fabs(xstl1_norm1[0])) * sqrt(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * ((2.0 / DREAM3D::Constants::k_SqrtPi) * atan(xstl1_norm1[1] / xstl1_norm1[0]));
+  }
+  else
+  {
+    sqCoord[0] = (xstl1_norm1[1] / fabs(xstl1_norm1[1])) * sqrt(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * ((2.0 / DREAM3D::Constants::k_SqrtPi) * atan(xstl1_norm1[0] / xstl1_norm1[1]));
+    sqCoord[1] = (xstl1_norm1[1] / fabs(xstl1_norm1[1])) * sqrt(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0);
+  }
+  return nhCheck;
 }

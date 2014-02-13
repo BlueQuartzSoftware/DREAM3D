@@ -219,8 +219,8 @@ void GBCDTriangleDumper::execute()
   }
 
   fprintf(f, "# Triangles Produced from DREAM3D version %s\n", DREAM3DLib::Version::Package() );
-  fprintf(f, "# Column 1-3:    right hand average orientation (phi1, PHI, phi2 in DEGREES)\n");
-  fprintf(f, "# Column 4-6:    left hand average orientation (phi1, PHI, phi2 in DEGREES)\n");
+  fprintf(f, "# Column 1-3:    right hand average orientation (phi1, PHI, phi2 in RADIANS)\n");
+  fprintf(f, "# Column 4-6:    left hand average orientation (phi1, PHI, phi2 in RADIANS)\n");
   fprintf(f, "# Column 7-9:    triangle normal\n");
   fprintf(f, "# Column 8:      surface area\n");
 
@@ -253,11 +253,8 @@ void GBCDTriangleDumper::execute()
     // Get the Triangle Normal
     tNorm = m_SurfaceMeshFaceNormals + (t * 3);
 
-    fprintf(f, "%0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f\n", euAng0[0]*radToDeg, euAng0[1]*radToDeg, euAng0[2]*radToDeg,
-            euAng1[0]*radToDeg, euAng1[1]*radToDeg, euAng1[2]*radToDeg,
-            tNorm[0], tNorm[1], tNorm[2], m_SurfaceMeshFaceAreas[t]);
-
-
+    fprintf(f, "%0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f %0.4f\n", euAng0[0], euAng0[1], euAng0[2],
+            euAng1[0], euAng1[1], euAng1[2], tNorm[0], tNorm[1], tNorm[2], m_SurfaceMeshFaceAreas[t]);
   }
 
   fclose(f);

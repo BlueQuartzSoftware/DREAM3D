@@ -144,14 +144,13 @@ class VisualizeGBCDPoleFigure : public AbstractFilter
     */
     void dataCheckSurfaceMesh();
 
+    bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
+
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    QVector<float> gmtValues;
-
     unsigned int* m_CrystalStructures;
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, GBCD)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GBCDdimensions)
 
     /**
      * @brief This function writes a set of Axis coordinates to that are needed

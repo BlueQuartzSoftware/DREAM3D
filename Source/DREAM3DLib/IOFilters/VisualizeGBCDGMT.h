@@ -144,6 +144,8 @@ class VisualizeGBCDGMT : public AbstractFilter
     */
     void dataCheckSurfaceMesh();
 
+    bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
+
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
@@ -151,7 +153,6 @@ class VisualizeGBCDGMT : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, GBCD)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GBCDdimensions)
 
     VisualizeGBCDGMT(const VisualizeGBCDGMT&); // Copy Constructor Not Implemented
     void operator=(const VisualizeGBCDGMT&); // Operator '=' Not Implemented

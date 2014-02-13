@@ -143,6 +143,8 @@ class FindGBCD : public SurfaceMeshFilter
     void dataCheckSurfaceMesh();
     void dataCheckVoxel();
 
+    void sizeGBCD(int faceChunkSize, int numMisoReps);
+
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceAreas)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
@@ -151,13 +153,20 @@ class FindGBCD : public SurfaceMeshFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, GBCD)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GBCDdimensions)
+
+    FloatArrayType::Pointer gbcdDeltasArray;
+    FloatArrayType::Pointer gbcdLimitsArray;
+    Int32ArrayType::Pointer gbcdSizesArray;
+    Int32ArrayType::Pointer gbcdBinsArray;
+    BoolArrayType::Pointer gbcdHemiCheckArray;
+    float* m_GBCDdeltas;
+    int32_t* m_GBCDsizes;
+    float* m_GBCDlimits;
+    int32_t* m_Bins;
+    bool* m_HemiCheck;
 
     FindGBCD(const FindGBCD&); // Copy Constructor Not Implemented
     void operator=(const FindGBCD&); // Operator '=' Not Implemented
 };
 
 #endif /* _FindGBCD_H_ */
-
-
-
