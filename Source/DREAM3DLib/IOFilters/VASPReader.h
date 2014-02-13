@@ -91,6 +91,7 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     virtual void execute();
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

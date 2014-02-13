@@ -183,7 +183,10 @@ void AlignSectionsFeatureCentroid::dataCheck()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

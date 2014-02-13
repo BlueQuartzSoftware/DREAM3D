@@ -180,7 +180,10 @@ void OpenCloseBadData::dataCheck()
 // -----------------------------------------------------------------------------
 void OpenCloseBadData::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

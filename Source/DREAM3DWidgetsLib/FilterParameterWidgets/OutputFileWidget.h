@@ -82,13 +82,16 @@ class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::Ou
 
 
   public slots:
-    void on_value_textChanged(const QString& text);
+    void widgetChanged(const QString& msg);
+    void filterNeedsInputParameters(AbstractFilter* filter);
+
     void on_value_returnPressed();
 
     void on_selectBtn_clicked();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
 
 

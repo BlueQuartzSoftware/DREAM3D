@@ -19,6 +19,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       AxisAngleWidget
       ArraySelectionWidget
       SingleArraySelectionWidget
+      DataContainerArrayProxyWidget
 #      VolumeVertexArrayNameSelectionWidget
 #      VolumeEdgeArrayNameSelectionWidget
 #      VolumeFaceArrayNameSelectionWidget

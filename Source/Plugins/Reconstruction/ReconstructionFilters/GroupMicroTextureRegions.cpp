@@ -244,7 +244,10 @@ void GroupMicroTextureRegions::dataCheck()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

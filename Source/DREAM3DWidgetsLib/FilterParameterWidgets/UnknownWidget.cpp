@@ -73,7 +73,16 @@ void UnknownWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UnknownWidget::parametersChanged(const QString& text)
+void UnknownWidget::widgetChanged(const QString &text)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void UnknownWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
 
 }
+

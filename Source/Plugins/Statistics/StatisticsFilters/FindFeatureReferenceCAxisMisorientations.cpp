@@ -150,7 +150,10 @@ void FindFeatureReferenceCAxisMisorientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceCAxisMisorientations::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

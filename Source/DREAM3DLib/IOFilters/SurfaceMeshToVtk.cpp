@@ -172,7 +172,10 @@ void SurfaceMeshToVtk::dataCheck()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToVtk::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 /**

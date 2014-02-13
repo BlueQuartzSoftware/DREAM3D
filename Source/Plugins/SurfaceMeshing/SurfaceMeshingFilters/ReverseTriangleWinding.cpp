@@ -175,7 +175,10 @@ void ReverseTriangleWinding::dataCheck()
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

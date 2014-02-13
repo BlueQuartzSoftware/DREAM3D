@@ -119,7 +119,10 @@ void FindFeaturePhases::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeaturePhases::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

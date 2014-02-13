@@ -290,7 +290,10 @@ void ReadOrientationData::dataCheck()
 // -----------------------------------------------------------------------------
 void ReadOrientationData::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

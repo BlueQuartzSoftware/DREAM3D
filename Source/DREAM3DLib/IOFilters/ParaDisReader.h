@@ -93,6 +93,7 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     virtual void execute();
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

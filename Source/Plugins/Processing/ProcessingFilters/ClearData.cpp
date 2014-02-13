@@ -235,7 +235,10 @@ void ClearData::dataCheck()
 // -----------------------------------------------------------------------------
 void ClearData::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

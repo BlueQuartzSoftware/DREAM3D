@@ -181,6 +181,8 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
       verticalLayout->addWidget(w);
 
       // Connect any errors/warnings that the widget may create to the Issues Tab
+      connect(w, SIGNAL(parametersChanged() ),
+              parent(), SLOT(preflightPipeline() ) );
     }
 
     QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);

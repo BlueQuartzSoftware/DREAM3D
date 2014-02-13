@@ -121,9 +121,11 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
+
 
   protected:
     DataContainerReader();

@@ -64,6 +64,17 @@ StringWidget::~StringWidget()
 // -----------------------------------------------------------------------------
 void StringWidget::setupGui()
 {
+  connect(value, SIGNAL(textChanged(const QString&)),
+          this, SLOT(widgetChanged(const QString&)));
+
+    connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight()));
+
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()));
+
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   blockSignals(true);
   if (m_FilterParameter != NULL)
@@ -80,25 +91,44 @@ void StringWidget::setupGui()
 // -----------------------------------------------------------------------------
 void StringWidget::on_value_returnPressed()
 {
-  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, value->text());
+  qDebug() << "StringWidget::on_value_returnPressed() " << this;
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StringWidget::widgetChanged(const QString &text)
+{
+//  qDebug() << "StringWidget::widgetChanged(const QString &text)";
+//  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StringWidget::beforePreflight()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StringWidget::afterPreflight()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StringWidget::filterNeedsInputParameters(AbstractFilter* filter)
+{
+  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, value->text());
   if (false == ok)
   {
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StringWidget::on_value_textChanged(const QString& text)
-{
-//  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
-//  if (false == ok)
-//  {
-//    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-//    emit errorSettingFilterParameter(ss);
-//  }
-
-}
-

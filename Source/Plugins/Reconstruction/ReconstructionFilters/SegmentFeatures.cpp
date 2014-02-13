@@ -110,7 +110,10 @@ void SegmentFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void SegmentFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

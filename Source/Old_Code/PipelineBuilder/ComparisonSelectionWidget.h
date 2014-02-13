@@ -123,6 +123,7 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
     QVector<ComparisonInput_t> getComparisonInputs();
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

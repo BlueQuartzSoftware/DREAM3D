@@ -185,7 +185,10 @@ void FindFeatureReferenceMisorientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceMisorientations::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -198,7 +198,10 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNodesTrianglesEdges::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

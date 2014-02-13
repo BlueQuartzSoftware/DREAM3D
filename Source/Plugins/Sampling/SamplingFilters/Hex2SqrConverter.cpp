@@ -136,7 +136,10 @@ void Hex2SqrConverter::dataCheck()
 // -----------------------------------------------------------------------------
 void Hex2SqrConverter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

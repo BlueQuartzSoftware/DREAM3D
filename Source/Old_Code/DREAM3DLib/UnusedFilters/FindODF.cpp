@@ -169,7 +169,10 @@ void FindODF::dataCheck()
 void FindODF::preflight()
 void FindODF::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

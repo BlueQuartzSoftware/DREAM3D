@@ -135,6 +135,7 @@ class SaveImages : public AbstractFilter
     int saveImage(uint8_t* ipfColors, size_t slice, size_t* dims);
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

@@ -70,7 +70,7 @@ void CreateFeatureArrayFromCellArray::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Cell Array Name");
     parameter->setPropertyName("SelectedCellArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -136,7 +136,10 @@ void CreateFeatureArrayFromCellArray::dataCheck()
 // -----------------------------------------------------------------------------
 void CreateFeatureArrayFromCellArray::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 

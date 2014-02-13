@@ -81,7 +81,7 @@ void FitFeatureData::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Feature Array To Fit");
     parameter->setPropertyName("SelectedFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -191,7 +191,10 @@ void FitFeatureData::dataCheck()
 // -----------------------------------------------------------------------------
 void FitFeatureData::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

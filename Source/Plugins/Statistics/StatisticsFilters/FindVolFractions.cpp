@@ -111,7 +111,10 @@ void FindVolFractions::dataCheck()
 // -----------------------------------------------------------------------------
 void FindVolFractions::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

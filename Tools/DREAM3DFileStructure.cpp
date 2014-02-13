@@ -92,7 +92,7 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
         std::cout << "    Found " << dIter.key().toStdString() << ": " << std::endl;
 
         const DataArrayProxy& daProxy = dIter.value();
-        if(daProxy.read == false) { continue; } // Skip to the next DataArray if not reading this one
+        if(daProxy.flag == DREAM3D::Unchecked) { continue; } // Skip to the next DataArray if not reading this one
 
         std::cout << "      reading " << dIter.key().toStdString() << std::endl;
 

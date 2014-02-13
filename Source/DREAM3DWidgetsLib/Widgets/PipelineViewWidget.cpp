@@ -317,7 +317,7 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
   for (int i = 0; i < fCount; i++)
   {
     // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
-    PipelineFilterWidget* w = new PipelineFilterWidget(filters.at(i));
+    PipelineFilterWidget* w = new PipelineFilterWidget(filters.at(i), NULL, this);
     index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
     addFilterWidget(w, filters.at(i), index);
   }
@@ -348,7 +348,7 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
   }
 
   // Create a FilterWidget object
-  PipelineFilterWidget* w = new PipelineFilterWidget(filter);
+  PipelineFilterWidget* w = new PipelineFilterWidget(filter, NULL, this);
 
   // Add the filter widget to this view widget
   addFilterWidget(w, filter, index);
@@ -415,7 +415,7 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
       m_InputParametersWidget, SLOT(removeWidgetInputs(PipelineFilterWidget*)));
   }
 
-  connect(filter.get(), SIGNAL(parametersChanged()),
+  connect(w, SIGNAL(parametersChanged()),
     this, SLOT(preflightPipeline()));
 
   // Check to make sure at least the vertical spacer is in the Layout

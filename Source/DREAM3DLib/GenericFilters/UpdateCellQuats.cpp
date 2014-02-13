@@ -112,7 +112,10 @@ void UpdateCellQuats::dataCheck()
 // -----------------------------------------------------------------------------
 void UpdateCellQuats::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

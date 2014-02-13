@@ -83,7 +83,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Feature Array To Fit");
     parameter->setPropertyName("SelectedFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -105,7 +105,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Array To Correlate With");
     parameter->setPropertyName("CorrelatedFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::VolumeFeatureArrayNameSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -221,7 +221,10 @@ void FitCorrelatedFeatureData::dataCheck()
 // -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

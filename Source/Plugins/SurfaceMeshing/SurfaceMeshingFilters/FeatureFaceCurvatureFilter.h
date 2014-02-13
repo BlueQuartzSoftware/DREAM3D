@@ -129,6 +129,7 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 #endif
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

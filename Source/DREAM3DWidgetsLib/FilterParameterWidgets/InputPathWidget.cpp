@@ -72,12 +72,12 @@ InputPathWidget::~InputPathWidget()
 void InputPathWidget::setupGui()
 {
   connect(value, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&)));
+          this, SLOT(widgetChanged(const QString&)));
 
   QFileCompleter* com = new QFileCompleter(this, false);
   value->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(parametersChanged(const QString &)));
+                    this, SLOT(widgetChanged(const QString &)));
 
   if (m_FilterParameter != NULL)
   {
@@ -102,22 +102,6 @@ bool InputPathWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
     lineEdit->setStyleSheet("");
   }
   return fileinfo.exists();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InputPathWidget::parametersChanged(const QString& text)
-{
-  if (verifyPathExists(text, value) == true)
-  {
-    bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
-    if (false == ok)
-    {
-      QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-      emit errorSettingFilterParameter(ss);
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -150,4 +134,27 @@ void InputPathWidget::on_selectBtn_clicked()
   m_OpenDialogLastDirectory = fi.path();
 
   value->setText(file);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputPathWidget::widgetChanged(const QString &text)
+{
+  verifyPathExists(text, value);
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputPathWidget::filterNeedsInputParameters(AbstractFilter* filter)
+{
+  QString text = value->text();
+  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
+  if (false == ok)
+  {
+    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
+    emit errorSettingFilterParameter(ss);
+  }
 }

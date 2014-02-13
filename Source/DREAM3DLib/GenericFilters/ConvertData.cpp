@@ -198,9 +198,9 @@ void ConvertData::setupFilterParameters()
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Volume Cell Array Name");
+    parameter->setHumanLabel("Attribute Array Name");
     parameter->setPropertyName("SelectedCellArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);

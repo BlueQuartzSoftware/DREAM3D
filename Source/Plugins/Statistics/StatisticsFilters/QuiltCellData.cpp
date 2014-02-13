@@ -72,7 +72,7 @@ void QuiltCellData::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Cell Array To Quilt");
     parameter->setPropertyName("SelectedFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -213,7 +213,10 @@ void QuiltCellData::dataCheck()
 // -----------------------------------------------------------------------------
 void QuiltCellData::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------
@@ -247,7 +250,7 @@ float quiltData(IDataArray::Pointer inputData, int xc, int yc, int zc, int pSize
           {
             if((xc+i) >= 0 && (xc+i) < xDim)
             {
-              value += cPtr[zStride+yStride+(xc+i)];   
+              value += cPtr[zStride+yStride+(xc+i)];
               count++;
             }
           }

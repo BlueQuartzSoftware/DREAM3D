@@ -226,7 +226,10 @@ void FindDeformationStatistics::dataCheck()
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

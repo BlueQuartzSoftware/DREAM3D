@@ -240,7 +240,10 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
 // -----------------------------------------------------------------------------
 void FindLocalAverageCAxisMisalignments::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

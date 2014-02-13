@@ -33,18 +33,18 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "SurfaceFaceArrayNameSelectionWidget.h"
+#include "DataContainerArrayProxyWidget.h"
 
 #include <QtCore/QMetaProperty>
 
 
-#include "FilterWidgetsLib/Widgets/moc_SurfaceFaceArrayNameSelectionWidget.cxx"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_DataContainerArrayProxyWidget.cxx"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceFaceArrayNameSelectionWidget::SurfaceFaceArrayNameSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
+DataContainerArrayProxyWidget::DataContainerArrayProxyWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
   m_Filter(filter),
   m_FilterParameter(parameter)
@@ -56,17 +56,54 @@ SurfaceFaceArrayNameSelectionWidget::SurfaceFaceArrayNameSelectionWidget(FilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceFaceArrayNameSelectionWidget::~SurfaceFaceArrayNameSelectionWidget()
+DataContainerArrayProxyWidget::~DataContainerArrayProxyWidget()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceFaceArrayNameSelectionWidget::setupGui()
+void DataContainerArrayProxyWidget::setupGui()
 {
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()) );
+
   if (m_FilterParameter != NULL)
   {
-    SurfaceFaceArrayNameSelectionWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    label->setText(m_FilterParameter->getHumanLabel() );
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxyWidget::beforePreflight()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxyWidget::afterPreflight()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxyWidget::on_dataContainerList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxyWidget::on_attributeMatrixList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxyWidget::on_attributeArrayList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous)
+{
+}

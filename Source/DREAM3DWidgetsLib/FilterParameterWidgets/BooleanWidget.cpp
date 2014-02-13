@@ -65,7 +65,7 @@ BooleanWidget::~BooleanWidget()
 void BooleanWidget::setupGui()
 {
   connect(value, SIGNAL(stateChanged(int)),
-          this, SLOT(parametersChanged(int) ) );
+          this, SLOT(widgetChanged(int) ) );
 
   if (m_FilterParameter != NULL)
   {
@@ -88,11 +88,19 @@ void BooleanWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BooleanWidget::parametersChanged(int state)
+void BooleanWidget::widgetChanged(int state)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BooleanWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
 
   QVariant v(value->isChecked() );
-  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
 
   if(false == ok)
   {

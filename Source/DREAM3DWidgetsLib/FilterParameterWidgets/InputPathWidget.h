@@ -74,18 +74,20 @@ class DREAM3DWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::Inp
     * @brief This method does additional GUI widget connections
     */
     void setupGui();
-   
+
     /**
     * @brief
     */
     bool verifyPathExists(QString filePath, QLineEdit* lineEdit);
 
   public slots:
-    void parametersChanged(const QString& text);
+    void widgetChanged(const QString& msg);
+    void filterNeedsInputParameters(AbstractFilter* filter);
     void on_selectBtn_clicked();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
   private:
     AbstractFilter*   m_Filter;

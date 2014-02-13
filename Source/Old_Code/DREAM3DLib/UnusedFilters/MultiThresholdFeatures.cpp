@@ -152,7 +152,10 @@ void MultiThresholdFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void MultiThresholdFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

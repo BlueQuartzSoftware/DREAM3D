@@ -153,7 +153,10 @@ void FindBasalLoadingFactor::dataCheck()
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

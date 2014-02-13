@@ -159,7 +159,10 @@ void GenerateSurfaceMeshConnectivity::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateSurfaceMeshConnectivity::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

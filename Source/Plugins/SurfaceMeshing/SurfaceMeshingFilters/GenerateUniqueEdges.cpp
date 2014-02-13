@@ -153,7 +153,10 @@ void GenerateUniqueEdges::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateUniqueEdges::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

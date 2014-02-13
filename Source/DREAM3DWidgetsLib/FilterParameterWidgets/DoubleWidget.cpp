@@ -65,7 +65,7 @@ DoubleWidget::~DoubleWidget()
 void DoubleWidget::setupGui()
 {
   connect(value, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&)));
+          this, SLOT(widgetChanged(const QString&)));
 
   QDoubleValidator* xVal = new QDoubleValidator(value);
   value->setValidator(xVal);
@@ -81,16 +81,25 @@ void DoubleWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DoubleWidget::parametersChanged(const QString& text)
+void DoubleWidget::widgetChanged(const QString &text)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DoubleWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = false;
   double i = value->text().toDouble(&ok);
   QVariant v(i);
-  ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
   if(false == ok)
   {
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 }
+
 

@@ -209,7 +209,10 @@ void TriangleDihedralAngleFilter::dataCheck()
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

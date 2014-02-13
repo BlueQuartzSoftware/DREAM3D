@@ -123,7 +123,10 @@ void FindSurfaceVoxelFractions::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSurfaceVoxelFractions::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

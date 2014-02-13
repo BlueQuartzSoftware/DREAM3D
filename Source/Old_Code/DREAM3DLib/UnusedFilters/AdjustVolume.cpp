@@ -131,7 +131,10 @@ void AdjustVolume::dataCheck()
 void AdjustVolume::preflight()
 void AdjustVolume::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

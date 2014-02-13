@@ -184,7 +184,10 @@ void AlignSectionsMutualInformation::dataCheck()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

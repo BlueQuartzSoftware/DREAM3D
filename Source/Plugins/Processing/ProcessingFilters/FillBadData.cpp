@@ -131,7 +131,10 @@ void FillBadData::dataCheck()
 // -----------------------------------------------------------------------------
 void FillBadData::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

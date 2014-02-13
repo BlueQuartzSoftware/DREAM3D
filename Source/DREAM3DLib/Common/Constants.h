@@ -59,6 +59,9 @@ namespace DREAM3D
   typedef uint32_t Rgb;
   const Rgb  RGB_MASK    = 0x00ffffff;                // masks RGB values
   const DREAM3D_STRING PathSep("|");
+  static const uint8_t Unchecked = 0;
+  static const uint8_t PartiallyChecked = 1;
+  static const uint8_t Checked = 2;
 
 
   namespace Defaults

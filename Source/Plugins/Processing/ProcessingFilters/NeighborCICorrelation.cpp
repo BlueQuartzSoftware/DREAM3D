@@ -144,7 +144,10 @@ void NeighborCICorrelation::dataCheck()
 // -----------------------------------------------------------------------------
 void NeighborCICorrelation::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

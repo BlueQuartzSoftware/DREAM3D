@@ -70,32 +70,18 @@ OutputPathWidget::~OutputPathWidget()
 void OutputPathWidget::setupGui()
 {
   connect(value, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&)));
+          this, SLOT(widgetChanged(const QString&)));
 
   QFileCompleter* com = new QFileCompleter(this, false);
   value->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(parametersChanged(const QString &)));
+                    this, SLOT(widgetChanged(const QString &)));
 
   if (m_FilterParameter != NULL)
   {
     OutputPathWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
     QString currentPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(currentPath);
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OutputPathWidget::parametersChanged(const QString& text)
-{
-  bool ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
-  if(false == ok)
-  {
-    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
   }
 }
 
@@ -130,3 +116,28 @@ void OutputPathWidget::on_selectBtn_clicked()
 
   value->setText(file);
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OutputPathWidget::widgetChanged(const QString &text)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OutputPathWidget::filterNeedsInputParameters(AbstractFilter* filter)
+{
+  QString text = value->text();
+  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
+  if(false == ok)
+  {
+    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
+    emit errorSettingFilterParameter(ss);
+  }
+}
+
+

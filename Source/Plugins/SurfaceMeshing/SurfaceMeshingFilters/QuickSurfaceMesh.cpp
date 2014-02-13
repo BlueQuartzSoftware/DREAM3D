@@ -204,7 +204,10 @@ void QuickSurfaceMesh::dataCheck()
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

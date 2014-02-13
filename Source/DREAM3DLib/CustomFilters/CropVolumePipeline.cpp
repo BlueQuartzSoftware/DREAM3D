@@ -162,7 +162,10 @@ void CropVolumePipeline::dataCheck()
 // -----------------------------------------------------------------------------
 void CropVolumePipeline::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 

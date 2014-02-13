@@ -541,7 +541,7 @@ int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayP
         dIter.next();
 
         const DataArrayProxy& daProxy = dIter.value();
-        if(daProxy.read == false) { continue; } // Skip to the next DataArray if not reading this one
+        if(daProxy.flag == DREAM3D::Unchecked) { continue; } // Skip to the next DataArray if not reading this one
 
         flat << dIter.value().name;
       }

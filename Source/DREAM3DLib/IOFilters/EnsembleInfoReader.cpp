@@ -155,7 +155,10 @@ void EnsembleInfoReader::dataCheck()
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

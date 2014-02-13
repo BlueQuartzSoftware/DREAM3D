@@ -210,7 +210,10 @@ void CAxisSegmentFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void CAxisSegmentFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

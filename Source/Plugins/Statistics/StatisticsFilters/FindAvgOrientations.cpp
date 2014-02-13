@@ -140,7 +140,10 @@ void FindAvgOrientations::dataCheck()
 // -----------------------------------------------------------------------------
 void FindAvgOrientations::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

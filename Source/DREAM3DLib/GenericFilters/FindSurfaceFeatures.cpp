@@ -110,7 +110,10 @@ void FindSurfaceFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSurfaceFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

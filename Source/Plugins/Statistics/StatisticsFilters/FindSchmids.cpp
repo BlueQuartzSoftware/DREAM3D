@@ -162,7 +162,10 @@ void FindSchmids::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSchmids::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

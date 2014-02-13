@@ -391,7 +391,10 @@ void FindEuclideanDistMap::dataCheck()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

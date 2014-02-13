@@ -65,7 +65,7 @@ IntWidget::~IntWidget()
 void IntWidget::setupGui()
 {
   connect(value, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&)));
+          this, SLOT(widgetChanged(const QString&)));
 
   QIntValidator* xVal = new QIntValidator(value);
   value->setValidator(xVal);
@@ -81,12 +81,20 @@ void IntWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IntWidget::parametersChanged(const QString& text)
+void IntWidget::widgetChanged(const QString &text)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IntWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = false;
   int i = value->text().toInt(&ok);
   QVariant v(i);
-  ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
   if(false == ok)
   {
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());

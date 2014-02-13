@@ -135,7 +135,10 @@ void FindLargestCrossSections::dataCheck()
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

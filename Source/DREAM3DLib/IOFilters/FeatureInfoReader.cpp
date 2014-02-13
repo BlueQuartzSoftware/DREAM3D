@@ -211,7 +211,10 @@ void FeatureInfoReader::dataCheck()
 // -----------------------------------------------------------------------------
 void FeatureInfoReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

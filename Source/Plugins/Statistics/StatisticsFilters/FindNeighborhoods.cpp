@@ -179,7 +179,10 @@ void FindNeighborhoods::dataCheck()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

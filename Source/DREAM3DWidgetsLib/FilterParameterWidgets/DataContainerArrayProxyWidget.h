@@ -33,8 +33,8 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceFeatureArrayNameSelectionWidget_H_
-#define _SurfaceFeatureArrayNameSelectionWidget_H_
+#ifndef _DataContainerArrayProxyWidget_H_
+#define _DataContainerArrayProxyWidget_H_
 
 
 
@@ -45,10 +45,9 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "FilterWidgetsLib/QFilterParameterWidget.h"
-#include "FilterWidgetsLib/FilterWidgetsLib.h"
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "FilterWidgetsLib/ui_SurfaceFeatureArrayNameSelectionWidget.h"
+#include "DREAM3DWidgetsLib/ui_DataContainerArrayProxyWidget.h"
 
 
 /**
@@ -56,7 +55,7 @@
 * @author
 * @version
 */
-class FilterWidgetsLib_EXPORT SurfaceFeatureArrayNameSelectionWidget : public QWidget, private Ui::SurfaceFeatureArrayNameSelectionWidget
+class DREAM3DWidgetsLib_EXPORT DataContainerArrayProxyWidget : public QWidget, private Ui::DataContainerArrayProxyWidget
 {
   Q_OBJECT
 
@@ -67,27 +66,38 @@ class FilterWidgetsLib_EXPORT SurfaceFeatureArrayNameSelectionWidget : public QW
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    SurfaceFeatureArrayNameSelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
-    
-    virtual ~SurfaceFeatureArrayNameSelectionWidget();
-    
+    DataContainerArrayProxyWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+
+    virtual ~DataContainerArrayProxyWidget();
+
     /**
     * @brief This method does additional GUI widget connections
     */
     void setupGui();
 
   public slots:
+    void beforePreflight();
+    void afterPreflight();
 
+    void on_dataContainerList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+
+    void on_attributeMatrixList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+
+    void on_attributeArrayList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+
+  signals:
+    void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
 
-    SurfaceFeatureArrayNameSelectionWidget(const SurfaceFeatureArrayNameSelectionWidget&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceFeatureArrayNameSelectionWidget&); // Operator '=' Not Implemented
+    DataContainerArrayProxyWidget(const DataContainerArrayProxyWidget&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerArrayProxyWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _SurfaceFeatureArrayNameSelectionWidget_H_ */
+#endif /* _DataContainerArrayProxyWidget_H_ */
 
 

@@ -337,7 +337,10 @@ void LaplacianSmoothing::dataCheck()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

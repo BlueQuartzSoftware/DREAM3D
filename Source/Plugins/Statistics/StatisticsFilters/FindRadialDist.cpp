@@ -168,7 +168,10 @@ void FindRadialDist::dataCheck()
 // -----------------------------------------------------------------------------
 void FindRadialDist::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

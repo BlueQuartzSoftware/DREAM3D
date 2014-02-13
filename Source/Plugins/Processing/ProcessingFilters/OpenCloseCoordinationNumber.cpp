@@ -143,7 +143,10 @@ void OpenCloseCoordinationNumber::dataCheck()
 // -----------------------------------------------------------------------------
 void OpenCloseCoordinationNumber::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

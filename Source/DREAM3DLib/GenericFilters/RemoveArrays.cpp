@@ -124,7 +124,10 @@ void RemoveArrays::dataCheck()
 // -----------------------------------------------------------------------------
 void RemoveArrays::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -95,6 +95,7 @@ class FindOrientationFieldCurl : public AbstractFilter
     virtual void preflight();
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

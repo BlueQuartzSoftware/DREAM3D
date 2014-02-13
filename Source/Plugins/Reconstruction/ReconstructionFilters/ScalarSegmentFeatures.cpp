@@ -165,7 +165,7 @@ void ScalarSegmentFeatures::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Input Cell Array Name");
     parameter->setPropertyName("ScalarArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::VolumeCellArrayNameSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -239,7 +239,7 @@ void ScalarSegmentFeatures::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  QVector<size_t> tDims(1, 0);  
+  QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
@@ -269,7 +269,10 @@ void ScalarSegmentFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------
@@ -468,9 +471,9 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
     return (*m_Compare)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
   //     | Functor  ||calling the operator() method of the CompareFunctor Class |
   }
-  else 
+  else
   {
-    return false; 
+    return false;
   }
 }
 

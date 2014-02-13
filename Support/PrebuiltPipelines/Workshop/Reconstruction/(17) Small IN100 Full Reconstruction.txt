@@ -116,10 +116,10 @@ ReferenceDir\3\z=1
 
 [20]
 Filter_Name=RenameAttributeArray
-SelectedArrayName=IPFColor
+Filter_Human_Label=Rename Attribute Array
+SelectedArrayPath=VolumeDataContainer|CellData|IPFColor
 NewArrayName=IPFColor_Z
-DataContainerName=VolumeDataContainer
-AttributeMatrixName=CellData
+
 
 [21]
 Filter_Name=GenerateMisorientationColors
@@ -131,10 +131,9 @@ ReferenceAngle=0
 
 [22]
 Filter_Name=RenameAttributeArray
-SelectedArrayName=MisorientationColor
+Filter_Human_Label=Rename Attribute Array
+SelectedArrayPath=VolumeDataContainer|CellData|MisorientationColor
 NewArrayName=SchuhColor
-DataContainerName=VolumeDataContainer
-AttributeMatrixName=CellData
 
 [23]
 Filter_Name=DataContainerWriter

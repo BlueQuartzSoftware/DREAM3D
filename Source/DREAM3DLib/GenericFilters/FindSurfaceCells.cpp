@@ -110,7 +110,10 @@ void FindSurfaceCells::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSurfaceCells::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

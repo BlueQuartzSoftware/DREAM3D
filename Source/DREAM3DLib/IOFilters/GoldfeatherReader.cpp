@@ -199,7 +199,10 @@ void GoldfeatherReader::dataCheck()
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -69,13 +69,13 @@ void AxisAngleWidget::setupGui()
 {
 
   connect(angle, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&) ) );
+          this, SLOT(widgetChanged(const QString&) ) );
   connect(axis_i, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&) ) );
+          this, SLOT(widgetChanged(const QString&) ) );
   connect(axis_j, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&) ) );
+          this, SLOT(widgetChanged(const QString&) ) );
   connect(axis_k, SIGNAL(textChanged(const QString&)),
-          this, SLOT(parametersChanged(const QString&) ) );
+          this, SLOT(widgetChanged(const QString&) ) );
 
   QDoubleValidator* xVal = new QDoubleValidator(axis_i);
   axis_i->setValidator(xVal);
@@ -101,7 +101,15 @@ void AxisAngleWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::parametersChanged(const QString &text)
+void AxisAngleWidget::widgetChanged(const QString &text)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxisAngleWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = false;
   AxisAngleInput_t data;
@@ -112,7 +120,7 @@ void AxisAngleWidget::parametersChanged(const QString &text)
 
   QVariant v;
   v.setValue(data);
-  ok = m_Filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
   if(false == ok)
   {
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());

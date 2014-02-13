@@ -197,7 +197,10 @@ void EBSDSegmentFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 void EBSDSegmentFeatures::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

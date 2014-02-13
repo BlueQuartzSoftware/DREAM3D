@@ -81,6 +81,7 @@ class DREAM3DLib_EXPORT Filt0 : public AbstractFilter
     virtual void preflight();
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
@@ -172,6 +173,7 @@ class DREAM3DLib_EXPORT Filt1 : public AbstractFilter
     virtual void preflight();
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

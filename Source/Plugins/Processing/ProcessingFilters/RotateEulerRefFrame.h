@@ -91,6 +91,7 @@ class RotateEulerRefFrame : public AbstractFilter
     virtual void execute();
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

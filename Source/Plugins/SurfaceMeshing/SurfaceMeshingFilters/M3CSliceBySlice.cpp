@@ -439,7 +439,10 @@ void M3CSliceBySlice::dataCheck()
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 

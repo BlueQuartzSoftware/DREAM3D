@@ -89,6 +89,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     virtual void preflight();
 
   signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

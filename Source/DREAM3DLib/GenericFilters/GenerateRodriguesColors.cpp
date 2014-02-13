@@ -164,7 +164,10 @@ void GenerateRodriguesColors::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateRodriguesColors::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -156,7 +156,10 @@ void LosAlamosFFTWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void LosAlamosFFTWriter::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

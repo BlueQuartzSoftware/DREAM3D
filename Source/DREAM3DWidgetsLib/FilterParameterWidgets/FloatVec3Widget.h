@@ -76,11 +76,12 @@ class DREAM3DWidgetsLib_EXPORT FloatVec3Widget : public QWidget, private Ui::Flo
     void setupGui();
 
   public slots:
-    void parametersChanged(const QString& text);
-
+    void widgetChanged(const QString& msg);
+    void filterNeedsInputParameters(AbstractFilter* filter);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
   private:
     AbstractFilter*   m_Filter;
