@@ -1,36 +1,45 @@
-Name of Filter {#importr3dstack}
+Import R3D Stack Filter {#importr3dstack}
 =====
 
 ## Group (Subgroup) ##
-Filter Group (Filter Subgroup)
+R3D Analytics (Input)
 
 
 ## Description ##
-This filter does the following...
+Reads in a stack of 2D segmented slices from output of R3D Analytics.
+
+
+## Notes
+
 
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
 | Field Array Name | String |
 
+
+## Required DataContainers ##
+
+Voxel
+
+
 ## Required Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+
+None
 
 
 ## Created Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+| Int  | User Defined       | ....        | other   |
 
 
 
 ## Authors ##
 
-**Copyright** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info** dream3d@bluequartz.net
 

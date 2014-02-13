@@ -1,7 +1,13 @@
-#--////////////////////////////////////////////////////////////////////////////
-#-- Your License or copyright can go here
-#--////////////////////////////////////////////////////////////////////////////
-
+#--
+#--  Copyright (c) 2011, Michael A. Jackson. BlueQuartz Software
+#--  Copyright (c) 2011, Michael Groeber, US Air Force Research Laboratory
+#--  Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
+#--  All rights reserved.
+#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
+#--
+#-- This code was partly written under US Air Force Contract FA8650-07-D-5800 & FA8650-13-M-5048
+#--
+	
 project(R3DAnalytics)
 
 set(PLUGIN_NAME R3DAnalytics)

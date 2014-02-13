@@ -1,6 +1,7 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,7 +31,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                   FA8650-07-D-5800 and FA8650-13-M-5048
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -57,13 +58,14 @@
 
 /**
  * @class QImportR3DStackWidget QImportR3DStackWidget.h Plugins/EbsdImport/UI/ImportR3DStackWidget.h
- * @brief This class represents the User Interface for the Image file import module
+ * @brief This class represents the User Interface for the R3D Analytics file import module
  * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications. This module controls
  * the import of Image data files into  DREAM3D data structure file
  * for better data management and archiving.
  * @author Michael A. Jackson for BlueQuartz Software
- * @date Jan 30, 2011
+ * @author Joseph C. Tucker for UES, Inc.
+ * @date Feb 10, 2014
  * @version 1.0
  */
 class QImportR3DStackWidget : public QFilterWidget, private Ui::QImportR3DStackWidget
